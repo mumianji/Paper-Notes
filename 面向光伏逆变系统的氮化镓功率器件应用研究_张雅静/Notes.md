@@ -17,10 +17,16 @@ HEMT（High Electron Mobility Transistor），高电子迁移率晶体管。
 + 模块式
 8. IGBT
 IGBT(Insulated Gate Bipolar Transistor)，绝缘栅双极型晶体管，是由BJT(双极型三极管)和MOS(绝缘栅型场效应管)组成的复合全控型电压驱动式功率半导体器件, 兼有MOSFET的高输入阻抗和GTR的低导通压降两方面的优点。
-9. 光伏逆变系统的主要指标
+9. MOSFET
+MOSFET(Metal Oxide Semiconductor Field Effect Transistor)，Si基金属-氧化物半导体场效应晶体管，可分为三类：垂直扩散型(Vertical Diffusion MOS,VDMOS)、横向扩散型(Lateral Diffusion MOS,LDMOS)和沟道型(Trench MOS,TMOS)
+10. 光伏逆变系统的主要指标
 + 逆变系数
 + 输出电流波形畸变率
 + 输出功率因数
 + 最大功率点跟踪效率~~（MPPT）~~
-10. MPPT
+11. MPPT
 MPP(Maximum Power Point),最大功率点；MPPT(Maximum Power Point Traeking)
+12. 微型光伏逆变器分类
++ 单级式拓扑结构
++ 准单级式拓扑结构
++ 包括DC/DC变换器产生稳定的中间直流电压，后级采用单相全桥电路将直流电压逆变
