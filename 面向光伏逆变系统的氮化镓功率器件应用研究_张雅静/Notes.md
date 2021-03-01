@@ -83,3 +83,22 @@ MPP(Maximum Power Point),最大功率点；MPPT(Maximum Power Point Traeking)
 
 22. 器件性能
     通常栅极-漏极（$Q_{gd}$）和通态电阻（$R_{ds\_on}$）的乘积
+
+```graphviz
+digraph finite_state_machine {
+    rankdir=LR;
+    size="8,5"
+
+    node [shape = doublecircle]; S;
+    node [shape = point ]; qi
+
+    node [shape = circle];
+    qi -> S;
+    S  -> q1 [ label = "a" ];
+    S  -> S  [ label = "a" ];
+    q1 -> S  [ label = "a" ];
+    q1 -> q2 [ label = "ddb" ];
+    q2 -> q1 [ label = "b" ];
+    q2 -> q2 [ label = "b" ];
+}
+```
