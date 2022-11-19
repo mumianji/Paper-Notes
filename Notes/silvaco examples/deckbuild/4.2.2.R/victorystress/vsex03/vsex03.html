@@ -1,0 +1,99 @@
+<html>
+  <head>
+    <title>Stress simulation for a SoC Transistor TEG</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Stress simulation for a SoC Transistor TEG</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Victory Process and Victory Stress</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Victory Process 7.22.0.R, Victory Stress 2.14.0.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="vsex03_0_vp_ex.png" width="640" alt="vsex03_0_vp_ex" />
+      <p/>
+      <img src="vsex03_1_vp_ex.png" width="640" alt="vsex03_1_vp_ex" />
+      <p/>
+      <img src="vsex03_2_vp_conformal_ex.png" width="640" alt="vsex03_2_vp_conformal_ex" />
+      <p/>
+      <img src="vsex03_4_vp.png" width="640" alt="vsex03_4_vp" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+In recent years, it has become increasingly important to investigate the effects
+of stress in MOS transistors for SoC (System on Chip) design because
+stress/strain effects are now used to improve the performance of the
+MOS transistors.
+Particularly, SoC transistor TEGs have attracted considerable attention in
+order to study the effects of stress liner films and the dependence on active
+region length, trench width, and gate-pitch.
+</p>
+<p>
+This example demonstrates a stress simulation for a SoC transistor TEG.
+The 3D structure is created by about 30 command lines with three mask layers
+(GATE, ACTIVE, and CONTACT) using Victory Process. A 3D mesh is created for the
+stress calculation.
+</p>
+<p>
+Then the stress distribution is simulated by Victory Stress. First, the result
+from Victory Process is loaded. The parameters of the materials such as young modulas,
+poisson ratio, and intrinsic stress are set. Then the matrix calculation method
+is set, and the stress is calculated. Finally, the structure, stress distribution
+and the stress enhanced mobility factors for electrons/holes are saved.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+<p>
+The image
+{pngview}  vsex03_0_vp_ex.png
+shows the 3-D topography after trench etching using the mask of the active area.
+</p>
+<p>
+The image
+{pngview}  vsex03_1_vp_ex.png
+shows the 3-D topography after poly-silicon gates are formed using the mask of the gate.
+</p>
+<p>
+The image
+{pngview}  vsex03_2_vp_conformal_ex.png
+shows the 3-D topography after contacts are formed using the mask of the contact.
+</p>
+<p>
+The image
+{pngview}  vsex03_3_vp.png
+shows the stress distribution (sigmaXX) for the final 3-D structure.
+</p>
+<p>
+The image
+{pngview}  vsex03_4_vp.png
+shows the distribution of the enhanced factor for the electron&apos;s mobility.
+</p>
+<p>
+The file
+{txtview} vsex03.in
+is the input deck for Victory Process and Victory Stress.
+</p>
+  </div></body>
+</html>

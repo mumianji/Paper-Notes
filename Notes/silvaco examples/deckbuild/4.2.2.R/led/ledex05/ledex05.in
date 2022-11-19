@@ -1,0 +1,159 @@
+# (c) Silvaco Inc., 2018
+go atlas
+title LED simulation
+#
+# Simulates a simple LED device
+#
+#-------------------------------------------------------------
+# SECTION 1: MESH GENERATION
+#-------------------------------------------------------------
+# 4 um X 4 um
+#
+mesh space.mult=1.0
+x.mesh l=0.0  spacing=0.25
+x.mesh l=1.5  spacing=0.1
+x.mesh l=2.5  spacing=0.1
+x.mesh l=4.0  spacing=0.25
+#
+y.mesh l=0.0  spacing=0.1
+y.mesh l=0.5  spacing=0.002
+y.mesh l=0.75 spacing=0.05
+y.mesh l=1.0  spacing=0.002
+y.mesh l=1.1  spacing=0.002
+y.mesh l=1.35 spacing=0.05
+y.mesh l=1.6  spacing=0.002
+y.mesh l=4.0  spacing=0.5
+#
+eliminate y.direction x.min=0.0 x.max=4.0 y.min=3.0 y.max=4.0
+#
+#-------------------------------------------------------------
+# SECTION 2: REGIONS AND ELECTRODES
+#-------------------------------------------------------------
+# (graded heterojunctions outside of cladding layers)
+#
+region num=1 Material=GaAs   y.max=0.5
+region num=2 Material=AlGaAs y.min=0.5 y.max=1.0 x.comp=0.35
+#
+region num=3 Material=GaAs   y.min=1.0 y.max=1.1 
+region num=4 Material=GaAs   y.min=1.6
+region num=5 Material=AlGaAs y.min=1.1 y.max=1.6 x.comp=0.35
+#
+elec       num=1  name=anode x.min=1.5 x.max=2.5 y.min=0.0 y.max=0.0
+elec       num=2  name=cathode bot
+#
+#-------------------------------------------------------------
+# SECTION 3: DOPING PROFILES
+#-------------------------------------------------------------
+#
+doping conc=5.0e18 p.type x.left=1.5 x.right=2.5 gaus char=0.5 ratio.lat=0.6
+doping uniform region=1 p.type conc=1.e15
+doping uniform region=2 p.type conc=1.e15
+doping uniform region=3 p.type conc=1.e15
+doping uniform region=4 n.type conc=2.e18
+doping uniform region=5 n.type conc=2.e18
+#
+#
+#---------------------------------------------------------------
+# SECTION 4: MATERIAL MODELS
+#---------------------------------------------------------------
+#
+# (radiative recombination constants same for AlGaAs and GaAs )
+#
+material copt=1.5e-10 
+material material=GaAs mun=6500 taurel.el=1.e-12 taumob.el=1.e-12 vsat=1.e7
+material material=AlGaAs mun=2000 taurel.el=1.e-12 taumob.el=1.e-12 align=0.6
+
+model auger optr srh bgn print 
+#
+# If barrier exists at anode need to set workf=4.07+barrier height
+#contact  name=anode workfun=4.07 
+#
+#----------------------------------------------------------------
+# SECTION 5: OUTPUT FLAGS
+#----------------------------------------------------------------
+#
+output con.band val.band recomb u.srh u.aug u.rad
+#
+#----------------------------------------------------------------
+# SECTION 6: INITIAL SOLUTION
+#----------------------------------------------------------------
+#
+# no carriers
+solve init
+#
+#-----------------------------------------------------------------
+# SECTION 7: BIAS RAMP 
+#-----------------------------------------------------------------
+#
+probe name="Recombination" recombination integrate \
+      left=0 right=4 top=1.0 bottom=1.1
+probe name="Radiative" radiative integrate \
+      left=0 right=4 top=1.0 bottom=1.1
+
+# 0.0 to 2.0 V forward bias
+#
+log outf=ledex05.log master
+method newton climit=1e-4 maxtrap=10
+solve l.wave=0.9 vanode=0.0 vstep=0.25 vfinal=2.0 name=anode
+# 
+# Do reverse ray-tracing, calculate optical output coupling, light power
+# Save angular power density plot, ray plot, and spectrum plot as specified
+# Ray-tracing for 5 different sets of parameters is shown 
+#
+# 1 reverse ray trace from one point in all directions
+#
+save angpower=ledex05ang_1.log rayplot=ledex05ray_1 x=2.0 y=1.01 l.wave=0.9 reflects=4 
+#
+# 2 same with a mirror on the bottom and ignoring sides as they are waveguide modes
+#
+save angpower=ledex05ang_2.log rayplot=ledex05ray_2 x=2.0 y=1.01 l.wave=0.9 side mir.bottom numrays=360 reflects=4
+#
+# 3 same but with interference
+#
+save angpower=ledex05ang_3.log rayplot=ledex05ray_3 x=2.0 y=1.01 l.wave=0.9  interfere side mir.bottom reflects=4  
+# 
+# 4 same again except we will scan the point in x and y
+#
+save angpower=ledex05ang_4.log xmin=1.0 xmax=3.0 xnum=3 ymin=1.01 ymax=1.09 ynum=9 interfere side l.wave=0.9 mir.bottom reflects=4
+#
+# 5 same again except we scan in frequency so we can extract spectrum
+#
+save angpower=ledex05ang_5.log spectrum=ledex05sp_5 xmin=1.2 xmax=2.8 xnum=3 ymin=1.01 ymax=1.09 ynum=5 interfere side lmin=0.86 lmax=0.94 nsamp=15 mir.bottom reflects=4
+#
+# 6 is different since it uses the 1D method TMM by enabling the source
+# term method (SOURCE.TERM).
+#
+save angpower=ledex05ang_6.log x=2.0 y=1.01 l.wave=0.9 mir.bottom numrays=360 reflects=4 side interfere source.term
+#
+# 7 is different again as it uses FDTD to do the analysis.
+#
+save angpower=ledex05ang_7.log x=2.0 y=1.01 l.wave=0.9 mir.bottom numrays=360 reflects=4 side interfere fdtd
+#
+save outfile=ledex05.str
+#
+# structure plot
+tonyplot ledex05.str -set ledex05_0.set
+# radiative recombination rate contours
+tonyplot  ledex05.str -set ledex05_1.set
+# luminous intensity vs bias
+tonyplot ledex05.log -set ledex05_2.set
+# angular power density vs angle for ray-tracing parameter sets 1-5
+tonyplot ledex05ang_1.log -set ledex05_3.set
+tonyplot ledex05ang_2.log -set ledex05_3.set
+tonyplot ledex05ang_3.log -set ledex05_4.set
+tonyplot ledex05ang_4.log -set ledex05_4.set
+tonyplot ledex05ang_5.log -set ledex05_4.set 
+tonyplot ledex05ang_6.log -set ledex05_4.set 
+tonyplot ledex05ang_7.log -set ledex05_3.set 
+#
+#------------------------------------------------------------------
+# SECTION 8: EXTRACTION
+#------------------------------------------------------------------
+#
+# Extract total and radiative components of recombination
+# (can be used to calculate luminous efficiency)
+#
+measure u.total
+measure u.radiative
+#
+quit

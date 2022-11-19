@@ -1,0 +1,87 @@
+# (c) Silvaco Inc., 2018
+go atlas
+set magz=1.0
+
+mesh width=1
+
+x.mesh l=0   s=2.5
+x.mesh l=50  s=2.5
+x.mesh l=100 s=2.5
+
+y.mesh l=0    s=2.5
+y.mesh l=50   s=2.5
+y.mesh l=100  s=2.5
+
+region num=1 material=air
+region num=2 material=silicon y.max=25 x.min=40 x.max=60
+region num=3 material=silicon y.min=25 y.max=75 x.min=0.0 x.max=100.0
+region num=4 material=silicon y.min=75 x.min=40 x.max=60
+
+electrode name=anode   bottom x.min=40 x.max=60
+electrode name=cathode top    x.min=40 x.max=60
+
+doping n.type uniform conc=1e16
+# Set the magnetic field and magnetic scattering factors
+models print bz=$magz rh.elec=1.2 rh.hole=0.8 srh 
+
+solve init
+solve prev 
+
+probe name=hall1 x=0.0 y=50.0  potential
+probe name=hall2 x=100.0 y=50.0 potential
+
+probe name=nconc x=50 y=50 n.conc
+
+output e.mob h.mob e.vel h.vel flowlines
+
+log outf=magneticex04_1.log
+solve name=anode nsteps=25 vfinal=25.0
+
+extract name="r" curve(v."anode",(probe."nconc"*1.602e-19*(probe."hall2" - probe."hall1")/(i."anode"*$magz))) outfile="re.dat"
+log off
+
+go atlas
+set magz=1.0
+
+mesh width=1
+
+x.mesh l=0   s=2.5
+x.mesh l=50  s=2.5
+x.mesh l=100 s=2.5
+
+y.mesh l=0    s=2.5
+y.mesh l=50   s=2.5
+y.mesh l=100  s=2.5
+
+region num=1 material=air
+region num=2 material=silicon y.max=25 x.min=40 x.max=60
+region num=3 material=silicon y.min=25 y.max=75 x.min=0.0 x.max=100.0
+region num=4 material=silicon y.min=75 x.min=40 x.max=60
+
+electrode name=anode   bottom x.min=40 x.max=60
+electrode name=cathode top    x.min=40 x.max=60
+
+doping p.type uniform conc=1e16
+# Set the magnetic field and magnetic scattering factors
+models print bz=$magz rh.elec=1.2 rh.hole=0.8 srh 
+
+solve init
+solve prev 
+
+probe name=hall1 x=0.0 y=50.0  potential
+probe name=hall2 x=100.0 y=50.0 potential
+
+probe name=pconc x=50 y=50 p.conc
+
+output e.mob h.mob e.vel h.vel flowlines
+
+log outf=magneticex04_2.log
+solve name=anode nsteps=25 vfinal=25.0
+
+extract name="r" curve(v."anode",(probe."pconc"*1.602e-19*(probe."hall1" - probe."hall2")/(i."anode"*$magz))) outfile="rh.dat"
+
+log off
+
+tonyplot -overlay re.dat rh.dat -set magneticex04.set
+
+quit

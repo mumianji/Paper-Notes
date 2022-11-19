@@ -1,0 +1,43 @@
+go athena 
+
+#TITLE: Trench etching  with proximity (microloading) effect
+
+line x loc=0.00 spac=0.03
+line x loc=3.00 spac=0.03
+line x loc=5.00 spac=0.1
+
+line y loc=0.00 spac=0.05
+line y loc=2.00 spac=0.2
+ 
+init orientation=100
+
+deposit oxide thick=0.10 div=2
+
+etch oxide start x=.5 y=-10
+etch       cont  x=.5 y=10
+etch       cont  x=.8 y=10
+etch       done  x=.8 y=-10
+
+etch oxide start x=1.3 y=-10
+etch       cont  x=1.3 y=10
+etch       cont  x=1.9 y=10
+etch       done  x=1.9 y=-10
+
+etch oxide start x=3.0 y=-10
+etch       cont  x=3.0 y=10
+etch       cont  x=5.0 y=10
+etch       done  x=5.0 y=-10
+
+# define the etch rates for silicon (zero for other materials)
+rate.etch machine=test rie  n.m silicon   \
+isotropic=10.0 directional=20.0 chemical=30.0 divergence=20.
+
+# perform the etch 
+etch mach=test time=20. minutes dx.mult=1
+
+
+# save the structure and plot
+structure outfile=anelex05.str
+tonyplot anelex05.str -ttitle "Microloading Effect"
+
+quit

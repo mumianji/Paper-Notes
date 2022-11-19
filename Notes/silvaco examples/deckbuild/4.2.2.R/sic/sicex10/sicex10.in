@@ -1,0 +1,229 @@
+# (c) Silvaco Inc., 2018
+
+source sicex10_aux_0.in
+source sicex10_aux_1.in
+source sicex10_aux_2.in
+
+
+go victorydevice simflags="-80"
+
+mesh infile=sicex10_0.str verbose=3
+
+electrode x.min=5 x.max=8 y.min=5 y.max=8 z.min=1 z.max=1 name=drain
+
+material material=4H-SiC permitti=9.64 eg300=3.26 \
+			edb=0.1 gcb=2 eab=0.2 gvb=4 \
+			nsrhn=3e17 nsrhp=3e17 taun0=5e-10 taup0=1e-10 \
+			tc.a=100 
+
+material material=4H-SiC 
+
+models srh print
+
+contact name=gate n.poly
+
+method PAM.GMRES itlimit=50 norm.scaling.local
+ 
+solve init
+solve previous
+solve vdrain=0.1 previous
+
+
+log outfile=sicex10_0_0.log
+solve vgate=0
+solve vgate=0.5 previous
+solve vgate=1 previous
+solve vgate=2 previous
+solve vfinal=12 name=gate vstep=1 previous
+save outf=sicex10_0_0.str
+solve vfinal=16 name=gate vstep=0.25 previous
+solve vfinal=20 name=gate vstep=1 previous
+ 
+
+
+go victorydevice simflags="-80"
+
+mesh infile=sicex10_0.str verbose=3
+
+electrode x.min=5 x.max=8 y.min=5 y.max=8 z.min=1 z.max=1 name=drain
+
+
+material material=4H-SiC permitti=9.64 eg300=3.26 \
+			edb=0.1 gcb=2 eab=0.2 gvb=4 \
+			nsrhn=3e17 nsrhp=3e17 taun0=5e-10 taup0=1e-10 \
+			tc.a=100 
+
+
+material material=4H-SiC ni.min=1e06
+
+models srh print
+
+contact name=gate n.poly
+
+impact aniso e.side
+
+method PAM.MPI itlimit=50 norm.scaling.local climit=1e-10 cr.tol=1e-20 maxtrap=5
+ 
+solve init
+log outfile=sicex10_0_2.log
+solve previous
+solve vdrain=0.5 previous
+solve vstep=1 vfinal=5 name=drain previous
+solve vstep=5 vfinal=50 name=drain previous
+solve vstep=10 vfinal=100 name=drain previous
+solve vstep=20 vfinal=700 name=drain previous compliance=1e-11 cname=drain
+contact name=drain current
+solve previous
+solve istep=1.2 ifinal=5e-11 imult name=drain
+save outf=sicex10_0_1.str
+
+########################################################################################
+
+go victorydevice simflags="-80"
+
+mesh infile=sicex10_1.str verbose=3
+
+electrode x.min=5 x.max=8 y.min=5 y.max=8 z.min=1 z.max=1 name=drain
+
+material material=4H-SiC permitti=9.64 eg300=3.26 \
+			edb=0.1 gcb=2 eab=0.2 gvb=4 \
+			nsrhn=3e17 nsrhp=3e17 taun0=5e-10 taup0=1e-10 \
+			tc.a=100 
+
+material material=4H-SiC 
+
+models srh print
+
+contact name=gate n.poly
+
+method PAM.GMRES itlimit=50 norm.scaling.local
+ 
+solve init
+solve previous
+solve vdrain=0.1 previous
+
+log outfile=sicex10_1_0.log
+solve vgate=0
+solve vgate=0.5 previous
+solve vgate=1 previous
+solve vgate=2 previous
+solve vfinal=12 name=gate vstep=1 previous
+save outf=sicex10_1_0.str
+solve vfinal=16 name=gate vstep=0.25 previous
+solve vfinal=20 name=gate vstep=1 previous
+
+
+
+go victorydevice simflags="-80"
+
+mesh infile=sicex10_1.str verbose=3
+
+electrode x.min=5 x.max=8 y.min=5 y.max=8 z.min=1 z.max=1 name=drain
+
+
+material material=4H-SiC permitti=9.64 eg300=3.26 \
+			edb=0.1 gcb=2 eab=0.2 gvb=4 \
+			nsrhn=3e17 nsrhp=3e17 taun0=5e-10 taup0=1e-10 \
+			tc.a=100 
+
+material material=4H-SiC ni.min=1e06
+
+models srh print
+
+contact name=gate n.poly
+
+impact aniso e.side
+
+method PAM.MPI itlimit=50 norm.scaling.local climit=1e-10 cr.tol=1e-20 maxtrap=5
+solve init
+log outfile=sicex10_1_2.log
+solve previous
+solve vdrain=0.5 previous
+solve vstep=1 vfinal=5 name=drain previous
+solve vstep=5 vfinal=50 name=drain previous
+solve vstep=10 vfinal=100 name=drain previous
+solve vstep=20 vfinal=620 name=drain previous 
+solve vstep=5 vfinal=660 name=drain previous compliance=1e-11 cname=drain
+contact name=drain current
+solve previous
+solve istep=1.2 ifinal=5e-11 imult name=drain previous
+save outf=sicex10_1_1.str
+
+
+go victorydevice simflags="-80"
+
+mesh infile=sicex10_2.str verbose=3
+
+electrode x.min=5 x.max=8 y.min=5 y.max=8 z.min=1 z.max=1 name=drain
+
+material material=4H-SiC permitti=9.64 eg300=3.26 \
+			edb=0.1 gcb=2 eab=0.2 gvb=4 \
+			nsrhn=3e17 nsrhp=3e17 taun0=5e-10 taup0=1e-10 \
+			tc.a=100 
+
+material material=4H-SiC 
+
+models srh print
+
+contact name=gate n.poly
+
+method PAM.MPI itlimit=50 norm.scaling.local
+ 
+solve init
+solve previous
+solve vdrain=0.1 previous
+
+log outfile=sicex10_2_0.log
+solve vgate=0
+solve vgate=0.5 previous
+solve vgate=1 previous
+solve vgate=2 previous
+solve vfinal=12 name=gate vstep=1 previous
+save outf=sicex10_2_0.str
+solve vfinal=16 name=gate vstep=0.25 previous
+solve vfinal=20 name=gate vstep=1 previous
+
+go victorydevice simflags="-80"
+
+mesh infile=sicex10_2.str verbose=3
+
+electrode x.min=5 x.max=8 y.min=5 y.max=8 z.min=1 z.max=1 name=drain
+
+
+material material=4H-SiC permitti=9.64 eg300=3.26 \
+			edb=0.1 gcb=2 eab=0.2 gvb=4 \
+			nsrhn=3e17 nsrhp=3e17 taun0=5e-10 taup0=1e-10 \
+			tc.a=100 
+
+material material=4H-SiC ni.min=1e06
+
+models srh print
+
+contact name=gate n.poly
+
+impact aniso e.side
+
+method PAM.MPI itlimit=50 norm.scaling.local climit=1e-4 cr.tol=1e-22 maxtrap=5
+
+ 
+solve init
+log outfile=sicex10_2_2.log
+solve previous
+solve vdrain=0.01 previous
+solve vdrain=0.1 previous
+solve vdrain=0.5 previous
+solve vstep=1 vfinal=5 name=drain previous
+solve vstep=5 vfinal=50 name=drain previous
+solve vstep=10 vfinal=100 name=drain previous
+solve vstep=20 vfinal=1000 name=drain previous compliance=7e-13 cname=drain
+
+contact name=drain current
+solve previous
+solve istep=1.2 ifinal=5e-11 imult name=drain
+save outf=sicex10_2_1.str
+
+tonyplot -overlay sicex10_0_0.log sicex10_1_0.log sicex10_2_0.log -set sicex10_0.set
+tonyplot -overlay sicex10_0_2.log sicex10_1_2.log sicex10_2_2.log -set sicex10_1.set
+tonyplot3d sicex10_0_1.str -set sicex10_2.set
+tonyplot3d sicex10_1_1.str -set sicex10_2.set
+tonyplot3d sicex10_2_1.str -set sicex10_2.set

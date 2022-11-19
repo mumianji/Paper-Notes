@@ -1,0 +1,60 @@
+go athena
+
+#TITLE: Trench etching using RIE model and OPTOLITH
+# 
+line x loc=-0.75 spac=0.20
+line x loc=-0.25 spac=0.05 
+line x loc=0 spac=0.05 
+line x loc=0.25 spac=0.05 
+line x loc=0.75 spac=0.20 
+#
+line y loc=0.00 spac=1
+line y loc=1 spac=1 
+initialize
+#
+deposit aluminum  thick=1. div=10
+deposit name.resist=OiR32  thick=1. div=40
+#
+structure outfile=anex10.str
+
+# Illumination wavelength
+#
+illumination lambda=0.365
+illum.filter clear.fil circle sigma=0.5 
+#
+# Projection numerical aperture
+#
+projection na=.52 
+pupil.filter clear.fil circle
+#
+# The mask layout
+#
+layout lay.clear x.lo=-.25 z.lo=-1 x.hi=.25 z.hi=1
+#
+# Run the imaging module with a mask input file from Maskviews
+#
+image opaque win.x.lo=-0.5 win.z.lo=0 win.x.hi=0.5 win.z.hi=0 \
+		dx=0.05 one.d n.pupil=3
+#
+structure outfile=anex10_0.str intensity mask
+tonyplot anex10_0.str
+#
+expose dose=240 num.refl=10
+#
+bake time=60 seconds temp=125
+#
+develop mack time=60 steps=5 substeps=24
+
+structure outfile=anex10_1.str
+
+rate.etch machine=m1 rie aluminum iso=.1 dir=0.95 u.m
+rate.etch machine=m1 rie name.resist=OiR32 iso=0.01 dir=0.1 u.m
+#
+etch machine=m1 time=60.0 second dx.mult=2
+
+structure outfile=anex10_2.str
+
+tonyplot anex10_1.str anex10_2.str
+#
+quit
+

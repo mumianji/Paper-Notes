@@ -1,0 +1,144 @@
+<html>
+  <head>
+    <title>SiGe PMOS Id/Vds with NEB Model</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>SiGe PMOS Id/Vds with NEB Model</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Blaze/Giga</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="mos2ex13_plot0.png" width="640" alt="mos2ex13_plot0" />
+      <p/>
+      <img src="mos2ex13_plot1.png" width="640" alt="mos2ex13_plot1" />
+      <p/>
+      <img src="mos2ex13_plot2.png" width="640" alt="mos2ex13_plot2" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates a comparison of Id/Vds analyses including
+second breakdown of a short PMOS structure with a SiGe channel using
+the non-isothermal Energy Balance (NEB) models.
+It shows:
+</p>
+<ul>
+  <li>
+ Specification of PMOS structure using Atlas syntax
+<br/>
+  </li>
+  <li>
+ Specification of abrupt SiGe heterojunctions
+<br/>
+  </li>
+  <li>
+ Selection of the energy balance model, lattice heat flow solution
+and coupled solver
+<br/>
+  </li>
+  <li>
+ Simulation of Id/Vds characteristic for Vgs=-1.0V
+  </li>
+</ul>
+<p>
+Many of the models and methods required for Id/Vds and breakdown
+simulation are described in the snapback and second breakdown examples
+in the MOS examples section. Some tips in defining SiGe structures are
+also given in the HBT examples section. Users should consult both these
+sections for more details on these two areas.
+</p>
+<p>
+Submicron devices should be simulated using the energy balance model
+due to velocity overshoot, and nonlocal impact ionization effects,
+which could substantially influence device characteristics. For high
+current levels the thermal self-heating effects could also play an
+important role decreasing mobility and impact ionization rate. This
+example demonstrates comparison of Id/Vds curves obtained with energy
+balance and nonisothermal energy balance models. The curve tracing
+algorithm is used to obtain these curves.
+</p>
+<p>
+The example contains two Atlas runs. The first uses non-isothermal
+energy balance simulation of an Id/Vds curve and the second repeats
+this simulation without the lattice heating model.
+</p>
+<p>
+The device is described in the first part of the input file, including
+mesh, regions locations, electrodes locations, and doping distribution.
+The
+<b> region </b> statements are used to define SiO2, Si and SiGe regions. The Ge
+composition fraction is defined  using
+<b> x.composition=&lt;num&gt; </b> Since no grad.* parameters were used on the region statement the Ge
+composition fraction has an abrupt change from 0.25 to zero at the
+region boundary. This constitutes the abrupt heterojunction.
+Discontinuities in band potentials will be seen at the SiGe/Si region
+boundaries.
+</p>
+<p>
+After the device description the
+<b> material </b> statements are used to specify the electron and hole lifetimes, hole
+energy relaxation times both in Si and SiGe, and Nc and Nv in SiGe.
+The
+<b> model hcte.ho lat.temp </b> statement is used to specify solution of the hole energy balance and
+lattice heating equations respectively. Other carrier and lattice
+temperature physical models are also set on the same statement.
+The
+<b> impact </b> statement is used to assign the energy relaxation length for Selberherr model.
+</p>
+<p>
+Thermal boundary conditions are defined in the
+<b> thermcontact </b> statement.  A value of the thermal resistance is specified at the thermocontact
+located along the substrate, and thermal isolation conditions are assumed on the
+all other surfaces.
+</p>
+<p>
+Then the gate voltage is ramped to -2V, and then the curve tracing algorithm
+is used for ramping the drain voltage. The
+<b> curvetrace </b> statement is used to initialize parameters for the curve tracing algorithm. The
+contr.name parameter specifies the name of the electrode for which the load line
+technique will be applied (drain in this case). The curr.cont parameter means
+that value of current will be monitored, and the simulation will be stopped when
+the current exceeds the value specified by end.val parameter.
+The mincur parameter defines the minimum current value after which the load
+line technique will actually be applied (before that voltage boundary
+conditions are used). The nextst.ratio parameter defines the factor which to
+use to increase voltage step on the smooth parts of the IV  curve.
+The command
+<b> solve curvetrace </b> is used to activate the curve tracing algorithm.
+</p>
+<p>
+The second Atlas run uses the same syntax, except that the solution of
+the  lattice energy balance equation is turned off in the
+<b> models </b> statement. The Id/Vds curves from both runs can be overlaid using
+TonyPlot. In plotting the drain voltage the quantity:
+<b> drain int. bias </b> should be used in TonyPlot. This is the value of the voltage on the
+metal/semiconductor interface at the drain as opposed to &apos;drain bias&apos;
+which includes the load resistor used in the curve trace algorithm.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

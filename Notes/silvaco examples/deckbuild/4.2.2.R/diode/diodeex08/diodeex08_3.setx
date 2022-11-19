@@ -1,0 +1,60 @@
+<!DOCTYPE SetFile-3D>
+<setfile version="1" >
+ <model_matrix m00="1" m01="0" m02="0" m03="0" m10="0" m11="1" m12="0" m13="0" m20="0" m21="0" m22="1" m23="0" m30="0" m31="0" m32="0" m33="1" />
+ <view_matrix m00="0.828001" m01="0.261287" m02="-0.496129" m03="6.77464" m10="-0.303426" m11="-0.535275" m12="-0.788298" m13="20.0254" m20="-0.471537" m21="0.80325" m22="-0.363927" m23="-170.778" m30="0" m31="0" m32="0" m33="1" />
+ <projection type="perspective" fovy="25" zoom_factor="1.1" />
+ <lights>
+  <light index="0" on="true" color="#ffffff" intensity="0.53" latitude="30" longitude="0" />
+  <light index="1" on="true" color="#ffffff" intensity="0.53" latitude="0" longitude="270" />
+ </lights>
+ <axes>
+  <x_axis hidden="false" color="#ff0000" label_color="#000000" label_hidden="false" division_labels_hidden="false" minimum="-1.57202" maximum="26.572" division="4" number_of_ticks="4" />
+  <y_axis hidden="false" color="#00ff00" label_color="#000000" label_hidden="false" division_labels_hidden="false" minimum="-1.57202" maximum="26.572" division="4" number_of_ticks="4" />
+  <z_axis hidden="false" color="#0000ff" label_color="#000000" label_hidden="false" division_labels_hidden="false" minimum="-2.57202" maximum="52.572" division="10" number_of_ticks="4" />
+ </axes>
+ <region_legend hidden="false" foreground_color="#000000" background_color="#ffffff" constraint="constrained" legend_position="top_right" horizontal_offset="10" vertical_offset="10" />
+ <contour_legend hidden="false" foreground_color="#000000" background_color="#ffffff" constraint="constrained" legend_position="bottom_left" horizontal_offset="10" vertical_offset="10" />
+ <vector_legend hidden="false" foreground_color="#000000" background_color="#ffffff" constraint="constrained" legend_position="top_right" horizontal_offset="10" vertical_offset="10" />
+ <title hidden="false" color="#000000" title="ATLAS" subtitle="Data from diodeex08_1.str" constraint="constrained" horizontal_alignment="center" vertical_alignment="top" horizontal_offset="10" vertical_offset="10" />
+ <display region_color_type="material" default_draw_mode="solid" >
+  <flags regions="false" contours="true" rays="false" isosurfaces="false" vectors="false" cutplanes="false" />
+ </display>
+ <contours quantity="e- Current Density" >
+  <limits choose_from="all_materials" >
+   <minimum value="0" use_default="true" />
+   <maximum value="26738.8" use_default="true" />
+  </limits>
+  <legend type="continuous" palette="blue_to_red" number_of_colors="5" mapping="auto" />
+ </contours>
+ <structure draw_mode="solid" >
+  <materials>
+   <material name="Silicon" draw_mode="default" contoured="true" >
+    <regions>
+     <region name="low1" hidden="false" transparent="false" draw_mode="default" >
+      <label text="low1" color="#000000" hidden="true" />
+     </region>
+     <region name="Region #2" hidden="false" transparent="false" draw_mode="default" >
+      <label text="Region #2" color="#000000" hidden="true" />
+     </region>
+    </regions>
+   </material>
+  </materials>
+  <contacts>
+   <contact name="Aluminum" draw_mode="default" contoured="true" >
+    <electrodes>
+     <electrode name="anode" hidden="false" transparent="false" draw_mode="default" >
+      <label text="anode" color="#000000" hidden="false" />
+     </electrode>
+     <electrode name="cathode" hidden="false" transparent="false" draw_mode="default" >
+      <label text="cathode" color="#000000" hidden="false" />
+     </electrode>
+    </electrodes>
+   </contact>
+  </contacts>
+  <cutplanes>
+   <cutplane reverse_x="false" reverse_y="false" swap_xy="false" project_vector_quantities="true" x_axis_hidden="false" y_axis_hidden="false" hidden="true" >
+    <xz_plane position="12.5" />
+   </cutplane>
+  </cutplanes>
+ </structure>
+</setfile>

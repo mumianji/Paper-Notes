@@ -1,0 +1,55 @@
+<html>
+  <head>
+    <title>MIS Solar cell</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>MIS Solar cell</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>S-Pisces/Luminous</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="solarex15_plot0.png" width="640" alt="solarex15_plot0" />
+      <p/>
+      <img src="solarex15_plot1.png" width="640" alt="solarex15_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+For a Metal Insulator Semiconductor (MIS) diode, the IV characteristic
+critically depends on the insulator thickness. If the insulator thickness
+is thick enough (&gt; 50A) carrier transport through the insulator is negligible
+and the MIS diode represents a conventional MIS capacitor. In this example
+a diode with an insulator thickness of 23.5A and a metal to insulator barrier
+height of 3.2ev is simulated. To obtain current through the insulating oxide,
+we used the self-consistent direct quantum tunneling models for electrons and
+holes. To activate this model in Atlas,
+<b> qtnlsc.ho qtnlsc.el</b> are set in the
+<b> model </b> statement
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

@@ -1,0 +1,81 @@
+<html>
+  <head>
+    <title>Comparison Between 2D and 3D BV Simulation</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Comparison Between 2D and 3D BV Simulation</H1>
+    <table id="text">
+      <tr>
+        <td><b>Required:</b></td><td><i>Victory Process, Victory Mesh, Victory Device</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Version:</b></td><td><i>Victory Process 7.22.3.R, Victory Mesh 1.2.4.R, Victory Device 1.12.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="sicex11_plot0.png" width="640" alt="sicex11_plot0" />
+      <p/>
+      <img src="sicex11_plot2.png" width="640" alt="sicex11_plot2" />
+      <p/>
+      <img src="sicex11_plot3.png" width="640" alt="sicex11_plot3" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+By default Victory Process and Device run on just one processor.
+To ensure better perfomance on your computer the following simulation condition
+<b> simflags=&quot;-P all&quot;</b> could be specidied in the
+<b> go</b> statement starting Victory Process or Device. This means that all processors available will be used.
+If you want to use a smaller number of processors you can substitute &quot;all&quot; with a desired number, e.g.
+<b> simflags=&quot;-P 4&quot;.</b> </p>
+<p>
+The following example shows comparison between 2D and 3D breakdown voltage simulation of a vertical SiC MOSFET.
+</p>
+<p>
+The 3D layout-driven structure is created using Victory Process. 3D device simulation
+is done using Victory Device built-in extended precision numeric.
+</p>
+<p>
+Hatakeyama, et al. [1] have developed an anisotropic impact ionization model for materials with
+a hexagonal crystal structure, including 4H-SiC. The ionization coefficients in this model
+depend on the strength of the electric field and on the orientation of the field with respect
+to the optical axis of the crystal.
+</p>
+<p>
+You can specify the orientation of the optical axis of the crystal in Victory Device by supplying values for
+<b> ZETA </b> and
+<b> THETA </b> parameters on a
+<b> MATERIAL </b> statement. ZETA defines the angle the optical axis makes with the downwards axis. THETA
+defines the angle that the projection of the optical axis onto the horizontal plane makes with
+respect to the right pointing axis (measured counter-clockwise). The defaults are zeta=0 degrees
+and theta=0 degrees, making the &lt;0001&gt; direction downward into the Substrate (which is
+usually what you want).
+</p>
+<p>
+As expected the breakdown voltage is the same in 2D and 3D for the same structure.
+</p>
+<p>
+[1] Hatakeyama, T., J. Nishio, C. Ota, and T. Shinohe, &quot;Physical Modeling and Scaling Properties of 4H-SiC Power Devices,&quot; Proc. SISPAD, Tokyo (2005): 171-174.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

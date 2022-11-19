@@ -1,0 +1,110 @@
+# (c) Silvaco Inc., 2018
+go athena
+# ATHENA TFT formation -> ATLAS Id/Vg extraction example
+
+# mesh definition
+line x loc=0   spac=0.2  
+line x loc=1.0 spac=0.1
+line x loc=3.0 spac=0.25  
+
+line y loc=0   spac=0.1  
+line y loc=0.2 spac=0.1   
+
+# start with glass substrate
+initialize oxide
+
+# deposit thin metal as gate
+deposit  aluminum  thick=0.30   spaces=2
+
+# MIS insulator 
+deposit  oxide     thick=0.20   spaces=4
+deposit  nitride   thick=0.2    spaces=4
+
+# active amorphous silicon layer
+deposit  silicon   thick=0.15   div=10 c.phos=1e14
+deposit  silicon   thick=0.05   c.phos=1.0e20  div=4
+
+# deposit source/drian contacts
+deposit  aluminum    thick=0.2    div=2
+
+# pattern source/drain regions. Recess into active layer.
+deposit  barrier  thick=0.1 div=1
+etch     barrier  p1.x=1.0 right
+etch     aluminum  dry thick=0.20
+etch     silicon   dry thick=0.10
+etch     barrier   all
+
+# Passivation Layer
+deposit oxide thick=0.2 div=2
+
+# mirror to get full structure
+structure mirror right
+
+# define electrodes for ATLAS
+electrode name=source x=0 y=-1.0
+electrode name=gate   x=3
+electrode name=drain  x=6 y=-1.0
+
+structure outf=tftex05_0.str
+
+tonyplot  tftex05_0.str -set tftex05_0.set
+
+
+go atlas
+# Title   a-si TFT simulation
+
+#   set parameters for amorphous silicon
+
+material material=silicon mun=20 mup=1.5 nc300=2.5e20 \
+ nv300=2.5e20 eg300=1.8 taun0=1e-8 taup0=1e-8
+
+defects nta=1.e21 ntd=1.e21 wta=0.05 wtd=0.05 \
+  nga=1.0e16 ngd=1.0e16 ega=0.6 egd=0.6 wga=0.3 wgd=0.3 \
+  sigtae=1.e-17 sigtah=1.e-15 sigtde=1.e-15 sigtdh=1.e-17  \ 
+  siggae=2.e-16 siggah=2.e-15 siggde=2.e-15 siggdh=2.e-16  
+interface qf=3e10
+
+# define gate workfunction
+contact	name=gate alum
+
+# define models, include bbt.kl for reverse leakage effect
+models srh temp=300 print bbt.kl bb.b=7.5e6
+
+# first ramp the drain up
+
+method newton    
+solve init 
+solve prev vdrain=0.1
+solve prev vdrain=0.2
+solve prev vdrain=0.5
+solve vdrain=1 vfinal=10 vstep=1 name=drain
+
+# select to store total electric field and save a file
+output e.field
+save outf=tftex05_0V.str
+
+# Solve Id versus reverse Vg curve
+
+
+log outf=tftex05_1.log 
+solve vgate=0 vstep=-0.5 vfinal=-20. name=gate 
+save outf=tftex05_1.str
+tonyplot  tftex05_1.str -set tftex05_1.set
+
+# extract the peak reverse current
+extract name="max_rev_id" y.val from curve(v."gate",i."drain") where x.val=-20
+
+# Solve Id versus forward Vg curve
+
+# restart from zero gate bias
+load inf=tftex05_0V.str master
+
+log outf=tftex05_2.log 
+solve vgate=0 vstep=0.5 vfinal=20. name=gate 
+
+# extract subthreshold slope
+extract name="subvtslope" 1.0/slope(maxslope(curve(abs(v."gate"),log10(abs(i."drain")))))
+
+tonyplot -overlay tftex05_1.log tftex05_2.log -set tftex05_log.set
+
+quit

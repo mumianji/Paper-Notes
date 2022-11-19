@@ -1,0 +1,31 @@
+v DBInternal
+# silvaco.file ASCII version=1.14.23 format=1 contents=SDB,Tables=1
+
+Copyright "###################################################################"
+Copyright "#                    Copyright Silvaco Inc. (c)                   #"
+Copyright "#                            1992-2014                            #"
+Copyright "#                                                                 #"
+Copyright "# This file format and the following Key are copyright Silvaco    #"
+Copyright "# International. You may not use, this format or key without      #"
+Copyright "# reproducing this message in full and obtaining                  #"
+Copyright "# express written permission from Silvaco Inc.                    #"
+Copyright "#                                                                 #"
+Copyright "# To obtain such permission please contact: Silvaco Inc.          #"
+Copyright "#                                           support@silvaco.com   #"
+Copyright "#                                                                 #"
+Copyright "# KEY=SVC86hn7562asdx                       PROD=345              #"
+Copyright "###################################################################"
+#dbinternal 2.11.7.R (Thu Feb  8 16:02:37 GMT 2018)
+#libSDB 1.12.42 (Thu Oct 26 19:20:24 PDT 2017)
+p 4 10000 10001 10002 10003
+d 1 0 0 -0
+d 2 0.1 511993e+7 -678078e+7
+d 3 0.2 105304e+8 -139356e+8
+d 4 0.3 162451e+8 -215088e+8
+d 5 0.4 222783e+8 -295564e+8
+d 6 0.5 286441e+8 -381501e+8
+Q 10000 1 ex_id
+Q 10001 1 xc
+Q 10002 1 AlGaN_interface_charge
+Q 10003 1 InGaN_interface_charge
+EOF 358088211

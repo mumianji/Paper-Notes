@@ -1,0 +1,870 @@
+
+{section} LASER : Laser Diode Application Examples
+
+{subsection} laserex01.in : InP/InGaAsP Laser: Simple Gain Model 
+
+Requires: Blaze/Laser
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates simulation of a buried heterostructure
+InP/InGaAsP laser diode using the  simple gain model. It shows:
+
+{bullet} Laser structure definition using Atlas syntax
+{newline}
+{bullet} Material parameters specification
+{newline}
+{bullet} Setting conventional physical models
+{newline}
+{bullet} Device initial biasing 
+{newline}
+{bullet} Activating LASER module of Atlas
+{newline}
+{bullet} Mesh definition for solving the Helmholtz wave equation
+{newline}
+{bullet} Definition of laser physical models and their parameters
+         including optical gain model
+{newline}
+{bullet} Calculation of laser electrical and optical characteristics
+
+At the beginning of the input file, the laser diode is described using Atlas
+structural syntax including mesh, regions, electrodes and doping distributions
+the same way as it is done for any conventional applications. The
+{bold} mesh 
+statement uses the 
+{bold} diag.flip 
+parameter to make the mesh symmetrical with respect
+to the vertical center cross section. The mesh symmetry reflects the
+respective symmetry of the structure and may be important for
+calculating correctly the
+light intensity, local optical gain, and other internal physical distributions. 
+Mesh spacings are specified to resolve heterojunctions in x and y directions. 
+
+The laser structure is composed of 10 regions. The active lasing region
+of the device is made of quaternary InGaAsP compound and surrounded by
+InP regions of n- and p- type. All heterojunctions are modeled as
+abrupt. The cathode electrode is defined in the center of the top of
+the device. The anode electrode extends across the device at the
+bottom. The composition parameters of the active region x.comp and
+y.comp are defined in the respective
+{bold} region 
+statement.  The composition parameters are used to calculate
+fundamental properties of the InGaAsP material. e.g. energy band gap,
+dielectric constant,
+densities of states in the conduction and valence bands, etc. using the
+default dependencies. The default values of the above parameters are used
+also for the InP regions. 
+
+Some other material parameters are specified in the 
+{bold} material 
+statements separately for InP and InGaAsP materials. These include electron
+and hole lifetimes (capture times) for the Shockley-Read-Hall recombination model,
+optical recombination constants, and low field mobilities. In addition 
+the electron affinity for InGaAsP is explicitly defined to ensure
+correct energy band alignment. The parameter gain1min describing local
+optical gain and different from the default value is also given in the
+{bold} material 
+statement for InGaAsP.
+
+In two 
+{bold} models 
+statements a standard set of the Atlas/Blaze models is specified. In
+order to save computational time no LASER specific models are defined
+at this point. The LASER models are specified later in the input file
+after the initial bias has been increased. According to theory no
+laser emission will occur until the
+difference of quasi-Fermi levels in the active layer exceeds the
+material band gap. Therefore it is recommended to ramp the bias up to
+some value not greater than the band gap of the active region, and then
+enable the LASER models. In this example after obtaining the initial
+solution the anode voltage is ramped up to 0.6 V in the two-carrier
+solution mode.
+
+The next part of the input file enables LASER specific models. It
+starts from defining a mesh for solution of the Helmholtz wave
+equation. The Helmholtz equation is solved on a uniform rectangular
+mesh that is independent of the triangular mesh used for electrical
+equations. The rectangular mesh and the region in which the Helmholtz
+equation is solved is defined using the
+{bold} lx.mesh 
+and
+{bold} ly.mesh 
+statements. The defined region must lie completely inside the BLAZE
+simulation domain and cover completely the active lasing region. The
+conventional models and LASER specific models are specified in the
+{bold} models 
+statement. The LASER simulation is enabled by the parameter
+{bold} laser 
+in this statement. In this example the the  simple empirical gain model
+is activated by the parameter
+{bold} gainmod=2 
+. Here the optical gain is a function of electron and hole
+concentrations given in the form of analytical expression with
+empirical coefficients. The parameter
+{bold} las_maxch 
+specifies the maximum allowable relative change in the photon densities
+between iterations. If not limited the rapid change in the photon
+density may cause convergence problems. The parameter
+{bold} photon_energy 
+is used to specify the energy of the photons. If
+{bold} gainmod=2 
+is used it specifies only an initial estimate of the photon energy.
+Instead of
+{bold} photon_energy 
+the parameter las_omega can be used to define the
+lasing frequency. The parameter
+{bold} cavity_length 
+specifies the cavity length in the 3rd z-direction. For other LASER
+models and their parameters the default dependencies and values are
+applied.
+
+In the LASER mode the anode voltage is ramped up to 1.7V. The I-V,
+light power, and total optical gain data, is saved in the log file. The
+final physical distributions in the structure are saved in the output
+structure file. The following results are visualized in TonyPlot:
+
+{bullet} Conventional I-V characteristic
+{newline}
+{bullet} Light power versus current 
+{newline}
+{bullet} Optical gain versus current
+{newline}
+{bullet} Light intensity distribution over the structure
+
+The behavior of the optical gain for the fundamental transverse mode
+illustrates its increase until the current reaches the threshold value
+and
+then it remains flat equal to the light losses (in this case 30cm-1).
+
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection}  laserex02.in : InP/InGaAsP Laser: Emission Spectrum Analysis 
+
+Requires: Blaze/Laser
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates simulation of a buried heterostructure
+InP/InGaAsP laser diode. A physically based frequency dependent optical
+gain model is used in this example to calculate light emission
+spectrum. The example shows:
+
+{bullet} Laser structure definition using Atlas syntax
+{newline}
+{bullet} Setting up the device models and initial biasing 
+{newline}
+{bullet} Activating LASER module of Atlas
+{newline}
+{bullet} Mesh definition for solving the Helmholtz wave equation
+{newline}
+{bullet} Definition of laser physical models and their parameters including the
+{bold} frequency dependent optical gain model
+{newline}
+{bullet} Calculation of laser electrical and optical characteristics
+
+This example illustrates how Atlas can be used to simulate
+spectral characteristics. The spectral characteristics refer to the
+longitudinal laser spectrum since LASER takes into account only the
+fundamental transverse mode solution. It is known from the theory that
+the longitudinal laser spectrum depends on the optical gain,
+spontaneous emission spectrum, and the cavity length in the third
+dimension (or Z-direction). A shorter cavity length leads to a wider
+energy spacing
+between adjacent longitudinal modes, and so fewer longitudinal modes
+will be actually lasing. From the computational point of view the
+situation of the nearly single mode laser operation is very desirable
+because each lasing mode considered imposes an additional computational
+burden.
+
+For illustration purposes the structure under consideration is the same
+as in the previous example in this section. We refer to that example
+regarding the laser structure definition, mesh, material and physical
+models specification.
+
+The difference between this and the previous simulation is that
+physically based optical gain modes are activated in LASER simulation
+using the syntax
+{bold} models lmodes gainmod=1 
+. Gainmod=1 sets the frequency dependent model.
+The parameters
+{bold} las_einit las_efinal 
+are used to specify the photon energy range for spectral analysis, and the
+{bold} cavity_length 
+parameter is set to 50 microns. The latter value is rather small but it
+allows us to demonstrate the spectral analysis within a comparatively
+short run time.
+
+As in the previous example the additional variables specified in the
+{bold} output 
+statement will be saved in the output structure file. These include the
+conduction and valence band potentials for analyzing the energy band
+diagram, total, SRH, Auger, and radiative recombination rates, and
+current flowlines.
+
+During simulation the IV data, light power, and total optical gain data is
+stored in the log file. The laser spectra (gain spectra and photon
+density spectra) are stored in separate log files for each bias
+condition. The name of the spectrum log file is specified using the
+parameter
+{bold} spec.name 
+in the 
+{bold} models 
+statment in the LASER portion of the input file. The following results
+are displayed in TonyPlot:
+
+{bullet} Total light output power versus current 
+{newline}
+{bullet} Gain spectra for different laser biases (currents) below and above lasing threshold  
+{newline}
+{bullet} Light output spectrum below and above lasing threshold
+
+For comparison, the light output power vs diode current is shown along
+with the similar data obtained in the previous example. The gain
+saturation effect is
+clearly seen after laser threshold. Only a few of the longitudinal
+modes are actually lasing and the light output spectrum is practically
+the same after the lasing threshold.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} laserex03.in : GaAs/AlGaAs Stripe Geometry Laser 
+
+Requires: Blaze/Laser
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates simulation of a the  stripe geometry
+GaAs/AlGaAs laser diode. Physically based frequency dependent optical
+gain model is used in this example. The example shows:
+
+{bullet} Laser structure definition using Atlas syntax
+{newline}
+{bullet} Material parameters specification
+{newline}
+{bullet} Setting conventional physical models
+{newline}
+{bullet} Device initial biasing 
+{newline}
+{bullet} Activating LASER module of Atlas
+{newline}
+{bullet} Mesh definition for solving the Helmholtz wave equation
+{newline}
+{bullet} Definition of laser physical models and their parameters
+         including optical gain model
+{newline}
+{bullet} Calculation of laser electrical and optical characteristics
+
+In this example the same approach is applied to simulate a laser structure of
+a different geometry and material composition. The active region of the
+device under consideration represents a narrow stripe made of GaAs
+included between two AlGaAs regions. The logistics of the structure,
+material parameters and physical models definition repeat that of the
+previous two examples in this section. Refer to those examples for
+more detailed explanations.
+
+After performing the LASER simulation and saving the results in the log and
+structure output files, the following results are displayed in
+TonyPlot:
+
+{bullet} Total light output power versus current 
+{newline}
+{bullet} Light intensity distribution over the structure
+
+Since stripe geometry lasers do not provide sufficient light confinement
+in the direction parallel to the p-n- and heterojunction planes, the
+lasing region
+can be smeared laterally along the active region or shifted to a side
+of the structure due to fluctuations in the carrier density and
+dielectric permittivity. The latter may lead to the  spatial hole
+burning effect and have a negative influence on the laser
+characteristics. In this particular example spatial hole burning does
+not occur, but the lack of index waveguiding in the lateral direction
+which results in spreading the lasing area along the active region is
+clearly visible.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} laserex04.in : Using Reflect on a GaAs/AlGaAs Stripe Geometry Laser 
+
+Requires: Blaze/Laser
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates the use of a reflecting laser boundary condition for the simulation of a stripe geometry
+GaAs/AlGaAs laser diode . The example shows:
+
+{bullet} Laser structure definition using Atlas syntax
+{newline}
+{bullet} Material parameters specification
+{newline}
+{bullet} Setting conventional physical models
+{newline}
+{bullet} Device initial biasing 
+{newline}
+{bullet} Activating LASER module of Atlas
+{newline}
+{bullet} Mesh definition for solving the Helmholtz wave equation
+{newline}
+{bullet} Definition of laser physical models and their parameters
+         including a physically based frequency dependent optical
+	gain model
+{newline}
+{bullet} Comparison between the full laser diode structure and simulation
+ of only half the structure but with a reflecting laser boundary
+ condition
+
+The logistics of the structure, material parameters and physical models definition repeat that of the previous examples in this section. Refer to those examples for more detailed explanations.
+
+Two simulations are performed; the first simulation is of only half the structure by assuming reflection around the x=0 plane and the second simulation is of the entire device. 
+
+To create the reflecting laser boundary condition, the 
+{bold} reflect 
+parameter of the
+{bold} laser 
+statement should be specified. This automatically assumes that the device is reflected around the x=0 plane. Also, the device mesh should have the diagonal triangle flipping turned off by specifying the parameter
+{bold} ^diag.flip 
+on the 
+{bold} mesh 
+statement.
+
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+{subsection} laserex05.in : Simulating a Multi-Quantum Well AlGaInP Laser Diode
+
+Requires: Blaze/Laser/Quantum
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates the application of Laser to simulate a multi-quantum well laser diode. The key points of this simulation are :
+
+{bullet} One mesh for both electrical and laser simulations
+{newline}
+{bullet} Laser structure definition using new Atlas region syntax
+{newline}
+{bullet} Optical and electrical material parameters specification for the chosen materials
+{newline}
+{bullet} Application of the QWELL parameter for active layer creation and quantum well simulation
+{newline}
+{bullet} Use of LASER statement to define laser attributes
+{newline}
+{bullet} The same BLAZE mesh used for both electrical and laser simulations
+
+This example is derived from published work [IEEE Journal of Quantum Electronics, 
+VOL. 34, NO. 9, September 1998] and is reproduced as closely as possible in this simulation.
+
+{bold} Mesh Creation 
+
+The standard Atlas mesh 
+is used in both the electrical and laser parts of this simulation. If no specific laser mesh is created then Laser defaults to the standard Atlas mesh.
+
+{bold} Region Creation 
+
+The REGION statements are used to define many region quantities. The material type is defined with the 
+{bold} material 
+parameter and the composition fractions within this material are set using the 
+{bold} X.COMP 
+and
+{bold} Y.COMP 
+ parameters appropriately. 
+
+The doping type and concentration are also defined on the region statement where the parameters
+{bold} acceptor 
+and
+{bold} donor 
+are used to define a uniform concentration in each region. If a non-uniform concentration is required then the DOPING statement would need to be used instead.
+
+{bold} Material Parameters 
+
+The 
+{bold} material 
+ statement is used to set various physical quantities for each material region in the device. 
+The band gap, conduction and valence band density of states and band alignment are declared with the parameters
+{bold} eg300, NC300, NV300 
+and
+{bold} align. 
+The material permittivity for the solution of Poisson's equation and the high frequency bulk dielectric constant are both explicity set with the parameters
+{bold} permittivity 
+and
+{bold} epsinf. 
+Finally, the material lifetimes 
+{bold} taun0 
+and 
+{bold} taup0 
+ and the constant of radiative recombination 
+{bold} COPT 
+ are defined.
+
+{bold} Quantum Wells (QWELL) 
+
+The 
+{bold} qwell 
+ parameter of the
+{bold} models 
+statement firstly creates new material region(s) that will contain the
+ quantum wells. Both the individual barrier width
+{bold} wb 
+and the quantum well width 
+{bold} ww 
+ need to be defined. Then a solution is found for bound state energies
+ in the quantum well by a solution to a coupled set of Poisson /
+ Schrodinger equations.
+The solution to this equation is then used in the 
+{bold} yan 
+model to calculate the optical gain of the quantum well. 
+
+{bold} Laser and Physical Models 
+
+The physical models may be chosen from the manual as normal and in this
+simulation there are 3 key models. The
+{bold} fermi 
+model is chosen to correctly simulate population inversion statistics
+within the active region. The  laser gain model chosen for the active
+regions is the multiple quantum well model chosen with the
+{bold} gainmod=4 
+parameter. Finally the spontaneous recombination model  
+{bold} optr 
+ has been chosen to calculate the spontaneous recombination in the
+ device. The spontaneous recombination is used in the photon
+ rate equations to calculate the photon density.
+
+The solution to the Helmholtz equation is controlled by parameters on the 
+{bold} laser 
+statement. On this line the rear and front reflectivities can be
+defined with the
+{bold} rf 
+and 
+{bold} rr 
+parameters. The length of the laser cavity must be defined, so that the
+longitudinal modes can be calculated correctly, using the
+{bold} cavity.length 
+ parameter.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} laserex06.in : Dynamic Simulation of Relaxation Oscillation
+
+Requires: Blaze/Laser
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates the simulation of the buried heterostructure
+InP/InGaAsP laser diode described earlier in example laserex02. A
+description of the structure and the DC behaviour is contained in
+example laserex02. This example performs a transient simulation of an
+impulse applied to the anode contact of the laser diode.
+
+The key points of this simulation are :
+
+{bullet} Mulit-longitudinal mode simulation
+{newline}
+{bullet} Addition of laser losses of bulk absorption and free carrier loss
+{newline}
+{bullet} DC simulation to obtain the operating point at the lasing threshold
+{newline}
+{bullet} Transient simulation response to a small impulse at the anode contact
+{newline}
+{bullet} Resultant oscillation in simulated photon density
+{newline}
+
+The dynamic laser equations used in Atlas include the photon rate
+equation as well as the equations for gain and spontaneous
+recombination. This set of equations will be shown in this example to
+reproduce the dynamic characteristics of relaxation oscillation.
+
+The example described in laserex02 for DC characteristics of a laser
+diode has been extended to examine the relaxation oscillations that
+exist when a sudden impulse is applied to the anode contact. This
+requires a transient simulation of the laser to reproduce these
+oscillations. The physical origin of the oscillation is is based upon
+the following principle: an increase in carrier density in the laser
+(caused by the small impulse) will cause an increase in the calculated
+gain which results in a rise in  the photon density inside the laser.
+This increase in photon density causes an increase in the stimulated
+recombination rate which decreases the carrier density, which causes
+the photon density to fall, which causes the carrier density to rise,
+and so on. An oscillatory process is therefore established which will
+have some characteristic frequency and a characteristic damping time
+constant.
+
+This simulation uses the multi-longitudinal mode calculation, first
+used in laserex02, in both the DC and transient parts of the
+simulation. The final plots will illustrate how the laser emission
+spectrum will change from the beginning to the end of the transient
+simulation.
+
+Four laser loss mechanisms have also been included; internal losses,
+mirror loss, bulk absorption loss and free carrier loss. These
+mechanisms have been activated with the parameters
+{bold} las.losses, 
+{bold} las.mirror, 
+{bold} las.absorption 
+and 
+{bold} las.fcarrier. 
+
+The plot of the final logfile produced by the transient simulation will
+plot the photon density versus time, and will show the oscillation
+described previously.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+   
+
+
+
+
+
+{subsection} laserex07.in : Ridge Multiple Quantum Well Laser 
+
+Requires: Blaze/Quantum/Laser
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates the simulation of 
+GaAs/AlGaAs ridge   laser diode. 
+The ridge structure allows two fundamental modes: TE-like and TM-like, as solved by vector Helmholtz solver. 
+Due to higher TE gain, the TE-like mode dominates. 
+Several slab modes are also present in the active region  and contribute to total laser intensity. 
+
+
+
+The key points of this simulation are :
+
+{bullet} Multi-transverse mode simulation, with mode competition 
+{newline}
+{bullet} Demonstration of vector Helmholtz solver 
+{newline}
+{bullet} Demonstration of Newton scheme for coupling of photon rate equations with drift-diffusion transport equations  
+{newline}
+
+The results show 2D plots of total optical intensity at anode bias of 1.5V and 3V, with the obvous contribution of non-fundamental modes.
+ The IV log file contains information of the power, photon density modal gain, modal loss and modal refractive indexes for each mode.
+ Spectrum log files contain information on gain and spontaneous emission spectra for each quantum well. 
+ 
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+
+
+{subsection} laserex08.in : Multiple Longitudinal Modes in Ridge MQW  Laser
+
+Requires: Blaze/Quantum/Laser
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates the simulation of
+GaAs/AlGaAs ridge  laser diode with multiple longitudinal modes.
+Previous example showed that TE-like fundamental mode is the main lasing mode.
+Here we use scalar Helmholtz solver and exclude TM modes, using parameter  HELM.TM. 
+Slab transverse modes are neglected.
+Longitudinal modes in the range of energies  [1.42; 1.5] eV are taken into account. 
+To limit the number of longitidinal modes, we set intermode energy separation to 4meV using DELTAE parameter. 
+If this parameter is omitted, energy separation will be that of Fabry-Perot resonator with length set by CAVITY_LENGTH. 
+Laser simulation starts automatically whenever optical gain anywhere in the device becomes positive, which happens just before the threshold. 
+ If subthreshold behavior is of interest, use START parameter on LASER statement.
+
+
+The key points of this simulation are :
+
+{bullet} Multi-longitudinal  mode simulation, with mode competition
+{newline}
+{bullet} Demonstration of scalar Helmholtz solver
+{newline}
+{bullet} Demonstration of modal spectra.  
+{newline}
+
+The results show 2D plots of total optical intensity at anode bias of 1.5V.
+ The IV log file contains information of the power, photon density modal gain, modal loss and modal refractive index for the fundamental transverse  mode.
+ Spectrum log files contain information on gain and spontaneous emission spectra for each quantum well.
+Modal spectrum log files are stored when SPECTRUM is specified on the SAVE statement with "_modal" appended at the end of the file name. Modal spectra contain modal gain, modal Rsp, modal photon density and modal lifetime for each longitudinal mode. 
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+{subsection} laserex09.in : Disk MQW Laser
+
+Requires: Blaze/Quantum/Laser
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates the simulation of a tunnel injection
+InGaAsP/InAsP disk laser. The Disk laser has a cylindrical cavity, which
+favors lasing of modes with high azimuthal (orbital) number. The fact
+that this is a tunnel injection laser has an important modeling
+implication. Since hot carriers are suppressed in the active region due
+to tunnel injection directly to low energy bound states, the carrier
+density in active region is predominantly fully 2 dimensional. Thus as
+opposed to a conventional laser, the capture-escape model is not
+necessary to dynamically couple the bound state density to bulk carriers
+in the active region. 
+
+To model the optical response in the active region, the deck employs the
+Luttinger-Kohn model k.p band structure model using the KP.CV2 parameter
+on the MODELS statement. The quantum wells are treated as coupled. The
+optical gain and spontaneous emission are computed using integration over 
+k-space. The integration can be activated by the KP.ADAPTIVE parameter on
+MODELS statement. It is not activated by default in this example to reduce
+simulation time.
+
+The deck employs a 2D cylindrical vector Helmholtz solver to find
+intensity and optical field distribution in R-Z plane of the cavity. The
+orbital number is set by ORBIT parameter on the LASER statement. If a
+range of orbital numbers is desired, set parameters ORB.MIN and ORB.MAX.
+Metal electrodes are excluded from the solution domain by swtching off
+HELMHOLTZ parameter on the REGION statement. Perfect Electric Conductor
+boundary conditions are used at the boundaries of the domain.
+
+Details of extraction of light from the cavity is not modeled here.
+Instead, exctraction losses are set by parameter EXTR.LOSS [1/cm], which
+is included in the photon rate equations. Mirror losses are kept at zero
+by setting mirror reflectivities to 100% . Parameter PHOTON.ENERGY is
+the initial guess for the cavity eigen mode's energy. The actual eigen
+energies are printed on the screen, when parameter PRT.EVAL is specified
+on the LASER statement.
+
+The deck uses voltage boundary conditions throughout the simulation. The
+voltage boundary conditions were found to provide better stability and 
+performance in the simulation.
+
+The important modeling highlights are:
+
+{bullet} k.p bandstructure based calculation of gain and spontaneous
+emission in the active region. The band structure is computed with
+strain effects and full coupling to the electrostatic potential at every
+bias step.
+{newline}
+{bullet} Multi-transverse  mode simulation of disk laser, with mode
+competition
+{newline}
+{bullet} Demonstration of a 2D vector Helmholtz solver for disk geometry
+with full coupling to the changes in the complex refractive index due to
+the gain computed from the k.p model, and free-carrier absorption from
+the bulk carrier density in the device.
+{newline}
+{bullet} Tunnel injection modeled using a non-local tunneling junction. 
+{newline}
+
+The results show the total power emitted, modal photon density, gain and
+loss of the lasing mode as a function of anode current. The family of
+k.p gain and spontaneous emission spectra are shown at the sub-threshold
+point of  micro Amps, near threshold, and above threshold. Flattening of 
+the electrostatic potential across the active region above threshold reduces 
+the energy differences between states localized in different wells. 
+This effect is clearly seen by comparing the valence bands at the 
+sub-threshold and above threshold points. The 2D plots optical intensity 
+above threshold show the spatial profile of the lasing mode.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} laserex10.in : Stripe Laser using Effective Index Solver   
+
+Requires: Blaze/Quantum/Laser/Led
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates the simulation of
+GaAs/AlGaAs stripe laser diode. 
+This deck employs an effective index (1.5D) scalar Helmholtz solver to find intensity and optical field distribution, which combines 1D solutions in in X and Y directions.  
+Total number of transverse modes is set by NMODES parameter. To set the number of 1D modes in X direction, use EFFMODES parameter.   TM modes are blocked by switching off HELM.TM. Additionally, when REFLECT parameter is present, you may block either symmetric or anti-symmetric solutions, by swithcing off HELM.SYM or HELM.ASY.
+Perfect Electric Conductor  boundary conditions are used. Alternatively, Perfect Magnetic Conductor can be used by setting HELM.PMC instead of HELM.PEC.  
+Default material refractive incexes are used. To remove   default material absorption, imaginary part of material dielectric constant is set to zero by EPSIM.ISO parameter. 
+ Instead, 3-band K.P gain/absorption  model for zincblende bulk and quantum wells, set by ZB.THREE on MODELS and GAINMOD=5 on LASER statements, is used everywhere in the device. To check the spectra of gain and spontaneous emission of a particular region, LED parameter is set on the REGION statement.
+ 
+
+
+The key points of this simulation are :
+
+{bullet} Demonstration of 1.5D effective index Helmholtz solver
+{newline}
+{bullet} Demonstration of bulk multiband k.p gain model 
+{newline}
+
+
+
+The results show 2D plots of total optical intensity  at anode bias of 3V.
+ The IV log file contains information of the power, photon density modal gain, modal loss and modal refractive index for the fundamental transverse  mode.
+ Spectrum log files contain information on gain and spontaneous emission spectra for the active region.
+Modal spectrum log files are stored when SPECTRUM is specified on the SAVE statement with "modal_" appended to the file name. Modal spectra contain modal gain, modal Rsp, modal photon density and modal lifetime for each mode.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+{subsection} laserex11.in : 1D GaN Laser Model 
+
+Requires: Blaze/Quantum/Laser
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates a 1D laser model, suitable for fast design of  transport and gain characteristics of the active region in the vertical Y-direction. 
+This deck assumes that the device is homogeneous in X-direction and  employs a 1DY  scalar Helmholtz solver to find intensity and optical field distribution.
+Material refractive indexes are set manually, using REAL.INDEX and IMAG.INDEX parameters on the MATERIAL statement.
+3-band  K.P gain/absorption  model for wutizite bulk and quantum wells, set by WZ.THREE on MODELS and GAINMOD=5 on LASER statements, is used everywhere in the device. To check the spectra of gain and spontaneous emission of a particular region, LED parameter is set on the REGION statement.
+
+
+
+
+The key points of this simulation are :
+
+{bullet} Demonstration of 1D Helmholtz solver
+{newline}
+{bullet} Demonstration of wurtzite 3-band k.p gain model
+{newline}
+
+
+
+The results show 2D plots of total optical intensity  at anode bias of 3V.
+ The IV log file contains information of the power, photon density modal gain, modal loss and modal refractive index for the fundamental transverse  mode.
+ Spectrum log files contain information on gain and spontaneous emission spectra for the active region.
+Modal spectrum log files are stored when SPECTRUM is specified on the SAVE statement with "modal_" appended to the file name. Modal spectra contain modal gain, modal Rsp, modal photon density and modal lifetime for each mode.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} laserex12.in : Silicon p-i-n Waveguide Modulator 
+
+Requires: Blaze/Quantum/Laser
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+
+This example demostrates a simulation of Si p-i-n  modulator using a WAVEGUIDE statement. 
+The modulation mechanism is based on electroabsorption by free-carriers, which are injected into the waveguide.
+The free-carrier absorption model, specified by ABS.FCARRIER on the MODELS statement, can be modified  
+n the MATERIAL statement using parameters FC.AN, FC.AP, FC.RN, FC.RP, etc. 
+
+Local refractive index at a particular location can be stored into the IV log file  using PROBE statement.
+In addition, a dispersion of local refractive index can be stored in a separate file, using SAVE statement and REFR.SPEC parameter.  
+
+The WAVEGUIDE statement can be used as a standlone optical eigen solver for a one-time solution. If TRACE parameter is added to the WAVEGUIDE statement, eigen modes are solved at each bias point as a post-processing. 
+In such case, when WVGD.REFR is specified on the OUTPUT statement,  IV log file contains effective refractive index and absorption for each optical mode.  
+
+The results show 2D plot of intensity  pattern for the fundamental mode at light wavelength of 1.31 micron at zero bias.
+Dispersion of local refractive index is stored in laserex12_refrspec_v0.log.
+The IV log file contains indormation on  effective  refractive index and effective absorption for each transverse  mode and also local refractive index at p-,i- and n-type side of the device.
+Time dependent simulation shows how effective refractive indexes are modulated with time and the coresponding eye diagram.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+ 
+{subsection} laserex13.in : Front Mirror with Tuning Air Gap and DBR Rear Mirror
+
+Requires: Blaze/Laser
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates a more general solution to an edge emitting LASER,
+where optical intensity has variance along the direction of propagation, 
+resulting from a 
+{bold} DBR mirror 
+at one end of the LASER and a 
+{bold} tuning air gap and external mirror 
+at the other end.  
+
+In order to leverage syntax that already existed for vertical cavity surface 
+emitting LASERs (VCSELs), this edge emitting LASER simulation is turned on it's
+side, so that the distributed Bragg reflector (DBR) is oriented in the same 
+plane as for all VCSEL simulation examples.  This allows us to use the same 
+simplified syntax previously described in the VCSEL examples to create the 
+many layers of the DBR mirror, using just two lines in the input file.  The 
+"front" and "rear" mirrors of the laser are therefore now at the "bottom" and
+"top" of the structure respectively.
+
+In order to inform the simulator that this type of LASER simulation is 
+required, specify the logical parameter 
+{bold} HYBRID 
+on the LASER statement.
+
+The position of the mirror in the air gap that extends below what is the 
+bottom of the structure in this simulation (in the Y direction), is defined by
+the parameter 
+{bold} FRONTMIRROR.LOC=<n> 
+where <n> is a Y location anywhere below the structure.  Defining a 
+FRONTMIRROR.LOC value located inside the structure, results in this 
+parameter being ignored and the simulation presumes an air gap of zero.  In 
+this example the airgap FRONTMIRROE.LOC parameter is set using a variable 
+called "front_mirror" which sets the FRONTMIRROE.LOC parameter to 100.6um, 
+{bold} creating an air gap of 0.6um 
+(since the bottom of the structure is located at Y=100).  
+
+Diffraction losses in the air gap can also be taken account of by specifying
+the new logical parameter,
+{bold} LOSS.DIFFRACTION 
+in the LASER statement, whilst another new parameter
+{bold} HYBRID.SPECRES 
+specifies the energy resolution in units of eV, to search for lasing modes of
+the whole active structure. 
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+

@@ -1,0 +1,96 @@
+<html>
+  <head>
+    <title>Family of Id/Vds Curves</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Family of Id/Vds Curves</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>SSuprem 4/S-Pisces</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R, Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="mos1ex09_plot0.png" width="640" alt="mos1ex09_plot0" />
+      <p/>
+      <img src="mos1ex09_plot1.png" width="640" alt="mos1ex09_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This is a basic MOS Athena to Atlas interface example demonstrating the
+simulation of a family of Id/Vds curves. The maximum drive current and
+saturation slope are extracted.  No advanced features are used in this
+example so as to demonstrate simple functionality. This example
+demonstrates:
+</p>
+<ul>
+  <li>
+ Process simulation of a MOS transistor in Athena
+<br/>
+  </li>
+  <li>
+ Process parameter extraction (eg. oxide thicknesses)
+<br/>
+  </li>
+  <li>
+ Autointerface between Athena and Atlas
+<br/>
+  </li>
+  <li>
+ Id/Vds curve generation with Vgs=-1.1, -2.2 and -3.3V
+<br/>
+  </li>
+  <li>
+ IV Curve parameter extraction for Idmax and saturation slope
+  </li>
+</ul>
+<p>
+The process simulation, process parameter extraction and electrode
+definition for this example are exactly as described in the first
+PMOS example in this section.
+</p>
+<p>
+A more advanced sequence of solve statements is used for this example.
+Three Id/Vds curves are required at different gate voltages. The first
+part of the solve sequence sets up the initial point of the three
+curves. For each of the three gate voltages a solution with Vds=0.0
+is simulated and the results saved to a solution file.
+</p>
+<p>
+Each of these three solution files are then loaded in turn into Atlas. A
+log file is opened and the ramp of Vds is set. When a file is loaded the
+voltages in Atlas are reset to the values in the file.
+</p>
+<p>
+At the end of the simulation,
+<b> extract </b> is used to measure the peak current and the saturation slope. From the
+shape of the Id/Vds curves the saturation slope is clearly the minimum
+value of the gradient along the curve as long as the absolute values of
+current and voltage are taken. Finally the three Id/Vds curves are
+overlaid in TonyPlot.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

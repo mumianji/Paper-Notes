@@ -1,0 +1,77 @@
+<html>
+  <head>
+    <title>Physical deposition models example</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Physical deposition models example</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Victory Process : Core Simulator, 3D Physical Etch &amp; Deposit</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Victory Process 7.22.0.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="vpex04_1.png" width="640" alt="vpex04_1" />
+      <p/>
+      <img src="vpex04_2.png" width="640" alt="vpex04_2" />
+      <p/>
+      <img src="vpex04_3.png" width="640" alt="vpex04_3" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates three different default deposition models as well as
+geometrical deposition. This example also illustrates the
+definition of mask polygons in
+<b> Victory Process.</b> </p>
+<p>
+The example shows a deposition steps performed with three different models
+on the same initial structure. Conformal, non-conformal and primary deposition model are used.
+The last illustrates a deposition model that uses the primary flux ballistic transport mode.
+</p>
+<p>
+List of key syntax:
+</p>
+<b> Init: </b> <p>
+Defines simulation volume and meshing resolution and number of
+Adaptive Mesh Refinement
+<b> (AMR) </b> levels
+</p>
+<b> SpecifyMaskPoly: </b> <p>
+Defines mask layer polygon
+</p>
+<b> Deposit: </b> <p>
+Simple analytical deposition
+</p>
+<b> Deposit: </b> <p>
+Physical deposition process. Parameters include
+<b> model, </b> to select the deposition model,
+<b> material, </b> to define the deposited material,
+<b> deposition rate, </b> to define the deposition rate in um/sec, um/min or um/hour with um/min being the default,
+<b> time </b> to define the deposition time in sec, min, hour with min being the default and
+<b> ratio </b> to define the extend of directionality of the deposition.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

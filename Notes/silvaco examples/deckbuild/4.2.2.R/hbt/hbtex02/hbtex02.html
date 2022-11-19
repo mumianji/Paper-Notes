@@ -1,0 +1,101 @@
+<html>
+  <head>
+    <title>AlGaAs/GaAs HBT Gummel Plot Simulation</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>AlGaAs/GaAs HBT Gummel Plot Simulation</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Blaze</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="hbtex02_plot0.png" width="640" alt="hbtex02_plot0" />
+      <p/>
+      <img src="hbtex02_plot1.png" width="640" alt="hbtex02_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates the simulation of an AlGaAs/GaAs HBT to
+extract Ic and Ib versus Vbe and plots the bipolar gain. It shows:
+</p>
+<ul>
+  <li>
+ Device formation using Atlas syntax
+<br/>
+  </li>
+  <li>
+ Specification of s graded AlGaAs composition fraction
+<br/>
+  </li>
+  <li>
+ Selection of models for AlGaAs and GaAs
+<br/>
+  </li>
+  <li>
+ DC simulation for Ic and Ib versus Vbe 
+  </li>
+</ul>
+<p>
+As in the previous example the majority of this example is similar to
+the silicon bipolar Gummel plot example described in the BJT section.
+This description will focus on specific GaAs and AlGaAs syntax. More details
+on various types of bipolar simulation can be found in the BJT examples
+section.
+</p>
+<p>
+The graded AlGaAs composition fraction is set in the
+<b> region </b> statement. The parameter
+<b> x.comp</b> defines the Al content inside the box defined by x.min, x.max, y.min
+and y.max. Outside the box the Al content falls linearly to zero in a
+distance
+<b> grad.*. </b> For more details on grad.* parameters see the Blaze chapter of the
+manual. Non-linear composition gradings can only be handled by DEVEDIT.
+Since devices constructed in Atlas syntax must be rectangular, a silicon
+dioxide region is used to fill the space to the left of the emitter.
+</p>
+<p>
+The
+<b> material</b> statement sets the low-field mobilities for the AlGaAs region. Note
+that the concentration dependent mobility model &apos;conmob&apos; can only be
+applied to GaAs so two model statements are used to define the models
+used in all regions and then just the GaAs regions.
+</p>
+<p>
+The
+<b> model</b> statements are used to specify the following set of models: field
+dependent mobility, SRH and optical recombination. Optical
+recombination (also known as band to band recombination) is an
+important effect in III-V devices. The parameter &apos;optr&apos; sets this model
+on.
+</p>
+<p>
+The electrical simulation proceeds as in the silicon BJT example
+referenced above. Results can be seem in TonyPlot.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

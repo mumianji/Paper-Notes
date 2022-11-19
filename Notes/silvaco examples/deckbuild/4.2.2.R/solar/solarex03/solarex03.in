@@ -1,0 +1,165 @@
+# (c) Silvaco Inc., 2018
+go atlas 
+#
+# Solar cell example number 3.
+# This example demonstrates a tandem solar cell.
+#
+# GaInP optical data and layer structure courtesy of IES-UPM, Madrid
+# Thanks to M. Baudrit for his consultancy.
+#
+# The AUTO keyword indicates that the
+# we will not specify mesh lines in the y direction that they
+# will be inferred from the REGION statements.
+#
+mesh auto
+#
+x.m loc=0.0 s=0.25
+x.m loc=1.0 s=0.25
+#
+# Here we specify an auxiliary quantum tunneling mesh used to
+# help model the tunneling interface between the diodes.
+#
+qtx.m loc=0.0 s=0.25
+qtx.m loc=1.0 s=0.25
+#
+qty.m l=0.67   s=0.0002
+qty.m l=0.685  s=0.0001
+qty.m l=0.7    s=0.0002
+#
+# The tandem cell is formed by two p-n photodiodes stacked
+# on top of one another.  The two cells (InGaP on top GaAs
+# on bottom) are separated by a GaAs tunnel junction. 
+#
+#
+region material=InAlGaP bot thick=0.0300 accept=2e18 ny=10 x.comp=0.371 y.comp=0.159
+region material=InGaP   bot thick=0.0500 accept=2e18 ny=10 x.comp=0.49
+region material=InGaP   bot thick=0.5500 donors=7e16 ny=10 x.comp=0.49
+region material=InAlGaP bot thick=0.0300 donors=2e18 ny=10 x.comp=0.371 y.comp=0.159
+#
+#
+region material=GaAs bot thick=0.0250 donors=5e19 ny=100
+region material=GaAs bot thick=0.0250 accept=3e19 ny=100 
+#
+#
+region material=InGaP  bot thick=0.0400 accept=3e18 ny=10 x.comp=0.49
+region material=GaAs   bot thick=0.5000 accept=2e18 ny=10
+region material=GaAs   bot thick=2.00   donors=2e17 ny=10
+region material=AlGaAs bot thick=0.1000 donors=5e18 ny=10 x.comp=0.7
+region material=GaAs   bot thick=0.2000 donors=1e18 ny=20
+#
+# Electrodes on top and bottom
+#
+electrode name=anode   top
+electrode name=cathode bottom
+#
+# The complex index data will mostly use the Sopra database.
+# The index data for InGaP is supplied in a file.
+#
+material mat=GaAs       sopra=Gaas.nk
+material mat=InAlGaP    sopra=Againp7.nk
+material mat=AlGaAs     sopra=Algaas7.nk
+material material=InGaP index.file=solarex03.nk
+#
+# Here we define the affinity for InGaP and AlGaAs to
+# set up the band alignment
+#
+material material=InGaP   affinity=4.08
+material material=AlGaAs  affinity=3.54
+#
+# Enable physical models 
+#
+models srh fermi conmob optr auger bgn
+#
+method itlimit=40 maxtraps=10
+#
+# Here we specify the optical source.  It propagates normal to the
+# surface from above.  We specify a multispectral source using
+# the POWER.FILE parameter to identify the spectrum.  We output
+# the spectrum for Tonyplot using the OUT.POWER parameter.
+# The spectrum is resampled via specification of the parameters
+# WAVEL.START, WAVEL.END and WAVEL.NUM.  This indicates that
+# the optical propogation problem will be solved at 300 uniformly
+# spaced samples of wavelength between 0.305 and 3.445 microns.
+# In this case a ray trace will be performed at each of the 300
+# sample wavelengths.  If we omit the WAVEL.START, WAVEL.END
+# and WAVEL.NUM parameters the sampling will occur at each
+# wavelength specified in the spectrum file (POWER.FILE).
+#
+beam num=1 x.o=0.5 y.o=-0.5 angle=90 \
+     wavel.start=0.305 wavel.end=3.455 wavel.num=300 \
+     power.file=solarex03_15.spec out.power=solarex03_15.log
+#
+# Plot input solar spectrum
+#
+tonyplot solarex03_15.log -set solarex03_0.set
+#
+# Here is an alternate simplified am0 solar spectrum
+#
+#     power.file=solarex03_0.spec out.power=solarex03_0.log
+#
+# You may also choose to use the public domain spectra available
+# from NREL by simply specifying the AM1.5 or AM0 parameter on
+# the beam statement and taking out the POWER.FILE assignment.
+# If you use either of these it is strongly suggested that you
+# also specify the sampling using WAVEL.START, WAVEL.END and WAVEL.NUM
+# since these spectra have many samples.
+#
+# Output optical intensity.
+#
+output band.temp opt.int
+#
+# save the initial structure
+#
+save outf=solarex03_0.str
+#
+# Ramp the bias without non-local band-to-band tunneling
+# (NLBBT).
+# Note that this could be used for IV dark
+#
+solve vanode=0.01
+solve vanode=0.5
+solve name=anode vstep=0.1 vfinal=2.7
+#
+# Set NLBBT .
+#
+models srh fermi ni.fermi conmob optr auger bgn \
+	bbt.nonlocal bbt.nlderivs  
+#
+# Here we ramp the beam.  This is not to simulate 
+# sunrise but to insure convergence.  Often setting
+# an optical source directly to its final value
+# can present difficulties in convergence for 
+# Newton's method so it may be advisable to
+# ramp the optical source.
+#
+solve b1=1e-02
+solve b1=1e-01
+solve b1=1
+#
+log outf=solarex03_1.log
+#
+# Ramp the bias back.
+#
+solve name=anode vstep=-0.01   vfinal=2.2
+solve name=anode vstep=-0.1    vfinal=0
+#
+# Extract important figures of merit.
+#
+extract init infile="solarex03_1.log"
+extract name="Jsc" max(curve(v."anode", i."cathode"))
+extract name="JscmAcm2" $Jsc*1e08*1e03
+extract name="Voc" x.val from curve(v."anode", i."cathode") where y.val=0.0 
+extract name="Pm" max(curve(v."anode", (v."anode" * i."cathode"))) 
+extract name="Vm" x.val from curve(v."anode", (v."anode"*i."cathode") ) \
+	where y.val=$"Pm"
+extract name="Im" $"Pm"/$"Vm"
+extract name="FF" ($"Pm"/($"Jsc"*$"Voc"))*100
+extract name="Opt_int" max(beam."1")
+extract name="Eff" (1e8*$Pm/$Opt_int)*100
+#
+# Plot the results
+#
+tonyplot solarex03_1.log -set solarex03_1.set
+
+quit
+

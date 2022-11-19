@@ -1,0 +1,118 @@
+<html>
+  <head>
+    <title>Use of Stress Evolution Model for Thick Stress Deposition in 2D</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Use of Stress Evolution Model for Thick Stress Deposition in 2D</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Athena and Victory Stress</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R , Victory Stress 2.14.0.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="vsex08_1.png" width="640" alt="vsex08_1" />
+      <p/>
+      <img src="vsex08_2.png" width="640" alt="vsex08_2" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+Most commercial process and stress simulators consider deposition not as a physical process governed
+by a time-dependent model, but rather as a mathematical abstraction in which a new layer just appears on
+the top of the structure.
+In these simulators the stress equations are solved after a material layer or region has been
+already added to the structure and not during the physical process of deposition.
+This one-step approach couldn&apos;t accurately predict stresses built in the deposited layer and in
+adjacent areas.
+</p>
+<p>
+In order to accurately predict stresses in  thick layers the process should be considered as a
+series of deposition and relaxation steps to emulate mechanical quasi-equilibrium during this
+physical deposition process.
+This more accurate simulation could be achieved by using &quot;stress evolution&quot; or &quot;stress history&quot;
+model implemented in Victory Stress.
+</p>
+<p>
+This example demonstrates how the stress evolution model can be applied to the simulation of
+stresses generated during thick layer deposition process and compare the results with standard
+one-step model. Detailed results of this example are presented in Simulation Standard paper
+&quot;Simulation of Stress Evolution During Semiconductor Device Fabrication&quot;:
+</p>
+<p>
+http://www.silvaco.com/tech_lib_TCAD/simulationstandard/2012/jul_aug_sep/jul_aug_sep2012.pdf
+</p>
+<p>
+The input deck consists of five sections:
+</p>
+<br/>
+ <ul>
+  <li>
+ Formation of a test structure with one layer nitride stressor in Athena
+<br/>
+  </li>
+  <li>
+ Calculation of stresses in the test structure using the one-step model of Victory Stress
+<br/>
+  </li>
+  <li>
+ Formation of a test structure with multi-layer stressor in Athena 
+<br/>
+  </li>
+  <li>
+ Calculation of stresses using stress evolution model of Victory Stress and &quot;looping&quot; capability of DeckBuild
+<br/>
+  </li>
+  <li>
+ 2D visualization and average stress extraction for both models
+<br/>
+  </li>
+</ul>
+<p>
+The stress evolution simulation uses the same structure  with 20 layers at each step while the effect
+of new sub-layer deposition is emulated by changing the status of this new sub-layer from
+&quot;non-active&quot; with properties inherited from &quot;air&quot; to &quot;active&quot; material region with properties
+inherited from nitride and the intrinsic stress of 1 GPa. Then Victory Stress recalculates stresses
+in the modified structure after each deposition step.
+</p>
+<p>
+The simulation results are shown in two plots which compare Sxx and Syy stresses for two models. In
+flat areas of deposited layer, both models produced similar and essentially uniform stress.
+In the single layer case non-uniform stress regions appear only near corners of spacer/nitride.
+However, in case of multi-layer stress history simulation a highly non-uniform stress field extends
+diagonally from the spacer/substrate corner to the top of the film.
+In other words, stresses are significantly higher where the layers are sharply bent.
+As the result the integrated stresses under the gate appear to be 1.4 - 2 times higher when the
+stress history method is used. The extracted averaged stresses are calculated and saved in
+vsex08_0.dat and vsex08_1.dat.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+<b> Note: </b> <p>
+To run this example you have to enable
+<b> System commands </b> in the
+<b> Options </b> menu from
+<b> DeckBuild: Main Control</b> .
+</p>
+  </div></body>
+</html>

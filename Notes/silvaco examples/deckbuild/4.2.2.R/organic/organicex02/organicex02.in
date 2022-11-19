@@ -1,0 +1,82 @@
+# (c) Silvaco Inc., 2018
+go atlas
+title Transient Simulation of MEH-PPV Polymer Light Emitting Diode 
+
+# Change the material thickness here
+set MEH_PPV_thick=0.0475
+set ITO_thick=0.05
+set Cathode_thick=0.05
+
+set total_thick=$MEH_PPV_thick + $Cathode_thick
+
+mesh   smooth=1 space.mult=1.0 
+x.mesh l= 0.0  spacing=1
+x.mesh l=10.0  spacing=1
+
+y.mesh l=-$ITO_thick    spacing=0.005
+y.mesh l=0.0            spacing=0.005
+y.mesh l=$MEH_PPV_thick     spacing=0.005
+y.mesh l=$total_thick spacing=0.005
+
+region num=1   material=PPV    y.max=$MEH_PPV_thick
+
+elec   num=1   name=anode  x.min=0 x.max=10.0 y.min=-$ITO_thick \
+                           y.max=0 material=ITO
+elec   num=2   name=cathode x.min=0 x.max=10.0 y.min=$MEH_PPV_thick \
+                            y.max=$total_thick material=Aluminum
+
+doping uniform region=1 conc=1e15 p.type
+
+# Set parameters for ITO
+material material=ITO real.index=1.83
+
+# Set parameters for MEH-PPV
+material region=1 material=PPV \
+         eg300=2.1  nc300=2.5e19 nv300=2.5e19 permittivity=3.0 \
+	 taun0=1e-9 taup0=1e-9 affinity=2.8 arichn=120  \
+	 rst.exciton=0.5 taus.exciton=1e-9 lds.exciton=0.01 \
+	 real.index=1.67 
+
+# Defining mobility parameters for MEH-PPV
+mobility region=1 material=PPV  deltaen.pfmob=0.48 deltaep.pfmob=0.48 betan.pfmob=3.7e-4 betap.pfmob=3.7e-4 mun=0.5e-5 mup=0.5e-4
+
+# Calcium (Cathode)
+contact name=cathode workfunc=2.9 
+
+# ITO (Anode)
+contact name=anode workfunc=4.7 
+
+models singlet langevin pfmob print
+
+solve init
+
+method newton dt.max=10e-9 
+
+solve vanode=0
+
+probe exciton max x=5 name=Exciton
+
+output u.langevin 
+
+# Single Square Pulse Transient Simulation
+# Vanode = 12V, Ramp time = 5ns, ON state = 0.5us
+
+log outfile=organicex02.log
+solve vanode=0 dt=1e-12 tstop=50e-9 name=anode
+solve vanode=12 ramptime=5e-9 dt=5e-11 tstop=500e-9 name=anode 
+save outfile=organicex02_1.str
+
+# Plot Langevin and Exciton Contour plots at Vanode=12V
+tonyplot organicex02_1.str -set organicex02_1.set
+tonyplot organicex02_1.str -set organicex02_2.set
+
+solve vanode=0 ramptime=5e-9 dt=5e-11 tstop=550e-9 name=anode
+
+# Plot Transient Response of the Exciton Density
+tonyplot organicex02.log -set organicex02_3.set
+
+# Plot Transient Response of Anode Current
+tonyplot organicex02.log -set organicex02_4.set
+
+quit
+

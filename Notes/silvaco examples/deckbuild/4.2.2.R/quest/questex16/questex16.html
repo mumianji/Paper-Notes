@@ -1,0 +1,70 @@
+<html>
+  <head>
+    <title>Parameterized MIM Capacitor layout</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Parameterized MIM Capacitor layout</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>QUEST</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>QUEST 2.0.2.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="questex16_plot0.png" width="640" alt="questex16_plot0" />
+      <p/>
+      <img src="questex16_plot1.png" width="640" alt="questex16_plot1" />
+      <p/>
+      <img src="questex16_plot2.png" width="640" alt="questex16_plot2" />
+      <p/>
+    </div>
+    <div id="text" >
+<p>
+This example demonstrates the use of an Expert LISA script used by QUEST to generate
+a parametrized MIM Capacitor gds layout.
+</p>
+<p>
+Introduction:
+</p>
+<p>
+In order to build an MIM capacitor model or simply make variation of layout parameters it
+is especially interesting to have parametrized gds. This is possible in QUEST by
+using the Expert layout editor&apos;s LISA scripting language.
+</p>
+<p>
+Running the Example
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+<p>
+In this example, two layout variables are defined (Width, Length) and the layout is
+created accordingly using the creategds command of QUEST associated with the Expert
+script file.
+</p>
+<p>
+Results analysis
+</p>
+<p>
+Inductor performance is monitored using the extract capability in DeckBuild.
+</p>
+  </div></body>
+</html>

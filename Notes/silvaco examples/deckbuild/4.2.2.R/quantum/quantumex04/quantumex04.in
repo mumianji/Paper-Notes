@@ -1,0 +1,87 @@
+# (c) Silvaco Inc., 2018
+go atlas
+
+mesh 
+
+x.m l=0 spac=1
+x.m l=1 spac=1
+
+y.m l=0.000 spac=0.1
+y.m l=0.5 spac=0.0001
+y.m l=1.0 spac=0.1
+
+region num=1 material=GaAs   
+region num=2 material=AlGaAs y.min=0.000 y.max=0.4995 x.comp=0.8 grad.34=0.0005
+
+electrode name=anode top
+electrode name=cathode bottom
+
+doping uniform conc=1e14 n.type 
+
+models fldmob srh print 
+
+material material=AlGaAs align=0.6
+output band.param val.band con.band
+
+method carr=1 elec  newton 
+
+solve vanode=0.00 outf=quantumex04_temp.str master
+
+log outf=quantumex04_1.log
+solve vanode=0 vstep=0.1 vfinal=2 name=anode
+
+log outf=quantumex04_2.log
+load inf=quantumex04_temp.str master
+solve vanode=0 vstep=-0.1 vfinal=-2 name=anode
+save outf=quantumex04_1.str
+
+
+go atlas
+
+mesh 
+
+x.m l=0 spac=1
+x.m l=1 spac=1
+
+y.m l=0.000 spac=0.1
+y.m l=0.5 spac=0.0001
+y.m l=1.0 spac=0.1
+
+region num=1 material=GaAs   
+region num=2 material=AlGaAs y.min=0.000 y.max=0.4995 x.comp=0.8 grad.34=0.0005
+
+electrode name=anode top
+electrode name=cathode bottom
+
+doping uniform conc=1e14 n.type 
+
+models fldmob srh print quantum
+
+material material=AlGaAs align=0.6
+output t.quantum band.param val.band con.band
+
+method carr=1 elec  newton 
+solve qfactor=0  
+solve qfactor=0.01
+solve qfactor=0.05
+solve qfactor=0.1
+solve qfactor=0.2
+solve qfactor=0.3
+solve qfactor=0.4
+solve qfactor=0.5
+solve qfactor=0.6
+solve qfactor=0.7
+solve qfactor=1.0 outfile=quantumex04_temp.str master
+
+
+log outf=quantumex04_3.log
+solve vanode=0 vstep=0.1 vfinal=2 name=anode
+
+log outf=quantumex04_4.log
+load inf=quantumex04_temp.str master
+solve vanode=0 vstep=-0.1 vfinal=-2 name=anode
+save outf=quantumex04_2.str
+
+tonyplot -overlay quantumex04_1.log quantumex04_2.log quantumex04_3.log quantumex04_4.log -set quantumex04_1.set
+
+quit

@@ -1,0 +1,187 @@
+
+go smartspice
+
+* Schematic name: 6T_SRAM_65nm
+CBLB BLB GND 10f
+CBL BL GND 10f
+M1 QBAR Q PWR PWR PCH L=90n W=120n
+M2 Q QBAR PWR PWR PCH L=90n W=120n
+M4 Q QBAR GND GND NCH L=90n W=200n
+M3 QBAR Q GND GND NCH L=90n W=200n
+M5 QBAR Write BLB GND NCH L=100n W=125n
+M6 Q Write BL GND NCH L=100n W=125n
+VWRITE Write GND DC 0 PULSE(0 0 )
+VSUPPLY PWR GND DC 0.85
+
+* Global Nodes Declarations
+.GLOBAL GND
+
+* End of the netlist
+
+*
+* Markers to save
+*
+.SAVE ID(M3) V(Q) V(QBAR) @M3[iseu]
+
+* Schematic Netlist rebuilt at runtime
+
+*SET TRACK DEVELOPMENT TIME
+.PARAM HIT_RISE=25p
+*SET DRAIN COLLECTION TIME
+.PARAM COLLECTION_TIME =150p
+*SET THE PARTICLE LET
+.PARAM DLET=1
+*SET FUNNEL LENGTH**************************************
+.PARAM F_LENGTH=0.5u
+********DEFINE INITIAL CONDITIONS FOR MEMORY CELL*****
+.IC V(Q)=0 V(QBAR)=0.85 
+
+****TRANSIENT ANALYSIS**********************************
+.TRAN 1p 1u
+*
+.RAD SEE=1
++ START=0.5u 
++ TAUR='HIT_RISE' 
++ TAUF='COLLECTION_TIME' 
++ DEVICE=M3  
++ NODE=NDP
++ LF='F_LENGTH'
++ LET='DLET'
+*+ QCRIT
++ ANNOTATE=2
+*****Number OF NODES TO DETECT UPSETS**************************************
+*+ UPSET_TARG=1
+*+ UPSET_NODE=QBAR 
+*+ UPSET_THRESHOLD=0.425
+*+ UPSET_ERROR=0.1
+*+ UPSET_DELTATIME=500p
+
+ 
+.MODEL  NCH  NMOS  LEVEL = 54
++VERSION = 4.0          BINUNIT = 1            PARAMCHK= 1            MOBMOD  = 0          
++CAPMOD  = 2            IGCMOD  = 1            IGBMOD  = 1            GEOMOD  = 1          
++DIOMOD  = 1            RDSMOD  = 0            RBODYMOD= 1            RGATEMOD= 1          
++PERMOD  = 1            ACNQSMOD= 0            TRNQSMOD= 0          
++TNOM    = 27           TOXE    = 1.85E-9      TOXP    = 1.2E-9       TOXM    = 1.85E-9   
++DTOX    = 0.65E-9      EPSROX  = 3.9          WINT    = 5E-009       LINT    = 5.25E-009   
++LL      = 0            WL      = 0            LLN     = 1            WLN     = 1          
++LW      = 0            WW      = 0            LWN     = 1            WWN     = 1          
++LWL     = 0            WWL     = 0            XPART   = 0            TOXREF  = 1.85E-9   
++XL      = -30E-9
++VTH0    = 0.423        K1      = 0.4          K2      = 0.01         K3      = 0          
++K3B     = 0            W0      = 2.5E-006     DVT0    = 1            DVT1    = 2       
++DVT2    = -0.032       DVT0W   = 0            DVT1W   = 0            DVT2W   = 0          
++DSUB    = 0.1          MINV    = 0.05         VOFFL   = 0            DVTP0   = 1.0E-009     
++DVTP1   = 0.1          LPE0    = 0            LPEB    = 0            XJ      = 1.96E-008   
++NGATE   = 2E+020       NDEP    = 2.54E+018    NSD     = 2E+020       PHIN    = 0          
++CDSC    = 0.000        CDSCB   = 0            CDSCD   = 0            CIT     = 0          
++VOFF    = -0.13        NFACTOR = 1.9          ETA0    = 0.0058       ETAB    = 0          
++VFB     = -0.55        U0      = 0.0491       UA      = 6E-010       UB      = 1.2E-018     
++UC      = 0            VSAT    = 124340       A0      = 1.0          AGS     = 1E-020     
++A1      = 0            A2      = 1.0          B0      = 0            B1      = 0          
++KETA    = 0.04         DWG     = 0            DWB     = 0            PCLM    = 0.04       
++PDIBLC1 = 0.001        PDIBLC2 = 0.001        PDIBLCB = -0.005       DROUT   = 0.5        
++PVAG    = 1E-020       DELTA   = 0.01         PSCBE1  = 8.14E+008    PSCBE2  = 1E-007     
++FPROUT  = 0.2          PDITS   = 0.08         PDITSD  = 0.23         PDITSL  = 2.3E+006   
++RSH     = 5            RDSW    = 165          RSW     = 85           RDW     = 85        
++RDSWMIN = 0            RDWMIN  = 0            RSWMIN  = 0            PRWG    = 0          
++PRWB    = 6.8E-011     WR      = 1            ALPHA0  = 0.074        ALPHA1  = 0.005      
++BETA0   = 30           AGIDL   = 0.0002       BGIDL   = 2.1E+009     CGIDL   = 0.0002     
++EGIDL   = 0.8          
++AIGBACC = 0.012        BIGBACC = 0.0028       CIGBACC = 0.002     
++NIGBACC = 1            AIGBINV = 0.014        BIGBINV = 0.004        CIGBINV = 0.004      
++EIGBINV = 1.1          NIGBINV = 3            AIGC    = 0.012        BIGC    = 0.0028     
++CIGC    = 0.002        AIGSD   = 0.012        BIGSD   = 0.0028       CIGSD   = 0.002     
++NIGC    = 1            POXEDGE = 1            PIGCD   = 1            NTOX    = 1          
++XRCRG1  = 12           XRCRG2  = 5          
++CGSO    = 1.5E-010     CGDO    = 1.5E-010     CGBO    = 2.56E-011    CGDL    = 2.653E-10     
++CGSL    = 2.653E-10    CKAPPAS = 0.03         CKAPPAD = 0.03         ACDE    = 1          
++MOIN    = 15           NOFF    = 0.9          VOFFCV  = 0.02       
++KT1     = -0.11        KT1L    = 0            KT2     = 0.022        UTE     = -1.5       
++UA1     = 4.31E-009    UB1     = 7.61E-018    UC1     = -5.6E-011    PRT     = 0          
++AT      = 33000      
++FNOIMOD = 1            TNOIMOD = 0          
++JSS     = 0.0001       JSWS    = 1E-011       JSWGS   = 1E-010       NJS     = 1          
++IJTHSFWD= 0.01         IJTHSREV= 0.001        BVS     = 10           XJBVS   = 1          
++JSD     = 0.0001       JSWD    = 1E-011       JSWGD   = 1E-010       NJD     = 1          
++IJTHDFWD= 0.01         IJTHDREV= 0.001        BVD     = 10           XJBVD   = 1          
++PBS     = 1            CJS     = 0.0005       MJS     = 0.5          PBSWS   = 1          
++CJSWS   = 5E-010       MJSWS   = 0.33         PBSWGS  = 1            CJSWGS  = 3E-010     
++MJSWGS  = 0.33         PBD     = 1            CJD     = 0.0005       MJD     = 0.5        
++PBSWD   = 1            CJSWD   = 5E-010       MJSWD   = 0.33         PBSWGD  = 1          
++CJSWGD  = 5E-010       MJSWGD  = 0.33         TPB     = 0.005        TCJ     = 0.001      
++TPBSW   = 0.005        TCJSW   = 0.001        TPBSWG  = 0.005        TCJSWG  = 0.001      
++XTIS    = 3            XTID    = 3          
++DMCG    = 0E-006       DMCI    = 0E-006       DMDG    = 0E-006       DMCGT   = 0E-007     
++DWJ     = 0.0E-008     XGW     = 0E-007       XGL     = 0E-008     
++RSHG    = 0.4          GBMIN   = 1E-010       RBPB    = 5            RBPD    = 15         
++RBPS    = 15           RBDB    = 15           RBSB    = 15           NGCON   = 1          
+
+*  65NM PMOS
+ 
+.MODEL  PCH  PMOS  LEVEL = 54
++VERSION = 4.0          BINUNIT = 1            PARAMCHK= 1            MOBMOD  = 0          
++CAPMOD  = 2            IGCMOD  = 1            IGBMOD  = 1            GEOMOD  = 1          
++DIOMOD  = 1            RDSMOD  = 0            RBODYMOD= 1            RGATEMOD= 1          
++PERMOD  = 1            ACNQSMOD= 0            TRNQSMOD= 0          
++TNOM    = 27           TOXE    = 1.95E-009    TOXP    = 1.2E-009     TOXM    = 1.95E-009   
++DTOX    = 0.75E-9      EPSROX  = 3.9          WINT    = 5E-009       LINT    = 5.25E-009   
++LL      = 0            WL      = 0            LLN     = 1            WLN     = 1          
++LW      = 0            WW      = 0            LWN     = 1            WWN     = 1          
++LWL     = 0            WWL     = 0            XPART   = 0            TOXREF  = 1.95E-009   
++XL      = -30E-9
++VTH0    = -0.365       K1      = 0.4          K2      = -0.01        K3      = 0          
++K3B     = 0            W0      = 2.5E-006     DVT0    = 1            DVT1    = 2       
++DVT2    = -0.032       DVT0W   = 0            DVT1W   = 0            DVT2W   = 0          
++DSUB    = 0.1          MINV    = 0.05         VOFFL   = 0            DVTP0   = 1E-009     
++DVTP1   = 0.05         LPE0    = 0            LPEB    = 0            XJ      = 1.96E-008   
++NGATE   = 2E+020       NDEP    = 1.87E+018    NSD     = 2E+020       PHIN    = 0          
++CDSC    = 0.000        CDSCB   = 0            CDSCD   = 0            CIT     = 0          
++VOFF    = -0.126       NFACTOR = 1.9          ETA0    = 0.0058       ETAB    = 0          
++VFB     = 0.55         U0      = 0.00574      UA      = 2.0E-009     UB      = 0.5E-018     
++UC      = 0            VSAT    = 70000        A0      = 1.0          AGS     = 1E-020     
++A1      = 0            A2      = 1            B0      = -1E-020      B1      = 0          
++KETA    = -0.047       DWG     = 0            DWB     = 0            PCLM    = 0.12       
++PDIBLC1 = 0.001        PDIBLC2 = 0.001        PDIBLCB = 3.4E-008     DROUT   = 0.56       
++PVAG    = 1E-020       DELTA   = 0.01         PSCBE1  = 8.14E+008    PSCBE2  = 9.58E-007  
++FPROUT  = 0.2          PDITS   = 0.08         PDITSD  = 0.23         PDITSL  = 2.3E+006   
++RSH     = 5            RDSW    = 165          RSW     = 85           RDW     = 85        
++RDSWMIN = 0            RDWMIN  = 0            RSWMIN  = 0            PRWG    = 3.22E-008  
++PRWB    = 6.8E-011     WR      = 1            ALPHA0  = 0.074        ALPHA1  = 0.005      
++BETA0   = 30           AGIDL   = 0.0002       BGIDL   = 2.1E+009     CGIDL   = 0.0002     
++EGIDL   = 0.8          
++AIGBACC = 0.012        BIGBACC = 0.0028       CIGBACC = 0.002     
++NIGBACC = 1            AIGBINV = 0.014        BIGBINV = 0.004        CIGBINV = 0.004      
++EIGBINV = 1.1          NIGBINV = 3            AIGC    = 0.69         BIGC    = 0.0012     
++CIGC    = 0.0008       AIGSD   = 0.0087       BIGSD   = 0.0012       CIGSD   = 0.0008     
++NIGC    = 1            POXEDGE = 1            PIGCD   = 1            NTOX    = 1        
++XRCRG1  = 12           XRCRG2  = 5          
++CGSO    = 1.5E-010     CGDO    = 1.5E-010     CGBO    = 2.56E-011    CGDL    = 2.653E-10
++CGSL    = 2.653E-10    CKAPPAS = 0.03         CKAPPAD = 0.03         ACDE    = 1
++MOIN    = 15           NOFF    = 0.9          VOFFCV  = 0.02
++KT1     = -0.11        KT1L    = 0            KT2     = 0.022        UTE     = -1.5       
++UA1     = 4.31E-009    UB1     = 7.61E-018    UC1     = -5.6E-011    PRT     = 0          
++AT      = 33000      
++FNOIMOD = 1            TNOIMOD = 0          
++JSS     = 0.0001       JSWS    = 1E-011       JSWGS   = 1E-010       NJS     = 1          
++IJTHSFWD= 0.01         IJTHSREV= 0.001        BVS     = 10           XJBVS   = 1          
++JSD     = 0.0001       JSWD    = 1E-011       JSWGD   = 1E-010       NJD     = 1          
++IJTHDFWD= 0.01         IJTHDREV= 0.001        BVD     = 10           XJBVD   = 1          
++PBS     = 1            CJS     = 0.0005       MJS     = 0.5          PBSWS   = 1          
++CJSWS   = 5E-010       MJSWS   = 0.33         PBSWGS  = 1            CJSWGS  = 3E-010     
++MJSWGS  = 0.33         PBD     = 1            CJD     = 0.0005       MJD     = 0.5        
++PBSWD   = 1            CJSWD   = 5E-010       MJSWD   = 0.33         PBSWGD  = 1          
++CJSWGD  = 5E-010       MJSWGD  = 0.33         TPB     = 0.005        TCJ     = 0.001      
++TPBSW   = 0.005        TCJSW   = 0.001        TPBSWG  = 0.005        TCJSWG  = 0.001      
++XTIS    = 3            XTID    = 3          
++DMCG    = 0E-006       DMCI    = 0E-006       DMDG    = 0E-006       DMCGT   = 0E-007     
++DWJ     = 0.0E-008     XGW     = 0E-007       XGL     = 0E-008     
++RSHG    = 0.4          GBMIN   = 1E-010       RBPB    = 5            RBPD    = 15         
++RBPS    = 15           RBDB    = 15           RBSB    = 15           NGCON   = 1  
+
+.END
+
+solve outfile=radex16.log
+
+tonyplot radex16.log -set radex16_0.set
+tonyplot radex16.log -set radex16_1.set

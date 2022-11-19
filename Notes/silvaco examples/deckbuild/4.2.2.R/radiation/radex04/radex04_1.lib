@@ -1,0 +1,50 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include <ctype.h>
+#include <malloc.h>
+#include <string.h>
+#include <template.h>
+
+/*
+ * -----------------------------------------------------------------
+ * ATLAS Parser Function Template
+ * ATLAS Version 5.2.0.R
+ * c 1993 - 2000 SILVACO International. 
+ * All rights reserved.
+ * -----------------------------------------------------------------
+ */
+
+/*
+ * Generation rate as a funcition of position (3D)
+ * Statement: BEAM
+ * Parameter: F3.RADIATE
+ * Arguments:
+ * x          location x (microns)
+ * y          location y (microns)
+ * z          location y (microns)
+ * t          time (seconds )
+ * *rat       generation rate per cc per sec.
+ */
+int radiate3(double x, double y, double z, double t, double *rat)
+{
+        double gen,rad,xlen,ylen,zlen;
+	gen=0.0;
+	xlen=x-5.0;
+	ylen=y-5.0;
+	zlen=z-5.0;
+	rad=sqrt(xlen*xlen+ylen*ylen+zlen*zlen);
+
+/* this is an inverse square dropoff in gen */
+/*  	gen=1.0e15/(rad*rad+0.1);   */
+
+	if (abs(rad) < 3 ) gen=1.0e15 ;
+
+/*	if (abs(rad) < 1 ) 
+	printf("%g %g %g %g %g\n",x,y,z,rad,gen); */
+
+	*rat = gen;
+
+	return(0);
+}
+	

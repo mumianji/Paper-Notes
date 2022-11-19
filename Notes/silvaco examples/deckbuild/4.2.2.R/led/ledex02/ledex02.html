@@ -1,0 +1,116 @@
+<html>
+  <head>
+    <title>UV 4 Multi Quantum Well GaN LED</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>UV 4 Multi Quantum Well GaN LED</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Blaze/Quantum/LED</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="ledex02_plot0.png" width="640" alt="ledex02_plot0" />
+      <p/>
+      <img src="ledex02_plot1.png" width="640" alt="ledex02_plot1" />
+      <p/>
+      <img src="ledex02_plot2.png" width="640" alt="ledex02_plot2" />
+      <p/>
+      <img src="ledex02_plot3.png" width="640" alt="ledex02_plot3" />
+      <p/>
+      <img src="ledex02_plot4.png" width="640" alt="ledex02_plot4" />
+      <p/>
+      <img src="ledex02_plot5.png" width="640" alt="ledex02_plot5" />
+      <p/>
+    </div>
+    <div id="text" >
+<p>
+This example demonstrate how the Atlas radiative recombination models
+can be used to analyze the Electro-Luminous spectrum of an UV LED.
+</p>
+<p>
+The objective of this example is to get the basic LED characteristics
+such as the I-V-L curve and EL spectrum. The input decks shows the 8
+sections required to make a basic LED input file. These sections create
+the structure, specify the model combination and biasing, and finally
+plot the curves.
+</p>
+<b> Mesh Generation</b> <p>
+The first section of the input file defines the mesh. The device diameter is 120um,
+so 1.13e4 [um] is specified on
+<b> WIDTH </b> parameter of the
+<b> MESH </b> statement.
+</p>
+<p>
+Region and Electrode Specification
+</p>
+<p>
+To model the effects of strain and the piezo effect, the
+<b> CALC.STRAIN</b> ,
+<b> POLARIZATION  </b> and
+<b> POLAR.SCALE </b> parameters of the
+<b> REGION </b> statement can be used.
+<b> POLAR.SCALE </b> is set to -0.15 for the AlGaN materials. This parameter combination
+will be result in an interface charge of ~1e13 cm-2, depending on the
+mole fraction of the well/barrier Layer.
+</p>
+<p>
+To get the EL spectrum, the parameter
+<b> QWELL </b> and
+<b> LED </b> should be specified on the quantum active layer region.
+</p>
+<p>
+The ANODE and CATHODE contacts are defined on the top and bottom of the device.
+</p>
+<b> Doping Profiles</b> <p>
+Layers 1, 2 and 3 are P-type with a doping of 1e20 cm-3. Layers 4 to
+10 are the multi-quantum well regions and are undoped. Layers 11 and 12
+are N-type with a doping of 2e18 cm-3. All doping profiles have a uniform
+distribution.
+</p>
+<b> Material and Models</b> <p>
+There are three parts to this section. The first specifies the
+<b> MATERIAL </b> statement parameters for the recombination and linewidth broadening factor,
+as well as enabling incomplete ionization. The second part specifies the
+<b> MODELS </b> statement for the GaN system. The other
+<b> MODELS </b> statement defines the Gain and EL spectrum models for the SQW region. The
+<b> CHUANG </b> and
+<b> SPONTANEOUS </b> are specified along with
+<b> LORENTZ </b> for linewidth broadening. The third part defines the mobility.
+</p>
+<b> Bias Ramp and Save Spectrum</b> <p>
+To obtain the EL spectrum, the
+<b> SPECTRUM </b> parameter and wavelength range
+<b> LMIN</b> ,
+<b> LMAX </b> and
+<b> NSAMP </b> are specified on the
+<b> SAVE </b> statement.
+</p>
+<b> Plotting Curves</b> <b> EXTRACT </b> <p>
+was used to calculate the the electron and hole concentration as a
+function of the bias. The I-V-L and EL spectrum are also plotted.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

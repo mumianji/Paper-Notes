@@ -1,0 +1,22 @@
+<!DOCTYPE SetFile-2D>
+<setfile version="1" >
+ <properties key_opaque="false" mark_frequency="0" mark_overlay="0" graph_width_0="2" graph_width_1="1" graph_width_2="1" graph_width_3="1" graph_width_4="1" graph_width_5="1" sequence_size="1" sequence_width="0" log_zero="0" sequence_mark_0="0" sequence_mark_1="1" sequence_mark_2="2" sequence_mark_3="3" sequence_mark_4="4" sequence_mark_5="5" />
+ <functions impurity_1_name="" impurity_1_units="" impurity_2_name="" impurity_2_units="" graph_1_name="" graph_1_units="" graph_2_name="" graph_2_units="" />
+ <mesh2d show_contours="true" show_edges="true" show_electrodes="true" show_junctions="false" show_light="false" show_materials="false" show_mesh="false" show_threed="false" show_vectors="false" region_param="-101" >
+  <contours_1 cont_log_impurity="Electron Conc" cont_materials="all" cont_min="auto" cont_max="auto" cont_nsteps="33" cont_type="fill" cont_outline="false" cont_color="spec30" />
+  <contours_2 cont_lin_impurity="(unknown impurity)" cont_materials="all" cont_min="auto" cont_max="auto" cont_nsteps="33" cont_type="fill" cont_outline="false" cont_color="spec30" />
+  <contours_3 cont_lin_impurity="(unknown impurity)" cont_materials="all" cont_min="auto" cont_max="auto" cont_nsteps="33" cont_type="fill" cont_outline="false" cont_color="spec30" />
+ </mesh2d>
+ <key cont_1_at="3" cont_2_at="1" cont_3_at="6" elec_at="6" vectors_at="6" overlay_at="2" regions_at="4" />
+ <annotation title_main="ATLAS / BLAZE" title_sub="HEMT Electron Concentration  Zero Bias" footer_right="none" footer_left="none" show_xaxis="true" show_yaxis="true" show_grid="false" show_label_xaxis="true" show_label_yaxis="true" range_xaxis="auto" range_yaxis="auto" label_xaxis="Microns" label_yaxis="Microns" />
+ <plot zoom_from_x="0" zoom_from_y="0.013467" zoom_scale_x="1" zoom_scale_y="2.30192" label_overlay="hemtAd2.out" >
+  <label label_text="Al~0.~2~2Ga~0.~7~8As" label_from_x="1.28928" label_from_y="0.0601363" label_color="#000000" label_scale="2" label_align="5" />
+  <label label_text="Al~0.~2~2Ga~0.~7~8As" label_from_x="2.7366" label_from_y="0.120392" label_color="#000000" label_scale="2" label_align="5" />
+  <label label_text="GaAs" label_from_x="0.665434" label_from_y="0.0167524" label_color="#000000" label_scale="2" label_align="5" />
+  <label label_text="GaAs" label_from_x="2.23752" label_from_y="0.178237" label_color="#000000" label_scale="2" label_align="5" />
+  <label label_text="GaAs" label_from_x="4.07579" label_from_y="0.0177165" label_color="#000000" label_scale="2" label_align="5" />
+  <label label_text="In~0.~2~2Ga~0.~7~8As" label_from_x="1.28928" label_from_y="0.0847204" label_color="#000000" label_scale="2" label_align="5" />
+  <label label_text="delta-doping" label_from_x="3.03604" label_from_y="0.0702592" label_color="#000000" label_scale="2" label_align="3" label_to_x="2.79482" label_to_y="0.0789359" />
+  <label label_text="delta-doping" label_from_x="3.21072" label_from_y="0.10111" label_color="#000000" label_scale="2" label_align="5" />
+ </plot>
+</setfile>

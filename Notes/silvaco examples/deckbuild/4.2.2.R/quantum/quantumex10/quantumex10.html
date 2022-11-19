@@ -1,0 +1,69 @@
+<html>
+  <head>
+    <title>Quantum Tunnelling in a Silicon Diode</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Quantum Tunnelling in a Silicon Diode</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>S-Pisces</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="quantumex10_plot0.png" width="640" alt="quantumex10_plot0" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This examples demonstrates:
+</p>
+<ul>
+  <li>
+ Example of a QTREGION statement.
+<br/>
+  </li>
+  <li>
+ Example of BBT.NONLOCAL and BBT.NLDERIVS commands.
+<br/>
+  </li>
+</ul>
+<p>
+In this example, the QTREGION statement is used to set up a mesh suitable
+for tunneling calculations. The device is a degenerately doped silicon p-n
+diode.  Non-local Band-To-Band tunneling is selected on the MODELS
+statement by using the BBT.NONLOCAL keyword. Because the solution will go
+to relatively high levels of tunneling current,  convergence may become
+difficult.  The optional parameter BBT.NLDERIVS is used to improve this.
+The diode is biased into both forward and reverse biases.  In forward bias
+a tunneling current occurs up to about 0.3 V, and at higher bias the
+usual forward bias diffusion current occurs as can be seen in the LOG file.
+The STRUCTURE files, with the BBT tunneling current displayed, show the
+actual tunneling current being injected into the device. Under reverse
+bias it acts like generation, under forward bias like
+recombination.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

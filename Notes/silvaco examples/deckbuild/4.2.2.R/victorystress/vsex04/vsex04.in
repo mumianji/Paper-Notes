@@ -1,0 +1,205 @@
+go victoryprocess
+
+# "Extremely Thin SOI (ETSOI) CMOS with Record Low Variability for Low Power ..."
+#  IEDM09-49
+#   K. Cheng, A. Khakifirooz, ...
+
+#  Parameters are obtained from the Fig. 3,4 of the paper. 
+
+# The following are parameters which can be use to investigate effects of geometry variation on stresses
+
+# 1: the gate length
+set gate_length=0.026
+
+# 2: the gate height
+set gate_height=0.043
+
+# 3: the RSD height
+set height_RSD=0.023
+
+# 4: the thickness of  Stress-liner
+set thick_liner=0.003
+
+# #5: the gate oxide thickness
+set thick_gateox=0.002
+
+# 6: the thickness of SOI
+set thick_SOI=0.005
+
+# 7: the thickness of bottom oxide 
+set thick_bottomox=0.02
+
+# 8: the x-coordinate at the bottom of RSD slope
+set x_RSD=0.02
+
+# 9: the x-coordinate at the top of RSD slope
+set x_end_slope=0.038
+
+# 10: the width of simulation domain 
+set x_end=0.043 
+
+# 11: the flag specifies that the RSD region is slopped (=1), for vertical (=0)
+set flag_faceted_RSD=1
+
+# The following 3 flags specify different types of stressor
+# parameters (12), (13), (14)
+set flag_RSD=1
+set flag_liner=1
+set flag_poly=1
+
+# 15: set flag for a sress-type of RSD: for SiGe it is (=-1); for SiC (=1)
+set mat_RSD=-1
+
+set y_top=-$gate_height+$thick_gateox
+set y_bottom=$thick_bottomox+$thick_SOI
+
+set x_left=0
+set x_right=$x_end
+
+set mat_name=RSD_stressor
+set mat_liner=Stress_liner
+
+Init material="oxide" \
+     from=$x_left to=$x_right  depth=$y_bottom gasheight=0.1 \
+     resolution="0.004,0.004" meshdepth=3 c.phos=1e12
+
+line x loc=$x_left spac=0.001 
+line x loc=$x_right spac=0.001 
+
+line z loc=$y_top spac=0.001 
+line z loc=$y_bottom spac=0.001 
+
+etch material=oxide thick=$thick_SOI dry
+deposit conformal material=silicon thick=$thick_SOI
+
+deposit material=$mat_name min thick=$height_RSD right.to=$x_RSD
+set name="vsex04_0.str"
+
+if cond=($flag_faceted_RSD>0) 
+set name="vsex04_1.str"
+set slope=$height_RSD/($x_end_slope-$x_RSD)
+set angle=atan($slope)*180/3.141592
+etch material=$mat_name thick=$height_RSD angle=$angle left.to=$x_end_slope dry
+if.end
+
+deposit conformal material=oxide thick=$thick_gateox left.to=0.5*$gate_length 
+deposit conformal material=polysilicon thick=$gate_height left.to=0.5*$gate_length
+deposit conformal material=$mat_liner thick=$thick_liner 
+
+export structure=$name
+
+go victorystress
+
+if cond=($flag_RSD=1)
+
+init structure="$name"
+
+# For the comparison with the Fig. 3 of the paper the stress in RSD must be used: -0.5e10
+# this corresponds to ~5% Ge 
+
+# set an absolute value of intrinsic stress
+set intrinsic_stress=0.5e10
+
+material material("$mat_name") intrin.sig=$mat_RSD*$intrinsic_stress
+material silicon model.iso=0
+
+material material("$mat_name") young.m=1.87e12
+material material("$mat_name") poiss.r=0.28
+
+material material("$mat_liner") young.m=3.89e12
+material material("$mat_liner") poiss.r=0.3
+
+material polysilicon young.m=1.87e12
+material polysilicon poiss.r=0.28
+
+stress exposed rebalance
+
+set name1="vsex04_2.str"
+set namex="vsex04_1.set"
+set namey="vsex04_2.set"
+if cond=($flag_faceted_RSD>0)
+set name1="vsex04_3.str"
+set namex="vsex04_3.set"
+set namey="vsex04_4.set"
+if.end
+
+save structure="$name1"
+tonyplot $name1 -set $namex
+tonyplot $name1 -set $namey
+
+#reset
+
+if.end
+reset
+if cond=($flag_liner=1)
+
+init structure="$name"
+ 
+#  Stress-layer. We use: -1.0e10 
+material material("$mat_liner") intrin.sig=-1.0e10 
+
+material silicon model.iso=0
+
+material material("$mat_name") young.m=1.87e12
+material material("$mat_name") poiss.r=0.28
+
+material material("$mat_liner") young.m=3.89e12
+material material("$mat_liner") poiss.r=0.3
+
+material polysilicon young.m=1.87e12
+material polysilicon poiss.r=0.28
+
+stress exposed rebalance
+
+set name1="vsex04_4.str"
+set namex="vsex04_5.set"
+set namey="vsex04_6.set"
+if cond=($flag_faceted_RSD>0)
+set name1="vsex04_5.str"
+set namex="vsex04_7.set"
+set namey="vsex04_8.set"
+if.end
+
+save structure="$name1"
+tonyplot $name1 -set $namex
+tonyplot $name1 -set $namey
+
+if.end
+reset
+
+if cond=($flag_poly=1)
+init structure="$name"
+ 
+#  The poly-gate is a stressor.
+material polysilicon intrin.sig=0.5e10 
+
+material silicon model.iso=0
+
+material material("$mat_name") young.m=1.87e12
+material material("$mat_name") poiss.r=0.28
+
+material material("$mat_liner") young.m=3.89e12
+material material("$mat_liner") poiss.r=0.3
+
+material polysilicon young.m=1.87e12
+material polysilicon poiss.r=0.28
+
+stress exposed rebalance
+
+set name1="vsex04_6.str"
+set namex="vsex04_9.set"
+set namey="vsex04_10.set"
+if cond=($flag_faceted_RSD>0)
+set name1="vsex04_7.str"
+set namex="vsex04_11.set"
+set namey="vsex04_12.set"
+if.end
+
+save structure="$name1"
+tonyplot $name1 -set $namex
+tonyplot $name1 -set $namey
+if.end
+
+quit
+
+

@@ -1,0 +1,118 @@
+
+go quest
+
+
+# Techno FILE
+
+layermapping layer.name = "IN1_OUT1" gds.Number = 31 gds.Datatype = 0
+layermapping layer.name = "Metalx" gds.Number = 32 gds.Datatype = 0
+layermapping layer.name = "MIM1" gds.Number = 33 gds.Datatype = 0
+layermapping layer.name = "MIM2" gds.Number = 34 gds.Datatype = 0
+layermapping layer.name = "Metalxx" gds.Number = 35 gds.Datatype = 0
+layermapping layer.name = "Metalxxx" gds.Number = 36 gds.Datatype = 0
+layermapping layer.name = "GIN1_GOUT1" gds.Number = 52 gds.Datatype = 0
+layermapping layer.name = "MIM3" gds.Number = 54 gds.Datatype = 0
+layermapping layer.name = "IN2_OUT2" gds.Number = 55 gds.Datatype = 0
+layermapping layer.name = "Alucap" gds.Number = 211 gds.Datatype = 6
+layermapping layer.name = "Padopen" gds.Number = 211 gds.Datatype = 5
+
+layermapping layer.name = "IN1_OUT1_t" gds.Number = 131 gds.Datatype = 0 isText
+layermapping layer.name = "GIN1_GOUT1_t" gds.Number = 132 gds.Datatype = 0 isText
+layermapping layer.name = "IN2_OUT2_t" gds.Number = 135 gds.Datatype = 0 isText
+
+layermapping layer.name = "MIM3b" isDerived operation = "OR MIM2 MIM2"
+
+attach electrode.layer = "GIN1_GOUT1" metal.layer = "Metalx"
+attach electrode.layer = "IN1_OUT1" metal.layer = "Metalxx"
+attach electrode.layer = "IN2_OUT2" metal.layer = "Alucap"
+
+
+connection layer = "Alucap" con.layer1 = "Padopen"
+connection layer = "GIN1_GOUT1" con.layer1 = "GIN1_GOUT1_t"
+connection layer = "IN1_OUT1" con.layer1 = "IN1_OUT1_t"
+connection layer = "IN2_OUT2" con.layer1 = "IN2_OUT2_t"
+connection layer = "Metalxxx" con.layer1 = "MIM3" con.layer2 = "Padopen"
+connection layer = "MIM1" con.layer1 = "Metalxx" con.layer2 = "MIM2"
+connection layer = "MIM2" con.layer1 = "MIM3b" 
+
+
+
+# PROCESS
+
+material name = "aluminum" cond = 3.76676e+07 permittivity = 1 permeability = 1 losstangent = 0
+material name = "oxide" cond =  0 permittivity = 3.9 permeability = 1 losstangent = 0
+material name = "silicon" cond = 100 permittivity = 11.8 permeability = 1 losstangent = 0
+material name = "copper" cond = 5.88235e+07 permittivity = 1 permeability = 1 losstangent = 0
+material name = "air" cond =  0 permittivity = 1 permeability = 1 losstangent = 0
+material name = "MIM3b_diel" cond =  0 permittivity = 3.9 permeability = 1 losstangent = 0
+material name = "nitride" cond =  0 permittivity = 7.5 permeability = 1 losstangent = 0
+
+
+deposit type = "substrate" layer.name = "Si" thick = 10 matName = "silicon"
+deposit type = "dielectric" layer.name = "Nitride" thick = 0.15 matName = "nitride"
+deposit type = "metal" layer.name = "Metalx" thick = 0.25 matName = "copper" anglex = 0 angley = 0
+deposit type = "dielectric" layer.name = "Sio2_Metalx" thick = 1 matName = "oxide"
+deposit type = "metal" layer.name = "Metalxx" thick = 0.4 matName = "copper" anglex = 0 angley = 0
+deposit type = "dielectric" layer.name = "Sio2_Metalxx" thick = 0.4 matName = "oxide"
+deposit type = "metal" layer.name = "MIM1" thick = 0.2 matName = "copper" anglex = 0 angley = 0
+deposit type = "dielectric" layer.name = "Diel2" thick = 0.2 matName = "oxide"
+deposit type = "metal" layer.name = "MIM2" thick = 0.05 matName = "copper" anglex = 0 angley = 0
+deposit type = "dielectric" layer.name = "Sio2_MIM2" thick = 0.05 matName = "oxide"
+deposit type = "metal" layer.name = "MIM3" thick = 0.35 matName = "copper" anglex = 0 angley = 0
+deposit type = "metal" layer.name = "MIM3b" thick = 0.35 matName = "copper" anglex = 0 angley = 0
+deposit type = "dielectric" layer.name = "MIM3b_diel" thick = 0.35 matName = "MIM3b_diel"
+deposit type = "metal" layer.name = "Metalxxx" thick = 0.9 matName = "copper" anglex = 0 angley = 0
+deposit type = "dielectric" layer.name = "Sio2_Metalxxx" thick = 0.9 matName = "oxide"
+deposit type = "metal" layer.name = "Padopen" thick = 1 matName = "aluminum" anglex = 0 angley = 0
+deposit type = "dielectric" layer.name = "SiN" thick = 0.1 matName = "nitride"
+deposit type = "dielectric" layer.name = "passiv" thick = 0.4 matName = "oxide"
+deposit type = "dielectric" layer.name = "passiv_b" thick = 0.5 matName = "nitride"
+deposit type = "metal" layer.name = "Alucap" thick = 1 matName = "aluminum" anglex = 0 angley = 0
+deposit type = "dielectric" layer.name = "AIR" thick = 10 matName = "air"
+
+
+# SOLVER
+
+Init simulation.type = "PORT" solvertype = "3D_Solver" \
+	 impedance.residual = 0.01 impedance.iteration = 200	\
+	 capacitance.residual = 0.01 capacitance.iteration = 200 \
+	 domainbase = "Grounded"	Z0 = 50	add.resistance = 0	\
+	 dx = 0.1 dy = 0.1 dz = 0.05	\
+	 computation.domain = "Automatic"
+
+# 4 ports simulation. All ports must be defined in one "electrodes" command. 
+# !! port 1 (IN1) 2 (OUT1) 3(IN2) and 4(OUT2) in this order 
+electrodes ports = "IN1", "GIN1", "OUT1", "GOUT1" ,"IN2", "GIN1", "OUT2", "GOUT1"
+
+# keep port 1 and 4
+transform ports = "IN1","GIN1","OUT2","GOUT1"
+
+Frequency type = "Range" range = 40, 30000 nsteps = 10 range.variation = "Lin"
+
+
+# OUTPUT
+
+save	database.path = "questex12_db" \
+		 spice.file. = "questex12" tony.file= "questex12" \
+		 sparameter.file = "questex12" \
+                 3D.file = "questex12"   
+
+layout gdsfile = "questex12.gds" cell = "MIM3D"
+
+# RUN
+solve
+
+# ANALYSIS
+
+runjavascript filename = "questex12.js"
+
+extract init inf="questex12_table.dat"
+extract name="C" max(da.value."C")
+extract name="CfF" $C*1e15
+extract name="L" max(da.value."L")
+extract name="LpH" $L*1e12
+
+tonyplot  questex12_db/questex12@@MIM3D/questex12_s_transform.dat -set questex12_1.set
+tonyplot  questex12_db/questex12@@MIM3D/questex12_abcd_transform.dat -set questex12_2.set
+
+quit

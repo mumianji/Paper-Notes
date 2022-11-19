@@ -1,0 +1,92 @@
+# (c) Silvaco Inc., 2018
+go atlas
+#
+# Solar cell example number 5.
+# This example is based on the reference:
+#
+# From Krc, J. Campa et all "Optical Modeling and simulation of thin-film
+# Cu(In,Ga)Se2 Solar cells, NUSOD 2006, pp. 33-34
+#
+# Here we specify a mesh of one square meter ( 1um x 1e12 um).
+# Since the structure is essentially one dimensional we ignore
+# variations if x and z.  The AUTO keyword indicates that the
+# we will not specify mesh lines in the y direction that they
+# will be inferred from the REGION statements.
+#
+mesh auto width=1e12
+x.m loc=0 s=1
+x.m loc=1 s=1
+#
+# Here we specify a standard n-p diode in between two electrodes.
+# in this case we handle the electrode materials explicitly since
+# we want to include their optical properties in the analysis using
+# the transfer matrix method.  The specification of CONDUCTOR means
+# we will solve the conduction equation in these regions.
+#
+region num=1 material=ZnO        bottom thick=0.44 ny=40 conductor
+region num=2 material=CdS        bottom thick=0.04 ny=15 donor=1e18
+region num=3 material=CIGS       bottom thick=0.36 ny=40 accep=2e16
+region num=4 material=Molybdinum bottom thick=0.3  ny=30 conductor
+#
+# Standare electrode names on top and bottom
+#
+elec num=1 name=cathode top
+elec num=2 name=anode   bottom
+#
+# Whenever we specify that regions are modeled as conductors we must
+# accompany that specification with a specification of the associated 
+# material resistivity.
+#
+material material=ZnO        resistivity=100
+material material=Molybdinum resistivity=100
+#
+# Here we associate some complex index of refraction tables
+# with the indexes of the two semiconductor materials.
+# These tables were digitized from the reference.
+# We specify output files using OUT.INDEX to
+# enable visualization using Tonyplot.
+#
+material material=CdS  indx.real=solarex05_0.n indx.imag=solarex05_0.k out.index=solarex05_0
+material material=CIGS indx.real=solarex05_1.n indx.imag=solarex05_1.k out.index=solarex05_1
+#
+# Here we look at the complex index of refraction data for CdS and CIGS.
+#
+tonyplot -overlay solarex05_0-k.log solarex05_1-k.log -set solarex05_1.set
+tonyplot -overlay solarex05_0-n.log solarex05_1-n.log -set solarex05_2.set
+#
+# We want to include optical intensity in the structure file outputs.
+#
+output opt.intens 
+#
+# Here we define several of the interfaces as diffusive with certain
+# haze function parameter specifications and angular distribution
+# functions.
+#
+interface opti p1.x=0 p2.x=1 p1.y=0    p2.y=0    diff ellipse sem=.31 sig=20 cr=1 ct=0.5 nr=2 nt=3
+interface opti p1.x=0 p2.x=1 p1.y=0.44 p2.y=0.44 diff ellipse sem=.31 sig=20 cr=1 ct=0.5 nr=2 nt=3
+interface opti p1.x=0 p2.x=1 p1.y=0.48 p2.y=0.48 diff ellipse sem=.31 sig=20 cr=1 ct=0.5 nr=2 nt=3
+#
+# Next we specify the optical source (solar representation).  We originate
+# the source directly above the device with propogation (ANGLE=90) normal
+# to the top surface of the device.  We specify an emission wavelength
+# which is actually arbitrary since we will later be doing spectral analysis.
+# We enable the transfer matrix method (TR.MAT) with diffusive interfaces
+# (DIFFUSE).  We specify the MIN.POWER and REFLECTS parameters to minimize
+# the total number of rays traced.  Finally, we specify SUB so that the final
+# interface is considered to act as though the last material is infinite in
+# the direction of propogation.
+# 
+beam num=1 x.origin=0.0 y.origin=-1.0 angle=90.0 wavelength=0.6 tr.mat diffuse min.power=1e-9 reflects=1 sub 
+#
+# Now we use the SOLAR statement as a convenience function to perform
+# a wavelength sweep from 0.3 microns to 1.2 microns in 0.01 micron
+# steps.  The outputs are saved in the log file solar05.log.
+#
+solar iw=solarex05.log min.wave=0.3 max.wave=1.2 step.wave=0.01 
+#
+# Finally we plot the results overlaid against measured results digitized
+# from the reference.
+#
+tonyplot -overlay solarex05.log solarex05.dat -set solarex05_0.set
+
+quit

@@ -1,0 +1,105 @@
+{section} Athena_COMPOUND : Compound Semiconductor Process Simulation  
+
+
+{subsection} ancoex01.in : Ion Implant Tilt Angle Dependence 
+
+Requires: SSuprem 4, MC Implant
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This example calculates 10 keV Be implant profiles in GaAs for 0 and 7 degrees 
+implant angles. The BCA implant model is used. The results show that ion channeling is very pronounced for light Be ions. 
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+{subsection} ancoex02.in : Ion Implant Dose Dependence 
+
+Requires: SSuprem 4, MC Implant
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This example calculated 10 keV Si implant profiles in GaAs for 3 implant doses:
+1e14, 5e14, and 2.5e15 ions/cm**3. The damage accumulation with the implant dose decreases the number of channeling ions which results in relatively smaller channeling tails.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} ancoex03.in : GaAs MESFET Gate Simulation in 1D
+
+Requires: SSuprem 4
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This example simulates a simple 1D GaAs Mesfet structure underneath the gate. 
+Carbon is used as background dopant in the INIT statement. Beryllium and silicon are implanted into GaAs using the analytical implant model. Next the anneal step is performed using the default Fermi method. 
+
+The hump in the beryllium profile where it intersects with silicon profile is due to the electric field effect. 
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+{subsection} ancoex04.in : Zinc Diffusion in N-type Indium Phosphide
+
+Requires: SSuprem 4
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This example demonstrates the effect of n-type doping on Zinc diffusion in InP. 
+
+It has been found that the main diffusion mechanism for Zn in A3B5 compounds 
+is via doubly charged interstitial pairs. This means that Zn diffusivity is 
+proportional to the second power of hole concentrations. Therefore, high  
+background n-type doping concentration results in strong retardation of zinc
+diffusion. Also, the Zn diffusion profile drops abruptly when n- and p-type
+concentrations are close to each other near the pn-junction. The diffusivity
+coefficients DIPP.0 and DIPP.E are selected to approximately match experimental
+data from G.J. van Gurp et.al. J. Appl. Phys., v.61(5), p.1846 (1987). 
+
+The simulation results for high n-type levels are in a reasonable agreement 
+with the experiments from this paper as well. Other effects may influence 
+these simulations. For example, the activation mechanism in this case can 
+be much more complicated than that based on the simple solid solubility 
+level set to 1e19 for all impurities. There is evidence that the solid
+solubility of Zn may depend on n-type doping level as well. In any case, this
+example is a good starting point for calibration of impurity diffusion effects
+in A3B5 compounds.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

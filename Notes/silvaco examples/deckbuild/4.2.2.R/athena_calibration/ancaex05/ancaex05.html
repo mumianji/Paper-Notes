@@ -1,0 +1,54 @@
+<html>
+  <head>
+    <title>Tuning Threshold Voltage using Seg.0 and Theta.0</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Tuning Threshold Voltage using Seg.0 and Theta.0</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>SSuprem 4</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="ancaex05_plot0.png" width="640" alt="ancaex05_plot0" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates how physical parameters related to silicon/oxide interface can be used for the tuning of
+threshold voltage of a MOS structure. A simplified 1D simulation of an
+NMOS channel formation is considered. Two parameters are used for the Vt calibration:
+<b> Seg.0 </b> , which is the prefactor of boron segregation coefficient on the
+silicon /oxide interface, and
+<b> theta.0 </b> which is the prefactor of interstitial injection coefficient. Using DBInternal capability
+(see section DOE of the Deckbuild Examples), the simulation is repeated for 7 different values of Seg.0 and for 5 different theta.0.
+For each case the threshold voltage is extracted using
+<b> QuickMOS 1dvt. </b> The results are stored in the
+<b> ancaex05.dat </b> file for subsequent plotting of Vt vs theta.0 for different Seg.0 curves. Such curves could be used
+for selecting of appropriate segregation and interstitial injection coefficients.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

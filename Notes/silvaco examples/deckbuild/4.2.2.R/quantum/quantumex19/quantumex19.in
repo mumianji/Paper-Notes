@@ -1,0 +1,245 @@
+# (c) Silvaco Inc., 2018
+go atlas
+
+
+
+
+# p-type SiGe RTD example 
+# 2nm-2nm-2nm double barrier, 
+
+
+mesh   diag.flip   
+
+x.mesh loc=0.00 spac=0.01
+x.mesh loc=0.01  spac=0.01
+
+y.mesh loc=-0.072  spac=0.0005
+y.mesh loc=-0.01 spac=0.0002
+y.mesh loc=0.0  spac=0.0001
+y.mesh loc=0.011  spac=0.0001
+y.mesh loc=0.013  spac=0.0001
+y.mesh loc=0.015 spac=0.0001
+y.mesh loc=0.017  spac=0.0001
+y.mesh loc=0.024  spac=0.0001
+y.mesh loc=0.026 spac=0.0001
+y.mesh loc=0.036 spac=0.0001
+y.mesh loc=0.046  spac=0.0002
+y.mesh loc=0.1  spac=0.0005
+
+
+#
+# Source and drain regions have to be specified as EQUIL.NEGF
+# to impose quasi-equilibrium condition.
+
+
+
+region num=1  name=SiGe material=Si \
+	   y.max=-0.01   equil.negf 
+	   
+region num=2 name=SiGe  material=Si  x.comp=0.6     \
+	   y.min= -0.01 y.max=0.011 equil.negf 
+
+region num=3 name=Si material=Si  \
+	   y.min=0.011 y.max=0.013 
+	   
+region num=4  name=SiGe material=Si  x.comp=0.6  \
+	   y.min=0.013 y.max=0.015  
+
+region num=5 name=Si material=Si \
+	   y.min=0.015 y.max=0.017 
+	   
+region num=6  name=SiGe material=Si  x.comp=0.6  \
+	   y.min=0.017 y.max=0.024     
+
+      
+region num=7  name=SiGe material=Si  x.comp=0.6  \
+	   y.min=0.024 y.max=0.036  	equil.negf  
+	   
+
+region num=8 name=SiGe material=Si  \
+	   y.min=0.036 y.max=0.046 equil.negf
+	   
+	   
+region num=9 name=SiGe material=Si  \
+	   y.min=0.046 equil.negf
+	 
+	 
+
+	 
+
+elec num=1 name=emitter top
+elec num=2 name=collector bottom
+
+
+
+
+#
+#   Band off-sets: We declare the same material Si in all regions.
+#   Here we modify band off-sets and set effective masses.
+#   Regions with SiGe  are given a name "SiGe", and regions with Si are given a name "Si".
+#   Holes: when NUM.BAND>1 on MODELS statement, use DEV.HH,DEV.LH and DEV.SO to set band off-sets
+#          when NUM.BAND=1, use DEV.ISO to set band off-set for isotropic band
+#
+#  Electrons: when NUM.DIRECT=3 on MODELS statement, use DEC.C1,DEC.C2 and DEC.C3 to set band off-sets
+#                                                     for each pair of valleys.
+#             when NUM.DIRECT=1, use DEC.ISO to set band off-set for isotropic band
+#   (in this example we compute only hole transport, while electrons are treated clasically)
+#
+#
+#  Valence Band off-sets (from the highest Ev of bulk Si)
+#
+material  name=Si      dev.so=-0.044 
+material  name=SiGe    dev.hh=0.32  dev.lh=0.26 dev.so=-0.044 
+
+
+#  Conduction Band off-sets (from the lowest Ec  of bulk Si)
+#
+material  name=SiGe  dec.iso=-0.01 
+
+#
+#   Holes: when NUM.BAND=1, 1 band is assumed with effective mass MV 
+#          when NUM.BAND=2, 2 bans are assumed with effective masses MHH and MLH
+#          when NUM.BAND=3, 3 bans are assumed with effective masses MHH and MLH  and MSO
+#
+#  Electrons: when NUM.DIRECT=1, 1 band is assumed with effective mass MC 
+#             when NUM.DIRECT=3, 3 bands are assumed with  anisotropic effective masses.
+#                                (ML,MT1,MT2) for band#1,
+#                                (MT1,ML,MT2) for band#2,
+#                                (MT1,MT2,ML) for band#3,
+#
+#   (in this example we compute only hole transport, while electrons are treated clasically)
+#
+#
+#
+#  Effective masses (taken from http://www.ioffe.ru/SVA/NSM/Semicond/SiGe)
+#
+material  name=Si     mc=0.3   mhh=0.49  mlh=0.16    mso=0.24
+material  name=SiGe   mc=1.06  mhh=0.426 mlh=0.1132  mso=0.17
+
+
+doping reg=1  uniform p.type conc=1e18
+doping reg=8  uniform p.type conc=1e16
+doping reg=9 uniform p.type conc=1e18
+
+# To launch model, use N.NEGF_PL1D and/or  P.NEGF_PL1D on the MODELS statement. 
+# This will solve 1D model in one slice and copy it to all other slices.
+# If slices are not equivalent, use N.NEGF_PL and/or  P.NEGF_PL, to solve 1D model
+# for each slice. Energy grid size in the NEGF solver is regulated 
+# by ESIZE.NEGF on the MODELS statement (default is 2001). You may increase it up 
+# to 10000   for better convergence. 
+# To set broadening in quazi-equilibrium regions 
+# use ETA.NEGF (default is 0.0066 eV). Increase it to 0.01 eV for better convergence.
+# Physically, the broadening   corresponds to inelastic electron-phonon scatterin, and 
+# is necessary  to fill emitter  quazi-bound states.
+
+
+# 
+# P.NEGF_PL1D - only holes are taken into account  in transport calculation
+# Take only light and heavy holes into account by setting NUM.BAND=2
+# ESIZE.NEGF=20001 incerases the number of energy grid for better resolution 
+# QCRIT.NEGF=1e-4 - convergence criterium is 0.1 meV or less in update of potential 
+# Broadening in quasi-equilibrium regions is set by ETA.NEGF=0.0066
+# When storing for eigen energies and wave functions , take only ehose localized  
+# between   EIG.YMIN=0.008  and EIG.YMAX=0.017
+#
+models  p.negf_pl1d  esize.negf=20001  eta.negf=0.0066  \
+num.band=2 eig.ymin=0.008  eig.ymax=0.017  qcrit.negf=1e-4
+
+
+method carr=0 
+
+
+
+# Probes contain important information about Transmission and density 
+# of states versus energy.
+# Also, you can output DENSVSE (carrier density spectrum) and CURDVSE 
+# (current density spectrum). Files will have names quantumex19_TranvsE_0.log, 
+# quantumex19_TranvsE_1.log etc. for each time you set NEGF.LOG on the SAVE statement.
+# Setting X-location is not needed if you solve only one slice (N.NEGF_PL1D).
+
+
+probe transmission filename="quantumex19_TranvsE_"
+probe transmission band=1
+probe transmission band=2
+probe dosvse  x=0     y=0.015
+probe dosvse  x=0     y=0.015 band=1
+probe dosvse  x=0     y=0.015 band=2
+probe curdvse  x=0     y=0.015
+probe curdvse  x=0     y=0.015 band=1
+probe curdvse  x=0     y=0.015 band=2
+
+
+
+
+
+# ESIZEOUT.NEGF on the OUTPUT statement is the size of energy grid in the output file TranvsE_DB2_0.log
+# If you don't set it, it will be the same as ESIZE.NEGF on the MODELS statement.
+ 
+output con.band val.band  eigen=7
+
+
+solve init
+save outf=quantumex19_init.str negf.log  negf.eig
+
+log outf=quantumex19_IV.log
+
+solve v2=0 name=collector vstep=-0.02 vfinal=-0.1 
+save outf=quantumex19_vm01.str negf.log negf.eig
+
+
+solve name=collector vstep=-0.02 vfinal=-0.2
+save outf=quantumex19_vm02.str negf.log negf.eig
+
+solve name=collector vstep=-0.02 vfinal=-0.3
+save outf=quantumex19_vm03.str negf.log negf.eig
+
+solve name=collector vstep=-0.02 vfinal=-0.4
+save outf=quantumex19_vm04.str negf.log negf.eig
+
+solve name=collector vstep=-0.005 vfinal=-0.5
+save outf=quantumex19_vm05.str negf.log negf.eig
+
+solve name=collector vstep=-0.005 vfinal=-0.58
+
+solve name=collector vstep=-0.005 vfinal=-0.6
+save outf=quantumex19_vm06.str negf.log negf.eig
+
+solve name=collector vstep=-0.005 vfinal=-0.7
+save outf=quantumex19_vm07.str negf.log negf.eig
+
+solve name=collector vstep=-0.005 vfinal=-0.8
+save outf=quantumex19_vm08.str negf.log negf.eig
+
+solve name=collector vstep=-0.005 vfinal=-0.9
+save outf=quantumex19_vm09.str negf.log negf.eig
+
+solve name=collector vstep=-0.005 vfinal=-1
+save outf=quantumex19_vm1.str negf.log negf.eig
+
+
+solve name=collector vstep=-0.01 vfinal=-2
+save outf=quantumex19_vm2.str negf.log negf.eig
+
+log off
+
+
+tonyplot quantumex19_vm07.str -set quantumex19_fig1.set
+
+tonyplot quantumex19_vm07.str -set quantumex19_fig2.set
+
+tonyplot quantumex19_IV.log -set quantumex19_fig3.set
+
+tonyplot quantumex19_TranvsE_7.log -set quantumex19_fig4.set
+
+tonyplot quantumex19_TranvsE_7.log -set quantumex19_fig5.set
+
+
+quit
+
+
+
+
+
+
+
+

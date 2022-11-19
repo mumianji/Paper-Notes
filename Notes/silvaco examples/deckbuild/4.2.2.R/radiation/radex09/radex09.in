@@ -1,0 +1,93 @@
+# (c) Silvaco Inc., 2018
+
+go internal
+
+set LET=4
+
+LOOP STEPS=4
+
+go victorydevice simflags="-80"
+
+mesh cylindrical
+
+x.mesh location=0     spacing=0.02
+x.mesh location=0.02  spacing=0.02
+x.mesh location=0.07  spacing=0.03
+x.mesh location=5     spacing=2
+
+y.mesh location=-25   spacing=5
+y.mesh location=-20   spacing=5
+y.mesh location=0     spacing=0.1
+y.mesh location=200   spacing=50
+y.mesh location=400   spacing=0.1
+y.mesh location=420   spacing=5
+y.mesh location=425   spacing=5
+
+region number=1 silicon
+
+electrode name=cathode y.min=-25 y.max=-20
+electrode name=anode   y.min=420 y.max=425
+
+doping n.type conc=3.1e13 uniform
+doping n.type conc=3e19 gaussian y.min=-25 y.max=0   charac=0.1
+doping p.type conc=1e18 gaussian y.min=400 y.max=425 charac=0.1
+
+set density=0.01035*$LET
+
+material material=silicon hc.std hc.a=1.6 hc.b=0 hc.c=0 hc.d=0 \
+         tcon.const tc.const=1.49
+models consrh conmob fldmob lat.temp auger fermi
+impact selb
+
+thermcontact number=1 elec.num=2 temperat=300
+
+singleeventupset entrypoint="0,-20,0" exitpoint="0,420,0" \
+                 b.density=$density pcunits radius=0.02 t0=5e-12 tc=2e-13 
+method max.temp=1000000 maxtraps=100 dt.min=1e-50 dt.max=10000 tol.time=1e6 \
+       climit=1e-6
+
+output band.param con.band val.band photogen
+probe lat.temp name="Temp_metallurgic" X=0 Y=400 Z=0
+probe lat.temp name="Temp_N_dope_step" X=0 Y=2   Z=0
+
+solve init
+solve previous
+solve vcathode=0.01
+log outfile=radex09_0.log
+solve vcathode=0.1
+solve vcathode=1 vstep=1 vfinal=10 name=cathode
+solve vstep=5 vfinal=50 name=cathode
+solve vstep=10 vfinal=100 name=cathode
+solve vstep=20 vfinal=200 name=cathode
+solve vstep=50 vfinal=3500 name=cathode
+log off
+
+solve tstop=1e-12 dt=1e-13 prev
+
+log outfile=radex09_$'LET'_3500V.log
+
+solve tstop=5e-12 dt=1e-13 prev
+save outfile=radex09_1.str
+
+solve tstop=25e-12 prev
+solve tstop=205e-12 prev
+solve tstop=305e-12 prev
+solve tstop=405e-12 prev
+solve tstop=505e-12 prev
+solve tstop=1005e-12 prev
+solve tstop=2005e-12 prev
+solve tstop=5005e-12 prev
+solve tstop=1    prev t.comp=1600.
+solve tstop=3600 prev t.comp=1600.
+
+set LET=2*$LET
+
+L.END
+
+go victorydevice
+
+tonyplot -overlay radex09_4_3500V.log radex09_8_3500V.log radex09_16_3500V.log radex09_32_3500V.log -set radex09_0.set
+tonyplot -overlay radex09_4_3500V.log radex09_8_3500V.log radex09_16_3500V.log radex09_32_3500V.log -set radex09_1.set
+tonyplot radex09_1.str -set radex09_2.set
+
+quit

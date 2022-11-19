@@ -1,0 +1,31 @@
+go athena
+# 
+line x loc=-4.00 spac=0.10
+line x loc=10.00 spac=0.10
+line y loc=0.00 spac=0.02
+line y loc=0.50 spac=0.5
+# 
+init silicon orientation=100
+# 
+deposit oxide thick=1.5 divisions=5
+deposit nitride thick=0.5 divisions=3
+# 
+etch nitride start x=2.0 y=-10.0
+etch cont x=2.00 y=10.0
+etch cont x=4.00 y=10.0
+etch done x=4.00 y=-10.0
+# 
+rate.etch machine=test1 oxide a.m  wet.etch isotropic=1000.00
+etch machine=test1 time=25 minutes dx.mult=.5
+
+rate.depo machine=Aldepo1 alumin n.m sigma.dep=0.75 monte1 dep.rate=100.0 angle1=0.0
+deposit machine=Aldepo1 time=10 minutes divis=5 n.particle=100000
+# 
+
+structure outfile=anelex21.str
+
+tonyplot anelex21.str
+
+
+quit
+

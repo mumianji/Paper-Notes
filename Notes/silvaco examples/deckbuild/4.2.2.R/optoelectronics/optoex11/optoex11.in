@@ -1,0 +1,49 @@
+# (c) Silvaco Inc., 2018
+go atlas
+Title 3D Elliptical Source
+#
+# SECTION 1: Mesh Specification
+#
+mesh three.d
+#
+x.m l=0    s=0.2
+x.m l=5    s=0.2
+y.m l=0.0  s=0.05
+y.m l=5.0  s=0.5
+y.m l=10.0 s=0.1
+z.m l=0    s=0.2
+z.m l=5    s=0.2
+#
+# SECTION 2: Structure Specification
+#
+regi num=1 silicon
+#
+elec num=1 top
+elec num=2 bottom
+#
+doping unif p.type conc=2e16
+doping gaus peak=0.0  char=0.1 conc=1e18 p.type dir=y
+doping gaus peak=10.0 char=0.1 conc=1e18 n.type dir=y
+#
+# SECTION 3: Elliptical Source Specification
+#
+beam num=1 circular x.origin=2.5 y.origin=-5.0 z.origin=2.5 \
+	   angle=90 theta=90 xcenter=0.0 zcenter=0.0 \
+	   xradius=1.0 zradius=2.5 nx=51 nz=51 \
+	   raytrace=optoex11_0 wavelength=0.623 front.refl lens.plane=20.0
+#
+# SECTION 4: Solution Proceedure
+#
+method newton carr=2
+#
+solve 
+solve v1=-0.5
+#
+solve b1=1.0
+#
+save outf=optoex11_1.str
+#
+tonyplot3d optoex11_0.str -set optoex11_0.set 
+tonyplot3d optoex11_1.str -set optoex11_1.set 
+#
+quit

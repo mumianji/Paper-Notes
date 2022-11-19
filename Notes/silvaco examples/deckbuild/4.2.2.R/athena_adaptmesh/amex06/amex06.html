@@ -1,0 +1,65 @@
+<html>
+  <head>
+    <title>CCD Structure Formation</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>CCD Structure Formation</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>SSuprem 4</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="amex06_plot0.png" width="640" alt="amex06_plot0" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+In this example, a CCD structure is constructed using Athena. This structure can be passed to ATLAS for electrical testing.
+</p>
+<p>
+The first stage of the input constructs the CCD geometry and doping
+profiles in Athena. The CCD device consists of a storage node on the
+left of the structure controlled by a polysilicon gate. A transfer node
+to the right of this structure is also controlled by both a polysilicon gate and a drain
+region of heavy n+ doping with a metal contact.
+</p>
+<p>
+The CCD structure has a n- active region at the surface above a p-type
+substrate. Under the transfer node an extra p-type implant is given.
+This implant is performed at sufficient dose level to create a potential
+difference between the storage and transfer nodes, but is not so large
+as to create a junction.
+</p>
+<p>
+The process simulation is designed to run extremely quickly so there is
+a minimum of diffusion steps included. The final stages of the Athena
+input performs the electrode definition needed by ATLAS.  Also some
+EXTRACT statements are used to measure the junction depth of the active
+region under the storage and transfer nodes.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

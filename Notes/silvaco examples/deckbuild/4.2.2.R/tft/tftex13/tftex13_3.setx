@@ -1,0 +1,16 @@
+<!DOCTYPE SetFile-2D>
+<setfile version="1" >
+ <properties key_opaque="true" mark_frequency="0" mark_overlay="0" graph_width_0="1" graph_width_1="1" graph_width_2="1" graph_width_3="1" graph_width_4="4" graph_width_5="1" sequence_size="2" sequence_width="2" log_zero="0" sequence_mark_0="0" sequence_mark_1="1" sequence_mark_2="2" sequence_mark_3="3" sequence_mark_4="4" sequence_mark_5="5" />
+ <functions impurity_1_name="" impurity_1_units="" impurity_2_name="" impurity_2_units="" graph_1_name="" graph_1_units="" graph_2_name="" graph_2_units="" />
+ <xygraph show_points="true" show_lines="true" xyg_type="0" xyg_convert="false" >
+  <cartesian xyg_yaxis_scale="linear" xyg_xaxis_lin="drain bias" xyg_yaxis="none" xyg_yaxis_lin="drain current" xyg_group="(unknown electricals)" xyg_cie="false" />
+ </xygraph>
+ <key cont_1_at="3" cont_2_at="1" cont_3_at="6" elec_at="6" vectors_at="6" overlay_at="2" regions_at="4" />
+ <annotation title_main="Experiment v.s Simulation" title_sub="IDVD@Vg=8,10,12" footer_right="none" footer_left="none" show_xaxis="true" show_yaxis="true" show_grid="true" show_label_xaxis="true" show_label_yaxis="true" range_xaxis_min="0" range_xaxis_max="10" range_xaxis_div="2" range_xaxis_ticks="4" range_yaxis_min="0" range_yaxis_max="2.5e-06" range_yaxis_div="5e-07" range_yaxis_ticks="4" label_xaxis="Drain Current(A)" label_yaxis="Drain Voltage(A)" />
+ <plot zoom_from_x="0" zoom_from_y="0" zoom_scale_x="1" zoom_scale_y="1" label_overlay="idvd_vg1.dat" label_overlay="idvd_vg2.dat" label_overlay="idvd_vg3.dat" label_overlay="idvd3_sim.dat" label_overlay="idvd4_sim.dat" label_overlay="idvd5_sim.dat" >
+  <label label_text="Red:Experiment" label_from_x="7.69343" label_from_y="1.65332e-06" label_color="#000000" label_scale="0" label_align="7" />
+  <label label_text="Vg=10" label_from_x="7.59584" label_from_y="1.09048e-06" label_color="#000000" label_scale="0" label_align="7" />
+  <label label_text="Vg=12" label_from_x="7.20864" label_from_y="2.17027e-06" label_color="#000000" label_scale="0" label_align="7" />
+  <label label_text="Vg=8" label_from_x="7.49904" label_from_y="4.74271e-07" label_color="#000000" label_scale="0" label_align="7" />
+ </plot>
+</setfile>

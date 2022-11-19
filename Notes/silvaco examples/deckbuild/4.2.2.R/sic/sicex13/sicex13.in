@@ -1,0 +1,332 @@
+#####################################
+# All four components:
+# 1/mu_alt =  1/mu_bulk + 1/mu_sr + 1/mu_sp + 1/mu_coul
+#####################################
+
+go atlas 
+
+mesh width=1.0
+
+x.m loc=0.0 spac=0.1
+x.m loc=0.2 spac=0.02
+x.m loc=0.5 spac=0.05
+x.m loc=0.8 spac=0.02
+x.m loc=1.0 spac=0.1
+
+y.m loc=-0.02 spac=0.005
+y.m loc=-0.01 spac=0.001
+y.m loc=0.0   spac=0.001
+y.m loc=0.1   spac=0.01
+y.m loc=1.0   spac=0.1
+
+region num=1 y.max=0.0 oxide
+region num=2 y.min=0.0 material="4H-SiC"
+
+electrode name=gate y.max=-0.01 x.min=0.25 x.max=0.75
+electrode name=source y.max=0.0 x.max=0.2
+electrode name=drain  y.max=0.0 x.min=0.8
+
+doping region=2 uniform p.type conc=1.0e15
+
+doping n.type gaussian conc=1e20 peak=0.0 junction=0.25 x.max=0.2 ratio.lat=0.6
+
+doping n.type gaussian conc=1e20 peak=0.0 junction=0.25 x.min=0.8 ratio.lat=0.6
+
+contact name=gate n.poly
+
+intdefects nta=1.5e12 ntd=1.5e12 nga=0.0 ngd=0.0 wta=0.33 wtd=0.33 \
+           numa=40 numd=40 tfile=sicex13_1.dat
+inttrap acceptor e.level=0.5 density=2.0e10 degen=4 sign=2.84e-15 sigp=2.84e-14
+inttrap acceptor e.level=0.7 density=2.0e10 degen=4 sign=2.84e-15 sigp=2.84e-14
+inttrap donor e.level=1.0 density=4.0e10 degen=4 sign=2.84e-15 sigp=2.84e-14
+interface charge=-1e10
+
+models srh fermi ni.fermi print 
+
+mobility altcvt.n 
+mobility n.lcrit=1.0e-6 p.lcrit=1.0e-6 
+
+solve init
+solve prev
+
+save outf=sicex13_0.str
+tonyplot sicex13_0.str sicex13_1.dat -set sicex13_1.set
+
+solve vdrain=0.1
+
+output e.mob h.mob con.band val.band qss
+probe name="Fy_I" field v.y x=0.5 y=0.0
+probe name="eMob_I" n.mob v.x x=0.5 y=0.0
+
+log outf=sicex13_1.log
+solve vgate=2.0
+solve vstep=0.25 vfinal=10.0 name=gate 
+log off
+
+save outf=sicex13_1.str
+
+
+#####################################
+# Bulk component only:
+# 1/mu_alt =  1/mu_bulk
+#####################################
+
+go atlas 
+
+mesh width=1.0
+
+x.m loc=0.0 spac=0.1
+x.m loc=0.2 spac=0.02
+x.m loc=0.5 spac=0.05
+x.m loc=0.8 spac=0.02
+x.m loc=1.0 spac=0.1
+
+y.m loc=-0.02 spac=0.005
+y.m loc=-0.01 spac=0.001
+y.m loc=0.0   spac=0.001
+y.m loc=0.1   spac=0.01
+y.m loc=1.0   spac=0.1
+
+region num=1 y.max=0.0 oxide
+region num=2 y.min=0.0 material="4H-SiC"
+
+electrode name=gate y.max=-0.01 x.min=0.25 x.max=0.75
+electrode name=source y.max=0.0 x.max=0.2
+electrode name=drain  y.max=0.0 x.min=0.8
+
+doping region=2 uniform p.type conc=1.0e15
+
+doping n.type gaussian conc=1e20 peak=0.0 junction=0.25 x.max=0.2 ratio.lat=0.6
+
+doping n.type gaussian conc=1e20 peak=0.0 junction=0.25 x.min=0.8 ratio.lat=0.6
+
+contact name=gate n.poly
+
+intdefects nta=1.5e12 ntd=1.5e12 nga=0.0 ngd=0.0 wta=0.33 wtd=0.33 \
+           numa=40 numd=40 tfile=sicex13_1.dat
+inttrap acceptor e.level=0.5 density=2.0e10 degen=4 sign=2.84e-15 sigp=2.84e-14
+inttrap acceptor e.level=0.7 density=2.0e10 degen=4 sign=2.84e-15 sigp=2.84e-14
+inttrap donor e.level=1.0 density=4.0e10 degen=4 sign=2.84e-15 sigp=2.84e-14
+interface charge=-1e10
+
+models srh fermi ni.fermi print
+
+mobility altcvt.n ^coulomb.n ^alt.sr.n ^alt.sp.n 
+mobility n.lcrit=1.0e-6 p.lcrit=1.0e-6 
+
+solve init
+solve prev
+
+solve vdrain=0.1
+
+output e.mob h.mob con.band val.band qss
+probe name="Fy_I" field v.y x=0.5 y=0.0
+probe name="eMob_I" n.mob v.x x=0.5 y=0.0
+
+log outf=sicex13_2.log
+solve vgate=2.0
+solve vstep=0.25 vfinal=10.0 name=gate
+log off
+
+save outf=sicex13_2.str
+
+
+#####################################
+# Bulk and Coulomb scattering components:
+# 1/mu_alt =  1/mu_bulk + 1/mu_coul
+#####################################
+
+go atlas
+
+mesh width=1.0
+
+x.m loc=0.0 spac=0.1
+x.m loc=0.2 spac=0.02
+x.m loc=0.5 spac=0.05
+x.m loc=0.8 spac=0.02
+x.m loc=1.0 spac=0.1
+
+y.m loc=-0.02 spac=0.005
+y.m loc=-0.01 spac=0.001
+y.m loc=0.0   spac=0.001
+y.m loc=0.1   spac=0.01
+y.m loc=1.0   spac=0.1
+
+region num=1 y.max=0.0 oxide
+region num=2 y.min=0.0 material="4H-SiC"
+
+electrode name=gate y.max=-0.01 x.min=0.25 x.max=0.75
+electrode name=source y.max=0.0 x.max=0.2
+electrode name=drain  y.max=0.0 x.min=0.8
+
+doping region=2 uniform p.type conc=1.0e15
+
+doping n.type gaussian conc=1e20 peak=0.0 junction=0.25 x.max=0.2 ratio.lat=0.6
+
+doping n.type gaussian conc=1e20 peak=0.0 junction=0.25 x.min=0.8 ratio.lat=0.6
+
+contact name=gate n.poly
+
+intdefects nta=1.5e12 ntd=1.5e12 nga=0.0 ngd=0.0 wta=0.33 wtd=0.33 \
+           numa=40 numd=40 tfile=sicex13_1.dat
+inttrap acceptor e.level=0.5 density=2.0e10 degen=4 sign=2.84e-15 sigp=2.84e-14
+inttrap acceptor e.level=0.7 density=2.0e10 degen=4 sign=2.84e-15 sigp=2.84e-14
+inttrap donor e.level=1.0 density=4.0e10 degen=4 sign=2.84e-15 sigp=2.84e-14
+interface charge=-1e10
+
+models srh fermi ni.fermi print 
+
+mobility altcvt.n ^alt.sr.n ^alt.sp.n 
+mobility n.lcrit=1.0e-6 p.lcrit=1.0e-6 
+
+solve init
+solve prev
+
+solve vdrain=0.1
+
+output e.mob h.mob con.band val.band qss
+probe name="Fy_I" field v.y x=0.5 y=0.0
+probe name="eMob_I" n.mob v.x x=0.5 y=0.0
+
+log outf=sicex13_3.log
+solve vgate=2.0
+solve vstep=0.25 vfinal=10.0 name=gate
+log off
+
+save outf=sicex13_3.str
+
+
+#####################################
+# Bulk and surface roughness components:
+# 1/mu_alt =  1/mu_bulk + 1/mu_sr
+#####################################
+
+go atlas
+
+mesh width=1.0
+
+x.m loc=0.0 spac=0.1
+x.m loc=0.2 spac=0.02
+x.m loc=0.5 spac=0.05
+x.m loc=0.8 spac=0.02
+x.m loc=1.0 spac=0.1
+
+y.m loc=-0.02 spac=0.005
+y.m loc=-0.01 spac=0.001
+y.m loc=0.0   spac=0.001
+y.m loc=0.1   spac=0.01
+y.m loc=1.0   spac=0.1
+
+region num=1 y.max=0.0 oxide
+region num=2 y.min=0.0 material="4H-SiC"
+
+electrode name=gate y.max=-0.01 x.min=0.25 x.max=0.75
+electrode name=source y.max=0.0 x.max=0.2
+electrode name=drain  y.max=0.0 x.min=0.8
+
+doping region=2 uniform p.type conc=1.0e15
+
+doping n.type gaussian conc=1e20 peak=0.0 junction=0.25 x.max=0.2 ratio.lat=0.6
+
+doping n.type gaussian conc=1e20 peak=0.0 junction=0.25 x.min=0.8 ratio.lat=0.6
+
+contact name=gate n.poly
+
+intdefects nta=1.5e12 ntd=1.5e12 nga=0.0 ngd=0.0 wta=0.33 wtd=0.33 \
+           numa=40 numd=40 tfile=sicex13_1.dat
+inttrap acceptor e.level=0.5 density=2.0e10 degen=4 sign=2.84e-15 sigp=2.84e-14
+inttrap acceptor e.level=0.7 density=2.0e10 degen=4 sign=2.84e-15 sigp=2.84e-14
+inttrap donor e.level=1.0 density=4.0e10 degen=4 sign=2.84e-15 sigp=2.84e-14
+interface charge=-1e10
+
+models srh fermi ni.fermi print 
+
+mobility altcvt.n ^coulomb.n ^alt.sp.n
+mobility n.lcrit=1.0e-6 p.lcrit=1.0e-6 
+
+solve init
+solve prev
+
+solve vdrain=0.1
+
+output e.mob h.mob con.band val.band qss
+probe name="Fy_I" field v.y x=0.5 y=0.0
+probe name="eMob_I" n.mob v.x x=0.5 y=0.0
+
+log outf=sicex13_4.log
+solve vgate=2.0
+solve vstep=0.25 vfinal=10.0 name=gate
+log off
+
+save outf=sicex13_4.str
+
+
+#####################################
+# Bulk and surface phonon components:
+# 1/mu_alt =  1/mu_bulk + 1/mu_sp
+#####################################
+
+go atlas 
+
+mesh width=1.0
+
+x.m loc=0.0 spac=0.1
+x.m loc=0.2 spac=0.02
+x.m loc=0.5 spac=0.05
+x.m loc=0.8 spac=0.02
+x.m loc=1.0 spac=0.1
+
+y.m loc=-0.02 spac=0.005
+y.m loc=-0.01 spac=0.001
+y.m loc=0.0   spac=0.001
+y.m loc=0.1   spac=0.01
+y.m loc=1.0   spac=0.1
+
+region num=1 y.max=0.0 oxide
+region num=2 y.min=0.0 material="4H-SiC"
+
+electrode name=gate y.max=-0.01 x.min=0.25 x.max=0.75
+electrode name=source y.max=0.0 x.max=0.2
+electrode name=drain  y.max=0.0 x.min=0.8
+
+doping region=2 uniform p.type conc=1.0e15
+
+doping n.type gaussian conc=1e20 peak=0.0 junction=0.25 x.max=0.2 ratio.lat=0.6
+
+doping n.type gaussian conc=1e20 peak=0.0 junction=0.25 x.min=0.8 ratio.lat=0.6
+
+contact name=gate n.poly
+
+intdefects nta=1.5e12 ntd=1.5e12 nga=0.0 ngd=0.0 wta=0.33 wtd=0.33 \
+           numa=40 numd=40 tfile=sicex13_1.dat
+inttrap acceptor e.level=0.5 density=2.0e10 degen=4 sign=2.84e-15 sigp=2.84e-14
+inttrap acceptor e.level=0.7 density=2.0e10 degen=4 sign=2.84e-15 sigp=2.84e-14
+inttrap donor e.level=1.0 density=4.0e10 degen=4 sign=2.84e-15 sigp=2.84e-14
+interface charge=-1e10
+
+models srh fermi ni.fermi print 
+
+mobility altcvt.n ^coulomb.n ^alt.sr.n
+mobility n.lcrit=1.0e-6 p.lcrit=1.0e-6 
+ 
+solve init
+solve prev
+
+solve vdrain=0.1
+
+output e.mob h.mob con.band val.band qss
+probe name="Fy_I" field v.y x=0.5 y=0.0
+probe name="eMob_I" n.mob v.x x=0.5 y=0.0
+
+log outf=sicex13_5.log
+solve vgate=2.0
+solve vstep=0.25 vfinal=10.0 name=gate
+log off
+
+save outf=sicex13_5.str
+ 
+tonyplot -overlay sicex13_1.log sicex13_2.log sicex13_3.log sicex13_4.log sicex13_5.log -set sicex13_2.set
+tonyplot -overlay sicex13_1.str sicex13_2.str sicex13_3.str sicex13_4.str sicex13_5.str -set sicex13_3.set 
+
+quit
+

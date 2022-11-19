@@ -1,0 +1,50 @@
+<html>
+  <head>
+    <title>Phosphorus Pile-up During Oxidation</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Phosphorus Pile-up During Oxidation</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>SSuprem 4</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="andfex05_plot0.png" width="640" alt="andfex05_plot0" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates the effect of Phosphorus pile-up during oxidation.
+To clearly demonstrate the pile-up effect the example starts with constant P concentration of 1e18 /cm^3. The effect is most pronounced when oxidation is more intensive than diffusion, so phosphorus piling-up due to moving oxidation front does not have time to diffuse inside the bulk. High pressure is used to increase oxidation rate.
+If the standard
+<b> Fermi </b> model for diffusion is used, the pile-up effect is
+exaggerated because oxidation enhanced diffusion is not taken into account.
+More realistic profiles can be obtained using the
+<b> Two.dim </b> model. In this case phosphorus diffuses faster inside the bulk which prevents the formation of a very high pile-up.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

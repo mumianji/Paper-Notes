@@ -1,0 +1,130 @@
+# (c) Silvaco Inc., 2018
+##########################################################
+#
+#  Without generation-recombination 
+#
+###########################################################
+
+
+go atlas
+mesh  cylindrical
+
+x.m l=0.000    s=0.0003
+x.m l=0.002    s=0.0001
+x.m l=0.003    s=0.0001
+
+y.m l=0.00     s=0.0002
+y.m l=0.05     s=0.0002
+
+
+
+region      num=1    material=silicon
+region      num=2    x.min=0.002  x.max=0.003   y.min=0.00   y.max=0.05 sio2
+
+
+
+electrode   num=2 name= source x.max=0.003  y.max=0.00 
+electrode   num=3 name= drain  x.max=0.003  y.min=0.05 
+electrode   num=1 name= gate   x.min=0.003  y.min=0.01 y.max=0.04
+
+contact name=source  reflect
+contact name=drain   reflect
+contact name=gate    workfun=4.8 
+
+
+doping region=1 y.min=0.00 y.max=0.01  n.type uniform conc=1.0E20
+doping region=1 y.min=0.04 y.max=0.05  n.type uniform conc=1.0E20
+doping region=1 y.min=0.01 y.max=0.04  p.type uniform conc=1.0E18
+
+
+models  schrodinger p.schro dd_ms sp.geom=1dx Ox.Schro  num.direct=1 \
+        analyt fldmob ^srh ^bbt.kane
+ 
+
+mobility betan=2 vsatn=1.1e7        
+        
+
+method carriers=0  gumits=60   
+#rgconv.ddms=1.e-5 rgiter.ddms=100
+
+output band.par con.band val.band eigens=15 impact u.srh u.bbt
+
+
+solve init
+
+solve   v3=0.1
+save outf=quantumex13_ddms_vd01_vg0.str ddms.log
+
+log outf=quantumex13_ddms_IVg_vd01.log
+solve   v1=0.0 vstep=0.03 vfinal=1.5 name=gate 
+#save outf=quantumex13_ddms_vd01_vg15.str ddms.log
+log off
+
+
+solve init
+
+solve   v1=1.0
+save outf=quantumex13_ddms_vd0_vg1.str
+
+log outf=quantumex13_ddms_IVd_vg1.log
+solve   v3=0.0 vstep=0.05 vfinal=1 name=drain 
+save outf=quantumex13_ddms_vd1_vg1.str  ddms.log
+log off
+
+
+tonyplot  quantumex13_ddms_vd1_vg1.str -set quantumex13_cur.set
+
+
+##########################################################
+#
+#  With generation-recombination 
+#
+###########################################################
+
+
+models  schrodinger p.schro dd_ms sp.geom=1dx Ox.Schro  num.direct=1 \
+        analyt fldmob srh bbt.kane
+ 
+impact  selb egran=2e6 an1=5e5 ap1=5e5 an2=5e5 ap2=5e5       
+
+mobility betan=2 vsatn=1.1e7        
+        
+
+method carriers=0  gumits=60  
+#rgconv.ddms=1.e-5 rgiter.ddms=100
+
+output band.par con.band val.band eigens=15 impact u.srh u.bbt
+
+
+solve init
+
+solve   v3=0.1 
+save outf=quantumex13_ddmsGR_vd01_vg0.str ddms.log
+
+log outf=quantumex13_ddmsGR_IVg_vd01.log
+solve   v1=0.0 vstep=0.03 vfinal=1.5 name=gate 
+#save outf=quantumex13_ddmsGR_vd01_vg15.str ddms.log
+log off
+
+#solve init
+
+solve   v1=1.0
+save outf=quantumex13_ddmsGR_vd0_vg1.str
+
+log outf=quantumex13_ddmsGR_IVd_vg1.log
+solve   v3=0.0 vstep=0.05 vfinal=1 name=drain 
+save outf=quantumex13_ddmsGR_vd1_vg1.str  ddms.log
+log off
+
+tonyplot  quantumex13_ddmsGR_vd1_vg1.str -set quantumex13_cur.set
+
+
+tonyplot -overlay quantumex13_ddms_IVg_vd01.log quantumex13_ddmsGR_IVg_vd01.log -set quantumex13_IVg.set
+
+tonyplot -overlay quantumex13_ddms_IVd_vg1.log quantumex13_ddmsGR_IVd_vg1.log -set quantumex13_IVd.set
+
+
+
+
+exit
+

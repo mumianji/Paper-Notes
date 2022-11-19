@@ -1,0 +1,635 @@
+{section} Athena_IMPLANT : Implant Process Simulation
+
+{subsection} aniiex01.in : Comparison of Gaussian, Pearson and SVDP methods 
+
+Requires: SSuprem 4
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This example compares implant analytical models: Gaussian (symmetrical)
+profile, single Pearson (amorphous implant), and SIMS Verified Dual
+Pearson (
+{bold}SVDP
+) method. 
+The parameter 
+{bold} PRINT.MOM 
+specifies that moments used in each simulation should be printed out.
+The
+{bold} MOMENTS 
+statement is used to select the tables.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+{subsection} aniiex02.in : Tilt Angle Dependence using the SVDP Model 
+
+Requires: SSuprem 4
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This example shows how  35 keV boron implant profile depends on the
+tilt angle. the SIMS Verified Dual Pearson (
+{bold}SVDP
+) method is used.  
+The parameter 
+{bold} PRINT.MOM 
+specifies that moments used in each simulation should be printed out.
+As can be seen the boron distribution is very sensitive even for a small
+variation in the tilt angle.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+{subsection} aniiex03.in : Screen Oxide Thickness Dependence using the SVDP Model 
+
+Requires: SSuprem 4
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This example shows how a 35 keV boron implant profile depends on the thickness of the surface oxide. Oxide is grown in DRY ambient at a temperature of 900 C. 
+Oxidation time varies from 0 to 160 minutes which results in oxide thicknesses
+between approximately 50 and 400 Angstroms. The values of oxide thickness are extracted and
+then substituted into the 
+{bold} S.OXIDE 
+parameter of the 
+{bold} IMPLANT 
+statement. The surface screen oxide partially randomizes the ion flux which
+leads to less channeling with increasing oxide thickness.
+The SIMS Verified Dual Pearson (
+{bold}SVDP
+) method allows us to properly predict this effect.  
+Parameter 
+{bold} PRINT.MOM 
+specifies that moments used in each simulation should be printed out.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+{subsection} aniiex04.in : Experimental Verification of Channeling Profiles  
+
+Requires: SSuprem 4
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This example compares zero-tilt boron implant profiles obtained using
+the SIMS Verified Dual Pearson (
+{bold}SVDP
+) method with experimental results (R.J. Shreutelkamp, et.al.,
+Nucl.Instr. & Meth., B55, p.615, 1991) saved in *.exp files.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+{subsection} aniiex05.in : Dose Dependent Channeling of Phosphorus 
+
+Requires: SSuprem 4
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This example shows the dose dependence of zero-tilt P implant profiles obtained using the 
+SIMS Verified Dual Pearson (
+{bold}SVDP
+) method and compares them with experimental results (R.J. Shreutelkamp, et.al., 
+Nucl.Instr. & Meth., B55, p.615, 1991) saved in *.exp files. As the implant dose
+increases, more damage is caused resulting in additional dechanneling of 
+phosphorus ions. Therefore, the profile tail shortens with increasing dose.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+{subsection} aniiex06.in : Retrograde Well Formation Using High Energy Implants
+
+Requires: SSuprem 4
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This example shows high energy implant capability. The look-up tables
+for main implants are extended up to 8 MeV which allows simulation
+of modern technologies involving MEV implants. In this example,
+the three microns deep retrograde well is formed using two P implants
+(2 MeV and 0.75 MeV) with subsequent 1 hour, 1100 C anneal. 
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+{subsection} aniiex07.in : User-Defined MOMENTs with Parameters from MC Simulation
+
+Requires: SSuprem 4, MC IMPLANT
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This example can be used as a template which allows us to estimate implant moments
+from Monte Carlo simulation and then use these moments in subsequent 
+analytical implants. This approach is useful for those ion/material/energy combinations
+which are not included into look-up tables. 
+
+In the first part of the example, the Monte Carlo method is used to calculate 
+moments for 70 keV boron in titanium silicide. Parameter
+{bold} PRINT.MOM 
+specified in the 
+{bold} IMPLANT 
+statement allows Athena to save the calculated moments in the standard structure
+file 
+{bold} aniiex07_01.str
+. 
+
+In the second part of the example, first the moments parameters 
+for single Pearson distribution are extracted from the file. Then, the 
+parameter substitution capability of 
+{bold} DeckBuild 
+is used to path these parameters to the 
+{bold} MOMENTS 
+statement. After that the moments set in the
+{bold} MOMENTS 
+statement are used in the analytical implant. The parameter
+{bold} ANY.PEARSON 
+is set to FALSE. This ensures that Pearson type-IV distribution will be used.
+Profiles obtained in Monte Carlo and analytical simulations
+are compared in TonyPlot.
+
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} aniiex08.in : Phosphorus Implant through Thick Nitride Layer
+
+Requires: SSuprem 4, MC IMPLANT
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This example compares Monte Carlo and analytical methods for implantation into
+a multi layered structure. It shows that analytical methods are reasonably accurate
+even for the case when the profile peak is close to interface between two
+materials with quite different stopping powers. In most cases the default 
+{bold} DOSE.MATCH 
+method appears to be fairly adequate, but sometimes range scaling methods (
+{bold} MAX.SCALE
+, for example) may give slightly better profiles in the deeper layer.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+{subsection} aniiex09.in : Lateral Implant Straggle
+
+Requires: SSuprem 4, MC IMPLANT
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This example compares analytical methods for simulation of 2D implantation.
+It also shows how to use Monte Carlo simulation for estimation of spatial
+moments. 
+
+In the first part, Monte Carlo simulation is used to save a structure 
+with spatial moments. Only 20000 trajectories is enough to estimate the moments.
+
+In the second part, all 8 spatial moments are extracted. Then, the default
+and 
+{bold}FULL.LAT 
+model are used to simulate 2D implant into the 0.2 microns mask window. The default method uses only 5 spatial moments, and lateral distribution is
+Gaussian  with standard deviation independent from the vertical coordinate.
+FULL.LAT model uses 8 spatial moments and lateral distribution is a symmetrical
+Pearson function with standard deviation varying as a parabolic function
+of the vertical coordinate.
+In general, lateral kurtosis should also depend on the vertical
+coordinate, however the simplified approach with constant kurtosis slightly
+smaller than the averaged fourth lateral moment KURTT is used. Obtained 2D
+profiles are overlaid in TonyPlot. 
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} aniiex10.in : LDD Formation using High Tilt Angle Implant (LATID)
+
+Requires: SSuprem 4
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This example demonstrates the use of the analytical angled implant model.
+A MOS structure is created with angled full rotation LDD implants. 
+Full rotation is used to provide symmetry of 2D profiles. LDD implant
+uses off-axes direction (48 degrees) to exclude very deep penetration along 
+45 degrees direction. A very detailed Monte Carlo simulation would be needed
+to obtain a reliable set of moments for 45 degree implants. Source and
+drain As implant is performed at 0 degrees. 
+
+
+{bold} Note: 
+The parameter
+{bold} STD_TABLE 
+is used in the 
+{bold} MOMENTS 
+statement. Otherwise the SVDP model would
+overestimate the implant tail because it does not have surface oxide
+dependence for arsenic.
+
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+{subsection} aniiex11.in : 2D BCA coincident boron arsenic point implants
+
+Requires: SSuprem 4, MC IMPLANT
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This example shows the difference between two implants as
+a result of the order in which they are done.  The implant
+damage from the first implant affects the second implant.
+
+An impenetrable 
+{bold} barrier 
+layer is deposited upon silicon in this example,
+which is then etched to create a 10 nm wide window.  This structure
+forms the starting point for two separate cases.
+
+In the first case, a 10 keV arsenic implant is performed, followed by
+a 10 keV boron implant.  Arsenic, a heavier ion than boron, creates
+significant damage in the silicon.  As a result, the crystal
+integrity of silicon is reduced, which in turn reduces the boron
+channeling.
+
+The second case reverses the order of the implants (but maintains
+the same energy and dose).  Boron is
+first implanted, and the normal 
+{bold} [100] 
+channel profile of boron as determined by BCA is formed.  The arsenic 
+implant follows. Since boron is much lighter than arsenic, there is 
+less damage created by the boron implant (which can also be viewed in the
+{bold} .history.str 
+files), and arsenic forms nearly the same distribution
+as in the first case.  Quantitatively, the peak concentration 
+(the projected range) of boron is noticeably deeper in the
+second case.
+
+The current example simulates 10,000 ions incident upon the
+structure for each implant.  Increased accuracy, at the
+cost of increased simulation time, can be obtained by increasing the 
+{bold} n.ion 
+parameter of the 
+{bold} IMPLANT 
+statement to 100,000.
+
+The 
+{bold} impct.point 
+parameter specifies a precise impact location
+for the ions.  This parameter makes the barrier layer redundant,
+and is available only for Monte Carlo ion implant simulations.  
+See the Athena User's manual for a complete description
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} aniiex12.in : Angled Monte Carlo Implant into a Trench 
+
+Requires: SSuprem 4, MC IMPLANT
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This example employs a Monte Carlo implant model to implant boron into
+the sidewall of a trench. The 
+{bold} RELAX 
+statement is also used to
+adapt the mesh after trench etching so that a fine mesh can be created
+at the surface where it is needed to resolve the implantation.
+
+For this example, ions are incident at an angle of 15 degrees from the
+direction of the y-axis.  Thus, the ions are incident directly only on
+the right side of the trench and at the top exposed surface.  The
+doping on the left side and bottom of the trench is due to reflected
+ions.  There is a visible reduction in the depth of the profile about 1
+micron from the bottom of the trench.  This corresponds to the point in
+the trench where ions are directly incident above this point and 
+shadowed below it. The first TonyPlot shows the ion trajectories
+(including those of reflected ions). To facilitated the visualization
+select the LINE (the last icon in the 
+{bold} DISPLAY 
+menu) button.
+
+Following the implant calculation, a short diffusion is performed and
+the results are plotted using 
+{bold} TonyPlot
+. 
+The output shows 1D profiles
+from the surface of the unetched silicon and also from the implanted
+sidewall of the trench.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} aniiex13.in : Comparison of Analytical and MC Implant Models
+
+Requires: SSuprem 4, MC IMPLANT
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This example shows that the channeling effect of ion implantation
+can be simulated by using the Monte Carlo crystal model.
+It compares boron implants at 7 degrees obtained by amorphous and crystalline 
+Monte Carlo models with amorphous and SVDP analytical models. Within the range 
+of the SVDP model validity the analytical approach is preferred. However outside 
+this range the crystalline MC implant can be used for more accurate profiles.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+{subsection} aniiex14.in : BCA Models for well channeled Boron Implant.
+
+Requires: SSuprem 4, MC IMPLANT
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+
+This example demonstrates that 0-tilt implantation can be simulated using the
+Binary Collision Approximation (BCA) Model. In the BCA model the deflection 
+of the moving particles is calculated in a strict binary way - between the 
+moving ion and the closest atom in the lattice. The difference between 
+the BCA model and earlier implemented Monte Carlo crystalline model is 
+much more accurate determination of the closest atom and more accurate 
+calculation of impact dependent inelastic energy losses. Therefore, 
+BCA is capable of much more accurately predicting trajectories of 
+well-channeled particles and therefore usually gives much better 
+agreement with experiments in those cases where the channeling process 
+is dominant, e.g. for 0 degrees implants. 
+
+The simulated profile is compared with experiment (R.J. Shreutelkamp, et.al., 
+Nucl. Instr. & Methods, v. B55, p. 615, 1991) and SVDP simulation which is 
+also based on SIMS experiments. It should be stressed here that 
+experimental results for well channeled implants are quite sensitive 
+to many factors including surface conditions (thickness and uniformity 
+of oxide surface layer) and precision of the ion beam orientation 
+and beam width. Even 0.5 degree deviation in these parameters could 
+result in considerable changes of measured implanted profiles. 
+Therefore, agreement between these simulations and experiment should 
+be considered as quite reasonable.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+{subsection} aniiex15.in : Preamorphization Effect on Shallow Junction Profile.
+
+Requires: SSuprem 4, MC IMPLANT
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This example demonstrates that the BCA implant model can predict
+reduction of the channeling tail by using the preamorphization
+technique. Preamorphization of surface layers using Silicon ion
+bombardment is often used to avoid deep channeling tails when shallow
+symmetric doping profiles are  required.
+
+BCA simulations of three separate 70 keV, 1e13 ion/cm^2, 0-tilt Arsenic 
+implants are performed:
+
+{bullet} without preamorphization
+{newline}
+{bullet} with partial preamorphization (1e14 Si ions/cm^2) 
+{newline}
+{bullet} with full preamorphization (1e15 Si ions/cm^2). 
+{newline}
+
+The profile comparison shows that even partial preamorphization
+significantly reduces the channeling tail, while "full"
+preamorphization completely eliminates the tail.
+
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} aniiex16.in : Use of C-Interpreter for Control of Damage Models.
+
+Requires: SSuprem 4
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This example shows how C-Interpreter can be used for control of
+PLUS.ONE (or UNIT.DAMAGE)  and <311> Cluster formation models. Both
+models estimate distributions of point defect and <311> clusters by
+scaling implant profile using factors DAM.F and CLUSTER.F,
+correspondingly. Also, in the case of <311>, the user specifies the
+concentration limits within which the clusters can be formed.
+
+These methods of damage model control are very limited and sometimes
+could not represent physical reality. For example, it is observed that
+clusters are not formed near silicon surface, but it cannot be
+specified within model limitations. 
+
+The first part of this example, and corresponding Figure on the left, shows that two <311> cluster bands are
+formed. This situation is even more pronounced in 2D since the <311>
+cluster band could propagate laterally and end up at the surface. This
+means that if the model is applied to S/D or LDD implant of a
+MOS device, the <311> would "appear" under the gate which is incorrect.
+
+Use of C-interpreter allows us to modify the models. In this case the C-interpreter
+file 
+{bold} aniiex16.lib 
+allows the cluster to be formed only at depths > 0.15 microns. Also, C-interpreter 
+allows us to modify the PLUS.ONE model. In this example,  C-interpreter specifies that the PLUS.ONE model is
+to be applied to concentrations only above level of 3e15 /cm^3.
+
+The C-interpreter file is specified by the
+{bold} DAM.MOD 
+parameter in the 
+{bold} IMPLANT 
+statement.     
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+{subsection} aniiex17.in : 2D BCA low energy boron source/drain implant
+
+Requires: SSuprem 4, MC IMPLANT
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This two dimensional example of the 
+{bold} Monte Carlo Binary Collision Approximation (BCA) 
+model has two cases, the first of zero tilt,
+the second of thirty degree tilt.  (See the Athena_IMPLANT example
+on "BCA Models for well channeled Boron Implant" for a description
+of the BCA model.)
+
+The structure includes a thin oxide above the silicon, and polysilicon
+0.15 um long (such as used for a MOS gate).  In this example, 
+the 2 keV boron implant is effectively a source/drain (or LDD) implant.  
+(At this low energy, most analytic implant models are inaccurate.)
+
+The zero tilt case produces nearly symmetric dopant distribution. 
+The thirty degree tilt case shows additional dopant
+on the left side of the structure, including the left side of
+the polysilicon, and a shadowing effect on the right side, as
+expected.
+
+A comparison of the zero tilt and the thirty degrees tilt will show
+a higher dose in the zero tilt case.  This is due to a larger number
+of incident ions reflected in the thirty degrees tilt case.
+
+The 
+{bold} beamwidth 
+parameter introduces a random tilt between zero and 
+{bold} +/- beamwidth/2 
+degrees for Monte Carlo ion implant simulations.  For
+an accurate simulation, this parameter has been set to 0.1.  
+
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} aniiex18.in : Effect of Implant Steps Sequence.
+
+Requires: SSuprem 4, MC IMPLANT
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This example demonstrates that not only the profile depth but also details
+of the 2D shape depends on the sequence of implant steps. In the first case even
+a low dose As implant partially disorders silicon near the surface which
+results in a higher probability of channeling in secondary directions. In the
+second case, channeling takes place predominantly in the normal direction.
+
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+{subsection} aniiex19.in : Use of SIMS Profile Model
+
+Requires: SSuprem 4, MC IMPLANT
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This example demonstrates how to use the SIMS Profile Model. 
+
+
+In many cases 1D profiles obtained from tabulated range moments are not
+accurate and it is preferable to use measured SIMS profile instead. The SIMS 
+Profile Model provides this capability. Athena will use SIMS profile stored 
+in a file specified by parameter 
+{bold} measured.sims 
+when 
+{bold} profile 
+parameter present in the implant statement.
+
+
+Another possibility is to generate SIMS-like profile using 1D Monte Carlo simulation 
+and extract capability of DeckBuild. This capability is shown in the example.
+In the first part 1D profile of 200 keV boron profile is simulated using BCA 
+Monte Carlo model and then extracted and saved in aniiex19.dat file. In the second part of the example,
+the 200 keV boron implantation through 1 micron mask window is simulated. The extracted profile aniiex19.dat is specified in the implant statement with parameter
+{bold} extract.sims
+. 
+The final 2D distribution is not as accurate as the result of a full 2D Monte Carlo simulation but the SIMS Profile Model is obviously much faster.
+
+
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+{subsection} aniiex20.in : Al implant in 4H-SiC in [11-23] Crystallographic Direction.
+
+Requires: SSuprem 4, MC IMPLANT
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This example shows very pronounced channeling effects 
+for on-axis implantation in 4H-SiC. The Al implant energy is 60 keV and
+implant direction condition corresponds to on-axis implantation in [11-23]
+crystallographic direction. Comparison with results of aniiex20.in shows that 
+crystallographic orientation significantly affects the length of channeling tails. 
+Crystallographic analysis shows that channels in [11-23] direction are 
+"wider" than in [0001] direction which result in almost 2 times longer channeling 
+tails when implanting in [11-23] direction. The experimental profiles are taken from 
+Wong-Leung et al. J. Appl. Phys. vol.93, pp 8914-8916, 2003.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+

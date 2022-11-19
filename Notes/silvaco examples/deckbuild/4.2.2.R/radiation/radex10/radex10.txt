@@ -1,0 +1,83 @@
+
+{subsection} radex10.in : Inter Device Leakage from Total Dose XRay Photonic Exposure
+
+Requires: VictoryProcess/VictoryDevice/REM
+{newline}
+Minimum Versions: VictoryProcess 7.14.3.R, VictoryDevice 1.10.2.R
+
+This examples demonstrates Inter Device Leakage from XRay Total Dose Exposure
+
+For older technologies, one of the main effects of 
+{bold} Total Dose Irradiation
+was the accumulation of positive charge in the gate oxide, resulting in 
+threshold voltage shifts that either reduced current drive or increased off 
+state leakage, depending on whether the device was a p- or n-MOS device
+respectively.  For more agressive technologies, the gate oxides are so thin,
+that the major effect of Total Dose Irradiation is the trapping of positive 
+charge in the trench isolation oxides, creating a parasitic current leakage 
+path between trench isolated devices.  The leakage path could be between the
+Source/Drain contacts of two seperate nMOS devices, or could be between the 
+Source/Drain contact of an nMOS device and the n-Well isolation of a p-MOS 
+device.  In this example, we demonstrate the creation of a current leakage path
+between two nMOS devices.  Leakage betwen an nMOS and pMOS n-Well is 
+essentially the same phenomenon.
+
+VictoryProcess is used to create the two nMOS devices, seperated and 
+electrically isolated by a trench and p-well with associated trench implants.
+
+There are several basic input file set up requirements for simulating total 
+dose effects in VictoryDevice:
+{newline}
+{bullet} the effected insulators must be simulated as wide bandgap semiconductors
+{newline}
+{bullet} any doping in the insulator therefore needs to be removed
+{newline}
+{bullet} insulator trap densities, characteristics and locations need to be defined
+{newline}
+{bullet} the radiation source and dose rate needs to be defined 
+{newline}
+{bullet} the parameter "radiation" needs to be invoked on the solve statement
+
+To convert an insulator to a wide bandgap semiconductor, the material statement
+is used.  For example:
+{newline}
+{bold} material material=oxide semiconductor
+{newline}
+
+To remove any existing doping from the insulator, which would cause erroneous 
+conduction, the "doping replace" syntax is used.  For example:
+{newline}
+{bold} doping material=oxide replace uniform net concentration=-1
+{newline}
+
+Two types of insulator traps can be defined, bulk insulator traps, using the
+{bold} oxidecharging
+statement and interface insulator traps, using the
+{bold} intoxidecharging
+statement in a direct analagy to defect and intdefect statements.  Two model
+implementations are also available, the 
+{bold} "Jmodel" 
+and the 
+{bold} "Vmodel".
+The user is directed to the manual to gain a full understanding of the meaning
+of all the parameters in these statements and the model implementation, as a
+full description is too lengthy for this brief example description.
+
+The radiation source and dose rate are defined in the radiation statement.  
+Here a 10keV XRay source and a dose rate of 1 Rad per second is defined, using
+the radiation statement:
+{bold} radiation doserate=1 XRay
+
+The convenience of defining a dose rate of 1 Rad per second is that the total 
+dose will be the same as the elapsed transient time in the solve statement, if
+the parameter "radiation" was invoked in the transient from the start.
+
+The simulation shows how the leakage between the two trench isolated nMOS
+devices, increases after a total dose of 3 MRads.
+
+To load and run this example, select the
+{bold} Load example 
+button in DeckBuild. This will copy the input file and any support
+files to your current working directory. Select the
+{bold} run 
+button to execute the example.

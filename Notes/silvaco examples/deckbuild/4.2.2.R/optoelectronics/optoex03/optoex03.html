@@ -1,0 +1,75 @@
+<html>
+  <head>
+    <title>Transient Response</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Transient Response</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>S-Pisces/Luminous</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="optoex03_plot0.png" width="640" alt="optoex03_plot0" />
+      <p/>
+      <img src="optoex03_plot1.png" width="640" alt="optoex03_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example deals with time domain response of the device
+to time dependent optical sources.  This example
+will extract the transient response of the device to an optical
+source being &quot;turned off&quot;.
+</p>
+<p>
+The first and second sections of the input file are the same as in the
+DC example described previously. The first section specifies that the device
+structure is read in from an external file. The second section specifies the material
+models used.  The third section of the file specifies a normally
+incident monochromatic source.  The wavelength of the source is 623 nm,
+equivalent to a HeNe laser wavelength.
+</p>
+<p>
+The fourth section of the input file sets the initial biasing
+conditions of the device.  Here again the device is biased
+to 2.0 volts.
+</p>
+<p>
+The last section of the input file specifies the transient.  In this
+case the DC solution at a source intensity of 5 W/cm^2 is obtained.
+Then, the source intensity is ramped linearly to 0 over a time
+of 1 ns.  Terminal data is then collected over the next 9 ns.  The
+terminal data is saved to the log file.
+</p>
+<p>
+The results of the example are viewed in TonyPlot. They compare the
+available photo current with the cathode current as a function of
+time.  In this case the cathode current lags the source transient by a
+fraction of a nanosecond.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

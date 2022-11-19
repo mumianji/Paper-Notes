@@ -1,0 +1,104 @@
+<html>
+  <head>
+    <title>SiGe HBT Fabrication and Characterization Simulation</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>SiGe HBT Fabrication and Characterization Simulation</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>SSuprem 4/Blaze</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="hbtex05_plot0.png" width="640" alt="hbtex05_plot0" />
+      <p/>
+      <img src="hbtex05_plot1.png" width="640" alt="hbtex05_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates fabrication and analysis of SiGe HBT. A
+bipolar device with a SiGe base created in Athena, and then passed to
+Atlas for electrical analysis to extract a gummel plot and bipolar
+gain. It shows:
+</p>
+<ul>
+  <li>
+ SiGe simulation in Athena
+<br/>
+  </li>
+  <li>
+ Specification of donor and acceptor dopants for SiGe material
+<br/>
+  </li>
+  <li>
+ Athena-Atlas automatic interface 
+<br/>
+  </li>
+  <li>
+ DC simulation for Ic and Ib versus Vbe 
+  </li>
+</ul>
+<p>
+This example contains two parts. The first is the Athena process simulation
+of the HBT, and the second is the Atlas electrical analysis. The whole of the
+Atlas part of this example is as described in the first example in this
+section with the exception of the Atlas structure specification syntax.
+</p>
+<p>
+The Athena run starts by defining the mesh and the silicon substrate.
+After the buried collector formation, the structure is flipped upside
+down using
+<br/>
+<b> struct outf=&lt;file&gt;</b> <br/>
+<b> init inf=&lt;file&gt; flip.y</b> <br/>
+The next step is the deposition of the silicon germanium layer. SiGe
+is a recognized material in FLASH so no special syntax is needed. The
+remainder of the bipolar processing is use of typical process simulation
+commands for base and emitter implant, silicon emitter layer and
+various drive steps. Metal contacts are deposited, patterned and
+defined using the
+<b> electrode</b> statement.
+</p>
+<p>
+The key statement required for the Athena/Atlas interface is to define
+the type of dopants that boron and phosphorus are in SiGe. This is
+necessary for all materials in FLASH. The command
+<b> impurity i.boron acceptor sige</b> sets boron as an acceptor-type dopant in SiGe. A similar statement sets
+phosphorus as a donor-type dopant.
+</p>
+<p>
+The line
+<b> go atlas</b> defines the automatic interface with Atlas. In Atlas, no structure
+specification syntax (including the mesh statement) is needed.
+</p>
+<p>
+Results of the electrical simulation can be seen in TonyPlot. Ic and Ib
+plots vs. Vbe can be seen from the log file. The band diagram and
+other physical variables can be seen from the solution file.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

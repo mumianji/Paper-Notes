@@ -1,0 +1,90 @@
+<html>
+  <head>
+    <title>Wide Bandgap Ga2O3 MOSFET</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Wide Bandgap Ga2O3 MOSFET</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>ATLAS</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>ATLAS 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="powerex17_plot0.png" width="640" alt="powerex17_plot0" />
+      <p/>
+      <img src="powerex17_plot1.png" width="640" alt="powerex17_plot1" />
+      <p/>
+      <img src="powerex17_plot2.png" width="640" alt="powerex17_plot2" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+Single-crystal gallium oxide (Ga2O3) has attracted increasing attention as a promising
+material for power device applications. It possesses excellent material properties and
+has the potential for mass productivity of low-cost and high-quality bulk crystals by
+using methods such as the edge-defined film-fed growth (EFG) method [1].
+</p>
+<p>
+The objective of this example is to demonstrate how to simulate this new wide bandgap
+oxide semiconductor material Ga2O3 and to reveal what kinds of physical models and
+settings are needed in order to reproduce experimental I-V data. The experimental
+data used in this benchmark were selected from a recently reported paper on the first
+demonstration of Ga2O3 MOSFET [2].
+</p>
+<p>
+The substrate is a semi-insulating single-crystal β-Ga2O3 and a 300 [nm] thick n-type
+Ga2O3 channel layer was grown on it. The dopant concentration of the layer is
+7e17 [1/cm3] and about half of this is considered to be activated. The source and drain
+contact regions were formed by multiple Si implantations with 150 [nm] deep box profile
+whose concentration is 5e19 [1/cm3]. We assumed that 3e19 [1/cm3] were activated. The
+distance between the source and the drain box regions is 20 [um] and a 20 [nm] thick
+Al2O3 gate dielectric film was formed with a 2 [um] long Ti/Pt/Au metal gate on top.
+</p>
+<p>
+We selected simple device models as much as possible. Only the LAT.TEMP parameter was
+set on the MODEL statement to solve the heat flow in the device and a constant
+thermal conductivity model was used.
+</p>
+<p>
+Simulated ID-VD curves and a ID-VG curve are shown in Fig.2 and Fig.3 with corresponding
+experimental data. Fairly good agreements with experimental data were obtained using
+constant mobility model even without any defect trap and interface charge
+</p>
+<p>
+To load and run this example, select the Load button in DeckBuild. This will
+copy the input file and any support files to your current working directory. Select
+the run button to execute the example.
+</p>
+<p>
+References:
+</p>
+<p>
+1]. H. Aida, K. Nishiguchi, H. Takeda, N. Aota, K. Sunakawa and Y. Yaguchi,
+&quot;Growth of B-Ga2O3 Single Crystals by the Edge-Defined, Film Fed Growth Method &quot;
+Jpn. J. Appl. Phys. 47, 8506(2008).
+</p>
+<p>
+[2]. M.Higashiwaki, K. Sasaki, T. Kamimura, M. H. Wong, D. Krishnamurthy, A. Kuramata, T. Masui and S. Yamakoshi,
+&quot;Depletion-mode Ga2O3 MOSFETs &quot;
+71st Annual Device Research Conference (DRC), 10.1109/DRC.2013.6633890.
+</p>
+  </div></body>
+</html>

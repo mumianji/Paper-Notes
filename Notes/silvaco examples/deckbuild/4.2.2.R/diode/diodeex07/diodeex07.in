@@ -1,0 +1,159 @@
+# (c) Silvaco Inc., 2018
+go devedit
+DevEdit version="2.2.1" library="1.17"
+
+work.area left=0 top=-34.6 right=5 bottom=38
+
+# SILVACO Library V1.17
+
+region reg=1 name=anode mat=Gold elec.id=1 work.func=0 color=0x595959 pattern=0xb \
+	points="5,38 0,38 0,13 5,13 5,38"
+#
+constr.mesh region=1 default
+
+region reg=2 name=contact mat=GaAs color=0x7f00 pattern=0x9 \
+	points="5,13 0,13 0,12 5,12 5,13"
+#
+impurity id=1 region.id=2 imp=Donors \
+	x1=0 x2=0 y1=0 y2=0 \
+	peak.value=2.5e+18 ref.value=1000000000000 comb.func=Multiply \
+	rolloff.y=both conc.func.y=Constant \
+	rolloff.x=both conc.func.x=Constant
+#
+constr.mesh region=2 default max.height=0.05
+
+region reg=3 name=transit mat=GaAs color=0x7f00 pattern=0x9 \
+	points="5,12 0,12 0,10.4 5,10.4 5,12"
+#
+impurity id=1 region.id=3 imp=Donors \
+	x1=0 x2=0 y1=0 y2=0 \
+	peak.value=1.2e+16 ref.value=1000000000000 comb.func=Multiply \
+	rolloff.y=both conc.func.y=Constant \
+	rolloff.x=both conc.func.x=Constant
+#
+constr.mesh region=3 default max.height=0.05
+
+region reg=4 name=substrate mat=GaAs color=0x7f00 pattern=0x9 \
+	points="5,10.4 0,10.4 0,0.4 5,0.4 5,10.4"
+#
+impurity id=1 region.id=4 imp=Donors \
+	x1=0 x2=0 y1=0 y2=0 \
+	peak.value=2.5e+18 ref.value=1000000000000 comb.func=Multiply \
+	rolloff.y=both conc.func.y=Constant \
+	rolloff.x=both conc.func.x=Constant
+#
+constr.mesh region=4 default max.height=0.05
+
+region reg=5 name=cathode mat=Gold elec.id=2 work.func=0 color=0x595959 pattern=0xb \
+	points="5,0.4 0,0.4 0,-9.6 5,-9.6 5,0.4"
+#
+constr.mesh region=5 default
+
+
+
+# Set Meshing Parameters
+#
+base.mesh height=50 width=100
+#
+bound.cond !apply max.slope=30 max.ratio=100 rnd.unit=0.01 line.straightening=1 align.points when=automatic
+#
+imp.refine imp="Donors" sensitivity=1
+imp.refine min.spacing=0.02
+#
+constr.mesh max.angle=90 max.ratio=300 max.height=1000 \
+	max.width=1000 min.height=0.0001 min.width=0.0001
+#
+constr.mesh type=Semiconductor default
+#
+constr.mesh type=Insulator default
+#
+constr.mesh type=Metal default max.angle=127.2
+#
+constr.mesh type=Other default
+#
+constr.mesh region=1 default
+#
+constr.mesh region=2 default max.height=0.05
+#
+constr.mesh region=3 default max.height=0.05
+#
+constr.mesh region=4 default max.height=0.05
+#
+constr.mesh region=5 default
+#
+# Perform mesh operations
+#
+Mesh Mode=MeshBuild
+struct outf=diodeex07.str
+
+go atlas
+#
+#mesh  infile=diodeex07.str
+#
+#
+# #1=anode #2=cathode 
+contact     name=anode neutral resist=5e2 
+
+# set GaAs-saturation velocity model with negative slope (evsatmod=1)
+# carriers=1 solves the electron continuity equation only, since holes
+# play no role here
+models consrh analytic fldmob evsatmod=1 b.elec=2 \
+	 boltzman print temperature=300
+
+method carriers=1 dt.max=1e-12
+#
+
+output     e.field 
+
+solve init
+solve
+
+# ramp up the bias
+log outf=diodeex07_1.log
+solve vanode=2 ramptime=1e-10 tstop=1e-10 dt=1e-12 
+save outf=diodeex07_1.str
+
+# extract the i-v characteristic and the crittical field, above which
+# the negative resistance begins
+extract name="diodeex07.dat" curve (vint."anode",i."anode") outf="diodeex07.dat"
+extract name="Icrit" max(i."anode")
+extract name="Ucrit" x.val from curve(vint."anode",i."anode") where y.val=$Icrit
+extract name="Ecrit" $Ucrit/1.6e-4
+tonyplot diodeex07.dat
+
+# do transient simulation at 2V constant external bias
+log outf=diodeex07_2.log
+solve tstop=3e-10 dt=1e-12 
+log off
+
+# extract the oscillation frequency by measuring the time for 4 periods
+extract init inf="diodeex07_2.log"
+extract name="v_ave" ave(vint."anode")
+extract name="t1" x.val from curve(time,vint."anode") where y.val=$"v_ave"
+extract name="t2" x.val from curve(time,vint."anode") where y.val=$"v_ave" and val.occno=9 
+extract name="delta" ($"t2" - $"t1") / 4
+extract name="f@2V" 1 / $"delta"
+tonyplot diodeex07_2.log -set diodeex07_2.set
+
+# ramp up to 4V external bias
+load inf=diodeex07_1.str master
+solve prev
+solve vanode=4 ramptime=1e-10 tstop=1e-10 dt=1e-12 
+save outf=diodeex07_3.str
+
+# do transient simulation at 4V constant external bias
+log outf=diodeex07_3.log
+solve tstop=1.8e-10 dt=1e-12 outfile=diodeex07_x0 master
+log off
+tonyplot diodeex07_3.log -set diodeex07_3.set
+
+extract init inf="diodeex07_3.log"
+extract name="v_ave" ave(vint."anode")
+extract name="t1" x.val from curve(time,vint."anode") where y.val=$"v_ave"
+extract name="t2" x.val from curve(time,vint."anode") where y.val=$"v_ave" and val.occno=9 
+extract name="delta" ($"t2" - $"t1") / 4
+extract name="f@4V" 1 / $"delta"
+
+tonyplot -st  diodeex07_x0 diodeex07_x1 diodeex07_x2 diodeex07_x3 diodeex07_x4 diodeex07_x5 diodeex07_x6 diodeex07_x7 diodeex07_x8 diodeex07_x9 diodeex07_xA diodeex07_xB diodeex07_xC diodeex07_xD diodeex07_xE -set diodeex07_4.set
+
+quit

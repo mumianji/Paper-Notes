@@ -1,0 +1,25 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include <ctype.h>
+#include <malloc.h>
+#include <string.h>
+#include <template.h>
+
+/*
+ * Generation rate as a funcition of position
+ * Statement: BEAM
+ * Parameter: F.RADIATE
+ * Arguments:
+ * x          location x (microns)
+ * y          location y (microns)
+ * z          location z (microns)
+ * t          time (seconds )
+ * *rat       generation rate per cc per sec.
+ */
+int radiate(double x, double y, double z, double t, double *rat)
+{
+	*rat = 2.7e21;
+	return(0);                /* 0 - ok */
+}
+

@@ -1,0 +1,69 @@
+go athena
+
+line x loc=0.000000 tag=left
+line x loc=25.000000 spac=5.000000
+line x loc=495.000000 spac=5.000000
+line x loc=1020.000000 tag=right
+line y loc=0.000000 spac=0.020000 tag=top
+line y loc=0.100000 spac=0.050000
+line y loc=0.500000 spac=0.080000
+line y loc=1.000000 spac=0.100000
+line y loc=5.000000 spac=3.000000 tag=bottom
+init silicon orientation=100
+# 
+deposit nitride thick=0.2 div=1
+
+depo barrier thick=0.010000 divis=1 
+etch barrier start x=-0.1 y=-1000
+etch cont x=-0.1 y=1000
+etch cont x=30 y=1000
+etch cont x=30 y=-1000
+etch cont x=230 y=-1000
+etch cont x=230 y=1000
+etch cont x=290 y=1000
+etch cont x=290 y=-1000
+etch cont x=490 y=-1000
+etch cont x=490 y=1000
+etch cont x=1020.1 y=1000
+etch done x=1020.1 y=-1000
+# 
+# 
+etch nitride dry thick=.3
+
+etch silicon dry thick=.5 
+
+strip
+
+# 
+deposit oxide thick=0.7 div=1
+
+struct outfile=anelex27_1.str
+
+# The hard polish
+
+rate.polish nitride machine=anelex27 n.m soft=4 height.fac=0.02 \
+	length.fac=30 kinetic.fac=10
+rate.polish oxide machine=anelex27 n.m soft=25 height.fac=0.02 \
+	length.fac=30 kinetic.fac=10
+#
+polish machine=anelex27 time=30 min dx.mult=1 dt.fact=0.0005
+
+struct outfile=anelex27_2.str
+
+init infile=anelex27_1.str
+
+# The hard polish
+
+rate.polish nitride machine=anelex27 n.m soft=4 height.fac=0.02 \
+	length.fac=4.2 kinetic.fac=10
+rate.polish oxide machine=anelex27 n.m soft=25 height.fac=0.02 \
+	length.fac=4.2 kinetic.fac=10
+
+polish machine=anelex27 time=30 min dx.mult=1 dt.fact=0.0005
+
+struct outfile=anelex27_3.str
+#
+
+tonyplot anelex27_1.str anelex27_2.str anelex27_3.str
+
+quit

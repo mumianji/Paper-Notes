@@ -1,0 +1,139 @@
+# (c) Silvaco Inc., 2018
+go atlas
+TITLE Ultra-Thin SOI simulation with Energy Balance and Nonisothermal Energy Balance Models
+
+mesh   space.mult=1.0
+# 
+x.mesh loc=0.00   spac=0.250
+x.mesh loc=1.15   spac=0.02
+x.mesh loc=1.5    spac=0.05
+x.mesh loc=1.85   spac=0.02
+x.mesh loc=3      spac=0.25
+#
+y.mesh loc=-0.012 spac=0.25
+y.mesh loc=0.00   spac=0.0025
+y.mesh loc=0.025  spac=0.02
+y.mesh loc=0.05   spac=0.005
+y.mesh loc=0.5    spac=0.1
+#
+region       num=1 y.max=0 oxide 
+region       num=2 y.min=0 y.max=0.05 silicon
+region       num=3 y.min=0.05  oxide
+#
+#*********** define the electrodes ************
+# #1-GATE #2-SOURCE #3-DRAIN #4-SUBSTRATE(below oxide)
+#
+electrode    name=gate    x.min=1 x.max=2 y.min=-0.012 y.max=-0.012
+electrode    name=source x.max=0.5 y.min=0 y.max=0
+electrode    name=drain  x.min=2.5 y.min=0 y.max=0
+electrode    substrate
+#
+#*********** define the doping concentrations *****
+#
+doping       uniform conc=1.75e17 p.type  reg=2
+doping       gauss n.type conc=1e20 char=0.2 lat.char=0.05 reg=2 x.r=1.0 
+doping       gauss n.type conc=1e20 char=0.2 lat.char=0.05 reg=2 x.l=2.0 
+#
+material     taurel.el=0.2e-12 taumob.el=0.2e-12 
+models       conmob bgn fldmob hcte.el  consrh auger print  
+#
+impact       selb  length.rel lrel.el=0.02
+#
+contact      number=2 n.polysilicon
+#
+solve        init 
+save         outf=soiex06_0.str
+tonyplot     soiex06_0.str -set soiex06_0.set
+#
+method       newton  maxtrap=6  temp.tol=1.e-4 trap
+#
+# Id-Vd calculations  EB model
+solve        vgate=1 
+solve        vgate=2
+solve        vgate=4 
+#
+log          outf=soiex06_eb.log master
+#
+solve        vdrain=0.00625
+solve        vdrain=0.0125
+solve        vdrain=0.025
+solve        vdrain=0.05
+#
+method       newton  maxtrap=6  temp.tol=1.e-4  trap     
+#
+solve        vdrain=0.1 vstep=0.025 vfinal=2 electr=3 
+#     
+solve        vdrain=2.2 vstep=0.2 electr=3 vfinal=4.5 
+save         outf=soiex06_eb.str
+#
+go atlas
+#
+mesh   space.mult=1.0
+# 
+x.mesh loc=0.00   spac=0.250
+x.mesh loc=1.15   spac=0.02
+x.mesh loc=1.5    spac=0.05
+x.mesh loc=1.85   spac=0.02
+x.mesh loc=3      spac=0.25
+#
+y.mesh loc=-0.012 spac=0.25
+y.mesh loc=0.00   spac=0.0025
+y.mesh loc=0.025  spac=0.02
+y.mesh loc=0.05   spac=0.005
+y.mesh loc=0.5    spac=0.1
+#
+region       num=1 y.max=0 oxide 
+region       num=2 y.min=0 y.max=0.05 silicon
+region       num=3 y.min=0.05  oxide
+#
+#*********** define the electrodes ************
+# #1-GATE #2-SOURCE #3-DRAIN #4-SUBSTRATE(below oxide)
+#
+electrode    name=gate    x.min=1 x.max=2 y.min=-0.012 y.max=-0.012
+electrode    name=source x.max=0.5 y.min=0 y.max=0
+electrode    name=drain  x.min=2.5 y.min=0 y.max=0
+electrode    substrate
+#
+#*********** define the doping concentrations *****
+#
+doping       uniform conc=1.75e17 p.type  reg=2
+doping       gauss n.type conc=1e20 char=0.2 lat.char=0.05 reg=2 x.r=1.0 
+doping       gauss n.type conc=1e20 char=0.2 lat.char=0.05 reg=2 x.l=2.0 
+#
+thermcontact num=1   x.min=0 x.max=6.5 y.min=0.5 y.max=0.5
+#
+material     taurel.el=0.2e-12 taumob.el=0.2e-12  
+models       conmob bgn fldmob hcte.el lat.temp consrh auger print  
+#
+impact       selb  length.rel  lrel.el=0.02
+#
+contact      number=2 n.polysilicon
+#
+solve        init 
+#
+method       newton  maxtrap=6  temp.tol=1.e-4 trap
+#          
+# Id-Vd calculations  NEB model
+#
+solve        vgate=1 
+solve        vgate=2 
+solve        vgate=4 
+#
+log          outf=soiex06_neb.log master
+#
+solve        vdrain=0.00625
+solve        vdrain=0.0125
+solve        vdrain=0.025
+solve        vdrain=0.05
+#
+method       newton  maxtrap=6  temp.tol=1.e-4  trap    
+#
+solve        vdrain=0.1 vstep=0.025 vfinal=2 electr=3 
+#
+solve        vdrain=2.2 vstep=0.2 electr=3 vfinal=4.5 
+#
+save         outf=soiex06_neb.str
+#
+tonyplot     -overlay  soiex06_eb.log soiex06_neb.log -set soiex06.set
+#
+quit

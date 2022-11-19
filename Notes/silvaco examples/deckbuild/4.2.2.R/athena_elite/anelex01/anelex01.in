@@ -1,0 +1,72 @@
+go athena
+
+# Deposit machine comparison
+# 
+line x loc=0.00 spac=0.20 
+line x loc=1.1 spac=0.05 
+line x loc=1.9 spac=0.05 
+line x loc=3.0 spac=0.20 
+#
+line y loc=0.00 spac=0.05 
+line y loc=1.0  spac=0.5 
+#
+initialize
+#
+deposit nitride      thick=.4 divis=10
+#
+etch nitride         start x=1.1 y=-10
+etch                 cont  x=1.1 y=10
+etch                 cont  x=1.9 y=10
+etch                 done  x=1.9 y=-10
+#
+# 
+structure outfile=anelex01_0.str
+
+init infile=anelex01_0.str
+
+rate.depo machine=uni oxide a.m  sigma.dep=0.20 \
+        uni dep.rate=1000 angle1=45.0
+# 
+deposit machine=uni time=1 minute divis=5
+structure outfile=anelex01_1.str
+
+init infile=anelex01_0.str
+rate.depo machine=planet1 oxide a.m sigma.dep=0.20 \
+      planetar dep.rate=1000 angle1=45.0 angle2=60.0 \
+      angle3=6.0 c.axis=20.0 p.axis=8.75
+deposit machine=planet1 time=1 minute divis=5
+structure outfile=anelex01_2.str
+# 
+init infile=anelex01_0.str
+rate.depo machine=dual oxide a.m  sigma.dep=0.20 \
+        dualdirec dep.rate=1000 angle1=45.00 angle2=-45.00
+deposit machine=dual time=1 minute divis=5
+structure outfile=anelex01_3.str
+# 
+init infile=anelex01_0.str
+rate.depo machine=hemi oxide a.m  sigma.dep=0.20 \
+          hemisphe dep.rate=1000 angle1=90.00 angle2=-90.00
+deposit machine=hemi time=1 minute divis=5
+structure outfile=anelex01_4.str
+
+init infile=anelex01_0.str
+rate.depo machine=cvd1 oxide a.m  \
+         cvd dep.rate=1000 step.cov=0.80
+deposit machine=cvd1 time=1 minute divis=5 
+structure outfile=anelex01_5.str
+# 
+init infile=anelex01_0.str
+rate.depo machine=conic oxide a.m  sigma.dep=0.20 \
+      conical dep.rate=1000 angle1=60.00 c.axis=45.00 p.axis=20.00
+deposit machine=conic time=1 minute divis=5
+structure outfile=anelex01_6.str
+#
+init infile=anelex01_0.str
+rate.depo oxide custom1 machine=custom1 infile=anelex01.dat a.m dep.rate=10.0
+deposit machine=custom1 time=1 minute divis=5
+structure outfile=anelex01_7.str
+
+
+tonyplot anelex01_*.str
+
+quit

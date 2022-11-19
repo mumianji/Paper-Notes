@@ -1,0 +1,123 @@
+<html>
+  <head>
+    <title>Reverse Recovery of a Power Diode</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Reverse Recovery of a Power Diode</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>S-Pisces/MixedMode</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="powerex01_plot0.png" width="640" alt="powerex01_plot0" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates the reverse recovery of a silicon power diode.  It shows:
+</p>
+<ul>
+  <li>
+ Structure definition using Atlas 
+<br/>
+  </li>
+  <li>
+ The SPICE-like command syntax for simulating MixedMode circuits
+<br/>
+   </li>
+  <li>
+ Steady state and transient analysis of a power diode
+  </li>
+</ul>
+<p>
+The structure consists of a rectangular silicon power diode.  Atlas is used to define the power
+diode structure including mesh, materials, electrodes, and doping.  The
+<b> mesh rect </b> statement defines a rectangular mesh with grid lines at the locations specified by the
+<b> x.m </b> and
+<b> y.m </b> statements.  The entire mesh is defined as one silicon region using the
+<b> region </b> statement.  Electrodes are defined on top and bottom and the
+<b> doping </b> statement is used to define a uniform background concentration and gaussian n-type and p-type regions.
+This structure is saved and will be used as a device by MixedMode.
+</p>
+<p>
+In this simulation, the MixedMode circuit simulator uses Atlas to calculate the electrical characteristics of the
+power diode under the specified circuit conditions.  First, a steady-state simulation of the power diode circuit
+is performed.
+</p>
+<p>
+The
+<b> .begin </b> and
+<b> .end </b> statements indicate the beginning and end of the MixedMode syntax.  The MixedMode commands are similar to those
+used in SmartSpice.  Circuit components, topology, and analysis are defined within.
+In general, the circuit component definition consists of three parts: the type of component, the lead or terminal
+node assignments, and the component value or model name.  For example, the  first component definition in this
+simulation is a dc voltage source.
+<b> v1 </b> defines the component as voltage source number one,
+<b> 1 </b> and
+<b> 0 </b> are the two circuit nodes for this component, and
+<b> 1000 </b> indicates that the voltage source value is 1000 volts.  The remaining circuit components are resistors
+<b> r1 r2</b> , inductor
+<b> l1 </b> and independent current source
+<b> i1</b> . The
+<b> adiode </b> statement specifies a device to be analyzed by Atlas.  The
+<b> a </b> part of the adiode
+command specifies that this is a device statement.  The
+<b> diode </b> portion simply defines the device name.  The option
+<b> infile= </b> indicates which device structure file is to be used.  The
+<b> .nodeset </b> statement defines the initial values for node voltages and the
+<b> .save outfile= </b> statement saves the result to the indicated file.  Since this is the steady state solution, no output log data file
+is needed.  Additionally, the
+<b> .options </b> command sets the solution method to a modified two-level Newton using the
+<b> m2ln </b> parameter.  Other command line options exist.  Please refer to the MixedMode
+section of the Atlas user&apos;s manual for a complete list.
+</p>
+<p>
+To completely specify the simulation, the physical models used by Atlas must be specified.  The
+<b> model </b> statement is used to turn on the appropriate transport models.  This set includes conmob: the concentration
+dependent mobility model, fldmob: the lateral electric field-dependent mobility model, consrh: Shockley-Read-Hall
+recombination using concentration dependent lifetimes, auger: recombination accounting for high level injection
+effects, and bgn: band gap narrowing.
+Refer to the Atlas user&apos;s manual for a description of these models.  The
+<b> material </b> statement is used to override default material parameters.  In this case, the carrier recombination fixed
+lifetimes are set.  Finally, an impact ionization model is enabled using the
+<b> impact </b> statement with the
+<b> selb </b> option.  This specifies that the Selberherr impact ionization model is to be used.
+</p>
+<p>
+The next step is the transient analysis which is specified in a similar manner.  The reverse recovery of the diode
+is simulated by dropping the value of output resistor r2 over a small increment of time.  The
+<b> r2 </b> statement contains additional syntax to perform this task.  Here, the resistor is
+treated as a source whose resistance decreases exponentially from 1 MOhm to 1
+mOhm over the specified time step.  This action essentially shorts out the
+parallel current source i1 which is also
+connected to the base of the diode.  The
+<b> .trans </b> statement is used to specify the time stepping parameters for the transient analysis.  In addition, the
+<b> .log </b> statement saves the diode output characteristics over the time interval specified.  TonyPlot plots the transient
+reverse recovery of the power diode.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

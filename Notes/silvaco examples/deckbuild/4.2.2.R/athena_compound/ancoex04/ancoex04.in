@@ -1,0 +1,42 @@
+go athena
+# 
+#  Zinc diffusion in n-type indium phosphide
+method min.temp=475
+# 
+
+impurity i.zinc acceptor inp Dipp.0=2.8 Dipp.E=2.65 
+impurity i.zinc      inp /gas Seg.0=1.0 Seg.E=0.0 Trn.0=1 Trn.E=0
+method min.temp=400
+
+line x loc=0.00 spac=0.10
+line x loc=0.1 spac=0.10
+#
+line y loc=0.00 spac=0.01
+line y loc=3 spac=0.05
+#
+init inp c.sele=2e16
+diffus time=15 temp=500 nitro press=1.00 c.zinc=1.0e19
+struct outf=ancoex04_0.str
+
+
+line x loc=0.00 spac=0.10
+line x loc=0.1 spac=0.10
+#
+line y loc=0.00 spac=0.01
+line y loc=3 spac=0.05
+# 
+init inp c.sele=3e18
+diffus time=15 temp=500 nitro press=1.00 c.zinc=1.0e19
+struct outf=ancoex04_1.str
+
+
+line x loc=0.00 spac=0.10
+line x loc=0.1 spac=0.10
+#
+line y loc=0.00 spac=0.01
+line y loc=3 spac=0.05
+# 
+init inp c.sele=7.7e18
+diffus time=15 temp=500 nitro press=1.00 c.zinc=1.0e19
+struct outf=ancoex04_2.str
+tonyplot -overlay ancoex04_*.str -set ancoex04.set

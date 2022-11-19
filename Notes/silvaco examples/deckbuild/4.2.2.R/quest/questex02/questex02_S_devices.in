@@ -1,0 +1,30 @@
+****S device (S parameter from Quest)****
+*******************************************************************************
+* three lines (100um) with the same conductivity.                             *
+*                                                                             *
+*   1st line: in1 ---------------------------------- out1 width=1um	      *
+*                              space=1um                                      *
+*   2nd line: in2 ---------------------------------- out2 width=2um	      *
+*                              space=0.5um                                    *
+*   3th line: in3 ---------------------------------- out3 width=2um	      * 
+*                                                                             *
+*******************************************************************************
+
+S1 in1 in2 in3 out1 out2 out3 0 FQMODEL=Quest_model TYPE=s
+*S element, in conjunction with the frequency-domain model containing S- or Y-parameters, allows users to simulate AC behavior of multi-terminal network. 
+.include questex02_s_param.mod
+
+
+VIN2 in 0 DC 2.5  SIN(0 0.1 1000MEG)  AC 5
+
+r1 0 in1 5
+r2 in in2 10
+r3 0 in3 5
+
+cout1 out1 0 0.5e-15
+cout2 out2 0 0.5e-15
+cout3 out3 0 0.5e-15
+
+.AC lin 10 1e7 2e10 
+.save all
+.end

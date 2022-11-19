@@ -1,0 +1,67 @@
+<html>
+  <head>
+    <title>Poly Buffered LOCOS (PBL)</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Poly Buffered LOCOS (PBL)</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>SSuprem 4</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="anoxex05_plot0.png" width="640" alt="anoxex05_plot0" />
+      <p/>
+      <img src="anoxex05_plot1.png" width="640" alt="anoxex05_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates the use of
+SSuprem 4 in modeling a Poly Buffer
+Locos (PBL) isolation structure.
+</p>
+<p>
+The structure is formed by depositing layers to create a sandwich of
+silicon, oxide, polysilicon, and nitride.  The nitride is patterned to
+expose the area that will be oxidized.  At this point,
+<b> TonyPlot </b> is invoked to display the material structure prior to oxidation.
+</p>
+<p>
+Next, the structure is oxidized in wet O2 for a time of 120 minutes at a
+temperature of 1000 degrees Celsius.
+</p>
+<p>
+The oxidation completely consumes the polysilicon in the exposed
+portion of the simulation and lifts the remaining polysilicon and
+nitride.
+</p>
+<p>
+The final structure is plotted in
+<b> TonyPlot</b> .
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

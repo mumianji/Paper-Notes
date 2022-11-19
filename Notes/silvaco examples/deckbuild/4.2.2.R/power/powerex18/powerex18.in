@@ -1,0 +1,167 @@
+# (c) Silvaco Inc., 2018
+go Victoryprocess
+
+init layout="powerex18.lay" silicon depth=10 gasheight=5 padding=0 
+
+#option doping.off
+
+line x loc=0     spac=0.5
+line x loc=1     spac=0.5
+line x loc=2     spac=0.5
+line x loc=3     spac=0.2
+line x loc=3.4   spac=0.2
+line x loc=4.4   spac=0.5
+line x loc=5.4   spac=0.5
+line x loc=6     spac=0.2
+line x loc=6.4   spac=0.2
+line x loc=7.4   spac=0.5
+line x loc=8.4   spac=0.5
+line x loc=9.4   spac=0.2
+line x loc=9.8   spac=0.2
+line x loc=14.8  spac=0.5
+line x loc=15.8  spac=0.5
+line x loc=16.8  spac=0.5
+line x loc=17.8  spac=0.5
+
+line y loc=0     spac=0.25
+line y loc=0.5   spac=0.25
+line y loc=1.5   spac=0.25
+line y loc=2.5   spac=0.25
+line y loc=3.5   spac=0.25
+line y loc=4     spac=0.25
+
+line z loc=-0.22 spac=0.05
+line z loc=-0.02 spac=0.01
+line z loc=0     spac=0.01
+line z loc=10    spac=1
+
+deposit oxide thick=0.02 max
+
+mask "PBASE" reverse
+doping silicon boron=1e15
+implant boron energy=80 dose=7e12 tilt=7 rotation=27
+strip resist
+
+mask "NBUFF" reverse
+implant phosphorus energy=80 dose=7e12 tilt=7 rotation=27
+strip resist
+
+diffuse temp=1100 time=300
+
+mask "NILLAR" reverse
+implant phosphorus energy=40 dose=7e12 tilt=7 rotation=27
+strip resist
+
+deposit polysilicon thick=0.4 max
+
+etch polysilicon thick=0.4 mask="POLY" max
+
+mask "PILLAR" reverse
+implant boron energy=20 dose=1.4e13 tilt=7 rotation=27
+strip resist
+
+diffuse temp=1100 time=120
+
+mask "NSD" reverse
+implant phosphorus energy=40 dose=5e15 tilt=7 rotation=27
+strip resist
+
+mask "PPLUS" reverse
+implant boron energy=40 dose=2e15 tilt=7 rotation=27
+strip resist
+
+diffuse temp=1100 time=3
+
+etch oxide thick=0.02 mask="CONT" reverse max
+
+mask "CONT" reverse
+deposit  aluminum thick=0.0 max
+strip resist
+
+electrodes "CONT" aluminum
+
+save name=powerex18_vp_0
+
+
+go victorymesh
+
+load in=powerex18_vp_0
+
+remesh delaunay
+
+refine max.size=1
+refine max.interface.size=0.1 grading="quadratic"
+refine max.junction.size=0.1 grading="quadratic"
+refine impurity="acceptor" min.impurity.size=0.25 max.impurity.factor=4
+
+save out=powerex18_0.str
+
+
+tonyplot3d powerex18_0.str -set powerex18_0.set
+
+
+# Reverse Breakdown Characteristics
+
+go victorydevice
+
+mesh infile=powerex18_0.str verbose=3
+
+models consrh cvt fermi
+
+impact selb e.side
+
+method pam.gmres climit=1e-4
+
+log outfile=powerex18_0.log
+solve init
+solve previous
+solve vdrain=0.1
+solve vstep=0.1 vfinal=1.5 name=drain 
+solve vdrain=2 vstep=2 vfinal=90 name=drain 
+contact name=drain current
+solve istep=1.05 ifinal=1e-08 imult name=drain
+save outfile=powerex18_1.str
+tonyplot3d powerex18_1.str -set powerex18_1.set
+log off
+tonyplot powerex18_0.log -set powerex18_2.set
+
+
+# Unsaturated Threshold Voltage
+
+go victorydevice
+
+mesh infile=powerex18_0.str 
+
+models consrh cvt fermi
+method pam.gmres climit=1e-4
+solve init
+solve previous
+solve vdrain=0.1
+log outfile=powerex18_1.log
+solve vgate=0.05 vstep=0.05 vfinal=4 name=gate
+log off
+# save outfile=Vg4_Vd0p1.str
+tonyplot powerex18_1.log -set powerex18_3.set
+
+
+# IdVd for Vgs=2V
+
+go victorydevice
+
+mesh infile=powerex18_0.str three.d
+
+models consrh cvt fermi
+method pam.gmres climit=1e-4
+solve init
+solve previous
+solve vgate=0.5 vstep=0.25 vfinal=1.25 name=gate
+solve vgate=2
+log outfile=powerex18_2.log
+solve vdrain=0.01
+solve vdrain=0.1
+solve vdrain=0.5 vstep=0.5 vfinal=20 name=drain
+log off
+# save outfile=Vg2_Vd20.str
+tonyplot powerex18_2.log -set powerex18_4.set
+
+

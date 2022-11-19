@@ -1,0 +1,86 @@
+<html>
+  <head>
+    <title>Overview and Structure Definition</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Overview and Structure Definition</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>S-Pisces</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="optoex01_plot0.png" width="640" alt="optoex01_plot0" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+The following set of examples demonstrates how to extract device
+characteristics for general photodetectors.  These characteristics are
+of interest to those involved in the design of PN and PIN photodiodes,
+avalanche photodiodes, photoconductors, phototransistors, optical FETs
+and MSMs.  These examples focus principally on optoelectronic
+characteristics as opposed to the purely electronic behavior of
+photodetectors (e.g. dark current, capacitance).
+</p>
+<p>
+The following examples will address a PIN photodetector.  The extraction
+techniques used on the PIN device will equally apply to other
+photodetector devices.  The device for these examples is described
+in the input file &quot;optoex01.in&quot;.  This input file should be run before
+any of the other examples in this section as it provides the base
+device structure used in the other examples.
+</p>
+<p>
+The first section of the input file specifies the mesh.  In this
+case, the mesh is 10 microns by 10 microns.  The spacings were chosen
+to help resolve the P+ N and N N+ junctions.  The
+<b> space.mult </b> parameter is used to make the mesh coarse for fast simulation.  For more accuracy,
+the value should be set to unity.
+</p>
+<p>
+The second section of the input file specifies the structure of the
+device.  The device is a square of silicon with an anode extending
+across the front surface (y=0.0) and a cathode across the bottom.
+It is uniformly doped N-type at 1.0e14, with heavily doped P+ and
+N+ regions at the front and back surfaces respectively.
+</p>
+<p>
+The third section of the input file specifies which material models
+will be used in the simulation.  Here SRH and Auger recombination
+mechanisms have been specified since they have important effects
+on the quantum efficiency of photodiodes.  Concentration and
+field dependent mobility models are also specified.
+</p>
+<p>
+The last section of the input file is used to obtain an initial
+solution.  The initial solution is written to a solution file that is
+used in all the subsequent photodetector analysis examples.  The output
+file   can be viewed using TonyPlot.  This shows the structure of the
+device and the device mesh.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

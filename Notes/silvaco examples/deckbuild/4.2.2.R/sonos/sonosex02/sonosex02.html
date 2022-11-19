@@ -1,0 +1,108 @@
+<html>
+  <head>
+    <title>Threshold Voltage Shift Calculation</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Threshold Voltage Shift Calculation</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>S-Pisces</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="sonosex02_plot0.png" width="640" alt="sonosex02_plot0" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+The example shows :
+</p>
+<ul>
+  <li>
+ How to set up a SANOS device (variant of a SONOS device)
+<br/>
+  </li>
+  <li>
+ How to obtain the threshold Voltage of a SANOS device
+<br/>
+  </li>
+  <li>
+ How to obtain data for a range of Biases and time frames
+<br/>
+  </li>
+</ul>
+<p>
+The blocking insulator need not be made of the same material as the
+tunnelling insulator.  In this case we have a blocking insulator made
+of Sapphire (Al203) and a tunnelling insulator made of Silicon dioxide.
+</p>
+<p>
+This example uses the DBINTERNAL feature of DeckBuild, and the deck
+sonosex02_aux.in is run for each value of the Gate Bias specified by
+the parameter sweep of vgate in the sonosex02.in deck.
+</p>
+<p>
+Each time sonosex02_aux.in is run,  it sets up a SANOS structure, very
+similar to the structure in sonosex01.in , but with the blocking insulator
+layer made of Sapphire.  It is necessary to make this material into a widegap
+semiconductor and set other parameters on the MATERIAL statement.
+</p>
+<p>
+The DYNASONOS model is selected on the first INTERFACE statement.  Because
+of the relatively low conduction band offset between the Silicon Nitride
+and the sapphire,  the
+<b> INTERFACE S.S THERMIONIC</b> statement is used to model any thermionically emitted current leaving the
+device.  This current will not appear in the SONOS outcurrent, but in the
+gate conduction current.
+</p>
+<p>
+In the
+<b> NITRIDECHARGE</b> statement, we set up the relevant parameters
+and also specify
+<b> PF.BARRIER.</b> This sets the barrier height for the
+Poole-Frenkel detrapping model, which is enabled by the PF.NITRIDE flag
+on the MODELS statement.
+</p>
+<p>
+The gate bias is ramped and the device charged for 1 second.  A structure file
+is saved out at various preset charging times.  The next part of the deck
+reads in these structure files in turn, and for each one it ramps the drain
+bias and also the gate bias in order to calculate the threshold voltage using the
+deckbuild EXTRACT facility.  The gate stack layers are treated as insulators
+in this case, to make the simulation simpler.  The charge trapped in the
+Nitride layer affects the threshold voltage in the same way.
+</p>
+<p>
+After calculating the threshold voltage for the set of Gate biases and at each
+of the preset charging times,  the threshold data is plotted.  The threshold voltage
+increases with Gate Bias and also with charging time.  For a charging
+time of 1.0 seconds there is a roughly linear relationship between gate bias
+and threshold voltage (0.65 V of threshold voltage change for every 1.0 V of
+bias volatge change).  The threshold voltage for the uncharged device is also
+shown, and threshold volatge shifts can be calculated relative to this.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

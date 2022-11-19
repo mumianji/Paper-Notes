@@ -1,0 +1,64 @@
+<html>
+  <head>
+    <title>Predeposition Simulation Using PLS Model</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Predeposition Simulation Using PLS Model</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>SSuprem 4 with DIFSIM Module</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="advdifex01_plot0.png" width="640" alt="advdifex01_plot0" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example shows the ability of the
+<b> advanced diffusion model </b> to handle the complex couplings between boron and free point defects.
+</p>
+<p>
+Although not corresponding to the modern deep sub-micron technologies, this simulation is representative of the high
+dopant concentration features which reveal the complex couplings between
+<b> dopant </b> and
+<b> point defects</b> . It is therefore considered a meaningful basic test for any advanced diffusion model.
+</p>
+<p>
+Even if this model has been developed for state of the art technologies, it stills can be used as the
+standard diffusion  model for any diffusion step. For example, in the case of buried layer formation,
+the TED phenomena become irrelevant. So only the
+<b> Classical Dopant Diffusion (CDD) </b> part of the advanced diffusion model can be used while
+<b> Interstitial Clusters (IC) </b> and
+<b> Defect-Dopant Clusters (DDC) </b> models can be ignored.
+</p>
+<p>
+To activate the new advanced diffusion model, specify
+<b> PLS </b> in the
+<b> METHOD </b> statement before the diffusion step. Then, only the SDD part is activated.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

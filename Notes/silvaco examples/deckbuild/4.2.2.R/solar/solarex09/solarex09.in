@@ -1,0 +1,165 @@
+# (c) Silvaco Inc., 2018
+################################################################################
+# set up mixed mode circuit and solutions - circuit 0 ##########################
+################################################################################
+set rs=5
+set rsh=100
+set wide=5e6
+set area=1
+go atlas 
+.begin
+
+# use this circuit to verify diode-only parameters
+V1 1 0 0
+Rs 1 2 1e-6
+Rsh 2 0 1e6
+Adiode 0=cathode 2=anode width=$wide infile=solarex09_0.str
+
+O1 1 1
+
+.log outfile=solarex09_0
+
+.dc V1 0 0.42 0.01
+
+.end
+
+models conmob fldmob consrh print
+material material=Aluminum imag.index=1000
+material material=Silicon taun0=1e-6 taup0=1e-6
+beam num=1 x.origin=10.0 y.origin=-2.0 angle=90.0 power.file=solarex09.spec
+
+go atlas 
+
+
+extract init infile="solarex09_0_dc_1.log"
+extract name="Voc" abs(x.val from curve(vcct.node."1", icct.node."V1") where y.val=0) 
+extract name="Isc" y.val from curve(vcct.node."1", abs(icct.node."V1")) where x.val=0 
+extract name="Pmax" max(curve(vcct.node."1",vcct.node."1"*icct.node."V1"))  
+extract name="Vm" x.val from curve(vcct.node."1",vcct.node."1"*icct.node."V1") where y.val=$Pmax 
+extract name="Im" y.val from curve(vcct.node."1", icct.node."V1") where x.val=$Vm 
+extract name="FF" $Im*$Vm/($Isc*$Voc) 
+extract name="efficiency" $Im*$Vm/(0.1316*$"area") 
+
+
+
+################################################################################
+# set up mixed mode circuit and solutions - circuit 1 ##########################
+################################################################################
+set wide=5e6
+set area=1
+go atlas 
+.begin
+
+# use this circuit to include a shunt resistor
+V1 1 0 0
+Rs 1 2 1e-6
+Rsh 2 0 $rsh
+Adiode 0=cathode 2=anode width=$wide infile=solarex09_0.str
+
+O1 1 1
+
+.log outfile=solarex09_1
+
+.dc V1 0 0.44 0.01
+
+.end
+
+models conmob fldmob consrh print
+material material=Aluminum imag.index=1000
+material material=Silicon taun0=1e-6 taup0=1e-6
+beam num=1 x.origin=10.0 y.origin=-2.0 angle=90.0 power.file=solarex09.spec
+
+go atlas 
+
+extract init infile="solarex09_1_dc_1.log"
+extract name="Voc" abs(x.val from curve(vcct.node."1", icct.node."V1") where y.val=0) 
+extract name="Isc" y.val from curve(vcct.node."1", abs(icct.node."V1")) where x.val=0 
+extract name="Pmax" max(curve(vcct.node."1",vcct.node."1"*icct.node."V1"))  
+extract name="Vm" x.val from curve(vcct.node."1",vcct.node."1"*icct.node."V1") where y.val=$Pmax 
+extract name="Im" y.val from curve(vcct.node."1", icct.node."V1") where x.val=$Vm 
+extract name="FF" $Im*$Vm/($Isc*$Voc) 
+extract name="efficiency" $Im*$Vm/(0.1316*$"area") 
+
+
+################################################################################
+# set up mixed mode circuit and solutions - circuit 2 ##########################
+################################################################################
+set wide=5e6
+set area=1
+go atlas 
+.begin
+
+# use this circuit to include a series resistor
+V1 1 0 0
+Rs 1 2 $rs
+Rsh 2 0 1e6
+Adiode 0=cathode 2=anode width=$wide infile=solarex09_0.str
+
+O1 1 1
+
+.log outfile=solarex09_2
+
+.dc V1 0 0.44 0.01
+
+.end
+
+models conmob fldmob consrh print
+material material=Aluminum imag.index=1000
+material material=Silicon taun0=1e-6 taup0=1e-6
+beam num=1 x.origin=10.0 y.origin=-2.0 angle=90.0 power.file=solarex09.spec
+
+go atlas 
+
+
+extract init infile="solarex09_2_dc_1.log"
+extract name="Voc" abs(x.val from curve(vcct.node."1", icct.node."V1") where y.val=0) 
+extract name="Isc" y.val from curve(vcct.node."1", abs(icct.node."V1")) where x.val=0 
+extract name="Pmax" max(curve(vcct.node."1",vcct.node."1"*icct.node."V1"))  
+extract name="Vm" x.val from curve(vcct.node."1",vcct.node."1"*icct.node."V1") where y.val=$Pmax 
+extract name="Im" y.val from curve(vcct.node."1", icct.node."V1") where x.val=$Vm 
+extract name="FF" $Im*$Vm/($Isc*$Voc) 
+extract name="efficiency" $Im*$Vm/(0.1316*$"area") 
+
+
+################################################################################
+# set up mixed mode circuit and solutions - circuit 3 ##########################
+################################################################################
+set wide=5e6
+set area=1
+go atlas 
+.begin
+
+# use this circuit to include a series and a shunt resistor
+V1 1 0 0
+Rs 1 2 $rs
+Rsh 2 0 $rsh
+Adiode 0=cathode 2=anode width=$wide infile=solarex09_0.str
+O1 1 1
+
+.log outfile=solarex09_3
+
+.dc V1 0 0.44 0.01
+
+.end
+
+models conmob fldmob consrh print
+material material=Aluminum imag.index=1000
+material material=Silicon taun0=1e-6 taup0=1e-6
+beam num=1 x.origin=10.0 y.origin=-2.0 angle=90.0 power.file=solarex09.spec
+
+go atlas 
+
+
+extract init infile="solarex09_3_dc_1.log"
+extract name="Voc" abs(x.val from curve(vcct.node."1", icct.node."V1") where y.val=0) 
+extract name="Isc" y.val from curve(vcct.node."1", abs(icct.node."V1")) where x.val=0 
+extract name="Pmax" max(curve(vcct.node."1",vcct.node."1"*icct.node."V1"))  
+extract name="Vm" x.val from curve(vcct.node."1",vcct.node."1"*icct.node."V1") where y.val=$Pmax 
+extract name="Im" y.val from curve(vcct.node."1", icct.node."V1") where x.val=$Vm 
+extract name="FF" $Im*$Vm/($Isc*$Voc) 
+extract name="efficiency" $Im*$Vm/(0.1316*$"area") 
+
+tonyplot -overlay solarex09_0_dc_1.log solarex09_1_dc_1.log solarex09_2_dc_1.log solarex09_3_dc_1.log -set solarex09_0.set
+tonyplot -overlay solarex09_0_dc_1.log solarex09_1_dc_1.log solarex09_2_dc_1.log solarex09_3_dc_1.log -set solarex09_1.set
+
+quit

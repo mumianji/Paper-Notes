@@ -1,0 +1,101 @@
+go athena
+#TITLE: Polysilicon Emitter Bipolar Example  (PNP)
+
+grid.model template=PNP
+ 
+line x loc=0.0         spacing=0.03 
+line x loc=0.2         spacing=0.02  
+line x loc=0.3         spacing=0.015 
+line x loc=0.8        spacing=0.15
+
+line y loc=0.0         spacing=0.01
+line y loc=0.1         spacing=0.01
+line y loc=0.4         spacing=0.02 
+line y loc=0.5         spacing=0.06
+line y loc=1.0         spacing=0.15  
+
+init c.boron=2e16   
+
+method adapt
+
+# base implant
+implant   phos  energy=100 dose=8e13
+
+# base drive
+diffuse time=5 temp=900
+
+# deposit polysilicon
+deposit poly thick=0.3 divisions=6 min.space=0.05 
+
+# Implant to dope polysilicon
+implant bf2 dose=3e15 energy=35
+
+# Pattern the poly 
+etch poly right p1.x=0.2
+
+structure outfile=amex02_1.str
+
+# relax the mesh in the substrate and extrinsic areas
+relax y.min=.5 
+
+# emitter drive 
+method compress fermi
+diffuse time=45   temp=900 nitrogen 
+
+# extrinsic emitter implant under spacer
+implant phos dose=2e14 energy=70
+
+# deposit spacer
+deposit oxide thick=0.3 divisions=10  min.space=0.1
+
+# etch the spacer back
+etch oxide dry thick=0.3 
+
+structure outfile=amex02_2.str
+
+# n+ base contact implant
+implant arsenic dose=1e15 energy=50
+
+# contact drive 
+diffuse time=30 temp=900   nitrogen
+
+
+structure outfile=amex02_3.str
+
+# put down Al and etch to form contacts
+deposit alum thick=0.05 div=2 
+
+etch alum start x=0.16 y=-4
+etch continue x=0.16 y=0.2 
+etch continue x=0.6 y=0.2
+etch done  x=0.6 y=-4
+
+
+
+# Name the electrodes for use with Atlas 
+electrode x=0.0    name=emitter
+electrode x=0.7    name=base
+electrode backside name=collector
+
+# extract junction depths
+extract name="EB_xj" xj material="Silicon" mat.occno=1 x.val=0.1 junc.occno=1
+extract name="BC_xj" xj material="Silicon" mat.occno=1 x.val=0.1 junc.occno=2
+extract name="base_width" $BC_xj - $EB_xj
+
+#extract 1D electrical parameters
+extract name="base_rho" n.sheet.res material="Silicon" mat.occno=1 x.val=0.1 region.occno=2
+extract name="poly_emitter_rho" p.sheet.res material="Polysilicon" mat.occno=1 x.val=0.1 region.occno=1 semi.poly
+
+
+
+#  Saveand plot the final structure
+structure outfile=amex02_4.str
+tonyplot amex02_4.str
+
+quit
+
+
+
+
+
+

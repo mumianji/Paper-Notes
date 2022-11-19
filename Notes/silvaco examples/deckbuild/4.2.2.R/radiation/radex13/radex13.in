@@ -1,0 +1,79 @@
+# (c) Silvaco Inc., 2018
+
+go victoryprocess 
+
+init material=silicon c.antimony=1.31e18 resolution="10,5" from=0 to=1217.5 depth=102 gasheight=100 orientation=100 meshdepth=4
+
+line x loc=0       spac=100
+line x loc=1000    spac=1
+line x loc=1006.25 spac=2
+line x loc=1012.5  spac=0.2
+line x loc=1100    spac=40
+line x loc=1187.5  spac=0.2
+line x loc=1217.5  spac=15
+
+line z loc=0 spac=0.05
+line z loc=0.5 spac=0.01
+line z loc=4 spac=2
+line z loc=50 spac=10
+line z loc=92 spac=2
+line z loc=102 spac=2
+
+etch material=silicon thick=92 dry
+
+loop steps=10
+deposit material=silicon thickness=0.1 c.antimony=3e12 max
+diffuse temp=1000 time=10
+l.end
+loop steps=45
+deposit material=silicon thickness=2 c.antimony=3e12 max 
+diffuse temp=1000 time=2
+l.end 
+
+loop steps=10
+deposit material=silicon thickness=0.1 c.antimony=3e12 max
+diffuse temp=1000 time=10
+l.end 
+
+deposit material=oxide thick=0.01 max
+deposit material=barrier thick=0.2 max
+etch material=barrier left.to=1000.0 thick=0.2 dry
+etch material=barrier between="1012.5,1187.5" thick=0.3 dry
+
+implant boron dose=5e14 energy=10 tilt=7 rotation=0 
+etch material=barrier dry
+diffus time=5 temp=1050 
+etch material=oxide dry
+deposit material=aluminum thick=0.1 conformal
+etch material=aluminum left.to=800.0 thick=0.2 dry
+etch material=aluminum between="1000,1012.51" thick=0.2 dry
+etch material=aluminum right.to=1187.5 thick=0.2 dry
+
+electrode name=anode x=900
+electrode name=pgate x=1100
+electrode name=cathode substrate
+
+save name=radex13_vp_0
+
+
+go victorymesh
+
+load in=radex13_vp_0
+
+remesh conformal
+refine max.obtuseness=1
+
+save out=radex13_0.str
+
+
+go internal
+
+load infile=radex13_aux.in
+
+sweep parameter=radiation type=list data="1e08, 1e12"
+
+tonyplot -overlay radex13_1e+08_tr.log radex13_1e+12_tr.log -set radex13_0.set
+tonyplot -overlay radex13_1e+08_tr.log radex13_1e+12_tr.log -set radex13_1.set
+tonyplot -overlay radex13_1e+08_tr.log radex13_1e+12_tr.log -set radex13_2.set
+
+quit

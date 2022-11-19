@@ -1,0 +1,61 @@
+<html>
+  <head>
+    <title>Spectral Response</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Spectral Response</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>S-Pisces/Luminous</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="optoex05_plot0.png" width="640" alt="optoex05_plot0" />
+      <p/>
+      <img src="optoex05_plot1.png" width="640" alt="optoex05_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+The final example in this set involves the extraction of spectral
+response data.
+</p>
+<p>
+The first four sections of the input file are the same as those in the
+previous examples.  The exception is that a monochromatic wavelength of
+100nm is specified.  In the last section of the file, solutions are
+obtained for a 1 W/cm^2 intensity at discrete source wavelengths of 0.1
+to 0.8 microns. The
+<b> lambda </b> parameter of the
+<b> solve </b> statement is used to set the wavelength for each solution. The terminal
+characteristics and wavelength results are saved to the log file.
+</p>
+<p>
+The results of the simulation shows that the device exhibits good
+quantum efficiency below a wavelength of about 700 nm.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

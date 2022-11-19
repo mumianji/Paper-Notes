@@ -1,0 +1,117 @@
+<html>
+  <head>
+    <title>CMOS Example Using MaskViews</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>CMOS Example Using MaskViews</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>SSuprem 4, MaskViews</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="anex11_plot0.png" width="640" alt="anex11_plot0" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<b> NOTE: </b> <p>
+This example works only on UNIX/LINUX computers.
+</p>
+<b> MaskViews  </b> <p>
+is a product enabling the design of more than one device side by side.
+For example, if an NMOS and a PMOS pair need to be considered side by
+side, then
+<b> MaskViews  </b> is used in conjunction with a single generic input file.
+<b> MaskViews  </b> sends to the process simulator the mask, grid, boolean region and
+electrode name information.
+</p>
+<p>
+This example uses an IC Layout cross section along with a
+generic process flow to realize a specific device.
+To run this example, first invoke
+<b> MaskViews  </b> from the
+<b> Tools - MaskViews - Start MaskViews  </b> menu options. An IC Layout editor will appear. Create a cutline object by selecting the
+<b> Write file  </b> button. Then select the beginning and end of the required cross section
+on the layout itself. This action will generate a &apos;cutline object&apos; as a
+file. (If used under the
+<b> VWF  </b> the cutline object will be loaded into the
+database). The cutline object contains 4 pieces of information:
+</p>
+<ul>
+  <li>
+ masking information - where to place the photoresist or barrier
+  </li>
+  <li>
+ grid information - automatically generated from a set of rules
+  </li>
+  <li>
+ boolean regions information - defining regions of interest
+  </li>
+  <li>
+ electrode names - for use in a later device test
+  </li>
+</ul>
+<p>
+Load the cutline object into
+<b> DeckBuild </b> by using the
+<b> Tools - MaskViews - Cutlines  </b> menu option. Once loaded into
+<b> DeckBuild</b> , press
+<b> run</b> .
+</p>
+<p>
+The completed run will relate directly to your IC layout cutline selection.
+</p>
+<p>
+Note the use of the
+<b> AUTOELECTRODE  </b> statement, used to refer any available electrode names at a particular
+point in the process flow to a specific material region.
+Electrode names may be associated with poly, metal or silicide regions.
+The
+<b> AUTOELECTRODE </b> statement will search from the top of the
+structure until it finds an appropriate electrode material.
+</p>
+<p>
+The lateral position of the electrode is determined from the
+IC layout electrode mask position. Electrodes are named automatically,
+half-way from the point where the cutline intercepts the
+layout electrode polygon to the point where the cutline leaves the
+electrode polygon.
+</p>
+<p>
+The grid is derived from a set of rules relating to the edge
+of each mask layer. These rules are defined under the :
+<b> define - grid - x  </b> pop-up window within
+<b> MaskViews</b> .
+</p>
+<p>
+This example also demonstrates the use of
+<b> MaskViews</b> , with a view to usage
+under the Virtual Wafer Fab. When used under the
+<b> VWF</b> , split lots may
+include many devices, e.g. a P-channel and an N-channel MOS device.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

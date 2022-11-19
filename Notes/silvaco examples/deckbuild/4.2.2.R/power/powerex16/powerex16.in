@@ -1,0 +1,281 @@
+# (c) Silvaco Inc., 2018
+###############################
+## Parallel strip design S1 ###
+###############################
+
+go victoryprocess 
+
+init silicon depth=2.5 gasheight=200 from="0, 0" to="4000, 500"
+
+#######################
+### n+ anode shorts ###
+#######################
+SpecifyMaskPoly maskname=S1 p1="3950, -4000" p2="4050,-4000" p3="4050, 4000" p4="3950, 4000"
+SpecifyMaskPoly ADD maskname=S1 p1="3450, -4000" p2="3550,-4000" p3="3550, 4000" p4="3450, 4000"
+SpecifyMaskPoly ADD maskname=S1 p1="2950, -4000" p2="3050,-4000" p3="3050, 4000" p4="2950, 4000"
+SpecifyMaskPoly ADD maskname=S1 p1="2450, -4000" p2="2550,-4000" p3="2550, 4000" p4="2450, 4000"
+SpecifyMaskPoly ADD maskname=S1 p1="1950, -4000" p2="2050,-4000" p3="2050, 4000" p4="1950, 4000"
+SpecifyMaskPoly ADD maskname=S1 p1="1450, -4000" p2="1550,-4000" p3="1550, 4000" p4="1450, 4000"
+SpecifyMaskPoly ADD maskname=S1 p1="950, -4000" p2="1050,-4000" p3="1050, 4000" p4="950, 4000"
+
+#####################
+### Active region ###
+#####################
+SpecifyMaskPoly maskname=AREA p1="0, 0" p2="4000,0" p3="4000, 500" p4="0, 500"
+
+line x loc=0 spac=100
+line x loc=950 spac=25
+line x loc=1050 spac=25
+line X loc=1250 spac=50
+line x loc=1450 spac=25
+line x loc=1550 spac=25
+line X loc=1750 spac=50
+line x loc=1950 spac=25
+line x loc=2050 spac=25
+line X loc=2250 spac=50
+line x loc=2450 spac=25
+line x loc=2550 spac=25
+line X loc=2750 spac=50
+line x loc=2950 spac=25
+line x loc=3050 spac=25
+line X loc=3250 spac=50
+line x loc=3450 spac=25
+line x loc=3550 spac=25
+line X loc=3750 spac=50
+line x loc=3950 spac=25
+line X loc=4000 spac=25
+
+line y loc=0 spac=100
+line y loc=500 spac=100
+
+line z loc=-111.1 spac=0.1
+line z loc=-111 spac=0.25
+line z loc=-110 spac=0.25
+line z loc=-65 spac=5
+line z loc=-10 spac=1.5
+line z loc=0 spac=0.1
+line z loc=2.5 spac=0.5
+
+doping  silicon phosphorus=1e12
+
+mask "S1" 
+doping silicon boron=4e17 min=0 max=2.5
+strip material=barrier
+
+mask "S1" reverse
+doping silicon phosphorus=1e19 min=0 max=2.5
+strip material=barrier
+
+####################################
+### 10 um-thick field stop layer ###
+####################################
+deposit silicon thick=10 max phosphorus=1e16
+
+######################################
+### 100 um-thick drain drift layer ###
+######################################
+deposit silicon thick=100 max phosphorus=1e14
+
+###################################################
+### Model the on-state IGBT mode of the BiGT ###
+###################################################
+deposit silicon thick=1 max phosphorus=1e19
+
+deposit aluminum thick=0.1 max
+
+save name=powerex16_vp_1
+
+
+go victorymesh
+
+load in=powerex16_vp_1
+
+remesh conformal
+
+save out=powerex16_1.str
+
+
+tonyplot3d powerex16_1.str -set powerex16_1.set
+
+
+go victorydevice
+
+mesh infile=powerex16_1.str hybridx prism verbose=3
+
+electrode name=emitter region=1
+electrode name=collector z.min=2.5 z.max=2.5
+
+##############################################
+### Specify the current boundary condition ### 
+##############################################
+contact name=collector current 
+
+models cvt srh print 
+method newton tol.time=1e0 maxtraps=10 itlimit=15 atrap=0.1 \
+       norm.scaling.local
+
+solve init
+solve prev
+
+log outf=powerex16_1.log
+solve icollector=0.2 ramptime=0.2 tstop=0.2 tstep=1e-4 
+solve icollector=0.75 ramptime=0.55 tstop=0.75 tstep=1e-3 
+save outfile=powerex16_1_1.str
+solve icollector=1 ramptime=0.25 tstop=1 tstep=1e-3 
+solve icollector=1.25 ramptime=0.25 tstop=1.25 tstep=1e-2 
+solve icollector=1.5 ramptime=0.25 tstop=1.5 tstep=1e-2 
+solve icollector=1.75 ramptime=0.25 tstop=1.75 tstep=1e-2 
+solve icollector=2 ramptime=0.25 tstop=2 tstep=1e-2 
+solve icollector=2.25 ramptime=0.25 tstop=2.25 tstep=1e-2 
+solve icollector=6 ramptime=3.75 tstop=6 tstep=1e-2 
+solve icollector=9 ramptime=3 tstop=9 tstep=1e-1 
+solve icollector=12 ramptime=3 tstop=12 tstep=1e-1 
+save outfile=powerex16_1_2.str
+solve icollector=15 ramptime=3 tstop=15 tstep=1e-1 
+solve icollector=18 ramptime=3 tstop=18 tstep=1e-1 
+solve icollector=21 ramptime=3 tstop=21 tstep=1e-1 
+solve icollector=24 ramptime=3 tstop=24 tstep=1e-1 
+save outfile=powerex16_1_3.str
+solve icollector=30 ramptime=6 tstop=30 tstep=1e-1 
+
+
+###############################
+## Radial strip design S2 ###
+###############################
+
+go victoryprocess
+
+init silicon depth=2.5 gasheight=200 from="0, 0" to="4000, 500"
+
+#######################
+### n+ anode shorts ###
+#######################
+SpecifyMaskPoly maskname=S2 p1="950,  450" p2="950,  550" p3="4500,  550" p4="4500,  450"
+SpecifyMaskPoly ADD maskname=S2 p1="950,  -50" p2="950,   50" p3="4500,   50" p4="4500,  -50"
+
+#####################
+### Active region ###
+#####################
+SpecifyMaskPoly maskname=AREA p1="0, 0" p2="4000,0" p3="4000, 500" p4="0, 500"
+
+line x loc=0 spac=100
+line x loc=950 spac=25
+line x loc=1600 spac=100
+line x loc=2200 spac=300
+line x loc=2800 spac=300
+line x loc=3400 spac=300
+line x loc=4000 spac=300
+
+line y loc=0 spac=25
+line y loc=50 spac=25
+line y loc=250 spac=50
+line y loc=450 spac=25
+line y loc=500 spac=25
+
+line z loc=-111.1 spac=0.1
+line z loc=-111 spac=0.25
+line z loc=-110 spac=0.25
+line z loc=-65 spac=5
+line z loc=-10 spac=1.5
+line z loc=0 spac=0.1
+line z loc=2.5 spac=0.5
+
+doping  silicon phosphorus=1e12
+
+mask "S2" 
+doping silicon boron=4e17 min=0 max=2.5
+strip material=barrier
+
+mask "S2" reverse
+doping silicon phosphorus=1e19 min=0 max=2.5
+strip material=barrier
+
+####################################
+### 10 um-thick field stop layer ###
+####################################
+deposit silicon thick=10 max phosphorus=1e16
+
+######################################
+### 100 um-thick drain drift layer ###
+######################################
+deposit silicon thick=100 max phosphorus=1e14
+
+###################################################
+### Model the on-state IGBT mode of the BiGT ###
+###################################################
+deposit silicon thick=1 max phosphorus=1e19
+
+deposit aluminum thick=0.1 max
+
+# todo: delete 
+#export victory(conformal) structure="powerex16_2.str"
+
+save name=powerex16_vp_2
+
+
+go victorymesh
+
+load in=powerex16_vp_2
+
+remesh conformal
+
+save out=powerex16_2.str
+
+
+tonyplot3d powerex16_2.str -set powerex16_1.set
+tonyplot3d powerex16_1.str -cut powerex16_1_2d.str -set powerex16_2.set
+tonyplot3d powerex16_2.str -cut powerex16_2_2d.str -set powerex16_2.set
+tonyplot powerex16_1_2d.str powerex16_2_2d.str -set powerex16_3.set 
+
+
+go victorydevice
+
+mesh infile=powerex16_2.str hybridx prism verbose=3
+
+electrode name=emitter region=1
+electrode name=collector z.min=2.5 z.max=2.5
+
+##############################################
+### Specify the current boundary condition ### 
+##############################################
+contact name=collector current 
+
+models cvt srh print 
+method newton  tol.time=1e0 maxtraps=10 itlimit=15 atrap=0.1 \
+       norm.scaling.local
+
+solve init
+solve prev
+
+log outf=powerex16_2.log
+
+solve icollector=0.2 ramptime=0.2 tstop=0.2 tstep=1e-4 
+solve icollector=0.75 ramptime=0.55 tstop=0.75 tstep=1e-3 
+save outfile=powerex16_2_1.str
+solve icollector=1 ramptime=0.25 tstop=1 tstep=1e-3 
+solve icollector=1.25 ramptime=0.25 tstop=1.25 tstep=1e-2 
+solve icollector=1.5 ramptime=0.25 tstop=1.5 tstep=1e-2 
+solve icollector=1.75 ramptime=0.25 tstop=1.75 tstep=1e-2 
+solve icollector=2 ramptime=0.25 tstop=2 tstep=1e-2 
+solve icollector=2.25 ramptime=0.25 tstop=2.25 tstep=1e-2 
+solve icollector=6 ramptime=3.75 tstop=6 tstep=1e-2 
+solve icollector=9 ramptime=3 tstop=9 tstep=1e-1 
+solve icollector=12 ramptime=3 tstop=12 tstep=1e-1 
+save outfile=powerex16_2_2.str
+solve icollector=15 ramptime=3 tstop=15 tstep=1e-1 
+solve icollector=18 ramptime=3 tstop=18 tstep=1e-1 
+solve icollector=21 ramptime=3 tstop=21 tstep=1e-1 
+solve icollector=24 ramptime=3 tstop=24 tstep=1e-1 
+save outfile=powerex16_2_3.str
+solve icollector=30 ramptime=6 tstop=30 tstep=1e-1 
+
+tonyplot -overlay powerex16_1.log powerex16_2.log -set powerex16_4.set
+
+tonyplot3d powerex16_1_1.str -cut powerex16_1_1_2d.str -set powerex16_5.set
+tonyplot3d powerex16_1_2.str -cut powerex16_1_2_2d.str -set powerex16_5.set
+tonyplot3d powerex16_1_3.str -cut powerex16_1_3_2d.str -set powerex16_5.set
+tonyplot3d powerex16_2_1.str -cut powerex16_2_1_2d.str -set powerex16_5.set
+tonyplot3d powerex16_2_2.str -cut powerex16_2_2_2d.str -set powerex16_5.set
+tonyplot3d powerex16_2_3.str -cut powerex16_2_3_2d.str -set powerex16_5.set
+
+tonyplot powerex16_1_1_2d.str powerex16_1_2_2d.str powerex16_1_3_2d.str powerex16_2_1_2d.str powerex16_2_2_2d.str powerex16_2_3_2d.str -set powerex16_6.set 

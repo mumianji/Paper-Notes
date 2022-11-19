@@ -1,0 +1,49 @@
+go athena 
+
+# First simulate and extract 1D profile
+
+line x loc=  0.0   spac=0.1
+line x loc = 0.1  spacing=0.1
+
+line y loc = 0     spacing = 0.01 
+line y loc = 1.6   spacing = 0.04 
+
+
+init silicon 
+implant boron energy=200 dose=1e14  n.ion=50000 bca sampling
+extract name="sims" curve(depth,impurity="Boron" material="Silicon" \
+        x.val=0.01) outfile="aniiex19.dat"
+
+# Now use this profile for 2D simulation
+
+line x loc=  0.0   spac=0.1
+line x loc=  0.5   spac=0.03
+line x loc = 1  spacing=0.1
+
+#the vertical definition
+line y loc = 0     spacing = 0.01 
+line y loc = 1.6   spacing = 0.04 
+
+#initialize the mesh
+init silicon
+
+deposit nitride thick=1 div=20
+etch nitride left p1.x=0.5
+struct mirror left
+
+implant boron dose=1e14 energy=200 tilt=0 extract.sims=aniiex19.dat profile
+
+# NOTE: If you want to use a "measured" SIMS profile in simple format
+# depth (microns) concentration (cm^-03)
+# 0.0     1e18
+# 0.01    1.71e18
+# etc.
+# use parameter measured.sims=measured_sims_file_name
+struct outf=aniiex19.str
+tonyplot  aniiex19.str -set aniiex19.set
+quit
+
+
+
+
+                                                                            

@@ -1,0 +1,72 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include <ctype.h>
+#include <malloc.h>
+#include <string.h>
+#include <template.h>
+
+/*
+ * Microscopic Noise Source for electron diffusion noise.
+ * Statement: MATERIAL
+ * Parameter: F.MNSNDIFF
+ * Arguments:
+ * xcomp      composition fraction x
+ * ycomp      composition fraction y
+ * temp       lattice temperature (K)
+ * n          electron concentration (cm^-3)
+ * mun        electron mobility (cm^2/V s)
+ * e          electric field (V/cm)
+ * *mns       microscopic noise source (s A^2 / cm)
+ */
+int mnsndiff(double xcomp, double ycomp, double temp, double n, double mun, double e, double *mns)
+{
+/*
+ * The following body is set up to emulate the default function
+ * implemented in ATLAS.
+ *
+ * The mns is 4.q^2.n.D, where D is the diffusion coefficient given
+ * by the Einstein relationship D=(kT/q).mun
+ */
+        const double q=1.602e-19;
+        const double k=1.381e-23;
+        double d;
+
+        d=(k*temp / q) * mun;
+        *mns=4.0*q*q*n*d;
+
+        return(0);                /* 0 - ok */
+}
+
+/*
+ * Microscopic Noise Source for hole diffusion noise.
+ * Statement: MATERIAL
+ * Parameter: F.MNSPDIFF
+ * Arguments:
+ * xcomp      composition fraction x
+ * ycomp      composition fraction y
+ * temp       lattice temperature (K)
+ * p          hole concentration (cm^-3)
+ * mup        hole mobility (cm^2 / V s)
+ * e          electric field (V / cm)
+ * *mns       microscopic noise source (s A^2 / cm)
+ */
+int mnspdiff(double xcomp, double ycomp, double temp, double p, double mup, double e, double *mns)
+{
+/*
+ * The following body is set up to emulate the default function
+ * implemented in ATLAS.
+ *
+ * The mns is 4.q^2.p.D, where D is the diffusion coefficient given
+ * by the Einstein relationship D=(kT/q).mup
+ */
+        const double q=1.602e-19;
+        const double k=1.381e-23;
+        double d;
+
+        d=(k*temp / q) * mup;
+        *mns=4.0*q*q*p*d;
+
+        return(0);                /* 0 - ok */
+}
+

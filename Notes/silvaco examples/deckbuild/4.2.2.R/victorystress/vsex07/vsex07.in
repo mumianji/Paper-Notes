@@ -1,0 +1,733 @@
+
+go victoryprocess 
+
+# Inverter cell with two pFETs and one nFET
+
+# Section 1. Definition of geometrical domain and region limits for subsequent
+#            consistent mesh formation
+
+# The folowing SET statements define geometrical parameters of FETs. 
+# All lengths and widths correspond to the layout used in this example - vsex07_0.lay
+# The variables with "_height" or "_thick" in thier names define the thicknesses of deposited material layers. 
+
+# Modification of some of length and/or width parameters would require modification of layout as well as 
+# corresponding simulation mesh in x- and y- directions (see "line x" and "line y" statements).
+
+# It is possible to change height or thickness of some layers. 
+# For example, the thickness of the stress liner can substantially alter the stress distribution. 
+# In this case the mesh in z direction should be modified (see "line z" statements). 
+# If the thickness of the gate is change the corressponding mesh modification will be required
+# in both z and y direction since the gate deposition is "conformal".
+
+# set the gate length
+set gate_length=0.06
+
+#set gate height
+set gate_height=0.05
+
+# The thickness of the stress liner over the gate is very important. 
+# It can be changed from the current value  it for changing the stress distribution inside the fin,
+# therefore the total structure height will be changed also. The stress liner deposited on nFinFET is
+# "nliner" and on pFinFETS - "pliner", see the layout and corresponded names.
+set stress_liner_height=0.05
+
+# set fin width
+set fin_width=0.03
+
+# set fin height
+set fin_height=0.06
+
+# set fin_length from the layout. 
+set fin_length=0.8+$gate_length
+
+
+# Another method of stress engineering is introduction of so-called Source/Drain stressors (SiGe or SiC). 
+# The structure of this example allows to have such stressor called nstressor (see "ns_str" and "nd_str" masks)
+# for nFinFET and pstressors (see "ps_str" and "pd_str" masks) for two p-FinFETs.
+
+# Each FinFET contains the vias which are placed over the metal contacts (aluminum). 
+# For simplicity the length of each via (for Source and for Drain)
+# was choosen the same as the length of stressors (0.3um). 
+# Vias are located at the some distance from the gate;
+# They were obtained by etching of stressed n-liner, p-liner and oxide top layer with subsequent filling of aluminum into the holes.
+# These holes in the stress liners and oxide layer could affect the stress under the gate.
+
+# the length of the "S/D" regions is calculated by use of the total length of the fin 
+set sd_length=($fin_length-$gate_length)/2 
+
+# The length of the horisontal metal contacts (see the mask "met1" from the layout) 
+# and the length of stressed S/D regions stress_length (see masks "ns_str" and "nd_str" for nFinFET and 
+# "ps_str" and "pd_str" for two pFinFETs)
+# are set to 0.75*sd_length.
+  
+set cont_length=0.75*$sd_length
+set stress_length=0.75*$sd_length
+
+# Set the simulation domain in x direction
+# This domain includes all parts of the cell
+# By decreasing this domain you can analize the influence of peripheral portions
+# of the cell
+
+set start_x=0
+set end_x=3.32 
+
+# set the thickness of oxide box where fins are placed
+set oxide_box_height=0.6
+
+# set  the thickness of covering oxide layer 
+set oxide_top_height=0.15
+
+# set the thickness of oxide spacer (see the mask "oxide")
+set spacer_thick=0.005
+
+# set the height of  metal contact
+set met_height=0.005
+
+# Set the width of via (or contact) equal to 0.11
+# It is effectively equal to the sum of two fin widths and gate height because 
+# the gate is "conformally" deposited over the fin
+set via_width=2*$fin_width+$gate_height
+
+# The length of the separate FinFET device as a part of the layout for the whole inverter cell  
+set length_half_cell=$end_x/2
+
+# Set simulation domain in y direction
+
+# In the direction of width of the cell:
+set start_y=0.0
+
+# From the layout the fin pitch was chosen 0.2. 
+set fin_pitch=0.2
+
+# From the layout the end in y-direction is
+set end_y=0.89
+# It is exactly 4*$fin_pitch+$fin_width+$gate_length, see the layout file
+
+# The maximum of thickness of stress liner
+set thickness_layer=$fin_height+$spacer_thick+$gate_height+$stress_liner_height
+
+# Section 2. VictoryCell process steps
+
+init Layout="vsex07_0.lay" Depth=$oxide_box_height material=box Gasheight=20 from="$start_x, $start_y" to="$end_x, $end_y"
+
+# The layout the cell is not symmetrical in y-direction 
+ 
+# The process steps for creation of the inverter cell structure
+
+# 1. Formation of the n-fin.
+deposit material=nfin thick=$fin_height min
+mask "nfin"
+etch material=nfin max
+strip resist
+
+# 2. Formation of two p-fins
+deposit material=pfin thick=$fin_height min
+mask "pfin"
+etch material=pfin max
+strip resist
+
+# Parts of the nfin could serve as a local stressors (i.e. compositional Si:Ge)
+# 3. Source side local stressor 
+mask "ns_str" reverse
+etch material=nfin max
+deposit material=nstressor thick=$fin_height min
+strip resist
+
+# 4. Drain side local stressor
+mask "nd_str" reverse
+etch material=nfin max
+deposit material=nstressor thick=$fin_height min
+strip resist
+
+# Parts of the pfin could serve as a local stressors (i.e. compositional Si:C)
+# 5. Source side local stressor 
+mask "ps_str" reverse
+etch material=pfin max
+deposit material=pstressor thick=$fin_height min
+strip resist
+
+# 6. Drain side local stressor
+mask "pd_str" reverse
+etch material=pfin max
+deposit material=pstressor thick=$fin_height min
+strip resist
+
+# 7. Oxide spacer deposition
+deposit material=oxide thick=$spacer_thick conformal
+mask "oxide"
+etch material=oxide max
+strip resist
+
+# 8. Gate formation
+deposit poly thick=$gate_height conformal
+mask "gate"
+etch poly max
+strip resist
+
+# 9. Depostion of metal contact layer
+deposit material=metal thick=$met_height conformal
+mask "met1"
+etch material=metal max
+strip resist
+
+# 10. Deposition of nliner
+mask "pliner"
+deposit material=nliner thick=$thickness_layer min
+strip resist
+
+# 11. Deposition of pliner
+mask "nliner"
+deposit material=pliner thick=$thickness_layer min
+strip resist
+
+# 12. Deposition of the top oxide layer
+deposit material=oxide thick=$oxide_top_height min
+
+# 13. Etching of top oxide layer and stress liners for further via formation
+mask "met1" reverse
+etch material=oxide max
+etch material=pliner max
+etch material=nliner max
+strip resist
+
+# 14. Deposition of metal (here aluminum) for the formations of via
+deposit aluminum thick=0 max
+
+# Section 3. Cartesian mesh formation and saving the structure for stress calculation
+
+# Mesh in x direction
+
+# Two considerations should be taken into account to form an optimal mesh for Manhattan-type structures:
+# a. A reasonable number of mesh points (spacings) should be generated across areas of interest. 
+#    In this case these areas are gate and fin
+# b. It is preferable that in each direction a mesh line coincides with material region boundary.
+
+# For meshing in x-direction the reasonable number of divisions under the gate is 10.
+set div_x=10
+# Corresponding minimum spacing will be:
+set minsp_x=$gate_length/$div_x
+
+# In areas far from the gate the spacing could be 10 times larger
+set maxsp_x=10*$minsp_x
+
+# Calculate the position of material region boundaries in x directionset  
+
+# The left boundary of the source region (which also corresponds to fin and metal contact)
+set left_source_x=$start_x+0.5*($length_half_cell-$gate_length)-$sd_length
+
+# The left boundary of nstressor on the source side
+set left_nstr_x=$left_source_x+$sd_length-$stress_length
+
+# The right boundary of the metal contact (or via) on the source region
+set right_via_source_x=$left_source_x+$cont_length
+
+# The left boundary of the gate (the right boundary of the nstressor on the source side)
+set left_gate_x=$left_nstr_x+$stress_length
+
+# The right boundary of the gate (or the left boundary of the nstressor on the drain side)
+set right_gate_x=$left_gate_x+$gate_length
+
+# The left boundary of the metal contact (or via) on the drain region
+set left_via_drain_x=$right_gate_x+$sd_length-$cont_length
+
+# The left boundary of the nstressor from the drain
+set right_nstr_x=$right_gate_x+$stress_length
+
+# The right boundary of drain region (also, fin and metal contact - see the layout)
+set right_drain_x=$right_gate_x+$sd_length
+
+# The following statement activates VictoryCell mesh specification sequence
+
+# The mesh specification in x-direction
+
+line x loc=$start_x spac=$maxsp_x
+line x loc=$left_source_x spac=$maxsp_x
+line x loc=$left_nstr_x spac=$maxsp_x
+line x loc=$right_via_source_x spac=$maxsp_x
+line x loc=$left_gate_x spac=$minsp_x
+line x loc=$right_gate_x spac=$minsp_x
+line x loc=$left_via_drain_x spac=$maxsp_x
+line x loc=$right_nstr_x spac=$maxsp_x
+line x loc=$right_drain_x spac=$maxsp_x
+line x loc=$length_half_cell spac=$maxsp_x
+
+# The x-coordinates of the boundaries of the secon part of the cell is calculated by 
+# by add of the value $length_half_cell to each already calculated x-position of boundaries.
+# Therefore position of "nstressor" is the real location of "pstressor"
+
+line x loc=$left_source_x+$length_half_cell spac=$maxsp_x
+line x loc=$left_nstr_x+$length_half_cell spac=$maxsp_x
+line x loc=$right_via_source_x+$length_half_cell spac=$maxsp_x
+line x loc=$left_gate_x+$length_half_cell spac=$minsp_x
+line x loc=$right_gate_x+$length_half_cell spac=$minsp_x
+line x loc=$left_via_drain_x+$length_half_cell spac=$maxsp_x
+line x loc=$right_nstr_x+$length_half_cell spac=$maxsp_x
+line x loc=$right_drain_x+$length_half_cell spac=$maxsp_x
+line x loc=$length_half_cell+$length_half_cell spac=$maxsp_x
+
+# Calculate spacings and y coordinates of all material region boundaries
+
+# Calculate coordinates of material region boundaries starting from the central point in y direction: 
+# "left" means "below" the center point, "right"  means above the center point
+# We consider central points of fins and the gate as a reference points and calculate y-coordinates 
+# of region boundaries located to the "left" and "right" from corresponding central points.
+
+# The center of the nFinFET/pFinFET in y-direction
+set center_p1_y=$fin_pitch+$fin_width/2
+
+# The center of second pFinFET 
+set center_p2_y=$center_p1_y+$fin_pitch
+
+# The y-coordinate of the center of the gate part parallel to x-axis
+set center_gate_y=3*$fin_pitch+$fin_width+0.5*$gate_length
+
+# For the first row of Fins:
+set left_fin_y1=$center_p1_y-$fin_width/2
+set right_fin_y1=$left_fin_y1+$fin_width
+
+# For the oxide spacer, or for contact metal:
+set left_spacer_y=$left_fin_y1-$spacer_thick
+set right_spacer_y=$right_fin_y1+$spacer_thick
+
+# For metal contact/via:
+set left_contact_y=$center_p1_y-$via_width/2
+set right_contact_y=$left_contact_y+$via_width
+
+# For the gate
+set left_gate_y=$left_spacer_y-$gate_height
+set right_gate_y=$right_spacer_y+$gate_height
+
+# Now we can build the mesh lines in y-dir for the first row of FETs
+# After that it is possible to extend it for the second row and
+# for the part of the gate which is parallel to x-direction
+# The min spacing in the direction of width
+
+# The spacer (also, metal contact) width is very small, however it should be at least two intervals in this material,
+set div_spacer=2
+set min_spac_oxide=$spacer_thick/$div_spacer
+
+# The fin width is small, so it will be good enough to have the same spacing as in oxide/spacer wall
+
+# Set the spacing in y-direction based on the gate height and the same number of divisions as for the gate length
+
+set div_gate=10
+set spac_gate=$gate_height/$div_gate
+
+# For outside areas of the structure the spacing could be at least twice larger:
+set spac_ends=2*$spac_gate 
+
+line y loc=$start_y spac=$spac_ends
+line y loc=$left_gate_y spac=$spac_gate
+line y loc=$left_contact_y spac=$spac_gate
+line y loc=$left_spacer_y spac=$min_spac_oxide
+line y loc=$left_fin_y1 spac=$min_spac_oxide
+line y loc=$right_fin_y1 spac=$min_spac_oxide
+line y loc=$right_spacer_y spac=$min_spac_oxide
+line y loc=$right_contact_y spac=$spac_gate
+line y loc=$right_gate_y spac=$spac_gate
+
+# For the second pFin; 
+
+set left_fin_y2=$center_p2_y-$fin_width/2
+set right_fin_y2=$left_fin_y2+$fin_width
+
+# For the oxide spacer, or for contact metal:
+set left_spacer_y=$left_fin_y2-$spacer_thick
+set right_spacer_y=$right_fin_y2+$spacer_thick
+
+# For metal contact/via:
+set left_contact_y=$center_p2_y-$via_width/2
+set right_contact_y=$left_contact_y+$via_width
+
+# For the gate
+set left_gate_y=$left_spacer_y-$gate_height
+set right_gate_y=$right_spacer_y+$gate_height
+
+# And the lines will be:
+line y loc=$left_gate_y spac=$spac_gate
+line y loc=$left_contact_y spac=$spac_gate
+line y loc=$left_spacer_y spac=$min_spac_oxide
+line y loc=$left_fin_y2 spac=$min_spac_oxide
+line y loc=$right_fin_y2 spac=$min_spac_oxide
+line y loc=$right_spacer_y spac=$min_spac_oxide
+line y loc=$right_contact_y spac=$spac_gate
+line y loc=$right_gate_y spac=$spac_gate
+line y loc=$end_y spac=$spac_ends
+
+# For mesh in z-direction it is necessary consistently use material boundaries as mesh lines.
+# Let to start from the top of the box (z=0) and go to the top of the structure
+
+# The first material boundary above the top of the box will be the gate 
+set gate_on_box_z=-$gate_height
+
+#The second material on the top of the box will be the fin
+set fin_on_box_z=-$fin_height
+
+# There is the oxide spacer on the top of the fin
+set spacer_z=$fin_on_box_z-$spacer_thick
+
+# The next is the boundary between the spacer and gate
+set gate_on_spacer_z=$spacer_z-$gate_height
+
+# The z-coordinate of the boundary between the gate and the stress liner
+set stress_liner_z=$gate_on_spacer_z-$stress_liner_height
+
+# The top of the structure
+set top_z=$stress_liner_z-$oxide_top_height 
+
+# Mesh in z-direction
+
+# As in y direction we need at least 2 divisions inside the oxide spacer, i.e. min_spac_oxide
+
+# Six divisions on z direction in the gate
+set div_gate_z=6
+set spac_gate_z=$gate_height/$div_gate_z
+
+# Above the top of the gate over the fin the spacing could be increased
+set spac_stress_liner=3*$spac_gate_z
+
+# Spacing in the oxide layer on the top of the step could be further incerased 
+set spac_oxide_top=2*$spac_stress_liner
+
+line z loc=$top_z spac=$spac_oxide_top
+line z loc=$stress_liner_z spac=$spac_stress_liner
+line z loc=$gate_on_spacer_z spac=$spac_gate_z
+line z loc=$spacer_z spac=$min_spac_oxide
+line z loc=$fin_on_box_z spac=$min_spac_oxide
+line z loc=0 spac=$spac_gate_z
+
+# In the box the spacing could be increased
+line z loc=$fin_height/2 spac=$spac_stress_liner
+
+# On the top of the box the spacing could be up to 10 times larger than in the gate
+set spac_box=10*$spac_gate_z
+line z loc=$oxide_box_height spac=$spac_box
+
+# As spacings are set up the structure can be saved for subsequent Victory Stress Simulation
+
+#save name="vsex06_test"
+
+doping phosphorus=1e12 material=box
+
+export atlas(conformal) structure="vsex07_1_vp_conformal.str"
+
+# Section 4. Stress calculations
+
+go victorystress
+
+init structure="vsex07_1_vp_conformal.str"
+
+# By default the absolute value of the initial intrinsic stress is 1GPa;
+# for the n-Fet it is positive; for the p-Fet it is negative:
+
+set stress_value=1.0e10
+
+material material("nliner") intrin.sig=$stress_value
+material material("pliner") intrin.sig=-$stress_value
+
+# The following  material property parameters are used for 
+# user-defined materials in the structure: 
+
+material material("nliner") young.m=3.89e12
+material material("nliner") poiss.r=0.3
+
+material material("pliner") young.m=3.89e12
+material material("pliner") poiss.r=0.3
+
+material material("box") young.m=6.6e11
+material material("box") poiss.r=0.2
+
+material material("nfin") young.m=1.67e12
+material material("nfin") poiss.r=0.28
+material material("pfin") young.m=1.67e12
+material material("pfin") poiss.r=0.28
+
+material material("nstressor") young.m=1.67e12
+material material("nstressor") poiss.r=0.28
+material material("pstressor") young.m=1.67e12
+material material("pstressor") poiss.r=0.28
+
+material material("metal") inherit(aluminum)
+
+stress exposed rebalance
+
+save structure="vsex07_2_vp_conformal.str"
+
+tonyplot3d vsex07_2_vp_conformal.str -set vsex07.set
+
+#Section 5. Visualization and analysis of simulation results, 
+#           extraction of average stresses and mobility enhancement factors
+
+# Since the simulation results are in 3D the only convenient way of analysing them is
+# to extract figures of merit inside representative cut planes within the 3D structure.
+# These 2D planes are generated using "-cut" option of Tonyplot3D.
+# The five planes selected are as follows: 
+# First four planes are parallel to the fin length;
+# Two of those planes are along sidewalls of  the nFinFET/pFinFET
+# Next two planes are along sidewall of another pFinFET 
+# The final (the fifth) is along the top of the fins. 
+# The exact position of the cut could be set manually using 
+# Cutplane Setting in Cutplane view menu of Tonyplot3D. 
+# The selected values for Pan and Pitch angles and Elevation are saved 
+# in five corresponding ".set" files: vsex07_1.set, vsex07_2.set, vsex07_3.set, vsex07_4.set and vsex07_5.set. 
+
+# As the result of the following statements the following five 2D structure files
+# vsex07_3_vp_conformal.str, vsex07_4_vp_conformal.str,  vsex07_5_vp_conformal.str, vsex07_6_vp_conformal.str, vsex07_7_vp_conformal.str will be generated
+
+
+# The first sidewall cut plane
+tonyplot3d vsex07_2_vp_conformal.str -set vsex07_1.set -cut vsex07_3_vp_conformal.str
+
+# The second sidewall cut plane 
+tonyplot3d vsex07_2_vp_conformal.str -set vsex07_2.set -cut vsex07_4_vp_conformal.str
+
+# The third side wall cut plane
+tonyplot3d vsex07_2_vp_conformal.str -set vsex07_3.set -cut vsex07_5_vp_conformal.str
+
+# The forth side wall cut plane
+tonyplot3d vsex07_2_vp_conformal.str -set vsex07_4.set -cut vsex07_6_vp_conformal.str
+
+# "The top of the fins" cut plane
+tonyplot3d vsex07_2_vp_conformal.str -set vsex07_5.set -cut vsex07_7_vp_conformal.str
+
+# The generated cut plane structures are shown using TonyPlot 
+# The "system" command guarantees that the 2D structures will be generated
+# before they are used in Tonyplot and subsequent extract commands
+
+tonyplot vsex07_3_vp_conformal.str vsex07_4_vp_conformal.str vsex07_5_vp_conformal.str vsex07_6_vp_conformal.str -set vsex07_6.set
+tonyplot vsex07_7_vp_conformal.str -set vsex07_7.set
+
+#  Average Stresses Calculations
+# "factor" is required  for obtaining inegrated stresses in GPa 
+set factor=100.
+
+#   Set the limits for integrations: (x,z) - for the sidewall cut plane 
+#   (x,y) - for the top cut.   
+
+set x_left=$left_gate_x+$minsp_x
+set x_right=$right_gate_x-$minsp_x
+
+set y_width1=$left_fin_y1+$min_spac_oxide
+set y_width2=$right_fin_y1-$min_spac_oxide
+
+set z_height2=0-$spac_gate_z
+set z_height1=$fin_on_box_z+$min_spac_oxide
+
+# The first side wall of the n-Fin under the gate
+extract init infile="vsex07_3_vp_conformal.str" 
+# for the Sxx-component
+extract name="integral_2d" 2d.area x.step=0.005 impurity="Stress XX" x.min=$x_left x.max=$x_right y.min=$z_height1 y.max=$z_height2
+extract name="Sxx_side_n_1" $factor*$integral_2d/($z_height2-$z_height1)/($x_right-$x_left) datafile="vsex07_1.dat" 
+
+extract init infile="vsex07_3_vp_conformal.str" 
+# for the Syy-component  
+extract name="integral_2d" 2d.area x.step=0.005 impurity="Stress YY" x.min=$x_left x.max=$x_right y.min=$z_height1 y.max=$z_height2
+extract name="Syy_side_n_1" $factor*$integral_2d/($z_height2-$z_height1)/($x_right-$x_left) datafile="vsex07_1.dat" 
+
+extract init infile="vsex07_3_vp_conformal.str" 
+# for the Szz-component
+extract name="integral_2d" 2d.area x.step=0.005 impurity="Stress ZZ" x.min=$x_left x.max=$x_right y.min=$z_height1 y.max=$z_height2
+extract name="Szz_side_n_1" $factor*$integral_2d/($z_height2-$z_height1)/($x_right-$x_left) datafile="vsex07_1.dat" 
+
+# The top wall of the n-Fin under the gate
+extract init infile="vsex07_7_vp_conformal.str" 
+# for the Sxx-component
+extract name="integral_2d" 2d.area x.step=0.005 impurity="Stress XX" x.min=$x_left x.max=$x_right y.min=$y_width1 y.max=$y_width2
+extract name="Sxx_top_n" $factor*$integral_2d/($y_width2-$y_width1)/($x_right-$x_left) datafile="vsex07_1.dat" 
+
+extract init infile="vsex07_7_vp_conformal.str" 
+# for the Syy-component  
+extract name="integral_2d" 2d.area x.step=0.005 impurity="Stress YY" x.min=$x_left x.max=$x_right y.min=$y_width1 y.max=$y_width2
+extract name="Syy_top_n" $factor*$integral_2d/($y_width2-$y_width1)/($x_right-$x_left) datafile="vsex07_1.dat" 
+
+extract init infile="vsex07_7_vp_conformal.str" 
+# for the Szz-component
+extract name="integral_2d" 2d.area x.step=0.005 impurity="Stress ZZ" x.min=$x_left x.max=$x_right y.min=$y_width1 y.max=$y_width2
+extract name="Szz_top_n" $factor*$integral_2d/($y_width2-$y_width1)/($x_right-$x_left) datafile="vsex07_1.dat" 
+
+# The second side wall of the n-Fin under the gate
+extract init infile="vsex07_4_vp_conformal.str" 
+# for the Sxx-component
+extract name="integral_2d" 2d.area x.step=0.005 impurity="Stress XX" x.min=$x_left x.max=$x_right y.min=$z_height1 y.max=$z_height2
+extract name="Sxx_side_n_2" $factor*$integral_2d/($z_height2-$z_height1)/($x_right-$x_left) datafile="vsex07_1.dat" 
+
+extract init infile="vsex07_4_vp_conformal.str" 
+# for the Syy-component  
+extract name="integral_2d" 2d.area x.step=0.005 impurity="Stress YY" x.min=$x_left x.max=$x_right y.min=$z_height1 y.max=$z_height2
+extract name="Syy_side_n_2" $factor*$integral_2d/($z_height2-$z_height1)/($x_right-$x_left) datafile="vsex07_1.dat" 
+
+extract init infile="vsex07_4_vp_conformal.str" 
+# for the Szz-component
+extract name="integral_2d" 2d.area x.step=0.005 impurity="Stress ZZ" x.min=$x_left x.max=$x_right y.min=$z_height1 y.max=$z_height2
+extract name="Szz_side_n_2" $factor*$integral_2d/($z_height2-$z_height1)/($x_right-$x_left) datafile="vsex07_1.dat" 
+
+# The p-FinFET (which is in parallel to n-FinFET)
+
+set x_left=$left_gate_x+$length_half_cell+$minsp_x
+set x_right=$right_gate_x+$length_half_cell-$minsp_x
+
+# The first side wall of the p-Fin under the gate
+extract init infile="vsex07_3_vp_conformal.str" 
+# for the Sxx-component
+extract name="integral_2d" 2d.area x.step=0.005 impurity="Stress XX" x.min=$x_left x.max=$x_right y.min=$z_height1 y.max=$z_height2
+extract name="Sxx_side_p1_1" $factor*$integral_2d/($z_height2-$z_height1)/($x_right-$x_left) datafile="vsex07_1.dat" 
+
+extract init infile="vsex07_3_vp_conformal.str" 
+# for the Syy-component  
+extract name="integral_2d" 2d.area x.step=0.005 impurity="Stress YY" x.min=$x_left x.max=$x_right y.min=$z_height1 y.max=$z_height2
+extract name="Syy_side_p1_1" $factor*$integral_2d/($z_height2-$z_height1)/($x_right-$x_left) datafile="vsex07_1.dat" 
+
+extract init infile="vsex07_3_vp_conformal.str" 
+# for the Szz-component
+extract name="integral_2d" 2d.area x.step=0.005 impurity="Stress ZZ" x.min=$x_left x.max=$x_right y.min=$z_height1 y.max=$z_height2
+extract name="Szz_side_p1_1" $factor*$integral_2d/($z_height2-$z_height1)/($x_right-$x_left) datafile="vsex07_1.dat" 
+
+# The top wall of the p-Fin under the gate
+extract init infile="vsex07_7_vp_conformal.str" 
+# for the Sxx-component
+extract name="integral_2d" 2d.area x.step=0.005 impurity="Stress XX" x.min=$x_left x.max=$x_right y.min=$y_width1 y.max=$y_width2
+extract name="Sxx_top_p1" $factor*$integral_2d/($y_width2-$y_width1)/($x_right-$x_left) datafile="vsex07_1.dat" 
+
+extract init infile="vsex07_7_vp_conformal.str" 
+# for the Syy-component  
+extract name="integral_2d" 2d.area x.step=0.005 impurity="Stress YY" x.min=$x_left x.max=$x_right y.min=$y_width1 y.max=$y_width2
+extract name="Syy_top_p1" $factor*$integral_2d/($y_width2-$y_width1)/($x_right-$x_left) datafile="vsex07_1.dat" 
+
+extract init infile="vsex07_7_vp_conformal.str" 
+# for the Szz-component
+extract name="integral_2d" 2d.area x.step=0.005 impurity="Stress ZZ" x.min=$x_left x.max=$x_right y.min=$y_width1 y.max=$y_width2
+extract name="Szz_top_p1" $factor*$integral_2d/($y_width2-$y_width1)/($x_right-$x_left) datafile="vsex07_1.dat" 
+
+# The next side wall of the p-Fin under the gate
+extract init infile="vsex07_4_vp_conformal.str" 
+# for the Sxx-component
+extract name="integral_2d" 2d.area x.step=0.005 impurity="Stress XX" x.min=$x_left x.max=$x_right y.min=$z_height1 y.max=$z_height2
+extract name="Sxx_side_p1_2" $factor*$integral_2d/($z_height2-$z_height1)/($x_right-$x_left) datafile="vsex07_1.dat" 
+
+extract init infile="vsex07_4_vp_conformal.str" 
+# for the Syy-component  
+extract name="integral_2d" 2d.area x.step=0.005 impurity="Stress YY" x.min=$x_left x.max=$x_right y.min=$z_height1 y.max=$z_height2
+extract name="Syy_side_p1_2" $factor*$integral_2d/($z_height2-$z_height1)/($x_right-$x_left) datafile="vsex07_1.dat" 
+
+extract init infile="vsex07_4_vp_conformal.str" 
+# for the Szz-component
+extract name="integral_2d" 2d.area x.step=0.005 impurity="Stress ZZ" x.min=$x_left x.max=$x_right y.min=$z_height1 y.max=$z_height2
+extract name="Szz_side_p1_2" $factor*$integral_2d/($z_height2-$z_height1)/($x_right-$x_left) datafile="vsex07_1.dat" 
+
+# The pFin (it is parallel to the previous pFin)
+
+set y_width1=$left_fin_y2+$min_spac_oxide
+set y_width2=$right_fin_y2-$min_spac_oxide
+
+# The first side wall of the p-Fin under the gate
+extract init infile="vsex07_5_vp_conformal.str" 
+# for the Sxx-component
+extract name="integral_2d" 2d.area x.step=0.005 impurity="Stress XX" x.min=$x_left x.max=$x_right y.min=$z_height1 y.max=$z_height2
+extract name="Sxx_side_p2_1" $factor*$integral_2d/($z_height2-$z_height1)/($x_right-$x_left) datafile="vsex07_1.dat" 
+
+extract init infile="vsex07_5_vp_conformal.str" 
+# for the Syy-component  
+extract name="integral_2d" 2d.area x.step=0.005 impurity="Stress YY" x.min=$x_left x.max=$x_right y.min=$z_height1 y.max=$z_height2
+extract name="Syy_side_p2_1" $factor*$integral_2d/($z_height2-$z_height1)/($x_right-$x_left) datafile="vsex07_1.dat" 
+
+extract init infile="vsex07_5_vp_conformal.str" 
+# for the Szz-component
+extract name="integral_2d" 2d.area x.step=0.005 impurity="Stress ZZ" x.min=$x_left x.max=$x_right y.min=$z_height1 y.max=$z_height2
+extract name="Szz_side_p2_1" $factor*$integral_2d/($z_height2-$z_height1)/($x_right-$x_left) datafile="vsex07_1.dat" 
+
+# The top wall of the p-Fin under the gate
+extract init infile="vsex07_7_vp_conformal.str" 
+# for the Sxx-component
+extract name="integral_2d" 2d.area x.step=0.005 impurity="Stress XX" x.min=$x_left x.max=$x_right y.min=$y_width1 y.max=$y_width2
+extract name="Sxx_top_p2" $factor*$integral_2d/($y_width2-$y_width1)/($x_right-$x_left) datafile="vsex07_1.dat" 
+
+extract init infile="vsex07_7_vp_conformal.str" 
+# for the Syy-component  
+extract name="integral_2d" 2d.area x.step=0.005 impurity="Stress YY" x.min=$x_left x.max=$x_right y.min=$y_width1 y.max=$y_width2
+extract name="Syy_top_p2" $factor*$integral_2d/($y_width2-$y_width1)/($x_right-$x_left) datafile="vsex07_1.dat" 
+
+extract init infile="vsex07_7_vp_conformal.str" 
+# for the Szz-component
+extract name="integral_2d" 2d.area x.step=0.005 impurity="Stress ZZ" x.min=$x_left x.max=$x_right y.min=$y_width1 y.max=$y_width2
+extract name="Szz_top_p2" $factor*$integral_2d/($y_width2-$y_width1)/($x_right-$x_left) datafile="vsex07_1.dat" 
+
+# The next side wall of the p-Fin under the gate
+extract init infile="vsex07_6_vp_conformal.str" 
+
+# for the Sxx-component
+extract name="integral_2d" 2d.area x.step=0.005 impurity="Stress XX" x.min=$x_left x.max=$x_right y.min=$z_height1 y.max=$z_height2
+extract name="Sxx_side_p2_2" $factor*$integral_2d/($z_height2-$z_height1)/($x_right-$x_left) datafile="vsex07_1.dat" 
+
+extract init infile="vsex07_6_vp_conformal.str" 
+# for the Syy-component  
+extract name="integral_2d" 2d.area x.step=0.005 impurity="Stress YY" x.min=$x_left x.max=$x_right y.min=$z_height1 y.max=$z_height2
+extract name="Syy_side_p2_2" $factor*$integral_2d/($z_height2-$z_height1)/($x_right-$x_left) datafile="vsex07_1.dat" 
+
+extract init infile="vsex07_6_vp_conformal.str" 
+# for the Szz-component
+extract name="integral_2d" 2d.area x.step=0.005 impurity="Stress ZZ" x.min=$x_left x.max=$x_right y.min=$z_height1 y.max=$z_height2
+extract name="Szz_side_p2_2" $factor*$integral_2d/($z_height2-$z_height1)/($x_right-$x_left) datafile="vsex07_1.dat" 
+
+# Mobility Enhancement Calculations
+
+# Piezorestivity coefficients for (100)/<100> n-Fin orientation (in cm^2/GPa)
+
+set nx1=-1.022
+set ny1=0.534
+set nz1=0.534
+
+# Piezorestivity coefficients for (110)/<100> n-Fin orientation (in cm^2/GPa)
+
+set nx2=-0.311
+set ny2=-0.175
+set nz2=0.534
+
+# Mobility Enhancements for n-FinFet with 2 fin orientations
+# Stresses weakly depend on fin orientation, so the enhancement factors are different because 
+# the piezorestivity coefficients are different
+
+# Mobility enhancement factors for the case of n-Fin: (100)/<100)
+extract init infile="vsex07_3_vp_conformal.str"
+extract name="n_factor_side1_n_1" 1-($nx1*$Sxx_side_n_1+$ny1*$Syy_side_n_1+$nz1*$Szz_side_n_1) datafile="vsex07_1.dat" 
+extract name="n_factor_side2_n_1" 1-($nx1*$Sxx_side_n_2+$ny1*$Syy_side_n_2+$nz1*$Szz_side_n_2) datafile="vsex07_1.dat" 
+extract name="n_factor_top_n_1" 1-($nx1*$Sxx_top_n+$ny1*$Syy_top_n+$nz1*$Szz_top_n) datafile="vsex07_1.dat" 
+
+# Mobility enhancement factors for the case of n-Fin: (110)/<100)
+extract name="n_factor_side1_n_2" 1-($nx2*$Sxx_side_n_1+$ny2*$Syy_side_n_1+$nz2*$Szz_side_n_1) datafile="vsex07_1.dat" 
+extract name="n_factor_side2_n_2" 1-($nx2*$Sxx_side_n_2+$ny2*$Syy_side_n_2+$nz2*$Szz_side_n_2) datafile="vsex07_1.dat" 
+extract name="n_factor_top_n_2" 1-($nx2*$Sxx_top_n+$ny2*$Syy_top_n+$nz2*$Szz_top_n) datafile="vsex07_1.dat" 
+
+# Piezorestivity coefficients for (100)/<100> p-Fin orientation (in cm2/GPa)
+
+set px1=0.066
+set py1=-0.011
+set pz1=-0.011
+
+# Piezorestivity coefficients for (110)/<100> p-Fin orientation (in cm2/GPa)
+
+set px2=0.718
+set py2=-0.663
+set pz2=-0.011
+
+# Mobility enhancement factors of the first pFin (it is paralle to nFin): (100)/<100)
+extract init infile="vsex07_3_vp_conformal.str"
+extract name="p_factor_side1_p1_1" 1-($px1*$Sxx_side_p1_1+$py1*$Syy_side_p1_1+$pz1*$Szz_side_p1_1) datafile="vsex07_1.dat" 
+extract name="p_factor_side2_p1_1" 1-($px1*$Sxx_side_p1_2+$py1*$Syy_side_p1_2+$pz1*$Szz_side_p1_2) datafile="vsex07_1.dat" 
+extract name="p_factor_top_p1_1" 1-($px1*$Sxx_top_p1+$py1*$Syy_top_p1+$pz1*$Szz_top_p1) datafile="vsex07_1.dat" 
+
+# Mobility enhancement factors of the first pFin (it is parallel to nFin): (110)/<100)
+extract name="p_factor_side1_p1_2" 1-($px2*$Sxx_side_p1_1+$py2*$Syy_side_p1_1+$pz2*$Szz_side_p1_1) datafile="vsex07_1.dat" 
+extract name="p_factor_side2_p1_2" 1-($px2*$Sxx_side_p1_2+$py2*$Syy_side_p1_2+$pz2*$Szz_side_p1_2) datafile="vsex07_1.dat" 
+extract name="p_factor_top_p1_2" 1-($px2*$Sxx_top_p1+$py2*$Syy_top_p1+$pz2*$Szz_top_p1) datafile="vsex07_1.dat" 
+
+# Mobility enhancement factors of the second pFin: (100)/<100)
+extract name="p_factor_side1_p2_1" 1-($px1*$Sxx_side_p2_1+$py1*$Syy_side_p2_1+$pz1*$Szz_side_p2_1) datafile="vsex07_1.dat" 
+extract name="p_factor_side2_p2_1" 1-($px1*$Sxx_side_p2_2+$py1*$Syy_side_p2_2+$pz1*$Szz_side_p2_2) datafile="vsex07_1.dat" 
+extract name="p_factor_top_p2_1" 1-($px1*$Sxx_top_p2+$py1*$Syy_top_p2+$pz1*$Szz_top_p2) datafile="vsex07_1.dat" 
+
+# Mobility enhancement factors of the second pFin: (110)/<100)
+extract name="p_factor_side1_p2_2" 1-($px2*$Sxx_side_p2_1+$py2*$Syy_side_p2_1+$pz2*$Szz_side_p2_1) datafile="vsex07_1.dat" 
+extract name="p_factor_side2_p2_2" 1-($px2*$Sxx_side_p2_2+$py2*$Syy_side_p2_2+$pz2*$Szz_side_p2_2) datafile="vsex07_1.dat" 
+extract name="p_factor_top_p2_2" 1-($px2*$Sxx_top_p2+$py2*$Syy_top_p2+$pz2*$Szz_top_p2) datafile="vsex07_1.dat" 
+
+quit

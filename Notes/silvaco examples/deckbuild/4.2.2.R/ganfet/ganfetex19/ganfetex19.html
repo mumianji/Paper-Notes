@@ -1,0 +1,72 @@
+<html>
+  <head>
+    <title>Effect of Nitride Intrinsic Stress Simulated with Victory Process</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Effect of Nitride Intrinsic Stress Simulated with Victory Process</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Victory Process / Victory Mesh / Victory Device</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Victory Process 7.22.3.R / Victory Mesh 1.2.4.R / Victory Device 1.12.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="ganfetex19_plot0.png" width="640" alt="ganfetex19_plot0" />
+      <p/>
+      <img src="ganfetex19_plot1.png" width="640" alt="ganfetex19_plot1" />
+      <p/>
+      <img src="ganfetex19_plot2.png" width="640" alt="ganfetex19_plot2" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+In this example, a 2D GaN HEMT structure with the stress distribution resulting from intrinsic stress in the nitride passivation layer is produced by Victory Process in process mode. The process modeling is then inputted into Victory Device for device simulation of IdVg characteristics.
+</p>
+<p>
+In order to accomplish stress simulation with Victory Process, the
+<b> STRESS.HIST </b> parameter of the
+<b> METHOD </b> statement must be activated as follows:
+<b> METHOD STRESS.HIST=ON</b> </p>
+<p>
+This will instruct Victory Process to calculate the stresses and evolutions of geometry after each processing step using the so-called &quot;stress evolution&quot; or &quot;stress history&quot; model. Since this example is intended for illustrating stress polarization as a consequence of nitride intrinsic stress, besides spontaneous and piezoelectric polarization, lattice mismatch stress must be explicitly excluded from stress calculation by
+<b> METHOD </b> statement:
+<b> METHOD STRESS.HIST=ON STRESS.LATTICEMISMATCH=OFF</b> </p>
+<p>
+An intrinsic stress can be introduced into the nitride passivation layer during the deposition using the parameters
+<b> STRESSXX</b> and
+<b> STRESSZZ </b> of the
+<b> DEPOSIT</b> statement for the xx-component and the zz-component of the stress tensor. The default unit of intrinsic stress is dyne/cm2.
+</p>
+<p>
+The IdVg characteristics at a drain bias of 1 V are ramped from -6 to 1.0 V. With the scale factor
+<b> TENSOR.SCALE </b> on the
+<b> MODEL </b> statement, Victory Device allows piezoelectric charges due to imported stress to be scaled independently from those due to lattice mismatch stress and spontaneous polarization.
+</p>
+<p>
+The effect of nitride intrinsic stress, which can be either compressive or tensile, is visible on IdVg characteristics. The results are also compared for different
+<b> TENSOR.SCALE</b> factors as well as different nitride layer thicknesses.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

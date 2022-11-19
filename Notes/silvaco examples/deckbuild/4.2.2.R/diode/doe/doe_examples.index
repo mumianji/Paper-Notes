@@ -1,0 +1,93 @@
+{section} DOE : Design of Experiments Examples 
+
+{subsection} doeex01.in : Implant Dose Effect at Different Energies 
+
+Requires: SSuprem 4, MCIMPLANT
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This example shows how to use the 
+{bold} DBInternal 
+capability of DeckBuild to investigate the dose
+effect on As implant profiles at different energies. A simple template
+Athena input deck "doeex01_tmpl.in" is created. It includes one BCA
+implant statement with dose and energy specified using set capability
+of Deckbuild. The content of "doeex01_tmpl.in can be seen inside the Experiment
+input deck file doeex01.in. 
+
+The Experiment file starts with the 
+{bold} go internal 
+command which transfers control from the current simulator (i.e. Athena) to
+DBInternal. The Experiment file consist of two main parts. The    
+{bold} load 
+command specifies which template file should be used for multiple runs. The
+{bold} sweep 
+command specifies how the variables set in the template file should be changed.
+Both parameters specified by the 
+{bold} set 
+command in the template file are set to be changed.
+The 
+{bold} range 
+specifies the initial value of the parameter, final value value of the parameter, and number of points. The dose varies in log scale, so its values will be 1e13, 1e14, and 1e15. 
+The energy is changed linearly, so its values will be 5keV, 10keV, and 15keV. The total number of simulations will be 3 X 3 = 9.
+
+After all simulations are complete, the resulting profiles are combined in
+3 TonyPlots.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+{subsection} doeex02.in : Doping dependence of resistivity and electron mobility 
+
+Requires: Atlas
+{newline}
+Minimum Versions: Atlas 5.18.3.R
+
+This example shows how to use the DBInternal capability to investigate the doping 
+dependence of resistivity and electron mobility. The simulations will reproduce 
+the graphs of mobility and resistivity for n-type silicon shown in Figures 18 
+and 21 in chapter 1 of S.M. Sze's "Physics of Semiconductor Devices".  The 
+template
+Atlas input deck "doeex02_tmpl.in" for a simple resistor is created. The  
+uniform doping is specified by the set command of Deckbuild. The parameters of 
+interest,
+resistivity and mobility, are extracted using "extract from curve" capability.
+The content of the template file can be seen inside the Experiment input deck 
+file "doeex02.in". 
+
+The Experiment file starts with the 
+{bold} go internal 
+command which transfers control from the current simulator (i.e. Atlas) to
+DBInternal. The Experiment file consists of the following sections:
+
+{bullet}The    
+{bold} load 
+command specifies which template file should be used for multiple runs. 
+
+{bullet}The
+{bold} sweep 
+command specifies how the variables set in the template file should be changed.
+In this example the doping varies from 1e12 to 1e21. The number of simulations
+is set to 37. 
+
+{bullet}The 
+{bold} save 
+command tells DBInternal to collate the data 
+generated in all extract commands into the file "doeex02.dat".
+
+After all simulations are complete, the resulting resistivity vs doping and 
+mobility vs doping dependencies are plotted in TonyPlot.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+

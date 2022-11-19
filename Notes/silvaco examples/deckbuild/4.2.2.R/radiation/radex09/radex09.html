@@ -1,0 +1,83 @@
+<html>
+  <head>
+    <title>Single Event Burnout (SEB) in a High Voltage PiN Diode</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Single Event Burnout (SEB) in a High Voltage PiN Diode</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Victory Device/SEE</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Victory Device 1.12.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="radex09_plot0.png" width="640" alt="radex09_plot0" />
+      <p/>
+      <img src="radex09_plot1.png" width="640" alt="radex09_plot1" />
+      <p/>
+      <img src="radex09_plot2.png" width="640" alt="radex09_plot2" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This examples demonstrates Single Event Burnout (SEB) in a High Voltage PiN Diode
+</p>
+<p>
+The structure of the 3D PiN diode is simple enough to be emulated directly in
+the device simulator without the need to resort to a full process simulator.
+Further simplification is afforded by the
+<b> circular symmetry </b> of the diode allowing the diode to be simulated in two dimensions with
+cylindrical corrections to correctly predict 3D device characteristics.  For
+the simulation of single events, only a central and vertical strike is a valid
+candidate for correctly simulating 3D effects using this 2 dimensional circular
+symetry method.  This method is invoked using the
+<b> cylindrical</b> parameter, on the mesh statement
+</p>
+<p>
+There are two important requirements for simulating Single Event Burnout (SEB).
+Firstly, the device IV characteristics must display a
+<b> &quot;snapback&quot;</b> characteristic, where, for at least a range of voltages, there exists two
+possible corresponding stable current conditions, one a low current &quot;off&quot; state
+and a second high current &quot;on&quot; state.  At high voltages, the &quot;on&quot; state
+dissipates sufficient power to over heat the device.
+</p>
+<p>
+Secondly, self heating plays a leading role in greatly reducing the current
+density in a PiN diode at which the snapback IV characteristic occurs, allowing
+a significantly lower
+<b> Linear Energy Transfer (LET)</b> strike to transfer the diode from an &quot;off&quot; state, to a stable &quot;on&quot; state, where
+continuous heating eventually burns the device to destruction, hence the name
+of the phenomenon, &quot;Single Event Burnout&quot;.
+</p>
+<p>
+This example, first biases the PiN diode close to it&apos;s breakdown voltage of
+<b> 3,500 volts.</b> Then a
+<b> LOOP, L.END</b> statement is used to start the simulation with a strike of 4 MeV-cm2/mg LET.
+The LOOP then doubles the LET strike value until the current pulse from the
+strike is sufficient to transfer the IV characteristics to a stable &quot;on&quot; state,
+whereupon the device burns out in short order afterwards.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

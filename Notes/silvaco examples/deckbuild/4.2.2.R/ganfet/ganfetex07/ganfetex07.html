@@ -1,0 +1,92 @@
+<html>
+  <head>
+    <title>A Normally-off GaN HFET with p-type GaN gate</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>A Normally-off GaN HFET with p-type GaN gate</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Blaze</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="ganfetex07_plot0.png" width="640" alt="ganfetex07_plot0" />
+      <p/>
+      <img src="ganfetex07_plot1.png" width="640" alt="ganfetex07_plot1" />
+      <p/>
+      <img src="ganfetex07_plot2.png" width="640" alt="ganfetex07_plot2" />
+      <p/>
+      <img src="ganfetex07_plot3.png" width="640" alt="ganfetex07_plot3" />
+      <p/>
+      <img src="ganfetex07_plot4.png" width="640" alt="ganfetex07_plot4" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates how to simulate a GaN HFET with p-type GaN gate
+and is based on the following paper:
+</p>
+<p>
+&quot;Normally-off AlGaN/GaN HEFT with p-type GaN Gate and AlGaN Buffer&quot;
+</p>
+<p>
+O. Hilt, A. Knauer, F. Brunner, E. Bahat-Treidel and J. Würfl
+Ferdinand-Braun-Institut, Leibniz Institut fuer Hoechstfrequenztechnik
+Gustav-Kirchhoff-Strasse 4, 12489 Berlin, Germany.
+Proceedings of The 22nd International Symposium on Power Semiconductor
+Devices &amp; ICs, Hiroshima
+</p>
+<p>
+While a Schottky-type metal on the AlGaN barrier acts as gate for normally-on
+HEMTs, a p-type doped semiconductor as gate is able to deplete the transistor
+channel when unbiased, thus yielding a normally-off device. The simulation of
+the transfert characteristic reveals a Vt of around 1.25V.
+</p>
+<p>
+The sub-threshold leakage current drops significantly immediately below the
+threshold voltage, however the drop slows down to around 4uA/mm at VGS=0V.
+The leakage current is determined by traps.
+</p>
+<p>
+The gate current in the on-state (defined as VGS=5V) is around 3uA/mm and
+thus around 5 orders of magnitude below the drain current. In order to ensure
+that the charge are present at the interface between p-type GaN, AlGaN and Nitride the
+<b> PCH.INS REGION=5 </b> parameters of the
+<b> MODELS </b> statement are used.
+</p>
+<p>
+The output characteristic shows a negative differential resistance due
+to lattice heating and simulated by solving the lattice heating equation
+set by the
+<b> LAT.TEMP </b> parameter of the
+<b> MODELS </b> statement. The maximum drain current is about 0.4A/mm.
+</p>
+<p>
+The Breakdown Voltage of thisdevice is 870V, and the leakage current
+is controlled by the traps.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

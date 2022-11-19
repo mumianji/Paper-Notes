@@ -1,0 +1,136 @@
+<html>
+  <head>
+    <title>GaN HEMT Breakdown</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>GaN HEMT Breakdown</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Blaze</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="ganfetex02_plot0.png" width="640" alt="ganfetex02_plot0" />
+      <p/>
+      <img src="ganfetex02_plot1.png" width="640" alt="ganfetex02_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates simulation of avalanche breakdown an
+AlGaN/GaN HEMT. It
+</p>
+<p>
+This example is based on the paper:
+</p>
+<p>
+Karmalkar and Mishra &quot;Enhancement of Breakdown Voltage in AlGaN/GaN
+High Electron Mobility Transistors Using a Field Plate&quot;, ED 48, No. 8,
+pp 1515-1521,  August 2001.
+</p>
+<p>
+At the outermost level, the simulation uses the DeckBuild looping and
+variable assignment capabilities of LOOP, L.END and SET.   Near the
+end of the input deck, the simulation again uses the built-in capabilities
+of DeckBuild to perform complex parameter extraction using the EXTRACT
+statements.
+</p>
+<p>
+This Atlas part of the example demonstrates:
+</p>
+<ul>
+  <li>
+ Construction of the heterojunction structure using Atlas syntax
+<br/>
+  </li>
+  <li>
+ Material and models parameter specification 
+<br/>
+  </li>
+  <li>
+ Simulation of Id-Vds and breakdown characteristic 
+<br/>
+  </li>
+  <li>
+ Display of the results in TonyPlot
+  </li>
+</ul>
+<p>
+The device under consideration consists of a simple 0.4 micron gate length
+GaN HEMT augmented with a field plate used to increase the breakdown
+voltage.  This simulation loops on increasing field plate lengths to
+examine the relationship between field plate geometry and breakdown
+voltage.
+</p>
+<p>
+In the first part of the input file, the device is described using
+the Atlas structural syntax. The description includes the mesh, regions
+locations, electrodes locations, and doping distribution.
+The
+<b> region </b> statements are used to define the AlGaN and GaN regions. The Al
+composition fraction (x.composition=0.295) is defined here as well.
+</p>
+<p>
+After the device description,
+<b> material </b> statement are used to define the characteristics of the various materials
+used in the simulation.
+</p>
+<p>
+The
+<b> models </b> statements are used to specify the following set of models : field
+dependent mobility, SRH recombination  and Fermi-Dirac statistics.
+</p>
+<p>
+In order to simulate avalanche breakdown, the impact ionization-generation model
+should be turned on. This is done using the
+<b> impact selb </b> statement in which the Selberherr impact ionization model is activated.
+All basic impact ionization parameters are user-accessible and can be
+modified by the user.
+</p>
+<p>
+The gate electrode in HEMT structures is a Schottky contact. This is specified
+by using the
+<b> contact </b> statement to define the workfunction of the gate electrode.
+</p>
+<p>
+Here the
+<b> beam </b> statement is used to specify an optical source of carrier pair generation
+in addition to the thermal generation provided by SRH.  This is generally a
+good strategy for analyzing breakdown especially in wide bandgap materials
+or at low temperatures to improve convergence.  This is not recommended when
+estimating sub-breakdown diode leakage currents though.
+</p>
+<p>
+Next the drain voltage is ramped to 1200 volts.  At that point the
+drain boundary is changed to a current boundary using the
+<b> contact current </b> statement.
+</p>
+<p>
+This is performed to improve convergence up throught the breakdown portion
+of the curve where current is changing much faster than voltage.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

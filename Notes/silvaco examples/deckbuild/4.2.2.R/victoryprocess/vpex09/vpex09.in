@@ -1,0 +1,75 @@
+# VICTORY Process example 9 - 3D process simulation
+# illustrating structure initialisation, mask handeling
+# geometrical etching and oxidation
+# Silvaco 2014
+# 
+
+go victoryprocess 
+
+
+# Define the simulation domain, the wafer material and the simulation mesh resolution
+
+Init material="silicon" layout="vpex09.lay" depth=0.8 gasHeight=0.7 from="-0.4,0.5" to="1.6,2.1" resolution="0.1,0.1,0.1" flow.dim=3d
+
+
+# Etch a thickness of 400nm using mask layer "Corner"
+
+Etch DRY thickness=0.4 reverse mask="Corner"
+
+
+# Save simulation status
+
+Save name="vpex09_1"
+
+
+# Export data into tonyplot3D format
+
+Export structure=vpex09_1.str
+
+
+# Oxidize up to a thickness of 100nm
+#  Analytical mode is used here
+
+Oxidize thickness=0.1 
+
+
+# Export data into tonyplot3D format
+
+Export structure=vpex09_2.str
+
+tonyplot3d vpex09_2.str -set vpex09.set
+
+
+# Export 2D structure file and extract thickness of oxide layer within trench
+
+Export 2D structure=vpex09_2_2d.str x=1.25 
+extract init infile="vpex09_2_2d.str"
+extract name="analytic" thickness material="oxide" x.val=1.21
+
+
+# Reload previously saved simulation status
+
+Load name="vpex09_1"
+
+
+# Oxidize in wet ambient at 1000C for 200sec
+#  Full physical mode is used here
+
+Diffuse wet time=505 sec temperature=1000
+
+
+# Export data into tonyplot3D format
+
+Export structure=vpex09_3.str
+
+tonyplot3d vpex09_3.str -set vpex09.set
+tonyplot3d vpex09_3.str -set vpex09_3.set
+
+# Export 2D structure file and extract thickness of oxide layer within trench
+
+Export 2D structure=vpex09_3_2d.str x=1.25 
+extract init infile="vpex09_3_2d.str"
+extract name="physical" thickness material="oxide" x.val=1.21
+
+quit
+

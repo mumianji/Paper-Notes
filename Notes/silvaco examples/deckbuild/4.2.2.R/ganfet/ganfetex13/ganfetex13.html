@@ -1,0 +1,109 @@
+<html>
+  <head>
+    <title>3D AlGaN/GaN HEMT Including Intrinsic Stress Effect</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>3D AlGaN/GaN HEMT Including Intrinsic Stress Effect</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Victory Stress/Blaze</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Victory Stress 2.14.0.R, Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="ganfetex13_plot0.png" width="640" alt="ganfetex13_plot0" />
+      <p/>
+      <img src="ganfetex13_plot1.png" width="640" alt="ganfetex13_plot1" />
+      <p/>
+      <img src="ganfetex13_plot2.png" width="640" alt="ganfetex13_plot2" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates:
+</p>
+<ul>
+  <li>
+ Construction of the 3D heterojunction structure
+<br/>
+  </li>
+  <li>
+ 3D Stress simulation, Material and models parameter specification 
+<br/>
+  </li>
+  <li>
+ 3D Simulation of Id/Vgs characteristics and comparison with 2D for validation
+  </li>
+</ul>
+<p>
+The device under consideration is a 3D AlGaN/GaN HEMT. The 2D structure is first
+obtained by Athena and then extruded in 3D using DEVEDIT. This is in fact the structure
+created in ganfetex05.  3D stress distribution is simulated by VICTORYSTRESS.
+This example produces stress distributions via the stress-liner made of nitride.
+Note that the stressor in this example is used to illustrate strain polarization,
+on top of lattice and spontaneous polarization.
+</p>
+<p>
+The polarization model that supports dependency on loaded strain tensor
+has been used in this example. The model is enabled by the
+<b> POLARIZATION </b> flag of the
+<b> MODELS </b> statement.
+</p>
+<p>
+The main concept of GaN based power devices is to use epitaxial strain to create
+2DEG. The polarization model that supports epitaxial strain due to lattice
+mismatch is enabled by the
+<b> CALC.STRAIN </b> flag on the
+<b> MODEL </b> statement.
+</p>
+<p>
+When both models are set in the simulation both the imported strain and the
+lattice mismatch calculation are accounted for.
+</p>
+<p>
+The lattice and imported strain dependent components of polarization can
+be independently scaled using the scale factors
+<b> TENSO.SCALE </b> and
+<b> PIEZO.SCALE </b> on the
+<b> MODEL </b> statement.
+</p>
+<p>
+When enabling the
+<b> POLARIZATION </b> flag spontaneous polarization is automatically included in the calculation.
+The size of the spontaneous component can be scaled using the
+<b> PSP.SCALE </b> parameter of the
+<b> MODELS </b> statement.
+</p>
+<p>
+After the initial solution is obtained the drain voltage is ramped to 1 V,
+then the IdVg characteristic is extracted from Vg=-8 to Vg=1.0 V.
+</p>
+<p>
+The effect of strain is seen on IdVg characteristic. Overlay of 2D simulation
+results with 3D simulation results obtained with width=1 validates our 3D
+implementation.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

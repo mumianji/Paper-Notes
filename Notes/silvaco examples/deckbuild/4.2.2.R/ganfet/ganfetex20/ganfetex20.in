@@ -1,0 +1,285 @@
+# (c) Silvaco Inc., 2018
+# GaN-AlGaN Vertical HEMT
+# CAVET = Current Aperture Vertical Electron Transistor
+# - based on the paper:
+# S. Chowdhury, M. H. Wong, B. L. Swenson, and U. K. Mishra, 
+# "CAVET on bulk GaN substrates achieved with MBE-regrown AlGaN/GaN layers
+#  to suppress dispersion", IEEE Electron Device Letters, vol.33, Jan. 2012.
+
+# go victorydevice
+
+go atlas
+
+# 80-bit precision: no visible difference in IV curves, sim.time 50% longer
+#go atlas  simflags="-80"
+
+#--------------------------------------
+# Select simulations to be performed:
+set run_IdVg = true
+set run_IdVd = true
+#--------------------------------------
+
+#################  DEVICE GEOMETRY:   ###################################
+
+# Is the 2D model a Half of a Symmetric Device?
+set HalfSym = true
+#--------------------------------------
+
+#==== LENGTHS (X):  ===========================
+# aperture length [um]:
+set Lap=10 
+# gate overlap length [um]:
+set Lgo=3 
+# gate to source distance [um]:
+set Lgs=1 
+# Length of each Source contact [um]:
+set Lsrc=0.5  
+
+set GendLeft = $Lsrc+$Lgs
+set GendRight = $GendLeft+$Lgo+$Lap+$Lgo
+
+# X position of the aperture Left end:
+set XapL = $Lsrc+$Lgs+$Lgo  
+# X position of the aperture Right end:
+set XapR = $XapL+$Lap        
+
+# total device length and device center:
+set devLen = $Lap + 2*($Lgo+$Lgs+$Lsrc)
+set dev_center = 0.5*$devLen
+
+# SCALING FACTOR to obtain Currents in [A/cm2]
+# (active area = between the two Source electrodes):
+set ActiveArea_cm2 = (2*$Lgs+2*$Lgo+$Lap)*1e-8
+set scale_Acm2 = 1.0/$ActiveArea_cm2
+set CurScale = $scale_Acm2
+
+# CURRENT SCALING FACTOR for a SPECIFIC WIDTH [um]:
+# (active area = between the two Source electrodes):
+set Device_Width_um = 75
+#set CurScale = $Device_Width_um
+
+set DevWidthToScaling = $Device_Width_um/$CurScale
+
+# Device Xend and Scaling depend on using the Half-Symmetry model:
+if cond = ($HalfSym = true) 
+  set Xend = $dev_center  
+  set GendRight = $dev_center 
+  set CurScale = 2*$CurScale
+else
+  set Xend = $devLen  
+if.end
+
+#===== THICKNESSES (Y):  =======================
+set TAir = 0.2
+
+set AlGaN_top = 0.2
+set Gate_bottom = $AlGaN_top
+
+# AlGaN layer thickness [um]:
+set AlGaN_thick = 0.030
+set AlGaNbottom = $AlGaN_top+$AlGaN_thick
+
+# 2DEG layer thickness [um] (to enable different mobility):
+set T2DEG = 0.050
+set bottom2DEG = $AlGaNbottom+$T2DEG
+
+# n-type GaN channel thickness [um] (below 2DEG):
+set TGaN1 = 0.100
+set CBLtop = $AlGaNbottom+$T2DEG+$TGaN1
+
+# p-type Current Blocking Layer (CBL) thickness [um]:
+set TGaN2 = 0.3
+
+set CBLbottom=$CBLtop+$TGaN2
+
+# Epitaxial n-type drift region thickness [um]:
+set TGaN3 = 3.0
+
+set DRIFTbottom=$CBLbottom+$TGaN3
+
+# Thickness of n++ GaN Substrate at Drain contact [um]:
+set TGaN4 = 1.0   
+set GaNbottom=$DRIFTbottom+$TGaN4
+
+# Thickness of the Drain contact [um]:
+set Tdrn = 0.2  
+
+#########################  2D MESH:   #####################################
+
+# mesh width in the 3rd (Z) direction = CURRENT SCALING:
+
+mesh width = $CurScale
+
+# left half:
+x.mesh location=0               spacing=0.5*$Lsrc
+x.mesh location=$Lsrc           spacing=0.05
+x.mesh location=$GendLeft-0.5   spacing=0.25
+x.mesh location=$GendLeft       spacing=0.1
+x.mesh location=$GendLeft+0.5   spacing=0.25
+x.mesh location=$XapL-0.2       spacing=0.1
+x.mesh location=$XapL           spacing=0.05
+x.mesh location=$XapL+0.2       spacing=0.1
+x.mesh location=$dev_center     spacing=$Lap/20
+
+y.mesh location=0.0              spacing=0.050
+y.mesh location=$AlGaN_top       spacing=0.002
+y.mesh location=$AlGaNbottom     spacing=0.002
+y.mesh location=$bottom2DEG      spacing=0.005
+y.mesh location=$CBLtop          spacing=0.010
+y.mesh location=$CBLbottom       spacing=0.040
+y.mesh location=$DRIFTbottom-1   spacing=0.5
+y.mesh location=$DRIFTbottom     spacing=0.1
+y.mesh location=$DRIFTbottom+$TGaN4/2  spacing=0.1
+y.mesh location=$GaNbottom             spacing=0.025
+y.mesh location=$GaNbottom+$Tdrn       spacing=0.1
+
+############################################################################
+## Structure Specification - REGIONS:
+
+region num=1 material=AlGaN y.min=$AlGaN_top   y.max=$AlGaNbottom x.min=0 x.max=$Xend x.comp=0.3
+region num=2 material=GaN   y.min=$AlGaNbottom y.max=$bottom2DEG  x.min=0 x.max=$Xend
+region num=3 material=GaN   y.min=$bottom2DEG  y.max=$GaNbottom x.min=0 x.max=$Xend substrate
+region num=4 material=SiN   y.min=0 y.max=$AlGaN_top   x.min=0 x.max=$Xend
+
+##### ELECTRODES (CONTACTS) specification:
+electrode num=1 name=drain  y.min=$GaNbottom y.max=$GaNbottom+$Tdrn  x.min=0 x.max=$Xend
+electrode num=2 name=source y.min=0 y.max=$CBLtop   x.min=0 x.max=$Lsrc
+electrode num=3 name=gate   y.min=0 y.max=$Gate_bottom  x.min=$GendLeft x.max=$GendRight
+
+##### DOPING specification:
+# AlGaN
+doping uniform y.min=$AlGaN_top y.max=$AlGaNbottom  x.min=0 x.max=$Xend n.type conc=1.5e17
+# Undoped GaN buffer over CBL
+doping uniform y.min=$AlGaNbottom  y.max=$CBLtop x.min=0 x.max=$Xend n.type conc=1e13
+doping uniform y.min=$CBLtop-0.020 y.max=$CBLtop x.min=0 x.max=$Xend n.type conc=1e14
+# Epi drift layer
+doping uniform y.min=$CBLtop y.max=$GaNbottom   x.min=0 x.max=$Xend n.type conc=2e16
+# Conductive GaN substrate
+doping uniform y.min=$DRIFTbottom y.max=$GaNbottom  x.min=0 x.max=$Xend n.type conc=1e18
+# p-type doping of Current Blocking Layer (CBL):
+doping uniform y.min=$CBLtop y.max=$CBLbottom x.min=0.0 x.max=$XapL p.type conc=3e17
+
+##### CONTACTS:
+# Intrinsic contact resistance per micron [ohm*um]:
+set Rcont = 300
+# External resistance [ohm] (in circuit) - must use keyword "ohms"
+set Rdrain = 120*$DevWidthToScaling
+
+contact name=drain   resistance=$Rdrain ohms
+#contact name=drain   resistance=$Rcont
+contact name=source  resistance=$Rcont
+contact name=gate    workfun=5.0
+
+#########################  MODELS USED:   #####################################
+ 
+material material=AlGaN taun0=1e-9 taup0=1e-8
+
+models SRH auger fermi temp=300  print
+
+## POLARIZATION CHARGE:
+model polarization calc.strain polar.scale=0.7
+
+# impact ionization
+impact SELB  e.side 
+          
+##### MOBILITIES
+# AlGaN:
+mobility region=1 FMCT.n FMCT.p
+# 2DEG :
+mobility region=2 FMCT.n FMCT.p
+# Bulk GaN:
+mobility region=3 FMCT.n FMCT.p   GaNsat.n  \
+                  MU2N.FMCT=1000 MU1N.FMCT=55 NCRITN.FMCT=2e17 ALPHAN.FMCT=1.0
+               
+output band.param con.band val.band charge traps qss polar.charge e.mobility h.mobility
+
+method itlimit=30
+
+#=====================  RUN SOLUTION ==============================
+# solve initial and zero-bias DC solution:
+solve initial
+solve previous 
+
+save outfile=ganfetex20_0V.str
+tonyplot ganfetex20_0V.str -set ganfetex20_str_plot.set
+
+# Extract 2DEG surface density [per cm2]:
+extract init infile="ganfetex20_0V.str"
+extract name="2DEG_density" 1e-4 * area from curve(depth, impurity="Electron Conc" \
+        material="All" mat.occno=1 x.val=($Lsrc+$Lgs/2) ) \
+	where x.min=$AlGaNtop and x.max=$CBLtop 
+
+###################################################################
+
+if cond = ($run_IdVg = true) 
+
+  ##---------- Id-Vg curves, for various Vds:  ------------------------
+
+  ####  OFF state:
+  solve vgate=-0.05
+  solve name=gate vstep=-0.05 vfinal=-2
+  solve name=gate vstep=-0.5  vfinal=-8
+
+  save outfile=ganfetex20_Vg-8V_Vd0V.str
+
+  #### Repeat (loop) for various Vds values:
+  loop steps = 4
+
+    assign name=Vds  n.value=(5, 7, 9, 11)
+
+    load infile=ganfetex20_Vg-8V_Vd0V.str master
+    solve previous 
+
+    solve vdrain=0.0 vstep=0.5 vfinal=$Vds name=drain
+    log outfile=ganfetex20_Vds_$'Vds'V.log
+    solve vgate=-8
+    solve vstep=0.5 vfinal=-7.0 name=gate
+    solve vstep=0.2 vfinal= 0.0 name=gate
+
+    ## Transconductance (dId/dVg):
+    extract init infile="ganfetex20_Vds_$'Vds'V.log"
+    extract name="gm"  deriv(v."gate", i."drain"/10) outfile="ganfetex20_gm_Vds_$'Vds'V.dat"
+
+    log off
+
+  l.end
+
+tonyplot -overlay ganfetex20_Vds_5V.log ganfetex20_Vds_7V.log ganfetex20_Vds_9V.log ganfetex20_Vds_11V.log -set ganfetex20_IdVg_plot.set 
+tonyplot -overlay ganfetex20_gm_Vds_5V.dat ganfetex20_gm_Vds_7V.dat ganfetex20_gm_Vds_9V.dat ganfetex20_gm_Vds_11V.dat -set ganfetex20_gm_plot.set
+
+if.end
+
+###################################################################
+
+if cond = ($run_IdVd = true) 
+
+  ##---------- Id-Vd curves, for various Vg:  ---------------------
+
+load infile=ganfetex20_0V.str master
+solve previous
+save outfile=ganfetex20_Vg_computed.str 
+
+  loop steps=4
+
+    assign name=Vg  n.value=(0, -2, -4, -6)
+
+    load infile=ganfetex20_Vg_computed.str master
+    solve previous 
+    solve name=gate vstep=-0.1 vfinal=$Vg
+    save outfile=ganfetex20_Vg_computed.str 
+
+    log outfile=ganfetex20_Vg_$'Vg'V.log
+    solve vdrain=0.0 
+    solve name=drain vstep=0.5 vfinal=12
+    solve name=drain vstep=0.5 vfinal=20
+    solve name=drain vstep=2.0 vfinal=40
+    log off
+
+  l.end
+
+tonyplot -overlay ganfetex20_Vg_0V.log ganfetex20_Vg_-2V.log ganfetex20_Vg_-4V.log ganfetex20_Vg_-6V.log -set ganfetex20_IdVd_plot.set
+
+if.end
+
+quit
+

@@ -1,0 +1,51 @@
+go athena
+
+line x loc=0.50 spac=0.05
+line x loc=1.50 spac=0.05
+#
+line y loc=0.00 spac=0.1
+line y loc=1.0 spac=0.5
+initialize
+method etch.eps=1e-10
+
+deposit oxide thick=0.8 div=16
+etch oxide start x=0.8 y=-10.0
+etch continue x=0.8 y=10.0
+etch continue x=1.2 y=10.0
+etch done x=1.2 y=-10.0
+
+structure outf=anelex17.str
+#
+### Unidirectional Model at 0 degrees ###
+#
+rate.depo aluminum unidirect machine=uni angle1=0.0 a.s \
+	dep.rate=100.0 sigma.dep=0.2 
+
+deposit machine=uni time=20 sec divis=4 substeps=11
+
+structure outf=anelex17_0.str
+#
+### The CUSTOM2 model exactly corresponds to the UNIDIRECT model with angle1=0 
+#
+init infile=anelex17.str
+
+rate.depo aluminum custom2 machine=custom_uni infile=anelex17_0.dat a.s \
+	dep.rate=100.0 sigma.dep=0.2 
+
+deposit machine=custom_uni time=20 sec divis=4 substeps=11
+
+structure outf=anelex17_1.str
+
+### The CUSTOM2 model with a "bell-shaped" angular distribution within [-20, 20] degrees
+#
+init infile=anelex17.str
+
+rate.depo aluminum custom2 machine=bell_shaped infile=anelex17_1.dat a.s \
+	dep.rate=100.0 sigma.dep=0.2 
+
+deposit machine=bell_shaped time=20 sec divis=4 substeps=11
+
+structure outf=anelex17_2.str
+
+tonyplot -overlay anelex17_*.str -set anelex17.set
+quit

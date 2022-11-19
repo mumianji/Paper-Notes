@@ -1,0 +1,101 @@
+<html>
+  <head>
+    <title>3D TFT Simulation</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>3D TFT Simulation</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Device 3D/TFT 3D</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="tftex06_plot0.png" width="640" alt="tftex06_plot0" />
+      <p/>
+      <img src="tftex06_plot1.png" width="640" alt="tftex06_plot1" />
+      <p/>
+      <img src="tftex06_plot2.png" width="640" alt="tftex06_plot2" />
+      <p/>
+      <img src="tftex06_plot3.png" width="640" alt="tftex06_plot3" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates Ids/Vgs and Id/Vds  3D analysis of a 10um
+channel length, ultra-thin TFT transistor. The example shows:
+</p>
+<ul>
+  <li>
+ Formation of 3D structure using Atlas syntax
+<br/>
+  </li>
+  <li>
+ Id/Vgs solution with Vds=0.1V
+<br/>
+  </li>
+  <li>
+ Id/Vds solution with Vgs=1.5V
+  </li>
+</ul>
+<p>
+The formation of this 3D structure is performed using the Atlas syntax.
+The syntax used is very similar to that used to create a normal 2D example. The
+definition of dimensions in the third direction is defined by the
+<b> z </b> indicator. Thus z.min and z.max define extents in the z direction, just
+as x.min and x.max do in the x direction.
+</p>
+<p>
+The TFT device is composed of a 0.05 micron layer of polysilicon on a 0.45
+micron silicon dioxide substrate.  The device has a 12 nm thick gate
+oxide and a gate length of 10 microns.  The gate width is 80um.
+</p>
+<p>
+After the device description the
+<b> model </b> statement is used to select a set of physical models for this simulation.  In this case,
+these models are &apos;srh&apos; recombination, bandgap narrowing, and the conmob and fldmob mobility models.
+The
+<b> impact </b> statement is used to specify the Selberherr model for impact ioisation in the 3D simulation. This is necessary to model &quot;kink&quot; effects that are often observed in TFT Id-Vd characteristics.
+The
+<b> contact </b> statement is used to assign the work function on the gate material. It this case an aluminum gate is used which assigns a workfunction of 4.10 V to the gate contact.
+</p>
+<p>
+The numerical methods used are also similar to the previous example:
+<b> METHOD gummel newton carr=2</b> . This means that if convergence is not reached in decoupled mode (gummel) the simulator
+will automatically switch to coupled mode (newton). In addition, a two carrier solution
+is performed by solving Poisson&apos;s equation for potential and the electron and hole
+continuity equations.
+</p>
+<p>
+The drain voltage is set to 0.1V, and then the gate voltage is swept to 1.5V to measure the Ids/Vgs curve.
+</p>
+<p>
+Then the gate voltage is set to 1.5V, and then the drain voltage is
+swept to 3V.  At this point faster solutions are obtained using the
+coupled newton algorithm so the simulation switches to this
+method.  The drain voltage is then ramped to 4V.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

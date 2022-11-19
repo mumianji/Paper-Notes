@@ -1,0 +1,96 @@
+go athena
+
+line x loc= 0.00 spac=0.5
+line x loc= 3.00 spac=0.1
+line x loc= 3.20 spac=0.1
+line x loc= 4.70 spac=0.25
+line x loc= 6.20 spac=0.1
+line x loc= 7.00 spac=0.2
+
+line y loc=0.00  spac=0.05
+line y loc=0.6   spac=0.1
+line y loc=3.0   spac=0.5
+
+method adapt
+adapt.par accur.mult=1 impl.smooth =1
+# Define material, orientation, initial doping
+init silicon c.boron=5e15 orientation=100 
+# form n- active layer at surface 
+implant phosphorus dose=8e11 energy=120
+
+# active layer diffusion
+diffuse time=60 temp=950 nitro
+
+# Deposit gate oxide
+
+deposit oxide thick=0.04 divisions=3
+ 
+ 
+# mask for the p- implant under transfer gate
+deposit photo thick=3.0 divisions=2
+ 
+etch photores start x=7 y=-10.0
+etch cont x=7 y=10.0
+etch cont x=3.5 y=10.0
+etch done x=3.5 y=-10.0
+ 
+
+relax y.min=1.0
+
+
+# Implant p- region   
+implant boron dose=1e11 energy=80
+ 
+etch photores all
+ 
+#drive diffusion : commented out for speed
+#method fermi compress
+#diffus time=220 temp=1000 nitro press=1.00
+
+deposit poly thick=0.12 div=1
+
+etch poly start x=3.0 y=-5
+etch cont x=3.0 y=5
+etch cont x=3.2 y=5
+etch done x=3.2 y=-5
+ 
+etch poly start x=6.2 y=-5
+etch cont x=6.2 y=5
+etch cont x=7.0 y=5
+etch done x=7.0 y=-5
+ 
+deposit photo thick=1.0 divisions=8
+ 
+etch photo right p1.x=6.2
+etch oxide right p1.x=6.2
+
+# Implant n+ drain region 
+adapt.par accur.mult=0.1
+implant arsenic dose=1e15 energy=50
+
+strip
+
+#drain anneal : commented out for speed
+#method fermi compress
+#diffus time=30 temp=900 nitro press=1.00
+
+deposit alum thick=0.1 div=2
+etch alum left p1.x=6.5
+
+electrode name=sto_gate x=0
+electrode name=tra_gate x=4
+electrode name=drain x=6.9
+electrode name=substrate backside
+
+# extract process parameters 
+# here active layer/substrate junction is SECOND from the surface
+extract name="storage_xj" xj material="Silicon" mat.occno=1 x.val=1 junc.occno=2
+extract name="transfer_xj" xj material="Silicon" mat.occno=1 x.val=1 junc.occno=2
+
+
+structure outf=amex06.str
+
+tonyplot amex06.str -set amex06.set
+
+
+ 

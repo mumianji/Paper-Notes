@@ -1,0 +1,94 @@
+go athena
+
+line x loc=-0.1    spac=0.1
+line x loc=0.1     spac=0.1
+
+line y loc=0.00 spac=0.02
+line y loc=1.00 spac=0.01
+line y loc=3.00 spac=0.01
+line y loc=5.00 spac=0.20
+lnee y loc=7.00 spac=0.30
+
+init sic_4h one.d
+
+implant aluminum dose=1.0e15 energy=90 bca n.ion=40000  miscut.th=4 miscut.ph=60 rotation=0 print.mom
+implant aluminum dose=1.0e15 energy=60 bca n.ion=10000  miscut.th=4 miscut.ph=60 rotation=0 print.mom
+implant aluminum dose=5.0e14 energy=30 bca n.ion=10000  miscut.th=4 miscut.ph=60 rotation=0 print.mom
+
+extract name="PPLUS" curve(depth,impurity="aluminum" material="4h-sic" x.val=0) \
+        outfile="sicex10.dat"
+
+
+go victoryprocess  
+
+Init material=sic4h \
+     GDS2="sicex10_round.gds" cell="CELL" depth=1 gasheight=10 layermap="sicex10.map"
+
+Line x location=5 spacing=0.25
+Line x location=6 spacing=0.02
+Line x location=8 spacing=0.25
+
+Line y location=5 spacing=0.25
+Line y location=6 spacing=0.02
+Line y location=8 spacing=0.25
+
+Line z location=-1    spacing=0.5
+Line z location=0     spacing=0.5
+Line z location=-4    spacing=0.05
+Line z location=-4.1  spacing=0.1
+Line z location=-4.2  spacing=0.05
+Line z location=-4.4  spacing=0.2
+Line z location=-4.5  spacing=0.02
+Line z location=-4.75 spacing=0.05
+Line z location=-5.05 spacing=0.02
+
+# Bottom Drain
+Doping material=sic4h phosphor=4e19
+Doping material=sic4h boron=1e12
+
+Deposit material=sic4h MAX thickness=4.5 phosphorus=2e16
+Deposit material=sic4h MAX thickness=0.55 boron=8e17
+Deposit material=sic4h MAX thickness=0.15 phosphorus=4e19
+
+Mask "IMPLANT" reverse 
+Profile infile="sicex10.dat" lstddev=0.02 boron
+Strip material=barrier
+
+Etch material=sic4h MAX thickness=0.9 angle=60 mask="TRENCH" reverse  
+
+Deposit material=oxide thickness=0.05 conformal
+
+Deposit material=polysilicon MAX thickness=0.5
+
+Etch material=polysilicon MAX thickness=0.6 mask="GATE"
+electrodes mask="GATE" material=polysilicon
+
+
+Deposit material=oxide MAX thickness=0
+
+Etch material=oxide MAX thickness=2 mask="CONTACT" reverse 
+
+Deposit material=aluminum MAX thickness=0
+
+electrodes mask="CONTACT" material=aluminum
+
+save name=sicex10_vp_2
+
+
+go victorymesh
+
+load in=sicex10_vp_2
+
+remesh delaunay
+
+refine max.size=0.5
+refine max.interface.size=0.075 max.interface.distance=2.25
+refine max.junction.size=0.075 max.junction.distance=1.5
+refine impurity=donor min.impurity.size=0.075 max.impurity.factor=4
+
+save out=sicex10_2.str
+
+
+
+
+

@@ -1,0 +1,82 @@
+# (c) Silvaco Inc., 2018
+go atlas 
+
+mesh auto
+ 
+x.m loc=0.0 s=10
+x.m loc=40.0 s=10
+
+region material=InGaAs    bot thick=0.25 accept=5e17 ny=20 x.comp=0.41
+region material=InGaAs    bot thick=1.00 donors=1e15 ny=20 x.comp=0.41
+region material=silicon   bot thick=1.00 accept=5e16 ny=20 
+region material=silicon   bot thick=4.2500 donors=1e19 ny=20 
+
+electrode name=anode   top
+electrode name=cathode bottom
+
+material material=InGaAs sopra=Ingaas.nk
+models fermi srh fldmob conmob optr print
+impact selb
+
+method climit=1e-4
+
+output e.field jx.e jy.e jx.h jy.h opt.int con.band val.band
+
+# Dark #########################################################################
+solve init
+log outf=optoex18_0.log
+solve vanode=-0.01
+solve vanode=-0.1
+solve vanode=-1 vstep=-1 vfinal=-20 name=anode
+solve vstep=-0.1 vfinal=-22 name=anode
+save outf=optoex18_0.str
+solve vstep=-0.1 vfinal=-30 name=anode
+
+log off
+
+tonyplot optoex18_0.str -set optoex18_0.set
+tonyplot optoex18_0.str -set optoex18_1.set
+
+# Light ########################################################################
+beam num=1 wavelength=1 angle=270 x.ori=20 y.ori=7 
+
+solve init
+solve b1=1e-03
+solve b1=1e-02
+solve b1=1e-01
+save outf=optoex18_1.str 
+
+tonyplot optoex18_1.str -set optoex18_2.set
+
+log outf=optoex18_1.log
+solve vanode=-0.01
+solve vanode=-0.1
+solve vanode=-1 vstep=-1 vfinal=-20 name=anode
+solve vstep=-0.1 vfinal=-30 name=anode
+log off
+
+tonyplot -overlay optoex18_0.log optoex18_1.log -set optoex18_3.set
+
+# Geiger Mode Simulation #######################################################
+
+models geiger
+
+probe name=pe1 x=30.0 y=1.5 PE.AVALANCHE filename=optoex18_Prob
+
+solve init
+
+solve vanode=-0.01
+solve vanode=-0.1
+solve vanode=-1 vstep=-1 vfinal=-20 name=anode
+
+log outf=optoex18_2.log
+
+solve vstep=-1 vfinal=-30 name=anode
+
+save outfile=optoex18_2.str 
+
+tonyplot optoex18_Prob9.log  -set optoex18_4.set
+tonyplot optoex18_2.log -set optoex18_5.set
+tonyplot optoex18_2.str -set optoex18_6.set
+
+quit

@@ -1,0 +1,96 @@
+<html>
+  <head>
+    <title>Charging a SONOS device using the Lucky Electron model</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Charging a SONOS device using the Lucky Electron model</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>S-Pisces</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="sonosex06_plot0.png" width="640" alt="sonosex06_plot0" />
+      <p/>
+      <img src="sonosex06_plot1.png" width="640" alt="sonosex06_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+The example shows:
+</p>
+<ul>
+  <li>
+ How to charge the device using lucky electron gate current
+<br/>
+  </li>
+  <li>
+ How to obtain the threshold voltage for different charging times 
+<br/>
+  </li>
+</ul>
+<p>
+The device structure is set up to be the same as in sonosex05.  The difference
+is that the gate stack materials are changed to semiconductors and the
+necessary parameters are set.  This example uses lucky electron gate current
+and the values of effective mass in the tunnelling insulator do not affect
+the simulation (they may if set to be unphysically small).
+</p>
+<p>
+The NITRIDECHARGE statement is used to specify electron traps at a uniform density
+of 5x10^19 /cm^3, and sets up various parameters for the capture cross-section
+and emission rates.  The emission rates are in fact overridden because on the
+MODELS statement the PF.NITRIDE flag is specified.  With this choice,  the emission
+rates are calculated using the Poole-Frenkel formula (see the DYNASONOS section in
+the manual).  The HEI flag is also used to select a hot carrier gate current
+calculation using the lucky electron approximation along with the drift-diffusion
+simulation.
+</p>
+<p>
+The gate bias is set to 8V and the drain is ramped to half of this.  At the
+channel/insulator interface, the hot electron current is calculated and the
+electric field lines are used to determine where the current arrives at the
+interface between the Silicon Nitride and the surrounding insulator.  The
+Nitride is then charged at its interface according to the amount of hot
+carrier current arriving there.
+</p>
+<p>
+The structure file is saved to file at certain preset simulation times.
+The SONOS.RATES flag was set on the OUTPUT statement and so you can see the
+location of the Nitride charging at each output time.  Only a subset of
+structure files are output by the example, but you can also view the
+other ones if desired.
+</p>
+<p>
+The next part of the deck uses dbinternal to obtain the threshold
+Voltage for each of the saved structure files.  It does this in the
+file sonos06_aux.in. The advantage of using dbinternal is that the
+data file containing the threshold values can be plotted using
+TonyPlot. These threshold voltages are plotted against charging time.
+The logfiles Idrain versus Vgate are also saved to file and can be viewed
+in TonyPlot.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+  </div></body>
+</html>

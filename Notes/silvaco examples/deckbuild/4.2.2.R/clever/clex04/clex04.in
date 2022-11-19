@@ -1,0 +1,36 @@
+go victoryprocess
+
+## Process Description ##
+
+Init Layout=clex04.lay Depth=1 material=silicon
+
+Deposit material=Oxide Thickness=0.5 Max
+
+Deposit material=Aluminum Thickness=0.5 Max
+
+Lithography Mask=MET1 StandardWL=DUVLINE resultimage=clex04.dat
+
+Etch material=Aluminum Thickness=0.6 Mask=MET1_LITHO Angle=87 deltaCD=-0.046 max
+
+Electrodes mask=MET1 material=Aluminum
+
+Deposit material=Oxide Thickness=1 Max
+
+export clever(conformal) structure=clex04_0.str
+
+tonyplot3d clex04_0.str
+
+
+## Parasitic Extraction in Clever ##
+
+go clever
+
+init structure="clex04_0.str"
+
+Material Silicon Inherit(Oxide)
+
+Interconnect Capacitance AdaptC=0.05
+
+Save Spice="clex04.net"
+
+quit

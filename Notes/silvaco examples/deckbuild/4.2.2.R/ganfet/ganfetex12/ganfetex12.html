@@ -1,0 +1,85 @@
+<html>
+  <head>
+    <title>Normally-off AlGaN/GaN Transistor with Conductivity Modulation</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Normally-off AlGaN/GaN Transistor with Conductivity Modulation</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Blaze</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="ganfetex12_plot0.png" width="640" alt="ganfetex12_plot0" />
+      <p/>
+      <img src="ganfetex12_plot1.png" width="640" alt="ganfetex12_plot1" />
+      <p/>
+      <img src="ganfetex12_plot2.png" width="640" alt="ganfetex12_plot2" />
+      <p/>
+      <img src="ganfetex12_plot3.png" width="640" alt="ganfetex12_plot3" />
+      <p/>
+      <img src="ganfetex12_plot4.png" width="640" alt="ganfetex12_plot4" />
+      <p/>
+      <img src="ganfetex12_plot5.png" width="640" alt="ganfetex12_plot5" />
+      <p/>
+      <img src="ganfetex12_plot6.png" width="640" alt="ganfetex12_plot6" />
+      <p/>
+      <img src="ganfetex12_plot7.png" width="640" alt="ganfetex12_plot7" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+The device structure in this example is based on the work from Yasuhiro Uemoto
+published at IEDM 2006 &quot;A Normally-off AlGaN/GaN Transistor with Ron=2.6mOhmcm2
+and BVds=640V Using Conductivity Modulation&quot;
+</p>
+<p>
+This example demonstrates simulation of a normally-off AlGaN/GaN transistor
+with conductivity modulation resulting from hole injection from a p-AlGaN
+gate to the AlGaN/GaN heterojunction. The p-AlGaN gate allows normally-off
+operation.
+</p>
+<p>
+When the gate voltage increases and reaches the built-in pn junction
+voltage at the gate (around 3.5V here) hole starts to inject into the channel
+and generate the equal number of electrons increasing the 2DEG. Electrons with
+high mobility will reach the drain under the effect of the electric field
+whereas the hole will stay since their mobility is much lower than the
+electron. The current is thus modulated by the number of holes injected.
+It is also interesting to notice that this device exhibit a double peak
+in the transconductance curve a second proof of hole injection.
+</p>
+<p>
+Electrons injection from the channel to the gate is limited by the AlGaN/GaN
+heterojunction. As a consequence no current offset is observed at zero drain
+since gate current is very low.
+</p>
+<p>
+This device exhibit a threshold voltage around 1V, a maximum drain current at
+vd=10V and Vg=5V of 200mA/mm and a breakdown voltage of 640V.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

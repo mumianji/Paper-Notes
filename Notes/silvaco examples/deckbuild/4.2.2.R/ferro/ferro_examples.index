@@ -1,0 +1,66 @@
+
+{section} FERRO : Ferroelectric Application Examples 
+
+
+
+{subsection} ferroex01.in : Material Parameter Effects in 1D MOS Capacitor 
+
+
+Requires: S-Pisces/Ferro
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+
+This simulation demonstrates the effects of various ferroelectric
+material settings on the CV characterisitics of a
+Metal-Ferroelectric-Silicon Capacitor.
+
+It demonstrates:
+
+{bullet} Basic structure definition using Atlas syntax
+{newline}
+{bullet} Definition of PZT material parameters
+{newline}
+{bullet} Application of ferroelectric model
+{newline}
+{bullet} Using probe to analyse polarisation
+{newline}
+{bullet} Plotting output curves and structures.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+{subsection} ferroex02.in : Threshold Shift in 2D FET 
+
+
+Requires: S-Pisces/Ferro
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This simulation demonstrates the threshold voltage shift due to
+ferroelectric polarisation in the insulating gate dielectric of an
+FET.
+
+{bullet} Basic structure definition using Atlas syntax
+{newline}
+{bullet} Definition of PZT material parameters
+{newline}
+{bullet} Application of ferroelectric model
+{newline}
+{bullet} Using probe to analyse polarisation
+{newline}
+{bullet} Plotting output curves and structures.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+

@@ -1,0 +1,50 @@
+go athena 
+
+#TITLE: Viscosity Example
+#
+line y loc=0    spac=0.1
+line y loc=2.0  spac=1.0 
+#
+line x loc=1.0  spac=0.25
+line x loc=2    spac=0.05
+line x loc=2.4  spac=0.05
+init   orient=100 
+#
+deposit oxide   thick=0.020 div=2
+deposit poly    thick=0.050 div=4
+
+structure outfile=anoxex08.str
+
+deposit nitride thick=0.200 div=4
+#
+etch nitride p1.x=2.0   right  
+#
+method fermi viscous
+diffuse time=60 temp=1000 dryo2
+diffuse time=98 temp=1000 f.h2=9.0 f.o2=5.0 
+#
+# save the structure
+structure outfile=anoxex08_1.str
+#
+initialize infile=anoxex08.str
+
+deposit nitride thick=0.20 div=4
+
+# set higher nitride viscocity
+material nitride visc.0=1.8e16
+
+#
+etch nitride p1.x=2.0  right   
+#
+method fermi viscous
+diffuse time=60 temp=1000 dryo2
+diffuse time=98 temp=1000 f.h2=9.0 f.o2=5.0 
+#    #
+# structure mirror left
+#
+# save the structure
+structure outfile=anoxex08_2.str
+
+tonyplot -overlay anoxex08_1.str anoxex08_2.str -set anoxex08.set
+
+

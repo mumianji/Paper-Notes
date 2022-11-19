@@ -1,0 +1,23 @@
+go internal
+
+# load tftex17.aux file
+load infile=tftex17_aux.in
+
+# simulate the three different case of hydrogen concentrations.
+# low hydrogen concentration
+sweep parameter=low type=list range="1" \
+	parameter=med type=list range="0" \
+	parameter=high type=list range="0"
+
+# medium hydrogen case
+sweep parameter=low type=list range="0" \
+	parameter=med type=list range="1" \
+	parameter=high type=list range="0"
+
+# high hydrogen case
+sweep parameter=low type=list range="0" \
+	parameter=med type=list range="0" \
+	parameter=high type=list range="1"
+
+quit
+

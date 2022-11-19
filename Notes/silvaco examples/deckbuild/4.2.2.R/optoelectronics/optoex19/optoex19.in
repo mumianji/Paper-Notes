@@ -1,0 +1,145 @@
+# (c) Silvaco Inc., 2018
+go atlas  
+
+mesh cyl
+#
+x.m l=0 s=1
+x.m l=5 s=.1
+x.m l=7.4 s=.1
+x.m l=10 s=1
+
+y.m l=0 s=0.1
+y.m l=1.0 s=0.01
+y.m l=6.0 s=0.1
+#
+region num=1 silicon donors=1e16
+#
+elec num=1 top x.max=5 name=anode 
+elec num=2 bottom name=cathode
+#
+doping    gaussian junction=1 conc=1e19  p.type x.left=0 x.right=5 y.top=0 \
+        y.bottom=0 ratio.lateral=0.7 direction=y
+
+doping n.type conc=1e19 gaus peak=6 char=0.25
+
+models bipolar analytic
+impact selb
+
+method newton autonr carr=2 climit=1e-3 maxtraps=20
+output impact 
+
+#-----------------------------------------------------------------
+# Ramp to Breakdown with Impact Ionization - no illumination
+#-----------------------------------------------------------------
+
+solve init
+solve
+save outfile=optoex19_0.str
+
+solve vcathode=0.1 vfinal=1.0 vstep=0.1 name=cathode 
+
+log outf=optoex19_0.log
+
+solve vfinal=70 vstep=1 name=cathode comp=1e-11 cname=cathode
+
+contact name=cathode current
+solve
+solve imult istep=1.4142 ifinal=1e-9 name=cathode
+save outf=optoex19_1.str
+solve imult istep=1.4142 ifinal=1e-2 name=cathode
+
+log off
+
+contact name=cathode ^current
+
+tonyplot optoex19_1.str -set optoex19_0.set
+
+tonyplot optoex19_0.log -set optoex19_1.set
+
+extract init infile="optoex19_0.log"
+extract name="Vbr dark" x.val from curve(v."cathode",i."cathode") where y.val=1e-9
+
+#quit
+
+#-----------------------------------------------------------------
+# Ramp to Breakdown with Impact Ionization and illumination
+#-----------------------------------------------------------------
+
+beam num=1 wavelength=0.7 angle=90 x.ori=0 y.ori=-1 
+set intens=1e-4
+
+solve init
+solve b1=$intens index.check
+
+solve vcathode=0.1 vfinal=1.0 vstep=0.1 name=cathode b1=$intens
+
+log outf=optoex19_1.log
+
+solve vfinal=70 vstep=1 name=cathode comp=3e-9 cname=cathode b1=$intens
+save outf=optoex19_2.str
+
+contact name=cathode current
+solve b1=$intens
+solve imult istep=1.4142 ifinal=1e-2 name=cathode b1=$intens
+
+log off
+
+contact name=cathode ^current
+
+tonyplot optoex19_2.str -set optoex19_2.set
+
+tonyplot optoex19_1.log -set optoex19_3.set
+
+tonyplot -overlay optoex19_0.log optoex19_1.log -set optoex19.4.set
+
+extract init infile="optoex19_1.log"
+extract name="Vbr light" x.val from curve(v."cathode",i."cathode") where y.val=1e-6
+
+#quit
+
+#-----------------------------------------------------------------
+# Calculate Avalanche Probabilitites in Geiger Mode 
+#-----------------------------------------------------------------
+
+models geiger 
+
+solve init
+solve
+solve vcathode=0.1 vfinal=1.0 vstep=0.1 name=cathode 
+
+log outf=optoex19_4.log
+probe name=pe1 x=5.3 y=0.6 PE.AVALANCHE 
+probe name=ph1 x=5.3 y=0.6 PH.AVALANCHE 
+probe name=pp1 x=5.3 y=0.6 PP.AVALANCHE 
+
+solve vfinal=10.0 nsteps=2 name=cathode
+#save outf=optoex19_geig_10.str
+#tonyplot optoex19_geig_10.str -set optoex19_prob.set
+
+solve vfinal=20.0 vstep=5 name=cathode
+#save outf=optoex19_geig_20.str
+#tonyplot optoex19_geig_20.str -set optoex19_prob.set
+
+solve vfinal=30.0 vstep=5 name=cathode
+#save outf=optoex19_geig_30.str
+#tonyplot optoex19_geig_30.str -set optoex19_prob.set
+
+solve vfinal=40.0 vstep=5 name=cathode
+save outf=optoex19_geig_40.str
+tonyplot optoex19_geig_40.str -set optoex19_5.set
+
+solve vfinal=50.0 vstep=5 name=cathode
+save outf=optoex19_geig_50.str
+tonyplot optoex19_geig_50.str -set optoex19_5.set
+
+solve vfinal=60.0 vstep=5 name=cathode
+save outf=optoex19_geig_60.str
+tonyplot optoex19_geig_60.str -set optoex19_5.set
+
+solve vfinal=70 vstep=5 name=cathode
+save outf=optoex19_geig_70.str
+tonyplot optoex19_geig_70.str -set optoex19_5.set
+tonyplot optoex19_4.log -set optoex19_6.set
+
+quit
+

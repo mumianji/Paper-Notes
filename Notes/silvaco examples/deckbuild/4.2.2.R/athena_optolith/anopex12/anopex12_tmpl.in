@@ -1,0 +1,24 @@
+go athena
+init inf=anopex12.str
+set thick=0.9
+rate.dev name.resist=OiR897i i.line c.dill=0.018 
+rate.develop name.resist=AquaTAR i.line \
+        a.dill=0.83 b.dill=0.03 c.dill=0.014\
+	rmax.mack=0.15 rmin.mack=0.15 mth.mack=0.0 n.mack=1.01\
+	r1.kim = 0.50 r2.kim = 0.50 r3.kim = 15.0 \
+	r4.kim = 0.0 r5.kim = 0.0 r6.kim = 0.0 r7.kim = 0.0 \
+	r8.kim = 0.0 r9.kim = 0.0 r10.kim = 0.0 \
+        Dix.0 = 7.55e-13 Dix.E = 3.34e-2
+optical photoresist name.resist=AquaTAR i.line refrac.real=1.41 \
+	refrac.imag=0.0 
+deposit name.resist=OiR897i thickness=$thick div=50*$thick min.space=0.01
+deposit photoresist name.resist=AquaTAR thick=0.0647 div=1 min.space=0.01
+#
+init inf=anopex12_int.str intensity
+expose dose=250 num.refl=10 
+#
+bake time=60 seconds temp=125
+develop kim time=60 steps=6 substeps=24
+extract name="cd_in_A" thickness material="OiR897i" mat.occno=1 y.val=-0.45
+extract name="CD" 1.0e-4*$"cd_in_A"
+quit

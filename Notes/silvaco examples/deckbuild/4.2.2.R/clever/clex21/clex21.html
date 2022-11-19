@@ -1,0 +1,105 @@
+<html>
+  <head>
+    <title>Calculating Well Isolation and Source/Drain Capacitance</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Calculating Well Isolation and Source/Drain Capacitance</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>CLEVER Version 3.6.10 or Later</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="clex21.str.png" width="640" alt="clex21.str" />
+      <p/>
+    </div>
+    <div id="text" >
+<p>
+This example demonstrates how to:-
+</p>
+<ul>
+  <li>
+ Include well isolation depletion capacitance in the calculation.
+<br/>
+  </li>
+  <li>
+ Include source/drain depletion capacitance in the calculation.
+<br/>
+  </li>
+  <li>
+ Specify cyclical cell boundary conditions for emulating cascaded cells.
+  </li>
+</ul>
+<b> Including Well Capacitance in the Field Solver Parasitic Extraction</b> <p>
+Diode isolated wells can be treated as a separate volume of silicon that is
+separated from the bulk wafer by a layer of insulator where the insulator
+thickness is the silicon depletion width and the insulator has the same
+permitivity as silicon.
+</p>
+<p>
+For a first order calculation, the depletion width of a diode separated well
+or source/drain region increases with the square root of the doping
+concentration of the lowest doped side of the junction.  If you don&apos;t
+know the depletion width of the junctions, a good approximation can be
+obtained from the following formula:
+</p>
+<p>
+Depletion Width (um) = SQRT ( 1e15 / Doping )
+</p>
+<p>
+where the Doping is the volume doping of the lightly doped side of the
+junction in atoms/cm3.  So for 1e15/cm3 doping, use 1um, for 1e17/cm3,
+use 0.1um and for 1e19/cm3 use 0.01um etc.
+</p>
+<p>
+In this example, the depletion region of the N-Well is simulated by first
+etching the silicon to the depth of the N-Well in the masked N-Well regions,
+and then by depositing a  0.1um thick film of a user defined material called
+<b> &quot;Nwell_Depletion&quot;</b> which is assigned a permittivity of 11.8 to match the permittivity of
+silicon.  The presumption here is that the nwell is bounded by a volume
+p-doping concentration of approximately 1e17/cm3.  Finally, the N-Well is
+then filled with silicon to represent the neutral region of the N-Doped well.
+</p>
+<b> Including Well Capacitance in the Field Solver Parasitic Extraction</b> <p>
+Simulating the Source/Drain diodes is the same process as the N-Well
+procedure described above, but with a thinner depletion insulating region
+of 0.02um to represent the higher doping in these regions.  The depletion
+capacitance of the source-drain diodes is simulated by using a user defined
+material called
+<b> &quot;SD_Depletion&quot;</b> and assigning it a permittivity of 11.8.  If you wish to remove this
+capacitance from the SPICE Netlist because it is decided to use the
+source/drain capacitance assigned to the active device model, then
+define the user defined material called &quot;SD_Depletion&quot;, a permittivity value
+of say 0.1 such that the capacitance calculated will add less than 1% error
+to the SPICE Model Capacitance.  Do not assign any insulator a permittivity
+of zero, as this will cause discontinuities in the field solver
+</p>
+<b> Specifying Cyclical Cell Boundary Conditions for Emulating Cascaded Cells</b> <p>
+The simulated Inverter Cell in this example is cascadable such that numerous
+identical cells could be cascaded together to make a ring oscillator.  For
+this application, it is more appropriate to specify
+<b> &quot;CYCLIC&quot;</b> boundary conditions rather that the default
+<b> &quot;MIRROR&quot;</b> boundary conditions.  To specify CYCLIC boundary conditions, on the
+Interconnect Statement, specify:
+</p>
+<b>   DomainBoundaryCondition=&quot;CYCLIC&quot;</b> <p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

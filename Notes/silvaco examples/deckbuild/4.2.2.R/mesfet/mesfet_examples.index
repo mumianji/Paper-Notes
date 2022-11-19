@@ -1,0 +1,371 @@
+
+{section} MESFET : MESFET Application Examples
+
+
+
+
+{subsection} mesfetex01.in : Ion Implanted GaAs MESFET Fabrication and Vt Test
+
+Requires: SSuprem 4/DevEdit/Blaze
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates fabrication and electrical analysis of a
+MESFET structure using the FLASH module of Athena and the Blaze
+capability of Atlas.  The example uses DEVEDIT at various points
+in the process to optimize the grid. The example shows:
+
+{bullet} MESFET fabrication using FLASH 
+{newline}
+{bullet} Re-meshing of structure in DEVEDIT
+{newline}
+{bullet} Setting of device parameters for electrical simulation
+{newline}
+{bullet} Electrical simulation of an Id/Vgs curve
+
+
+This example starts by interfacing Athena and DEVEDIT to provide a
+GaAs MESFET structure using silicon and beryllium implants. Details of
+using FLASH can be found in the ATHENA_FLASH examples section.
+
+It is necessary to set contact workfunctions for every Schottky contact
+in each Atlas input file. The command
+{bold} contact name=gate work=4.87 
+is used to set the gate workfunction. Source and drain contacts are
+assumed to be ohmic. Users should note that this contact statement is
+necessary even though the material Titanium was used in the Athena
+simulation. Atlas does not recognize different metals, and the properties of
+different metal regions are not transferred from Athena to Atlas.  Atlas
+calculates the barrier height of a Schottky barrier in the following
+mannor:
+
+{bold} barrier height = (metal work function - semiconductor electron
+{bold} affinity).  
+
+Care should be taken to ensure the appropriate barrier height is chosen.
+
+Low lifetimes typical of GaAs are set in the
+{bold} material 
+statement.  The  
+{bold} models 
+statement is used to specify appropriate models within the simulation. The
+{bold} fldmob 
+parameter turns on the electric field dependent mobility. 
+{bold} conmob
+specifies the concentration dependent mobility. These values are taken
+from a look-up table and exist only for room temperature.
+
+The solution sequence for MESFET threshold voltage is first to obtain the initial solution at zero bias on all contacts. Then the drain is set to 0.1V. A log file is opened by the 
+{bold} log 
+statement to store all terminal characteristics. The  final 
+{bold} solve                    
+statement ramps the gate from zero to -3V. Note that Atlas requires the
+zero bias solution to be solved first in all cases. Thus the gate
+voltage should be swept from zero to the value required. If a range of
+both negative and positive gate voltages is required two sweeps can be
+done by saving and loading the zero bias solution.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+{subsection} mesfetex02.in : Epitaxial GaAs MESFET  S-Parameters
+
+Requires: Blaze
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates the calculation of s-parameters in a simple
+MESFET. It shows:
+
+{bullet} MESFET structure definition using Atlas syntax
+{newline}
+{bullet} Setting of GaAs mobility models and gate workfunction  
+{newline}
+{bullet} Id/Vds characteristics with Vgs=0
+{newline}
+{bullet} AC analysis at a single DC bias at different frequencies
+{newline}
+{bullet} Conversion of capacitance and conductance data from Atlas into s-parameters
+{newline}
+{bullet} Smith Charts of MESFET s-parameters using TonyPlot
+
+The geometry and doping of the  MESFET device used in this example is
+described using the Atlas structural syntax. 
+Initially the mesh is specified in x and y, using the following command format
+{bold} x.mesh loc=aaa spac=bbb 
+specifying that there is a mesh spacing of bbb and x location aaa.
+{bold} region 
+statements are used to specify two GaAs regions which will later be
+doped differently.
+{bold} electrode 
+statements specify the names and positions of electrodes. The
+workfunction of the gate contact is set using
+{bold} contact
+. 
+Each GaAs region is uniformly doped. An n-type active layer sits on top
+of a lowly doped p-type substrate. GaAs mobility models for
+concentration and field dependence are set in the
+{bold} models 
+statement. 
+
+The numerical methods used at the initial stage of the simulation are
+conservative. The statement
+{bold} method gummel newton 
+specifies that the decoupled (gummel) method is used at the start of
+the simulation for each bias point. This switches to the coupled
+(newton) method if convergence is not obtained. This is the most robust
+method for the initial bias steps and for complex devices. It does
+consume more CPU time and can lead to problems at high current levels.
+If these problems occur the statement
+{bold} method newton 
+can be used. 
+
+The DC simulation proceeds by ramping the drain voltage in the 
+{bold} solve 
+statement until Vds=3.0V. After this, a log file is opened and AC analysis begins.
+The full sweep of frequency is done on the line:
+{newline}
+{bold} solve ac.analysis direct frequency=1.e9 fstep=2.e9 nfsteps=20 
+{newline}
+The 'ac' parameter switches on the AC analysis. 'direct' specifies a
+robust AC solver for high frequencies. Activating the 'direct' solver
+will cause more memory to be allocated than was used during the DC
+simulation. If your system does not have enough virtual memory to run
+the AC application, the simulation will stop here with an error
+message.  The exact amount of memory required depends on the number of
+mesh points. The 'frequency' value is the initial frequency of the AC
+signal, fstep is the step value added to this frequency, and nfsteps is the number
+of steps. 
+
+The AC analysis in Atlas calculates the real and imaginary
+current components from a small AC signal on top of the existing DC
+solution. From these currents Atlas calculates the conductance and
+capacitance between each pair of electrodes. By plotting the log file,
+users can see graphs of drain-gate conductance (C drain>gate) or 
+total gate capacitance (-1*C gate>gate).
+
+The s-parameters (or Z, Y and ABCD parameters) are calculated by setting
+the
+{bold} s.param 
+(or y.param etc) on the log statement preceeding the ac analysis.
+The most important parameters are the *port parameters. s-parameter
+analysis assumes the device is a two port device with 4 terminals.
+The inport and outport are used to assign the respective electrodes. 
+Users should ensure the correct definition of all ports.
+In this example the input port is set to the gate and output
+port to the drain. 
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+
+
+
+{subsection} mesfetex03.in : Energy Balance and Drift Diffusion Comparison
+
+Requires: Blaze
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates electrical analysis of a 0.2um MESFET structure
+with Energy Balance (EB) and Drift-Diffusion (DD) Models. It shows:
+
+{bullet} Structure definition using Atlas syntax
+{newline}
+{bullet} Specification of energy balance models
+{newline}
+{bullet} Simulation of Id/Vds with Vgs=0.0V
+{newline}
+{bullet} Repeat simulation using drift-diffusion models to compare results.
+
+The example file consists of two Atlas runs. Both use the same device
+structure defined in a similar manner to the previous example. The
+first uses energy balance models to simulate Id/Vds and the second does
+the same electrical simulation using the classical drift-diffusion
+models. The aim of this example is to compare the effects of the
+different models.
+
+Energy balance models provide a more accurate description of physical
+device effects, in particular the effect of velocity overshoot and
+non-local impact ionization. These  are not handled by the classical
+drift-diffusion model. These two
+effects can be observed in sub-micron MESFET simulation. 
+This example concentrates on the velocity
+overshoot effect in GaAs. Non-local impact ionization effects can be
+seen in breakdown simulations. Since velocity overshoot is not
+accounted for in drift-diffusion the results from simulations with this
+model will underestimate the current severely. This discrepancy gets
+worse as the channel length decreases.
+
+The sequence of simulation syntax is similar to the previous example.
+The structure differs from the previous only in the addition of heavily
+doped source/drain regions.
+
+The energy balance models are defined using
+{bold} model hcte.el
+.
+Since this is a unipolar device, only electron energy balance is
+selected.  A key parameter in the energy balance model is the
+relaxation time. Typical GaAs values are set on the
+{bold} material 
+statement. 
+
+A choice of numerical methods exists for energy balance simulation.
+Here, full coupling of the 4 equations to be solved is selected by
+{bold} method newton.
+The block method may also be added if convergence problems are seen 
+at the initial stage of the simulation. 
+
+The second run repeats the first but without 'models hcte.el'. Results
+from the two runs can be compared by overlaying the two log files in
+TonyPlot. Two solution files are also saved and these can be compared
+to see the difference in simulated electron concentration between the
+two models. The statement
+{bold} output e.velocity 
+was used in both runs to save the electron velocity information to the
+solution files. Selecting to plot this for the energy balance solution
+file will show the overshoot effect.
+
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+
+{subsection} mesfetex04.in : Deep Level Bulk Traps (EL2) - DC Analysis
+
+Requires: SSuprem 4/Blaze
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This next three examples demonstrate the simulation of a MESFET structure with
+trap states. The example consists of several sections:
+
+{bullet} Formation of a MESFET structure and doping using FLASH
+{newline}
+{bullet} DC simulation of Id/Vgs characteristics including traps
+{newline}
+{bullet}- Transient simulation of gate turn off including traps
+{newline}
+{bullet}- Frequency domain AC simulation including traps
+{newline}
+{bullet}- S-parameter extraction including traps
+{newline}
+
+This example will create the structure for subsequent use and perform the
+DC analysis.
+
+In the process simulation section, a simple planar MESFET is formed by
+implantation. The initial substrate is intrinsic GaAs. A low doping
+level of 1.0e11 is specified. An active layer of 0.1um of n-type GaAs
+is deposited. A nitride hard mask is used to pattern the source and
+drain regions. These regions are heavily doped using a silicon implant.
+Finally metal deposition and patterning is performed. The electrode names
+and positions are then defined at the final stage of Athena.
+
+Once in Atlas each run starts by setting the workfunction of the gate electrode. 
+The models used in this simulation are electric field dependent mobility
+and SRH recombination. The lifetimes for the SRH recombination are set
+by the tau parameters on the MATERIAL statement. The vsat parameter sets
+the saturation velocity.
+
+The 
+{bold} trap 
+statement is used to set the parameter of the bulk trap
+states. Only one state is used here but several trap statements can be
+used in the same run to define multiple states. The trap type must be
+set as donor or acceptor. The energy level of the trap is set using
+'e.level'. The energy levels are referenced to the conduction or
+valence band edges. The sign and sigp parameters set the trapping cross
+sections for electrons and holes. An equivalent syntax setting
+lifetimes rather than cross sections is also available. 
+
+The DC simulation consists of setting the drain voltage to 0.5V and
+stepping the gate from zero to -1.0V. Comparing the results of this
+simulation with and without traps shows that a shift to a more positive
+threshold voltage is caused by the presence of the donor traps.
+
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} mesfetex05.in : Deep Level Bulk Traps (EL2) - Transient Analysis
+
+Requires: SSuprem 4/Blaze
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example is based on the structure created in example 4 within the
+MESFET section - the trap simulation is now performed in transient mode.
+
+In the transient turn-off simulation, the drain voltage is also set to
+0.5V. However the gate is then ramped in a transient from zero to
+-2.0V. The ramptime parameter sets the time for the gate voltage ramp,
+whilst tstop sets the time until which the simulation will continue. The
+parameter dt is used to set the first timestep of the transient. All
+other timesteps are calculated automatically by the program. A dt value
+of ramptime/100 is a safe one under most circumstances. Comparing the
+results of turn-off with and without traps shows how the presence of
+the fast trap states slows the time taken for the drain current to
+reduce to 1pA/um.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} mesfetex06.in : Deep Level Bulk Traps (EL2) - AC Analysis
+
+Requires: SSuprem 4/Blaze
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example is based on the structure created in example 4 within the
+MESFET section - the trap simulation is now performed in ac mode.
+
+The AC simulation uses the same initial point as the previous two
+cases. The gate is grounded and the drain is at 0.5V. An AC signal is
+applied at this point to each contact in turn. The frequency of this AC
+signal is then ramped from 1MHz to over 10GHz. The fstep parameter sets
+the step size of the frequency change. However the parameter 
+{bold} mult.f 
+means fstep is applied as a multiplier to the frequency rather than as
+a sum. 
+
+As described in example 2 in this section, the s.param command on the
+log statement is used to specify the output of s-parameters.
+
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+

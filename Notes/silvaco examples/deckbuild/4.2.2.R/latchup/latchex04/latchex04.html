@@ -1,0 +1,100 @@
+<html>
+  <head>
+    <title>Transient 3D CMOS Latch-Up</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Transient 3D CMOS Latch-Up</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>DevEdit 3D/Device 3D</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="latchex04_plot0.png" width="640" alt="latchex04_plot0" />
+      <p/>
+      <img src="latchex04_plot1.png" width="640" alt="latchex04_plot1" />
+      <p/>
+      <img src="latchex04_plot2.png" width="640" alt="latchex04_plot2" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates transient latch-up in a three-dimensional
+npnp structure typical of CMOS processes. The stages of this examples
+are:
+</p>
+<ul>
+  <li>
+ Definition of npnp structure in DEVEDIT3D
+<br/>
+  </li>
+  <li>
+ Setting of a transient negative voltage pulse on the Vss contact to trigger latch-up
+  </li>
+</ul>
+<p>
+The npnp  structure defined by DEVEDIT3D is a three dimensional one. The
+n+ and p+ contacts do not fall in one 2D plane as in the previous
+examples. They are arranged in a rectangle. The DEVICE3D module of
+Atlas is required to simulate latch-up in this structure.
+</p>
+<p>
+The structure is created using DEVEDIT3D either graphically or using the
+command menus in DeckBuild. The most common technique is to form the
+structure graphically, then save an input file containing all the
+commands required to reproduce this structure. This input file can be
+loaded into DeckBuild, and Atlas runs can be appended to it to create a file
+similar to this one.
+</p>
+<p>
+In Atlas, no special syntax is required to enter the DEVICE3D module as
+opposed to 2D SPISCES. On reading a mesh file, Atlas will automatically
+detect if it is two or three dimensional. The syntax for specifying
+bipolar models and setting up the initial bias state are identical to
+the two-dimensional cases described in the previous examples.
+</p>
+<p>
+The command
+<b> method halfimpl </b> chooses the half-implicit scheme for transient simulation. This scheme
+significantly reduces the simulation time for many 3D transient
+problems. In difficult cases more robust but slower methods might be
+required. The transient pulse applied to the n+ contact in the pwell is
+similar to the first example in this section.
+</p>
+<p>
+Results from the log file show latch-up occurs as the device does not
+return to its initial state after the pulse is over. The current is
+still increasing at the end of the simulation which will eventually
+cause device failure. It is possible to repeat this experiment varying
+the the parameter
+<b> t.final </b> in the statement:
+<br/>
+solve v4=-2.0 tfinal=4.5e-9 tstep=10.e-12
+<br/>
+If the voltage is held at -2.0V for shorter times latch-up may not occur.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

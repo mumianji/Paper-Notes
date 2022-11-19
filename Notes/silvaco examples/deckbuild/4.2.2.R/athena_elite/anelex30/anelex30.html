@@ -1,0 +1,85 @@
+<html>
+  <head>
+    <title>Dopant Concentration Enhanced Etch Rate</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Dopant Concentration Enhanced Etch Rate</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>SSUPREM4, Elite, MC DEPOSIT/ETCH</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="anelex30_plot0.png" width="640" alt="anelex30_plot0" />
+      <p/>
+      <img src="anelex30_plot1.png" width="640" alt="anelex30_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates the used of dopant enhanced etching using the Elite
+module of Athena.  A simple trench is etched into the silicon substrate
+with half of the region of the trench passing through high concentration
+Phosphorus.  A normal etch is first performed giving a symmetrical
+trench structure.  The simulation is then re-initialized to the pre-etch
+state and Phosphorus enhanced etching is defined for the etch machine.
+The trench is etched again, but this time the final trench structure is
+asymmetrical as the etch rates were enhanced as the surface moved through
+the high concentration Phosphorus region.
+</p>
+<p>
+The dopant enhanced etch rate is defined by the equation
+</p>
+<p>
+ERenh = (1 + enh) ER
+</p>
+<p>
+where ER is the normal (un-enhanced) etch rate and enh is the
+enhancement due to the dopant.  This enhancement is calculated as a
+function of the dopant using the equation:
+</p>
+<p>
+enh = 0.5*Enh.Max*(tanh(Enh.Scale*(S - Enh.MinC)) + 1)
+</p>
+<p>
+where the parameters have the following meanings
+</p>
+<b> Enh.Max </b> <p>
+defines the maximum enhancement factor
+</p>
+<b> Enh.MinC </b> <p>
+gives the solution value below which enhancement decays
+</p>
+<p>
+and
+<b> Enh.Scale </b> gives the spread of the enhancement over solution values, i.e., how
+quickly does the enhancement factor reach its maximum.
+</p>
+<p>
+For exponentially varying solutions, S and Enh.MinC are used as a logarithm.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

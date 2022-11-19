@@ -1,0 +1,130 @@
+# (c) Silvaco Inc., 2018
+############################################################################
+# BQP MOS-C Calibration to Schrodinger-Poisson  
+# tox=2nm. NMOS inversion mode, compare 3 attempts with BQP to SP
+############################################################################
+go atlas
+mesh
+x.m l=0.0 s=1.0
+x.m l=1.0 s=1.0
+	
+y.m l=-0.002 s=0.00002
+y.m l=0.0    s=0.00002
+y.m l=0.1    s=0.001
+y.m l=1      s=0.05
+
+region      num=1 y.min=0 silicon
+region      num=2 y.max=0 sio2
+
+electrode   num=1 name=gate top
+electrode   num=2 substrate
+
+doping region=1 uniform conc=1e18 p.type
+
+model schrodinger eigens=10 qminconc=1.0e5 ox.schro fixed.fermi ^calc.fermi qy.min=-0.001 qy.max=0.05 num.direct=3 new.eig
+
+contact name=gate work=4.1
+method climit=1.0E-2 carriers=0
+solve init
+
+log outf=quantumex05_sp.log
+solve name=gate vgate=0.0 vstep=0.01 vfinal=1.0 qscv
+
+
+
+go atlas
+##########################################################
+#   BQP attempt 1
+##########################################################
+mesh
+x.m l=0.0 s=1.0
+x.m l=1.0 s=1.0
+	
+y.m l=-0.002 s=0.00002
+y.m l=0.0    s=0.00002
+y.m l=0.1    s=0.001
+y.m l=1      s=0.05
+
+region      num=1 y.min=0 silicon
+region      num=2 y.max=0 sio2
+
+electrode   num=1 name=gate top
+electrode   num=2 substrate
+
+doping region=1 uniform conc=1e18 p.type
+
+model fermi bqp.ngamma = 0.98 bqp.nalpha=0.5 bqp.n
+
+contact name=gate work=4.1
+method climit=1.0E-2 carriers=0
+solve init
+
+log outf=quantumex05_bqp_g1.log
+solve name=gate vgate=0.0 vstep=0.01 vfinal=1.0 qscv
+log off
+
+go atlas
+##########################################################
+#   BQP attempt 2
+##########################################################
+mesh
+x.m l=0.0 s=1.0
+x.m l=1.0 s=1.0
+	
+y.m l=-0.002 s=0.00002
+y.m l=0.0    s=0.00002
+y.m l=0.1    s=0.001
+y.m l=1      s=0.05
+
+region      num=1 y.min=0 silicon
+region      num=2 y.max=0 sio2
+
+electrode   num=1 name=gate top
+electrode   num=2 substrate
+
+doping region=1 uniform conc=1e18 p.type
+
+model fermi bqp.ngamma = 1.7 bqp.nalpha=0.25 bqp.n
+
+contact name=gate work=4.1
+method climit=1.0E-2 carriers=0
+solve init
+
+log outf=quantumex05_bqp_g2.log
+solve name=gate vgate=0.0 vstep=0.01 vfinal=1.0 qscv
+log off
+
+go atlas
+##########################################################
+#   BQP attempt 3,  calibrated
+##########################################################
+mesh
+x.m l=0.0 s=1.0
+x.m l=1.0 s=1.0
+	
+y.m l=-0.002 s=0.00002
+y.m l=0.0    s=0.00002
+y.m l=0.1    s=0.001
+y.m l=1      s=0.05
+
+region      num=1 y.min=0 silicon
+region      num=2 y.max=0 sio2
+
+electrode   num=1 name=gate top
+electrode   num=2 substrate
+
+doping region=1 uniform conc=1e18 p.type
+
+model fermi bqp.ngamma=1.35 bqp.nalpha=0.9 bqp.n
+
+contact name=gate work=4.1
+method climit=1.0E-2 carriers=0
+solve init
+
+log outf=quantumex05_bqp_calibrated.log
+solve name=gate vgate=0.0 vstep=0.01 vfinal=1.0 qscv
+log off
+
+tonyplot -overlay quantumex05_sp.log quantumex05_bqp_g1.log quantumex05_bqp_g2.log quantumex05_bqp_calibrated.log -set quantumex05.set
+
+quit

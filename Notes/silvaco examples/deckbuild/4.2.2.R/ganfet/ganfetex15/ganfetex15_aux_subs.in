@@ -1,0 +1,149 @@
+go atlas simflags="-80"
+
+set dg_space=5
+
+mesh width=1
+
+x.mesh location=-4   		spacing=0.5
+x.mesh location=-3   		spacing=0.5
+x.mesh location=0    		spacing=0.1
+x.mesh location=1.5  		spacing=0.4
+x.mesh location=3    		spacing=0.1
+x.mesh location=3+($dg_space)/2 spacing=$dg_space/2
+x.mesh location=3+$dg_space   	spacing=0.1
+x.mesh location=3+$dg_space+1  	spacing=0.5
+
+y.mesh location=-0.3   		spacing=0.05
+y.mesh location=-0.08   	spacing=0.01
+y.mesh location=-0.04  		spacing=0.01
+y.mesh location=0      		spacing=0.001
+y.mesh location=0.01  		spacing=0.004
+y.mesh location=0.02  		spacing=0.001
+y.mesh location=0.5  		spacing=0.2
+y.mesh location=1.02   		spacing=0.05
+y.mesh location=15    		spacing=3
+
+region number=1 material=GaN y.min=0.02 y.max=1.02 substrate
+region number=2 material=AlGaN x.comp=0.2 y.min=0 y.max=0.02 
+region number=3 material=oxide y.max=0
+region number=4 material=silicon y.min=1.02 y.max=15
+
+electrode name=source x.min=-4 x.max=-3 y.min=-0.04 y.max=0
+electrode name=gate x.min=0 x.max=3 y.min=-0.08 y.max=0
+electrode name=drain x.min=3+$dg_space x.max=3+$dg_space+1 y.min=-0.04 y.max=0
+electrode name=substrate bottom
+
+doping trap acceptor e.level=3.2 conc=2e17 sign=1e-15 sigp=1e-15 degen=2 gaussian peak=0.9 region=1 char=0.38
+
+doping trap e.level=3.2  donor conc=2e16 uniform region=1 sign=1e-15 sigp=1e-15 degen=2
+doping trap e.level=3.2  donor conc=1e17 uniform region=2 sign=1e-15 sigp=1e-15 degen=2
+doping trap e.level=3.2  donor conc=2e16 uniform region=4 sign=1e-15 sigp=1e-15 degen=2
+
+inttrap donor e.level=3.23 density=3e13 degen.fac=2 sign=1e-12 sigp=1e-12 \
+        intmaterial="oxide/AlGaN"
+inttrap acceptor e.level=3.23 density=8e12 degen.fac=2 sign=1e-12 sigp=1e-12 \
+        intmaterial="silicon/GaN" s.s
+
+material align=0
+
+models consrh auger fermi temp=300 print
+model polarization calc.strain polar.scale=0.75
+mobility region=1 GaNsat.n
+mobility region=1 albrct.n  
+
+interface neutralize y.min=1.02 y.max=1.02
+
+contact name=gate   workfunc=5.5
+contact name=source workfunc=4.08
+contact name=drain  workfunc=4.08 
+contact name=substrate resist=1e11
+
+method newton climit=1e-4 maxtraps=4 itlimit=30  
+
+output band.param con.band val.band charge polar.charge qss
+
+solve init
+save outf=ganfetex15_0_subs.str
+solve previous
+solve vstep=0.1 vfinal=1 name=drain previous
+log outfile=ganfetex15_0_${dg_space}_subs.log
+solve previous
+solve vstep=-0.25 vfinal=-4 name=gate 
+log off
+
+
+
+go atlas simflags="-80"
+
+mesh width=1
+
+x.mesh location=-4   		spacing=0.5
+x.mesh location=-3   		spacing=0.5
+x.mesh location=0    		spacing=0.1
+x.mesh location=1.5  		spacing=0.4
+x.mesh location=3    		spacing=0.1
+x.mesh location=3+($dg_space)/2 spacing=$dg_space/2
+x.mesh location=3+$dg_space   	spacing=0.1
+x.mesh location=3+$dg_space+1  	spacing=0.5
+
+y.mesh location=-0.3   		spacing=0.05
+y.mesh location=-0.08   	spacing=0.01
+y.mesh location=-0.04  		spacing=0.01
+y.mesh location=0      		spacing=0.001
+y.mesh location=0.01  		spacing=0.004
+y.mesh location=0.02  		spacing=0.001
+y.mesh location=1.02   		spacing=0.25
+y.mesh location=15    		spacing=3
+
+region number=1 material=GaN y.min=0.02 y.max=1.02 substrate
+region number=2 material=AlGaN x.comp=0.2 y.min=0 y.max=0.02 
+region number=3 material=oxide y.max=0
+region number=4 material=silicon y.min=1.02 y.max=15
+
+electrode name=source x.min=-4 x.max=-3 y.min=-0.04 y.max=0
+electrode name=gate x.min=0 x.max=3 y.min=-0.08 y.max=0
+electrode name=drain x.min=3+$dg_space x.max=3+$dg_space+1 y.min=-0.04 y.max=0
+electrode name=substrate bottom
+
+doping trap acceptor e.level=3.2 conc=2e17 sign=1e-15 sigp=1e-15 degen=2 gaussian peak=0.9 region=1 char=0.38
+doping trap e.level=3.2  donor conc=2e16 uniform region=1 sign=1e-15 sigp=1e-15 degen=2
+doping trap e.level=3.2  donor conc=1e17 uniform region=2 sign=1e-15 sigp=1e-15 degen=2
+ 
+inttrap donor e.level=3.23 density=1e13 degen.fac=2 sign=1e-12 sigp=1e-12 \
+        intmaterial="oxide/AlGaN"
+inttrap acceptor e.level=3.23 density=8e12 degen.fac=2 sign=1e-12 sigp=1e-12 \
+        intmaterial="silicon/GaN" s.s
+
+material align=0
+
+models consrh auger fermi temp=300
+model polarization calc.strain polar.scale=0.75
+impact selb material=GaN 
+
+interface neutralize y.min=1.02 y.max=1.02
+
+contact name=gate   workfunc=5.5
+contact name=source workfunc=4.08
+contact name=drain  workfunc=4.08 resist=1e9
+contact name=substrate resist=1e11
+
+method newton climit=1e-4 maxtraps=4 itlimit=30  ix.tol=1e-35 ir.tol=1e-35 quasi
+
+output band.param con.band val.band charge polar.charge qss
+
+solve init
+solve previous
+solve vstep=-0.5 vfinal=-2 name=gate previous
+
+log outfile=ganfetex15_1_${dg_space}_subs.log 
+solve vdrain=100e06 ramptime=100e6 tfinal=100e6 dt=1e02 compliance=1e-2 cname=drain previous
+save outf=ganfetex15_${dg_space}_subs.str
+
+extract init infile="ganfetex15_1_${dg_space}_subs.log"
+#extract name="BV1" xintercept(maxslope(curve(vint."drain", i."drain")))
+extract name="BV" x.val from curve(abs(vint."drain"),abs(i."drain")) \
+        where y.val = max(abs(i."drain"))
+
+quit
+
+

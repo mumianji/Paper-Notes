@@ -1,0 +1,185 @@
+# (c) Silvaco Inc., 2018
+# MOS-Capacitor with Polysilicon gate and ultrathin oxide
+
+go atlas
+
+mesh width=1.0e8
+
+x.m  loc=-0.5 spa=0.5
+x.m  loc=0.5 spa=0.5
+
+y.m loc=-0.0025   spa=0.0001 
+y.m loc=0         spa=0.0001
+y.m loc=0.001     spa=0.0001
+y.m loc=0.02      spa=0.0002
+y.m loc=1.0       spa=0.005
+
+region num=1 oxide y.min=-0.0025 y.max=0 thick=0.0025
+region num=2 Silicon thick=1.0 y.min=0 y.max=1.0
+
+electrode name=cathode material=polysilicon top
+electrode name=anode material=aluminum bottom
+
+doping region=2 uniform p.type conc=7.0e15
+
+save outf=diodeex12.str
+
+# Self-consistent electrons - forward bias
+
+go atlas 
+
+mesh inf=diodeex12.str width=1.0e8
+
+material silicon  taun0=1e-7 taup0=1e-7
+material oxide mc=0.42 mv=0.2
+
+#set the workfunction and effective masses for the top contact
+contact name=cathode n.poly qtunn.cmass=0.5 qtunn.vmass=0.5 
+
+#set models including self-consistent electron tunnelling
+models print conmob fldmob consrh qtnlsc.el  qtnl.derivs
+
+#set some parameters to help convergence 
+method newton clim.dd=1e8 dvmax=0.1
+
+# Get I-V curves
+
+solve init
+solve prev 
+
+# Go up to a forward bias of 2.4 Volts
+log outfile=diodeex12_1.log j.hole j.electron j.tun 
+solve vstep=0.01 vfinal=0.4 name=anode
+solve vstep=0.05 vfinal=2.4 name=anode 
+log off
+###
+
+# Self-consistent electrons and holes - forward bias
+
+go atlas 
+
+mesh inf=diodeex12.str width=1.0e8
+
+material silicon  taun0=1e-7 taup0=1e-7
+material oxide mc=0.42 mv=0.2
+
+#set the workfunction and effective masses for the top contact
+contact name=cathode n.poly qtunn.cmass=0.5 qtunn.vmass=0.5 
+
+#set models including self-consistent electron tunnelling
+models print conmob fldmob consrh qtnlsc.el qtnlsc.ho  qtnl.derivs
+
+#set some parameters to help convergence 
+method newton clim.dd=1e8 dvmax=0.1
+
+# Get I-V curves
+
+solve init
+solve prev 
+
+# Go up to a forward bias of 2.4 Volts
+log outfile=diodeex12_2.log j.hole j.electron j.tun 
+solve vstep=0.01 vfinal=0.4 name=anode
+solve vstep=0.05 vfinal=2.4 name=anode 
+log off
+#
+
+# Self-consistent electrons and holes with band-to-band component - forward bias
+
+go atlas 
+
+mesh inf=diodeex12.str width=1.0e8
+
+material silicon  taun0=1e-7 taup0=1e-7
+material oxide mc=0.42 mv=0.2
+
+#set the workfunction and effective masses for the top contact
+contact name=cathode n.poly qtunn.cmass=0.5 qtunn.vmass=0.5 
+
+# set models including self-consistent electron tunnelling
+# and self-consistent hole tunnelling
+models print conmob fldmob consrh qtnlsc.el qtnlsc.ho qtnlsc.bbt qtnl.derivs
+
+#set some parameters to help convergence 
+method newton clim.dd=1e8 dvmax=0.1
+
+# Get I-V curves
+
+solve init
+solve prev 
+
+# Go up to a forward bias of 2.4 Volts
+log outfile=diodeex12_3.log j.hole j.electron j.tun 
+solve vstep=0.01 vfinal=0.4 name=anode
+solve vstep=0.05 vfinal=2.4 name=anode 
+log off
+#
+
+tonyplot -overlay diodeex12_1.log diodeex12_3.log diodeex12_2.log -set diodeex12_1.set
+
+# with all models enabled , do reverse bias
+
+go atlas 
+
+mesh inf=diodeex12.str width=1.0e8
+
+material silicon  taun0=1e-7 taup0=1e-7
+material oxide mc=0.42 mv=0.2
+
+#set the workfunction and effective masses for the top contact
+contact name=cathode n.poly qtunn.cmass=0.5 qtunn.vmass=0.5 
+
+# set models including self-consistent electron tunnelling
+# and self-consistent hole tunnelling
+models print conmob fldmob consrh qtnlsc.el qtnlsc.ho qtnlsc.bbt qtnl.derivs
+
+#set some parameters to help convergence 
+method newton clim.dd=1e8 dvmax=0.1
+
+# Get I-V curves
+
+solve init
+solve prev 
+
+# Go up to a forward bias of 2.4 Volts
+log outfile=diodeex12_4.log j.hole j.electron j.tun 
+solve vstep=-0.01 vfinal=-0.4 name=anode
+solve vstep=-0.05 vfinal=-2.4 name=anode 
+log off
+#
+# with all models enabled , do reverse bias
+# as before but with longer srh lifetime
+go atlas 
+
+mesh inf=diodeex12.str width=1.0e8
+
+# Reset the srh lifetimes in the silicon
+material silicon  taun0=1e-5 taup0=1e-5
+
+material oxide mc=0.42 mv=0.2
+
+#set the workfunction and effective masses for the top contact
+contact name=cathode n.poly qtunn.cmass=0.5 qtunn.vmass=0.5 
+
+# set models including self-consistent electron tunnelling
+# and self-consistent hole tunnelling
+models print conmob fldmob consrh qtnlsc.el ^qtnlsc.ho ^qtnlsc.bbt qtnl.derivs
+
+#set some parameters to help convergence 
+method newton clim.dd=1e8 dvmax=0.1
+
+# Get I-V curves
+
+solve init
+solve prev 
+
+# Go up to a forward bias of 2.4 Volts
+log outfile=diodeex12_5.log j.hole j.electron j.tun 
+solve vstep=-0.01 vfinal=-0.4 name=anode
+solve vstep=-0.05 vfinal=-2.4 name=anode 
+log off
+#
+
+tonyplot -overlay diodeex12_4.log diodeex12_5.log -set diodeex12_2.set
+
+tonyplot -overlay diodeex12_3.log diodeex12_4.log -set diodeex12_3.set

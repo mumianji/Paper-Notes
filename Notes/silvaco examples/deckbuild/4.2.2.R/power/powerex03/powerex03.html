@@ -1,0 +1,117 @@
+<html>
+  <head>
+    <title>IGBT Transient Latch-up with Lattice Heating</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>IGBT Transient Latch-up with Lattice Heating</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>S-Pisces/Giga</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="powerex03_plot0.png" width="640" alt="powerex03_plot0" />
+      <p/>
+      <img src="powerex03_plot1.png" width="640" alt="powerex03_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+In this example the non-isothermal latchup of an IGBT device is simulated.
+The latchup is produced in the transient or switching mode. The currents
+during latchup in this device are high and significant local heating occurs.
+Therefore, the solution of lattice temperature and heat flow must be included.
+This example shows:
+</p>
+<ul>
+  <li>
+ The definition of the IGBT structure using Atlas
+<br/>
+  </li>
+  <li>
+ How to enable Giga non-isothermal simulation
+<br/>
+  </li>
+  <li>
+ IGBT collector steady state solution at 300V
+<br/>
+  </li>
+  <li>
+ Transient gate voltage ramp to produce latchup
+  </li>
+</ul>
+<p>
+The Atlas simulation begins with the definition of the IGBT structure.
+A fine rectangular mesh is first defined.  Next, the materials are assigned to specific regions using the
+<b> region </b> command.  The electrodes and doping profiles are then defined.  Additionally, specific characteristics of these materials, their electrodes and the charge carriers within can be modified.  The
+<b> material </b> statement is
+used to define the electron and hole recombination lifetimes in the semiconductor.  The
+<b> contact </b> statement defines the workfunction of the polysilicon electrode, in this case, that of degenerately doped n-type polysilicon.   This completes the IGBT structure definition.
+</p>
+<p>
+For any Atlas device simulation, the physical transport models must be enabled using the
+<b> model </b> statement.  In this case, they reflect the different physical effects important to the IGBT device.
+They are analytic: analytic concentration dependent mobility, fldmob: lateral electric field dependent mobility, surfmob: surface mobility degradation, srh:
+Shockley-Read-Hall recombination, and auger:  recombination accounting for high level injection
+effects.
+</p>
+<p>
+The steady-state characteristics of the IGBT are now solved.
+As with most Atlas simulations, an initial solution is performed at zero bias using the statement
+<b> solve init</b> . This gives the Atlas solvers a good starting point.  The subsequent
+<b> solve </b> statements ramp the IGBT collector up to 300V in several stages .  Each additional stage uses the previous
+solution as an initial guess.  Other initial guess strategies are available however.
+Consult the Atlas User&apos;s manual for more details.  If an electrode bias is not specified, it remains at its
+previous value, in this case, zero volts.  After the solution is obtained at 300V, the solution is saved.  It will
+be used as the initial solution in the transient mode latchup simulation which follows.
+</p>
+<p>
+Three additional items are added for the IGBT transient mode simulation: thermal contacts, heat flow, and impact
+ionization.  Thermal boundary conditions are a very important part of any non-isothermal simulation and must be
+specified.  For the IGBT, a constant temperature along the collector contact is  specified in the
+<b> thermcontact </b> statement.  All other contacts and surfaces are assumed to be in thermal isolation.  The
+<b> lat.temp </b> lattice temperature model is added to the
+<b> model </b> statement to include heat flow.  This means that the heat
+flow equation is solved in addition to the semiconductor equations and
+all physical parameters become temperature dependent.  In addition to heat flow, impact ionization plays an
+important role in IGBT transient mode latchup.  The Selberherr impact ionization model is added using the
+<b> impact </b> statement with the
+<b> selb </b> option.
+</p>
+<p>
+An IGBT gate transient is now simulated.    The previous solution at the collector
+bias of 300V is loaded and used as an initial guess for the latchup simulation.  The
+<b> output </b> statement is used to add additional solution quantities to the standard output variables.
+The gate voltage is ramped from 0  to 10 V in 100 nano seconds to cause the IGBT latchup.
+The gate will then be held at the 10 V level until the time reaches 1 micro second.  These conditions are set on the
+<b> solve </b> statement.  The output results are saved in the log file.  Using
+TonyPlot, it is possible to observe the latchup by plotting the
+collector current and maximum temperature in the device versus time.
+The structure and solution at the final time point is saved
+and all output variables can be observed using TonyPlot.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

@@ -1,0 +1,78 @@
+go athena
+
+#TITLE: Metal Patterning with SSUPREM4, ELITE, and OPTOLITH (20 minutes)
+#
+line x loc=-2 spacing=0.05
+#line x loc=-1.0 spacing=0.05
+#line x loc=1.0  spacing=0.05
+line x loc=2  spacing=0.05
+line y loc=0.0  spacing=0.05
+line y loc=1.0  spacing=0.5
+initial space.m=1
+#
+deposit oxide thick=0.01 div=1
+deposit nitride thick=.25 div=5 
+
+etch nitride right p1.x=0.0
+method grid.ox=0.05
+diff time=120 temp=950 weto2
+
+etch nitride all 
+etch oxide thick=0.03
+rate.depo machine=PE4450 aluminum u.m  sigma.dep=0.75 hemisphe dep.rate=.2 angle1=70 angle2=-70
+deposit machine=PE4450 time=1.1 minutes divisions=12 
+
+rate.depo machine=PRspin photores name.res=OiR32 u.m  \
+          sigma.dep=.50  hemisphe dep.rate=1.0 angle1=90 angle2=-90 \
+          smooth.win=1 
+deposit machine=PRspin time=45 sec div=30
+
+
+illumination i.line 
+
+illum.filter circle sigma=.5
+
+projection na=.45
+
+pupil.filter circle
+
+layout x.lo=-3.2 z.lo=-3.0 x.hi=-2.8 z.hi=3.0
+layout x.lo=-1.2 z.lo=-3.0 x.hi=-0.8 z.hi=3.0
+layout x.lo=0.8  z.lo=-3.0 x.hi=1.2  z.hi=3.0
+layout x.lo=2.8  z.lo=-3.0 x.hi=3.2  z.hi=3.0
+
+
+image clear dx=0.05 win.x.lo=-2.5 win.x.hi=2.5 win.z.lo=0.0 win.z.hi=0.0 one.d
+
+structure outfile=anex04_0.str intensity mask
+
+tonyplot anex04_0.str -ttitle anex04.in:Intensity -set anex04_0.set
+
+expose dose=280 num.refl=5
+
+structure outfile=anex04_1.str
+
+tonyplot anex04_1.str -set anex04_1.set
+
+bake diff.length=0.06
+
+structure outfile=anex04_2.str
+
+tonyplot anex04_2.str -ttitle "anex04.in: Following Expose and Postbake" -set anex04_2.set
+
+develop mack time=400 steps=6 substeps=24
+
+structure outfile=anex04_3.str
+
+tonyplot anex04_3.str -ttitle "anex04.in: Following Develop"
+#
+rate.etch mach=test rie u.m isotropic=0.01  direction=0.0 photoresist
+rate.etch mach=test rie u.m isotropic=0.3   direction=0.5 alumin
+#
+etch mach=test time=20 sec dx.mult=0.7
+#
+structure outfile=anex04_4.str
+#
+tonyplot anex04_4.str -ttitle anex04.in:Final
+
+quit

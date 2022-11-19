@@ -1,0 +1,90 @@
+# (c) Silvaco Inc., 2018
+go atlas
+
+TITLE SiGe PMOS Id-Vd simulation with Energy Balance 
+#     and Nonisothermal Energy Balance Models
+
+mesh         nx=34 ny=41 
+
+x.m          n=1     l=0.00    r=1.0
+x.m          n=4     l=0.4     r=1.0
+x.m          n=10    l=0.6     r=0.9
+x.m          n=18    l=0.85    r=1.1
+x.m          n=26    l=1.1     r=0.9
+x.m          n=31    l=1.3     r=1.02
+x.m          n=34    l=1.7     r=1.0
+
+y.m          n=1     l=-0.012  r=1.0
+y.m          n=3     l=0.0000  r=1.0
+y.m          n=8     l=0.005   r=1.0
+y.m          n=14    l=0.007   r=1.0
+y.m          n=20    l=0.025   r=1.0
+y.m          n=26    l=0.027   r=1.0
+y.m          n=30    l=0.08    r=1.0
+y.m          n=33    l=0.10    r=1.0
+y.m          n=37    l=0.15    r=1.5
+y.m          n=41    l=0.7     r=1.3
+
+region     num=1  material=SiO2 x.min=0 x.max=1.7 y.min=-0.012 y.max=0.0
+region     num=2  material=Si y.min=0. y.max=0.006 x.min=0. x.max=0.7
+region     num=3  material=Si y.min=0. y.max=0.006 x.min=0.7 x.max=1.7
+region     num=4  material=SiGe y.min=0.006 y.max=0.026 x.min=0 x.max=0.7 \
+           x.composition=0.25 
+region     num=5  material=SiGe y.min=0.006 y.max=0.026 x.min=0.7 x.max=1.7 \
+           x.composition=0.25          
+region     num=6  material=Si y.min=0.026 y.max=0.1  x.min=0. x.max=0.7
+region     num=7  material=Si y.min=0.1   y.max=0.7  x.min=0. x.max=0.7
+region     num=8  material=Si y.min=0.026 y.max=0.7  x.min=0.7 x.max=1.7
+
+elec       num=1  name=source x.min=0.0 x.max=0.4 y.min=0.00 y.max=0.00
+elec       num=2  name=gate   x.min=0.5 x.max=1.2 y.min=-0.012 y.max=-0.012
+elec       num=3  name=drain  x.min=1.3 x.max=1.7 y.min=0.00 y.max=0.00
+elec       num=4  name=substrate  x.min=0 x.max=1.7 y.min=0.7 y.max=0.7
+
+doping     uniform  n.type conc=1.e14 x.left=0.6 x.right=1.1 y.top=0 y.bottom=0.026
+doping     uniform  n.type conc=1.e17 x.left=0.6 x.right=1.1 y.top=0.026 y.bottom=0.7
+doping     uniform  n.type conc=1.e17 x.left=1.1 x.right=1.7 y.top=0.1 y.bottom=0.7
+doping     uniform  n.type conc=1.e17 x.left=0. x.right=0.6 y.top=0.1 y.bottom=0.7
+doping     uniform  p.type conc=5.e19 x.left=0 x.right=0.6 y.top=0.0 y.bottom=0.1
+doping     uniform  p.type conc=5.e19 x.left=1.1 x.right=1.7 y.top=0.0 y.bottom=0.1
+
+thermcontact num=1   x.min=0 x.max=1.7 y.min=0.7 y.max=0.7 alpha=300
+
+material material=Si   taun0=1.e-7  taup0=1.e-7 \ 
+         taurel.ho=2.e-13 taumob.ho=2.e-13
+material material=SiGe     taun0=1.e-7  taup0=1.e-7 \
+         nv300=1.55e19  nc300=2.86e19 \
+         taurel.ho=2.e-13 taumob.ho=2.e-13
+
+models   conmob bgn fldmob hcte.ho  lat.temp consrh auger print   
+impact  selb  length.rel lrel.ho=0.02 
+
+contact number=2 n.polysilicon
+
+solve  
+
+output con.band val.band h.velocity
+save outf=mos2ex13_0.str
+tonyplot  mos2ex13_0.str -set mos2ex13_0.set
+
+# Calculations with NEB model
+# Ramp gate to -2V
+
+method block newton temp.tol=1.e-4 trap
+         
+solve vgate=0 vstep=-1 name=gate vfinal=-2
+
+# Id-Vd calculations
+
+method newton temp.tol=1.e-4 trap 
+curvetrace end.val=-5.e-4 contr.name=drain step.init=-0.01 \
+           curr.con mincur=5e-12 nextst.ratio=1.2
+
+log outf=mos2ex13_neb.log master
+solve curvetrace
+save outf=mos2ex13_neb.str
+
+tonyplot mos2ex13_neb.log -set mos2ex13_1.set
+tonyplot mos2ex13_neb.str -set mos2ex13_2.set
+
+quit

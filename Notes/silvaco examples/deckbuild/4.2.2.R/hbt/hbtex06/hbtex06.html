@@ -1,0 +1,143 @@
+<html>
+  <head>
+    <title>InGaAs/InP HBT DC and High Frequency Characteristics</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>InGaAs/InP HBT DC and High Frequency Characteristics</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>DevEdit/Blaze</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="hbtex06_plot0.png" width="640" alt="hbtex06_plot0" />
+      <p/>
+      <img src="hbtex06_plot1.png" width="640" alt="hbtex06_plot1" />
+      <p/>
+      <img src="hbtex06_plot2.png" width="640" alt="hbtex06_plot2" />
+      <p/>
+      <img src="hbtex06_plot3.png" width="640" alt="hbtex06_plot3" />
+      <p/>
+      <img src="hbtex06_plot4.png" width="640" alt="hbtex06_plot4" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+In this example, an HBT structure based on the InGaAs-InP material system is
+constructed using DEVEDIT. The structure is then passed to Atlas for
+electrical testing. The input file consists of the following 2 main
+portions:
+</p>
+<ul>
+  <li>
+ Construction of the device in DEVEDIT
+<br/>
+  </li>
+  <li>
+ Simulation of the Gummel plot  in Atlas
+<br/>
+  </li>
+  <li>
+ Simulation of the AC parameters 
+<br/>
+  </li>
+  <li>
+ S-parameter extraction
+  </li>
+</ul>
+<p>
+The first stage of the input constructs the HBT geometry, material regions,
+doping profiles, and electrodes in DEVEDIT. The n-p-n HBT device is based on
+a lattice matched InGaAs-InP material system. It consists of
+a highly doped InGaAs cap region followed by another cap region made of InP.
+The next region, also made of InP, constitutes the actual emitter. As usual in
+HBTs the emitter (InP) has wider energy band gap than the base and collector
+(InGaAs). The base is followed by the n- subcollector and n+ collector regions.
+The substrate is made of undoped InP.
+</p>
+<p>
+The structure was created in DEVEDIT by drawing the device regions in
+interactive mode and specifying 2D doping distribution. In this example
+each region was uniformly doped. The Ga composition fraction of 0.47 was
+also specified in DEVEDIT for each of the InGaAs regions. Finally the mesh was
+generated automatically by specifying basic mesh constraints and refining it
+along x- and/or y-directions in the important areas of the device.
+</p>
+<p>
+The Atlas simulation begins by reading in the structure from DEVEDIT.
+DeckBuild provides an automatic interface between DEVEDIT and Atlas so that the
+structure produced by DEVEDIT is transferred to Atlas without having to
+indicate the mesh statement.
+</p>
+<p>
+The first active statements in the Atlas portion of the input file are
+material parameters and models definition. In this example the energy band gap,
+densities of states, and other fundamental material parameters for
+InGaAs are calculated based on the composition specified in DEVEDIT.
+For InP the respective default values are used.
+The band alignment is defined using the
+<b> align </b> parameter on the
+<b> material</b> statement.  Material and model parameters can be specified in Atlas on
+material-by-material or region-by-region basis. The latter possibility
+is used here to define carrier lifetimes, low field mobilities, and
+saturation velocities taking into consideration the doping levels in the
+respective regions.
+</p>
+<p>
+The same set of physical models is applied here to all the regions/materials:
+Shockley-Read- Hall recombination, electric field dependent mobilities
+with GaAs-like velocity-field characteristic, and Fermi-Dirac statistics.
+To reflect the different properties of materials with regard to the critical
+field,
+<b> ecritn </b> is specified in
+separate
+<b> model </b> statements for InP and InGaAs.
+</p>
+<p>
+The simulation is first performed to obtain the Gummel plot by biasing
+simultaneously the base and collector with respect to the emitter up to 1.2 V.
+At the same time, a small signal AC perturbation is applied at a frequency
+of 1 MHz to calculate the AC parameters (conductances and capacitances) as
+functions of Vbe. This also allows the user to obtain
+the cutoff frequency using the low frequency approximation in TonyPlot
+or using the extraction feature of DeckBuild. Currents, voltages, and AC
+parameters are saved in a log file, and internal structure information
+is saved for a bias condition (Vbe=Vce=0.95 V) where the cutoff frequency is
+close to its maximum.  The calculation of s-parameters is specified on the
+log statement with the s.param command.
+</p>
+<p>
+At the end of the simulation,
+<b> extract</b> statements are used to determine the maximum
+cutoff frequency, the base bias, the input (base) capacitance, and the
+transconductance - all at the bias of Vbe=Vce=1.0 V where the maximum cutoff
+frequency was observed.
+</p>
+<p>
+The structure plot, the Gummel plot, the AC current gain versus frequency, and S-parameters are then displayed using TonyPlot.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

@@ -1,0 +1,122 @@
+<html>
+  <head>
+    <title>Polarization Charge Analysis</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Polarization Charge Analysis</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Blaze</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="ganfetex01_plot0.png" width="640" alt="ganfetex01_plot0" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates the interaction between polarization charges,
+surface states and cap layer thickness in AlGaN/GaN HFETs.
+</p>
+<p>
+This example was the basis for the Simulation Standard article
+&quot;Simulating the Source of Polarization Charge in AlGaN/GaN HFETs&quot;
+Simulation Standard, V. 15, N. 8, Aug. 2006, Silvaco International.
+</p>
+<p>
+This article and example are based on the work of:
+J. P. Ibbetson, et. al., Appl. Phys. Lett. 77, 250 (2000).
+</p>
+<p>
+The input deck ganfetex01.in uses dbinternal to obtain the channel
+charge density for each of the saved structure files.  It does this using
+the file ganfetex01_aux.in. The advantage of using dbinternal is that the
+data file containing the charge densities can be plotted using
+TonyPlot. These charge densities are plotted against the cap layer thickness.
+</p>
+<p>
+The input deck containing the actual description of the devices is
+contained in ganfetex01_aux.in.
+</p>
+<p>
+The Atlas specification consists of the following parts:
+</p>
+<ul>
+  <li>
+ Construction of the device and the grid using Atlas syntax
+<br/>
+  </li>
+  <li>
+ Specification of material regions
+<br/>
+  </li>
+  <li>
+ Definition of electrodes and doping
+<br/>
+  </li>
+  <li>
+ Material, models, interface charge and interface trap parameters
+<br/>
+  </li>
+  <li>
+ Simulation of Id-Vds characteristic 
+<br/>
+  </li>
+</ul>
+<p>
+In the first part of the input file the device is described using Atlas
+syntax including mesh, regions and electrodes locations, and doping distribution.
+The
+<b> region </b> statements are used to define AlGaN and GaN regions. The Al composition
+fraction (x.composition=0.34)is defined here as well.
+After the device description, the
+<b> material </b> statement is used to specify some of the material parameters different from
+the default values. Whenever any of the default values of material parameters
+or models are questioned you should specify the parameter values manually.
+</p>
+<p>
+The
+<b> model </b> statement is used to specify the following set of models: field dependent
+mobility, and Shockley-Read-Hall recombination, Fermi-Dirac statistics, and
+incomplete ionization.
+</p>
+<p>
+Next the interface characteristics are specified.  In particular the
+polarization charges and surface traps are specified.  We could have
+used the built-in polarization models that calculate the polarization
+charges as a function of composition, strain and lattice constant for
+the various materials, but in this case we are specifying polarization
+charges directly to simplify calibration to the data presented in the paper.
+</p>
+<p>
+Next the
+<b> solve </b> statement is used to obtain a zero biassed solution.  The
+<b> save </b> statement is used to save this solution for subsequent examination in
+TonyPlot.  TonyPlot is used to look at the channel electron
+charge as a function of cap layer thicknress.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

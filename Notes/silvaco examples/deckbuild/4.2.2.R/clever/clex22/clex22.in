@@ -1,0 +1,84 @@
+# This example demonstrates the LC director calculation
+# of a super in-plane switching (S-IPS) cell. 
+# The pixel electrodes of the S-IPS cell 
+# consist of two zigzag ITO electrodes.
+
+go VictoryProcess
+
+Init  material="oxide" GasHeight=5 Depth=1 from="0,0" to="10,10"
+
+SpecifyMaskPoly maskname=Pixel p1="3,5" p2="4.5,10" p3="2.5,10" p4="1,5" \
+                p5="2.5,0" p6="4.5,0" electrode="Pix"
+SpecifyMaskPoly maskname=Common p1="8,5" p2="9.5,10" p3="7.5,10" p4="6,5" \
+                p5="7.5,0" p6="9.5,0" electrode="Com"
+
+line x location=0 spac=0.25
+line x location=10 spac=0.25
+
+line y location=0 spac=0.25
+line y location=5 spac=0.2
+line y location=10 spac=0.25
+
+line z location=-5 spacing=1
+line z location=-4 spacing=1
+line z location=-3 spacing=0.025
+line z location=-2.95 spacing=0.025
+line z location=-1.5 spacing=0.1
+line z location=0 spacing=0.1
+line z location=1 spacing=1
+
+deposit material="LC" thick=2.95 min
+
+# Pattern the pixel electrodes.
+deposit material=ITO thick=0.05 min
+etch material=ITO thick=0.05 min Mask=Pixel
+electrode mask=Pixel material="ITO"
+
+deposit material=oxide thick=0.05 max
+etch material=oxide thick=0.1 max Mask=Common reverse
+
+deposit material=ITO thick=0.05 min
+electrodes mask=Common material=ITO
+strip oxide
+
+deposit material=LC thick=0.05 min
+deposit material=oxide thick=1 min
+
+export clever(conformal) structure=clex22.str
+
+
+go clever simflags="-P 10"
+
+set penalty=1000
+
+Init structure="clex22.str"
+
+material ITO conductivity=1000
+material oxide permittivity=3.9
+
+# Specify the anisotropic permittivity and the elastic constants of the LC.
+setLC epsParaDir=10.7 epsVertDir=3.7 splay=14.4e-12 twist=6.9e-12 \
+      bend=18.3e-12 cPenalty=$penalty
+
+# Specify the rubbing angle and the pre-tilt angle 
+# on the top and at the bottom of the LC region.
+LCbndaryB partition(0 10) rubAngle(90) tiltangle(1)
+LCbndaryT partition(0 10) rubAngle(90) tiltangle(1)    
+
+solver linearsolver=pam pamsolver=gmres ddprecond=RAS preconditioner=amp \
+        multilevel=0 fillratio=1.e-3 lsmaxiter=200 lstolerance=1.0e-10 \
+        nlsmaxiter=100 nlstolerance=1.0e-8 topDirichletBC
+
+option LSconvergeinfo=2 NLSconvergeinfo
+
+# Ramp the pixel voltage to 5V with a step of 0.5V until 2V 
+# and of 0.25V thereafter.
+# Save the structure at each 1-volt interval from 0 to 5V.
+Interconnect Capacitance domainboundarycondition=cyclic vpix("Pix" 6) \
+             initvstep=0.5 vstepAt(2 0.25) savestep=1 structure="clex22" 
+
+# Save the parasitic capacitance netlist.
+save spice="clex22.net"
+
+tonyplot3d clex22.V6.str
+tonyplot clex22.net

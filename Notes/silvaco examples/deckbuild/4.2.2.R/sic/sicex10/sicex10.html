@@ -1,0 +1,101 @@
+<html>
+  <head>
+    <title>3D Trench Shape Effect on IV and BV Characteristics</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>3D Trench Shape Effect on IV and BV Characteristics</H1>
+    <table id="text">
+      <tr>
+        <td><b>Required:</b></td><td><i>Victory Process, Victory Mesh, Victory Device</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Version:</b></td><td><i>Victory Process 7.22.3.R, Victory Mesh 1.2.4.R, Victory Device 1.12.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="sicex10_plot0.png" width="640" alt="sicex10_plot0" />
+      <p/>
+      <img src="sicex10_plot1.png" width="640" alt="sicex10_plot1" />
+      <p/>
+      <img src="sicex10_plot2.png" width="640" alt="sicex10_plot2" />
+      <p/>
+      <img src="sicex10_plot3.png" width="640" alt="sicex10_plot3" />
+      <p/>
+      <img src="sicex10_plot4.png" width="640" alt="sicex10_plot4" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+By default Victory Process and Device run on just one processor.
+To ensure better perfomance on your computer the following simulation condition
+<b> simflags=&quot;-P all&quot;</b> could be specified in the
+<b> go</b> statement starting Victory Process or Device. This means that all processors available will be used.
+If you want to use a smaller number of processors you can substitute &quot;all&quot; with a desired number, e.g.
+<b> simflags=&quot;-P 4&quot;.</b> </p>
+<p>
+The following example demonstrates the effect of the shape of a trench on IV and
+BV characteristics.
+</p>
+<p>
+The 3D layout-driven structure is created using Victory Process. 3D device simulation
+is done using Victory Device built-in extended precision numeric.
+</p>
+<p>
+In this example we compare 3 different structures. One fully Manhattan (i.e right
+angle layout and trench) versus 2 structures one having rounded layout and another
+one having rounded layout and angled trench.
+</p>
+<p>
+Aluminum implantation is simulated in 1D (to save simulation time) in Athena using
+Monte Carlo implantation before being imported in the 3D structure using the
+<b> PROFILE </b> statement in Victory Process.
+</p>
+<p>
+The 3D structure is meshed to a full 3D Delaunay mesh using Victory Mesh.
+Different options are available in order to optimize the mesh under the gate
+and at the p/n junction. This 3D refinement is fully automatic.
+</p>
+<p>
+The 3D structure is then loaded in Victory Device. The default 3D Delaunay
+discretization method combined with a parallelized iterative solver set by
+<b> PAM.MPI </b> statement in Victory Device allow good convergence, speed and accurate results.
+</p>
+<p>
+Victory Device automatically sets the optical axis downwards toward the SiC surface.
+This is important for anisotropic models such as anisotropic impact ionization, which
+treat one direction (downwards, along the optical axis in this case) differently than
+the others.
+</p>
+<p>
+We can clearly see the effect of the trench shape on the IDVG and BV characteristics.
+Indeed a known &quot;hump&quot; effect is observed on the IDVG characteristic especially
+on the device with full Manhattan shape. However this parasitic effect is removed
+with the device using rounded layout and angled trench.
+</p>
+<p>
+BV simulation reveals that the breakdown voltage can be increased by 30% using
+rounded layout and angled trench due to impact ionization not occurring anymore
+only at the corner of the trench.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

@@ -1,0 +1,74 @@
+## layout
+name "CMOS latchup device"
+start 0.000000 9.000000
+stop 12.000000 9.000000
+## end
+## information
+## end
+## grid
+linex 0.000
+linex 0.500 0.200
+linex 1.000 0.050
+linex 1.500 0.200
+linex 2.000 0.050
+linex 2.500 0.200
+linex 3.000 0.050
+linex 3.500 0.200
+linex 4.000 0.050
+linex 4.500 0.200
+linex 6.000 0.200
+linex 7.500 0.200
+linex 8.000 0.050
+linex 8.500 0.200
+linex 9.000 0.050
+linex 9.500 0.200
+linex 10.000 0.050
+linex 10.500 0.200
+linex 11.000 0.050
+linex 11.500 0.200
+linex 12.000
+liney 0.00 0.05
+liney 0.50 0.08
+liney 1.00 0.10
+liney 6.00 0.50
+## end
+## electrodes
+"pwell" "MET" 1.000000 2.000000
+"vss" "MET" 3.000000 4.000000
+"vdd" "MET" 8.000000 9.000000
+"nwell" "MET" 10.000000 11.000000
+## end
+## mask "PWE"
+barrier 0.01 1 min.space=0.005 min.dist=0.000
+etchstart -0.100
+etchdone  0.000
+etchstart 0.000
+etchdone  6.000
+## end
+## mask "N+"
+barrier 0.01 1 min.space=0.005 min.dist=0.000
+etchstart 3.000
+etchdone  4.000
+etchstart 10.000
+etchdone  11.000
+## end
+## mask "P+"
+barrier 0.01 1 min.space=0.005 min.dist=0.000
+etchstart 1.000
+etchdone  2.000
+etchstart 8.000
+etchdone  9.000
+## end
+## mask "MET"
+barrier 0.01 1 min.space=0.005 min.dist=0.000
+etchstart -0.100
+etchdone  1.000
+etchstart 2.000
+etchdone  3.000
+etchstart 4.000
+etchdone  8.000
+etchstart 9.000
+etchdone  10.000
+etchstart 11.000
+etchdone  12.100
+## end

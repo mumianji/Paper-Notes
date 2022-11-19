@@ -1,0 +1,66 @@
+# (c) Silvaco Inc., 2018
+go atlas
+mesh
+
+x.mesh l=0    s=0.05
+x.mesh l=1.0  s=0.05
+y.mesh l=0    s=0.05
+y.mesh l=1.0  s=0.05
+
+region num=1 material=silicon
+
+electrode name=anode   bottom
+electrode name=cathode top
+
+doping n.type uniform conc=1.0e18
+
+
+method mag2dlsq
+models srh fldmob bz=1.0 rh.elec=1.2 rh.hole=0.8
+
+solve init
+
+solve prev 
+
+probe name=hall1 x=0.0 y=0.5 potential
+probe name=hall2 x=1.0 y=0.5 potential
+probe name=reference x=0.5 y=0.5 potential
+
+log outf=magneticex01_ntype.log
+solve name=anode vanode=0.0 vstep=0.05 vfinal=1.0
+log off
+
+go atlas
+
+mesh
+
+x.mesh l=0    s=0.05
+x.mesh l=1.0  s=0.05
+y.mesh l=0    s=0.05
+y.mesh l=1.0  s=0.05
+
+region num=1 material=silicon
+
+electrode name=anode   bottom
+electrode name=cathode top
+
+doping p.type uniform conc=1.0e18
+
+method mag2dlsq
+models srh fldmob bz=1.0
+
+solve init
+
+solve prev 
+
+probe name=hall1 x=0.0 y=0.5 potential
+probe name=hall2 x=1.0 y=0.5 potential
+probe name=reference x=0.5 y=0.5 potential
+
+log outf=magneticex01_ptype.log
+solve name=anode vanode=0.0 vstep=0.05 vfinal=1.0
+log off
+
+tonyplot -overlay magneticex01_ntype.log magneticex01_ptype.log -set magneticex01.set
+
+quit

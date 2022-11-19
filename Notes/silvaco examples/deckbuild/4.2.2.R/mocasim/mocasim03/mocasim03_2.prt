@@ -1,0 +1,194 @@
+
+=============================================================
+ Current settings: 
+=============================================================
+
+total number of iterations:         80000000        
+total number of electrons:          1000            
+total number of energy nodes:       75001           
+maximum energy:                     7.5              (eV)
+total number of time steps:         80000           
+time step:                          1                (fs)
+
+-----------------------------------------------------
+|  id  | field (V/cm) | doping(cm-3) |   temp (K)   |
+-----------------------------------------------------
+| 0    | 500          | 1e+18        | 300          | 
+| 1    | 1000         |              |              | 
+| 2    | 1500         |              |              | 
+| 3    | 2000         |              |              | 
+| 4    | 2500         |              |              | 
+| 5    | 3000         |              |              | 
+| 6    | 3250         |              |              | 
+| 7    | 3500         |              |              | 
+| 8    | 3750         |              |              | 
+| 9    | 4000         |              |              | 
+| 10   | 4250         |              |              | 
+| 11   | 4500         |              |              | 
+| 12   | 4750         |              |              | 
+| 13   | 5000         |              |              | 
+| 14   | 5500         |              |              | 
+| 15   | 6000         |              |              | 
+| 16   | 6500         |              |              | 
+| 17   | 7000         |              |              | 
+| 18   | 7500         |              |              | 
+| 19   | 8000         |              |              | 
+| 20   | 8500         |              |              | 
+| 21   | 9000         |              |              | 
+| 22   | 9500         |              |              | 
+| 23   | 10000        |              |              | 
+-----------------------------------------------------
+
+
+=============================================================
+Bulk material parameters:
+=============================================================
+
+material density:                      5.3176           g/cm3
+speed of sound:                        473060           cm/s
+DC dielectric constant:                12              
+RF dielectric constant:                10.89           
+
+=============================================================
+Valley dependent parameters:
+=============================================================
+G valley:
+effective mass:                        0.063           
+energy gaps:                           1400             meV
+non-parabolicity:                      0.6166           1/eV
+-------------------------------------------------------------
+L valley:
+effective mass:                        0.221054        
+energy gaps:                           1750             meV
+non-parabolicity:                      0.463            1/eV
+-------------------------------------------------------------
+X valley:
+effective mass:                        0.4097          
+energy gaps:                           1950             meV
+non-parabolicity:                      0.205            1/eV
+=============================================================
+
+
+=============================================================
+Scattering mechanisms:
+=============================================================
+Intravalley scattering:
+=============================================================
+G valley:
+-------------------------------------------------------------
+G) Def. Pot. AP absorption scattering.
+Def. pot (E1):                         7                eV
+G) Def. Pot. AP Emission scattering.
+Def. pot (E1):                         7                eV
+G) POP absorption scattering.
+Phonon freq:                           5.36845e+13      rad/s
+G) POP Emission scattering.
+Phonon freq:                           5.36845e+13      rad/s
+G) CW ionised impurity scattering.
+Impurity charge:                       1               
+-------------------------------------------------------------
+L valley:
+-------------------------------------------------------------
+L) Def. Pot. AP absorption scattering.
+Def. pot (E1):                         7                eV
+L) Def. Pot. AP Emission scattering.
+Def. pot (E1):                         7                eV
+L) POP absorption scattering.
+Phonon freq:                           5.36845e+13      rad/s
+L) POP Emission scattering.
+Phonon freq:                           5.36845e+13      rad/s
+L) CW ionised impurity scattering.
+Impurity charge:                       1               
+-------------------------------------------------------------
+X valley:
+-------------------------------------------------------------
+X) Def. Pot. AP absorption scattering.
+Def. pot (E1):                         7                eV
+X) Def. Pot. AP Emission scattering.
+Def. pot (E1):                         7                eV
+X) POP absorption scattering.
+Phonon freq:                           5.36845e+13      rad/s
+X) POP Emission scattering.
+Phonon freq:                           5.36845e+13      rad/s
+X) CW ionised impurity scattering.
+Impurity charge:                       1               
+=============================================================
+Intervalley scattering:
+=============================================================
+G to G
+-------------------------------------------------------------
+No scattering defined
+-------------------------------------------------------------
+G to L
+-------------------------------------------------------------
+G->L) IVP absorption scattering.
+Defpot (D):                            1e+09            eV/cm
+Phonon frequency:                      4.23575e+13      rad/s
+G->L) IVP emission scattering.
+Defpot (D):                            1e+09            eV/cm
+Phonon frequency:                      4.23575e+13      rad/s
+-------------------------------------------------------------
+G to X
+-------------------------------------------------------------
+G->X) IVP absorption scattering.
+Defpot (D):                            1e+09            eV/cm
+Phonon frequency:                      4.55024e+13      rad/s
+G->X) IVP emission scattering.
+Defpot (D):                            1e+09            eV/cm
+Phonon frequency:                      4.55024e+13      rad/s
+-------------------------------------------------------------
+L to G
+-------------------------------------------------------------
+L->G) IVP absorption scattering.
+Defpot (D):                            1e+09            eV/cm
+Phonon frequency:                      4.23575e+13      rad/s
+L->G) IVP emission scattering.
+Defpot (D):                            1e+09            eV/cm
+Phonon frequency:                      4.23575e+13      rad/s
+-------------------------------------------------------------
+L to L
+-------------------------------------------------------------
+L) IVP absorption scattering.
+Defpot (D):                            1e+09            eV/cm
+Phonon frequency:                      4.40591e+13      rad/s
+L) IVP emission scattering.
+Defpot (D):                            1e+09            eV/cm
+Phonon frequency:                      4.40591e+13      rad/s
+-------------------------------------------------------------
+L to X
+-------------------------------------------------------------
+L->X) IVP absorption scattering.
+Defpot (D):                            5e+08            eV/cm
+Phonon frequency:                      4.45756e+13      rad/s
+L->X) IVP emission scattering.
+Defpot (D):                            5e+08            eV/cm
+Phonon frequency:                      4.45756e+13      rad/s
+-------------------------------------------------------------
+X to G
+-------------------------------------------------------------
+X->G) IVP absorption scattering.
+Defpot (D):                            1e+09            eV/cm
+Phonon frequency:                      4.55024e+13      rad/s
+X->G) IVP emission scattering.
+Defpot (D):                            1e+09            eV/cm
+Phonon frequency:                      4.55024e+13      rad/s
+-------------------------------------------------------------
+X to L
+-------------------------------------------------------------
+X->L) IVP absorption scattering.
+Defpot (D):                            5e+08            eV/cm
+Phonon frequency:                      4.45756e+13      rad/s
+X->L) IVP emission scattering.
+Defpot (D):                            5e+08            eV/cm
+Phonon frequency:                      4.45756e+13      rad/s
+-------------------------------------------------------------
+X to X
+-------------------------------------------------------------
+X) IVP absorption scattering.
+Defpot (D):                            7e+08            eV/cm
+Phonon frequency:                      4.55024e+13      rad/s
+X) IVP emission scattering.
+Defpot (D):                            7e+08            eV/cm
+Phonon frequency:                      4.55024e+13      rad/s
+=============================================================
+

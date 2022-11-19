@@ -1,0 +1,104 @@
+<html>
+  <head>
+    <title>Image Sensor Cell including 2 Pass Transistors</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Image Sensor Cell including 2 Pass Transistors</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Victory Process, Victory Mesh, Victory Device</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Victory Process 7.22.3.R, Victory Mesh 1.2.4.R, Victory Device 1.12.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="imagesensorex06_plot0.png" width="640" alt="imagesensorex06_plot0" />
+      <p/>
+      <img src="imagesensorex06_plot1.png" width="640" alt="imagesensorex06_plot1" />
+      <p/>
+      <img src="imagesensorex06_plot2.png" width="640" alt="imagesensorex06_plot2" />
+      <p/>
+      <img src="imagesensorex06_plot3.png" width="640" alt="imagesensorex06_plot3" />
+      <p/>
+      <img src="imagesensorex06_plot4.png" width="640" alt="imagesensorex06_plot4" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+By default Victory Process and Device run on just one processor.
+To ensure better perfomance on your computer the following simulation condition
+<b> simflags=&quot;-P all&quot; </b> could be specidied in the
+<b> go </b> line starting Victory Process or Device. This means that all processors available will be used.
+If you want to use a smaller number of processors you can substitute &quot;all&quot; with a desired number, e.g.
+<b> simflags=&quot;-P 4&quot;.</b> </p>
+<p>
+This examples demonstrates solutions to some of the particular 3D process
+and device issues when simulating a 3D image sensor cell.  The first issue
+with a number of designs is the
+<b> very high implantation energies </b> required to isolate the active region of the image sensor.
+</p>
+<p>
+If 3D Monte-Carlo Implantation is used to simulate these high energy implants,
+the simulation times can be excessive.  The solution is to simulate these
+implants as a single spot in Athena and then to extract the depth and lateral
+spreading of the implants using
+<b> deckbuild&apos;s extract statements. </b> This creates an accurate data file of the implant, which can then be imported
+into Victory cell using the
+<b> profile statement </b> and incorporated into the 3D structure when required using the implant
+statement.
+</p>
+<p>
+The device simulation is in three parts.  Firstly the threshold voltage
+of the two pass transistors is simulated.  Then a dark transient is simulated
+to find the dark current recovery time, which sets the low light sensitivity
+limit of the image sensor, ie the maximum useable light integration time.
+Finally a simulastion is done illuminating the device with a typical average
+light intensity of 0.01 Watts/cm2 with a standard solar AM 1.5 spectrum,
+which for this sesnor, would require an integration time of approximately
+0.0008 for a 50% exposure level.  The illumination intensity and exposure
+integration time can both be adjusted by changing these two variable
+quantities at the
+<b> set statement </b> lines, near the top of the inpu file for the final device simulation.
+</p>
+<p>
+The threshold voltage of the pass transistors is
+deliberately high to ensure that charge leakage in their off state is
+minimized.  Since the pass transisotrs have a common floating electrode
+without an ohmic contact, the threshold voltage is plotted using the
+electron concentration under the gates.  The electron concentrations are
+measwured using
+<b> probe </b> statemnts, which probe the silicon surface under the gates. In this example,
+the probe quantities have been called
+<b> &quot;cg_conc&quot; </b> and
+<b> &quot;ng_conc&quot;</b> .
+</p>
+<p>
+For the transient simulations, the output voltage of the cell can be monitored
+in tonyplot by plotting the probe quantity called
+<b> fd_potential</b> . Another interesting quantity also extracted using the
+probe statement is the electron concentration in the active image sensor
+region.  This image sensor electron concentration is called
+<b>&quot;cis_conc&quot; </b> in this example.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+  </div></body>
+</html>

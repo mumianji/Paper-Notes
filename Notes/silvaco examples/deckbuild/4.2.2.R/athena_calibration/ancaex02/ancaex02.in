@@ -1,0 +1,53 @@
+go athena
+set example=ancaex02
+#TITLE: OED calibration using theta.0
+# original
+#interst	silicon	/oxide theta.0=4.58e8 theta.E=2.36 dryo2
+
+line x loc = 0.0 
+line x loc = 0.25  spacing=0.25
+line y loc = 0     spacing=0.01
+line y loc = 1.50  spacing=0.05
+line y loc = 10.0   spacing=1.0
+              
+init silicon c.boron=1.0e14
+#
+#perform uniform boron implant
+implant boron dose=3e14 energy=70
+#
+structure outfile=$"example".str
+
+method two.dim compress
+
+init inf=$"example".str
+#First, use default
+set theta0=4.58e8
+interst	silicon	/oxide theta.0=$theta0  theta.E=2.36 dryo2
+diffuse time=30 temperature=1000 dry
+structure outfile=$"example"_$"theta0".str
+
+
+init inf=$"example".str
+set theta0=1.0e8
+interst	silicon	/oxide theta.0=$theta0  theta.E=2.36 dryo2
+diffuse time=30 temperature=1000 dry
+structure outfile=$"example"_$"theta0".str
+
+init inf=$"example".str
+set theta0=3.0e8
+interst	silicon	/oxide theta.0=$theta0  theta.E=2.36 dryo2
+diffuse time=30 temperature=1000 dry
+structure outfile=$"example"_$"theta0".str
+
+init inf=$"example".str
+set theta0=6.0e8
+interst	silicon	/oxide theta.0=$theta0  theta.E=2.36 dryo2
+diffuse time=30 temperature=1000 dry
+structure outfile=$"example"_$"theta0".str
+
+
+tonyplot -overlay $"example"_*.str -set $"example".set
+
+
+quit
+

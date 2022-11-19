@@ -1,0 +1,145 @@
+# (c) Silvaco Inc., 2018
+go atlas
+
+mesh width=300
+
+x.mesh l=-3.0   s=0.5
+x.mesh l=-0.5  s=0.1
+x.mesh l=0.5   s=0.1
+x.mesh l=3.0   s=0.5
+
+y.mesh l=1.0   s=0.1
+y.mesh l=1.9   s=0.01
+y.mesh l=2.02   s=0.0005
+y.mesh l=2.03   s=0.0005
+y.mesh l=2.04   s=0.0005
+y.mesh l=2.05   s=0.0005
+y.mesh l=2.06   s=0.0005
+y.mesh l=2.07   s=0.0005
+y.mesh l=3   s=0.1
+y.mesh l=5.0   s=0.5
+
+region num=1 material=SiO2
+
+region num=2 material=AlGaAs x.comp=0.3 \ 
+       x.min=-0.5 x.max=0.5 y.min=1.0 y.max=1.9
+
+region num=2 material=AlGaAs \
+       x.min=-3 x.max=3.0 y.min=1.9  y.max=2.02
+
+region num=3 material=GaAs name=well \
+       x.min=-3  x.max=3.0 y.min=2.02 y.max=2.03  
+
+region num=4 material=AlGaAs x.comp=0.5 \
+       x.min=-3  x.max=3.0 y.min=2.03 y.max=2.04
+       
+region num=5 material=GaAs name=well \
+       x.min=-3  x.max=3.0 y.min=2.04 y.max=2.05  
+
+region num=6 material=AlGaAs x.comp=0.5 \
+       x.min=-3  x.max=3.0 y.min=2.05 y.max=2.06       
+
+region num=7 material=GaAs  name=well \
+       x.min=-3  x.max=3.0 y.min=2.06 y.max=2.07  
+
+region num=8 material=AlGaAs x.comp=0.5 \
+       x.min=-3  x.max=3.0 y.min=2.07 y.max=3 
+              
+       
+region num=9 material=AlGaAs x.comp=0.5 \
+       x.min=-3  x.max=3.0 y.min=3 y.max=5     
+
+
+electrode name=anode top
+electrode name=cathode bottom
+
+doping     uniform reg=2  p.type conc=1.e18
+doping     uniform reg=8 n.type conc=1.e18
+doping     uniform reg=9 n.type conc=1.e18
+
+
+#
+# user defined dielectric constant
+# for anisotropic case, use EPS.XX, EPS.YY,EPS.ZZ, EPSIM.XX, EPSIM.YY, EPSIM.ZZ 
+#
+material reg=1     eps.iso=1    epsim.iso=0 
+material reg=2     eps.iso=10   epsim.iso=0 
+material reg=3     eps.iso=12   epsim.iso=0 
+material reg=4     eps.iso=10   epsim.iso=0 
+material reg=5     eps.iso=12   epsim.iso=0 
+material reg=6     eps.iso=10   epsim.iso=0 
+material reg=7     eps.iso=12   epsim.iso=0 
+material reg=8     eps.iso=10   epsim.iso=0 
+material reg=9     eps.iso=1    epsim.iso=0 
+#
+
+material material=AlGaAs  taun0=2.e-9  taup0=2.e-9  copt=1.5e-10 mun=2400.0 mup=800.0  align=0.6 
+material material=GaAs    taun0=10.e-9 taup0=10.e-9 copt=1.5e-10 mun=4600.0 mup=2500.0 
+
+models   fermi  srh optr auger
+models name=well qwell   zb.three spontaneous   gainmod=5
+
+output con.band val.band u.rad u.srh u.aug  flowlines las.loss las.refr
+
+method itlimit=40 
+
+
+
+laser  s.helm ^helm.tm lmodes  absorption fcarrier  nmodes=1 cavity_length=300 \
+toler=1.0e-2 itmax=60 maxch=10 e.init=1.42 e.final=1.5 gainmod=5 max.lmodes=20
+
+
+solve init 
+save outf=laserex08_init.str  spectrum=laserex08_spec_init.log 
+
+log outf=laserex08_IV.log
+
+solve prev
+
+solve v1=0.01
+solve v1=0.05
+solve v1=0.1
+
+
+solve   vstep=0.1  vfinal=1.0 name=anode  
+
+laser start
+solve prev  
+save outf=laserex08_1.str  spectrum=laserex08_spec_1.log 
+
+tonyplot laserex08_spec_1_modal.log -set laserex08_spec_1dens.set 
+tonyplot laserex08_spec_1_modal.log -set laserex08_spec_1gain.set 
+
+
+solve   vstep=0.05  vfinal=1.45 name=anode 
+
+solve  vstep=0.01 vfinal=1.5 name=anode
+save outf=laserex08_15.str  spectrum=laserex08_spec_15.log 
+
+tonyplot laserex08_15.str -set laserex08_15.set 
+tonyplot laserex08_spec_15_modal.log -set laserex08_spec_15dens.set 
+tonyplot laserex08_spec_15_modal.log -set laserex08_spec_15gain.set 
+
+solve  vstep=0.01 vfinal=1.55 name=anode
+
+solve  vstep=0.05 vfinal=2 name=anode  
+save outf=laserex08_2.str spectrum=laserex08_spec_2.log 
+
+
+solve  vstep=0.1 vfinal=3 name=anode  
+save outf=laserex08_3.str spectrum=laserex08_spec_3.log 
+
+tonyplot laserex08_IV.log -set laserex08_IV.set 
+
+
+log off
+
+
+quit
+
+
+
+
+
+
+

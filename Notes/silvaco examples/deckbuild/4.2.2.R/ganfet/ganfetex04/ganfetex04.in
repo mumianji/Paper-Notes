@@ -1,0 +1,16 @@
+# (c) Silvaco Inc., 2018
+#
+# ganfetex04.in
+#
+# This input deck is designed to reproduce the results from Joachim
+# Piprek's book.  The plot in Piprek's book is Figure 9.5.
+#
+# Piprek, J. "Semiconductor Optoelecronic Devices: Introduction to Physics
+# and Simulation", Academic Press, 2003.
+#
+go internal
+load infile=ganfetex04_aux.in
+sweep parameter=xc type=linear range="0,0.5,6" 
+save type=sdb outfile=ganfetex04.dat
+tonyplot ganfetex04.dat -set ganfetex04.set
+quit

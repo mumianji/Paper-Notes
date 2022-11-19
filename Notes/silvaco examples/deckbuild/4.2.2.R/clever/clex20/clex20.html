@@ -1,0 +1,59 @@
+<html>
+  <head>
+    <title>Simulating Micro-Loading Effects using Advanced Etching</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Simulating Micro-Loading Effects using Advanced Etching</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>CLEVER</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="clex20_plot0.png" width="640" alt="clex20_plot0" />
+      <p/>
+      <img src="clex20_plot1.png" width="640" alt="clex20_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<p>
+Micro-loading etching effects describe the phenomenon whereby the effective
+material etch rate depends on the hole size of the pattern masking layer.
+</p>
+<p>
+This can be simulated using the advanced etching module in Victory Process.
+Once the structure is created, it is loaded into Clever to simulate back end
+parasitics.
+</p>
+<p>
+The etch machine characteristics are described by the Fux, Topography and
+EtchDepoProperties statements.  Once the etch machine has been described, the
+wafer is loaded into this virtual etch machine and is etched for 4 minutes.
+The created trench structures are then filled with aluminum.
+</p>
+<p>
+For ease of observation of the micro-loading effects, a 2D cut line of the
+3D structure is created and plotted, where it can be clearly seen that the
+depth of each trench is dependent on the width of the trench.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

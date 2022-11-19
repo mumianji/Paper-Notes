@@ -1,0 +1,169 @@
+# (c) Silvaco Inc., 2018
+###########################################################################
+# The device van Mensfoort and Coehoorn model is
+#    * 100 nm (0.1 um) long
+#    * Nt = 8.51e26 m^-3 = 8.51e20 cm^-3
+#    * mu0 = 1e-10 m^2/Vs = 1e-6 cm^2/Vs
+#    * kappa = 3
+#    * sighat = 6
+#    * n1 = 4.25e26 m^-3 = 4.25e20 cm^-3: carrier concentration at the contact 
+#      (NB, this is basically Nt/2 so the work function is in the
+#       middle of the LUMO level, the nominal conduction band.)
+# I add
+#    * eg = 3
+# This gives NC = 5.59e30
+###########################################################################
+# Fundamental constants
+assign name=k n.value=1.3806488e-23
+assign name=q n.value=1.602176565e-19
+
+###########################################################################
+# sighat is the width of the Gaussian normalised to kT
+# normc is the carrier concentration normalised to the density of the Gaussian.
+# normf is the normalised electric field
+# tl is the lattice temperature
+set sighat=6
+set tl=300
+
+###########################################################################
+# Concentration of the Gaussian
+assign name=Nt n.value=8.51e20
+# average separation between sites
+assign name=a n.value=1e7/pow(${Nt},0.3333333333)
+# The width of the Gaussian is sig = sighat*k*T (in eV)
+assign name=sig n.value=${sighat}*${k}*${tl}/${q}
+
+###########################################################################
+assign name=eg n.value=3
+assign name=chi n.value=1
+assign name=kappa n.value=3
+
+###########################################################################
+assign name=mun0 n.value=1e-6
+assign name=mup0 n.value=1e-6
+
+###########################################################################
+# The contact work function is designed to give n=4.25e20
+# This is basically half of Nt so the Fermi level is the middle
+# of the Gaussian band
+assign name=wf n.value=${chi}
+
+###########################################################################
+set nstep=10
+
+go atlas
+
+# By making the width 1e12 um the xz area is 1cm^2
+# Therefore current and current density have the same value.
+mesh width=1e12
+
+x.mesh loc=0   spac=0.25
+x.mesh loc=1   spac=0.25
+y.mesh loc=0   spac=0.001
+y.mesh loc=0.1 spac=0.005
+
+region number=1 material=organic
+
+electrode name=anode top
+electrode name=cathode bottom
+
+material number=1 ntc.gauss=$Nt sigc.gauss=$sig eg300=${eg} \
+         permittivity=${kappa} affinity=${chi}
+
+contact name=anode workf=${wf}
+contact name=cathode workf=${wf}
+
+###########################################################################
+# We can set a.pasv/sig.pasv independently, but if we have a gaussian
+# band structure the default values are from that.
+mobility mup=${mup0} mun=${mun0} pasveer.n ccutoff.n=0.5 fcutoff.n=2
+
+###########################################################################
+models print
+method itlimit=250 cx.tol=1e-10 weak=1
+
+###########################################################################
+solve init
+solve vanode=0
+save outfile=organicex05_0.str
+solve vanode=0.01
+log outfile=organicex05_0.log
+set v1=0.01
+set v2=0.5
+set s1=exp(log($v2/$v1) / $nstep)
+solve vstep=$s1 vmult vfinal=$v2 name=anode
+save outfile=organicex05_1.str
+set v3=2
+set s2=exp(log($v3/$v2) / $nstep)
+solve vstep=$s2 vmult vfinal=$v3 name=anode
+save outfile=organicex05_2.str
+set v4=8
+set s3=exp(log($v4/$v3) / $nstep)
+solve vstep=$s3 vmult vfinal=$v4 name=anode
+save outfile=organicex05_3.str
+set v5=20
+set s4=exp(log($v5/$v4) / $nstep)
+solve vstep=$s4 vmult vfinal=$v5 name=anode
+
+
+###########################################################################
+# Repeat the previous simulation, but with constant mobility
+###########################################################################
+
+go atlas
+
+###########################################################################
+# By making the width 1e8 um the xz area is 1cm^2
+# Therefore current and current density have the same value.
+mesh width=1e12
+x.mesh loc=0   spac=0.25
+x.mesh loc=1   spac=0.25
+y.mesh loc=0   spac=0.001
+y.mesh loc=0.1 spac=0.005
+region number=1 material=organic
+electrode name=anode top
+electrode name=cathode bottom
+
+material number=1 ntc.gauss=$Nt sigc.gauss=$sig eg300=${eg} \
+         permittivity=${kappa} affinity=${chi}
+
+contact name=anode workf=${wf}
+contact name=cathode workf=${wf}
+
+###########################################################################
+# We can set a.pasv/sig.pasv independently, but if we have a gaussian
+# band structure the default values are from that.
+mobility mup=${mup0} mun=${mun0}
+
+###########################################################################
+models print
+method itlimit=250 cx.tol=1e-10 weak=1
+
+###########################################################################
+solve init
+solve vanode=0
+save outfile=va00_mu0.str
+solve vanode=0.01
+log outfile=organicex05_1.log
+set v1=0.01
+set v2=0.5
+set s1=exp(log($v2/$v1) / $nstep)
+solve vstep=$s1 vmult vfinal=$v2 name=anode
+save outfile=va05_mu0.str
+set v3=2
+set s2=exp(log($v3/$v2) / $nstep)
+solve vstep=$s2 vmult vfinal=$v3 name=anode
+save outfile=va20_mu0.str
+set v4=8
+set s3=exp(log($v4/$v3) / $nstep)
+solve vstep=$s3 vmult vfinal=$v4 name=anode
+save outfile=va80_mu0.str
+set v5=20
+set s4=exp(log($v5/$v4) / $nstep)
+solve vstep=$s4 vmult vfinal=$v5 name=anode
+
+##########################################################################
+tonyplot -overlay organicex05_0.str organicex05_1.str organicex05_2.str organicex05_3.str -set organicex05_0.set
+tonyplot -overlay organicex05_0.log organicex05_1.log -set organicex05_1.set
+##########################################################################
+

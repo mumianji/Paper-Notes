@@ -1,0 +1,15 @@
+<!DOCTYPE SetFile-2D>
+<setfile version="1" >
+ <properties key_opaque="false" mark_frequency="0" mark_overlay="0" graph_width_0="2" graph_width_1="1" graph_width_2="1" graph_width_3="1" graph_width_4="2" graph_width_5="1" sequence_size="1" sequence_width="0" log_zero="0" sequence_mark_0="0" sequence_mark_1="1" sequence_mark_2="2" sequence_mark_3="3" sequence_mark_4="4" sequence_mark_5="5" />
+ <functions impurity_1_name="" impurity_1_units="" impurity_2_name="" impurity_2_units="" graph_1_name="" graph_1_units="" graph_2_name="" graph_2_units="" />
+ <xygraph show_points="true" show_lines="true" xyg_type="0" xyg_convert="false" >
+  <cartesian xyg_yaxis_scale="linear" xyg_xaxis_lin="Depth" xyg_yaxis="none" xyg_yaxis_lin="Potential" xyg_group="(unknown electricals)" xyg_cie="false" />
+ </xygraph>
+ <key cont_1_at="3" cont_2_at="1" cont_3_at="6" elec_at="6" vectors_at="6" overlay_at="2" regions_at="4" />
+ <annotation title_main="Potential in the N- buried region at Y=0.8um" title_sub=" " footer_right="none" footer_left="none" show_xaxis="true" show_yaxis="true" show_grid="false" show_label_xaxis="true" show_label_yaxis="true" range_xaxis="auto" range_yaxis="auto" label_xaxis="Depth ()" label_yaxis="Potential ()" />
+ <plot zoom_from_x="0" zoom_from_y="0" zoom_scale_x="1" zoom_scale_y="1" label_overlay="Before_light" label_overlay="After light" label_overlay="after electrons transfert" >
+  <label label_text="DRAIN" label_from_x="8.80232" label_from_y="-0.197346" label_color="#000000" label_scale="2" label_align="0" label_to_x="8.31571" label_to_y="-0.300486" />
+  <label label_text="N- BURIED REGION" label_from_x="4.76746" label_from_y="-0.155728" label_color="#000000" label_scale="2" label_align="7" />
+  <label label_text="STI" label_from_x="1.48281" label_from_y="-0.273344" label_color="#000000" label_scale="2" label_align="3" label_to_x="1.64501" label_to_y="-0.448864" />
+ </plot>
+</setfile>

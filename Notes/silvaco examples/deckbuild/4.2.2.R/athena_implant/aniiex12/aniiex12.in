@@ -1,0 +1,47 @@
+go athena
+
+#TITLE: Angled Monte Carlo Implant into a Trench
+#
+line x loc=-1    spac=0.25 
+line x loc=-0.8  spac=0.04
+line x loc=-0.5  spac=0.04
+line x loc=-0.4  spac=0.1
+line x loc=0.00  spac=0.5 
+#
+line y loc=0.00  spac=0.04
+line y loc=0.20  spac=0.04
+line y loc=0.30  spac=0.1
+line y loc=4.50  spac=0.5
+line y loc=5.00  spac=0.04
+line y loc=5.20  spac=0.04
+line y loc=6.00  spac=0.5 
+init c.boron=1.0e16 orientation=100
+#
+# Etch half of the trench
+etch silicon start x=-0.50 y=0.00
+etch cont x=-0.50 y=4.50
+etch cont x=-0.48 y=4.90
+etch cont x=-0.45 y=4.93
+etch cont x=0.00 y=5.00
+etch cont x=1 y=5.00
+etch done x=1 y=0.00
+#
+#Perform a series of relax operations to loosen the mesh
+relax y.min=.5   x.max=-.8 
+relax y.min=5.15 
+relax y.min=5.15 
+#
+#mirror to form complete trench
+structure mirror right
+#
+#Perform Monte Carlo implant  
+implant boron dose=1e16 ener=50 monte n.ion=10000 amorph tilt=15 
+#
+# Diffuse the implant slightly
+diffuse time=10 temp=900
+#
+structure outfile=aniiex12.str
+tonyplot aniiex12.str -set aniiex12.set
+#
+
+quit

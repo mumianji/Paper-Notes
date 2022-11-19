@@ -1,0 +1,89 @@
+<html>
+  <head>
+    <title>Temperature Properties of Amorphous In-Ga-Zn-O Thin-Film Transistors with a new Mobility Model</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Temperature Properties of Amorphous In-Ga-Zn-O Thin-Film Transistors with a new Mobility Model</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Atlas</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="tftex21_plot0.png" width="640" alt="tftex21_plot0" />
+      <p/>
+      <img src="tftex21_plot1.png" width="640" alt="tftex21_plot1" />
+      <p/>
+      <img src="tftex21_plot2.png" width="640" alt="tftex21_plot2" />
+      <p/>
+      <img src="tftex21_plot3.png" width="640" alt="tftex21_plot3" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<br/>
+<p>
+In this example, we demonstrate the temperature properties of amorphous IGZO TFT.
+We reproduced the measured transfer curve as well as mobility with temperature through newly developed IGZO.TOKYO model.
+For detailed informatioin, please refer to simulation standard article on www.silvaco.com.
+<br/>
+</p>
+<b> Atlas Structure</b> <p>
+The IGZO thickness is 40nm and channel length is 40um.
+The mesh structure is generated with x.mesh(x.m) and y.mesh(y.m) statement.
+Each generated mesh is defined with material usimg region statement.
+The electrode and doping statement were used to define metal electrode and channel doping.
+For intrinsic IGZO n-type doping, we assumed uniform 8e15/cm^3 concentration.
+<br/>
+</p>
+<b> Models</b> <p>
+We used fixed trap states for the IGZO sub-gate states with temperature. It is validated from experimental data, in which the extracted DOS is not significantly changed during temperature change.
+The IGZO band gap is 3.1 eV and constant band edge mobility is assumed to be 14.
+During transfer curve simulation, threshold voltage is defined at drain current of 1e-10 Ampere and
+subthreshold voltage and linear mobility are extracted.
+</p>
+<p>
+To enable new IGZO.TOKYO model, use mobility statement and model flag name &quot;IGZO.TOKYO&quot;.
+</p>
+<ul>
+  <li>
+ mobility IGZO.TOKYO mun=$mue0 mup=0.01 tmun=0 tmup=0 \
+  </li>
+  <li>
+		igzo.gamma0=$gm0 igzo.tgamma=$tgm igzo.ncrit=$necr
+  </li>
+</ul>
+<p>
+Other related parameters are defined with set command in the tftex21_aux.in file.
+<br/>
+</p>
+<b> Simulation Results</b> <p>
+tftex21.in is simple doe file which select different temperature from 253K to 393K.
+and it loads tftex21_aux.in file which simulate the temperature effect on IGZO TFT.
+After completion, it will plot the mobility v.s temperature curve, transfer curve v.s temperature as well as overlaying with experimental data, and threshold voltage shift with temperature which is automatically saved in tftex21_temperature.dat file during simulation.
+</p>
+<p>
+To load and run this example, select the
+<b> Load example </b> button in DeckBuild. This will copy the input file and any support
+files to your current working directory. Select the
+<b> run </b> button to execute the example.
+</p>
+  </div></body>
+</html>

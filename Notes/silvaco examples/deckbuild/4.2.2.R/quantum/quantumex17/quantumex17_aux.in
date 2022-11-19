@@ -1,0 +1,59 @@
+go atlas
+set doping=2.0e19
+
+mesh space.mult=1.0 width=1.0e8
+ 
+x.mesh loc=-0.5 spac=0.2  
+x.mesh loc=0.5 spac=0.2
+
+y.mesh loc=-1.0 spac=0.1
+y.mesh loc=-0.2 spac=0.01
+y.mesh loc=-0.02 spac=0.005
+y.mesh loc=0 spac=0.0005
+y.mesh loc=0.02 spac=0.005
+y.mesh loc=0.2 spac=0.01
+y.mesh loc=1.0 spac=0.1
+
+ 
+# Regions  
+region num=1 material=Germanium y.min=-1.0 y.max=0  
+region num=2 material=Germanium y.min=0 y.max=1.0 
+ 
+# Electrodes 
+electrode name=anode top
+electrode name=cathode bottom 
+
+# Set up a qtregion to cover the junction (between y=-0.2 microns and
+# y =0.02 microns). There are 6 tunnelling slices which are parallel
+# and regularly spaced, with 151 points each on which to do the tunnel
+# current calculation. 
+
+qtregion x1=-0.5 y1=-0.02 x2=0.5 y2=-0.02 x3=0.5 y3=0.02 x4=-0.5 y4=0.02 number=1 pts.normal=6 pts.tunnel=151
+# Doping 
+doping uniform region=1 p.type conc=$doping
+doping uniform region=2 n.type conc=$doping
+ 
+# Tunnel current depends strongly on tunnel effective masses
+# We also place lower bound on intrinsic carrier conc.
+material material=germanium me.tunnel=0.05 mh.tunnel=0.05 ni.min=1.0
+
+# Models 
+
+model fermi srh bgn consrh conmob bbt.nonlocal bbt.nlderivs temp=4.2
+
+output con.band val.band u.rad u.srh recomb u.aug flowlines
+method newton trap itlimit=50
+# Solving 
+solve init 
+solve prev
+
+log outf=quantumex17_${doping}.log
+
+solve vstep=0.003 vfinal=0.15 name=anode
+# Extract peak current value, and Voltage at which it occurs
+extract name="peakcurrent" max(curve(abs(v."anode"),abs(i."anode")))
+extract name="peakposition" x.val from curve(abs(v."anode"),abs(i."anode")) where y.val=max(abs(i."anode"))
+log off
+
+
+quit

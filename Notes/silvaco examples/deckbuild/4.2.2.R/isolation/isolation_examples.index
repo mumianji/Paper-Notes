@@ -1,0 +1,207 @@
+
+{section} ISOLATION : Isolation Applications Examples
+
+
+{subsection} isolationex01.in : Local Oxidation Isolation Punchthrough
+
+Requires: SSuprem 4/DevEdit/S-Pisces
+{newline}
+Minimum Versions: Athena 5.22.3.R, Atlas 5.26.1.R
+
+This example simulates punchthrough between two n+ areas separated by
+an oxide isolation structure. The isolation structure is a local
+oxidation using Sealed Interface Local Oxidation (SILO) combined with
+a p-type field stop implant.
+
+This example demonstrates the following features:
+
+{bullet} Processing of a local oxidation structure
+{newline}
+{bullet} Remeshing at the process to device simulation interface
+{newline}
+{bullet} Remeshing within device simulation
+{newline}
+{bullet} Ramping iv curves to a compliance limit
+
+
+This example starts with process simulation using Athena, remeshes
+using DEVEDIT, and interfaces to Atlas. Atlas ramps the voltage up to a predefined 
+drain current value,
+a further remesh in DEVEDIT is performed, and Atlas ramps to the
+punchthrough target current.
+
+For details on local oxidation (bird's beak) process simulations, see the
+ATHENA_SSUPREM4 examples section.
+
+The electrodes are placed at the end of the process flow and then
+subsequently named with
+{bold} electrode 
+statements. Only the 
+{bold} x 
+coordinate needs to be specified in this case as the electrodes are on the surface of the structure. Should they be buried, both 
+{bold} x 
+and
+{bold} y 
+coordinates need to be specified. Both polysilicon and metal regions are treated as
+possible electrodes.
+
+The
+{bold} electrode name=substrate backside 
+statement will automatically place an electrode on the bottom of 
+the structure. This is the best and most efficient way of approximating a well contact.
+
+
+After the process simulation, the structure is remeshed with DEVEDIT
+with the command:
+{bold} go devedit 
+
+At this point the solution only contains solution quantities from the
+process simulator, so that only impurity values are available as 
+remeshing criteria. These are selected with the commands:
+
+{newline}
+{bold} imp.refine imp="Arsenic" sensitivity=0.5 
+{newline}
+{bold} imp.refine imp="Boron" sensitivity=0.4 
+{newline}
+{bold} imp.refine imp="Phosphorus" sensitivity=0.5 
+
+Boron is weighted so that the mesh will be more sensitive to boron
+concentration gradients. In other words, the smaller the value for
+{bold} sensitivity, 
+the more sensitive the mesh will be to concentration gradients and the
+denser the mesh will be.
+
+In this example,
+{bold} constr.mesh 
+commands control the maximum allowable angle within a
+triangle, specific to a material type. For example:
+{newline}
+{bold} constr.mesh type=Insulator default max.angle=178 
+{newline}
+states that very obtuse triangles are allowed in all insulator (oxide)
+regions.
+
+This is acceptable, as obtuse triangles are essentially only a problem
+in semiconductor regions when solving carrier transport equations.
+The reason for doing this is because by lowering the criteria for
+maintaining zero obtuse triangles, the more relaxed the mesh can be
+and  the simulation will run faster.
+
+
+Next the structure is passed into the device simulator Atlas for 
+biasing and design parameter extraction. This is accomplished with
+the command 
+{bold} go atlas. 
+
+As the device is simply punching though, the current is governed almost 
+completely by the potential barrier and drain induced barrier lowering
+effects. Thus a special mobility model is not selected to speed up the calculation.
+
+An interface charge of 1e11 is selected arbitrarily, and may be adjusted
+as a primary calibration parameter to match experimental results.
+
+
+A sequence of 
+{bold} solve 
+commands ramps the drain contact up to 30V using a current
+compliance of 0.001uA. The simulation stops when either of these is
+exceeded. In the present example, this will be at
+about 14V drain voltage. It is assumed that the breakdown will not
+occur during this ramp. 
+For the last bias point, a single structure file,
+containing both the mesh and the solution, is saved.
+
+
+After the previous biasing of about 14 volts, the structure is remeshed
+again using 
+DEVEDIT
+this time as a function of potential gradient, doping
+gradient and electron concentration gradient resulting in a more accurate 
+mesh. The current compliance value has been chosen such that the 
+resulting drain voltage has a value that will always be lower than
+the punchthrough voltage, but is high enough to offer a closer solution
+to the final IV area of interest.
+
+Another log file is opened for the final punchthrough IV curve to be held.
+The solution is reloaded with the new mesh created by DEVEDIT
+and the drain bias is increased up to 30 volts or 0.1um/W/L, whichever is reached
+sooner.
+
+Finally, a design parameter relating to the punchthrough voltage is extracted.
+
+The command
+{newline}
+{bold}extract name="n_isolation_vpt" x.val from curve(abs(v."drain"),abs(i."drain")) where y.val = 1.0e-7
+{newline}
+should be allowed to run over two lines. Do not use a line continuation character
+in any 
+{bold} extract 
+statement.  It defines the measure of punchthrough as that drain voltage at which the drain current is 0.1uA/um.
+
+
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+
+
+
+{subsection} isolationex02.in : Trench Isolation Punchthrough
+
+
+Requires: SSuprem 4/Elite/S-Pisces
+{newline}
+Minimum Versions: Athena 5.22.3.R, Atlas 5.26.1.R
+
+This examples demonstrates punchthrough between unrelated n+ regions
+separated by trench isolation. It shows:
+
+{bullet} Trench formation by ELITE physical etch models
+{newline}
+{bullet} Trench doping using SSUPREM4 implant models
+{newline}
+{bullet} Trench fill by ELITE physical deposition models
+{newline}
+{bullet} Punchthrough test across the trench using Atlas
+
+The example file consists of two parts. The first uses Athena to
+construct the geometry and doping of two n+ areas separated by trench
+isolation. The second uses Atlas to simulate punchthrough between these
+two regions. 
+
+Details of ELITE and SSUPREM4 syntax for trench formation and refill
+can be found in the appropriate Athena example sections.
+
+The trench is formed by Reactive Ion Etching (RIE), with different
+isotropic and anisotropic etch rates for each material present.  A
+field implant is performed directly into the trench.
+
+The device is interfaced automatically into Atlas. The two carrier mode is
+selected along with impact ionisation. The contact named drain is
+ramped to 20 volts under the control of a current compliance limit of 3e-12 A/um.
+
+The final drain current contours are plotted at the end of the
+simulation, where the current density can be seen to avoid the field
+implant doping peak.
+
+A design parameter is measured at the end of the Atlas simulation using the
+{bold} extract 
+statement. The parameter is defined as the voltage required on the
+drain to get 2e-12 A/um of drain current.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+

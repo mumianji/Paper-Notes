@@ -1,0 +1,64 @@
+<html>
+  <head>
+    <title>AC Response</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>AC Response</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>S-Pisces/Luminous</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="optoex04_plot0.png" width="640" alt="optoex04_plot0" />
+      <p/>
+      <img src="optoex04_plot1.png" width="640" alt="optoex04_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This input file analyzes the small signal response of the device
+to a small signal optical source.
+</p>
+<p>
+The first four sections of the input file are identical to the
+corresponding sections in the input file for the DC example
+described previously.
+</p>
+<p>
+The fifth section of the file specifies that a DC solution at
+a source intensity of 5 W/cm^2 is obtained.  After the DC
+solution, the small signal response of the device to an small
+signal optical source of 1 mW/cm^2 is extracted for frequencies
+ranging from 100KHz to 100GHz.  The full AC terminal characteristics
+are saved in the log file.
+</p>
+<p>
+When the results are viewed in TonyPlot, they show that the device has a
+cutoff frequency of about 1 GHz.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

@@ -1,0 +1,51 @@
+go quest 
+
+# Techno FILE
+
+layermapping layer.name = "Lay2" gds.Number = 2 gds.Datatype = 0
+layermapping layer.name = "Lay3" gds.Number = 3 gds.Datatype = 0
+layermapping layer.name = "Lay3Dt1" gds.Number = 3 gds.Datatype = 1 isText
+
+attach electrode.layer = "Lay3" metal.layer = "Lay2"
+
+connection layer = "Lay3" con.layer1 = "Lay3Dt1"
+
+
+# PROCESS
+
+material name = "aluminum" cond = 3.76676e+07 permittivity = 1 permeability = 1 losstangent = 0
+material name = "oxide" cond =  0 permittivity = 3.9 permeability = 1 losstangent = 0
+material name = "silicon" cond = 100 permittivity = 11.8 permeability = 1 losstangent = 0
+material name = "copper" cond = 5.88235e+07 permittivity = 1 permeability = 1 losstangent = 0
+material name = "air" cond =  0 permittivity = 1 permeability = 1 losstangent = 0
+material name = "GaAs" cond = 0.008 permittivity = 12.9 permeability = 1 losstangent = 0.065
+material name = "polyimide" cond =  0 permittivity = 3.5 permeability = 1 losstangent = 0
+
+
+deposit type = "substrate" layer.name = "substrate" thick = 500 matName = "silicon"
+deposit type = "dielectric" layer.name = "ild" thick = 10 matName = "oxide"
+deposit type = "metal" layer.name = "Lay2" thick = 1 matName = "aluminum" anglex = 0 angley = 0
+deposit type = "dielectric" layer.name = "passiv" thick = 20 matName = "oxide"
+deposit type = "dielectric" layer.name = "gas" thick = 500 matName = "air"
+
+
+# SOLVER
+
+Init simulation.type = "PORT" \
+	 impedance.residual = 0.01 impedance.iteration = 50	\
+	 capacitance.residual = 0.01 capacitance.iteration = 50 \
+	 domainbase = "Grounded"	Z0 = 50	add.resistance = 0	\
+	 dx = 1 dy = 1 dz = 1	\
+	 computation.domain="Automatic" 
+
+electrodes ports = "IN", "subs_ground", "OUT", "subs_ground" 
+Frequency type="Range" range=100,100000 nsteps=30 range.variation="Qua" 
+
+
+
+# OUTPUT
+
+save	database.path = "questex11_db" \
+		 spice.file. = "questex11" tony.file= "questex11" \
+		 sparameter.file = "questex11" \
+                 3D.file = "questex11"   

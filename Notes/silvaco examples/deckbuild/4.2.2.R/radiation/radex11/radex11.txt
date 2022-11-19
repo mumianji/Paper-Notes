@@ -1,0 +1,43 @@
+
+{subsection} radex11.in : Single Event gate Rupture (SEGR) in a Power MOSFET
+
+Requires: VictoryProcess/Devedit/VictoryDevice/SEE
+{newline}
+Minimum Versions: VictoryProcess 7.14.3.R, Devedit 2.8.26.R, VictoryDevice 1.10.2.R
+
+This examples demonstrates Single Event gate Rupture (SEGR) in a Power MOSFET
+
+The structure of the 3D Power MOSFET in this example is conveniently 
+cylindrically symmetric allowing the 3D structure to be simulated accurately
+using only two dimensions with cylindrical co-ordinates.  For the simulation of
+single events, only a central and vertical strike is a valid candidate for 
+correctly simulating 3D effects using this 2 dimensional circular symetry 
+method.  This method is invoked using the
+{bold} cylindrical
+parameter, on the mesh statement.
+
+After the 2 dimensional VictoryProcess simulation of the power MOSFET, the 
+structure was exported to
+{bold} Devedit 
+to create a mesh suitable for device simulation.
+
+In the device simulator, the power MOSFET is biased to a condition where the
+drain voltage is approximately twice the gate voltage, which is known to 
+make such a device more susceptible to gate rupture after a single event.
+
+A single event, with an LET value of 37.2 MeV-cm2/mg corresponding to a bromine
+ion, was allowed to strike the power MOSFET and the evolution of the gate oxide
+electric field was monitored using the
+{bold} probe
+statement.  It is observed that the gate oxide electric field suffered a 3 fold
+increase, just after the strike, taking it close to the bulk dielectric 
+breakdown field strength and therefore vulnerable to an irreversible di-
+electric breakdown event.  The gate oxide Fowler Nordheim current was also
+monitored and exceeded one tenth of a nano Amp.
+
+To load and run this example, select the
+{bold} Load example 
+button in DeckBuild. This will copy the input file and any support
+files to your current working directory. Select the
+{bold} run 
+button to execute the example.

@@ -1,0 +1,121 @@
+<html>
+  <head>
+    <title>Id/Vgs and Threshold Voltage Extraction</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Id/Vgs and Threshold Voltage Extraction</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>SSuprem 4/S-Pisces</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R, Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="mos1ex08_plot0.png" width="640" alt="mos1ex08_plot0" />
+      <p/>
+      <img src="mos1ex08_plot1.png" width="640" alt="mos1ex08_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This is a basic MOS Athena to Atlas interface example simulating an Id/Vgs curve
+and extracting threshold voltage and other SPICE parameters.  No
+advanced features are used in this example so as to demonstrate simple
+functionality. This example demonstrates:
+</p>
+<ul>
+  <li>
+ Process simulation of a MOS transistor in Athena
+<br/>
+  </li>
+  <li>
+ Process parameter extraction (eg. oxide thicknesses)
+<br/>
+  </li>
+  <li>
+ Autointerface between Athena and Atlas
+<br/>
+  </li>
+  <li>
+ Simple Id/Vgs curve generation with Vds=-0.1V
+<br/>
+  </li>
+  <li>
+ IV Curve parameter extraction for Vt, Beta and Theta
+  </li>
+</ul>
+<p>
+The process simulation, process parameter extraction and electrode
+definition for this example are exactly as described in the first
+example in this section.
+</p>
+<p>
+The unique feature of this example is the IV data simulated and the
+extraction syntax used. The
+<b> model, interface </b> and
+<b> contact</b> statements in
+Atlas are also as in the previous example.
+</p>
+<p>
+The sequence of SOLVE statements is set to ramp the gate bias with the
+drain voltage at -0.1V. Solutions are obtained at -0.25V intervals up to
+-3.0V. All terminal characteristics are saved to the file mos1ex02_1.log
+as specified in the LOG statement.
+</p>
+<p>
+The
+<b> extract </b> statement at the end of the file are used to measure the threshold
+voltage and other SPICE parameters. The results from the extract
+statements are printed in the run-time output, saved to a file called
+results.final, and optionally used in the optimizer or VWF automation
+tools. The syntax used in these statements is freely composed of
+operators such as maximum value (max) and simulation results such as
+drain current (i.&quot;drain&quot;). One operator of particular use in PMOS device extraction is
+<b> abs()</b> . This takes the absolute value of a variable and can be used to
+make all PMOS and NMOS extractions equivalent.
+</p>
+<p>
+The
+<b> name </b> parameter specifies a user-defined label. The routines are not
+hard-coded to these names. Thus the first extraction statement reads:
+extract the value called pvt found by taking the x intercept of the
+maximum slope to the curve of drain voltage vs. drain current and
+subtracting half the drain voltage. This is just one definition of
+threshold voltage. Current search methods are also possible and are
+described under the DIBL example later in this section. The VWF
+interactive tools manual has details of the EXTRACT syntax.
+</p>
+<p>
+The second extract statement measures the gain (or Beta). This is
+defined as the value of the steepest slope to the Id/Vgs curve divided
+by the drain voltage. The final extraction is for the SPICE level 3
+mobility roll-off parameter (or Theta). This syntax shows the use of
+the syntax:
+<b> $&quot;pvt&quot; </b> and
+<b> $&quot;pbeta&quot;</b> . This tells DeckBuild to use the previously extracted values of
+threshold and beta in the equation.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

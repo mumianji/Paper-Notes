@@ -1,0 +1,278 @@
+# (c) Silvaco Inc., 2018
+Title Luttinger Kohn Model for Band Structure and Optical Response of Quantum Well Structures 
+#
+# INTRODUCTION TO THE SIMULATION
+#
+# In this example we will demonstrate the use of Luttinger-Kohn k.p model 
+# to calculate the band structure of the active region of a single quantum well
+# laser diode. The structure consists of an active layer with 8 nm GaAs quantum 
+# well with 30 nm barriers of Al(0.15)GaAs(0.85) on each side. The active layer
+# is intrinsic and is surrounded by two n-type spacer layers of wider band gap
+# Al(0.3)GaAs(0.7) with a concentration of 10^16 /cm^3. The top of the resulting 
+# device is an n-type contact layer and the bottom is a p-type layer both 
+# consisting of Al(0.3)GaAs(0.7) and carrier concentration of 10^19 /cm^3.
+# 
+# We perform two sets of calculations. In the first, we use the Luttinger Kohn
+# model to calculate the optical response of the active layer. The optical 
+# response is coupled to the drift diffusion equations through radiative 
+# recombination mechanism. We then repeat this calculation using the 
+# effective mass approximation applied to the same Luttinger Kohn model.
+#
+# After the calculation completes, plots of band structure, optical gain, 
+# density of states, band character, and velocity matrix elements compare each
+# of these quantities from the two models. 
+#
+# The main outcome to notice in the results is the striking difference in the
+# bands, and the density of states between the two models, with the Luttinger
+# Kohn model showing reversal of band curvature of the top Light Hole band, and
+# large non-step like density of states compared to the effective mass model. 
+#
+# The material and geometry in this example are such that the total quantum densities
+# both model are similar. The electrical conditions are thus similar in the gain 
+# regime. The differences in optical gain then arise mainly from the distribution
+# of this density among the valence bands, which in turn is controlled by the
+# density of states in these bands.
+#
+# The calculation also makes use of the following modeling options: 
+#
+# 1. Automatic adaptive integration in momentum space to converge the density of 
+#    states for non-parabolic bands. This would show visibly in the density of
+#    of k-points in the resulting plots with more points placed where the bands
+#    curve away from being parabolic the most.
+# 2. Finite element (FEM) bases to calculate spatial Hamiltonian
+# 3. Full matching of wavefunctions at all FEM cell boundaries
+#
+# These are important modeling options that you should vary to select the
+# numerical approach to a particluar problem.  You can observe the effects of 
+# each of these options can be observed by turning off the corresponding logical 
+# flags.
+#
+# BRIEF THEORY BEHIND THE MODEL
+#
+# The Luttinger-Kohn model describes the coupled Heavy Hole (HH) and 
+# Light Hole (LH) valence states near the center of the Brillouin zone. The 
+# bulk Hamiltonian for the four states can be diagonalized into 2x2 blocks, 
+# which preserves the HH and LH character of the states (value of the angular 
+# momentum in confinement direction). The block diagonalized Hamiltonian 
+# produces identical energy bands for confinement potentials with reflection 
+# symmetry. This is generally a good approximation and its violation for
+# asymmetric potential results in a small spin splitting, called the 
+# structure induced asymmetry (SIA), in the hole bands. 
+# SIA splitting is known to be small for GaAs/AlGAs structures and we 
+# thus ignore it here. The SIA can be explored with models (also available 
+# in ATLAS) that include all spin states in the valence manifold.
+#
+# The optical transitions that we consider are from the HH and LH subbands to 
+# the subbands of the lowest conduction  band. 
+#
+# The results of this section can be compared with those in [1]. Note that 
+# differences would exist with respect to the highly idealized calculations 
+# shown in the textbook for an isolated quantum well/barrier system.
+#
+# REFERENCES:
+# 1. Joachim Piprek, "Semiconductor Optoelectronic Devices" (2003)
+# Academic Press, San Diego.
+#
+# SECTION 1: Mesh Specification
+#
+go atlas
+mesh cylindrical
+x.mesh l= 0 s=1
+x.mesh l= 2 s=1
+y.mesh l=-1 s=0.1
+y.mesh l=-1     s=0.1
+y.mesh l=-0.100 s=0.01
+y.mesh l=-0.020 s=0.0005
+y.mesh l= 0.010 s=0.0005
+y.mesh l= 0.018 s=0.0005
+y.mesh l= 0.048 s=0.0005
+y.mesh l= 0.148 s=0.0005
+y.mesh l= 1.088 s=0.1
+#
+# SECTION 2: Structure Specification
+#
+region num=1 name=topcont material=AlGaAs y.max=-0.1   x.comp=0.3
+region num=2 name=spacer1 material=AlGaAs y.min=-0.1   y.max=-0.02 x.comp=0.3
+region num=3 name=barr    material=AlGaAs y.min=-0.020 y.max=0.010 x.comp=0.15
+region num=4 name=well    material=GaAs   y.min= 0.010 y.max=0.018 
+region num=5 name=barr    material=AlGaAs y.min= 0.018 y.max=0.048 x.comp=0.15
+region num=6 name=spacer2 material=AlGaAs y.min=0.048  y.max=0.148 x.comp=0.3
+region num=7 name=botcont material=AlGaAs y.min=0.148  x.comp=0.3
+#
+electrode num=1 name=anode top
+electrode num=2 name=cathode   bottom
+#
+doping name=topcont  uniform n.type conc=1e19
+doping name=spacer1  uniform n.type conc=1e16
+doping name=spacer2  uniform n.type conc=1e16
+doping name=botcont  uniform p.type conc=1e19
+#
+# SECTION 3: Material specification
+#
+materials material=GaAs   affinity=4.07 eg300=1.42 
+materials material=GaAs   lutt1=6.98 lutt2=2.06 lutt3=2.93
+#
+# SECTION 4: Model specification
+#
+models fermi temperature=300
+#
+# We turn on the k.p models for the single GaAs well and the AlGaAs barriers
+# immediately to its left and right ( see Section 2 above).
+models name=well kp.cv2 qwell spont ^optr 
+models name=barr kp.cv2 qwell ^spont ^optr 
+#
+# We use Hermite polynomials for the Finite Element expansion of 
+# eigenfunctions. Default is KP.FEM.LAGRANGE
+#
+# To save computation time, we turn off explicit matching of wavefunction
+# derivatives at each cell boundary. The wavefunction continuity is always
+# imposed in the FEM construction. The error in ignoring the derivative 
+# matching is minute unless change in band parameters across well/barrier
+# boundary is large. For GaAs/AlGaAs systems, the correction is small. But
+# for InP/InAsP systems, it is large enough to warrant setting 
+# KP.FEM.INTERFACE = true. 
+#
+models kp.fem.hermite kp.fem.interface ^kp.parabolic
+#
+# We take the system to be uniform in the plane so only 1 slice is used
+# in x direction for the quantum calculation
+#
+models well.nx=1 
+#
+# Here we specify the geometry for the momentum space. KP.KMAX is the maximum
+# value of wavevector measured from the Brillouin zone center (Gamma point).
+# This value should generally be smaller than about 1/4 of the distance from
+# Gamma to zone edge in the case of full 8-band model in order to remain 
+# within the validity of k.p approximations. Here we are using even fewer
+# bands and we use KP.KMAX = 1.0 /nm which is roughly 0.17 of the distance
+# to the zone edge. The carrier densities limit the model to even smaller
+# effective area in the Brillouin zone for positive gain.
+#
+# We set the initial number of k-points to 8 and then let ATLAS refine the
+# 1D grid adaptively to converge the DOS to within a specified tolerance
+# KP.DOSTOL. KP.SOLVERTOL is the tolerance for the Arpack solver used to
+# solve for the desired eigenstates from the full Hamiltonian.
+#
+models kp.kmax=1.0 kp.numkpt=8 kp.adaptive kp.dostol=1e-3 kp.dosres=1e-4
+models kp.solvertol=1e-6 
+#
+# We compute 1 conduction band and 6 valence bands. Recall that each is 
+# doubly degenerate in the KP.CV2 model
+#
+models well.cnbs=2 well.vnbs=6
+#
+# Here we specify the broadeing in eV. Broadening can be set to 0 to perform
+# exact integration of the delta functions when computing optical 
+# susceptibility.
+#
+models kp.chibroad=0.005
+#
+# SECTON 5: Output
+#
+# Here KP.PRINT prints out information on the screen as the calculation
+# proceeds. We use KP.CNLDOS = 10 to probe Local DOS at 10 uniformly
+# placed slices 
+#
+models kp.print kp.cnldos=5 kp.vnldos=5 
+#
+# SECTION 6: METHOD
+#
+method newton maxtrap=10 itlimit=100
+#
+# SECTION 7: OUTPUT
+#
+output con.band val.band band.param kp.vmatrix kp.basisproj
+#
+#
+# SECTION 8: SOLVE
+#
+# We perform two initializations. In the first, we generate the k.p solutions with
+# the poisson potential turned off. This generates a band structure for both the
+# coupled and parabolic cases using identical band profiles and thus a fair 
+# comparison can be made. The potential is turned off by specifying the 
+# KP.POTENTIAL.OFF parameter.
+#
+solve init kp.potential.off
+#
+save outf=quantumex22_1.str kp.outfile=quantumex22_1
+#
+# We now initialize again for the voltage ramp towards a positive gain regime
+#
+solve init
+#
+# Here we ramp to VCATHODE=1.6 V where a modest gain exists
+#
+solve vstep=0.4 vfinal=1.6 name=cathode 
+save outf=quantumex22_2.str kp.outfile=quantumex22_2
+#
+log off
+
+
+# Simulation using the effective mass approximation 
+
+go atlas
+ 
+mesh cylindrical
+x.mesh l= 0 s=1
+x.mesh l= 2 s=1
+y.mesh l=-1 s=0.1
+y.mesh l=-1     s=0.1
+y.mesh l=-0.100 s=0.01
+y.mesh l=-0.020 s=0.0005
+y.mesh l= 0.010 s=0.0005
+y.mesh l= 0.018 s=0.0005
+y.mesh l= 0.048 s=0.0005
+y.mesh l= 0.148 s=0.0005
+y.mesh l= 1.088 s=0.1
+region num=1 name=topcont material=AlGaAs y.max=-0.1   x.comp=0.3
+region num=2 name=spacer1 material=AlGaAs y.min=-0.1   y.max=-0.02 x.comp=0.3
+region num=3 name=barr    material=AlGaAs y.min=-0.020 y.max=0.010 x.comp=0.15
+region num=4 name=well    material=GaAs   y.min= 0.010 y.max=0.018 
+region num=5 name=barr    material=AlGaAs y.min= 0.018 y.max=0.048 x.comp=0.15
+region num=6 name=spacer2 material=AlGaAs y.min=0.048  y.max=0.148 x.comp=0.3
+region num=7 name=botcont material=AlGaAs y.min=0.148  x.comp=0.3
+electrode num=1 name=anode top
+electrode num=2 name=cathode   bottom
+doping name=topcont  uniform n.type conc=1e19
+doping name=spacer1  uniform n.type conc=1e16
+doping name=spacer2  uniform n.type conc=1e16
+doping name=botcont  uniform p.type conc=1e19
+materials material=GaAs   affinity=4.07 eg300=1.42 
+materials material=GaAs   lutt1=6.98 lutt2=2.06 lutt3=2.93
+models fermi temperature=300
+models name=well kp.cv2 qwell spont ^optr 
+models name=barr kp.cv2 qwell ^spont ^optr 
+models kp.fem.hermite kp.fem.interface kp.parabolic
+models well.nx=1 
+models kp.kmax=1.0 kp.numkpt=32 kp.adaptive kp.dostol=1e-3 kp.dosres=1e-4
+models kp.solvertol=1e-6 
+models well.cnbs=2 well.vnbs=6
+models kp.chibroad=0.005
+models kp.print kp.cnldos=5 kp.vnldos=5 
+method newton maxtrap=10 itlimit=100
+output con.band val.band band.param kp.vmatrix kp.basisproj
+
+solve init kp.potential.off
+save outf=quantumex22_3.str kp.outfile=quantumex22_3
+
+solve init
+
+solve vstep=0.4 vfinal=1.6 name=cathode 
+save outf=quantumex22_4.str kp.outfile=quantumex22_4
+
+tonyplot -overlay quantumex22_2_bands.log quantumex22_4_bands.log -set quantumex22_vbands.set
+tonyplot -overlay quantumex22_2_bands.log quantumex22_4_bands.log -set quantumex22_cbands.set
+tonyplot -overlay quantumex22_2_dos.log quantumex22_4_dos.log -set quantumex22_vdos.set
+tonyplot -overlay quantumex22_2_dos.log quantumex22_4_dos.log -set quantumex22_cdos.set
+
+tonyplot -overlay quantumex22_2_vmatrix.log quantumex22_4_vmatrix.log -set quantumex22_vmatrixte.set
+tonyplot -overlay quantumex22_2_vmatrix.log quantumex22_4_vmatrix.log -set quantumex22_vmatrixtm.set
+
+tonyplot -overlay quantumex22_2_basisproj.log quantumex22_4_basisproj.log -set quantumex22_vbasislh.set
+tonyplot -overlay quantumex22_2_basisproj.log quantumex22_4_basisproj.log -set quantumex22_vbasishh.set
+
+tonyplot -overlay quantumex22_2.log quantumex22_4.log -set quantumex22_gainte.set
+tonyplot -overlay quantumex22_2.log quantumex22_4.log -set quantumex22_gaintm.set
+
+tonyplot -overlay quantumex22_2.str quantumex22_4.str -set quantumex22_vldos.set
+tonyplot -overlay quantumex22_2.str quantumex22_4.str -set quantumex22_qden.set

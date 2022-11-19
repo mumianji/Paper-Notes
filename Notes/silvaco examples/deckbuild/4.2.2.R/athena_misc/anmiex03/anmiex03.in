@@ -1,0 +1,46 @@
+go athena
+
+# TITLE: Use improved gridding to avoid excess segregation through gate oxide
+# 
+line x loc=0.00 spac=0.10 
+line x loc=0.1 spac=0.10 
+#
+line y loc=0.00 spac=0.01 
+line y loc=1.0 spac=0.1 
+# 
+init orientation=100
+# 
+method fermi compress
+diffus time=20 temp=900 dryo2 press=1.00 hcl.pc=0
+# 
+deposit poly thick=0.50 c.phosphor=1.0e19 divisions=10
+
+# 
+method fermi compress 
+diffus time=20 temp=900 nitro press=1.00
+#
+structure outfile=anmiex03_1.str
+
+# 
+line x loc=0.00 spac=0.10 
+line x loc=0.1 spac=0.10 
+#
+line y loc=0.00 spac=0.02 
+line y loc=1.0 spac=0.1 
+# 
+init orientation=100
+# 
+method fermi compress grid.ox=.003 gridinit.ox=.003
+diffus time=20 temp=900 dryo2 press=1.00 hcl.pc=0
+#
+extract name="tox" thickness oxide mat.occno=1 x.val=0.0
+# 
+deposit poly thick=0.50 c.phosphor=1.0e19 divisions=10
+# 
+method fermi compress 
+diffus time=20 temp=900 nitro press=1.00
+#
+structure outfile=anmiex03_2.str
+
+tonyplot  anmiex03_1.str -add anmiex03_2.str -set anmiex03.set
+

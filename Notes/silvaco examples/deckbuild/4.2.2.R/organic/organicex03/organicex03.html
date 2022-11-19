@@ -1,0 +1,99 @@
+<html>
+  <head>
+    <title>Doping Dependent Hopping Mobility</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Doping Dependent Hopping Mobility</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Blaze/Organic Display</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="organicex03_plot0.png" width="640" alt="organicex03_plot0" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates the basic characteristics of the doping dependent organic hopping mobility model.
+The simulations will produce graphs of mobility as a function of doping for an organic material. It demonstrates:
+</p>
+<ul>
+  <li>
+ Single organic layer definition using Atlas syntax
+<br/>
+  </li>
+  <li>
+ Hopping mobility model specification using the ODEFECTS and MODELS statements
+<br/>
+  </li>
+  <li>
+ Material parameter specification
+<br/>
+  </li>
+  <li>
+ Mobility specification
+<br/>
+  </li>
+  <li>
+ Contact specification
+<br/>
+  </li>
+  <li>
+ DBInternal specification
+<br/>
+  </li>
+</ul>
+<p>
+The template Atlas input deck &quot;organicex03_1.in&quot; is used to calculate the hopping mobility in an organic material.
+The doping value is specified using the DeckBuild
+<b> set </b> command.
+The parameters of interest (the hopping mobility) are extracted using the &quot;
+<b>extract from 2d.max.conc</b> &quot; capability.
+</p>
+<p>
+The content of the template file can be seen inside the input deck file &quot;organicex03.in&quot;.
+</p>
+<p>
+The file &quot;organicex03.in&quot; starts with the
+<b> GO INTERNAL </b> command which transfers control from the current simulator (i.e. Atlas) to DBInternal. The deck file consists of two main parts:
+</p>
+<p>
+The
+<b> LOAD </b> command specifies which template file should be used for multiple runs. The
+<b> SWEEP </b> command specifies how the variables set in the template file should be changed.
+In this example, the doping varies from 1e17 to 1e23, and the gamma varies from 2.5e7 to 3.5e7.
+The number of simulations is set to 14 times 3 (i.e. 42).
+</p>
+<p>
+The
+<b> SAVE </b> command tells DBInternal to collate the data generated in all extract commands into the file &quot;organicex03.dat&quot;.
+</p>
+<p>
+After all simulations are complete, the resulting mobility vs doping are plotted in TonyPlot.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

@@ -1,0 +1,238 @@
+# (c) Silvaco Inc., 2018
+go atlas simflags="-80"
+
+mesh three.d  
+
+x.mesh location=-8 spacing=0.5
+x.mesh location=8  spacing=0.5
+
+y.mesh location=0  spacing=0.5
+y.mesh location=8  spacing=0.5
+
+z.mesh location=-0.12 spacing=0.03
+z.mesh location=-0.06 spacing=0.025
+z.mesh location=0     spacing=0.05
+z.mesh location=0.5   spacing=0.2
+z.mesh location=1.05     spacing=0.1
+z.mesh location=10    spacing=4
+z.mesh location=20    spacing=4
+
+
+region number=1 material=4H-SiC z.min=0
+region number=2 oxide z.max=0
+
+electrode name=source x.min=5 x.max=8 y.min=0 y.max=3 z.min=-0.06 z.max=0
+electrode name=source x.min=-8 x.max=-5 y.min=5 y.max=8 z.min=-0.06 z.max=0
+electrode name=gate x.min=-4 x.max=4 y.min=0 y.max=8 z.min=-0.12 z.max=-0.06
+electrode name=gate x.min=4 x.max=8 y.min=4 y.max=8 z.min=-0.12 z.max=-0.06
+electrode name=gate x.min=-8 x.max=-4 y.min=0 y.max=4 z.min=-0.12 z.max=-0.06
+electrode name=drain x.min=-8 x.max=8 y.min=0 y.max=8 z.min=17.9 z.max=20
+
+doping material=4H-SiC concentration=1e16 n.type uniform
+doping material=4H-SiC concentration=1e19 n.type uniform \
+       x.min=-8 x.max=8 y.min=0 y.max=8 z.min=10 z.max=20
+doping material=4H-SiC concentration=1e18 p.type uniform \
+       x.min=2 x.max=8 y.min=0 y.max=6 z.min=0 z.max=1
+doping material=4H-SiC concentration=1e18 p.type uniform \
+       x.min=-8 x.max=-2 y.min=2 y.max=8 z.min=0 z.max=1
+doping material=4H-SiC concentration=1e19 n.type uniform \
+       x.min=3 x.max=6 y.min=0 y.max=5 z.min=0 z.max=0.2
+doping material=4H-SiC concentration=1e19 n.type uniform \
+       x.min=6.1 x.max=8 y.min=2 y.max=5 z.min=0 z.max=0.2
+doping material=4H-SiC concentration=1e19 n.type uniform \
+       x.min=-6 x.max=-3 y.min=3 y.max=8 z.min=0 z.max=0.2
+doping material=4H-SiC concentration=1e19 n.type uniform \
+       x.min=-8 x.max=-6.1 y.min=3 y.max=6 z.min=0 z.max=0.2
+doping material=4H-SiC concentration=1e19 p.type uniform \
+       x.min=6 x.max=8 y.min=0 y.max=2 z.min=0 z.max=0.2
+doping material=4H-SiC concentration=1e19 p.type uniform \
+       x.min=-8 x.max=-6 y.min=6 y.max=8 z.min=0 z.max=0.2
+
+material material=4H-SiC taun0=5e-10 taup0=1e-10 
+
+models conmob fldmob srh print
+ 
+method bicgst climit=1e-10 maxtraps=30 itlimit=50 \
+       ir.tol=1.e-35 ix.tol=1.e-35 
+
+solve init
+save outf=sicex08_0.str
+solve previous
+solve vdrain=0.1
+
+log outfile=sicex08_0.log
+solve vgate=0 vstep=0.5 vfinal=30 name=gate
+log off
+
+solve init 
+solve prev vfinal=20 name=gate vstep=1
+save outfile=sicex08_vg20.str
+solve prev vfinal=25 name=gate vstep=1
+save outfile=sicex08_vg25.str
+solve prev vfinal=30 name=gate vstep=1
+save outfile=sicex08_vg30.str
+
+
+load infile=sicex08_vg20.str master
+log outfile=sicex08_1.log
+solve vdrain=0 vstep=2 vfinal=50 name=drain
+log off
+
+load infile=sicex08_vg25.str master
+log outfile=sicex08_2.log
+solve vdrain=0 vstep=2 vfinal=50 name=drain
+log off
+
+load infile=sicex08_vg30.str master
+log outfile=sicex08_3.log
+solve vdrain=0 vstep=2 vfinal=50 name=drain
+log off
+
+tonyplot3d sicex08_0.str -set sicex08_0.set
+tonyplot sicex08_0.log -set sicex08_1.set
+tonyplot -overlay sicex08_1.log sicex08_2.log sicex08_3.log -set sicex08_2.set
+
+
+go atlas simflags="-80"
+
+mesh three.d 
+
+
+x.mesh location=-8 spacing=0.5
+x.mesh location=8  spacing=0.5
+
+y.mesh location=0  spacing=0.5
+y.mesh location=8  spacing=0.5
+
+z.mesh location=-0.12 spacing=0.03
+z.mesh location=-0.06 spacing=0.025
+z.mesh location=0     spacing=0.05
+z.mesh location=0.5   spacing=0.2
+z.mesh location=1.05     spacing=0.1
+z.mesh location=10    spacing=4
+z.mesh location=20    spacing=4
+
+region number=1 material=4H-SiC z.min=0
+region number=2 oxide z.max=0
+
+electrode name=source x.min=5 x.max=8 y.min=0 y.max=3 z.min=-0.06 z.max=0
+electrode name=source x.min=-8 x.max=-5 y.min=5 y.max=8 z.min=-0.06 z.max=0
+electrode name=gate x.min=-4 x.max=4 y.min=0 y.max=8 z.min=-0.12 z.max=-0.06
+electrode name=gate x.min=4 x.max=8 y.min=4 y.max=8 z.min=-0.12 z.max=-0.06
+electrode name=gate x.min=-8 x.max=-4 y.min=0 y.max=4 z.min=-0.12 z.max=-0.06
+electrode name=drain x.min=-8 x.max=8 y.min=0 y.max=8 z.min=17.9 z.max=20
+
+doping material=4H-SiC concentration=1e16 n.type uniform
+doping material=4H-SiC concentration=1e19 n.type uniform \
+       x.min=-8 x.max=8 y.min=0 y.max=8 z.min=10 z.max=20
+doping material=4H-SiC concentration=1e18 p.type uniform \
+       x.min=2 x.max=8 y.min=0 y.max=6 z.min=0 z.max=1
+doping material=4H-SiC concentration=1e18 p.type uniform \
+       x.min=-8 x.max=-2 y.min=2 y.max=8 z.min=0 z.max=1
+doping material=4H-SiC concentration=1e19 n.type uniform \
+       x.min=3 x.max=6 y.min=0 y.max=5 z.min=0 z.max=0.2
+doping material=4H-SiC concentration=1e19 n.type uniform \
+       x.min=6.1 x.max=8 y.min=2 y.max=5 z.min=0 z.max=0.2
+doping material=4H-SiC concentration=1e19 n.type uniform \
+       x.min=-6 x.max=-3 y.min=3 y.max=8 z.min=0 z.max=0.2
+doping material=4H-SiC concentration=1e19 n.type uniform \
+       x.min=-8 x.max=-6.1 y.min=3 y.max=6 z.min=0 z.max=0.2
+doping material=4H-SiC concentration=1e19 p.type uniform \
+       x.min=6 x.max=8 y.min=0 y.max=2 z.min=0 z.max=0.2
+doping material=4H-SiC concentration=1e19 p.type uniform \
+       x.min=-8 x.max=-6 y.min=6 y.max=8 z.min=0 z.max=0.2
+
+
+material material=4H-SiC taun0=5e-10 taup0=1e-10 ni.min=1e6
+models srh
+impact aniso sic4h0001 e.side
+method bicgst climit=1e-10 maxtraps=6 itlimit=50 \
+       ir.tol=1.e-35 ix.tol=1.e-35 cr.tol=1.e-20 px.tol=1e-10 cx.tol=1e-15
+
+solve init
+
+log outfile=sicex08_4.log
+solve previous
+solve vdrain=0.5
+solve vstep=1 vfinal=5 name=drain previous
+solve vstep=5 vfinal=50 name=drain previous
+solve vstep=10 vfinal=100 name=drain previous
+solve vstep=50 vfinal=1200 name=drain previous 
+contact name=drain current
+solve istep=1.05 ifinal=1e-08 imult name=drain
+
+
+go atlas simflags="-160"
+
+mesh three.d 
+
+x.mesh location=-8 spacing=0.5
+x.mesh location=8  spacing=0.5
+
+y.mesh location=0  spacing=0.5
+y.mesh location=8  spacing=0.5
+
+z.mesh location=-0.12 spacing=0.03
+z.mesh location=-0.06 spacing=0.025
+z.mesh location=0     spacing=0.05
+z.mesh location=0.5   spacing=0.2
+z.mesh location=1.05     spacing=0.1
+z.mesh location=10    spacing=4
+z.mesh location=20    spacing=4
+
+
+region number=1 material=4H-SiC z.min=0
+region number=2 oxide z.max=0
+
+electrode name=source x.min=5 x.max=8 y.min=0 y.max=3 z.min=-0.06 z.max=0
+electrode name=source x.min=-8 x.max=-5 y.min=5 y.max=8 z.min=-0.06 z.max=0
+electrode name=gate x.min=-4 x.max=4 y.min=0 y.max=8 z.min=-0.12 z.max=-0.06
+electrode name=gate x.min=4 x.max=8 y.min=4 y.max=8 z.min=-0.12 z.max=-0.06
+electrode name=gate x.min=-8 x.max=-4 y.min=0 y.max=4 z.min=-0.12 z.max=-0.06
+electrode name=drain x.min=-8 x.max=8 y.min=0 y.max=8 z.min=17.9 z.max=20
+
+doping material=4H-SiC concentration=1e16 n.type uniform
+doping material=4H-SiC concentration=1e19 n.type uniform \
+       x.min=-8 x.max=8 y.min=0 y.max=8 z.min=10 z.max=20
+doping material=4H-SiC concentration=1e18 p.type uniform \
+       x.min=2 x.max=8 y.min=0 y.max=6 z.min=0 z.max=1
+doping material=4H-SiC concentration=1e18 p.type uniform \
+       x.min=-8 x.max=-2 y.min=2 y.max=8 z.min=0 z.max=1
+doping material=4H-SiC concentration=1e19 n.type uniform \
+       x.min=3 x.max=6 y.min=0 y.max=5 z.min=0 z.max=0.2
+doping material=4H-SiC concentration=1e19 n.type uniform \
+       x.min=6.1 x.max=8 y.min=2 y.max=5 z.min=0 z.max=0.2
+doping material=4H-SiC concentration=1e19 n.type uniform \
+       x.min=-6 x.max=-3 y.min=3 y.max=8 z.min=0 z.max=0.2
+doping material=4H-SiC concentration=1e19 n.type uniform \
+       x.min=-8 x.max=-6.1 y.min=3 y.max=6 z.min=0 z.max=0.2
+doping material=4H-SiC concentration=1e19 p.type uniform \
+       x.min=6 x.max=8 y.min=0 y.max=2 z.min=0 z.max=0.2
+doping material=4H-SiC concentration=1e19 p.type uniform \
+       x.min=-8 x.max=-6 y.min=6 y.max=8 z.min=0 z.max=0.2
+
+
+material material=4H-SiC taun0=5e-10 taup0=1e-10
+models srh
+
+impact aniso sic4h0001 e.side
+
+method bicgst climit=1e-20 maxtraps=6 itlimit=50 \
+       ir.tol=1.e-45 ix.tol=1.e-45 \
+       px.tol=1.e-25 pr.tol=1.e-40 \
+       cx.tol=1.e-25 cr.tol=1.e-33 
+
+solve init
+
+log outfile=sicex08_5.log
+solve previous
+solve vdrain=0.5
+solve vstep=1 vfinal=5 name=drain previous
+solve vstep=5 vfinal=50 name=drain previous
+solve vstep=10 vfinal=100 name=drain previous
+solve vstep=50 vfinal=1200 name=drain previous 
+contact name=drain current
+solve istep=1.05 ifinal=1e-23 imult name=drain
+
+
+tonyplot -overlay sicex08_4.log sicex08_5.log -set sicex08_3.set

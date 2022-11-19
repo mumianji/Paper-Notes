@@ -1,0 +1,11 @@
+go internal
+
+load infile=optoex20_target.in
+               
+sweep parameter=xm type=linear range="-10, 10, 21"
+
+save type=sdb outfile=optoex20.dat
+
+tonyplot optoex20.dat -set optoex20.set
+
+quit

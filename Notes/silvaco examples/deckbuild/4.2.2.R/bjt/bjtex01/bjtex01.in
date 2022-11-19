@@ -1,0 +1,133 @@
+# (c) Silvaco Inc., 2018
+go athena
+# TITLE: Polysilicon Emitter Bipolar Example - Ssuprem4->Devedit->Spisces
+# If you do not have Devedit: Please comment these lines out....
+line x loc=0.0         spacing=0.03 
+line x loc=0.2         spacing=0.02  
+line x loc=0.24        spacing=0.015 
+line x loc=0.3         spacing=0.015 
+line x loc=0.8         spacing=0.15
+#
+line y loc=0.0         spacing=0.01
+line y loc=0.07        spacing=0.01 
+line y loc=0.1         spacing=0.01
+line y loc=0.12        spacing=0.01  
+line y loc=0.3         spacing=0.02 
+line y loc=0.5         spacing=0.06
+line y loc=1.0         spacing=0.35  
+#
+init c.arsenic=2e16
+#
+implant   boron  energy=18 dose=2.5e13
+diffuse time=60 temp=920
+# deposit polysilicon
+deposit poly thick=0.3 divisions=6 min.space=0.05 
+
+# Implant to dope polysilicon
+implant arsenic dose=7.5e15 energy=50
+
+# Pattern the poly 
+etch poly right p1.x=0.2
+
+relax y.min=.2 x.min=0.2
+relax y.min=.2 x.min=0.2
+
+method compress fermi
+diffuse time=25   temp=920 dryo2 
+diffuse time=50   temp=900 nitrogen
+
+implant boron dose=2.5e13 energy=18
+
+# deposit spacer
+deposit oxide thick=0.4 divisions=10  min.space=0.1
+
+# etch the spacer back
+etch oxide dry thick=0.5 
+
+implant boron dose=1e15 energy=30
+
+diffuse time=60 temp=900   nitrogen
+
+structure reflect left
+
+# put down Al and etch to form contacts
+deposit alum thick=0.05 div=2 
+
+etch alum start x=-0.16 y=-4
+etch continue x=-0.16 y=0.2 
+etch continue x=-0.6 y=0.2
+etch done  x=-0.6 y=-4
+
+etch alum right p1.x=0.15
+
+# Name the electrodes for use with Atlas.....1,2,3
+electrode x=0.0    name=emitter
+electrode x=-0.65  name=base
+electrode backside name=collector
+
+#  Save the final structure
+structure outfile=bjtex01_0.str
+
+
+# Completely remesh the structure without obtuse triangles in the semiconductor
+# Use the Sensitivity & Minspacing parameters to adjust the mesh density....
+# .. the smaller the Sensitivity, the denser the mesh...
+go devedit
+
+base.mesh height=0.25 width=0.25
+bound.cond apply=false max.ratio=300
+constr.mesh max.angle=90 max.ratio=300 max.height=1 max.width=1 \
+        min.height=0.0001 min.width=0.0001
+constr.mesh type=Semiconductor default
+constr.mesh type=Insulator default max.angle=170
+constr.mesh type=Metal default max.angle=180
+
+# Define the minimum mesh spacing globally...
+imp.refine min.spacing=0.025
+
+# Select a list of solution (impurity) gradients to refine upon....
+imp.refine imp="Arsenic" sensitivity=0.5
+imp.refine imp="Boron" sensitivity=0.5
+
+# now mesh the structure....
+mesh
+#
+struct outfile=bjtex01_1.str
+#
+##################### Gummel Plot Test ###########################
+# Electrode names used in this test: Base, Collector, Emitter
+go atlas
+# set material models etc.
+material taun0=5e-6 taup0=5e-6
+contact name=emitter n.poly surf.rec
+models bipolar print  
+
+# initial solution
+ 
+solve init
+
+# change to two carriers
+method newton autonr trap 
+solve prev
+# set the collector bias
+solve vcollector=2 local
+# start ramping the base
+solve vbase=0.1 
+# Ramp the base to 0.9 volts.... 
+log outf=bjtex01_2.log master
+solve vbase=0.2 vstep=0.05 vfinal=0.9 name=base ac freq=1e6 aname=base
+
+# Now dump a structure file, for tonyplotting... but first decide what 
+# you want in it, on top of the default quantities......
+output e.field flowlines jx.el jx.ho jy.el jy.ho
+save outf=bjtex01_3.str
+tonyplot  bjtex01_3.str -set bjtex01_1.set
+
+# Now extract some design parameters...
+extract name="peak collector current" max(curve(abs(v."base"),abs(i."collector")))
+extract name="peak gain" max(i."collector"/ i."base")
+extract name="max fT" max(g."collector""base"/(2*3.1415*c."base""base")) 
+# plot the results
+tonyplot  bjtex01_2.log -set bjtex01_2.set
+quit
+

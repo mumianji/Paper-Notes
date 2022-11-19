@@ -1,0 +1,81 @@
+<html>
+  <head>
+    <title>Default GaN material simulation</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Default GaN material simulation</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Mocasim, TonyPlot</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Mocasim 5.16.0.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="mocasim05_plot0.png" width="640" alt="mocasim05_plot0" />
+      <p/>
+      <img src="mocasim05_plot1.png" width="640" alt="mocasim05_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<p>
+This example repeats example 1 and 2 with a Wurtzite material.
+</p>
+<p>
+The main difference between examples 1 and 2 and this example is
+on the
+<b> intervalley_phonon</b> command.
+</p>
+<p>
+In Zincblende and Diamond structure crystals, the structure of the
+conduction band minima is fairly consistent.  There is a minimum at
+the Gamma point of the Brillouin zone, a minimum along the L direction
+of the Brillouin zone, and a minimum along the X direction of the
+Brillouin zone.
+</p>
+<p>
+In Wurtzite structure crystals there is no such uniformity.  The
+three-valley model uses the three lowest conduction band minima.
+The lowest minima is given the ordinal 0, the next lowest minima
+is given the ordinal 1, and the third lowest minim is given the
+ordinal 2.
+</p>
+<p>
+The three lowest minima for GaN can be seen from the output of the
+<b> print</b> command in section 5.
+</p>
+<p>
+The
+<b> fit</b> command to fit a polynomial model to the Monte Carlo data.  The
+polynomial model is of the form
+</p>
+<p>
+mu = Sum{e=0...numE-1,n=0...numN-1,t=0...numT-1} Cent*E^e*log(N)^n*T^t
+</p>
+<p>
+This polynomial contains numE*numN*numT terms and so can very quickly
+become unwieldy.  In this example the doping and the temperature are
+fixed, so electric field is the only independent variable.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

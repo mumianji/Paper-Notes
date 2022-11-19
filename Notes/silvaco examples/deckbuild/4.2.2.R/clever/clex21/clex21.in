@@ -1,0 +1,76 @@
+
+go clever
+
+init layout="clex21.lay" map="clex21.lmp" depth=1
+save layout="clex21_1.lay"
+
+# Isolate the N-Well From the P-Substrate by Simulating Well Depletion
+deposit material("Nwell_Depletion") thick=0.1 max
+mask "NWELL"
+etch material("Nwell_Depletion")
+strip resist
+deposit silicon thick=0.4 max
+
+mask "AA" reverse
+etch silicon thick=0.45 max
+strip resist
+deposit oxide thick=0 max
+
+# Isolate Source Drain Diodes by simulating Diode Depletion Regions 
+mask "N_SD" reverse
+etch silicon thick=0.2 max
+mask "P_SD" reverse
+etch silicon thick=0.2 max
+strip resist
+deposit material("SD_Depletion") thick=0.02 conformal
+etch material("SD_Depletion") thick=0.02 max
+deposit silicon thick=0 max
+electrodes "*CONT" silicon
+deposit material("gate_ox") thick=0.004 max
+mask "GATES"
+etch material("gate_ox")
+strip resist
+deposit oxide thick=0 max
+deposit poly thick=0.1 max
+
+mask "POLY"
+etch poly
+strip resist
+electrodes "*GATE" poly
+deposit material("spacer_ox") thick=0.1 conformal 
+etch material("spacer_ox") rate=1 time=0.1 isotropic=0
+deposit oxide thick=0.3 max
+
+mask "CONT" reverse
+etch oxide thick=0.44 max
+strip resist
+deposit aluminum thick=0.2 max
+
+mask "M1"
+etch aluminum thick=0.22 max
+strip resist
+electrodes "CONT" aluminum
+deposit oxide thick=0.4 max
+
+mask "VIA1" reverse
+etch oxide thick=0.44 max
+strip resist
+deposit aluminum thick=0.3 max
+
+mask "M2"
+etch aluminum thick=0.33 max
+strip resist
+deposit oxide thick=0.5 max
+deposit nitride thick=0.1 max
+
+material silicon                     conductivity=100
+material material("Nwell_Depletion") permittivity=11.8
+material material("SD_Depletion")    permittivity=11.8
+material material("gate_ox")         permittivity=0.01
+material material("spacer_ox")       permittivity=3.9
+
+save structure="clex21.str"
+
+interconnect adapt=(0.05,0.05) DomainBoundaryCondition=CYCLIC
+
+save spice="clex21.net"

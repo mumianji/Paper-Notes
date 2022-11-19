@@ -1,0 +1,130 @@
+{section} ATHENA_STRESS : Stress Simulation Examples
+
+
+{subsection} anstex01.in : Substrate Shear Stress 
+
+Requires: SSuprem 4
+Minimum Versions: Athena 5.22.3.R
+
+This example demonstrates  the ability to calculate shear
+stress as a result of an overlying nitride layer.  The results of the
+calculation are plotted using 
+{bold} TonyPlot 
+to display contours of the XX component of stress.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} anstex02.in : Stresses in a Buried-SiGe Strained-Silicon MOSFET. Part 1.  
+
+Requires: SSuprem 4
+Minimum Versions: Athena 5.22.3.R
+
+This example demonstrates the simulation of stresses in a test MOSFET structure with
+ embedded anSiGe layer. The simulated process includes epitaxial growth of thin 
+compressed SiGe and relaxed silicon layers. The standard gate stack is then emulated by 
+gate oxide and poly deposition and oxide spacer formation.  All important geometrical 
+characterisics of the test structure, including thicknesses of different layers, spacer width, gate length, etc.,
+are parametrized. This allows us to investigate the effects of parameter
+ variations on important device characteristics using either DBInternal capability of Deckbuild or Virtual Wafer Fab (VWF).
+The set values of all parameters approximately correspond to those used
+to simulate Figs. 2. and 3 in 
+{bold} [1]
+.  
+
+The most important step of this test process is etching of the source/drain areas because 
+it creates free surfaces on the sides of the buried SiGe layer. This step results in 
+elastic expansion of the buried layer, reducing the compressive stress inside the 
+layer and generating tensile stress in silicon above, i.e. under the gate. This 
+enhanced tensile stress affects carrier transport and effectively improves device 
+characteristics. The stresses in the whole structure are  calculated before and after the S/D etch. 
+
+The results of the calculation are plotted using 
+{bold} TonyPlot 
+to display 2D contours of the XX component of stress in the final structure. The second plot compares stress profiles (obtained by 
+{bold} Extract ... curve
+statements and measured in MPa) through the center of the gate before and after the S/D etch step. 
+
+The series of
+{bold} Extract
+statements calculate the average stresses under the gate. The first 2 extract statements estimate 
+average stress at specified depth under the gate. Next 2 extract statements estimate 
+average stress inside a box under the gate. 
+
+The last extract statement calculates the important figure of merit of this 
+process, i.e. the stress transfer efficiency (STE) specified as absolute value of 
+the ratio between the average stresses under the gate and initial stress in the SiGe 
+buried layer.  
+
+{bold} [1] J.G. Fiorenza, et.al. "Detailed Simulation Study of a Reverse Embedded-SiGe Strained-Silicon MOSFET", IEEE Trans. on Electron Devices, v.55, No.2, p. 640, (2008).
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+{subsection} anstex03.in : Stresses in a Buried-SiGe Strained-Silicon MOSFET. Part 2.  
+
+Requires: SSuprem 4
+Minimum Versions: Athena 5.22.3.R
+
+This example is similar to the previous example anstex02.in. There are three main differences: 
+
+1. This example demonstrates the use of the STRESS.HIST method instead of several STRESS statements.
+
+2. It calculates dopant induced intrinsic stresses based on Germanium fraction in Silicon instead of user-defined intrinsic stresses in the SiGe layer. This is achieved by specifying 
+{bold} DOPANT.STRESS
+parameter in the METHOD statement. 
+
+3. It uses more realistic angled etching of source/drain area.
+
+Two additional process parameters, 
+{bold} Ge_fraction 
+and 
+{bold} etch_angle, 
+are introduced. These parameters could be used for further optimization of the process.
+It is interesting to note that if a realistic 70-75 degrees etch is applied the stress 
+transfer efficiency (see previous example) could be increased by 12-15% in some cases.
+
+The results of the calculation are plotted using 
+{bold} TonyPlot 
+to display 2D contours of the XX component of stress in the final structure. 
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

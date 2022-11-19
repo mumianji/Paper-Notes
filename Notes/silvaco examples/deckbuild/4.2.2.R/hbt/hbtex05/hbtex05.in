@@ -1,0 +1,139 @@
+# (c) Silvaco Inc., 2018
+go athena
+# SiGe HBT simulation
+
+
+# Establish initial grid and substrate material
+
+line x  location=0.0   spacing=0.08
+line x  location=0.5   spacing=0.05
+line x  location=0.7  spacing=0.05
+line x  location=1.2  spacing=0.08
+line x  location=2.2   spacing=0.18
+#
+line y  location=0.0   spacing=0.01
+line y  location=0.1   spacing=0.02
+line y  location=0.5   spacing=0.05
+line y  location=0.8   spacing=0.15
+#
+init silicon c.phos=2e16 
+
+structure outf=tmpr1.str
+
+init inf=tmpr1.str flip.y
+implant phos energy=60 dose=3e15
+
+
+diffuse time=5 temp=1000
+struct outf=temp
+init inf=temp flip.y
+
+
+
+# Deposit Silicon germanium with composition fraction 0.2 for base
+
+deposit sige    thick=.1 divis=12 ydy=0.05 dy=0.02 c.frac=0.2 c.boron=1e15
+
+implant   boron  energy=10 dose=1.0e13 
+
+
+
+
+
+# Deposit silicon for the emitter
+
+deposit silicon thick=0.2  divis=10 ydy=0.08 dy=0.04 c.phos=1.e15
+
+
+
+implant   boron  energy=12 dose=3e14
+
+
+
+diffuse time=0.5 temp=920
+
+
+
+# Mask and implant the emitter
+deposit photo thick=.5 divis=5
+etch photo left p1.x=0.5
+#implant phos energy=40 dose=6e15
+implant phos energy=38 dose=6e15
+
+diffuse time=5 temp=920
+strip
+
+
+
+# Deposit and pattern the contact metal
+
+deposit aluminum thick=0.05 div=1
+
+etch aluminum start x=0.5 y=10.
+etch          cont  x=0.5 y=-10.
+etch          cont  x=1.2 y=-10.
+etch          done  x=1.2 y=10.
+
+
+# Define the electrodes
+electrode    name=emitter x=0.0
+electrode    name=base    x=2.0
+electrode    name=collector backside 
+
+
+# Define impurity characteristics in each material
+
+impurity i.boron acceptor sige
+impurity i.phos  donor    sige
+
+
+structure outfile=hbtex05_0.str
+
+
+go atlas
+
+
+# Material parameter and model specification
+
+material material=Si   taun0=1e-7 taup0=1e-7
+material material=SiGe  taun0=1.e-8 taup0=1.e-8
+model    bgn  consrh  auger fldmob conmob  
+
+
+# Initial solution
+
+
+solve init 
+
+save outf=hbtex05_1.str
+tonyplot  hbtex05_1.str -set hbtex05_0.set
+
+# Bias collector to 2 volts
+output con.band val.band
+method gummel  newton trap autonr 
+solve prev 
+solve local vcollector=2.0 
+
+
+# Bias base for Gummel plot
+
+output con.band val.band 
+
+method  newton  trap  
+solve vbase=0.01 
+solve vbase=0.05 
+solve vbase=0.2
+ 
+log outfile=hbtex05.log master
+
+solve vbase=0.3  vstep=0.05 name=base vfinal=0.9 
+
+save outfile=hbtex05_2.str
+
+# plot the  logfile
+tonyplot  hbtex05.log -set hbtex05.set
+
+
+
+quit
+

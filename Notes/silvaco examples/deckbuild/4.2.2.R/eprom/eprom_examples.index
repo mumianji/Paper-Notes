@@ -1,0 +1,433 @@
+
+{section} EPROM : EPROM Application Examples 
+
+
+
+
+
+{subsection} eprmex01.in : Flash EEPROM Programming and Erasing 
+
+Requires: SSuprem 4/DevEdit/S-Pisces
+{newline}
+Minimum Versions: Athena 5.22.3.R, Atlas 5.26.1.R
+
+This example simulates the structure
+definition and electrical test of a FLASH EEPROM cell. The example consists of:
+
+{bullet} Dual gate EEPROM structure formation in Athena
+{newline}
+{bullet} Re-meshing in DevEdit
+{newline}
+{bullet} Threshold voltage simulation before programming
+{newline}
+{bullet} Transient programming simulation
+{newline}
+{bullet} Threshold voltage simulation after programming
+{newline}
+{bullet} Transient erasure simulation  
+
+For accurate simulation of programming and erasure it is vital to have
+a very accurate representation of the device structure. The gate and
+tunneling currents are very sensitive to geometry and doping profiles.
+It will be possible for you to alter
+process parameters and observe their effect on device performance
+directly with this input file. 
+
+The interface between Athena and Atlas is automatic. The electrode
+statements in Athena are used to define the electrode positions for
+Atlas. Any metal or polysilicon layer can optionally be set as an
+electrode region. The electrode names given in Athena are transferred
+into Atlas.
+
+As with many of the examples provided, the grid structure for the
+example EEPROM device is rather coarse. This allows a realistic
+execution times for the example. When comparing simulated and real
+EEPROM devices, a finer grid is recommended. This can be done quickly by
+decreasing the 
+{bold} space.mult 
+parameter of the initialize statement. 
+
+To obtain a finer grid, DevEdit is used. This can effectively refine the
+grid for the electrical simulation. A finer mesh for resolving the
+dopant distribution is still recommended though.
+
+The  Atlas programming simulation consists of 3 basic parts. Firstly a
+threshold voltage simulation is done to obtain the EEPROM cell threshold in
+it's unprogrammed state. Then the device is biased into the initial
+condition of the transient with the high programming control gate
+voltage. Here 12V is used.
+
+Next the programming transient is performed. Since the times involved in
+programming are much greater than the relaxation time of the device, the
+syntax 
+{bold} method quasi can be used to specify the quasistatic 
+method. This results in a large improvement in the speed of the
+calculation.
+
+The programming consists of two solve
+statements. The first ramps the drain to 5.0V in 1ns. A solution file
+is saved at this point. This can be used to examine the
+potentials before charge is applied to the floating gate. The second
+line gives no change in the applied voltages, it simply leaves the
+device biased the condition VCG=12.0V and Vds=5.0V. During this time
+the hot electron injection model will predict values of gate current.
+This current coupled with the transient time step size is used to add
+charge self-consistently to the floating gate. A solution file is saved
+at the end of the transient.
+
+Comparisons of device internal distributions, such as potentials can be
+done by comparing the two solution files from before
+programming and  after the programming.
+
+The final part of this run consists of a copy of the first part.
+A threshold voltage test is run on the EEPROM cell. In this case
+however the device is programmed and a large threshold voltage shift is
+seen.
+
+The graphics output of this section shows plots of threshold voltage
+before and after programming. A plot of floating gate charge vs. time
+can be obtained from the result of the transient simulation. Also, the
+actual programming gate current can be seen falling off with time. This
+is because the increasing charge on the floating gate increases the
+threshold voltage of the device. This in turn reduces the drain
+current which will cause a drop in hot carrier density and hence a
+reduction in programming current.
+
+
+It is possible to plot the showed the floating gate charge charge vs. time curve. This can be quickly
+converted to threshold voltage shift using the following formula:
+
+Threshold Shift =   Q Tox / L Eox 
+
+
+Where Q = floating gate charge per unit width,
+Tox  = inter-poly oxide thickness,
+L = length of floating gate,
+Eox = absolute permittivity of oxide.
+
+In this case Tox is converted into an effective Tox based on the thickness
+of each layer of the inter-poly ONO di-electric. This is done by:
+
+Effective Tox = E oxide *  (Tox1/Eox1 + Tnitride/Enitride + Tox2/Eox2   )
+
+where Tx is thickness of x and Ex is relative permittivity of x.
+
+The final run of this example is a transient erasure simulation. Atlas is restarted using the command
+{bold} go atlas
+. The correct set of erasing models for EEPROMs is chosen . The key models are
+{bold} fnord 
+and
+{bold} bbt.std
+. fnord specifies the solution for Fowler Nordheim tunneling the main
+erasure mechanism for EEPROMs. bbt.std specifies the band to band
+tunneling model. This is required due to the high electric fields at
+the source/channel junction. Tunneling due to these fields leads to
+high substrate current during erasing.
+
+After the models and other material parameters are set, the charge on
+the floating gate is ramped using the parameter q1. This 'q' works in
+an analogous manner to ramping voltages using 'v': q1 and qstep are the
+equivalent in charge to v1 and vstep.  In EEPROM erasure the drain is
+disconnected to avoid large power consumption from source to drain
+breakdown currents. One way to disable a contact is to use current
+boundary conditions and force zero current. An alternative used here is
+to attach a very large resistor to the contact.
+
+The transient erasure is performed in a single solve statement. The
+source electrode is ramped to 12.5V. The mechanism to remove charge
+from the floating gate is exactly analogous to programming. The only
+differences is the  Fowler-Nordheim tunneling rather then hot electron
+injection as gate current. Obviously this will change the direction of
+the current through the gate oxide.
+
+The resultant graphics show the transient erasing characteristic. To
+plot the threshold voltage shift, the same calculation given in the
+programming section can be used.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+ 
+
+
+
+{subsection} eprmex02.in : 3D Flash EPROM Programming
+
+Requires: DevEdit 3D/Device 3D
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This examples demonstrates steady-state and transient simulation of
+an Flash EPROM device in three dimensions.
+
+In this example an EPROM device is constructed using DevEdit 3D. The 
+structure is then passed to Atlas for electrical testing. The input file
+consists of the following sections:
+
+{bullet} Construction of the device in DevEdit 3D
+{newline}
+{bullet} Threshold voltage test before programming
+{newline}
+{bullet} Transient simulation of Flash EPROM programming
+{newline}
+{bullet} Threshold voltage test after programming
+
+
+The first stage of the input constructs the EPROM geometry, material regions,
+doping profiles, and electrodes in DevEdit 3D. The structure was created in 
+DevEdit 3D by drawing the device regions in interactive mode and specifying 3D
+doping distribution. Finally the mesh was generated automatically by specifying 
+basic mesh constraints and refining in the important areas of the device.
+
+The Atlas simulation begins from reading in the structure from
+DevEdit 3D.  DeckBuild provides an automatic interface between DevEdit
+and Atlas so that the structure produced by DevEdit 3D is transferred
+to Atlas without having to use the mesh statement.
+
+In Atlas, the 
+{bold} contact 
+statements are used to assign the work function on the polysilicon
+gates and to specify the floating gate contact. The
+{bold} interface 
+statement is used to assign a fixed interface charge under the floating gate.
+The
+{bold} models 
+statement is used to select a set of physical models for programming
+simulation.  The  key model for programming is the hot carrier injection model 
+to give the gate current. This is enabled by
+{bold} models hei
+.
+
+First the initial solution for zero biases is obtained.  Next, Id/Vgs
+calculations are performed with zero charge on the floating gate
+(before programming). The drain voltage is set to 0.5V, and the control
+gate voltage is ramped until the drain current reaches a compliance
+limit set with the 'compl' parameter. At this stage the combined algorithm
+is specified using
+{bold} method gummel newton
+. 
+It means that if convergence is not reached in decoupled mode (gummel) the
+simulator will automatically switch to coupled mode (newton).
+
+Next, the programming process is simulated. First of all, the control
+gate voltage is ramped to 10V. The combined algorithm is used for this
+stage, but the coupled Newton method is used for transient analysis
+calculations. In the transient analysis the drain voltage is ramped to
+5.5V in 1ns. Vds is kept constant while transient programming is
+performed until the time set by 
+{bold}tfinal 
+is reached.
+
+The final stage of the file re-simulates the Id/Vgs curve to obtain the
+threshold voltage after programming. The results of the two Id/Vgs curves can be overlaid using TonyPlot.
+{bold} extract 
+statements can be used to measure the threshold according to
+user-defined rules. Details of the extract syntax for threshold voltage
+can be found under the MOS threshold voltage example. extract can also be used to measure the threshold voltage shift by subtracting the two previously extracted thresholds.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+{subsection} eprmex03.in : Controlling the Capacitative Coupling 
+
+Requires: SSuprem 4/DevEdit/S-Pisces
+{newline}
+Minimum Versions: Athena 5.22.3.R, Atlas 5.26.1.R
+
+This example consists of :
+
+{bullet} Dual gate EEPROM structure formation in Athena
+{newline}
+{bullet} Re-meshing in DevEdit
+{newline}
+{bullet} Threshold voltage simulation without a coupling capacitor
+{newline}
+{bullet} Definition of additional coupling capacitance
+{newline}
+{bullet} Threshold voltage simulation with a coupling capacitor
+{newline}
+{bullet} Plotting two threshold voltage curves for comparison
+
+This example file is based upon that given in exprmex01.in but 
+has an additional modification to account for capacitive coupling. 
+ A description of the standard syntax may be found in example eprmex01.in.
+
+In a real device, the coupling between the control gate and the floating 
+gate is a three-dimensional problem that depends upon the layout. 
+As a result any two-dimensional simulation will not be able to accurately 
+simulate coupling capacitance. In most cases it will underestimate this value.
+To take account of this problem Atlas is capable of connecting 
+electrodes together via some capacitor. 
+This effectively increases the coupling capacitance and can normally allow 
+accurate matching to experimental data without having to make unphysical 
+modifications to the structure.
+
+This example consists of two Atlas input files. The first is a standard 
+calculation of the threshold voltage from which the coupling ratio may be found.
+In the second, the syntax has been modified so that on the 
+{bold} contact 
+ statement a capacitance is specified between the control and floating gates.
+After plotting the results it is apparent that the coupling ratio has been 
+increased due to the additional coupling capacitance.
+ This has effectively modified the threshold voltage.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} eprmex04.in : Hot Carrier Injection and Ionisation  
+
+Requires: SSuprem 4/DevEdit/S-Pisces
+{newline}
+Minimum Versions: Athena 5.22.3.R, Atlas 5.26.1.R
+
+This example is based upon exprmex01.in for the SSuprem 4/DevEdit simulations. It demonstrates
+
+{bullet} Concannon model for substrate current
+{newline}
+{bullet} Concannon model for hot carrier injection to the gate
+{newline}
+{bullet} Plotting of gate current as a function of position on the gate
+
+In practice, hot electron injection is normally analysed by measuring the gate 
+current that is injected onto the floating gate contact. 
+The Atlas input file was therefore created to simulate both the floating 
+gate and substrate currrents. 
+To, do this the electrode
+{bold} fgate 
+was not specified as floating. 
+
+The Concannon model for substrate current is implemented on the
+{bold} impact 
+statement with the parameters
+{bold} n.concannon p.concannon 
+to turn on the individual electron and hole components. The Concannon model for hot carrier injection is implemented on the 
+{bold} models 
+statement with the parameters 
+{bold} n.concannon p.concannon 
+for the individual components. Both of these models are based upon the carrier energies and therefore will automatically implement the electron and hole energy balance equations.
+
+This example finishes by saving a solution and plotting the structure and the injected current as a function of position across the polsilicon gate - oxide interface.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+{subsection} eprmex05.in : Polysilicon versus metallic floating gate 
+
+Requires: S-Pisces
+{newline}
+Minimum Versions:  Atlas 5.26.1.R
+
+This example creates a simple EEPROM cell with a polysilicon floating gate.
+It then highlights the difference between treating this as a floating
+contact (perfect conductor) or a floating electrode (semiconductor).
+It demonstrates
+
+{bullet} Single gate EEPROM structure formation in Atlas.
+{newline}
+{bullet} Mesh refinement in Atlas.
+{newline}
+{bullet} Threshold voltage simulation before charging of polysilicon.
+{newline}
+{bullet} Assignment of a charge to perfectly conducting contact.
+{newline}
+{bullet} Threshold voltage simulation after charging.
+{newline}
+{bullet} Assignment of a charge to a semiconductor contact.
+{newline}
+{bullet} Threshold voltage simulation after charging.
+{newline}
+
+The
+{bold} FLOATING 
+parameter on the
+{bold} CONTACT 
+statement causes the specified electrode to be treated as
+a perfect conductor, and therefore as an equipotential.  Any stored charge 
+is assumed to be evenly distributed and coupled to the device potential
+by using Gauss's flux theorem. For a polysilicon electrode this can be an
+imperfect approximation, because in the isolated semiconductor the potential
+and charge distributions will be position dependent in order to maintain
+the condition of zero steady state current flow.  The
+{bold} FLOATING
+ parameter on the
+{bold} ELECTRODE
+ statement
+allows to to model the floating gate as a semiconductor.
+{newline}
+This example has four sections, each staring with
+{newline}
+{bold} go atlas
+{newline}
+The first creates the EEPROM cell using Atlas syntax,  giving the polysilicon
+floating gate a donor density of 1e18 /cc.  A simple mesh refinement is then 
+carried out to give better resolution near the p-n junctions, and the structure is
+saved
+{newline}
+In the next section the structure is loaded and the
+device with zero floating gate charge is simulated
+to give the unprogrammed Id-Vg curves.
+{newline}
+
+The next section loads the structure and assigns the floating gate to be 
+a perfect conductor using the 
+{bold} FLOATING 
+parameter on the
+{bold} CONTACT 
+statement, as well setting the workfunction to be that for n-doped polysilicon
+by using the 
+{bold} N.POLY
+ flag.  The floating gate is given a negative charge of
+-1e-15 C/cm  using the Q<elec> syntax of the SOLVE statement.  This is 
+an alternative to charging the floating gate during a transient solve.
+The Id-Vg curve of this charged device is then obtained, and the structure
+file with a control gate bias of 3 V is saved.
+{newline}
+The final section loads in the structure and uses the syntax
+{newline}
+{bold} ELECTRODE MODIFY FLOATING 
+{newline}
+to specify that the named electrode should be
+treated as an isolated semiconductor. It is still necessary to specify the
+workfunction of the contact using the N.POLY parameter on the CONTACT statement,
+but the FLOATING parameter should not be specified on the CONTACT statement in
+this case.   The floating gate is given a negative charge of
+-1e-15 C/cm  using the Q<elec> syntax of the SOLVE statement, as previously,
+and the Id-Vg curve is obtained. The PROBE statement saves the integrated floating gate
+charge to the logfile. The structure file of the device with a
+control gate bias of 3V is saved.
+{newline}
+The visualisation of the structure files shows a cutline through the gate stack,
+with the floating electrode case having a position dependent electron concentration
+and the floating contact case showing no concentration. The potentials in the 
+floating gate can also be compared to see an equipotential in the floating contact
+case and potential changes in the floating electrode case.  The Id-Vg
+curves are slightly different between the two cases,  due to the different charge
+distributions.  The integrated total charge of the floating electrode, as obtained 
+from the PROBE statement, can be seen to be bias independent.  The threshold voltages
+for the three curves can be obtained from the results.final file.
+
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+

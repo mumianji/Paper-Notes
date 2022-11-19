@@ -1,0 +1,102 @@
+<html>
+  <head>
+    <title>Band-to-band tunneling at low temperature</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Band-to-band tunneling at low temperature</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Blaze</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="quantumex17_plot0.png" width="640" alt="quantumex17_plot0" />
+      <p/>
+      <img src="quantumex17_plot1.png" width="640" alt="quantumex17_plot1" />
+      <p/>
+      <img src="quantumex17_plot2.png" width="640" alt="quantumex17_plot2" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This gives an example of using the
+<b> BBT.NONLOCAL</b> model to study the forward tunneling current in a degenerately-doped
+Germanium diode at 4.2K.
+</p>
+<p>
+The deck uses the
+<b> dbinternal</b> interface to consider 6 values of doping and to obtain the results in a
+format suitable for use with TonyPlot.  The auxiliary file quantumex17_aux.in
+is run for the 6 values of doping specified in quantumex17.in.
+</p>
+<p>
+The auxiliary file sets up a simple p-n diode in Germanium, with a fine
+mesh being specified near the actual junction.  Both the donor and acceptor
+concentration are set to be the same value, as specified by the $doping
+parameter supplied by the main deck.  The actual tunneling junction is set
+up by the
+<b> QTREGION </b> statement.  Its limits in the y-direction (-0.2 microns to 0.2 microns)
+are sufficient to ensure that the tunneling slices start and end outside
+the depletion region under the biasing conditions considered.
+</p>
+<p>
+There are 6 tunneling slices which are parallel and regularly spaced,
+with 151 points each on which to do the tunnel current calculation.
+</p>
+<p>
+The parameters on the MATERIAL statement
+</p>
+<b> me.tunnel and  mh.tunnel</b> <p>
+have the major influence on the tunneling current and can be used as
+fitting parameters. ni.min is specified to avoid underflow at these
+low temperatures.
+</p>
+<p>
+The model
+<b> BBT.NONLOCAL </b> is specified on the MODELS statement, along with
+<b> BBT.NLDERIVS</b> which includes fully non-local coupling into the jacobian matrix.
+</p>
+<p>
+If you wish to save out a structure point at a given value of bias, you
+can see the internal quantum tunnel current as a generation rate. This
+is optional.
+</p>
+<p>
+The bias is ramped up to 0.15 V of forward bias and the I-V curves saved
+in logfiles.  The
+<b> extract</b> statement is used to find the peak value of the current, and the value
+of bias at which it occurs.  The I-V curves are plotted.
+</p>
+<p>
+The other plots are of the logarithm of the peak current versus the reciprocal
+of the square root of the doping level.  This curve is approximately a
+straight line as is observed experimentally.  Also shown is the bias at which
+the tunnel current is a maximum.  This increases with the doping level,
+reflecting the more favourable band lineup for tunneling under more
+degenerate doping.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

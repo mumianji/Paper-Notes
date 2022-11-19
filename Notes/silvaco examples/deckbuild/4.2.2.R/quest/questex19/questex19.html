@@ -1,0 +1,111 @@
+<html>
+  <head>
+    <title>optimization procedure</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>optimization procedure</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>QUEST, OPTIMIZER</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>QUEST 2.0.2.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="questex19_plot0.png" width="640" alt="questex19_plot0" />
+      <p/>
+      <img src="questex19_plot1.png" width="640" alt="questex19_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<p>
+This example can  be used as a tutorial for setting up an optimization
+procedure with a so-called curved target. This example is based on
+questex14.in
+</p>
+<p>
+Running the Example
+</p>
+<p>
+An experimental profile is provided with the example in a simple XY format
+which can be read into the OPTIMIZER
+<b> questex19.opt.</b> </p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+<p>
+The goal of the example is to find
+<b> Metal1 Thickness and conductivity</b> that will give a Q factor versus frequency close to the experimental one.
+To achieve this, select
+<b> Optimizer... </b> from the
+<b> Main Control </b> menu. The
+<b> DeckBuild: Optimizer </b> screen will appear in a moment.
+</p>
+<p>
+First, select
+<b> Parameters </b> from the
+<b> Mode  </b> menu; this will display the Parameter worksheet. To define the parameters,
+select (highlight) the
+MATERIAL name = &quot;m1&quot; statement from the input deck and choose
+<b> Add </b> from the
+<b> Edit </b> pulldown menu. The
+<b> Parameter define </b> popup will appear. Check cond, then press
+<b> Apply. </b> Redo the same thing with the DEPOSIT deposit type = &quot;metal&quot; layername = &quot;M1&quot;
+statement and select thick. By default all min/max values for parameters are
++-50%. To edit any of these numeric values position the pointer over the
+corresponding cell of the worksheet, click the left-hand mouse button, edit
+the value, and do not forget to press return after finishing the
+editing. You should change the default +-50% in this case. Set Minimum value
+of the conductivity to 1e+06 and maximum to 1e+08 and Minimum value for thickness
+to 0.25 and Maximum to 1.
+</p>
+<p>
+The next step is setting the curved target. Select
+<b> Targets </b> from the
+<b> Mode </b> menu. Highlight the
+<b> extract name=&quot;simu&quot; </b> line. This line extracts the Q factor verus frequency. Choose
+<b> Add </b> from the
+<b> Edit </b> pulldown menu. A new row will be inserted into the Target worksheet.
+The target name will correspond to the name in the extract statement.
+To insert a curved target select the only row in the worksheet
+by double-clicking the left-hand button while the pointer is positioned
+anywhere in the row, then choose
+<b> From File </b> from the
+<b> Insert </b> submenu from the
+<b> X/Y Data </b> menu under the
+<b> Edit </b> pulldown menu. As the result the
+<b> Optimizer X/Y Target Data </b> popup will appear. Select
+<b> questex19.opt </b> file and then press
+<b> Load.</b> </p>
+<p>
+Once the parameters, targets, and setup information have been
+defined, the Optimization process can be started by pressing the
+<b> Optimize  </b> button. During the optimization run, the
+<b> Graphics </b> mode shows real-time updates of parameter, target, and error values.
+</p>
+<p>
+Results analysis
+</p>
+<p>
+After optimization is completed you may execute the
+<b> tonyplot </b> command which will plot the comparison between optimized and measured profiles.
+</p>
+  </div></body>
+</html>

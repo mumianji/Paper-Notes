@@ -1,0 +1,268 @@
+# (c) Silvaco Inc., 2018
+go athena
+Title     Combined ATHENA (in 1D mode) and ATLAS Simulation of Bipolar Device
+#
+# First run: Through emitter
+#
+line x location=0 spacing=0.1
+line x location=0.1 spacing=0.1
+Initialize  <100> Silicon  Thick=5. \
+            dX=.01 XdX=.05 Spaces=100 one.d x.loc=0.05
+
+
+#           Implant and drive-in the antimony buried layer.
+Implant     Antimony  Dose=5E14  Energy=120
+Diffusion   Temperature=1150  Time=15  DryO2
+Diffusion   Temperature=1150  Time=300
+
+Etch        Oxide all
+
+#           Epi-layer formation
+Epitaxy     Temperature=1050 Time=4 growth.rate=0.4 div=80 \
+            c.arsenic=5E15
+
+#           Base screen oxide
+diffuse     time=20 temp=950 wet
+
+#           Base implant
+Implant     Boron  Dose=5E13  Energy=40 amorph
+
+#           Base drive
+diffuse     time=30 temp=950
+
+etch oxide all
+
+#           Polysilicon deposition
+Deposit     Polysilicon  Thickness=.5 div=10  
+
+#           Polyemitter implant
+implant     phos energy=40 dose=5e15
+
+#           emitter drive-in
+Diffusion   Temperature=1000  Time=10  
+
+#           p+ contact implant
+#implant     boron dose=7e14 energy=40
+#           n+ contact implant
+#implant     phos dose=4e15 energy=40
+#           final anneal
+diffuse     time=60 temp=900
+etch        oxide all
+etch        poly all
+#           Extract base sheet resistance
+extract name="bshro" sheet.res material="Silicon" mat.occno=1 region.occno=1
+
+#           Extract basewidth
+extract name="Xj1" xj silicon mat.occno=1 junc.occno=1
+#
+extract name="Xj2" xj silicon mat.occno=1 junc.occno=2
+#
+extract name="basewidth" $Xj2 - $Xj1
+
+Structure outfile=bjtex10_1.str
+
+#
+# Second  run: Through base
+#
+line x location=0 spacing=0.1
+line x location=0.1 spacing=0.1
+Initialize  <100> Silicon  Thick=5. \
+            dX=.01 XdX=.05 Spaces=100
+
+
+#           Implant and drive-in the antimony buried layer.
+Implant     Antimony  Dose=5E14  Energy=120
+Diffusion   Temperature=1150  Time=15  DryO2
+Diffusion   Temperature=1150  Time=300
+
+Etch        Oxide all
+
+#           Epi-layer formation
+Epitaxy     Temperature=1050 Time=4 Growth.Rate=0.4 div=80 \
+            c.arsenic=5E15
+
+#           Base screen oxide
+diffuse     time=20 temp=950 wet
+
+#           Base implant
+Implant     Boron  Dose=5E13  Energy=40 amorph
+
+#           Base drive
+diffuse     time=30 temp=950
+
+#etch oxide all
+
+#           Polysilicon deposition
+#Deposit     Polysilicon  Thickness=.5  Temp=620 
+
+#           Polyemitter implant
+#implant     phos energy=40 dose=5e15
+
+#           emitter drive-in
+Diffusion   Temperature=1000  Time=10  
+
+#           p+ contact implant
+#implant     boron dose=7e14 energy=40
+#           n+ contact implant
+#implant     phos dose=4e15 energy=40
+#           final anneal
+diffuse     time=60 temp=900
+etch oxide all
+struct outfile=bjtex10_2.str
+extract name="basexj" xj silicon mat.occno=1 junc.occno=1
+
+#
+# Third run run: Through P= contact
+#
+line x location=0 spacing=0.1
+line x location=0.1 spacing=0.1
+Initialize  <100> Silicon  Thick=5. \
+            dX=.01 XdX=.05 Spaces=100
+
+
+#           Implant and drive-in the antimony buried layer.
+Implant     Antimony  Dose=5E14  Energy=120
+Diffusion   Temperature=1150  Time=15  DryO2
+Diffusion   Temperature=1150  Time=300
+
+Etch        Oxide all
+
+#           Epi-layer formation
+Epitaxy     Temperature=1050 Time=4 Growth.Rate=.4 div=80 \
+            C.Arsenic=5E15
+
+#           Base screen oxide
+diffuse     time=20 temp=950 wet
+
+#           Base implant
+#Implant     Boron  Dose=5E13  Energy=40 amorph
+
+#           Base drive
+diffuse     time=30 temp=950
+
+#etch oxide all
+
+#           Polysilicon deposition
+#Deposit     Polysilicon  Thickness=.5  Temp=620 
+
+#           Polyemitter implant
+#implant     phos energy=40 dose=5e15
+
+#           emitter drive-in
+Diffusion   Temperature=1000  Time=10  
+
+#           p+ contact implant
+implant     boron dose=8e14 energy=30 am
+#           n+ contact implant
+#implant     phos dose=4e15 energy=40
+#           final anneal
+diffuse     time=60 temp=900
+etch oxide all
+struct outfile=bjtex10_3.str
+
+#
+# Fourth run: Through collector
+#
+line x location=0 spacing=0.1
+line x location=0.1 spacing=0.1
+Initialize  <100> Silicon  Thick=5. \
+            dX=.01 XdX=.05 Spaces=100
+
+
+#           Implant and drive-in the antimony buried layer.
+Implant     Antimony  Dose=5E14  Energy=120
+Diffusion   Temperature=1150  Time=15  DryO2
+Diffusion   Temperature=1150  Time=300
+
+Etch        Oxide all
+
+#           Epi-layer formation
+Epitaxy     Temperature=1050 Time=4 Growth.Rate=.4  div=80 \
+            C.arsenic=5E15
+
+#           Base screen oxide
+diffuse     time=20 temp=950 wet
+
+#           Base implant
+#Implant     Boron  Dose=5E13  Energy=40 am
+
+#           Base drive
+diffuse     time=30 temp=950
+
+#etch oxide all
+
+#           Polysilicon deposition
+#Deposit     Polysilicon  Thickness=.5  Temp=620 
+
+#           Polyemitter implant
+#implant     phos energy=40 dose=5e15
+
+#           emitter drive-in
+Diffusion   Temperature=1000  Time=10  
+
+#           p+ contact implant
+#implant     boron dose=8e14 energy=30 am
+#           n+ contact implant
+implant     phos dose=4e15 energy=80
+#           final anneal
+diffuse     time=60 temp=900
+etch oxide all
+struct outfile=bjtex10_4.str
+
+go atlas noauto
+
+mesh
+x.m l=0 spac=0.2
+x.m l=1.2 spac=0.08
+x.m l=2.7 spac=0.2
+x.m l=4 spac=0.1
+x.m l=5 spac=0.1
+x.m l=7.5 spac=0.5
+x.m l=9.5 spac=0.2
+x.m l=12 spac=0.5
+
+y.m l=0 spac=0.04
+y.m l=0.15 spac=0.01
+y.m l=0.225 spac=0.02
+y.m l=0.3 spac=0.01
+y.m l=1.5 spac=0.1
+y.m l=5 spac=0.5
+
+eliminate x.min=0 x.max=12 y.min=0.5 y.max=5 columns
+
+region num=1 silicon
+
+electrode name=emitter         length=1.0
+electrode name=base  x.min=4   length=1.0
+electrode name=collector right length=1.0
+
+#	    emitter
+doping master athena.1d inf=bjtex10_1.str   antimony 
+doping master athena.1d inf=bjtex10_1.str   arsenic 
+doping master athena.1d inf=bjtex10_1.str   phos x.right=1 ratio.lat=0.75
+#	    base
+doping master athena.1d inf=bjtex10_2.str      boron x.right=5 ratio.lat=0.8
+#	    ppcontact
+doping master athena.1d inf=bjtex10_3.str boron x.left=4 x.right=5 ratio.lat=0.8
+#	    collector
+doping master athena.1d inf=bjtex10_4.str phos x.left=10 ratio.lat=0.6
+
+save outf=bjtex10_0.str
+tonyplot  bjtex10_0.str -set bjtex10_0.set
+
+contact name=emitter n.poly surf.rec
+models bipolar print  
+material taun0=1e-6 taup0=1e-6
+
+solve init
+method newton trap
+solve init
+solve vcollector=2 local
+solve vbase=0.1
+ 
+log outf=bjtex10.log
+solve vbase=0.2 vstep=0.05 vfinal=0.9 name=base 
+
+tonyplot  bjtex10.log -set bjtex10_log.set
+
+quit

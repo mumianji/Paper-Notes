@@ -1,0 +1,86 @@
+<html>
+  <head>
+    <title>Multiple Longitudinal Modes in Ridge MQW  Laser</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Multiple Longitudinal Modes in Ridge MQW  Laser</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Blaze/Quantum/Laser</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="laserex08_plot0.png" width="640" alt="laserex08_plot0" />
+      <p/>
+      <img src="laserex08_plot1.png" width="640" alt="laserex08_plot1" />
+      <p/>
+      <img src="laserex08_plot2.png" width="640" alt="laserex08_plot2" />
+      <p/>
+      <img src="laserex08_plot3.png" width="640" alt="laserex08_plot3" />
+      <p/>
+      <img src="laserex08_plot4.png" width="640" alt="laserex08_plot4" />
+      <p/>
+      <img src="laserex08_plot5.png" width="640" alt="laserex08_plot5" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates the simulation of
+GaAs/AlGaAs ridge  laser diode with multiple longitudinal modes.
+Previous example showed that TE-like fundamental mode is the main lasing mode.
+Here we use scalar Helmholtz solver and exclude TM modes, using parameter  HELM.TM.
+Slab transverse modes are neglected.
+Longitudinal modes in the range of energies  [1.42; 1.5] eV are taken into account.
+To limit the number of longitidinal modes, we set intermode energy separation to 4meV using DELTAE parameter.
+If this parameter is omitted, energy separation will be that of Fabry-Perot resonator with length set by CAVITY_LENGTH.
+Laser simulation starts automatically whenever optical gain anywhere in the device becomes positive, which happens just before the threshold.
+If subthreshold behavior is of interest, use START parameter on LASER statement.
+</p>
+<p>
+The key points of this simulation are :
+</p>
+<ul>
+  <li>
+ Multi-longitudinal  mode simulation, with mode competition
+<br/>
+  </li>
+  <li>
+ Demonstration of scalar Helmholtz solver
+<br/>
+  </li>
+  <li>
+ Demonstration of modal spectra.  
+<br/>
+  </li>
+</ul>
+<p>
+The results show 2D plots of total optical intensity at anode bias of 1.5V.
+The IV log file contains information of the power, photon density modal gain, modal loss and modal refractive index for the fundamental transverse  mode.
+Spectrum log files contain information on gain and spontaneous emission spectra for each quantum well.
+Modal spectrum log files are stored when SPECTRUM is specified on the SAVE statement with &quot;_modal&quot; appended at the end of the file name. Modal spectra contain modal gain, modal Rsp, modal photon density and modal lifetime for each longitudinal mode.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

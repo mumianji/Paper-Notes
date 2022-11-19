@@ -1,0 +1,144 @@
+go athena
+
+set con_thk=0.2
+set csi_thk=300
+set defect_csi=0.001
+set iasi_thk=0.01
+set asi_thk=0.02
+
+set n_width=500
+set p_width=1700-$n_width
+set gap=50
+
+set cell_width=$p_width+$gap+$n_width
+
+line x loc=0				  spac=$gap/5
+line x loc=$p_width/2 			  spac=$csi_thk/2
+line x loc=$p_width 			  spac=$gap/5
+line x loc=$p_width+$gap 		  spac=$gap/5
+line x loc=$p_width+$gap+$n_width/2       spac=$csi_thk/2
+line x loc=$cell_width 	  		  spac=$gap/5
+ 	                  
+line y loc=0.0 			          spac=$csi_thk/500e03
+line y loc=$csi_thk/2 		          spac=$csi_thk/10
+line y loc=$csi_thk 		          spac=$csi_thk/500
+
+init silicon two.d 
+
+deposit material=cSi thick=$defect_csi div=5
+deposit material=iASi thick=$iasi_thk divisions=10
+deposit material=ASi thick=$asi_thk divisions=10
+deposit aluminum thick=$con_thk divisions=5
+
+etch aluminum        start      x=$p_width 	   y=-350
+etch cont  	 		x=$p_width          y=0
+etch cont  	 		x=$p_width+$gap     y=0
+etch done 			x=$p_width+$gap     y=-350
+etch aluminum        start      x=$cell_width 	   y=-350
+etch cont  	 		x=$cell_width       y=0
+etch cont  	 		x=$cell_width+$gap  y=0
+etch done 			x=$cell_width+$gap  y=-350
+
+
+etch material=ASi        start  x=$p_width 	   y=-350
+etch cont  	 		x=$p_width          y=0
+etch cont  	 		x=$p_width+$gap     y=0
+etch done 			x=$p_width+$gap     y=-350
+etch material=Asi        start  x=$cell_width 	   y=-350
+etch cont  	 		x=$cell_width       y=0
+etch cont  	 		x=$cell_width+$gap  y=0
+etch done 			x=$cell_width+$gap  y=-350
+
+electrode name=anode x=$p_width/2 y=-0.1
+electrode name=cathode x=$p_width+$gap+$n_width/2 y=-0.1
+
+structure flip.y
+
+structure outf=solarex18_0.str
+
+
+go atlas 
+
+set defect=3e18
+set n_interf=5e16
+
+mesh inf=solarex18_0.str 
+
+doping uniform n.type conc=2.2e15 material=iASi
+doping uniform n.type conc=5e15 material=silicon
+doping uniform n.type conc=5e15 region=2
+doping uniform p.type conc=2e19 region=4
+doping uniform n.type conc=1.5e19 region=5
+
+interface s.n=10 s.p=10 y.min=-300 y.max=-300 s.x
+interface y.min=0.001 y.max=0.001 s.s thermionic tunnel
+
+material user.default=silicon mat=iASi mun=5 mup=1 eg300=1.7 nc300=3e20  affinity=3.86 \
+                                       nv300=3e20 permittivity=11.9 sopra=Siam1.nk  
+material user.default=silicon mat=ASi  mun=5 mup=1 eg300=1.7 nc300=3e20 affinity=3.86 \        
+                               nv300=3e20 permittivity=11.9 sopra=Siam1.nk  
+
+material material=silicon taun0=2e-3 taup0=2e-3 
+material user.default=silicon material=csi taun0=2e-3 taup0=2e-3 
+
+# p-type a-Si
+defect reg=4 cont nta=1e21 ntd=1e21 wta=0.07 wtd=0.12 \
+    nga=1e19 ngd=1e19 ega=1.3 egd=1.1 wga=0.2 wgd=0.2 \
+    sigtae=2e-16 sigtah=1e-16 sigtde=1e-16 sigtdh=3e-17 \ 
+    siggae=1e-16 siggah=1e-16 siggde=5e-17 siggdh=1e-15 \
+    numa=50 numd=50 tfile=solarex18_pdefect.dat
+
+# n-type a-Si
+defect reg=5 cont nta=1e21 ntd=1e21 wta=0.07 wtd=0.12 \
+    nga=1e19 ngd=1e19 ega=0.7 egd=0.45 wga=0.2 wgd=0.2 \
+    sigtae=2e-16 sigtah=1e-16 sigtde=1e-16 sigtdh=3e-17 \ 
+    siggae=1e-16 siggah=1e-16 siggde=5e-17 siggdh=1e-15 \
+    numa=50 numd=50 tfile=solarex18_ndefect.dat
+
+# Intrisic a-Si
+defect reg=3 cont nta=1e18 ntd=1e18 wta=0.06 wtd=0.09 \
+    nga=1e16 ngd=$defect ega=1.1 egd=0.9 wga=0.15 wgd=0.15 \
+    sigtae=2e-16 sigtah=1e-16 sigtde=1e-16 sigtdh=3e-17 \ 
+    siggae=1e-16 siggah=1e-16 siggde=5e-17 siggdh=1e-15 \
+    numa=50 numd=50 tfile=solarex18_idefect.dat
+
+# Defective region between c-si and (i)a-si
+defect reg=2 cont nta=0 ntd=0 wta=0.07 wtd=0.12 \
+    nga=$n_interf ngd=$n_interf ega=0.5 egd=0.5 wga=0.2 wgd=0.2 \
+    sigtae=1e-16 sigtah=1e-16 sigtde=1e-16 sigtdh=1e-16 \ 
+    siggae=1e-16 siggah=1e-16 siggde=1e-16 siggdh=1e-16 \
+    numa=50 numd=50 tfile=solarex18_interdefect.dat
+
+
+models srh auger fermi bgn print 
+model bqp.n bqp.ngamma=0.4
+model material=silicon conmob 
+
+beam num=1 x.origin=$cell_width/2 y.origin=-305 angle=90 power.file=solarex18.spec 
+
+output con.band val.band band.para u.srh u.aug flowlines opt.int charge traps u.trap
+
+probe name=inten beam=1 intensity max
+
+method itlimit=40 maxtraps=30
+
+solve init 
+solve b1=1
+save outf=solarex18_1.str
+
+log outf=solarex18_0_$'iasi_thk'.log
+solve vanode=0 name=anode vstep=0.05 vfinal=0.6
+solve name=anode vstep=0.01 vfinal=0.75
+
+extract init inf="solarex18_0_$'iasi_thk'.log"
+extract name="JscmAcm2" (y.val from curve(v."anode", i."cathode") where x.val=0.0)*1e08*1e03/($cell_width)
+extract name="Voc" x.val from curve(v."anode", i."cathode") where y.val=0.0 
+extract name="Pm" max(curve(v."anode", (v."anode" * i."cathode"))) 
+extract name="Vm" x.val from curve(v."anode", (v."anode"*i."cathode") ) \
+	where y.val=$"Pm"
+extract name="Im" $"Pm"/$"Vm"
+extract name="Jsc" y.val from curve(v."anode", i."cathode") where x.val=0.0
+extract name="FF" ($"Pm"/($"Jsc"*$"Voc"))*100
+extract name="intens" max(probe."inten")
+extract name="Eff" ($Pm/($"intens"*($cell_width)/1e8))*100
+ 

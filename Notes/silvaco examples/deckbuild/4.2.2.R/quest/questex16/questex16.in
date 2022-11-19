@@ -1,0 +1,106 @@
+
+go quest 
+
+
+# Techno FILE
+
+layermapping layer.name = "M5" gds.Number = 0 gds.Datatype = 0
+layermapping layer.name = "MIM" gds.Number = 1 gds.Datatype = 0
+layermapping layer.name = "M6" gds.Number = 2 gds.Datatype = 0
+layermapping layer.name = "Electrode_M5" gds.Number = 3 gds.Datatype = 0
+layermapping layer.name = "Electrode_M6" gds.Number = 4 gds.Datatype = 0
+
+layermapping layer.name = "Electrode_M5_TXT" gds.Number = 3 gds.Datatype = 0 isText
+layermapping layer.name = "Electrode_M6_TXT" gds.Number = 4 gds.Datatype = 0 isText
+
+attach electrode.layer = "Electrode_M5" metal.layer = "M5"
+attach electrode.layer = "Electrode_M6" metal.layer = "M6"
+
+connection layer = "Electrode_M5" con.layer1 = "Electrode_M5_TXT"
+connection layer = "Electrode_M6" con.layer1 = "Electrode_M6_TXT"
+connection layer = "M6" con.layer1 = "MIM" 
+connection layer = "MIM" con.layer1 = "M6" 
+
+
+# PROCESS
+
+material name = "aluminum" cond = 3.76676e+07 permittivity = 1 permeability = 1 losstangent = 0
+material name = "oxide" cond =  0 permittivity = 3.9 permeability = 1 losstangent = 0
+material name = "silicon" cond = 5.5 permittivity = 11.8 permeability = 1 losstangent = 0
+material name = "copper" cond = 4.8e+07 permittivity = 1 permeability = 1 losstangent = 0
+material name = "air" cond =  0 permittivity = 1 permeability = 1 losstangent = 0
+material name = "MIM3b_diel" cond =  0 permittivity = 3.9 permeability = 1 losstangent = 0
+material name = "nitride" cond =  0 permittivity = 7.5 permeability = 1 losstangent = 0
+material name = "SiN" cond =  0 permittivity = 7 permeability = 1 losstangent = 0
+
+deposit type = "substrate" layer.name = "substrate" thick = 400 matName = "silicon"
+deposit type = "dielectric" layer.name = "Dielec0" thick = 0.6 matName = "oxide"
+deposit type = "metal" layer.name = "M5" thick = 0.3 matName = "copper" anglex = 0 angley = 0
+deposit type = "dielectric" layer.name = "Dielec1" thick = 0.3 matName = "oxide"
+deposit type = "dielectric" layer.name = "Dielec2" thick = 0.035 matName = "SiN" anglex = 0 angley = 0
+deposit type = "metal" layer.name = "MIM" thick = 0.4 matName = "copper" anglex = 0 angley = 0
+deposit type = "dielectric" layer.name = "Dielec3" thick = 0.4 matName = "oxide"
+deposit type = "metal" layer.name = "M6" thick = 0.8 matName = "copper" anglex = 0 angley = 0
+deposit type = "dielectric" layer.name = "Dielec4" thick = 0.08 matName = "SiN" anglex = 0 angley = 0
+deposit type = "dielectric" layer.name = "Dielec5" thick = 0.72 matName = "oxide"
+deposit type = "dielectric" layer.name = "Dielec6" thick = 0.05 matName = "SiN" anglex = 0 angley = 0
+deposit type = "dielectric" layer.name = "Dielec7" thick = 0.6 matName = "oxide"
+deposit type = "dielectric" layer.name = "AIR" thick = 50 matName = "air"
+
+
+# SOLVER
+
+Init simulation.type = "PORT" solvertype = "3D_Solver" \
+	 impedance.residual = 0.01 impedance.iteration = 50	\
+	 capacitance.residual = 0.01 capacitance.iteration = 50 \
+	 domainbase = "Floating"	Z0 = 50	add.resistance = 0	\
+	 dx = 0.5 dy = 0.5 dz = 0.2	\
+	 computation.domain = "Automatic"
+
+# 4 ports simulation. All ports must be defined in one "electrodes" command. 
+# !! port 1 (IN1) 2 (OUT1) 3(IN2) and 4(OUT2) in this order 
+electrodes ports = "In_M5", "gin1,gin2", "In_M6", "gin1,gin2" ,"Out_M5", "gout1,gout2", "Out_M6", "gout1,gout2"
+
+# keep port 1 and 4
+transform ports = "In_M5","gin1,gin2","Out_M6","gout1,gout2"
+
+Frequency type = "Range" range = 15, 15000 nsteps = 15 range.variation = "Lin"
+
+# layout
+
+set L = 2
+set W = 2
+
+creategds script = "questex16.xis" outgdsfile = "questex16_Length=$"L"Width=$"W".gds" \
+		  argumentnames = "L","W"	\
+		  arguments = $"L",$"W"
+
+layout gdsfile = "questex16_Length=$"L"Width=$"W".gds" cell = "CELL"
+
+
+save	database.path = "questex16_db"	\
+		spicefile.name = "spice" 	tonyfile.name = "tony" \
+		sparameterfile.name = "spara" 3D.file="structure"
+
+# RUN
+solve
+
+# ANALYSIS
+
+
+runjavascript filename = "questex16.js"
+
+# This is to compare B-I calculated by QUEST and the model.
+# questex16.set is generated automatically by questex16_1.js
+# and contain B_I model equation.
+# Set in tonyplot Frequency as X-axis and B-I and function1 as Y-axis.
+
+tonyplot questex16_table.dat -set questex16.set
+
+extract init inf="questex16_table2.dat"
+extract name="C" max(curve(da.value."", da.value."C"))
+extract name="CfF" $C*1e15
+extract name="L" max(curve(da.value."", da.value."L"))
+extract name="LpH" $L*1e12
+
+quit

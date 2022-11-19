@@ -1,0 +1,82 @@
+# (c) Silvaco Inc., 2018
+go atlas
+TITLE SOI device simulation
+#
+# 0.1um of silicon on 0.4um oxide substrate     
+#
+mesh   space.mult=1.0
+# 
+x.mesh loc=0.00   spac=0.50
+x.mesh loc=1.15   spac=0.02
+x.mesh loc=1.5    spac=0.1
+x.mesh loc=1.85   spac=0.02
+x.mesh loc=3      spac=0.5
+#
+y.mesh loc=-0.017 spac=0.02
+y.mesh loc=0.00   spac=0.005
+y.mesh loc=0.05   spac=0.02
+y.mesh loc=0.1    spac=0.01
+y.mesh loc=0.5    spac=0.25
+#
+region      num=1 y.max=0    oxide 
+region      num=2 y.min=0    y.max=0.1 silicon
+region      num=3 y.min=0.1  oxide
+#
+#*********** define the electrodes ************
+# #1-GATE #2-SOURCE #3-DRAIN #4-SUBSTRATE(below oxide)
+#
+electrode   name=gate    x.min=1 x.max=2 y.min=-0.017 y.max=-0.017
+electrode   name=source x.max=0.5 y.min=0 y.max=0
+electrode   name=drain  x.min=2.5 y.min=0 y.max=0
+electrode   substrate
+#
+#*********** define the doping concentrations *****
+#
+doping       uniform conc=1e17 p.type  reg=2
+doping       gauss n.type conc=1e20 char=0.2 lat.char=0.05 reg=2 x.r=1.0 
+doping       gauss n.type conc=1e20 char=0.2 lat.char=0.05 reg=2 x.l=2.0 
+save         outf=soiex02_0.str
+tonyplot     soiex02_0.str -set soiex02_0.set
+#
+# set interface charge separately on front and back oxide interfaces
+interf       qf=3e10 y.max=0.05
+interf       qf=1e11 y.min=0.05
+#
+# set workfunction of gate
+contact      name=gate n.poly
+#
+# select models
+models       conmob srh auger bgn fldmob print 
+#
+solve init
+#
+# do IDVG characteristic
+#
+method       newton    trap 
+solve        prev 
+solve        vgate=-0.2 
+solve        vdrain=0.05
+solve        vdrain=0.1
+#
+# ramp gate voltage
+log          outf=soiex02_1.log master
+solve       vgate=0.1 vstep=0.1 name=gate vfinal=1.5
+#
+# plot resultant IDVG threshold voltage curve 
+tonyplot    soiex02_1.log -set soiex02_1.set
+#
+# plot resultant IDVG subthreshold slope curve 
+tonyplot    soiex02_1.log -set soiex02_2.set
+#
+#
+extract name="subvt" \
+        1.0/slope(maxslope(curve(v."gate",log10(abs(i."drain")))))
+#
+#
+extract name="vt" (xintercept(maxslope(curve(v."gate",abs(i."drain")))) \
+        - abs(ave(v."drain"))/2.0)
+#
+quit
+
+
+

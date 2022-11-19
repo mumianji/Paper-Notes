@@ -1,0 +1,102 @@
+<html>
+  <head>
+    <title>SiC Extended Precision PiN Diode simulation</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>SiC Extended Precision PiN Diode simulation</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Blaze</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="sicex01_plot0.png" width="640" alt="sicex01_plot0" />
+      <p/>
+    </div>
+    <div id="text" >
+</p>
+<br/>
+<p>
+This example demonstrates simulation of a reverse SiC PiN Diode characteristic
+versus different levels of arithmetic precision.
+</p>
+<p>
+Simulation of wide band gap semiconductor devices is challenging mainly
+because the intrinsic carrier concentration is small. One solution to
+overcome this problem is to artificially increase the intrinsic carrier
+concentration. A more rogorous method consists of using different levels
+of arithmetic precision.
+</p>
+<p>
+For well-converged solutions, run-time increases with precision. The
+increase is especially significant at the highest precision levels.
+</p>
+<p>
+On the other hand, certain problems (e.g. SiC devices) that have difficulty
+converging at the lower precision levels are likely to run faster if the
+precision level is increased. Accordingly, the optimum precision level for
+a particular problem is likely to be the minimum level that yields good
+convergence during the solution.
+</p>
+<p>
+The maximum precision that may be required for a well-converged solution can
+be estimated from the semiconductor bandgap. However, it is often possible to
+simulate a given device, under particular bias conditions, using a precision
+less than this maximum. Conversely, we can say that a given precision level
+is supportive of bandgaps up to a certain value, and convergence may be
+difficult if materials with higher bandgaps are simulated.
+</p>
+<p>
+SiC may need to be simulated using a nominal precision of 256-bits.
+However in this example and as mentionned above 128 bits precision
+is enough in this case.
+</p>
+<p>
+In the first part of the input deck a simple SiC PiN diode is created.
+Then multiple breakdown voltage simulations are performed with different
+levels of arithmetic precision. The level of arithmetic precision is set
+in Atlas using the
+<b> simflags=&quot;-128&quot; </b> parameter in the
+<b> go atlas </b> statement for a 128 bits precision.
+</p>
+<p>
+All the simulation were performed with the
+<b> SiC anisotropic Impact Ionization model </b> </p>
+<p>
+Simulation time are extracted for all simulations in deckbuild using
+<b> extract name=&quot;t&quot; clock.time </b> </p>
+<p>
+The results are plotted and overlayed in tonyplot showing that the
+Breakdown Voltage is independent of the precision used during the
+simulation. As mentionned above the 128 bits precision is enough to
+allow accurate simulation of the leakage current.
+</p>
+<p>
+It is also interesting to notice that the simulation time as a
+function of precision exhibits a bell shape and confirm what we
+mentioned above.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

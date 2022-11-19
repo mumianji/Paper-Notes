@@ -1,0 +1,125 @@
+# (c) Silvaco Inc., 2018
+go atlas
+#
+# Charge Integration
+# In this example we will calculate the charge generated in the well
+# of adjacent green and red pixels under green light illumination
+# and look at the saturation of charge collection and blooming
+# into the adjacent pixel.
+#
+mesh
+#
+# Structure definition
+#
+x.m l=0    s=0.1
+x.m l=10   s=0.1
+y.m l=0    s=0.25
+y.m l=1.5  s=0.1
+y.m l=2.5  s=0.1
+y.m l=5.0  s=0.05
+y.m l=5.5  s=0.05
+y.m l=6.5  s=0.05
+y.m l=9.5  s=0.1
+y.m l=10.5 s=0.1
+#
+region num=1 silicon y.min=6.5
+region num=2 oxide y.max=6.5
+region num=3 material=aluminum x.min=2.5  x.max=7.5  y.min=5 y.max=5.5
+#
+# color filters
+#
+region num=4 oxide y.min=1.5 y.max=2.5 x.min=0.0 x.max=4.0
+region num=5 oxide y.min=1.5 y.max=2.5 x.min=6.0 x.max=10.0
+#
+elec num=1 substrate
+elec num=2 material=aluminum x.min=2.5  x.max=7.5  y.min=5 y.max=5.5
+#
+# Background doping
+#
+doping region=1 unif p.type conc=2e15
+#
+# Isolation
+#
+doping region=1 gaus p.type conc=1e18 peak=6.5 char=0.25 x.min=2.5  x.max=7.5
+#
+# Nwell
+#
+doping region=1 gaus n.type conc=1e16 peak=6.6 char=0.05
+#
+# Here we set some models.  For this analysis these are not too important
+# as we are only looking at photogeneration.
+#
+model srh conmob fldmob print
+#
+# We choose a high index to reflect light in FDFD.
+#
+material material=Aluminum real.index=1 imag.index=10
+#
+# Here we set up the red filter to disallow 99% of the green source
+#
+material region=5 imag.index=0.1951
+#
+# We choose to output optical intensity 
+#
+output opt.int
+#
+# Here we define the optical source.  It is incident normal to the device
+# from above.  It has a wavelength of 0.5325 microns.  We select spacings
+# in time and space.  The space step should be a small fraction of the
+# wavelength (about 1/20th).  We specify to propogate 111 wavelengths.
+# At the end of the simulation we output a structure file of the FDTD
+# representation.
+#
+beam num=1 fdtd x.origin=5.0 y.origin=-4.0 angle=90.0 wavelength=0.5325 \
+   td.srate=7 fd.auto prop.leng=10 big.index td.err=0.01 \
+	td.end td.file="imagesensorex02_1" 
+#
+# Here we specify the spherical lenslets by index, location and radius.
+#
+lens plane=0.0 index=1.586 x.loc=0.0  y.loc=1.1667 radius=4.1667 spheric
+lens plane=0.0 index=1.586 x.loc=10.0 y.loc=1.1667 radius=4.1667 spheric
+#
+# We specify perfectly matched layers (PMLs) at the top and the bottom
+# to absorb exiting radiation.
+#
+pml top     degree=1 width=1 r90=0.001
+pml bottom  degree=1 width=1 r90=0.001 material=silicon
+#
+# We get an initial solution.
+#
+solve init
+#
+# Specify 2 carrier solutions
+#
+method carriers=2
+#
+# We probe the integrated electron charge in bounding boxes around
+# the N wells.
+#
+probe name="Qg" n.conc integrate x.min=0   x.max=2.5  y.min=6.5 y.max=7.5
+probe name="Qr" n.conc integrate x.min=7.5 x.max=10.0 y.min=6.5 y.max=7.5
+#
+# Initial solution empty the wells
+#
+method carriers=0
+solve
+solve n.bias=20.0
+#
+# We will capture the output in a log file.
+#
+log outf=imagesensorex02_1.log
+#
+# Turn on the light and integrate signal charge in time
+#
+method carriers=2
+solve tstop=1e-6 tstep=1e-9 b1=0.001 ramp.lit ramptime=5e-9
+save outf=imagesensorex02_2.str
+#
+# Plot the results
+#
+tonyplot imagesensorex02_1.str -set imagesensorex02_1.set
+tonyplot imagesensorex02_1.log -set imagesensorex02_3.set
+tonyplot imagesensorex02_2.str -set imagesensorex02_2.set
+#
+quit
+

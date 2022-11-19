@@ -1,0 +1,90 @@
+# TPCS version: 8
+# various properties
+log label 0
+key opaque 0
+mark frequency 0
+mark overlay 0
+graph width 0 1
+graph width 1 1
+graph width 2 1
+graph width 3 1
+graph width 4 4
+graph width 5 1
+sequence size 5
+sequence width 3
+log zero 1
+sequence mark 0 0
+sequence mark 1 1
+sequence mark 2 2
+sequence mark 3 3
+sequence mark 4 4
+sequence mark 5 5
+# Functions
+function 1 "" ""
+function 2 "" ""
+function 3 "" ""
+function 4 "" ""
+select 1
+# xygraph flags
+show points on
+show lines on
+# xygraph types
+xygraph type 0 convert 0
+xygraph yaxis scale linear
+# xygraph x-axis
+xygraph xaxis "Drain Voltage" linear
+# xygraph y-axes
+xygraph yaxis none
+xygraph yaxis "Drain Current" linear
+# xygraph group
+xygraph group "(unknown electricals)"
+# key positions
+key contours 1 at 3
+key contours 2 at 0
+key contours 3 at 0
+key electrical at 0
+key vectors at 0
+key overlay at 0
+key regions at 3
+key apply 
+# annotation, titles
+title main "ATLAS simulation of amorphous IGZO TFT"
+title sub "Comparison of experiment and simulation"
+# annotation, footers
+footer right none
+footer left none
+# annotation, show
+show xaxis on
+show yaxis on
+show grid off
+show label xaxis on
+show label yaxis on
+# annotation, axes
+range xaxis auto
+range yaxis auto
+label xaxis "Drain Voltage (V)"
+label yaxis "Drain Current (A)"
+# zoom
+zoom from 0, 0 scale 1, 1
+# user labels
+label "Vg=12 V" from 19.0243, 0.000197646 color 0 scale 0
+label 0 at 7 7
+label "Vg=16 V" from 18.9805, 0.00032981 color 0 scale 0
+label 1 at 7 7
+label "Vg=20 V" from 18.6737, 0.000421003 color 0 scale 0
+label 2 at 7 7
+label "Vg=4 V" from 18.9367, -8.53061e-06 color 0 scale 0
+label 3 at 7 7
+label "Vg=8 V" from 18.9805, 0.000103809 color 0 scale 0
+label 4 at 7 7
+# overlay level names
+label overlay 0 "simulation Vg=4 V"
+label overlay 1 "experiment Vg=4 V"
+label overlay 2 "simulation Vg=8 V"
+label overlay 3 "experiment Vg=8 V"
+label overlay 4 "simulation Vg=12 V"
+label overlay 5 "experiment Vg=12 V"
+label overlay 6 "simulation Vg=16 V"
+label overlay 7 "experiment Vg=16 V"
+label overlay 8 "simulation Vg=20 V"
+label overlay 9 "experiment Vg=20 V"

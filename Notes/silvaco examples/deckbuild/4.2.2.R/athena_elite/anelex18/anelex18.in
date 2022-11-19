@@ -1,0 +1,32 @@
+go athena
+
+#TITLE: Trench etch using rie model
+#
+line x loc=0.00 spac=0.05
+line x loc=3.00 spac=0.05
+#
+line y loc=0.00 spac=0.05
+line y loc=1.00 spac=0.05 
+# 
+init orientation=100 space.m=1
+#
+deposit oxide thick=0.10 div=5
+#
+etch oxide start x=1.2 y=-10
+etch       cont  x=1.2 y=10
+etch       cont  x=1.8 y=10
+etch       done  x=1.8 y=-10
+#
+rate.etch machine=det2 rie silicon n.m chemical=125 directional=100 divergence=90
+#
+rate.etch machine=det2 rie oxide n.m chemical=5.0 directional=5
+#
+etch mach=det2 time=5.0 minutes dx.mult=.5
+#
+
+structure outfile=anelex18.str
+
+tonyplot anelex18.str
+
+
+quit

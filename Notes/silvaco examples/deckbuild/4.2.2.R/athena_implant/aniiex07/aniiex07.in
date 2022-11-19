@@ -1,0 +1,55 @@
+go athena
+
+# Using Moments Statement with Parameters Extracted from MC Simulation
+
+#the x dimension definition
+line x loc = 0.0   spacing=0.25
+line x loc = 0.25  spacing=0.25
+
+#the vertical definition
+line y loc = 0     spacing = 0.01 
+line y loc = 0.4  spacing = 0.01
+
+
+#initialize the mesh
+set dose=1e13
+set energy=70
+set ion=boron
+set mat=tisi
+
+init $mat
+
+# First use MC method and save the structure and moments in it
+implant $ion dose=$dose energy=$energy monte n.ion=5000  print.mom 
+struct outf=aniiex07_01.str remove.gas
+
+
+#the x dimension definition
+line x loc = 0.0   spacing=0.25
+line x loc = 0.25  spacing=0.25
+
+#the vertical definition
+line y loc = 0     spacing = 0.01 
+line y loc = 0.4  spacing = 0.01
+
+
+#initialize the mesh
+init $mat
+# Now extract the moments from the saved structure
+extract init infile="aniiex07_01.str"
+   extract name="rp" param="RP"
+   extract name="drp" param="DRP"
+   extract name="skew" param="SKEW"
+   extract name="kurt" param="KURT"
+
+# Use them in the moments statement
+moments $mat i.$ion dose=$dose energy=$energy rp=$rp drp=$drp skewn=$skew kurtos=$kurt
+
+# Now analytical implant could be used
+implant $ion dose=$dose energy=$energy print.mom any.pearson=f
+struct outf=aniiex07_02.str
+
+tonyplot -overlay aniiex07_*.str -set aniiex07.set
+quit
+
+

@@ -1,0 +1,56 @@
+# TPCS version: 6
+# key positions
+key contours 1 at 3
+key contours 2 at 1
+key contours 3 at 6
+key electrical at user 0.364964, 0.487585
+key vectors at 6
+key overlay at user 0.072089, 0.062761
+key regions at 4
+# various properties
+log label 0
+select 1
+# plot flags, special
+show mesh off
+show edges on
+show materials on
+show contours off
+show light off
+show vectors off
+show junctions off
+show electrodes on
+show threed off
+draw 1
+# annotation, titles
+title main auto
+title sub auto
+# annotation, footers
+footer right none
+footer left none
+# annotation, show
+show xaxis on
+show yaxis on
+show grid off
+show label xaxis on
+show label yaxis on
+# annotation, axes
+range xaxis auto
+range yaxis auto
+label xaxis "Microns"
+label yaxis "Microns"
+# zoom
+zoom from 0, 0 scale 1, 1
+# user labels
+label "BURIED OXIDE" from 9.9562, 0.324862 color 0 scale 1
+label 0 at 5 5
+label "GATE OXIDE" from 9.86861, -0.0941896 color 0 scale 1
+label 1 at 5 5
+label "GRAIN" from 10.8905, 0.0980813 color 0 scale 1 to 10.6861, 0.0290609
+label 2 at 2 2
+label "GRAIN" from 2.24818, 0.0767178 color 0 scale 1 to 3.27007, 0.0356343
+label 3 at 5 5
+label "GRAIN BOUNDARY" from 7.62044, 0.142451 color 0 scale 1 to 5.34307, 0.033991
+label 4 at 2 2
+# overlay level names
+label overlay 0 "tftex07_0.str"
+draw all

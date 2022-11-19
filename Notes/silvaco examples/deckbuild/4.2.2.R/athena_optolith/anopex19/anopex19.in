@@ -1,0 +1,63 @@
+go athena
+#
+#                   OPTOLITH input file: anopex19.in
+#                   --------------------------------
+#
+#           This example illustrates exposure and development
+#	    over nonplanar topography using a user defined 
+#	    aerial image cross section.
+#
+# Define the structure
+# 
+line x loc=0.00 spac=0.25
+line x loc=1.25  spac=0.1
+line x loc=1.75  spac=0.1
+line x loc=3.00 spac=0.25
+#
+line y loc=0.5  spac=.1
+line y loc=1.00 spac=.1
+line y loc=1.50 spac=.1
+# 
+init silicon
+#
+#rate.develop name.resist= OiR32 i.line c.dill=0.026
+# 
+# Etch the silicon to create a simple wedge structure
+#
+etch silicon right p1.x=1.25 p1.y=.5 p2.x=1.75 p2.y=1.0
+# 
+# Deposit default photoresist
+#
+deposit name.resist=AZ1350J thick=1.00 divisions=60
+# 
+# Etch photoresist to create a flat top surface
+#
+etch name.resist=AZ1350J start x=0.00 y=-0.5 
+etch cont x=0.00 y=0.00 
+etch cont x=3.00 y=0.00 
+etch done x=3.00 y=-0.5 
+#
+# Expose using a user intensity cross section
+#
+expose inf=anopex19.exp dose=200.0
+#
+structure outfile=anopex19_0.str
+tonyplot anopex19_0.str
+#
+# Diffuse the PAC for the post exposure bake
+#
+bake time=45 seconds temp=115
+#
+structure outfile=anopex19_1.str
+#
+tonyplot anopex19_1.str -set anopex19_1.set
+#
+# Develop the photoresist
+#
+develop kim time=60 steps=8
+#
+structure outfile=anopex19_2.str
+#
+tonyplot anopex19_2.str
+#
+quit

@@ -1,0 +1,44 @@
+# TPCS version: 6
+# key positions
+key contours 1 at 3
+key contours 2 at 1
+key contours 3 at 6
+key electrical at user 0.048059, 0.014644
+key vectors at 6
+key overlay at 2
+key regions at 4
+select 1
+# xygraph flags
+show points on
+show lines on
+# xygraph types
+xygraph type 0 convert 0
+xygraph yaxis scale log
+# xygraph x-axis
+xygraph xaxis "base bias" linear
+# xygraph y-axes
+xygraph yaxis none
+xygraph yaxis "base current" log
+xygraph yaxis "collector current" log
+# annotation, titles
+title main auto
+title sub auto
+# annotation, footers
+footer right none
+footer left none
+# annotation, show
+show xaxis on
+show yaxis on
+show grid off
+show label xaxis on
+show label yaxis on
+# annotation, axes
+range xaxis auto
+range yaxis auto
+label xaxis "base bias (V)"
+# zoom
+zoom from 0.000000, 0.000000 scale 1.000000, 1.000000
+# user labels
+# overlay level names
+label overlay 0 "bjtex01_2.log"
+draw all

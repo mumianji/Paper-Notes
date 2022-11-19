@@ -1,0 +1,31 @@
+go athena
+
+#TITLE: Simple Boron Anneal
+
+#the x dimension definition
+line x loc = 0.0  spacing=0.1
+line x loc = 0.1  spacing=0.1
+
+#the vertical definition
+line y loc = 0     spacing = 0.02 
+line y loc = 2.0   spacing = 0.20 
+
+#initialize the mesh
+init silicon c.phos=1.0e14
+
+#perform uniform boron implant
+implant boron dose=1e13 energy=70
+
+#perform diffusion
+diffuse time=30 temperature=1000 
+#
+extract name="xj" xj silicon mat.occno=1 x.val=0.0 junc.occno=1
+
+#save the structure
+structure outfile=andfex01.str
+
+#plot the final profile
+tonyplot andfex01.str
+
+
+quit

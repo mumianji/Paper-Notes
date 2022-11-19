@@ -1,0 +1,94 @@
+
+go victoryprocess simflags="-P all"
+
+Init material=silicon depth=1 layout="clex20.lay" gasheight=5 \
+      resolution=0.05 meshdepth=1
+
+####################
+# Create variables #
+####################
+
+set sigma=40
+set iso=0
+set metal1_thick=0.565
+
+###########################
+# The process description #
+###########################
+
+Deposit MAX material=PMD thickness=1.5
+Deposit MAX material=nitride thickness=$metal1_thick
+Etch DRY material=nitride thickness=$metal1_thick mask=metal reverse
+
+####################################
+# Describe Etch Machine Properties #
+####################################
+
+Flux name=clever_flux \
+     pri_c_function="vonmises" \
+     pridep=theta \
+     pripar=$sigma
+                        
+Topography name=cleveretchmodel flux=clever_flux reaction=fluxdependent
+
+EtchDepoProperties name=clever_rates \
+                   material=silicon rate=0.38 \
+                   material=PMD     rate=0.38
+
+#####################################################################
+# Put Wafer into Etch Machine Described Above and Run for 4 Minutes #
+#####################################################################
+
+Etch model=cleveretchmodel materialproperties=clever_rates time=4
+
+###################################
+# Fill Etched Holes with Aluminum #
+###################################
+
+deposit material=aluminum thickness=-$metal1_thick max
+electrodes mask=metal material=aluminum
+
+Save name=clex20_vp
+
+
+############################
+# Create a mesh for Clever #
+############################
+
+
+go victorymesh
+
+load in="clex20_vp"
+remesh delaunay 
+
+refine regions="*" max.size=0.25
+refine regions="material:aluminum" max.interface.size=0.1 grading="quadratic" \
+       interface.regions="material:aluminum" other.interface.regions="material:si3n4,material:pmd"
+
+save mode="clever" out="clex20_vm.str"
+
+
+############################################################
+# Now Extract Capacitance Network of the Three Metal Lines #
+############################################################
+
+go clever
+
+init structure="clex20_vm.str" layout="clex20.lay"
+
+material silicon permittivity=11.8
+material nitride permittivity=8 
+material material("PMD") permittivity=4
+
+Interconnect Capacitance AdaptC=0.01
+
+Save Spice="clex20.net"
+
+##############################################
+# Make a Cut Line to View a 2D Cross Section #
+##############################################
+
+Cut line=(1, 7, 6.75, 7)
+save structure="clex20_2D.str"
+
+tonyplot clex20_2D.str -set clex20.set

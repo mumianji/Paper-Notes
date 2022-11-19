@@ -1,0 +1,77 @@
+<html>
+  <head>
+    <title>Defining a Gaussian Beam with Non-normal Incidence</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Defining a Gaussian Beam with Non-normal Incidence</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>S-Pisces/Luminous</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="optoex14_plot0.png" width="640" alt="optoex14_plot0" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates:
+<br/>
+ </p>
+<ul>
+  <li>
+ How to define an optical source that has a gaussion optical intensity
+<br/>
+   </li>
+  <li>
+ Application of the periodic boundary condition for light sources
+  </li>
+</ul>
+<p>
+The first four sections of the input file are similiar to the
+corresponding sections in the input file for example optoex01.in
+described previously.
+</p>
+<p>
+The fifth section describes the beam properties and follows in general the beam
+properties of example optoex10.in described previously.
+</p>
+<p>
+In Atlas, by default, an unspecified boundary condition for device simulation
+is assumed mirror or periodic.  However, for ray tracing by default the edges
+of the device are considered interfaces with a vacuum, and therefore reflections
+are calculated along these boundaries. In some cases it is useful to be able to
+specify the edges to be periodic in regards to ray tracing as well. This is
+particularly true when the beam is not normal to the plane.
+</p>
+<p>
+This example runs two simulations; the first with the default boundary conditions
+for ray tracing, and the second with periodic boundary conditions for the rays.
+The periodic boundary conditions are chosen by the
+<b> periodic</b> parameter of the BEAM statement.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

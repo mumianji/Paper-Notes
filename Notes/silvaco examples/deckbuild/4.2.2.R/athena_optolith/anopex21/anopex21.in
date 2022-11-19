@@ -1,0 +1,106 @@
+go athena 
+set example=anopex21
+# 
+#                   ATHENA Input File: anopex21.in
+#                   ----------------------------
+# 
+#      This example demonstrates BPM exposure of photoresist with
+#      with/without dependence of refractive index on dose. 
+#
+#
+# Define the structure
+# 
+line x loc=-1.5 spac=0.1
+line x loc=0  spac=0.025 
+line x loc=1.5 spac=0.1
+
+# 
+line y loc=0.00 spac=0.05
+line y loc=1. spac=0.05
+# 
+init silicon
+# 
+# Etch the silicon
+#
+etch silicon start x=-1 y=0.0
+etch cont x=-0.4 y=0.7
+etch cont x=0.4 y=0.7
+etch done x=1 y=0.0
+#
+# Deposit photoresist
+#
+deposit name.resist=KTI820 thick=1 divisions=50
+#
+etch name.resist=KTI820 above p1.y=-0.2 
+#
+struct outf=$"example".str
+#
+#
+# Mask layout
+#
+layout lay.clear x.lo=-1.50 z.lo=-1.50 x.hi=-0.80 z.hi=1.50 phase=0. trans=0.
+layout x.lo=-0.80 z.lo=-1.50 x.hi=-0.25 z.hi=1.50 phase=0. trans=1.
+layout x.lo=-0.25 z.lo=-1.50 x.hi=0.25 z.hi=1.50 phase=0. trans=0.
+layout x.lo=0.25 z.lo=-1.50 x.hi=0.8 z.hi=1.50 phase=0. trans=1.
+layout x.lo=0.80 z.lo=-1.50 x.hi=1.50 z.hi=1.50 phase=0. trans=0. 
+
+# Aerial image calculation
+# 
+illumination i.line 
+#
+illum.filter clear.fil circle sigma=0.38
+#
+projection na=.54
+#
+pupil.filter clear.fil circle
+#
+image win.x.lo=-1 win.x.hi=1 win.z.lo=0 win.z.hi=0 dx=0.01 one.d
+#
+structure outfile=$"example"_int.str intensity mask
+#
+# Initialize structure and intensity distribution
+init infile=$"example"_int.str intensity
+init infile=$"example".str
+#
+# Resist exposure with constant refraction index 
+optical name.resist=KTI820 i.line refrac.real=1.4 refrac.imag=0.02 
+#
+expose dose=250 num.refl=3
+#
+#
+# Post exposure bake
+#
+bake time=30 seconds temp=115
+#
+#
+# Resist Development
+#
+develop kim time=20 steps=5 substeps=24
+#
+structure outfile=$"example"_1.str
+#
+# Resist exposure with refraction index dependent on the exposure dose
+#
+optical name.resist=KTI820 i.line refrac.real=1.4 refrac.imag=0.02 delta.real=0.2 delta.imag=0.02
+#
+# Initialize structure and intensity distribution
+init infile=$"example"_int.str intensity 
+init infile=$"example".str
+expose dose=250 num.ref=3 
+#
+# Post exposure bake
+#
+bake time=30 seconds temp=115
+#
+#
+# Resist Development
+#
+develop kim time=20 steps=5 substeps=24
+#
+structure outfile=$"example"_2.str
+#
+tonyplot -overlay $"example"_1.str $"example"_2.str -set $"example".set
+
+quit
+
+ 

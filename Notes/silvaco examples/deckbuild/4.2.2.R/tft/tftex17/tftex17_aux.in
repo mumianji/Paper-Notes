@@ -1,0 +1,452 @@
+# (c) Silvaco Inc., 2018
+
+go victoryprocess 
+
+# tftex17: PBTS with hydrogen - Amorphous InGaZnO thin-film transistors
+# Ref: Tatsuya Toda, Dapeng Wang, Jingxin Jiang, Mai Phi Hung,
+# Mamoru Furuta, “Quantitative Analysis of the Effect of
+# Hydrogen Diffusion from Silicon Oxide Etch-Stopper Layer
+# into Amorphous In-Ga-Zn-O on Thin-Film-Transistor”, IEEE
+# Trans. On Electron Devices, vol. 61, No. 11, November 2014.
+
+
+#ES Hydrogen control
+#select H conc
+set low=0
+set med=0
+set high=1
+
+if cond=(@low=1)
+set hydrogen=4e16*1
+if.end
+
+if cond=(@med=1)
+set hydrogen=4e16*10
+if.end
+
+if cond=(@high=1)
+set hydrogen=4e16*45
+if.end
+
+#initial H in IGZO
+set active_h=1e16*0.1
+
+# same Partial pressure which is larger than deposit IGZO
+set GI=2e16
+set PS=2e16
+
+set L=20
+set W=50
+set Lover=2
+
+# mesh initialize 
+Init meshdepth=3 material=oxide from=0 to=12 depth=1 gasheight=5 resolution="0.25,0.25"  
+
+Line x location=0 s=0.5
+Line x location=$L/2-1 s=0.25
+Line x loc=$L/2 s=0.025
+Line x loc=$L/2+1 s=0.25
+Line x location=12.0 s=1
+
+line z location=-0.6 spac=0.05*2
+line z location=-0.245 spac=0.002
+line z location=-0.20-0.045/2 s=0.0045
+line z location=-0.20 spac=0.002
+line z location=-0.15 spac=0.05
+
+line z location=-0.06 spac=0.05
+line z location=-0.05 spac=0.025
+Line z location=0 spacing=0.025
+Line z location=1 spacing=0.5
+
+
+#diffusivity 
+material material="ingazno" dif.parameter="streamfermiwithoutfield/H_A/D" \
+	dif.parametervalue="(chargedependent)(neutral)(arrhenius)(1.3e-14/0.11)" 
+
+material material="sio2" dif.parameter="streamfick/H/D" dif.parametervalue="(chargedendent)(neutral)(arrhenius)(1.3e-11/0.5)" 
+material material="si3n4" dif.parameter="streamfick/H/D" dif.parametervalue="(chargedendent)(neutral)(arrhenius)(1/1)" 
+material material="aluminum" dif.parameter="streamfick/H/D" dif.parametervalue="(chargedendent)(neutral)(arrhenius)(1.75e-4/0.1685)" 
+
+#Override default hydrogen segregation at each interface
+interface material1="sio2" material2="ingazno" dif.parameter="segregation/H/Seg" dif.parametervalue="1.0/0" 
+interface material1="sio2" material2="ingazno" dif.parameter="segregation/H/Trn"  dif.parametervalue="1.66e-7/0.0" 
+
+interface material1="ingazno" material2="si3n4" dif.parameter="segregation/H/Seg" dif.parametervalue="1.0/0" 
+interface material1="ingazno" material2="si3n4" dif.parameter="segregation/H/Trn"  dif.parametervalue="1.66e-7/0.0" 
+
+interface material1="aluminum" material2="sio2" dif.parameter="segregation/H/Seg" dif.parametervalue="1.0/0" 
+interface material1="aluminum" material2="sio2" dif.parameter="segregation/H/Trn"  dif.parametervalue="1.66e-7/0.0" 
+
+interface material1="ito" material2="sio2" dif.parameter="segregation/H/Seg" dif.parametervalue="1.0/0" 
+interface material1="ito" material2="sio2" dif.parameter="segregation/H/Trn"  dif.parametervalue="1.66e-7/0.0" 
+
+interface material1="aluminum" material2="ingazno" dif.parameter="segregation/H/Seg" dif.parametervalue="1.0/0" 
+interface material1="aluminum" material2="ingazno" dif.parameter="segregation/H/Trn"  dif.parametervalue="1.66e-7/0.0" 
+
+#
+Method material=nitride model=direct 
+
+#Gate metal 50nm Cr
+Deposit material=aluminum thick=0.05 division=5 max
+
+
+# SiOx Gate ins depo: 150nm 350'C 0.99Pa as same as PS cond.
+Deposit material=oxide thick=0.15 divisions=15 conformal dopant=hydrogen dopingvalue=$GI
+diffuse temp=350 time=10 c.hydrogen=$GI
+
+###################################3
+# active a-IGZO : 45nm DC spurtering
+Deposit material=IGZO thick=0.045  conformal  dopant=hydrogen dopingvalue=$active_h
+Diffuse time=5 temperature=160 c.hydrogen=$active_h
+#####################################################
+
+#################hydrogen contraol############# 110 Pa ##############
+# Etch stopper 200nm : SiH4 PEVCD
+Deposit material=oxide thick=0.20 divisions=20 dopant=hydrogen dopingvalue=$hydrogen max
+diffuse time=25 temp=170 c.hydrogen=$hydrogen
+###############################################
+
+Etch material=oxide between.x=-$L/2-$Lover , -10 thickness=0.5 dry
+Etch material=oxide between.x="10, 12" thickness=0.5 dry
+
+
+# S/D metal 50nm ITO
+Deposit material=ITO thick=0.05 divisions=5 conformal
+
+Etch between.x=-8,8 material=ITO thickness=0.1 max
+
+# passivation 200nm SiOx 170nm 170'C PECVD : 0.99 Pa
+Deposit material=oxide thick=0.170 divisions=5 conformal dopant=hydrogen dopingvalue=$PS
+diffuse time=20 temp=170 c.hydrogen=$PS
+
+#aneal 350'C 1h
+diffuse time=60 temp=350 
+
+#Structure mirror to left
+mirror mirror="-x"
+
+# S/D electrode definition 
+Electrode name=gate x=0 material=aluminum
+Electrode name=source x=-$L/2 material=ito
+Electrode name=drain x=$L/2 material=ito
+
+export structure=tftex17_0.str
+tonyplot tftex17_0.str
+
+go victorydevice 
+
+mesh infile=tftex17_0.str width=50
+
+# Definition of ions
+species formula="H"    charge=0  name="H"
+species formula="In:Ga:Zn:O2"   charge=0  name="IGZO"
+species formula="In:Ga:Zn:O2" charge=-1 name="IGZO-"
+species formula="In:Ga:Zn:O2:H" charge=0  name="IGZOH"
+
+# Hydrogen profile importing from process
+doping f.doping=tftex17_0.c species.name="H"
+
+contact name=source workfunc=4.16
+contact name=drain  workfunc=4.16  
+contact name=gate   workfunc=4.53  
+
+#
+interface s.i qf=-0.2e11 y.min=-0.2-0.01 y.max=-0.2 + 0.01
+
+# GI and passivation insulator epsilon
+material material=Si3N4 permit=7
+material material=nitride permit=7
+material material=oxide permit=3.9
+
+if cond = (@low = 1)  
+mobility material=IGZO mun0=14.0 mup0=0.1
+if.end
+
+if cond = (@med = 1)
+mobility material=IGZO mun0=15.3 mup0=0.1
+if.end
+
+if  cond = (@high = 1) 
+mobility material=IGZO mun0=18.2 mup0=0.1
+if.end
+
+
+# a-IGZO bandgap, density of states, and affinity
+material material=IGZO nc300=5.2e18 nv300=5e20 eg300=3.0 affinity=4.16 taun0=1e-9 taup0=1e-9 
+
+#diffusivity of hydrogen
+material species.name="H" species.ea=0.35 species.af=1e3 species.hop=1e-6 
+	
+#initial ion trap
+interface s.i  x.min=-12.0 x.max=12.0 y.min=-0.21 y.max=-0.19 \
+          species.name="IGZO"   concentration=8e11 
+
+interface s.i x.min=-12.0 x.max=12.0 y.min=-0.21 y.max=-0.19 \
+          species.name="IGZO-" concentration=1e10
+
+interface s.i x.min=-12.0 x.max=12.0 y.min=-0.21 y.max=-0.19 \
+          species.name="IGZOH"  concentration=1e10
+
+# models
+models srh  TEMP=330 
+
+#Boundary condition
+speciescontact electrode.name=source species="H" concentration=1.0e12
+speciescontact electrode.name=drain  species="H" concentration=1.0e12
+speciescontact electrode.name=gate   species="H" concentration=1.0e12
+
+
+# Reactions
+reaction formula="IGZO  + H  <=> IGZOH"  forward.rate=2e-17 forward.ea=0 reverse.rate=1e-15 reverse.ea=1.5
+
+reaction formula="IGZO + e- <=> IGZO-" forward.rate=1e-10  forward.ea=0.83 reverse.rate=1e-15 reverse.ea=1.5
+
+#-----------------------------------------------------------------------
+# Output specification
+#-----------------------------------------------------------------------
+
+#probe x=0.0 y=-0.2 material=IGZO ft.species="IGZO"
+#probe x=0.0 y=-0.2 material=IGZO ft.species="IGZO-"
+#probe x=0.0 y=-0.2 material=IGZO ft.species="IGZOH"
+probe x=0.0 y=-0.2 material=IGZO e.trantrap 
+probe x=0.0 y=-0.2 material=IGZO h.trantrap
+probe x=0.0 y=-0.2 material=IGZO species.trapping="H"
+probe x=0.0 y=-0.2 material=IGZO n.conc
+probe x=0.0 y=-0.2 material=IGZO species="H"
+probe x=0.0 y=-0.2 material=IGZO potential
+
+
+probe x=0.0 y=-0.2 material=IGZO reaction.species="IGZO"  
+probe x=0.0 y=-0.2 material=IGZO reaction.species="IGZO-"
+probe x=0.0 y=-0.2 material=IGZO reaction.species="IGZOH" 
+
+probe position="0.0, -0.2" material=IGZO species.name="IGZO"  
+probe position="0.0, -0.2" material=IGZO species.name="IGZO-"
+probe position="0.0, -0.2" material=IGZO species.name="IGZOH" 
+
+probe max species.name="IGZO"   name="Max IGZO"
+probe max species.name="IGZO-"  name="Max IGZO-"
+probe max species.name="IGZOH"  name="Max IGZOH"
+
+output con.band val.band u.trap traps traps.ft
+
+solve init 
+
+# Numerical options
+method maxtrap=10 carr=1 electron itlimit=40 lte.timestep tstep.incr=1.4 atrap=0.7142857
+#dt.max=1000
+
+solve prev freezespecies
+
+solve vdrain=0.1 freezespecies
+save outfile=tftex17_1.str
+
+if cond = (@low = 1) 
+set vg_start=-1
+if.end
+
+if cond = (@med=1)
+set vg_start=-5
+if.end
+
+if cond = (@high=1)
+set vg_start=-17
+if.end
+
+log outfile=tftex17_0.log no.trap
+solve vgate=$vg_start vstep=0.25 vfinal=20 name=gate freezespecies
+log off
+
+extract init infile="tftex17_0.log"
+extract name="vt0" x.val from curve(v."gate", i."drain") where y.val=1e-9
+
+solve init
+
+# PBTS : Vgs=+20+vt0
+set vs=$vt0 + 20
+solve prev freezespecies
+
+if cond=(@low=1)
+log outf=tftex17_1.log no.trap
+if.end
+
+if cond=(@med=1)
+log outf=tftex17_2.log no.trap
+if.end
+
+if cond=(@high=1)
+log outf=tftex17_3.log no.trap
+if.end
+
+solve tstop=1e-6 ramptime=1e-9 dt=1e-12  vgate=$vs
+save outfile=tftex17_2.str
+
+solve prev tstop=1e-3
+solve prev tstop=1
+
+method dt.max=10
+solve tstop=100
+save outfile=tftex17_3.str
+
+method dt.max=20
+solve tstop=500.0 
+save outfile=tftex17_4.str
+
+method dt.max=50
+solve tstop=1000.0
+save outfile=tftex17_5.str
+
+solve tstop=3000.0 
+save outfile=tftex17_6.str
+
+solve tstop=5000.0
+save outfile=tftex17_7.str
+
+log off
+
+# plot the occupation probability
+if cond=(@low=1)
+tonyplot tftex17_1.log -set tftex17_0.set
+if.end
+
+if cond=(@med=1)
+tonyplot tftex17_2.log -set tftex17_1.set
+if.end
+
+if cond=(@high=1)
+tonyplot tftex17_3.log -set tftex17_2.set
+if.end
+
+
+########################################
+# post stress IdVg simulation
+############### pristine ##############
+
+load infile=tftex17_2.str
+if cond=(@low=1)
+log outfile=tftex17_4_low.log no.trap
+if.end
+
+if cond=(@med=1)
+log outfile=tftex17_4_med.log no.trap
+if.end
+
+if cond=(@high=1)
+log outfile=tftex17_4_high.log no.trap
+if.end
+
+#solve prev freezespecies
+solve prev vstep=-0.25 vfinal=$vg_start name=gate freezespecies vdrain=0.1
+log off
+
+########### post-PBTS t=100s, 500, 1000s, 3000, 5000 ###############
+
+### t=100s
+load infile=tftex17_3.str
+
+if cond=(@low=1)
+log outfile=tftex17_5_low.log no.trap
+if.end
+
+if cond=(@med=1)
+log outfile=tftex17_5_med.log no.trap
+if.end
+
+if cond=(@high=1)
+log outfile=tftex17_5_high.log no.trap
+if.end
+
+#solve prev freezespecies
+solve prev vstep=-0.25 vfinal=$vg_start name=gate freezespecies vdrain=0.1
+log off
+
+
+### t=500s
+load infile=tftex17_4.str
+if cond=(@low=1)
+log outfile=tftex17_6_low.log no.trap
+if.end
+
+if cond=(@med=1)
+log outfile=tftex17_6_med.log no.trap
+if.end
+
+if cond=(@high=1)
+log outfile=tftex17_6_high.log no.trap
+if.end
+
+#solve prev freezespecies
+solve prev vstep=-0.25 vfinal=$vg_start name=gate freezespecies vdrain=0.1
+log off
+
+#### 1000s
+
+load infile=tftex17_5.str
+
+if cond=(@low=1)
+log outfile=tftex17_7_low.log no.trap
+if.end
+
+if cond=(@med=1)
+log outfile=tftex17_7_med.log no.trap
+if.end
+
+if cond=(@high=1)
+log outfile=tftex17_7_high.log no.trap
+if.end
+
+#solve prev freezespecies
+solve prev vstep=-0.25 vfinal=$vg_start name=gate freezespecies vdrain=0.1
+log off
+
+
+##3000s
+load infile=tftex17_6.str
+if cond=(@low=1)
+log outfile=tftex17_8_low.log no.trap
+if.end
+
+if cond=(@med=1)
+log outfile=tftex17_8_med.log no.trap
+if.end
+
+if cond=(@high=1)
+log outfile=tftex17_8_high.log no.trap
+if.end
+
+#solve prev freezespecies
+solve prev vstep=-0.25 vfinal=$vg_start name=gate freezespecies vdrain=0.1
+log off
+
+####5000s
+load infile=tftex17_7.str
+if cond=(@low=1)
+log outfile=tftex17_9_low.log no.trap
+if.end
+
+if cond=(@med=1)
+log outfile=tftex17_9_med.log no.trap
+if.end
+
+if cond=(@high=1)
+log outfile=tftex17_9_high.log no.trap
+if.end
+
+#solve prev freezespecies
+solve prev vstep=-0.25 vfinal=$vg_start name=gate freezespecies vdrain=0.1
+log off
+
+if cond=(@low=1)
+tonyplot -overlay tftex17_4_low.log tftex17_5_low.log tftex17_6_low.log tftex17_7_low.log tftex17_8_low.log tftex17_9_low.log -set tftex17_3.set
+if.end
+
+if cond=(@med=1)
+tonyplot -overlay tftex17_4_med.log tftex17_5_med.log tftex17_6_med.log tftex17_7_med.log tftex17_8_med.log tftex17_9_med.log -set tftex17_4.set
+if.end
+
+if cond=(@high=1)
+tonyplot -overlay tftex17_4_high.log tftex17_5_high.log tftex17_6_high.log tftex17_7_high.log tftex17_8_high.log tftex17_9_high.log -set tftex17_5.set
+if.end
+
+quit

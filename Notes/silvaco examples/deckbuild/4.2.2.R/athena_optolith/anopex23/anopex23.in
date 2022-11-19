@@ -1,0 +1,29 @@
+go athena
+#
+#                   OPTOLITH input file: anopex23.in
+#                   --------------------------------
+#
+#                Proximity printing of circular mask features
+# 
+illumination g.line               
+#
+layout lay.clear
+layout x.cir=-22 z.cir=22.0 radius=20
+layout x.cir=22 z.cir=22.0 radius=20 ringwidth=8
+layout x.cir=-22 z.cir=-22.0 radius=20 ringwidth=16
+layout x.cir=22.0 z.cir=-22.0 radius=20 ringwidth=6 multiring
+ 
+#
+# Calculation of the aerial image using proximity printing
+#
+image win.x.lo=-45 win.z.lo=-45 win.x.hi=45 win.z.hi=45 dx=.5  gap=50
+#
+# Store the aerial image in a structure file
+#
+structure outfile=anopex23.str intensity mask
+#
+# Plot the aerial image during the run
+#
+tonyplot anopex23.str
+#
+quit

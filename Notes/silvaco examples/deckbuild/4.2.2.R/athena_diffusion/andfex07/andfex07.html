@@ -1,0 +1,67 @@
+<html>
+  <head>
+    <title>Emitter Push Effect</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Emitter Push Effect</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>SSuprem 4</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="andfex07_plot0.png" width="640" alt="andfex07_plot0" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates the use of the
+<b> FULL.CPL </b> model to simulate the emitter push effect on boron diffusion.
+</p>
+<p>
+The emitter push effect is observed experimentally when a high
+concentration phosphorus doped emitter region is diffused within a
+boron doped base region.  The boron profile beneath the emitter region
+is seen to diffuse more rapidly than the boron profile in the base
+region.  This is the result of point defects that are coupled to the
+diffusing phosphorus that are swept outward into the substrate where
+they enhance the boron diffusion. Such effects were the driving force
+behind the development of the fully coupled model in
+<b> Athena/SSuprem 4.  </b> This model includes terms that describe the flux of point
+defects based on gradients in impurity profiles.
+</p>
+<p>
+The fully coupled model is invoked for the co-diffusion of boron and
+phosphorus in this example by specifying the
+<b> FULL.CPL </b> parameter
+on the
+<b> METHOD </b> statement.  This model is the most time consuming of the
+<b> Athena/SSuprem 4 </b> diffusion models and should be used with caution.  The fully
+coupled model, however, is the only model that can accurately simulate
+the emitter push effect.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

@@ -1,0 +1,77 @@
+<html>
+  <head>
+    <title>Insulator Trap Induced Measurement Sweep Hysterisis</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Insulator Trap Induced Measurement Sweep Hysterisis</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>SSuprem 4/Blaze/TFT</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R,  Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="tftex12_plot0.png" width="640" alt="tftex12_plot0" />
+      <p/>
+      <img src="tftex12_plot1.png" width="640" alt="tftex12_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example shows the effect of measurement time on the results obtained for
+typical TFT DC I-V measurements.  For some TFT devices, where the insulator
+contains traps that are within communication distance of the semiconductor
+channel, the time and bias dependent trapping and de-trapping events create a
+<b> hysterisis effect </b> in the IV curves.  The time dependency of the insulator trapping and
+de-trapping events, creates a hysterisis effect, the magnitude of which depends
+on the time taken to take the measurements.
+</p>
+<p>
+In order to greatly simplify the time dependency simulation of insulator trap
+induced effects, the device simulator has incorporated the
+<b> Heiman model </b> which is invoked by specifying the &quot;heiman&quot; parameter in the
+<b> inttrap </b> statement.
+The Heiman model allows the simulation of insulator trap time dependency
+effects using simple DC solve statements.  The maximum effective communication
+distance of the insulator traps with the semiconductor channel, is specified
+using the
+<b> depth </b> parameter in the &quot;inttrap&quot; statement.  The depth resolution of the insulator
+traps is specified by the
+<b> hpoints </b> parameter in the inttrap statement.  Other than these Heiman related
+parameters, the rest of the inttrap statement is exactly the same as a normal
+inttrap statement.
+</p>
+<p>
+All that remains to take account of the measurement time dependency effects,
+caused by the insulator traps, is to specify the total measurement time on
+the solve statement.   This is done using the
+<b> timespan </b> parameter on the solve statement.  In this particular example, the &quot;timespan&quot;
+parameter is set as a variable called
+<b> measurementtime </b> at the begining of the Atlas section of the input file, so that the input file
+can be easily modified to create a design of experiments using the measurement
+time as a variable.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

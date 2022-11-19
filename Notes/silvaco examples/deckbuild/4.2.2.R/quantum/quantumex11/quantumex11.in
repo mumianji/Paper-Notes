@@ -1,0 +1,142 @@
+# (c) Silvaco Inc., 2018
+go atlas
+
+mesh space.mult=1.0 diag.flip
+
+x.mesh location=0.0 spacing=0.2
+x.mesh location=0.7 spacing=0.1
+x.mesh location=0.9 spacing=0.01
+x.mesh location=1.1 spacing=0.01
+x.mesh location=1.3 spac=0.1
+x.mesh location=2.0 spacing=0.2
+
+y.mesh loc=0 spacing=0.1
+y.mesh loc=0.25 spacing=0.05
+y.mesh loc=0.48 s=0.01
+y.mesh loc=0.5 s=0.001
+y.mesh loc=0.52 s=0.01
+y.mesh loc=1.0 s=0.1
+y.mesh loc=1.5 s=0.01
+y.mesh loc=1.6 s=0.001
+y.mesh loc=1.7 s=0.01
+y.mesh loc=2 spacing=0.1
+
+region  num=1  material=silicon
+
+elec  name=collector   y.max=0.0 x.min=0.0 x.max=0.9
+elec  name=emitter  bottom  
+elec  name=base x.min=2.0 y.max=1.0
+
+# We set up the non-planar base-emitter junction to be the first
+# quantum tunnelling region. It is composed as a set of connected 
+# quadrilaterals.  Please note that we set up the number of
+# meshpoints in tunnelling direction (pts.tunnel) only once, it
+# is valid for the whole region.  We use snrm.beg and snrm.end to
+# match the mesh spacing in the direction normal to tunnelling
+# to the rest of the mesh for the first quadrilateral. The rest
+# of the quadrilaterals describe the curved part of the junction
+# and for simplicity we use a fixed number of tunnelling slices in 
+# each one, ie pts.normal=10
+
+qtregion number=1 pts.tunnel=71 x1=0.0 y1=0.45 x2=0.9 y2=0.45 \
+x3=0.9 y3=0.55 x4=0.0 y4=0.55 snrm.beg=0.2 snrm.end=0.02
+
+qtregion number=1 pts.normal=10 x2=0.93 y2=0.435 x3=0.99 y3=0.52 
+
+qtregion number=1 pts.normal=10 x2=0.94 y2=0.42 x3=1.02 y3=0.475 
+
+qtregion number=1 pts.normal=10 x2=0.97 y2=0.36 x3=1.07 y3=0.4
+
+qtregion number=1 pts.normal=10 x2=1.0 y2=0.2 x3=1.1 y3=0.2
+
+qtregion number=1 pts.normal=10 x2=0.98 y2=0.1 x3=1.08 y3=0.05
+
+qtregion number=1 pts.normal=10 x2=0.96 y2=0.0 x3=1.06 y3=0.0
+
+# Here we set up the second quantum tunnelling region to cover the planar
+# base collector junction. The mesh spacing in the tunnelling
+# direction is determined from the file whose name is given by the 
+# f.resolution parameter.  This contains a monotonic set of values
+# between 0.0 and 1.0 which give the relative mesh positions along 
+# the tunnelling directions.
+
+qtregion number=2 x1=0.0 y1=1.55 x2=0.7 y2=1.55 \
+x3=0.7 y3=1.65 x4=0.0 y4=1.65 snrm.beg=0.2 snrm.end=0.1 f.resolution=quantumex11_mesh.dat
+
+qtregion number=2 x1=0.7 y1=1.55 x2=0.9 y2=1.55 \
+x3=0.9 y3=1.65 x4=0.7 y4=1.65 snrm.beg=0.1 snrm.end=0.01 
+
+qtregion number=2 x2=1.1 y2=1.55 \
+x3=1.1 y3=1.65  pts.normal=21
+
+qtregion number=2 x2=1.3 y2=1.55 \
+x3=1.3 y3=1.65 snrm.beg=0.01 snrm.end=0.1 
+
+qtregion number=2 x2=2.0 y2=1.55 \
+x3=2.0 y3=1.65  snrm.beg=0.1 snrm.end=0.2
+
+
+doping uniform  n.type conc=1e20
+
+doping gaussian x.min=0.0 x.max=0.9  p.type peak=0.2 conc=1.0e21 junction=0.5 ratio.lat=0.5
+
+doping uniform y.min=1.6 p.type conc=3.0e20
+
+# Here we specify the use of the non-local band-to-band tunnelling model
+# bbt.nonlocal.  The parameter bbt.nlderivs enables non-local couplings in
+# the Jacobian matrix in order to improve convergence.  The bbt.forward flag
+# specifies that the tunnelling current is injected at the start and
+# end points of the tunnelling slices.
+
+models temperature=300 srh fermi ni.fermi print bbt.nonlocal bbt.nlderivs bbt.forward
+
+output band.temp traps u.srh
+
+method climit=1.0 maxtrap=8 dvmax=0.005
+solve init
+
+solve prev
+
+# forward bias emitter-base  junction, the bbt.forward flag has been specified
+# the tunnelling current produced flows between the base and the emitter
+log outf=quantumex11_0.log
+
+solve name=emitter vemitter=0.0 vstep=0.01 vfinal=0.1
+
+log off
+
+tonyplot quantumex11_0.log -set quantumex11_0.set
+
+save outf=quantumex11_0.str
+
+# We now reverse bias the emitter-collector junction until the majority
+# of the emitter current flows into the collector. We switch off bbt.forward
+# and use the default current injection method (see manual for more detail).
+# The existing forward current injection switches seamlessly to the new 
+#position as can be seen by comparing quantumex11_0.str and quantumex11_0b.str
+ 
+models bbt.nonlocal bbt.nlderivs ^bbt.forward
+
+solve prev
+
+save outf=quantumex11_0b.str
+
+log outf=quantumex11_1.log
+
+solve name=collector vcollector=0.0 vstep=-0.05 vfinal=-2.0
+
+log off
+
+save outf=quantumex11_1.str
+
+
+tonyplot quantumex11_1.log -set quantumex11_1.set
+
+# From Structure files we can see exactly where BBT current arises
+# plot either "Nonlocal BBT e- Tunnelling Rate" or
+# "Nonlocal BBT h+ Tunnelling Rate" on a logarithmic or linear scale
+ 
+tonyplot quantumex11_1.str -set quantumex11_2.set
+
+exit
+

@@ -1,0 +1,64 @@
+go athena
+
+#  anelex25.in
+line x loc=-10.00 spac=0.1
+line x loc=10.00 spac=0.1
+#
+line y loc=0 spac=0.5
+line y loc=3.0  spac=1
+initialize silic
+
+deposit aluminum thick=.5 divis=6
+
+structure outfile=anelex25_0.str
+
+etch aluminum start x=-1 y=-10.0  
+etch continue x=-1 y=10.0
+etch continue x=1 y=10.0
+etch done x=1 y=-10.0
+
+etch aluminum start x=3 y=-10.0  
+etch continue x=3 y=10.0
+etch continue x=5 y=10.0
+etch done x=5 y=-10.0
+
+etch aluminum start x=-5 y=-10.0  
+etch continue x=-5 y=10.0
+etch continue x=-3 y=10.0
+etch done x=-3 y=-10.0
+# 
+rate.depo machine=oxide oxide u.s  smooth.win=0.20 smooth.step=1 cvd \
+        dep.rate=1.0 step.cov=0.6
+
+deposit machine=oxide time=1 seconds div=10 substeps=15
+
+structure outfile=anelex25_1.str
+
+rate.polish oxide machine=polish u.s max.hard=.15 min.hard=.03 isotropic=0.001
+
+polish machine=polish time=5 seconds dx.mult=0.5
+
+structure outfile=anelex25_2.str
+
+init infile=anelex25_0.str
+
+etch aluminum start x=-1 y=-10.0  
+etch continue x=-1 y=10.0
+etch continue x=1 y=10.0
+etch done x=1 y=-10.0
+
+etch aluminum left x=-3
+etch aluminum right x=3
+# 
+
+deposit machine=oxide time=1 seconds div=10 substeps=15
+
+structure outfile=anelex25_3.str
+
+polish machine=polish time=5 seconds dx.mult=.5
+
+structure outfile=anelex25_4.str
+
+tonyplot anelex25_1.str anelex25_2.str anelex25_3.str anelex25_4.str
+
+quit

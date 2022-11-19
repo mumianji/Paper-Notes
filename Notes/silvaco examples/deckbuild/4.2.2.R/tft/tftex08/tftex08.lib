@@ -1,0 +1,83 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include <ctype.h>
+#include <malloc.h>
+#include <string.h>
+#include <template.h>
+
+/*
+ * -----------------------------------------------------------------
+ * ATLAS Parser Function Template
+ * ATLAS Version 5.12.0.R
+ * c 1993 - 2006 SILVACO International. 
+ * All rights reserved.
+ * -----------------------------------------------------------------
+ */
+
+/*
+#
+#  This c-int function creates a trap distribution for poly-Si  
+*/
+/*
+ * TFT donor trap density as function of energy
+ * Statement: DEFECT
+ * Parameter: F.TFTDON
+ * Arguments:
+ * energy     energy relative to valence band (eV)
+ * eg         band gap (eV)
+ * *density   tft donor trap density (cm^-3)
+ * *sigmae    donor trap electron capture cross-section
+ * *sigmah    donor trap hole capture cross-section
+ */
+int tftdon(double energy,double eg,double *density,double *sigmae,double *sigmah)
+{
+
+	double Ntd, Ndd, kTtd, kTdd, dummy;
+
+	Ntd=3.83e19;
+	kTtd=0.065;
+	Ndd=1.69e17;
+	kTdd=0.787;
+	dummy=0.0;
+
+	dummy =  ((Ntd*exp(-energy/kTtd)) + (Ndd*exp(-energy/kTdd)));
+/*
+	printf("%g %g\n",energy,dummy);
+*/
+
+	*(density) = dummy;
+	return(0);
+}
+
+
+
+/*
+ * TFT acceptor trap density as function of energy
+ * Statement: DEFECT
+ * Parameter: F.TFTACC
+ * Arguments:
+ * energy     energy relative to conduction band (eV)
+ * eg         band gap (eV)
+ * *density   tft acceptor trap density (cm^-3)
+ * *sigmae    donor trap electron capture cross-section
+ * *sigmah    donor trap hole capture cross-section
+ */
+int tftacc(double energy,double eg,double *density,double *sigmae,double *sigmah)
+{	
+	double Nta, Nda, kTta, kTda, dummy;
+
+	Nta=1.26e20;
+	kTta=0.065;
+	Nda=3.32e17;
+	kTda=0.393;
+	dummy=0.0;
+
+	dummy =  ((Nta*exp(-energy/kTta)) + (Nda*exp(-energy/kTda)));
+/*
+	printf("%g %g\n",energy,dummy);
+*/
+
+	*(density) = dummy;
+	return(0);
+}

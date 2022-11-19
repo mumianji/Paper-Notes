@@ -1,0 +1,115 @@
+<html>
+  <head>
+    <title>3D Victory Process tutorial (structure editor mode)</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>3D Victory Process tutorial (structure editor mode)</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Victory Process : Core Simulator, 3D Structure Editor, 3D Diffusion and Implantation</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Victory Process 7.22.0.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="vpex03_0.png" width="640" alt="vpex03_0" />
+      <p/>
+      <img src="vpex03_1.png" width="640" alt="vpex03_1" />
+      <p/>
+      <img src="vpex03_2.png" width="640" alt="vpex03_2" />
+      <p/>
+      <img src="vpex03_2d.png" width="640" alt="vpex03_2d" />
+      <p/>
+      <img src="vpex03_3.png" width="640" alt="vpex03_3" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+The goal of this example is to provide a tutorial on Victory Process cell mode
+based on a 3D buffered super junction LDMOS device. The device simulation itself
+and corresponding description can be found in powerex18 example. A Detailed description
+of the process syntax is mentioned in the text below as well as in the input deck itself.
+</p>
+<b> Super junctions</b> <p>
+are used in LDMOS structures to
+<b> greatly increase the breakdown voltage</b> of small geometry devices
+by allowing the drain depletion region to spread in two dimensions
+instead of one at higher drain voltages
+(the additional direction being laterally across the super junction).
+The neat result is that the drain voltage can now be spread across
+a much greater total distance than would otherwise be the case,
+which greatly lowers the field at the drain
+and therefore increases the breakdown voltage.
+</p>
+<p>
+By default Victory Process runs on just one processor.
+To ensure better performance on your computer the following simulation condition
+<b> simflags=&quot;-P all&quot;</b> could be specified in the
+<b> go</b> line starting Victory Process. This means that all processors available will be used.
+If you want to use a smaller number of processors you can substitute &quot;all&quot; with a desired number, e.g.
+<b> simflags=&quot;-P 4&quot;.</b> </p>
+<p>
+Victory Process in cell mode starts with a definition of the initial wafer material, including its thickness
+<b> depth=10</b> and background doping
+<b> dopant=boron dopingvalue=1e15</b> , as well as the simulation domain. The horizontal extent of the simulation domain is automatically determined from the enclosing bounding box of the mask layers contained in the mask file
+<b> vpex03.lay</b> . This mask file is imported into Victory Process with the
+<b> layout</b> parameter. The
+<b> depth=10</b> and
+<b> gasheight=5</b> parameters set the vertical extent of the simulation domain as follows: the vertical position of the wafer surface is at &quot;0&quot; level on the Z-axis with the wafer of
+<b> 10 um</b> in thickness along the positive Z-direction. Above the wafer surface in the negative Z-direction lies a &apos;transparent&apos; gas region with a thickness of
+<b> 5 um</b> .
+</p>
+<p>
+After the wafer initialization, we manually define the volume data mesh by several
+<b> line</b> statements. These mesh lines are especially intended for subsequent implantation and diffusion steps. Then, we implant boron
+and phosphorus ions into regions that are supposed to be p-base and n-buffer regions with the aid of &quot;PBASE&quot; and &quot;NBUFF&quot; mask
+layers and after that perform a diffusion process. The next step consists of defining a poly gate with &quot;POLY&quot; mask and forming
+n-pillar, p-pillar, n+ source/drain and p+ regions with &quot;NILLAR&quot;, &quot;PILLAR&quot;, &quot;NSD&quot;, and &quot;PPLUS&quot; layers, respectively, by ion
+implantation and thermal diffusion.
+</p>
+<p>
+Finally, we make contact holes in the oxide layer and fill them with aluminum to form the source, drain, and substrate electrodes. The statement
+<b> electrodes &quot;cont&quot; aluminum</b> turns all exposed aluminum regions that are overlapped with &quot;cont&quot; layer into electrodes and assigns corresponding labels from &quot;cont&quot; layer as electrode names to those electrodes. Similarly, with the statement
+<b> electrodes &quot;cont&quot; polysilicon</b> all exposed polysilicon regions that are overlapped with &quot;cont&quot; layer become electrodes taking corresponding labels from &quot;cont&quot; layer as their names.
+</p>
+<p>
+Victory Process in cell mode provides several options to export calculated process structure to a format suitable for device simulation. These include, e.g.,:
+</p>
+<b> export 2d y=2:</b> <p>
+Export a 2D cross-section of the geometry and the volume data across a plane parallel to one of the coordinate planes (Y=2).
+</p>
+<b> export atlas3d(regular):</b> <p>
+Export a prismatic mesh that contains all nodes of the volume data mesh and an approximated representation of the geometry of the process mesh.
+</p>
+<b> export victory(delaunay):</b> <p>
+Export an unstructured tetrahedral mesh with local mesh density controllable by users.
+</p>
+<p>
+In addition, Victory Process in cell mode supports mirroring feature for all options of prismatic mesh export, e.g.,
+<b> export atlas3d(conformal) mirror=&quot;-x+y&quot; </b> ,
+<b> export atlas3d(regular) mirror=&quot;x-y&quot;</b> ,
+<b> export atlas3d(reduced) mirror=&quot;-x-y&quot; </b> and enables cropping the structure with mask layers, e.g., &quot;CRP&quot; layer, within an unstructured tetrahedral mesh export
+<b> export victory(delaunay) crop.mask=&quot;CRP&quot; </b> </p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

@@ -1,0 +1,152 @@
+<html>
+  <head>
+    <title>Retangular Domain vs. Cylindrical Domain of LED</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Retangular Domain vs. Cylindrical Domain of LED</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Blaze/LED</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="ledex04_plot0.png" width="640" alt="ledex04_plot0" />
+      <p/>
+      <img src="ledex04_plot1.png" width="640" alt="ledex04_plot1" />
+      <p/>
+      <img src="ledex04_plot2.png" width="640" alt="ledex04_plot2" />
+      <p/>
+      <img src="ledex04_plot3.png" width="640" alt="ledex04_plot3" />
+      <p/>
+      <img src="ledex04_plot4.png" width="640" alt="ledex04_plot4" />
+      <p/>
+    </div>
+    <div id="text" >
+<p>
+This example demonstrate how the radiative recombination models of LED
+in 2 dimensional Atlas can be used to analyze the electro-luminescence in
+rectangular vs. cylindrical domains.
+</p>
+<p>
+The objective of this example is to obtain and compare the basical LED
+characteristics such as the I-V-L curve depenenced on the simulation domain.
+The cylindrical domain characteristics are obtained in the same manner
+as in the rectangular except the
+<b> CYLINDRICAL </b> parameter should be set on the
+<b> MESH </b> statement.
+</p>
+<p>
+Also for cylindrical analysis only the right half of the X-Y plane
+should be defined.
+</p>
+<p>
+There are 7 sections to define the structure, material models,
+biasing conditions and data extraction of the operational characteristics.
+</p>
+<p>
+In this example there are two input decks.  The first deck specifies
+the 2D experiment.
+</p>
+<b> Mesh Generation</b> <p>
+In the first section of the input file, the unit of the rectangular
+domain is chosen as [A] with
+<b> WIDTH </b> parameter of
+<b> MESH </b> statement. Device
+size is 3.14*4^2 um2 as 8um diameter, so 12.566 [um]  to make the exact
+Anode Area on top view, set on
+<b> WIDTH </b> parameter.
+</p>
+<b> Region and Electrode Specification</b> <p>
+This section defines a 5 layer GaAs/AlGaAs diode with compositional grading
+in layers numbered 2 and 5.  In region 2 the composition fraction of Al
+increases from 0.0 at the top to 0.35 at the bottom of the layer.  This
+grading is specified using the
+<b> X.COMP </b> and
+<b> GRAD.12 </b> parameters of the
+<b> REGION </b> statement.  Similar definitions are used in the
+<b> REGION statement for region number 5</b> .
+</p>
+<p>
+The ANODE and CATHODE contacts are defined on the top and bottom of the device.
+</p>
+<b> Doping Profiles</b> <p>
+Layers 1 and 2 have a P-type doping of 1e18 cm-3. Layer 3 is P-type doped
+at 1e15 cm-3. Layers 4 and 5 are doped at 2e18 cm-3 N-type.
+All doping profiles have a uniform distribution within the region.
+</p>
+<b> Material and Models</b> <p>
+The
+<b> MATERIAL</b> statements in this section define parameters for the radiative recombination
+rate constant,
+<b> COPT</b> , the low field mobilities,
+<b> MUN</b> , the satruation velocity,
+<b> VSAT</b> and the conduction band alignment,
+<b> ALIGN</b> .
+</p>
+<p>
+The
+<b> MODELS </b> statement in this section selects models for Fermi-Dirac statistics,
+<b> FERM</b> , Auger recombination,
+<b> AUGER</b> , radiative recombination,
+<b> OPTR</b> , and Shockley-Read-Hall recombination,
+<b> SRH</b> .
+</p>
+<b> Outputs</b> <p>
+Many parameters are output to any generated structure files by default.
+The
+<b> OUTPUT </b> statement can be specified to include quantities that are not output
+by default.  In this case the conduction band edge energy,
+<b> CON.BAND</b> , the valence band edge energy,
+<b> VAL.BAND</b> , various band parameters (e.g. Eg, Nc, Nv etc.),
+<b> BAND.PARAM</b> , various recombination rates,
+<b> RECOMB, U.SRH, U.AUG, U.RAD</b> , and the current flowlines,
+<b> FLOWLINES</b> .
+</p>
+<b> Initial Solution and Bias Ramp</b> <p>
+In these sections the bias conditions of the diode are set on various
+<b> SOLVE </b> statements.  Structure files showing the internal conditions of the device
+are saved at various biases using
+<b> SAVE </b> statements.  The
+<b> LOG </b> statment is used to capture terminal conditions as well as the
+integrated radiative and total recombination rates using the
+<b> PROBE </b> statements.
+</p>
+<p>
+The second deck performs the cylindrical device analysis.  It is instructive
+to compare the two decks.  The second deck is identical to the first one
+except that the device is defined as a cylindrical device using the
+<b> CYLINDRICAL </b> parameter of the
+<b> MESH </b> statement.
+</p>
+<b> Plotting Curves</b> <p>
+The I-V curve compared and I-L curve calculated using the
+<b> EXTRACT </b> statement.
+</p>
+<p>
+The current flowlines dependency on the device domain and bais point is also
+shown.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

@@ -1,0 +1,126 @@
+# (c) Silvaco Inc., 2018
+go internal
+
+load infile=organicex06_aux.in
+
+################### CONTENT of organicex06_aux.in file ####################
+#  # S.L.M.van Mensfoort, S.I.E.Vulto, R.A.J.Janssen, and R.Coehoorn      #
+#  # Hole transport in polyflourene-based sandwich-type devices:          #
+#  # Quantitative analysis of the role of energetic disorder              #
+#  # Physical Review B 78, 085208 (2008)                                  #
+#  #                                                                      #
+#  #    -----                                                             #
+#  #    PEDOT:PSS 100 nm (anode)                                          #
+#  #    -----                                                             #
+#  #    LEP 60-125 nm                                                     #
+#  #    -----                                                             #
+#  #    Pd 100 nm (cathode)                                               #
+#  #    -----                                                             #
+#  #                                                                      #
+#  # The Pd and PEDOT:PSS layers can be treated as                        #
+#  # contacts so this is a single layer device.                           #
+#  #                                                                      #
+#  # In the paper the thickness of the LEP layer and the temperature      #
+#  # are main variables.                                                  #
+#  set LEP_temp = 150                                                     #
+#  set LEP_t_nm = 122                                                     #
+#  set Va_final = 15                                                      #
+#                                                                         #
+#  set k = 1.3806488e-23                                                  #
+#  set q = 1.602176565e-19                                                #
+#                                                                         #
+#  set nm_to_um = 1e-3                                                    #
+#  set m2_to_cm2 = 1e4                                                    #
+#  set pm3_to_pcm3 = 1e-6                                                 #
+#                                                                         #
+#  set LEP_t = $LEP_t_nm*$nm_to_um                                        #
+#  assign name=logfile c.value=ht_${LEP_temp}_${LEP_t_nm}.log             #
+#                                                                         #
+#  # TABLE I from the paper gives                                         #
+#  #    sigma[eV]                 = 0.13                                  #
+#  #    Nt[10^26 m^-3]            = 6                                     #
+#  #    Vib[V]                    = 1.95                                  #
+#  #    epsilon_r                 = 3.2                                   #
+#  #    mu_0[10^-7 m^2 V^-1 s^-1] = 1.4                                   #
+#  #    C                         = 0.39                                  #
+#  set LEP_sigma = 0.13                                                   #
+#  set LEP_Nt = 6e26*$pm3_to_pcm3                                         #
+#  set LEP_Vbi = 1.95                                                     #
+#  set LEP_kappa = 3.2                                                    #
+#  set LEP_mu0 = 1.4e-7*$m2_to_cm2                                        #
+#  set LEP_Cmu = 0.39                                                     #
+#                                                                         #
+#  # They define                                                          #
+#  #    mu0(T) = mu0 * exp(-C * (sigma/kT)^2)                             #
+#  # We need to 300K mu0                                                  #
+#  #    mu0(300) = mu0 * exp(-C * (sigma/k.300.0)^2)                      #
+#  set tmp0 = $q*$LEP_sigma / ($k*300.0)                                  #
+#  set mu300 = $LEP_mu0 * exp(-$LEP_Cmu * $tmp0 * $tmp0)                  #
+#                                                                         #
+#  # FIG 1 from the paper gives                                           #
+#  #    PEDOT:PSS = 5.1 eV                                                #
+#  #    LUMO      = 2.1 eV                                                #
+#  #    HOMO      = 5.2 eV                                                #
+#  set PEDOT_wf = 5.1                                                     #
+#  set PD_wf = $PEDOT_wf-$LEP_Vbi                                         #
+#  set LEP_lumo = 2.1                                                     #
+#  set LEP_homo = 5.2                                                     #
+#  set LEP_eg = $LEP_homo-$LEP_lumo                                       #
+#                                                                         #
+#  # The x-length is 1 um, set the width to 1e12 um so that               #
+#  # the cross-sectional area is 1 m^2                                    #
+#  go atlas simflags="-80"                                                #
+#  mesh width=1e12                                                        #
+#  x.mesh l=0      s=0.5                                                  #
+#  x.mesh l=1      s=0.5                                                  #
+#  y.mesh l=0      s=0.025*$LEP_t                                         #
+#  y.mesh l=$LEP_t s=0.025*$LEP_t                                         #
+#  region num=1 material=organic                                          #
+#  electrode name=anode top                                               #
+#  electrode name=cathode bottom                                          #
+#                                                                         #
+#  material number=1 nth.gauss=$LEP_Nt sigh.gauss=$LEP_sigma \            #
+#       affinity=$LEP_lumo eg300=$LEP_eg permittivity=$LEP_kappa          #
+#                                                                         #
+#  contact name=anode workf=$PEDOT_wf                                     #
+#  contact name=cathode workf=$PD_wf                                      #
+#                                                                         #
+#  models temperature=$LEP_temp print                                     #
+#  mobility mun=$mu300 mup=$mu300 \                                       #
+#      pasveer.p tc2.pasv.p=$LEP_Cmu                                      #
+#  method itlimit=250 ls.damping lsd.skip.iter=3 weak=1 xnorm             #
+#                                               			  #
+#                                                                         #
+#  solve init                                                             #
+#  solve vanode=0                                                         #
+#  log outfile=$logfile                                                   #
+#  solve vstep=0.1 vfinal=$Va_final name=anode                            #
+#                                                                         #
+#  quit                                                                   #
+###########################################################################
+
+# FIG 2
+sweep parameter=LEP_temp type=list range="295" \
+      parameter=LEP_t_nm type=list range="122" \
+      parameter=Va_final type=list range="15"
+tonyplot organicex06_295_122.log -set organicex06_0.set
+
+# FIG 5(c)
+sweep parameter=LEP_temp type=list range="295" \
+      parameter=LEP_t_nm type=list range="67,98" \
+      parameter=Va_final type=list range="15"
+tonyplot -overlay organicex06_295_67.log organicex06_295_98.log organicex06_295_122.log -set organicex06_1.set
+
+# FIG 5(d)
+sweep parameter=LEP_temp type=list range="171" \
+      parameter=LEP_t_nm type=list range="67,98,122" \
+      linked=Va_final type=list range="12,17,20"
+tonyplot -overlay organicex06_171_67.log organicex06_171_98.log organicex06_171_122.log -set organicex06_2.set
+
+# FIG 3(b)
+sweep parameter=LEP_temp type=list range="150,193,213,233,253,271" \
+      parameter=LEP_t_nm type=list range="122" \
+      parameter=Va_final type=list range="15"
+tonyplot -overlay organicex06_150_122.log organicex06_193_122.log organicex06_213_122.log organicex06_233_122.log organicex06_253_122.log organicex06_271_122.log -set organicex06_3.set
+
+quit

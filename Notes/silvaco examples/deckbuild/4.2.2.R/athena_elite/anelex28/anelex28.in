@@ -1,0 +1,271 @@
+go athena 
+#define and use a global shrnk variable...
+set shrnk=0.9
+
+line x loc=0*$shrnk spac=0.1
+line x loc=5.6*$shrnk spac=0.1
+
+line y loc=0 spac=0.1
+line y loc=1 spac=1
+line y loc=2 spac=2
+
+init silicon c.boron=1e14 space.mult=0.25
+
+deposit oxide thick=0.01 div=1
+deposit nitride thick=0.15 divi=2
+deposit photo thick=0.5 divi=2
+
+etch photo left p1.x=2.2*$shrnk
+etch nitride left p1.x=2.2*$shrnk
+
+implant boron energy=50 dose=1.2e13
+
+strip
+
+diffuse temp=1000 time=30 wet
+
+strip nitride
+
+implant phosph dose=1e13 energy=30
+
+diffuse temp=1200 time=120 nitrogen
+
+strip oxide 
+
+deposit oxide thick=0.01 div=1
+deposit nitride thick=0.15 divi=5
+
+etch nitride left p1.x=0.3*$shrnk
+etch nitride right p1.x=4.1*$shrnk
+etch nitride start x=1.7*$shrnk y=-10
+etch nitride continue x=1.7*$shrnk y=10
+etch nitride continue x=2.7*$shrnk y=10
+etch nitride  done    x=2.7*$shrnk y=-10
+
+
+implant boron dose=1e12 energy=30
+
+method grid.oxide=0.05
+diffuse temp=1000 time=20 wet
+
+strip nitride
+
+etch oxide dry thick=0.01
+
+diffuse temp=900 time=10 dry
+
+implant boron dose=1.4e12 boron energy=10 pear
+
+deposit poly thick=0.2 divi=4
+
+etch poly left p1.x=0.9*$shrnk
+
+etch poly start x=1.1*$shrnk y=-10
+etch continue x=1.1*$shrnk y=10
+etch continue x=3.3*$shrnk y=10
+etch done     x=3.3*$shrnk y=-10
+
+etch poly right p1.x=3.5*$shrnk
+
+structure outf=anelex28_0.str
+
+#NLDD Implant######################################################
+deposit photo thick=0.5 divi=3
+
+etch photo left p1.x=2.2*$shrnk
+
+implant phos dose=1e13 energy=10 pear
+
+strip
+
+#PLDD Implant######################################################
+deposit photo thick=0.5 divi=3
+
+etch photo right p1.x=2.2*$shrnk
+
+implant bf2 dose=1e13 energy=10 pear
+
+strip
+
+#Spacer Dep######################################################
+
+deposit oxide thick=0.1 divi=3
+
+etch dry oxide thick=0.12 
+
+
+######################################################
+
+#N++ Implant######################################################
+deposit photo thick=0.5 divi=3
+
+etch photo left p1.x=2.2*$shrnk
+
+implant phos dose=1e15 energy=20 pear
+
+strip
+
+#P++ Implant######################################################
+deposit photo thick=0.5 divi=3
+
+etch photo right p1.x=2.2*$shrnk
+
+implant bf2 dose=1e15 energy=30 pear
+
+strip
+######################################################
+structure outf=anelex28_1.str
+
+deposit nitride thick=0.02 div=1
+
+# 
+rate.depo machine=bpsg1 material=bpsg1 a.s  cvd dep.rate=1.0 step.cov=0.80
+# 
+deposit machine=bpsg1 time=4000 seconds divisions=5
+
+
+deposit photo thick=0.1 divi=2
+etch photo start x=0.5*$shrnk y=-10
+etch continue    x=0.5*$shrnk y=10
+etch continue    x=0.7*$shrnk y=10
+etch done        x=0.7*$shrnk y=-10
+
+etch photo start x=1.3*$shrnk y=-10
+etch continue    x=1.3*$shrnk y=10
+etch continue    x=1.5*$shrnk y=10
+etch done        x=1.5*$shrnk y=-10
+
+etch photo start x=2.9*$shrnk y=-10
+etch continue    x=2.9*$shrnk y=10
+etch continue    x=3.1*$shrnk y=10
+etch done        x=3.1*$shrnk y=-10
+
+etch photo start x=3.7*$shrnk y=-10
+etch continue    x=3.7*$shrnk y=10
+etch continue    x=3.9*$shrnk y=10
+etch done        x=3.9*$shrnk y=-10
+
+
+# 
+rate.etch machine=mcc1 material=bpsg1 a.s  rie isotropic=0.02 dir=1.00 \
+        chem=0.00 div=0.01
+rate.etch machine=mcc1 nitride a.s  rie isotropic=0.01 dir=1.00 \
+        chem=0.00 div=0.01
+rate.etch machine=mcc1 oxide a.s  rie isotropic=0.01 dir=1.00 \
+        chem=0.00 div=0.01
+
+# 
+etch machine=mcc1 time=5000 seconds
+
+structure outf=anelex28_2.str
+strip
+
+
+# 
+rate.depo machine=met1 tung a.s  sigma.dep=0.60 unidirec dep.rate=1.0 \
+        angle1=0.00
+# 
+deposit machine=met1 time=4000 seconds divisions=10
+
+structure outf=anelex28_3.str
+material photo no.flip=t
+deposit photo thick=0.1 divi=4
+etch photo start x=0.9*$shrnk y=10
+etch continue    x=1.1*$shrnk y=10
+etch continue x=1.1*$shrnk y=-10
+etch done    x=0.9*$shrnk y=-10
+
+etch photo start x=3.3*$shrnk y=-10
+etch continue    x=3.3*$shrnk y=10
+etch continue x=3.5*$shrnk y=10
+etch done    x=3.5*$shrnk y=-10
+
+# 
+rate.etch machine=fmd1 tung a.s  rie isotropic=0.20 dir=1.00 chem=0.00 \
+        div=0.01
+# 
+etch machine=fmd1 time=70 minutes
+
+structure outf=anelex28_4.str
+
+strip
+
+rate.depo machine=bsg material=bsg a.s  cvd dep.rate=1.0 step.cov=0.80
+# 
+deposit machine=bsg time=2000 seconds divisions=5
+
+deposit oxide thick=0.4 div=5
+
+etch above p1.y=-1.09
+
+deposit material=bpsg1 thick=0.3 divi=3
+
+structure outf=anelex28_5.str
+
+deposit photo thick=0.1 div=1
+etch photo start x=2. y=-10
+etch continue    x=2 y=10
+etch continue    x=2.4 y=10
+etch done        x=2.4 y=-10
+
+etch photo start x=4.8 y=-10
+etch continue    x=5.2 y=-10
+etch continue    x=5.2 y=10
+etch done        x=4.8 y=10
+
+# define metal contact cut etch..
+rate.etch machine=mcc2 oxynitr a.s  rie isotropic=0.18 dir=1 chem=0.00 div=0.01
+rate.etch machine=mcc2 oxide a.s  rie isotropic=0.01 dir=1 chem=0.00 div=0.01
+rate.etch machine=mcc2 material=bsg a.s  rie isotropic=0.01 dir=1 chem=0.00 div=0.01
+rate.etch machine=mcc2 material=bpsg1 a.s  rie isotropic=0.05 dir=1 chem=0.00 \
+        div=0.01
+rate.etch machine=mcc2 nitride a.s  rie isotropic=0.01 dir=1 chem=0.00 div=0.01
+
+# 
+etch machine=mcc2 time=6000 seconds
+
+structure outf=anelex28_6.str
+etch photo above p1.y=-1.2
+
+####################################################################
+rate.depo machine=tung tung a.s  cvd dep.rate=1.0 step.cov=0.60
+# 
+deposit machine=tung time=4000 seconds divisions=5
+
+etch tung dry thick=0.4
+####################################################################
+# 
+rate.depo machine=aldep alumin a.s  cvd dep.rate=1.0 step.cov=0.60
+# 
+deposit machine=aldep time=4000 seconds divisions=5
+#etch alum above p1.y=-1.7
+#deposit barrier thick=0.01 div=1
+#etch barrier above p1.y=-1.5
+#strip
+deposit photo thick=0.15 div=2
+
+etch photo start x=3*$shrnk y=-10
+etch continue x=3*$shrnk y=10
+etch continue x=3.5*$shrnk y=10
+etch done     x=3.3*$shrnk y=-10
+
+
+rate.etch machine=fmd3 alumin a.s  rie isotropic=0.40 dir=1.00 chem=0.00 \
+        div=0.01
+# 
+etch machine=fmd3 time=4200 seconds
+
+etch photo above p1.y=-1.5
+
+
+rate.depo machine=oxydep oxynitr a.s  cvd dep.rate=1.0 step.cov=0.80
+# 
+deposit machine=oxydep time=6000 seconds divisions=5
+
+structure mirror right
+
+structure outf=anelex28.str
+
+tonyplot anelex28.str -set anelex28.set
+
+quit

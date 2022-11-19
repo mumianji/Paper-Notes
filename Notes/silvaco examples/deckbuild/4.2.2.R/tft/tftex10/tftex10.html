@@ -1,0 +1,79 @@
+<html>
+  <head>
+    <title>Amorphous IGZO TFT Simulation</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Amorphous IGZO TFT Simulation</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Blaze/TFT</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="tftex10_plot0.png" width="640" alt="tftex10_plot0" />
+      <p/>
+      <img src="tftex10_plot1.png" width="640" alt="tftex10_plot1" />
+      <p/>
+      <img src="tftex10_plot2.png" width="640" alt="tftex10_plot2" />
+      <p/>
+      <img src="tftex10_plot3.png" width="640" alt="tftex10_plot3" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This file performs Id/Vgs and Id/Vd simulations of a TFT device with material
+properties corresponding to amorphous IGZO (indium galium zinc oxide) material.
+The example shows:
+</p>
+<ul>
+  <li>
+ Structure formation using Atlas syntax
+<br/>
+  </li>
+  <li>
+ Material and model settings for passivated IGZO
+<br/>
+  </li>
+  <li>
+ Forward Id/Vgs characteristics
+<br/>
+  </li>
+  <li>
+  On state Id/Vds characteristics
+  </li>
+</ul>
+<p>
+The key command in TFT simulation is the
+<b> defect </b> statement. It is used to define a continuous density of trap states in
+the silicon and the relevant trapping cross-sections.
+</p>
+<p>
+The Id/Vgs and Id/Vd ramping is done in a similar manner to the threshold voltage
+tests for MOS devices described in the MOS examples. Results from this
+example are compared with published experimental data.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

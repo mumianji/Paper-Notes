@@ -1,0 +1,72 @@
+<html>
+  <head>
+    <title>TFT Simulation of Grains and Grain Boundaries</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>TFT Simulation of Grains and Grain Boundaries</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>S-Pisces/TFT</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="tftex09_plot0.png" width="640" alt="tftex09_plot0" />
+      <p/>
+      <img src="tftex09_plot1.png" width="640" alt="tftex09_plot1" />
+      <p/>
+      <img src="tftex09_plot2.png" width="640" alt="tftex09_plot2" />
+      <p/>
+      <img src="tftex09_plot3.png" width="640" alt="tftex09_plot3" />
+      <p/>
+      <img src="tftex09_plot4.png" width="640" alt="tftex09_plot4" />
+      <p/>
+      <img src="tftex09_plot5.png" width="640" alt="tftex09_plot5" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates how Atlas and SPISCES may be used to model the influence of
+grain boundaries on the device simulation results. The input deck has been created in
+such a way as to allow easy implementation into a VWF automation tools environment.
+</p>
+<p>
+The input deck initially uses the
+<b> internal</b> simulator within DeckBuild to define a number of variables using the DeckBuild
+<b> set</b> statement syntax. There are six variables the the user is required to specify which
+define the physical geometry of the TFT.  The other variables are automatically defined
+and are used to create the mesh, regions and electrodes.
+</p>
+<p>
+The grain and grain boundary are created by defining two regions in the polysilicon.
+Each region then has its own
+<b> material</b> and
+<b> defect</b> statements that define the properties within the grain and the grain boundary.
+</p>
+<p>
+The remainder of the syntax is as normal and is described in the previous TFT examples.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

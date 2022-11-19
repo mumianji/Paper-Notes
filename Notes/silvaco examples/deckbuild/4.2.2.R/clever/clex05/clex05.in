@@ -1,0 +1,41 @@
+go clever
+
+## Process Description ##
+
+Init Layout="clex05.lay" Depth=1
+
+Deposit Oxide Thickness=0.5 Max
+
+Deposit Resist Thickness=0.1 Max
+
+Etch Oxide
+
+Strip Resist
+
+Deposit Aluminum Thickness=0.58 Max
+
+Material Aluminum Conductivity=1e6
+
+Deposit Resist Thickness=0.1 Max
+
+Mask "M1"
+
+Etch Aluminum
+
+Strip Resist
+
+Electrodes "M1" Aluminum
+
+Deposit Oxide Thickness=0.5 Max
+
+Electrodes Substrate
+
+Save Structure="clex05.str"
+
+## Parasitic Extraction ##
+
+Interconnect Adapt = (0.04, 0.04)
+
+Save Spice="clex05.net" Layout="clex05_1.lay"
+
+quit

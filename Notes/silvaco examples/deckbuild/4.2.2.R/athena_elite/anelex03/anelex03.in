@@ -1,0 +1,34 @@
+go athena
+
+#TITLE: Simple trench etching
+# 
+line x loc=0.00 spac=0.10 
+line x loc=3.0 spac=0.10 
+#
+line y loc=0.00 spac=0.05
+line y loc=2.0  spac=0.05 
+#
+initialize
+#
+deposit material=SPR500      thick=1.16 divis=11
+#
+etch material=SPR500 start x=1.1 y=-10
+etch                 cont  x=1.1 y=10
+etch                 cont  x=1.9 y=10
+etch                 done  x=1.9 y=-10
+#
+structure outfile=anelex03_0.str
+#
+rate.etch machine=m1 rie silicon \
+iso=0.0 dir=1.0 u.m
+rate.etch machine=m1 rie material=SPR500 \
+iso=0.0 dir=0.05 u.m
+#
+etch machine=m1 time=60.0 second dx.mult=0.5
+#
+structure outfile=anelex03_1.str
+
+tonyplot -ttitle anelex03.in anelex03_*.str
+#
+quit
+

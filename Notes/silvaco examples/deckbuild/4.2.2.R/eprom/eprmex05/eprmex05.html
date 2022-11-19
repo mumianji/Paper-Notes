@@ -1,0 +1,141 @@
+<html>
+  <head>
+    <title>Polysilicon versus metallic floating gate</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Polysilicon versus metallic floating gate</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>S-Pisces</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="eprmex05_plot0.png" width="640" alt="eprmex05_plot0" />
+      <p/>
+      <img src="eprmex05_plot1.png" width="640" alt="eprmex05_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example creates a simple EEPROM cell with a polysilicon floating gate.
+It then highlights the difference between treating this as a floating
+contact (perfect conductor) or a floating electrode (semiconductor).
+It demonstrates
+</p>
+<ul>
+  <li>
+ Single gate EEPROM structure formation in Atlas.
+<br/>
+  </li>
+  <li>
+ Mesh refinement in Atlas.
+<br/>
+  </li>
+  <li>
+ Threshold voltage simulation before charging of polysilicon.
+<br/>
+  </li>
+  <li>
+ Assignment of a charge to perfectly conducting contact.
+<br/>
+  </li>
+  <li>
+ Threshold voltage simulation after charging.
+<br/>
+  </li>
+  <li>
+ Assignment of a charge to a semiconductor contact.
+<br/>
+  </li>
+  <li>
+ Threshold voltage simulation after charging.
+<br/>
+  </li>
+</ul>
+<p>
+The
+<b> FLOATING </b> parameter on the
+<b> CONTACT </b> statement causes the specified electrode to be treated as
+a perfect conductor, and therefore as an equipotential.  Any stored charge
+is assumed to be evenly distributed and coupled to the device potential
+by using Gauss&apos;s flux theorem. For a polysilicon electrode this can be an
+imperfect approximation, because in the isolated semiconductor the potential
+and charge distributions will be position dependent in order to maintain
+the condition of zero steady state current flow.  The
+<b> FLOATING</b> parameter on the
+<b> ELECTRODE</b> statement
+allows to to model the floating gate as a semiconductor.
+<br/>
+This example has four sections, each staring with
+<br/>
+<b> go atlas</b> <br/>
+The first creates the EEPROM cell using Atlas syntax,  giving the polysilicon
+floating gate a donor density of 1e18 /cc.  A simple mesh refinement is then
+carried out to give better resolution near the p-n junctions, and the structure is
+saved
+<br/>
+In the next section the structure is loaded and the
+device with zero floating gate charge is simulated
+to give the unprogrammed Id-Vg curves.
+<br/>
+</p>
+<p>
+The next section loads the structure and assigns the floating gate to be
+a perfect conductor using the
+<b> FLOATING </b> parameter on the
+<b> CONTACT </b> statement, as well setting the workfunction to be that for n-doped polysilicon
+by using the
+<b> N.POLY</b> flag.  The floating gate is given a negative charge of
+-1e-15 C/cm  using the Q&lt;elec&gt; syntax of the SOLVE statement.  This is
+an alternative to charging the floating gate during a transient solve.
+The Id-Vg curve of this charged device is then obtained, and the structure
+file with a control gate bias of 3 V is saved.
+<br/>
+The final section loads in the structure and uses the syntax
+<br/>
+<b> ELECTRODE MODIFY FLOATING </b> <br/>
+to specify that the named electrode should be
+treated as an isolated semiconductor. It is still necessary to specify the
+workfunction of the contact using the N.POLY parameter on the CONTACT statement,
+but the FLOATING parameter should not be specified on the CONTACT statement in
+this case.   The floating gate is given a negative charge of
+-1e-15 C/cm  using the Q&lt;elec&gt; syntax of the SOLVE statement, as previously,
+and the Id-Vg curve is obtained. The PROBE statement saves the integrated floating gate
+charge to the logfile. The structure file of the device with a
+control gate bias of 3V is saved.
+<br/>
+The visualisation of the structure files shows a cutline through the gate stack,
+with the floating electrode case having a position dependent electron concentration
+and the floating contact case showing no concentration. The potentials in the
+floating gate can also be compared to see an equipotential in the floating contact
+case and potential changes in the floating electrode case.  The Id-Vg
+curves are slightly different between the two cases,  due to the different charge
+distributions.  The integrated total charge of the floating electrode, as obtained
+from the PROBE statement, can be seen to be bias independent.  The threshold voltages
+for the three curves can be obtained from the results.final file.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

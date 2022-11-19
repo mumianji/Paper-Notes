@@ -1,0 +1,33 @@
+ERROR: Unable to extract from 3d structure, please use 1d or 2d files only
+
+	Extracted results: N/A
+	Check cut line and/or selected quantities
+
+analytic=1000.01 angstroms (0.100001 um)  X.val=1.25
+
+analytic=1000.13 angstroms (0.100013 um)  X.val=1.21
+
+analytic=1003.41 angstroms (0.100341 um)  X.val=1.21
+
+physical=992.104 angstroms (0.0992104 um)  X.val=1.21
+
+analytic=1004.06 angstroms (0.100406 um)  X.val=1.21
+
+physical=985.508 angstroms (0.0985508 um)  X.val=1.21
+
+analytic=1004.06 angstroms (0.100406 um)  X.val=1.21
+
+physical=985.508 angstroms (0.0985508 um)  X.val=1.21
+
+analytic=1000.15 angstroms (0.100015 um)  X.val=1.21
+
+physical=973.653 angstroms (0.0973653 um)  X.val=1.21
+
+analytic=997.412 angstroms (0.0997412 um)  X.val=1.21
+
+physical=980.981 angstroms (0.0980981 um)  X.val=1.21
+
+analytic=997.118 angstroms (0.0997118 um)  X.val=1.21
+
+physical=980.981 angstroms (0.0980981 um)  X.val=1.21
+

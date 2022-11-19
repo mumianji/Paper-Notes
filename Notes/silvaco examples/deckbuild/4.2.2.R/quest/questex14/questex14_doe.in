@@ -1,0 +1,10 @@
+go internal
+
+load inf=questex14.in
+
+sweep	parameter=wire_width 	type=linear range="8, 14, 3" \
+	parameter=radius 	type=linear range="40, 160, 3" \
+	parameter=nb_coils  	type=linear range="2, 4, 3" 
+	
+save type=sdb outf=questex14.dat
+save type=spayn outf=questex14.db

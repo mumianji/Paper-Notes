@@ -1,0 +1,90 @@
+<html>
+  <head>
+    <title>Stress in FinFET due to capping layer</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Stress in FinFET due to capping layer</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Victory Process, Victory Stress</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Victory Process 7.22.0.R, Victory Stress 2.14.0.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="vsex01_fine_atlas_conformal_ex.png" width="640" alt="vsex01_fine_atlas_conformal_ex" />
+      <p/>
+      <img src="vsex01_stress_fine_atlas_conformal.png" width="640" alt="vsex01_stress_fine_atlas_conformal" />
+      <p/>
+      <img src="vsex01_stress_fine_atlas_conformal_fincut.png" width="640" alt="vsex01_stress_fine_atlas_conformal_fincut" />
+      <p/>
+    </div>
+    <div id="text" >
+</p>
+<br/>
+<p>
+This example is executed in two steps:
+</p>
+<p>
+First, Victory Process is used to generate the FinFET structure out of specifications provided in a
+layout file. The &apos;line x|y|z..&apos; statements are used to refine the mesh inside the FinFET structure
+in the area of the gate and the fin. At the end of the Victory Process simulation run the structure
+is exported with a tetrahedral volume mesh and is saved to the file
+&apos;vsex01_fine_victory_conformal_ex.str&apos; which can be visualized with
+<b> Tonyplot3d</b> .
+</p>
+<p>
+In the second part of the simulation deck stress analysis is performed by Victory Stress. The
+statement
+</p>
+<b> go victorystress</b> <p>
+starts the Victory Stress simulator. Than, the FinFET structure created in the first part of the
+simulation run is loaded with the
+<b> Init</b> statement.
+</p>
+<p>
+The
+<b> Material</b> statement defines different elastic properties of the materials contained in the
+structure. Without those definitions, Victory Stress would load default values of these properties
+from an internal material database. The
+<b> Material </b> statement overrides those default values.
+</p>
+<p>
+The
+<b> Method</b> statement chooses a particular linear equation system solver for solving the the system of elastic
+stress equations. In this case the solver called &apos;ams&apos; is selected.
+</p>
+<p>
+The stress analysis itself is a one-step simulation and it is started by the
+<b> Stress </b> statement.
+Note : Since it is not specified explictly in this examples, the default crystal orientations are
+applied, which means that a (100) silicon wafer is used and the fin is oriented in the &lt;100&gt;
+direction.
+</p>
+<p>
+Once stress analysis simulation is complete the three-dimensional structure is saved with the
+<b> Save </b> statement and can be visualized using
+<b> Tonyplot3d</b> .
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

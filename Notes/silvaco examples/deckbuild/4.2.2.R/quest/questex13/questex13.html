@@ -1,0 +1,117 @@
+<html>
+  <head>
+    <title>Complex number calculation</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Complex number calculation</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>QUEST</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>QUEST 2.0.2.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="questex13_plot0.png" width="640" alt="questex13_plot0" />
+      <p/>
+      <img src="questex13_plot1.png" width="640" alt="questex13_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<p>
+This example demonstrates the use of JavaScript analysis of QUEST to perform
+calculations using complex numbers.
+</p>
+<p>
+Introduction:
+</p>
+<p>
+It is sometimes interesting to compare simulation and experimental results on
+quantities that are not extracted by default with QUEST. It could be a quantity
+like Qdiff defined as a function of S-param:
+</p>
+<p>
+Sd_dut=0.5*(S11+S22-S12-S21)
+<br/>
+Zd_in=100*(1+Sd_dut)/(1-Sd_dut)
+<br/>
+Ldiff = Im(Zd_in)*1/w
+<br/>
+Qdiff = I(Zd_in)/R(Zd_in)
+</p>
+<p>
+It could also be interesting to transform the measured S-param to the measured Y-param also
+for comparison purpose in QUEST.
+</p>
+<p>
+In all cases calculation with complex numbers are needed.
+</p>
+<p>
+Running the Example
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+<p>
+Results analysis
+</p>
+<p>
+This example illustrates the complex number calculation syntax used in the JavaScript
+analysis of QUEST:
+</p>
+<p>
+1. Creation of scalar S-param table (CSV) from simulation (questex13_S_simu.js).
+Note that this file format (CSV) can also be used with measurement data.
+</p>
+<p>
+2. From the previous S-param table, calculation of Y11-param (questex13_Y11.js).
+</p>
+<p>
+3. General transformation of S to Y-param can be done by using the Macro function
+convert_S_to_Y (quest13_Y.js).
+</p>
+<p>
+2 and 3 can typically be used to convert measured S-Param to Y-param. Y11 real and
+imaginary are of course identical if we compare them from the 3 different calculations
+described above.
+</p>
+<p>
+4. Calculation of L and Q from Y-param calculated from 2 above. (questex13_L_Q.js)
+</p>
+<p>
+Note that:
+</p>
+<p>
+A. Q can be directly compared to Q calculted in QUEST.
+</p>
+<p>
+B. This is not the case for L since here L is calculated from Y11 and not
+from Y21 as it is done by default in QUEST. It thus shows that quantities that are
+not calculated by default in QUEST can easily be created using QUEST JavaScript
+analysis.
+</p>
+<p>
+TO RUN all the scripts, use the RUNJAVASCRIPT command or just run
+</p>
+<p>
+quest -v -b javascript_name.js
+</p>
+  </div></body>
+</html>

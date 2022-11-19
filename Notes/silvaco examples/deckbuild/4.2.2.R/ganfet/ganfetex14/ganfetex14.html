@@ -1,0 +1,82 @@
+<html>
+  <head>
+    <title>GaN HEMT Thermal Optimization using Flip Chip structure</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>GaN HEMT Thermal Optimization using Flip Chip structure</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Blaze</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="ganfetex14_plot0.png" width="640" alt="ganfetex14_plot0" />
+      <p/>
+      <img src="ganfetex14_plot1.png" width="640" alt="ganfetex14_plot1" />
+      <p/>
+      <img src="ganfetex14_plot2.png" width="640" alt="ganfetex14_plot2" />
+      <p/>
+      <img src="ganfetex14_plot3.png" width="640" alt="ganfetex14_plot3" />
+      <p/>
+      <img src="ganfetex14_plot4.png" width="640" alt="ganfetex14_plot4" />
+      <p/>
+      <img src="ganfetex14_plot5.png" width="640" alt="ganfetex14_plot5" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates two-dimensional electro-thermal simulations with heat sink structures.
+</p>
+<p>
+Although the superiority of GaN HFET device characteristics has been demonstrated, the self
+heating effect has hindered the production of high power and high speed GaN-based switching
+devices. This effect can be significantly reduced by the cost effective heat-sink approach.
+in this EXAMPLE, in order to understand and control the self heating effect, GaN HFET with
+flip chip concept is simulated, and device characteristics  are compared versus normal
+structure using Atlas.
+</p>
+<p>
+For HFETs, the GaN/AlGaN epitaxial layers have been grown on either sapphire or SiC substrates.
+Although sapphire has the advantage of lower cost and availability in larger  wafer sizes, its
+poor thermal conductivity (0.3 W/cm-K) limits the achievable powers due  to severe self-heating.
+The self heating effect can be significantly reduced by flip-chip mounting the devices
+onto highly conducting substrates such as AlN (1.8 W/cm-K).
+</p>
+<p>
+The typical GaN HFET flip chip structure in this example is a Al0.25Ga0.75 N-GaN HFET on a
+sapphire substrate. The structure consists of an AlN layer as a heat sink, a 2.7nm undoped
+AlGaN layer, and 2 GaN layers which includes 20nm doped 1e15 GaN and 1um undoped GaN.
+</p>
+<p>
+The self-heating is a local increase of crystal temperature due to dissipated Joule electric
+power, this effect can significantly reduce the electron mobility and degrade device performance.
+</p>
+<p>
+DC, Transient and AC simulations are done and compare with and without the flip chip
+structure. As expected the performance of the device is better when lattice temperature is reduced.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

@@ -1,0 +1,11 @@
+<!DOCTYPE SetFile-2D>
+<setfile version="1" >
+ <properties mark_frequency="0" graph_width_0="2" graph_width_1="1" graph_width_2="1" graph_width_3="1" graph_width_4="1" graph_width_5="1" sequence_size="1" sequence_width="0" lin_axis_nbrs="1" log_axis_nbrs="0" log_zero="-20" sequence_mark_0="0" sequence_mark_1="1" sequence_mark_2="2" sequence_mark_3="3" sequence_mark_4="4" sequence_mark_5="5" />
+ <functions/>
+ <xygraph show_points="true" show_lines="true" xyg_type="0" xyg_convert="false" >
+  <cartesian xyg_yaxis_scale="all" xyg_xaxis_log="Transient time" xyg_yaxis="none" xyg_yaxis_lin_left="V[G]" xyg_yaxis_lin_left="V[D]" xyg_yaxis_lin_right="I[iin]" xyg_yaxis_lin_right="I[amos_gate]" xyg_yaxis_lin_right="I[amos_drain]" xyg_group="(unknown electricals)" xyg_cie="false" />
+ </xygraph>
+ <legend cont_1_at="3" cont_2_at="1" cont_3_at="6" elec_at_user_x="0.0988858" elec_at_user_y="0.169922" vectors_at="6" overlay_at="2" regions_at="4" />
+ <annotation title_main="auto" title_sub="DMOS Gate Charge Simulation" footer_right="none" footer_left="none" show_xaxis="true" show_yaxis="true" show_grid="false" show_label_xaxis="true" show_label_yaxis="true" range_xaxis="auto" range_yaxis="auto" range_y2axis="auto" label_xaxis="Transient time (s)" label_yaxis="Voltage [V]" label_y2axis="Current [A]" />
+ <plot zoom_from_x="0.149025" zoom_from_y="0.0546875" zoom_scale_x="1.38878" zoom_scale_y="1.12527" label_overlay="trpowerex02_tr.log" lev_line="true" lev_mark="true" />
+</setfile>

@@ -1,0 +1,33 @@
+go athena
+#
+#                   OPTOLITH input file: anopex14.in
+#                   --------------------------------
+#
+#
+# Illumination system
+#
+illumination lambda=.193
+#
+illum.filter clear.fil circle sigma=0.3 
+#
+# Projection system
+#
+projection na=.52 
+#
+pupil.filter clear.fil circle
+#
+# Run the imaging module with  asection file from Maskviews
+#
+image inf=anopex14.sec dx=0.1 win.x.h=12 win.x.l=0 win.z.h=10 win.z.l=2
+#
+structure outfile=anopex14_1.str intensity mask
+tonyplot anopex14_1.str
+
+layout lay.clear
+layout infile=anopex14.lay mask=LAY1
+image dx=0.1 win.x.h=12 win.x.l=0 win.z.h=10 win.z.l=2
+#
+structure outfile=anopex14_2.str intensity mask
+tonyplot anopex14_2.str
+#
+quit

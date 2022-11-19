@@ -1,0 +1,99 @@
+# (c) Silvaco Inc., 2018
+go atlas 
+
+mesh width=1.0
+
+x.m  loc=0.0  spac=0.025
+x.m  loc=0.2  spac=0.005
+x.m  loc=0.3  spac=0.005
+x.m  loc=0.5  spac=0.025
+
+
+y.m  loc=-0.1   spac=0.02
+y.m  loc=-0.03  spac=0.005
+y.m  loc=-0.02  spac=0.002
+y.m  loc=-0.005 spac=0.002
+y.m  loc=0.0    spac=0.002
+y.m  loc=0.1    spac=0.01
+y.m  loc=1.0    spac=0.2
+
+
+# Set up device with 5/15/10 nm ONO stack
+
+region num=1 silicon y.min=0.0
+region num=2 oxide y.max=0.0
+region num=3 nitride y.min=-0.02 y.max=-0.005 x.min=0.2 x.max=0.3
+
+electrode name=gate x.min=0.2 x.max=0.3 y.min=-0.1 y.max=-0.03
+electrode name=source y.min=0.0 y.max=0.0 x.max=0.1
+electrode name=drain  y.min=0.0 y.max=0.0 x.min=0.4
+electrode name=substrate bottom
+
+doping uniform conc=1e17 p.type region=1
+doping gauss   conc=1e20 n.type junc=0.15 x.right=0.15 ratio.lat=0.1 region=1
+doping gauss   conc=1e20 n.type junc=0.15 x.left=0.35  ratio.lat=0.1 region=1 
+
+#  Use the dynasonos model
+interface n.i dynasonos
+
+# Set up parameters for gate stack materials (wide bandgap semiconductors)
+material material=oxide semiconductor taun0=1.0 taup0=1.0 mc=0.4 mv=0.6
+material material=nitride semiconductor nc300=1e19 nv300=1e19 mun=1.0e-1 mup=1.0e-1 mc=1.0 mv=1.0 taun0=1.0 taup0=1.0
+
+contact name=gate n.poly
+
+# Set up Nitride electron traps
+
+nitridecharge  nt.p=0.0  nt.n=5.0e19  tau.n=1.0e-4 tau.p=1.0e-4 elec.depth=1.5 sigmat.n=1.0e-14 sigman.p=0.0 sigmap.n=0.0
+
+# Specify hei for hot electron  gate charging current
+# and Poole-frenkel detrapping rate
+
+models srh hei pf.nitride
+
+output sonos.rates con.band val.band
+
+solve init 
+
+solve prev
+
+# charge using hot carriers by ramping gate to 6V and then
+# in transient mode, ramping drain bias to 3V in 1 nanosecond,
+# followed by charging at this bais up to 1s.
+# Save out the structure file at various time points
+
+solve name=gate vstep=0.1 vfinal=6.0
+
+solve vdrain=3.0 ramptime=1.0e-9 tstep=1e-14 tfinal=1.0e-7
+save outf=sonosex06_m7.str
+solve tfinal=1.0e-6
+save outf=sonosex06_m6.str
+solve tfinal=1.0e-5
+save outf=sonosex06_m5.str
+solve tfinal=1.0e-4
+save outf=sonosex06_m4.str
+solve tfinal=1.0e-3
+save outf=sonosex06_m3.str
+solve tfinal=1.0e-2
+save outf=sonosex06_m2.str
+solve tfinal=1.0e-1
+save outf=sonosex06_m1.str
+solve tfinal=1.0
+save outf=sonosex06_m0.str
+
+
+# Plot a subset of the snapshot  structure files
+tonyplot -overlay sonosex06_m0.str sonosex06_m4.str sonosex06_m6.str -set sonosex06_1.set
+
+# Use dbinternal to get Vt for each of the snapshot files
+
+go internal
+
+load inf=sonosex06_aux.in
+
+sweep parameter=minus type=list data="7,6,5,4,3,2,1,0"
+
+save type=sdb outfile=sonosex06.dat
+
+tonyplot sonosex06.dat -set sonosex06_0.set
+quit

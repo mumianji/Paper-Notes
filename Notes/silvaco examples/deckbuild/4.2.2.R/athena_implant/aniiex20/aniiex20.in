@@ -1,0 +1,28 @@
+go athena
+
+# Aluminum implant in 4H-SiC in [11-23] crystallographic direction
+
+line x loc=-1 spac=1
+line x loc=1 spac=1
+
+line y loc=0.00 spac=0.0125
+line y loc=2.50 spac=0.0125
+
+init sic_4h one.d rot.sub=0
+#deposit oxide thick=0.001 div=2
+structure outfile=aniiex20_init.str
+
+init infile=aniiex20_init.str
+implant aluminum diverg=0.1 n.ion=5000 dose=2.15e13 tilt=17 rot=0 energy=60 bca sampling
+struct outfile=aniiex20_0.str remove.gas
+extract name="al2.15e13" curve(depth,impurity="Aluminum" material="All" x.val=0.0) \
+        outfile="aniiex20_0.dat"
+
+init infile=aniiex20_init.str
+implant aluminum diverg=0.1 n.ion=5000 dose=16.0e13 tilt=17 rot=0 energy=60 bca sampling
+struct outfile=aniiex20_1.str remove.gas
+extract name="al1.6e14" curve(depth,impurity="Aluminum" material="All" x.val=0.0) \
+        outfile="aniiex20_1.dat"
+tonyplot -overlay aniiex20_0.dat aniiex20_0.exp aniiex20_1.dat aniiex20_1.exp -set aniiex20.set
+
+quit

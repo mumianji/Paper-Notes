@@ -1,0 +1,199 @@
+# (c) Silvaco Inc., 2018
+# Reference:
+# K. Abe et. al., "Mobility- and temperature-dependent device model for amorphous
+# In–Ga–Zn–O thin-film transistors," Thin Solid Films 559 (2014) 40-43
+#
+# tftex21 : tempearture properties of a-IGZO TFT
+# IGZO.TOKYO mobility model with electron conconcentration and temperature.
+
+# See also, "Temperature Properties of Amorphous In-Ga-Zn-O Thin-Film Transistors with a new Mobility Model"
+# Simulation Standard, December 2017, Silvaco Inc.
+
+#
+#
+# IGZO thickness
+set igzo_th=0.04
+# gate lenght 40 um, width 10um
+set lsz=40
+set wsz=10
+#
+## IGZO.TOKYO parameters
+# IGZO.TOKYO mu0 of electron
+set mue0=14
+# IGZO.TOKYO Tgamma of electron
+set tgm=178.33
+# IGZO.TOKYO gamma0 of electron
+set gm0=-0.3088
+# IGZO.TOKYO critical carrier conc. of electron
+set necr=10e19
+#
+## DOS based on the reference paper
+# acceptor-like tail state
+set ntac=1e19
+set wtac=0.008
+# acceptor-like Gaussian state
+set ngac=1.5e17
+set egac=0.0
+set wgac=0.64
+# donor-like tail state
+set ntdo=3.0e19
+set wtdo=0.12
+# donor-like Gaussian state
+set ngdo=1.3e17
+set egdo=2.48
+set wgdo=0.24
+#
+## set id at vth
+set i_vt=1.e-10
+#
+## temperature
+set set_t=300
+
+# comments for igzo.tokyo model
+set ver1="igzo-tokyo_$'set_t'"
+# comments for fixed mobility model
+set ver2="f-mob_$'set_t'"
+
+#
+# ne-dependent mobility model
+#
+go atlas
+
+mesh outf=tftex21_0.str width=10
+
+x.m l=0		 	s=1
+x.m l=1			s=1
+x.m l=4.6	 	s=0.1
+x.m l=5 		s=0.1
+x.m l=5.4 		s=0.1
+x.m l=6			s=0.1
+x.m l=0.5*$'lsz'+5 	s=1
+x.m l=$'lsz'+4		s=0.1
+x.m l=$'lsz'+4.6 	s=0.1
+x.m l=$'lsz'+5 		s=0.1
+x.m l=$'lsz'+5.4 	s=0.1
+x.m l=$'lsz'+9		s=1
+x.m l=$'lsz'+10 	s=1
+
+y.m l=-0.4		s=0.1
+y.m l=-0.2		s=0.02
+y.m l=-0.1 		s=0.02
+y.m l=-0.02 		s=0.005
+y.m l=0 		s=0.002
+y.m l=0.5*$'igzo_th' 	s=0.005
+y.m l=$'igzo_th' 	s=0.002
+y.m l=0.02+$'igzo_th' 	s=0.005
+y.m l=0.04+$'igzo_th' 	s=0.01
+y.m l=0.05+$'igzo_th' 	s=0.02
+y.m l=0.06+$'igzo_th' 	s=0.05
+y.m l=0.2+$'igzo_th' 	s=0.1
+
+
+#
+# The device is composed of a 40 nm layer of IGZO deposited
+# Gate insulater is composed of 200 nm SiO2.
+# Protection is 200nm SiO2 and Passivation is 
+#
+region num=1 material=igzo y.min=0 		y.max=$'igzo_th'
+region num=2 material=sio2 y.min=$'igzo_th' 	y.max=0.2+$'igzo_th'
+region num=3 material=sio2 x.min=5 x.max=$'lsz'+5 y.min=-0.2 y.max=0
+region num=4 material=sin y.min=-0.4 y.max=-0.2
+region num=5 material=sin x.min=0 x.max=5 y.min=-0.2 y.max=0
+region num=6 material=sin x.min=$'lsz'+5 x.max=$'lsz'+10 y.min=-0.2 y.max=0
+
+# electrodes
+elec num=1 name=gate y.min=0.2+$'igzo_th' y.max=0.2+$'igzo_th'
+elec num=2 name=source y.min=0.0 y.max=0.0 x.min=0.0  x.max=2.0
+elec num=3 name=drain  y.min=0.0 y.max=0.0 x.min=$'lsz'+8 x.max=$lsz+10
+
+# doping
+# channel
+doping region=1 uniform conc=8e15 n.type
+# SD
+doping region=1 gauss x.right=5 conc=1e20 char=0.3 n.type
+doping region=1 gauss x.left=$'lsz'+5 conc=1e20 char=0.3 n.type
+
+#
+# IGZO parameters
+#
+material region=1 semiconductor \
+	 m.dsn=0.34 m.dsp=1.5 \
+	 eg300=3.1 affinity=4.2 permittivity=13
+
+# IGZO.TOKYO mobility model
+mobility igzo.tokyo mun=$mue0 mup=0.01 tmun=0 tmup=0 \
+	 igzo.gamma0=$gm0 igzo.tgamma=$tgm igzo.ncrit=$necr
+
+
+# cvd-sio2
+material material=oxide permittivity=4.2
+
+#
+# Defects
+#
+defects continuous \
+	nta=$ntac ntd=$ntdo wta=$wtac wtd=$wtdo \
+	nga=$ngac ngd=$ngdo ega=$egac egd=$egdo wga=$wgac wgd=$wgdo \
+	sigtae=1e-17 sigtah=1e-15 sigtde=1e-15 sigtdh=1e-17 \
+	siggae=2e-16 siggah=2e-15 siggde=2e-15 siggdh=2e-16 \
+	tfile=tftex21_igzo_ext-std1_dos_$'ver1'.dat \
+	numa=200 numd=200
+
+#
+# contancts 
+# Ti 4.3
+# Mo 4.53
+#
+contact num=1 workf=4.53 name=gate
+contact num=2 workf=4.3 name=source
+contact num=3 workf=4.3 name=drain
+
+# models
+models srh fermi print temp=$set_t
+
+# outputs
+output band.para band.temp con.band val.band e.mobility h.mobility
+
+# probe
+probe name="ne_1n" n.conc x=$'lsz'*0.5+5 y=$'igzo_th'-0.001
+probe name="mob_1n" n.mob x=$'lsz'*0.5+5 y=$'igzo_th'-0.001
+probe name="ne_2n" n.conc x=$'lsz'*0.5+5 y=$'igzo_th'-0.002
+probe name="mob_2n" n.mob x=$'lsz'*0.5+5 y=$'igzo_th'-0.002
+probe name="ne_5n" n.conc x=$'lsz'*0.5+5 y=$'igzo_th'-0.005
+probe name="mob_5n" n.mob x=$'lsz'*0.5+5 y=$'igzo_th'-0.005
+probe name="ne_10n" n.conc x=$'lsz'*0.5+5 y=$'igzo_th'-0.01
+probe name="mob_10n" n.mob x=$'lsz'*0.5+5 y=$'igzo_th'-0.01
+probe name="ne_20n" n.conc x=$'lsz'*0.5+5 y=$'igzo_th'-0.02
+probe name="mob_20n" n.mob x=$'lsz'*0.5+5 y=$'igzo_th'-0.02
+
+#
+# Solve
+#
+solve init
+save outf=tftex21_init.str
+
+# method
+method newton climit=1e-5 maxtraps=10 itlimit=40 ir.tol=5e-16 ix.tol=2e-6 carr=1 electron
+
+# id-vg at Vd=0.1
+solve prev
+solve vdrain=0.01
+solve vdrain=0.1
+
+solve vgate=0.1
+solve vgate=1.
+solve vgate=2. vstep=2. vfinal=20 name=gate
+#save outf=tftex21_vg20vd01_$'ver1'.str
+
+log outf=tftex21_vd01_$'ver1'.log
+solve vgate=20 vstep=-0.25 vfinal=-5 name=gate
+#save outf=tftex21_vgm10vd01_$'ver1'.str
+#extract name="idvg01" curve( v."gate", abs(i."drain") ) outfile="idvg01_$'ver1'.dat"
+#extract name="mob01" deriv( v."gate", abs(i."drain")/($wsz*1.73e-8*(4.2/3.9)*0.1/$lsz) ) outfile="mob-lin_$'ver1'.dat"
+extract name="vt_01" x.val from curve( v."gate", abs(i."drain") ) where y.val=$i_vt
+extract name="ss_01" y.val from deriv( log10( abs(i."drain") ), v."gate" ) where x.val=log10($i_vt)
+extract name="ion_01" y.val from curve( v."gate", abs(i."drain") ) where x.val=20
+extract name="mul_01" y.val from deriv( v."gate", abs(i."drain")/($wsz*1.73e-8*0.1/$lsz) ) where x.val=20
+log off
+
+quit

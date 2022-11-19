@@ -1,0 +1,101 @@
+<html>
+  <head>
+    <title>Breakdown Simulation with the Curve Tracer</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Breakdown Simulation with the Curve Tracer</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>S-Pisces</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="diodeex03_plot0.png" width="640" alt="diodeex03_plot0" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates breakdown simulation for a 1D diode using the
+automatic curve tracing algorithm. It shows:
+</p>
+<ul>
+  <li>
+ 1D diode structure formation using Atlas syntax
+<br/>
+  </li>
+  <li>
+ Setting of models for breakdown simulation
+<br/>
+  </li>
+  <li>
+ Setting of curve tracing parameters
+<br/>
+  </li>
+  <li>
+ Automatic reverse bias curve trace simulation.
+  </li>
+</ul>
+<p>
+In the first part of the input file, the device structure is specified including
+mesh, electrodes locations, and doping distribution.
+</p>
+<p>
+The
+<b> models </b> statement is then used to select a set of physical models for this simulation.  In this case,
+these models are SRH and AUGER recombination, the concentration and field dependent
+mobility model, band gap narrowing and two carriers solution.
+The
+<b> impact </b> statement is used to activate the Crowell-Sze impact ionization model.
+The
+<b> method </b> statement is used to activate the coupled Newton algorithm.
+</p>
+<p>
+The
+<b> curvetrace </b> statement is used to initialize parameters for the curve tracing algorithm. The
+<b> contr.name </b> parameter specifies the name of electrode for which the load line
+technique will be applied. In this example it is the emitter. The
+<b> curr.cont </b> parameter means
+that value of current will be monitored, and simulation will be stopped when
+the current exceeds the value specified by the
+<b> end.val </b> parameter (1.e-3 A/micron in this case).
+The
+<b> mincur </b> parameter defines the minimum current value after which the load
+line technique will actually be applied. Before that point, standard voltage boundary
+conditions are used. The
+<b> nextst.ratio </b> parameter defines the maximum factor to use in increasing the voltage step on
+flat parts of the IV curve away from the turning points.
+</p>
+<p>
+The statement
+<b> solve curvetrace </b> is used to activate the curve tracing algorithm.
+</p>
+<p>
+The results of the simulation are then displayed using TonyPlot. The drain voltage should be plotted as
+<b> drain int.bias </b> from the TonyPlot menu, since the drain bias value includes the effect
+of the varying load used in the curve tracing algorithm.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

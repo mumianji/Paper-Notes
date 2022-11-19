@@ -1,0 +1,342 @@
+# (c) Silvaco Inc., 2018
+
+go victoryprocess
+
+
+init layout="sicex09.lay" depth=1 gasheight=165 padding=0 SiC4h
+
+SpecifyMaskPoly maskname=SOURCE istransparent=false p="1, 4" p="1, 1" p="2, 1" p="2, 4"
+SpecifyMaskPoly maskname=SOURCE ADD istransparent=false p="2, 2" p="2, 1" p="4, 1" p="4, 2" electrode="source"
+SpecifyMaskPoly maskname=PWELL istransparent=false p="3.5, 4" p="3.5, 3.5" p="4, 3.5" p="4, 4" electrode="pwell"
+
+
+cart mask="SUBS" spac=0.05 all.point 
+
+line X location=0
+line X location=0.4 
+line x location=0.5
+line x location=1
+
+line Y location=0  
+line Y location=0.4
+line y location=0.5
+line y location=1
+
+line z location=-163
+line z location=-162.5  
+line z location=-162  
+line z location=-160.5  
+line z location=-159.6  
+line z location=-159.5    
+line z location=-80    
+line z location=0 spacing=0.1    
+line z location=1      
+  
+doping  SiC4h boron=1e20
+doping  SiC4h phosphorus=1e12
+deposit SiC4h thick=160.5 max phosphorus=6e14
+
+deposit SiC4h thick=1.5   max boron=4e17
+deposit SiC4h thick=0.5 max boron=4e17
+
+mask "SUBS" reverse
+doping SiC4h boron=1e20 min=0 max=0.5
+strip resist
+
+mask "SUBS"
+doping SiC4h phosphorus=1e20 min=0 max=0.5
+strip resist
+
+etch SiC4h thickness=3 mask="TRENCH" reverse max
+
+deposit oxide thick=0 max
+
+etch oxide thickness=2.9 mask="GATE" reverse max
+
+deposit poly thick=2.9 min
+electrode mask="gate" material="polysilicon"
+
+deposit oxide thick=0.5 min
+
+etch oxide  mask="SOURCE"  max
+etch oxide  mask="PWELL"  max
+
+deposit aluminum thick=0 max
+
+electrode mask="source" material="aluminum"
+electrode mask="pwell" material="aluminum"
+
+save name=sicex09_vp_0
+
+go victorymesh
+
+load in=sicex09_vp_0
+
+remesh delaunay
+
+refine max.size=1
+refine max.interface.size=0.075 grading="quadratic"
+refine max.junction.size=0.15 grading="quadratic"
+
+save out=sicex09_0.str
+
+go victorydevice simflags="-128"
+
+mesh infile=sicex09_0.str verbose=3
+
+electrode name=drain x.min=0 x.max=4 y.min=0 y.max=4 z.min=1 z.max=1
+
+contact name=gate n.poly
+
+material material=4H-SiC ni.min=1e02
+
+models srh 
+
+impact aniso e.side  
+
+method pam.gmres climit=1e-6 maxtraps=5 itlimit=30 \
+       ir.tol=1.e-35 ix.tol=1.e-35  norm.scaling.local cr.tol=1.e-23
+ 
+solve init
+solve previous
+
+log outfile=sicex09_0.log
+
+solve vdrain=0.001 previous
+solve vdrain=0.005 previous
+solve vdrain=0.01 previous
+solve vdrain=0.1 previous
+solve vdrain=0.5 previous
+solve vdrain=1 previous
+solve vdrain=2 vstep=2 vfinal=10 name=drain previous
+solve vstep=5 vfinal=100 name=drain previous
+solve vstep=10 vfinal=1000 name=drain previous
+solve vstep=20 vfinal=3000 name=drain 
+solve vstep=100 vfinal=4500 name=drain 
+solve vstep=250 vfinal=10250 name=drain 
+solve vstep=100 vfinal=11000 name=drain 
+contact name=drain current
+solve previous
+solve istep=1.05 ifinal=6.5e-17 imult name=drain previous
+save outf=sicex09_BV.str
+
+go victorydevice simflags="-128"
+
+mesh infile=sicex09_0.str verbose=3
+
+electrode name=drain x.min=0 x.max=4 y.min=0 y.max=4 z.min=1 z.max=1
+
+contact name=gate n.poly
+
+material material=4H-SiC ni.min=1e03 
+
+models srh auger bgn
+
+method pam.gmres climit=1e-6 maxtraps=5 itlimit=30 \
+       ir.tol=1.e-35 ix.tol=1.e-35  norm.scaling.local cr.tol=1.e-23
+
+solve init
+solve previous
+solve vgate=0.01
+solve vgate=0.5 previous
+solve vgate=1 previous
+solve vfinal=20.0 vstep=1 name=gate previous
+
+log outfile=sicex09_3.log
+solve vdrain=0.01
+solve vdrain=0.5 previous
+solve vdrain=1 previous
+solve vdrain=2 previous
+solve vstep=1 vfinal=80 name=drain previous
+
+log off
+
+solve init
+solve previous
+solve vgate=0.1
+solve vdrain=0.01
+solve vdrain=0.5 previous
+solve vdrain=1 previous
+solve vfinal=15.0 vstep=1 name=drain previous
+
+log outfile=sicex09_5.log
+solve vgate=0 vstep=1 vfinal=6 name=gate previous
+solve vstep=0.2 vfinal=8 name=gate previous
+solve vstep=1 vfinal=12 name=gate previous
+save outf=sicex09_5_vd15vg12.str
+solve vstep=1 vfinal=25 name=gate previous
+
+
+go victoryprocess
+
+init layout="sicex09_round.lay" depth=1 gasheight=165 padding=0 SiC4h
+
+SpecifyMaskPoly maskname=SOURCE istransparent=false p="1, 4" p="1, 1" p="2, 1" p="2, 4"
+SpecifyMaskPoly maskname=SOURCE ADD istransparent=false p="2, 2" p="2, 1" p="4, 1" p="4, 2" electrode="source"
+SpecifyMaskPoly maskname=PWELL istransparent=false p="3.5, 4" p="3.5, 3.5" p="4, 3.5" p="4, 4" electrode="pwell"
+
+option cartesian.spacing.ratio=1.75
+
+cart mask="SUBS" spac=0.05 all.point 
+
+line Y location=0  
+line Y location=0.4
+line y location=0.5
+line y location=1
+
+line z location=-163
+line z location=-162.5  
+line z location=-162  
+line z location=-160.5  
+line z location=-159.6  
+line z location=-159.5    
+line z location=-80    
+line z location=0 spacing=0.1    
+line z location=1      
+  
+doping  SiC4h boron=1e20
+doping  SiC4h phosphorus=1e12
+deposit SiC4h thick=160.5 max phosphorus=6e14
+
+deposit SiC4h thick=1.5   max boron=4e17
+deposit SiC4h thick=0.5 max boron=4e17
+
+mask "SUBS" reverse
+doping SiC4h boron=1e20 min=0 max=0.5
+strip resist
+
+mask "SUBS"
+doping SiC4h phosphorus=1e20 min=0 max=0.5
+strip resist
+
+etch SiC4h thickness=2.8 mask="TRENCH" reverse max
+etch SiC4h thickness=0.2 mask="TRENCH" round reverse max
+
+deposit oxide thick=0 max
+
+etch oxide thickness=2.7 mask="GATE" reverse max
+etch oxide thickness=0.2 mask="GATE" round reverse max
+
+
+deposit poly thick=2.9 min
+electrode mask="gate" material="polysilicon"
+
+deposit oxide thick=0.5 min
+
+etch oxide  mask="SOURCE"  max
+etch oxide  mask="PWELL"  max
+
+deposit aluminum thick=0 max
+
+electrode mask="source" material="aluminum"
+electrode mask="pwell" material="aluminum"
+
+save name=sicex09_vp_0_round
+
+
+go victorymesh
+
+load in=sicex09_vp_0_round
+
+remesh delaunay
+
+refine max.size=1
+refine max.interface.size=0.075 grading="quadratic"
+refine max.junction.size=0.15 grading="quadratic"
+
+save out=sicex09_0_round.str
+
+
+go victorydevice simflags="-128"
+
+mesh infile=sicex09_0_round.str verbose=3
+
+electrode name=drain x.min=0 x.max=4 y.min=0 y.max=4 z.min=1 z.max=1
+
+contact name=gate n.poly
+
+material material=4H-SiC ni.min=1e02 
+
+models srh 
+
+impact aniso e.side  
+
+method pam.gmres climit=1e-10 maxtraps=4 itlimit=30 \
+       ir.tol=1.e-35 ix.tol=1.e-35 cr.tol=1.e-23 norm.scaling.local 
+ 
+solve init
+solve previous
+
+log outfile=sicex09_0_round.log
+
+solve vdrain=0.001 previous
+solve vdrain=0.005 previous
+solve vdrain=0.01 previous
+solve vdrain=0.1 previous
+solve vdrain=0.5 previous
+solve vdrain=1 previous
+solve vdrain=2 vstep=2 vfinal=10 name=drain previous
+solve vstep=5 vfinal=100 name=drain previous
+solve vstep=10 vfinal=1000 name=drain previous
+solve vstep=20 vfinal=4000 name=drain 
+solve vstep=200 vfinal=600 name=drain 
+solve vstep=400 vfinal=14000 name=drain 
+solve vstep=20 vfinal=14400 name=drain compliance=1e-15 cname=drain
+contact name=drain current
+solve previous
+solve istep=1.05 ifinal=1e-15 imult name=drain previous
+save outf=sicex09_BV_round.str
+
+
+go victorydevice simflags="-128"
+
+mesh infile=sicex09_0_round.str verbose=3
+
+electrode name=drain x.min=0 x.max=4 y.min=0 y.max=4 z.min=1 z.max=1
+
+contact name=gate n.poly
+
+material material=4H-SiC ni.min=1e03 
+
+models srh auger bgn
+
+method pam.gmres climit=1e-6 maxtraps=5 itlimit=30 \
+       ir.tol=1.e-35 ix.tol=1.e-35  norm.scaling.local cr.tol=1.e-23
+
+solve init
+solve previous
+solve vgate=0.01
+solve vgate=0.5 previous
+solve vgate=1 previous
+solve vfinal=20.0 vstep=1 name=gate previous
+
+log outfile=sicex09_3_round.log
+solve vdrain=0.01
+solve vdrain=0.5 previous
+solve vdrain=1 previous
+solve vdrain=2 previous
+solve vstep=1 vfinal=10 name=drain previous
+solve vstep=2 vfinal=80 name=drain previous
+log off
+
+
+solve init
+solve previous
+solve vgate=0.1
+solve vdrain=0.01
+solve vdrain=0.5 previous
+solve vdrain=1 previous
+solve vfinal=15.0 vstep=1 name=drain previous
+
+log outfile=sicex09_5_round.log
+solve vgate=0 vstep=1 vfinal=12 name=gate previous
+save outf=sicex09_5_vd15vg12_round.str
+solve vstep=1 vfinal=25 name=gate previous
+
+tonyplot -overlay sicex09_0.log sicex09_0_round.log  -set sicex09_0.set
+tonyplot -overlay sicex09_3.log sicex09_3_round.log  -set sicex09_1.set
+tonyplot -overlay sicex09_5.log sicex09_5_round.log  -set sicex09_2.set
+tonyplot3d sicex09_5_vd15vg12.str -set sicex09_3.set
+tonyplot3d sicex09_5_vd15vg12_round.str -set sicex09_3.set
+tonyplot3d sicex09_BV.str -set sicex09_4.set
+tonyplot3d sicex09_BV_round.str -set sicex09_4.set

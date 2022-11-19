@@ -1,0 +1,107 @@
+# (c) Silvaco Inc., 2018
+go atlas
+mesh width=1.0
+
+x.m  loc=0.0  spac=0.025
+x.m  loc=0.2  spac=0.005
+x.m  loc=0.3  spac=0.005
+x.m  loc=0.5  spac=0.025
+
+
+y.m  loc=-0.1   spac=0.02
+y.m  loc=-0.03  spac=0.005
+y.m  loc=-0.02  spac=0.002
+y.m  loc=-0.005 spac=0.002
+y.m  loc=0.0    spac=0.002
+y.m  loc=0.1    spac=0.01
+y.m  loc=1.0    spac=0.2
+
+region num=1 silicon y.min=0.0
+region num=2 oxide y.max=0.0
+region num=3 nitride y.min=-0.02 y.max=-0.005 x.min=0.2 x.max=0.3
+
+
+electrode name=gate x.min=0.2 x.max=0.3 y.min=-0.1 y.max=-0.03
+electrode name=source y.min=0.0 y.max=0.0 x.max=0.1
+electrode name=drain  y.min=0.0 y.max=0.0 x.min=0.4
+electrode name=substrate bottom
+
+doping uniform conc=1e17 p.type region=1
+doping gauss   conc=1e20 n.type junc=0.15 x.right=0.15 ratio.lat=0.1 region=1
+doping gauss   conc=1e20 n.type junc=0.15 x.left=0.35  ratio.lat=0.1 region=1 
+
+# need to explicitly clear dynasonos model
+interface n.i ^dynasonos
+
+material material=oxide mc=0.2
+
+contact name=gate n.poly
+
+# Specify n.concannon for hot electron simulation of gate charging current
+models srh n.concannon
+
+solve init
+
+solve prev
+
+solve name=drain vstep=0.05 vfinal=0.5
+
+log outf=sonosex05_0.log
+
+solve name=gate vstep=0.1 vfinal=5.0
+
+extract name="vt0" (xintercept(maxslope(curve(abs(v."gate"),abs(i."drain")))) \
+        - abs(ave(v."drain"))/2.0)
+
+log off
+
+solve init 
+
+# charge using hot carriers
+
+solve vgate=6.0 nocurrent
+
+solve vdrain=3.0 ramptime=1e-9 tstep=1e-10 tfinal=1.0e-5
+
+save outf=sonosex05_charged.str
+
+solve init 
+
+solve name=drain vstep=0.05 vfinal=0.5
+
+log outf=sonosex05_1.log
+
+solve name=gate vstep=0.1 vfinal=5.0
+
+extract name="vt1" (xintercept(maxslope(curve(abs(v."gate"),abs(i."drain")))) \
+        - abs(ave(v."drain"))/2.0)
+
+log off
+
+solve init
+
+#erase via tunnelling
+
+solve vgate=-7.0 ramptime=1e-9 tstep=1e-10 tfinal=1.0e-3
+
+save outf=sonosex05_erased.str
+
+solve init
+
+solve name=drain vstep=0.05 vfinal=0.5
+
+log outf=sonosex05_2.log
+
+solve name=gate vstep=0.1 vfinal=5.0
+
+extract name="vt2" (xintercept(maxslope(curve(abs(v."gate"),abs(i."drain")))) \
+        - abs(ave(v."drain"))/2.0)
+
+log off
+
+tonyplot -overlay sonosex05_0.log sonosex05_1.log sonosex05_2.log -set sonosex05_0.set
+
+tonyplot -overlay sonosex05_charged.str sonosex05_erased.str -set sonosex05_1.set
+
+quit
+

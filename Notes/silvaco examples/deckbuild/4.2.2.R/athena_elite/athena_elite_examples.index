@@ -1,0 +1,1062 @@
+{section} Athena_Elite : 2-D Topography Simulation
+
+
+{subsection} anelex01.in : Deposit Machine Comparison 
+
+Requires:  Elite
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This example shows the use of six different deposit machines:
+unidirectional, planetary, dual directional,  hemispherical,
+CVD, and conical.
+The resulting structures are plotted for comparison.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} anelex02.in : Unidirectional Deposit Example 
+
+Requires:  Elite
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This example uses the unidirectional deposit model with incident
+angles of 0, 45, -45, and 80 degrees from the surface normal.
+The unidirectional model uses a cosine law deposit that 
+is applicable to line of sight deposition.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} anelex03.in : Trench Etching: A Simple Approach 
+
+Requires:  Elite
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+Simple directional etching can be modeled by combining two etch rate 
+components: isotropic and directional. By selecting positive or negative
+values for the isotropic component, you can model trench etch with 
+undercuts or conical sections such as demonstrated in this example. 
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} anelex04.in : Trench Etching Using the RIE Model 
+
+Requires:  Elite
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This example demonstrates simple trench etching using a combination 
+of isotropic and directional etch components. The initial structure 
+was created in three steps. The 
+{bold} INITIALIZE 
+statement defines 
+silicon as the substrate material and specifies the structure dimensions. 
+The second step is a simple vertical deposition. The third step models 
+lithography in a very simple manner. An opening with critical dimensions 
+of 0.8 um and sidewall a slope of 89 degrees is created with the 
+{bold} ETCH 
+statement.
+
+The RIE was performed in two steps. The first step has a high 
+isotropic component.  This produces a 
+rounded profile with undercutting. The second portion has a high
+directional component.
+This produces a quick and dirty simulation 
+of a strawberry shaped profile that is observed experimentally.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} anelex05.in : Microloading Effects 
+
+Requires:  Elite
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+The angular distributions obtained from the Monte Carlo simulation 
+may be approximated by a Gaussian distribution overlaid by a strong 
+peak at 0 degrees. Using such an approximation or using the original 
+distribution obtained from the Monte-Carlo program for the calculation 
+of local ion flux results in strawberry-shaped profiles.  
+They have rounded bottoms and a barrel-like underetching in the upper
+part of the trenches. A microloading or proximity effect can be seen.
+Small feature sizes have a lesser etch rate than wide feature sizes.
+The maximum etch rate can only be reached in a distance from the mask
+feature that is large compared to the etch depth. 
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} anelex06.in : Comparison of RIE Model Components 
+
+Requires:  Elite
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This example demonstrates simple trench etching using the
+{bold} RIE 
+etching model.
+The input file consists of four parts.
+
+The first part produces the initial
+multilayered structure using the 
+{bold} Athena INITIALIZE, DEPOSIT, 
+and 
+{bold} ETCH 
+statements. In the first step, the 
+{bold} INITIALIZE 
+statement defines silicon as a substrate 1.0 micron thick and 2 microns wide.
+
+The second step is a simple vertical deposition of photoresist. The third step models lithography in a very simple manner.
+An opening with critical dimensions of 0.6 um and a sidewall slope of 87 degrees is created with the 
+{bold} ETCH 
+statement. The second part demonstrates an example of 
+{bold} WET 
+or isotropic etching, which is modeled using the parameter
+{bold} ISOTROPIC 
+e.g. 
+{bold} rate.etch machine=ad1 silicon a.s rie isotropic=50.0
+
+The third part shows anisotropic (directional) etching using the parameter
+{bold} DIRECTIONAL 
+e.g.
+{bold} rate.etch machine=ad1 silicon a.s rie directional=50.0
+The last part illustrates chemical etching using the parameters
+{bold} CHEMICAL 
+and
+{bold} DIVERGENCE 
+, e.g.
+{bold} rate.etch machine=ad1 silicon a.s rie chemical=50.0 divergence=5 
+where 
+{bold} CHEMICAL 
+is the rate and
+{bold} DIVERGENCE 
+is the standard deviation in degrees of a Gaussian distribution of ions 
+with angle, incident upon the surface.
+The simulation results appear on the joint plot at the very end of simulation.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} anelex07.in : Effect of Beam Divergence on Etch Rates
+
+Requires:  Elite
+{newline}
+Minimum Versions: Athena 5.22.3.R
+ 
+This example demonstrates simple trench etching using the
+{bold} RIE 
+etching model. The example illustrates the influence of the
+{bold} DIVERGENCE 
+parameter on the final profile obtained by the
+{bold} CHEMICAL 
+etch mode.
+The input file consists of four parts. The first part produces the initial
+multilayered structure using the 
+{bold} Athena INITIALIZE, DEPOSIT, 
+and 
+{bold} ETCH 
+statements. The 
+{bold} INITIALIZE 
+statement defines silicon as a substrate 1.0 micron thick and 2 microns wide.
+The second step is a simple vertical deposition of photoresist. The third step models lithography in a very simple manner.
+An opening with critical dimensions of 0.6 um and a sidewall slope of 87 degree is created with the 
+{bold} ETCH 
+statement.
+
+The second part demonstrates an example
+of  chemical etching, modeled using the parameter
+{bold} CHEMICAL 
+e.g. 
+{bold} rate.etch machine=ad2 silicon a.s rie chemical=50.0 divergence=0.1 
+The third part shows the same etching mode, except the parameter
+{bold} DIVERGENCE=10 
+The last part illustrates the same etching mode with
+{bold} DIVERGENCE=45
+
+The simulation results appear on the joint plot at the very end of the simulation.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} anelex08.in : Trench Etch Tuning using RIE Model 
+
+Requires:  Elite
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This example demonstrates etching using the
+{bold} RIE 
+etching model. The example illustrates the influence of the
+{bold} DIVERGENCE 
+of the ion beam on the final profile obtained by the
+{bold} DIRECTIONAL 
+etch mode.
+The angular distribution of the ions coming down to the wafer is assumed
+to be Gaussian. Parameter
+{bold} DIVERGENCE 
+sets the standard deviation of the distribution function (in degrees).
+The input file consists of two major parts. 
+
+The first part creates the initial
+multilayer structure using the 
+{bold} Athena INITIALIZE, DEPOSIT, 
+and 
+{bold} ETCH 
+statements. The 
+{bold} INITIALIZE 
+statement defines silicon as a substrate 1.0 micron thick and 2 microns wide.
+The second step is a simple vertical deposition of photoresist. The third step models lithography in a very simple manner.
+An opening with critical dimensions of 0.6 um and a sidewall slope of 87 degree is created with the 
+{bold} ETCH 
+statement.
+ 
+The second part of the input file demonstrates an example of 
+{bold} RIE 
+etching simulation using the parameters
+{bold} DIRECTIONAL
+, 
+{bold} ISOTROPICAL
+, 
+{bold} CHEMICAL
+, 
+and
+{bold} DIVERGENCE
+. 
+{bold} DIVERGENCE 
+determines the standard deviation of the ion's Gaussian angular distribution function for the 
+{bold} CHEMICAL 
+component of the 
+{bold} RIE 
+etch model.
+This example shows a number of simulations with a variation of the
+of the three etching components:
+{bold} DIRECTIONAL
+, 
+{bold} ISOTROPICAL 
+and
+{bold} CHEMICAL 
+etch rates.
+
+The simulation results appear on the joint plot at the very end of the simulation.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} anelex09.in : Trench Filling and Planarization 
+
+Requires:  Elite
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+A simple trench filling, planarization, and etch back is demonstrated 
+in this example. The initial trench profile was defined using the 
+{bold} ETCH 
+statement with a bottom critical dimension of 0.6 um 
+and 87 degree sidewall slopes.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} anelex10.in : Ion Milling of Aluminum 
+
+Requires:  Elite
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This example demonstrates Athena/Elite ion milling using the 
+{bold} RIE 
+model. Ion milling shows a strong directional dependence. For this example, 
+the incoming ion flux is vertical.  This is modeled by
+using the 
+{bold} RIE 
+model with a directional component only.  This results 
+in a vertical penetration.
+
+A machine called 
+{bold} ionmill 
+is defined and applied to the window 
+structure.  After each one minute etch, a structure file is saved.
+Following the last ion milling step, the structures are plotted sequentially.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} anelex11.in : Two-Step Trench Etch Process 
+
+Requires:  Elite
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This example simulates trench etching. Etching is described by a
+combination of wet etching (30nm/min) and ion induced etching
+(100nm/min). 
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} anelex12.in : Lift-off Profile Polymer Etching 
+
+Requires:  Elite
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+The example described in this section originated from studies accompanying 
+the development of a lift-off resist profile for sub-micron MESFET 
+fabrication using a tri-level resist technique. The goal of this process 
+development is to get the lift-off profile in the bottom resist of 
+the tri-level system without using special e-beam exposure techniques 
+or multi-layer e-beam resists.
+
+The resist system used instead is quite simple. The bottom layer 
+is a hard baked standard Novolac or polyimide resist covered with a 
+silicon nitride intermediate layer. This intermediate layer is used 
+during the etching process as a hard mask. The top layer is a PMMA
+resist structured by conventional electron beam lithography. The top 
+PMMA resist is stripped and etching begun.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} anelex13.in : Interconnect Metalization 
+
+Requires:  Elite
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This example performs a sequence of deposition and etch steps corresponding
+to a double metal power IC process.  The step coverage and topography of 
+the second metal level is critical in determining the success of the process.
+
+This example compares the structures created by two final metalization 
+techniques.  The first technique includes surface diffusion that would result
+from a high temperature during deposition or from increased temperature or 
+RF bias.  The second technique does not use surface diffusion.
+The improved step coverage due to surface diffusion is evident from the 
+plots produced.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} anelex14.in : MOS LDD Spacer Formation 
+
+Requires:  Elite
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This example simulates poly gate etching and spacer formation. The 
+structure is initialized, a stack of layers is deposited, a photomask 
+is patterned, and a directional etch of polysilicon is performed. The 
+photoresist is removed, the oxide is deposited using CVD with a step 
+coverage of 70%, and finally a highly directional oxide etch is performed.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} anelex15.in : Metal Passivation 
+
+Requires:  Elite
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This example simulates metal passivation. The presence of defects 
+(metal feet) on the sides of the metal line causes cracks in the deposited 
+insulator that could be a source of corrosion or inter-level shorts.
+
+By contrast, sputtering on a hot substrate can prevent crack formation. 
+{bold} Elite 
+models the effect of the hot substrate by incorporating 
+surface diffusion using the 
+{bold} SIGMA.DEP 
+parameter.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} anelex16.in : Intermetal Dielectric Formation 
+
+Requires:  Elite
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This example shows the use of two conductors (poly and aluminum) that 
+come close together. The narrow gap between them can form voids as 
+demonstrated in this example for atmospheric pressure CVD. 
+The type of inter-metal dielectric material, the thickness of this 
+dielectric, and the method of insulation can have an impact on design 
+rules for ICs with multi-level metalization.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} anelex17.in : Custom Deposit 
+
+Requires:  Elite
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This example shows the use of the
+{bold} CUSTOM2 
+ deposition model which allows us to specify an angular distribution of deposition flux. 
+The data files anelex17*.dat are used to read in a user defined
+set of angle vs. deposition rate parameters.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} anelex18.in : Trench Etch 
+
+Requires:  Elite
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This example shows the use of 
+{bold} Elite 
+to model trench etching.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} anelex19.in : Contact Etch, Reflow, and Metalization 
+
+Requires:  Elite
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This example shows the use of 
+{bold} Elite 
+to model a contact opening by using an
+isotropic etch followed by a directional etch. This results in an opening
+that has edges that may be prone to metal thinning during interconnect metal
+deposition.  To reduce this effect, reflow is performed using the 
+{bold} Elite 
+reflow model.  This is accomplished by specifying 
+
+{bold} material oxide visc.0=1.862e-20 gamma.reflo=1e3 reflow 
+
+{bold} method viscous 
+
+{bold} diff time=10 temp=950 reflow 
+
+which invokes a time temperature cycle that calculates the effects of surface
+tension on the structure.
+
+Following reflow, the metalization is performed using a simple
+CVD model that is characterized using deposit rate and step coverage
+parameters.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} anelex20.in : Sticking Coefficient for Monte Carlo Deposit 
+
+Requires:  Elite, MC DEPOSIT/ETCH
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This example shows the use of 
+{bold} Elite 
+to model deposit into a test structure 
+with changing sticking coefficient.  The step coverage varies as a function 
+of the sticking coefficient in a complex manner as a function of geometry.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} anelex21.in : Surface Diffusion for Monte Carlo Deposit 
+
+Requires:  Elite, MC DEPOSIT/ETCH
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This example shows the use of 
+{bold} Elite 
+to model deposit into a test structure 
+with surface diffusion.  The deposit gradually fills the hole in the 
+structure so that deposit into the hole is reduced.  This results in 
+a tip structure whose sharpness is a function of the surface diffusion.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} anelex22.in : Monte Carlo Deposit into Contact Cut
+
+Requires:  Elite, MC DEPOSIT/ETCH
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This example shows the use of 
+{bold} Elite 
+to model deposit into a test structure 
+with an atomistic level surface repositioning calculation.  Individual 
+particle resting places can be seen in the final structure plots.
+Increasing the surface diffusion parameter, 
+{bold} SIGMA.DEP
+, changes the resulting density due to atom re-positioning.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} anelex23.in : Monte Carlo Deposit on Sloped Sidewall
+
+Requires:  Elite, MC DEPOSIT/ETCH
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This example shows the use of 
+{bold} Elite 
+to model deposit onto a test structure 
+with an atomistic level surface repositioning calculation.  Individual 
+particle resting places can be seen in the final structure plots.
+Increasing the surface diffusion parameter, 
+{bold} SIGMA.DEP
+, changes the resulting density due to atom re-positioning.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} anelex24.in : Customizable Deposit from an ASCII File 
+
+Requires:  Elite
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This example shows the use of 
+{bold} Elite 
+to model a customizable deposit. Input is performed via an ASCII file containing angle and rate information.
+
+The example begins by creating a test structure using geometrical etch with a 
+{bold} START CONT DONE 
+sequence of 
+{bold} ETCH 
+statements.  This creates a globe on which deposition will be performed 
+and compared.  The globe is then deposited with rates that are included
+in a data file using the 
+{bold} CUSTOM1 
+model.  
+The first data file anelex24_1.dat specifies that the deposit rates will be constant
+at all angles except at a single angle (-45 degrees) where the rate is ten times higher.
+
+A second data file anelex24_2.dat specifies cosine rate distribution with a maximum rate in the vertical direction. 
+Finally, the deposit is repeated using a standard unidirectional model.  
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} anelex25.in : The Hard Polish Model 
+
+Requires:  Elite
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This example shows the use of 
+{bold} Elite 
+to model chemical mechanical polishing using the hard polish model.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} anelex26.in : The Soft Polish Model 
+
+Requires:  Elite
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This example shows the use of 
+{bold} Elite 
+to model chemical mechanical polishing
+using the soft polish model. This example calculates results for the 
+the soft polish model so that they can be compared to the published
+results by J. Warnock, "A Two Dimensional Process Model for Chemimechanical
+Polish Planarization", Electrochem. Soc. Vol 138, No. 8, August 1991.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} anelex27.in : Hard and Soft Pad Modeling Using the Soft Polish Model 
+
+Requires:  Elite
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This example shows the use of 
+{bold} Elite 
+to model chemical mechanical polishing
+using the soft polish model. A hard polishing pad is simulated by setting 
+LENGTH.FAC = 30. The soft pad uses LENGTH.FAC = 4.2. LENGTH.FAC is a 
+measure of the flexibility of the pad.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} anelex28.in : Multi-layer CMOS structure  
+
+Requires:  Elite
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This example demonstrates the use of a global shrink parameter with application to a simple multi layer interconnect structure sitting on top of some CMOS 
+transistors.
+
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+{subsection} anelex29.in : Simple Plasma Etched Trench with Sidewall Implant
+
+Requires:  Elite, MC DEPOSIT/ETCH
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This example demonstrates the use of plasma etching to etch a simple
+trench structure.
+
+The example etch machine uses a Monte Carlo simulated plasma model to
+describe the angular ion distribution incident on the substrate surface.
+At each point on the surface, an angular "window" of visibility is
+calculated.  This window of visibility is used in the integration of
+the angular distribution to calculate the etch rate.
+
+Each surface string is then moved and remeshed at the end of the
+etch step. This windowing, ray tracing technique is highlighted in this
+example if you change the SPR500 resist thickness.
+
+After trench etch, the structure is implanted at an angle and the
+trench is oxidized. This highlights the ability of Elite to perform
+physical etch alongside oxidation and implant functions.
+
+In the first
+{bold} rate.etch 
+command, the parameters for the plasma etcher are defined.  These
+parameters define the characteristics of the machine and are used to
+calculate the ion angular and energy distributions which, in turn, are
+used to calculate the ion flux at each point on the surface during
+etching.
+
+The first parameter,
+{bold} plasma 
+is used to select the plasma etching model.
+
+The parameters for the Monte Carlo plasma etching simulation are 
+{bold} pressure 
+in mT which will effect the mean free path and
+therefore the fractional angular window "seen" by the plasma
+by a given surface string element.
+
+{bold} tgas 
+is the gas temperature in Kelvin and and will effect the 
+pressure and hence the mean free path calculation.
+
+{bold} tion 
+is the temperature of the ion and is typically at a higher value
+than that of the gas.
+
+{bold} vpdc 
+is the specified DC bias on the cathode electrode. This will
+control the energy and angular anisotropy of the incoming ions energy.
+
+{bold} vpac 
+is the AC component of the electrodes bias.
+
+{bold} lshdc 
+in meters is the mean debye sheath thickness.
+
+{bold} lshac 
+is the alternating component of the sheath thickness in meters.
+
+{bold} freq 
+is the AC frequency of the RF power supply in MegaHertz.
+
+{bold} nparticles 
+is the number of Monte Carlo particles used in the calculation.
+
+{bold} mgas 
+is the gas atomic mass in AMUs. This is used in the collision calculation
+and will affect the momentum transfer characteristics.
+
+{bold} mion 
+is the atomic mass of the ion in AMUs.
+
+{bold} elec.model 
+selects the type of plasma electric field model to be used. Here
+there are four options,
+
+{bold} constant, linear, collision, child
+. These four models respectively include Constant, Linear electric field
+models and then Collision dominated and collisionless Child-Langmuir
+models for the spatial dependence of the electric field.
+
+{bold} energy.div 
+relates to the number of energy divisions for the energy distribution.
+
+{bold} angle.div 
+relates the the number of angular quantizations for the angular energy
+distribution.
+
+{bold} qio 
+is the momentum transfer cross section in meters^2.
+
+{bold} qcht 
+is the charge exchange cross section in meters^2.
+
+Subsequent
+{bold} rate.etch 
+statements define the parameters for each of the materials etched.
+
+When the plasma model is invoked, the angular window calculation is very 
+important to the final profile. The Thickness of the photoresist, in this
+example, will determine largely the angular ion energy distribution via a 
+resist 
+shadowing calculation. Thus, making the resist thicker will result in less 
+'bowing' of the sidewall. Try making the resist thinner to say, 0.1 um to 
+see this effect.
+
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+{subsection} anelex30.in : Dopant Concentration Enhanced Etch Rate
+
+Requires:  SSUPREM4, Elite, MC DEPOSIT/ETCH
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This example demonstrates the used of dopant enhanced etching using the Elite
+module of Athena.  A simple trench is etched into the silicon substrate
+with half of the region of the trench passing through high concentration
+Phosphorus.  A normal etch is first performed giving a symmetrical
+trench structure.  The simulation is then re-initialized to the pre-etch
+state and Phosphorus enhanced etching is defined for the etch machine.
+The trench is etched again, but this time the final trench structure is
+asymmetrical as the etch rates were enhanced as the surface moved through
+the high concentration Phosphorus region.
+
+The dopant enhanced etch rate is defined by the equation
+
+	ERenh = (1 + enh) ER
+
+where ER is the normal (un-enhanced) etch rate and enh is the
+enhancement due to the dopant.  This enhancement is calculated as a
+function of the dopant using the equation:
+
+	enh = 0.5*Enh.Max*(tanh(Enh.Scale*(S - Enh.MinC)) + 1)
+
+where the parameters have the following meanings
+
+{bold} Enh.Max 
+defines the maximum enhancement factor
+
+{bold} Enh.MinC 
+gives the solution value below which enhancement decays
+
+and
+{bold} Enh.Scale 
+gives the spread of the enhancement over solution values, i.e., how
+quickly does the enhancement factor reach its maximum.
+
+For exponentially varying solutions, S and Enh.MinC are used as a logarithm.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} anelex31.in : Oxidation Induced Stress Enhanced Etch Rate
+
+Requires:  SSUPREM4, Elite, MC DEPOSIT/ETCH
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This example demonstrates the stress enhanced etching using
+the Elite module of Athena.  A simple trench is etched into the silicon
+substrate through a region near a bird's beak.  This region 
+contains two high Sxy stress areas developed after oxidation. 
+Oxidation is simulated using a stress-dependent viscous model. 
+
+A standard 
+{bold} RIE 
+etching machine is defined using the 
+{bold} RATE.ETCH 
+statement.
+Stress enhancement of the etch rate is specified in the 
+{bold} RATE.DOPE 
+statement.   
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} anelex32.in : Metal Void Formation 
+
+Requires:  Elite
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This example demonstrates the formation of a void in a deposited metal
+layer. The input files defines a machine for the metal deposition into
+a contact. The machine is described using the hemispherical model.
+
+To activate the formation of any voids in the metal layer the parameter
+{bold} void 
+is required on the deposit statement. 
+
+The resulting plot shows the void formation and that the subsequent
+deposition of a dielectric layer 
+{italic} does not fill the void.
+
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} anelex33.in : Polymer Redeposition Effect 
+
+Requires:  Elite, MC DEPOSIT/ETCH
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This example demonstrates basic capabilities of the Monte Carlo Plasma Etching Module. It shows the effect of polymer redeposition on the etching of a deep trench in silicon.  
+
+Oxide is used as a masking material. First, a 0.4 micron opening is formed in masking oxide. Than, parameters of plasma for machine MCETCH are specified. 
+Also, parameters of interaction of incoming ion fluxes as well as polymer 
+flux with all materials in the structure including polymer are specified 
+in the
+{bold} ETCH.RATE 
+statement.
+
+After that, 3 minutes of etching is applied to the initial structure with and without
+redeposition taken into account. Redeposition is controlled by the
+{bold} MC.REDEPO 
+parameter.
+
+The resulting plot compares the shape of the trenches obtained with and without
+redeposition taken into account. It can be seen that redeposition slows down the etching process. Also, the resulting trench has positive slopes instead of a "barrel" shape.  
+
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} anelex34.in : Polymer Etch Rate and Reflection Effect 
+
+Requires:  Elite, MC DEPOSIT/ETCH
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This example is similar to 
+{bold} anelex33.in
+. It demonstrates how the characteristics of redeposited polymer affect the etching efficiency and shape of an etched trench. 
+
+The effect of polymer redeposition could be increased either by decreasing
+polymer etch rate (parameters
+{bold} MC.ETCH1 
+and 
+{bold} MC.ETCH2
+) or by decreasing polymer particle reflection from the polymer layer (parameter
+{bold} MC.PLM.ALB
+) 
+
+The resulting plot shows that in both cases trench becomes shallower and narrower.    
+
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+{subsection} anelex35.in : Effect of Plasma Characteristics 
+
+Requires:  Elite, MC DEPOSIT/ETCH
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This example is similar to 
+{bold} anelex33.in
+. It demonstrates how plasma characteristics affect etching efficiency and shape of an etched trench. Fluxes of ions and neutrals leaving a plasma sheath are represented by a bimaxwell velocity distribution function. In this approximation higher relative normal plasma temperatures 
+{bold} MC.NORM.T1/MC.LAT.T1 
+and 
+{bold} MC.NORM.T2/MC.LAT.T2 
+result in particle fluxes less dispersed in the lateral direction.
+
+In this example only one type of particle is considered. Two normal to lateral temperature ratios are considered: the first is 7:1 and the second is 15:1.   
+ 
+
+The resulting plot shows that "narrower" plasma ion flux results in a narrower and deeper trench.    
+
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+

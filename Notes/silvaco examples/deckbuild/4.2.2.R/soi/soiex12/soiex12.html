@@ -1,0 +1,75 @@
+<html>
+  <head>
+    <title>20nm Undoped Channel, Ultra-Thin Body and Buried Oxide Fully Depleted SOI NMOSFET in 2D</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>20nm Undoped Channel, Ultra-Thin Body and Buried Oxide Fully Depleted SOI NMOSFET in 2D</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Victory Process/Victory Mesh/Victory Device</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Victory Process 7.22.3.R / Victory Mesh 1.2.4.R / Victory Device 1.12.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="soiex12_plot0.png" width="640" alt="soiex12_plot0" />
+      <p/>
+      <img src="soiex12_plot1.png" width="640" alt="soiex12_plot1" />
+      <p/>
+      <img src="soiex12_plot2.png" width="640" alt="soiex12_plot2" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example is similar to the previous
+<b> soiex11.in</b> example, except that it aims at pointing a simple way to generate a 2D 20nm FDSOI NMOSFET from the existing 3D process flow in the previous
+<b> soiex11.in</b> example.
+</p>
+<p>
+When a mask layout file is used for process simulation, a 2D simulation deck in Victory Process differs from a 3D simulation deck only in that a 2D simulation domain (2D cut) must be defined within the mask using the
+<b> FROM </b> and
+<b> TO </b> parameters as well as the
+<b> AT </b> parameter of the
+<b> INIT</b> statement. In this example, a 2D cut is made at the position Y = 0.02
+<b> (AT=0.02)</b> within the
+<b> soiex12.lay</b> mask, which is idential to the
+<b> soiex11.lay</b> mask used in the previous
+<b> soiex11.in</b> example, to create a 2D FDSOI NMOS structure. The cut line is parallel to the X-axis starting from the point X = 0
+<b> (FROM=0)</b> , which coincides with the left side of the mask area, to the point X = 0.12
+<b> (TO=0.12)</b> , which coincides with the right side of the mask area. As this X cut-line at the Y = 0.02 position within the mask results in a 2D simulation in XZ plane, the
+<b> FLOW.DIM=2D_XZ</b> parameter is also specified in the
+<b> INIT</b> statement to enforce the 2D symmetry mode right from the beginning of the simulation flow.
+</p>
+<p>
+The resulting 2D FDSOI NMOSFET is meshed using Victory Process.  In addition, the maximum level of obtuseness
+of a triangle in the device mesh is set to
+<b> MAX.OBTUSENESS=1.</b> The lower the value of
+<b> MAX.OBTUSENESS,</b> the more triangles of the resulting conformal device mesh are less obtuse.
+</p>
+<p>
+Like the previous
+<b> soiex11.in</b> example, the Id-Vd characteristics of the 2D 20nm FD-SOI MOSFET are simulated with various carrier transport models using Victory Device.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

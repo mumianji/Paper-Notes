@@ -1,0 +1,186 @@
+# (c) Silvaco Inc., 2018
+go atlas 
+#
+# 5-QW GaN LED, capture-escape model, quantum-charge self-consistency
+# 
+#-------------------------------------------------------------------
+# SECTION 1 : MESH GENERATION
+#-------------------------------------------------------------------
+#
+# 1 Dimensional Structure
+# for A/cm^2 Unit
+mesh width=1e8
+#
+x.mesh  loc=0.0 spac=1
+x.mesh  loc=1.0 spac=1
+#
+y.mesh  loc=0.0 spac=0.1
+y.mesh  loc=0.2 spac=0.01
+y.mesh  loc=0.3 spac=0.01
+y.mesh  loc=0.5 spac=0.01
+y.mesh loc=0.55 spac=0.005
+y.mesh  loc=0.604 spac=0.0001
+y.mesh  loc=0.611 spac=0.0001
+y.mesh  loc=0.613 spac=0.0001
+y.mesh  loc=0.620 spac=0.0001
+y.mesh  loc=0.622 spac=0.0001
+y.mesh  loc=0.629 spac=0.0001
+y.mesh  loc=0.631 spac=0.0001
+y.mesh  loc=0.638 spac=0.0001
+y.mesh  loc=0.640 spac=0.0001
+y.mesh  loc=0.647 spac=0.0001
+y.mesh loc=0.670 spac=0.005
+y.mesh loc=0.680 spac=0.01
+y.mesh  loc=5.00   spac=1.0
+#
+#-------------------------------------------------------------
+# SECTION 2: REGIONS AND ELECTRODES
+#-------------------------------------------------------------
+region num=1 material=GaN y.max=0.2 
+region num=2 material=AlGaN y.min=0.2 y.max=0.604 x.comp=0.1 
+region num=3 material=InGaN y.min=0.604 y.max=0.611 x.comp=0.20   name=well    \
+      calc.strain polarization polar.scale=1.0 
+
+region num=4 material=GaN y.min=0.611 y.max=0.613
+region num=5 material=InGaN y.min=0.613 y.max=0.620 x.comp=0.20  name=well  \
+      calc.strain polarization polar.scale=1.0 
+
+region num=6 material=GaN y.min=0.620  y.max=0.622
+region num=7 material=InGaN y.min=0.622 y.max=0.629 x.comp=0.20  name=well  \
+       calc.strain polarization polar.scale=1.0  
+
+region num=8 material=GaN y.min=0.629 y.max=0.631
+region num=9 material=InGaN y.min=0.631 y.max=0.638 x.comp=0.20   name=well   \
+       calc.strain polarization polar.scale=1.0 
+
+region num=10 material=GaN y.min=0.638 y.max=0.640
+region num=11 material=InGaN y.min=0.640 y.max=0.647 x.comp=0.20   name=well       \
+       calc.strain polarization polar.scale=1.0 
+
+region num=12 material=GaN y.min=0.647 y.max=0.670 
+region num=13 material=GaN y.min=0.670 substrate
+
+
+#
+electrode name=anode   top
+electrode name=cathode bottom
+
+#x.min=2 x.max=3 y.min=0.670 y.max=0.680
+#
+#-------------------------------------------------------------
+# SECTION 3: DOPING PROFILES
+#-------------------------------------------------------------
+# p type is Mg
+# n type is Si
+doping region=1 uniform p.type conc=1e18
+doping region=2 uniform p.type conc=1e18
+doping region=13 uniform n.type conc=1e18
+#
+#---------------------------------------------------------------
+# SECTION 4: MATERIAL MODELS
+#---------------------------------------------------------------
+#
+material material=GaN taun0=1e-9 taup0=1e-9 copt=1.1e-8 \
+         augn=1.0e-34 augp=1.0e-34
+material material=AlGaN taun0=1e-9 taup0=1e-9 copt=1.1e-8 \
+         augn=1.0e-34 augp=1.0e-34
+material material=InGaN taun0=1e-9 taup0=1e-9 copt=1.1e-8 \
+         augn=1.0e-34 augp=1.0e-34 
+#
+# Lorentz Broaden factor
+material well.gamma0=30e-3
+
+#Capture escape time
+material well.taup=1e-12 well.taun=1e-12
+#
+material edb=0.080 eab=0.101
+#
+
+
+#
+#---------------------------------------------------------------
+# SECTION 4: MODELS
+#---------------------------------------------------------------
+#
+
+models fermi incomplete srh auger optr 
+
+models name=well  qwell led 
+
+models k.p wz.three
+models well.capt well.inplane 
+models name=well   spontaneous
+models well.selfcon well.npred=7 well.cnbs=7 well.vnbs=7 
+
+
+
+mobility mun0=100 mup0=10 
+#
+#----------------------------------------------------------------
+# SECTION 5: OUTPUT FLAGS and METHOD
+#----------------------------------------------------------------
+#
+output con.band val.band band.param charge polar.charge e.mobility \
+       h.mobility u.srh u.radiative u.auger 
+#
+method climit=1e-4 maxtrap=10   itlimit=25 
+#
+#----------------------------------------------------------------
+# SECTION 6: INITIAL SOLUTION
+#----------------------------------------------------------------
+#
+solve init
+save outf=ledex09_init.str
+
+
+log outf=ledex09_IV.log
+
+solve prev
+save outf=ledex09_v0.str spectrum=ledex09_v0.log
+
+solve vstep=0.1 vfinal=1 name=anode
+save outf=ledex09_v1.str spectrum=ledex09_v1.log
+
+
+solve vstep=0.1 vfinal=2 name=anode
+save outf=ledex09_v2.str spectrum=ledex09_v2.log
+
+
+solve vstep=0.1 vfinal=3 name=anode
+save outf=ledex09_v3.str spectrum=ledex09_v3.log
+
+
+solve vstep=0.1 vfinal=4 name=anode
+save outf=ledex09_v4.str spectrum=ledex09_v4.log
+
+
+solve vstep=0.1 vfinal=5 name=anode
+save outf=ledex09_v5.str spectrum=ledex09_v5.log
+
+solve vstep=0.1 vfinal=6 name=anode
+save outf=ledex09_v6.str spectrum=ledex09_v6.log
+
+solve vstep=0.1 vfinal=7 name=anode
+save outf=ledex09_v7.str spectrum=ledex09_v7.log
+
+log off
+
+#
+# Plotting curves
+#
+
+tonyplot ledex09_IV.log -set ledex09_IV.set
+
+extract init infile="ledex09_v7.str"
+
+extract name="Electron" curve(depth,impurity="Bound State Electron Concentration" material="All"   x.val=0.5) outfile="ledex09_v7_Electron.dat"
+extract name="Hole" curve(depth,impurity="Bound State Hole Concentration" material="All"   x.val=0.5) outfile="ledex09_v7_Hole.dat"
+
+extract name="e- Capture" curve(depth,impurity="e- Quantum Well Capture Rate" material="All" x.val=0.5) outfile="ledex09_v7_ecapt.dat"
+extract name="h+ Capture" curve(depth,impurity="h+ Quantum Well Capture Rate" material="All" x.val=0.5) outfile="ledex09_v7_hcapt.dat"
+
+tonyplot -overlay ledex09_v7_Electron.dat ledex09_v7_Hole.dat -set ledex09_v7.set
+tonyplot -overlay ledex09_v7_ecapt.dat ledex09_v7_hcapt.dat -set ledex09_v7capt.set
+tonyplot -overlay ledex09_v5.log ledex09_v6.log ledex09_v7.log -set ledex09_spec.set
+
+

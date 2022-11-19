@@ -1,0 +1,75 @@
+<html>
+  <head>
+    <title>Finding the Maximum Potential and Integrated Charge</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Finding the Maximum Potential and Integrated Charge</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Atlas</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="ccdex03_plot0.png" width="640" alt="ccdex03_plot0" />
+      <p/>
+      <img src="ccdex03_plot1.png" width="640" alt="ccdex03_plot1" />
+      <p/>
+      <img src="ccdex03_plot2.png" width="640" alt="ccdex03_plot2" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates postprocessing on CCD structures from the
+previous examples. It shows:
+</p>
+<ul>
+  <li>
+ Extraction of the line of
+maximum potential from a 2D structure
+<br/>
+  </li>
+  <li>
+ 2D integration of a charge packet
+  </li>
+</ul>
+<p>
+The first section of the example takes a solution file from the transient
+charge transfer in the first example in this section. It uses the extract
+feature
+<b> max.conc.file </b> to store a file of the maximum potential for each x location in the
+structure. This file can be plotted directly in TonyPlot. Alternatively,
+the file can be overlayed onto the 2D structure in TonyPlot. This can
+be performed by plotting the 2D CCD structure with the flag
+<b> -ccd</b> .  To overlay the file saved by extract, right mouse click on the main
+TonyPlot window and choose &quot;Maximum Potential&quot;.
+</p>
+<p>
+The second and third extract statements use the 2D integration feature of
+<b> extract </b> to give the integrated electron concentration in the charge packet.
+This is done for both empty and full well conditions.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

@@ -1,0 +1,79 @@
+# TPCS version: 8
+# various properties
+log label 0
+key opaque 0
+mark frequency 0
+mark overlay 1
+graph width 0 2
+graph width 1 1
+graph width 2 1
+graph width 3 0
+graph width 4 1
+graph width 5 0
+sequence size 1
+sequence width 0
+log zero 0
+sequence mark 0 0
+sequence mark 1 1
+sequence mark 2 2
+sequence mark 3 3
+sequence mark 4 4
+sequence mark 5 5
+# Functions
+function 1 "" ""
+function 2 "" ""
+function 3 "" ""
+function 4 "" ""
+select 1
+# xygraph flags
+show points on
+show lines on
+# xygraph types
+xygraph type 0 convert 0
+xygraph yaxis scale linear
+# xygraph x-axis
+xygraph xaxis "Drain Voltage" linear
+# xygraph y-axes
+xygraph yaxis none
+xygraph yaxis "Drain Current" linear "left"
+# xygraph group
+xygraph group "(unknown electricals)"
+# key positions
+key contours 1 at 3
+key contours 2 at 1
+key contours 3 at 6
+key electrical at 0
+key vectors at 6
+key overlay at 0
+key regions at 0
+key apply 
+# annotation, titles
+title main "ATLAS Simulation of DMOS Device"
+title sub " "
+# annotation, footers
+footer right none
+footer left none
+# annotation, show
+show xaxis on
+show yaxis on
+show grid off
+show label xaxis on
+show label yaxis on
+# annotation, axes
+range xaxis auto
+range yaxis auto
+label xaxis "Drain Voltage (V)"
+label yaxis "Drain Current (A/um)"
+# zoom
+zoom from 0, 0 scale 1, 1
+# user labels
+label "anisotropic mobility" from 41.5216, 0.00021267 color 0 scale 1 to 46.1778, 0.000183672
+label 0 at 3 3
+label "isotropic mobility <1000>" from 43.091, 0.000121794 color 0 scale 1 to 34.8385, 8.16441e-05
+label 1 at 0 0
+label "isotropic mobility <1100>" from 20.5685, 0.000327374 color 0 scale 1 to 24.9561, 0.000300953
+label 2 at 3 3
+# overlay level names
+label overlay 0 "powerex10_1.log"
+label overlay 1 "powerex10_2.log"
+label overlay 2 "powerex10_3.log"

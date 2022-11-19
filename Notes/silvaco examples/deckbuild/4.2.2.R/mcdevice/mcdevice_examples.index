@@ -1,0 +1,439 @@
+{section} MCDEVICE : Monte Carlo Device Application Examples
+
+
+
+
+{subsection} mcdeviceex01.in : Bulk n-type Silicon
+
+Requires: MC Device
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates the simulation of electron transport
+in bulk n-type silicon with a single value
+of the doping and the electric field.
+
+This example shows how to set bulk material properties,
+the number of iterations, the MC time step, and the
+number of carriers (i.e., electrons).
+This example also shows
+how to obtain estimates of the bulk mobility.
+This example introduces the bulk mode of MCDEVICE and basic
+concepts of modeling charge transport in bulk semiconductors.
+
+The bulk material properties are set on the
+{bold} BULK 
+statement. The
+{bold} FIELD 
+parameter and the
+{bold} DOPING 
+parameter are the most commonly used.
+In this case, a low field with no doping is chosen
+to model the behavior of mobile electrons in intrinsic silicon in the
+linear region of the velocity-field characteristic.
+
+The number of iterations and duration of the time step are
+set on the
+{bold} ALGO 
+statement.
+The
+{bold} ITER 
+parameter implies that mobility estimates
+in the mcdeviceex1_diff.log file are averaged over
+of TIME = (
+{bold} ITER
+-
+{bold} TRANS
+) *
+{bold} DT
+= (10000-0)*(1e-15 s) = 10e-12 s = 10 ps.
+To improve the estimates, increase
+{bold} TRANS
+, which is the number of transient iterations performed before
+TIME=0 when MCDEVICE begins to collect data for the averages.
+The number of computational carriers used in the Monte Carlo model
+is determined by the
+{bold} N 
+parameter on the
+{bold} PARTICLE 
+statement.  For bulk simulations,
+{bold} N 
+represents the
+ensemble size used to collect data.  The magnitude of
+the noise of the averages will be reduced both by increasing the
+size of the ensemble and by increasing the time during
+which data is collected, namely (
+{bold} ITER
+-
+{bold} TRANS
+) *
+{bold} DT
+).
+
+The mobility estimates along with other time-averaged quantities are
+written into the mcdeviceex01_diff.log file.  You can plot these
+with TonyPlot.  The best estimate for the mobililty
+is obtained when drift-derived and diffusion-derived
+estimates converge.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} mcdeviceex02.in : 25-nm n-MOSFFET
+
+Requires: MC Device
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates 2D Monte Carlo device modeling of a silicon
+n-MOSFET without quantum correction.
+
+The first part of the input file specifies the algorithmic parameters of the
+Monte Carlo model.  Many of the same parameters specified in the
+input file for the bulk example (mcdeviceex01)
+are used again here.  In this case,
+the number of computational carriers (electrons) is set to 40,000 with the
+{bold} N 
+parameter on the
+{bold} PARTICLE 
+statement.
+{bold} N 
+= 40000 is large enough to adequately sample
+the spatial distribution of mobile charge in the device.
+To better sample the tail of the distribution function, use a
+higher value of
+{bold} N 
+or statistical enhancement.
+
+On the
+{bold} ALGO 
+statement,
+{bold} DT
+= 0.1e-15 s = 0.1 fs is ten times smaller than in the bulk example
+since the electrons must sense small variations in the 2D doping and
+field profiles.  To get even closer to the steady-state solution,
+change from
+{bold} ITER 
+= 2500 to
+{bold} ITER
+= 25000.  With this change, MCDEVICE will take about 10
+times longer to run the example, but the averages will be closer
+to the steady-state solution.  As in the bulk case, you may want
+to change from
+{bold} TRANS
+= 0 to
+{bold} TRANS
+= 1000 to obtain a more
+accurate solution before TIME = 0 when MCDEVICE begins collecting data
+for its averages.
+We have kept this example short by using
+{bold} ITER
+= 2500 and
+{bold} TRANS
+= 0
+so you can experience running a complete simulation in just a couple
+of minutes.
+
+
+In this case,
+{bold} TSTEP
+= 5
+on the 
+{bold} POISSON 
+statement indicates that Poisson's equation will be solved every 5 iterations
+(or every 5 *
+{bold} DT
+= 0.5 fs).  This time must remain short in order for the
+electrons to properly
+sample spatial and temporal variations of the electric fields.
+
+The second part of the input file specifies a rectangular tensor product
+mesh used
+to represent the physical structure of the device,
+to solve Poisson's equation,
+and to help enforce the MC carrier boundary conditions.
+A finer mesh captures more
+carrier-carrier interaction.  A courser mesh captures less
+carrier-carrier interaction.  In this example, we use a typical size
+of the 2D mesh for a 25-nm n-MOSFET.  This 2D mesh is finer
+than what is typically used when solving for the steady-state
+solution of the drift diffusion or energy balance equations for the
+same device.
+
+The third part of the input file specifies rectangular regions
+on the mesh.  The REGION statements indicate both the
+material (MAT parameter) and type of region (TYPE parameter).
+When you specify the regions in your input file, always 
+include regions with the TYPE of OUT, MC, BLOCK, and CONTACT.
+Please see the MCDEVICE chapter of the Atlas User's Manual for
+a complete description of
+the region types and how they control the Monte
+Carlo solution.
+
+The fourth part of the input file specifies the rectangular current
+regions used to estimate the current in the device.  In this case,
+the x-directed estimates of
+the current (dim=1 values in the mcdeviceex02_current.log file)
+from the first and third regions represent the terminal currents at
+the source and drain, respectively.
+
+The fifth part of the input file specifies the doping profiles.
+
+The last part of the input file includes a
+{bold} SOLVE 
+statement.  The
+{bold} SOLVE 
+statement performs the Monte Carlo solve at the voltage biases
+provided by the
+{bold} V<NAME> 
+parameters on the
+{bold} SOLVE 
+statement.
+Additional commented
+{bold} SOLVE 
+statements may be
+used to do perform voltage ramps
+or obtained solutions at other bias points.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} mcdeviceex03.in : 25-nm n-MOSFFET with quantum correction
+
+Requires: MC Device
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates 2D Monte Carlo device modeling of a silicon
+n-MOSFET with quantum correction.
+
+For all aspects of this example apart from the quantum correction,
+please see the previous example, mcdeviceex02.
+
+The aspects of this example related to the quantum correction are
+specified with three different statements.
+
+On the
+{bold} QREGION 
+statement,
+the 
+{bold} BOUNDP 
+parameter specifies a rectangular domain where
+the quantum correction is included.
+In this case, the quantum correction is included just under the gate.
+{bold} DIR
+= Y
+on the
+{bold} QREGION 
+statement specifies the
+direction of quantization.
+
+The
+{bold} SCHRMESH 
+statement specifies the number and location of nodes used for the
+Schroedinger mesh.  The Schroedinger equation is solved
+on the 1D mesh specified here at every
+{bold} XSTEP
+= 1
+mesh lines along X
+and at every
+{bold} TSTEP
+= 4000
+iterations.  Undersampling the quantum solution either
+spatially or temporally may reduce the accuracy of the solution.
+This choice
+was found to be adequate for this device
+and is a reasonable starting point for modeling other devices.
+
+The
+{bold} SCHRREGION 
+statement specifies the material regions
+used for the quantum correction.
+You must specify these material definitions using
+{bold} SCHRREGION 
+statements consistently with the material definitions
+you specified on the 2D Poisson mesh using
+{bold} REGION 
+statements.
+In this example, although MCDEVICE obtains non-zero values of the 
+electrons' wave functions in the SiO2 region,
+MCDEVICE confines the MC electrons to the silicon substrate.
+As a result,
+the "Electron Conc" and "Average Electron Conc" fields in the
+mcdeviceex03_sol.str file
+do not show electrons in the SiO2 even though electron penetration of
+oxide barrier is considered as part of the model.
+This choice is conventional.
+The model does a good job of predicting
+the impact of quantum size effects on the electron concentration
+and the terminal currents.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} mcdeviceex04.in : 25-nm p-MOSFFET
+
+Requires: MC Device
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates 2D Monte Carlo device modeling of a silicon
+p-MOSFET without quantum correction.
+
+For all aspects of this example apart from the quantum correction,
+please see mcdeviceex02.
+
+This example was generated by changing all n-type dopants to
+p-type dopants, all p-type dopants to n-type dopants,
+and by negating all applied bias voltages.
+
+The
+{bold} CARRIER 
+parameter on the
+{bold} ALGO 
+statement is changed from
+{bold} CARRIER 
+= E for electrons (as in mcdeviceex02) to
+{bold} CARRIER
+= H for holes.  This means that holes are modeled using
+the Monte Carlo transport model and electrons are modeled using
+the constant quasi-Fermi method.  In mcdeviceex02,
+these choices are reversed.
+
+In additional, the
+{bold} PHON
+,
+{bold} BANDS
+,
+and
+{bold} FINAL 
+statements are
+added near the end of the input file (just before the
+{bold} SOLVE 
+statement).  These three statements are provided here
+to change to settings
+consistent with
+{bold} CARRIER
+= H.
+The default values for these three statements are
+are consistent with
+{bold} CARRIER
+= E.
+
+In this case, the x-component of the currents produced by the
+p-MOSFET are negative while the x-component of the current
+produced by the n-MOSFET were positive.  This is as expected and
+follows the sign conventions for the current
+described in the "Current Regions" section of the MCDEVICE
+chapter of the Atlas User's Manual.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} mcdeviceex05.in : Imported 25-nm n-MOSFFET
+
+Requires: MC Device
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates 2D Monte Carlo device modeling of a silicon
+n-MOSFET by importing the mesh, regions, and doping from
+a Silvaco structure file.
+
+For all aspects of this example apart from the
+{bold} IMPORT 
+statement, please see mcdeviceex02.
+
+In preparation for this example, we generated the same structure used
+in mcdeviceex02 using Atlas outside the MCDEVICE module and saved it
+in the mcdeviceex05_atlas.str file.
+This example uses the
+{bold} IMPORT 
+statement to 
+import structure information from this file into MCDEVICE.
+
+The
+{bold} MESH, REGIONS
+, and
+{bold} DOP 
+parameters on the
+{bold} IMPORT 
+statement are set to
+{bold} TRUE
+. This indicates that all three aspects will be imported
+from the structure file specified by the
+{bold} STRFILE 
+parameter.
+The 
+{bold} TYPE 
+parameter is set to 8 to indicate that
+the file is a Silvaco structure file.
+
+The initial definitions of
+the source, drain, gate, and substrate regions
+are imported from the mcdeviceex05_atlas.str file.
+The 
+{bold} REGION 
+statements change the
+{bold} TYPE 
+parameter for these regions from
+{bold} MC 
+to
+{bold} CONTACT
+.
+
+Specify all contact definitions
+in your input file either by changing the
+{bold} TYPE 
+parameter of imported regions (as shown here)
+or by adding new contact definitions.
+This is true since
+flat contacts are ignored by
+{bold} IMPORT 
+statements
+and contact regions are imported as
+{bold} TYPE=MC
+.
+
+All aspects of the structure
+can be modified after import and prior to a
+{bold} SOLVE 
+statement by using the
+{bold} XMESH, YMESH, REGION
+, and
+{bold} DOPING 
+statements.
+In this case, just the
+{bold} TYPE 
+parameters of the contact
+regions were changed
+and all other structure information
+from the import were retained.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+

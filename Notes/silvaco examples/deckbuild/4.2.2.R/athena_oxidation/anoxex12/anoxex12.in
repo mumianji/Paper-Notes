@@ -1,0 +1,96 @@
+go athena
+
+line x loc=-0.5000  spacing=0.100   
+line x loc=0.0000  spacing=0.0400   
+line x loc=0.1000  spacing=0.0150
+line x loc=0.2500  spacing=0.0200
+line x loc=0.5500  spacing=0.0400   
+
+line y loc=0.0000  spacing=0.0100   
+line y loc=0.5000  spacing=0.100
+
+
+init no.imp
+
+deposit   oxide thickness=0.005 divisions=3
+
+deposit   poly   thickness=0.2 temp=550  divisions=6
+
+etch poly right p1.x=0.1000
+
+etch dry oxide thickness=0.0020
+
+structure outf=anoxex12_0.str
+
+# oxidation threshold model. This will stop oxidation happening 
+# when the value of weto2 drops below 1e19 at the oxidising interface
+method ox.thresh
+
+set min.oxi=1e19
+oxide poly wet min.oxidant=$min.oxi
+oxide silicon wet min.oxidant=$min.oxi
+
+
+# grow the oxide that will encroach under the gate....
+diffuse   time=20  temp=900  wet
+
+structure outfile=anoxex12_1.str
+
+# Extract some design parameters for calibration... 
+extract name="tox_at_0.05um_min.oxid_$min.oxi" thickness \
+	material="SiO~2" mat.occno=2 x.val=0.05
+
+extract name="tox_at_0.um_min.oxid_$min.oxi" thickness \
+	material="SiO~2" mat.occno=2 x.val=0.0
+#
+extract name="weto2_conc_0.0_min.oxid_$min.oxi" max.conc \
+	impurity="Wet O~2" material="SiO~2" mat.occno=2 x.val=0.0
+
+#------------------------------------------------------------------------
+
+init inf=anoxex12_0.str
+# redefine oxidant threshold
+set min.oxi=1e18
+oxide poly wet min.oxidant=$min.oxi
+oxide silicon wet min.oxidant=$min.oxi
+
+
+# grow the oxide that will encroach under the gate....
+diffuse   time=20  temp=900  wet
+
+structure outfile=anoxex12_2.str
+
+# Extract some design parameters for calibration... 
+extract name="tox_at_0.05um_min.oxid_$min.oxi" thickness \
+	material="SiO~2" mat.occno=2 x.val=0.05
+
+extract name="tox_at_0.um_min.oxid_$min.oxi" thickness \
+	material="SiO~2" mat.occno=2 x.val=0.0
+#
+extract name="weto2_conc_0.0_min.oxid_$min.oxi" max.conc \
+	impurity="Wet O~2" material="SiO~2" mat.occno=2 x.val=0.0
+
+
+#------------------------------------------------------------------------
+
+init inf=anoxex12_0.str
+method ox.thresh=f
+
+# grow the oxide that will encroach under the gate....
+diffuse   time=20  temp=900  wet
+
+structure outfile=anoxex12_3.str
+
+# Extract some design parameters for calibration... 
+extract name="tox_at_0.05um_min.oxid_def" thickness \
+	material="SiO~2" mat.occno=2 x.val=0.05
+
+extract name="tox_at_0.um_min.oxid_def" thickness \
+	material="SiO~2" mat.occno=2 x.val=0.0
+#
+extract name="weto2_conc_0.0_min.oxid_def" max.conc \
+	impurity="Wet O~2" material="SiO~2" mat.occno=2 x.val=0.0
+
+# now plot the 3 structures and overlay them....
+tonyplot -overlay anoxex12_[1-3].str -set anoxex12.set
+

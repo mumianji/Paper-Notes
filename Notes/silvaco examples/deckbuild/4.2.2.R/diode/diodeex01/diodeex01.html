@@ -1,0 +1,88 @@
+<html>
+  <head>
+    <title>Schottky Diode Forward Characteristic</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Schottky Diode Forward Characteristic</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>S-Pisces</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="diodeex01_plot0.png" width="640" alt="diodeex01_plot0" />
+      <p/>
+      <img src="diodeex01_plot1.png" width="640" alt="diodeex01_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates simulation of a Schottky Diode Forward Characteristic.
+It shows:
+</p>
+<ul>
+  <li>
+ Formation of a diode structure using Atlas syntax
+<br/>
+  </li>
+  <li>
+ Setting of Schottky barrier height for the anode
+<br/>
+   </li>
+  <li>
+ Forward biasing the anode
+  </li>
+</ul>
+<p>
+In the first part of the input file the device is described, including
+mesh, electrodes locations, and doping distribution. This is a 2D
+n-type device with heavily doped floating p-type guard ring regions,
+located at the left and right sides of the structure. The Schottky
+anode is located at the top of the device, and a heavily doped cathode is located at
+the bottom of the device.
+</p>
+<p>
+After the device description, the
+<b> model </b> statement is used to specify the following set of models :
+carrier concentration dependent mobility
+<b> (ccsmob)</b> , field dependent mobility, band-gap narrowing,
+SRH and Auger recombination. The two carrier model is specified here as well (carriers=2).
+</p>
+<p>
+The key statement for setting a Schottky contact is
+<b> contact name=&lt;char&gt; work=&lt;val&gt;</b> . It is used to specify the workfunction of the Schottky electrode. In this
+example, since the substrate is n-type silicon with an affinity of 4.17,
+the specified workfunction of 4.97 provides
+a Schottky-barrier height of 0.8V. The default barrier height is zero
+(a perfect ohmic contact). This condition is assumed for the cathode.
+</p>
+<p>
+The electrical simulation simply ramps the anode voltage to 1.0V in
+0.05V steps using the
+<b> solve </b> statement. The results of the simulation are then displayed using TonyPlot.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

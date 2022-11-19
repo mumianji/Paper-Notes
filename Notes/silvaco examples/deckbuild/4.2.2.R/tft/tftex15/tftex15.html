@@ -1,0 +1,118 @@
+<html>
+  <head>
+    <title>3D Amorphous Bottom-Gate IGZO TFT Simulation</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>3D Amorphous Bottom-Gate IGZO TFT Simulation</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Victory Process/Victory Mesh/Victory Device</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Victory Process 7.22.3.R / Victory Mesh 1.2.4.R / Victory Device 1.12.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="tftex15_plot0.png" width="640" alt="tftex15_plot0" />
+      <p/>
+      <img src="tftex15_plot1.png" width="640" alt="tftex15_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<br/>
+<p>
+The oxide TFTs utilizing amorphous InGaZnO material is the candidate material as a switching transistor for pixel or driver transistor for AMOLED in the future large scale and flexible consumer electronics. The foundamental and basic understanding of IGZO materials is very important to realize such a devices in display area. This example performs 3D bottom gate oxide TFT structure generation using 3D Victoryprocess process simulation and then simulates IDVG device characteristics extracting threshold voltage and subthreshold swing.
+<br/>
+</p>
+<ul>
+  <li>
+ Structure formation using Victoryprocess syntax
+<br/>
+  </li>
+  <li>
+ Material and model settings for bottom gate passivated IGZO TFT
+<br/>
+  </li>
+  <li>
+ DOS(Density Of State) in a-IGZO bulk and at interface between IGZO and gate insulator
+<br/>
+  </li>
+  <li>
+ Forward Id/Vgs characteristics and extraction of Vth and Subthreshold swing
+<br/>
+  </li>
+</ul>
+<p>
+The bottom gate oxide TFT is initialized by glass substrate thickness of 5um using
+the init statment. The device size in x-y plane is defined by loading Maskviews&apos;s layout file &quot;tftex15_0.lay&quot;. The initial mesh is added by cartesian statement from loaded mask polygon edge information.
+<br/>
+The next step is to deposit bottom gate metal and then make gate pattern with mask statement.
+The gate edge angle is defined by geometrical etching with 45 degree. The electrode statement is
+used to attach &quot;gate&quot; electrode name which is defined in Maskviews layout file.
+<br/>
+The double gate insulator is composed by SiO2(50nm) and Si3N4(400nm) and deposited by conformal deposition which
+is uniformly deposited on the bottom gate topography.
+<br/>
+The active oxide semiconductor(here, amorphous IGZO) with thickness of 50nm is uniformly deposited
+and then patterned by mask &quot;ACT&quot; layer. Here we used a silicon as a default active channel material which will be modified to physical IGZO material in Victorydevice part using REGION MODIFY statement.
+<br/>
+The etch stopper oxide is deposied for active channel length and source/drain metal contact size.
+For etch stopper size we used the same mask layer as &quot;SD&quot; with reverse polarity. This makes a contact to channel layer, channel length, and gate source/drain overlap length. And then source/drain metal
+layer is deposted on this etch stopper layer. In this example, 10um channel length is assumed.
+The final electrode satement is to make source/drain electrode names.
+{newlines}
+</p>
+<p>
+The SiO2/Si3N4 passivation layers are deposited and then final structure is saved using Victory Mesh  to &quot;tftex15_0.str&quot; file using Delaunay triangulation for subsequent Victory Device simulation.
+</p>
+<p>
+For better accuracy we used &quot;max.size=0.5&quot; as a global mesh refinement, which means minimum feature size is not exceeded to 0.5um.
+<br/>
+For more information about Delaunay meshing refinement, you can refer to victoryprocess example section.
+</p>
+<p>
+The key command in amorphous InGaZnO oxide TFT device simulation is the
+<b> n-type doping in the channel layer</b> We put 1e16/cm^3 n-type doping for electron carrier in the channel layer using region modify statement.
+<br/>
+<b> Source/Drain metal workfunction with barrier height</b> The source/drain metal workfunction is the sume of IGZO affinity(4.16) and barrrier height of 0.16eV.
+<br/>
+<b> Physical model parameters for transport.</b> You can use finite non-zero contact resistance at source/drain by CONTACT statement.
+The dielectric permittivity constant and basic band parameters such as band gap, band-edge mobility, and effective mass of electron were considered in MATERIAL statement. The effective density of states
+in band(Nc,NV) were assumed by matching tails states of density of state in sub-band gap. The electron effective mass of 0.34*me is Nc~5e18/cm^3 at room temperature.
+<b> Density of states in sub-band gap of oxide semiconductor </b> It is used to define a continuous density of trap states in the a-IGZO active channel bulk with DEFECT
+statement. Next, we added interface traps site to the interface between gate insulator and channel using INTDEFECT statement. It is now believed that density of states for oxygen-vacancy(Vo) in a-IGZO material is formed by shallow donor-like states or deep donor-like states. The tail distribution from
+conduction band-edge(Ec) is taken into account by NTA and WTA which are very important factor to characterize the performance of a-IGZO TFT under sub-threshold or below threshold conditions. The high
+mobility of amorphous IGZO materials as compared to a-Si:TFT is due to the low acceptor-like tail states(NTA).
+<br/>
+<b> Model statement</b> In this model statement, we assumed the ambient temperature of 300K and Fermi statistics for carrier.
+The field-dependent saturation mobility model is taken into account to saturation current level.
+<br/>
+<b> Nemerical method</b> Next, we use PAM.GMRES(64bit) muti-threaded version of iterative numerical solver. it is possible to define the number of CPUs used (-P &quot;all&quot; or -P &quot;# of CPUS) during simulation. The default is 1.
+<br/>
+For detailed numerical options, please refer to victorydevice manual.
+<br/>
+<b> IDVG DC simulation</b> The IdVg at low drain bias and high bias conditions were simulated and then threshold voltage
+and subthreshold swing values are extracted by EXTRACT statement. For sub-threshold swing value, we used slope of transconductance curve and then extracted by 1/Gm.
+For accurate subthreshold extraction, it is required to use very small voltage step during DC bias sweep.
+<br/>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

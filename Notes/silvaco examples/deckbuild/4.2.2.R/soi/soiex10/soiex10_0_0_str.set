@@ -1,0 +1,174 @@
+silvaco.file ASCII version=1.14.19 format=1
+""
+#non-visible objects
+number-of-non-visible-objects 0
+
+#non-enable-contour objects
+number-of-non-enable-contour-objects 1
+non-enable-contour-object SiO2
+
+#Cut Plane Settings
+point_1 0 0 0
+point_2 1 0 0
+point_3 0 0 1
+three_points 0
+PAN 0
+PITCH 90
+ELEV 1
+
+#Cut Plane Axes Settings
+X_REVERSE 0
+Y_REVERSE 0
+XY_SWAP 0
+
+#Region Properties
+region "Region #1" 0 0 3
+region "Region #2" 0 0 3
+region "Region #3" 0 0 3
+region "Region #4" 0 0 3
+region "Region #5" 0 0 3
+region "Region #7" 0 0 3
+region "Region #6" 0 0 3
+
+#Region Labels
+region_label "Region #1" "Region #1" 1 0 0 0
+region_label "Region #2" "Region #2" 1 0 0 0
+region_label "Region #3" "Region #3" 1 0 0 0
+region_label "Region #4" "Region #4" 1 0 0 0
+region_label "Region #5" "Region #5" 1 0 0 0
+region_label "Region #7" "Region #7" 1 0 0 0
+region_label "Region #6" "Region #6" 1 0 0 0
+
+#Overlay Properties
+overlay_mode_active 0
+
+#Define the scene matrix
+sm_00 0.9486532786429952
+sm_01 0.30816650433482523
+sm_02 0.071346776563118219
+sm_03 -1.635145672843862
+
+sm_10 -0.17407687786959009
+sm_11 0.32028531517381387
+sm_12 0.93118986113208202
+sm_13 0.0010089961584951895
+
+sm_20 0.26411019955895304
+sm_21 -0.89579613891222898
+sm_22 0.35748437727943333
+sm_23 5.8385069429171272
+
+sm_30 0
+sm_31 0
+sm_32 0
+sm_33 1
+
+#Define the camera matrix
+cm_00 1
+cm_01 0
+cm_02 0
+cm_03 0
+
+cm_10 0
+cm_11 1
+cm_12 0
+cm_13 0
+
+cm_20 0
+cm_21 0
+cm_22 1
+cm_23 -13.98574397525628
+
+cm_30 0
+cm_31 0
+cm_32 0
+cm_33 1
+
+#Define the scene scaling factors
+ss_xyz 1 1 1
+
+#Define 3D projection
+proj_3d_aspect 1.097799511002445
+proj_3d_z_near 6.364123208804715
+proj_3d_z_far 12.949388882072416
+proj_3d_height 5.4472943485532666
+proj_3d_fovy 25
+proj_3d_type 0
+proj_3d_depth_cue 2
+
+coord_selection 1
+coord_type 1
+
+modelview_x_scale 1
+modelview_y_scale 1
+modelview_z_scale 1
+
+#Global BBox Settings
+global_bbox_min -0.2016829194552677 -0.2016829194552677 -0.45168291945526767
+global_bbox_max 3.378155473978627 4.3781554739786266 0.77815547397862694
+
+#Define x-y-z Axis Visibility
+x_axis_visibility 1
+y_axis_visibility 1
+z_axis_visibility 1
+
+#Define Legend Visibility
+contour_legend 1
+region_legend 1
+
+#Define the DisplayMode
+display_mode_id 3
+
+#Define Show Cut Plane
+show_cut_plane 0
+
+#Define Show Cut Plane X Y Axes
+show_cut_plane_x_axis 1
+show_cut_plane_y_axis 1
+
+#Define the DrawMode
+draw_mode_id 0
+
+#Define the Region_Color_Type
+region_color_type 0
+
+mat_info "Aluminum 72 1"
+mat_info "Conductor 78 1"
+mat_info "Gold 8 1"
+mat_info "IGZO 80 1"
+mat_info "OxyNitride 57 1"
+mat_info "Polysilicon 40 1"
+mat_info "Si3N4 28 1"
+mat_info "SiO2 47 1"
+mat_info "Silicon 8 1"
+mat_info "Titanium 57 1"
+mat_info " 24 1"
+
+#Define light0 and light1 information
+light0_enabled 1
+light0_color 255 255 255
+light0_intensity 0.52999997138977051
+light0_latitude 30
+light0_longitude 0
+
+light1_enabled 1
+light1_color 255 255 255
+light1_intensity 0.52999997138977051
+light1_latitude 0
+light1_longitude 270
+
+#Define contours information
+imp_menu_index -1
+name-of-doping "Impact Gen Rate"
+limit_select_type 0
+auto_max_limit 0
+auto_min_limit 1
+contour_max_imp_value 1e+30
+contour_min_imp_value 0
+legend_type 0
+legend_auto_mapping 1
+legend_mapping 0
+legend_palette 0
+legend_nbr_of_colors 5
+
+EOF 2115677256

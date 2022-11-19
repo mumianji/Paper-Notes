@@ -1,0 +1,124 @@
+<html>
+  <head>
+    <title>3D Device Simulation - Effect of Lattice Heating</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>3D Device Simulation - Effect of Lattice Heating</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Device 3D/Giga 3D</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="soiex09_plot0.png" width="640" alt="soiex09_plot0" />
+      <p/>
+      <img src="soiex09_plot1.png" width="640" alt="soiex09_plot1" />
+      <p/>
+      <img src="soiex09_plot2.png" width="640" alt="soiex09_plot2" />
+      <p/>
+      <img src="soiex09_plot3.png" width="640" alt="soiex09_plot3" />
+      <p/>
+      <img src="soiex09_plot4.png" width="640" alt="soiex09_plot4" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates an Id/Vds 3D analysis of a short channel
+ultra-thin SOI transistor with a body contact. Two simulations are
+performed with and without lattice heating turned on.
+</p>
+<p>
+Such simulations cannot be performed accurately using a 2D simulator
+because the body electrode is located in a different z-plane compared with the drain, gate and source. The example shows:
+</p>
+<ul>
+  <li>
+ Formation of 3D structure using Atlas syntax
+<br/>
+  </li>
+  <li>
+ Id/Vds solution with Vgs=3.0V
+  </li>
+</ul>
+<p>
+The formation of this 3D structure is performed using the Atlas syntax.
+The syntax used is very similar to that of a 2D example. The
+definition of dimensions in the third direction is defined by the
+<b> z </b> indicator. Thus z.min and z.max define extents in the z direction, just
+as x.min and x.max do in the x direction.
+</p>
+<p>
+The SOI device is composed of a 0.2 micron layer of silicon on a 0.4
+micron silicon dioxide substrate.  The device has a 17 nm thick gate
+oxide and a gate length of 1.0 microns (effective channel length is 0.8
+microns).  The gate width is 2.5um. The body contact location is
+defined by the following statement
+</p>
+<b> electrode     name=body   x.min=1 x.max=2 y.min=0.0 y.max=0.0 z.min=3.5 z.max=4</b> <p>
+The
+<b> model </b> statement is used after the device description to select a set of physical
+models for this simulation. In this case the example uses conmob: the
+doping dependent low field mobility model, fldmob: the lateral electric
+field-dependent mobility model, srh: Shockley-Read-Hall recombination,
+auger: recombination
+accounting for high level injection effects, and bgn: band gap narrowing.
+</p>
+<p>
+Also, in the lattice heating simulation input deck, an additional parameter
+<b> lat.temp</b> is placed on the
+<b> model</b> statement. This switches on lattice heating inside the simulation. With
+this option it is also necessary to include a thermal boundary condition.
+This is included using the following statement:
+</p>
+<b> thermcontact num=1 ext.temp=300 x.min=0 x.max=3 y.min=0.35 z.min=0 z.max=4  </b> <p>
+and forces the temperature on the bottom of the device to be fixed at 300K.
+</p>
+<p>
+The
+<b> impact </b> statement is used to specify Selberherr model.
+The
+<b> contact </b> statement is used to assign the work function on the polysilicon gate.
+</p>
+<p>
+The numerical methods used are different to previous 2D examples and are
+chosen by the statement
+<b> method       bicgst.</b> This chooses a bi-conjugate gradient solution scheme which has been found
+to give robust and fast simulations of three dimensional devices.
+</p>
+<p>
+The drain voltage is set to 0.1V, and then the gate voltage is swept to
+3.0V to obtain the operating gate voltage.
+</p>
+<p>
+Then the gate voltage is set to 3.0V, and then the drain voltage is
+swept to its final value.
+</p>
+<p>
+The IV results are displayed using TonyPlot showing the ID-VG characteristics
+both with and without lattice heating.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

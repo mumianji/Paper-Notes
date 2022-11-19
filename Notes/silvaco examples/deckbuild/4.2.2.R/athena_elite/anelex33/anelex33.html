@@ -1,0 +1,60 @@
+<html>
+  <head>
+    <title>Polymer Redeposition Effect</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Polymer Redeposition Effect</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Elite, MC DEPOSIT/ETCH</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="anelex33_plot0.png" width="640" alt="anelex33_plot0" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates basic capabilities of the Monte Carlo Plasma Etching Module. It shows the effect of polymer redeposition on the etching of a deep trench in silicon.
+</p>
+<p>
+Oxide is used as a masking material. First, a 0.4 micron opening is formed in masking oxide. Than, parameters of plasma for machine MCETCH are specified.
+Also, parameters of interaction of incoming ion fluxes as well as polymer
+flux with all materials in the structure including polymer are specified
+in the
+<b> ETCH.RATE </b> statement.
+</p>
+<p>
+After that, 3 minutes of etching is applied to the initial structure with and without
+redeposition taken into account. Redeposition is controlled by the
+<b> MC.REDEPO </b> parameter.
+</p>
+<p>
+The resulting plot compares the shape of the trenches obtained with and without
+redeposition taken into account. It can be seen that redeposition slows down the etching process. Also, the resulting trench has positive slopes instead of a &quot;barrel&quot; shape.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

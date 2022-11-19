@@ -1,0 +1,72 @@
+<html>
+  <head>
+    <title>CIGS Cell</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>CIGS Cell</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>S-Pisces/Luminous</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="solarex05_plot0.png" width="640" alt="solarex05_plot0" />
+      <p/>
+      <img src="solarex05_plot1.png" width="640" alt="solarex05_plot1" />
+      <p/>
+      <img src="solarex05_plot2.png" width="640" alt="solarex05_plot2" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates the use of the transfer matrix method,
+<b> TMM</b> , with diffusive interfaces to model a textured CIGS solar cell.
+This approach is equally applicable to other types of textured
+thin film cells such as amorphous silicon cells.
+</p>
+<p>
+The keys to this simulation are the use of the transfer matrix
+method to account for the coherent interference in the thin films
+and the use of diffusive interfaces to account for the effects of
+light trapping in the textured surfaces.
+</p>
+<p>
+This example also shows the importance and methodology of including
+conducting layers in the simulation using the transfer matrix method.
+These models are enabled by the
+<b> TR.MAT </b> and
+<b> DIFFUSE </b> parameters of the
+<b> BEAM </b> statement.
+</p>
+<p>
+Finally, this is a good example of the specification of diffusive
+interfaces using haze function parameters and angular distribution
+functions
+<b> ADFs</b> on the
+<b> INTERFACE</b> statements.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

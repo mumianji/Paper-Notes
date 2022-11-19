@@ -1,0 +1,73 @@
+<html>
+  <head>
+    <title>Directional magnetic field detector</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Directional magnetic field detector</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Device 3D/Magnetic 3D</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="magneticex03_plot0.png" width="640" alt="magneticex03_plot0" />
+      <p/>
+      <img src="magneticex03_plot1.png" width="640" alt="magneticex03_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+The example shows:
+</p>
+<ul>
+  <li>
+ 3D structure formation using Atlas syntax
+<br/>
+  </li>
+  <li>
+ Model settings for 3D Magnetic field
+<br/>
+  </li>
+  <li>
+ Field detection using open circuited contacts
+  </li>
+</ul>
+<p>
+The Magnetic field in Atlas 3D is specified by setting some combination of
+BX,BY, or BZ on the MODELS statement. In this case the current flow is in the x-direction and so we set up a field in the y-direction and z-directions
+by setting BY and BZ on the
+<b> models</b> statement.  Open circuited contacts
+are placed perpendicular to the y-direction and z-direction respectively. The
+potential drop in the y-direction (and hence
+<b> BZ</b> ) is measured between contacts Hall1 and Hall2
+and that in the z-direction (and hence
+<b> BY</b> ) is measured between contacts Hall3 and Hall4. The ratio of potential
+differences generated can be seen to be in proportion to the ratio of
+magnetic field components,  thus giving the direction of the field in
+the y-z plane.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

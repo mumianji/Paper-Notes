@@ -1,0 +1,49 @@
+go athena
+# 
+line x loc=0.00 spac=0.2
+line x loc=0.4 spac=0.01
+line x loc=0.55 spac=0.04
+#
+line y loc=0.00 spac=0.03
+line y loc=1 spac=0.1
+
+init 
+
+#deposit oxide thick=0.01 div=1
+deposit oxide thick=0.08 div=4
+#deposit oxide thick=0.01 div=1
+deposit nitride thick=0.2 div=5
+
+etch nitride right p1.x=0.4
+structure mirror right
+method grid.ox=0.05
+
+diffuse time=10 temp=1100 wet 
+
+deposit poly thick=0.1 div=10
+rate.etch machine=m0 rie poly dir=0.1 iso=0.0 u.m
+etch machine=m0 time=62.0 second dx.mult=0.5
+deposit photo thick=0.5 div=5
+
+etch photo start x=0.4 y=-1
+etch cont x=0.4 y=1
+etch cont x=0.7 y=1
+etch done x=0.7 y=-1
+
+rate.etch machine=m1 rie oxide dir=1.0 iso=0.00 u.m
+rate.etch machine=m1 rie poly dir=0.2 iso=0.0 u.m
+rate.etch machine=m1 rie photo dir=0.1 iso=0.01 u.m
+etch machine=m1 time=17.0 second dx.mult=0.5
+
+rate.etch machine=m2 rie silicon dir=1.0 iso=0.00 u.m
+rate.etch machine=m2 rie poly dir=5.0 iso=5 u.m
+etch machine=m2 time=20.0 second dx.mult=0.5
+etch poly thick=0.15
+strip
+method adapt
+implant arsenic energy=30 dose=4e13 tilt=15
+struct outf=amex04.str
+
+tonyplot amex04.str -set amex04.set
+
+quit

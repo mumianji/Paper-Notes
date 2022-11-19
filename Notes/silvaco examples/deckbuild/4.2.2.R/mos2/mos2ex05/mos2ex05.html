@@ -1,0 +1,128 @@
+<html>
+  <head>
+    <title>Comparison of Id/Vds using EB and NEB models</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Comparison of Id/Vds using EB and NEB models</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>SSuprem 4/S-Pisces/Giga</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R, Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="mos2ex05_plot0.png" width="640" alt="mos2ex05_plot0" />
+      <p/>
+      <img src="mos2ex05_plot1.png" width="640" alt="mos2ex05_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates fabrication and Id/Vds analysis of a short
+channel structure with Energy Balance and Non-isothermal Energy Balance
+Models. The example shows:
+</p>
+<ul>
+  <li>
+  Creation of a  short channel MOSFET in Athena
+<br/>
+  </li>
+  <li>
+  Regridding in DEVEDIT 
+<br/>
+  </li>
+  <li>
+  Isothermal Id/Vds analysis in Atlas
+<br/>
+  </li>
+  <li>
+  Non-isothermal Id/Vds analysis in Atlas
+  </li>
+</ul>
+<p>
+Deep submicron devices should be simulated using the Energy Balance Model
+due to velocity overshoot and nonlocal impact ionization effects,
+which could substantially influence device characteristics. For high
+current levels (high gate voltages) the thermal self-heating effects
+can also play an important role by decreasing mobility and the impact
+ionization rate. This example demonstrates a comparison of Id/Vds curves
+obtained between the Energy Balance and Nonisothermal Energy Balance Models.
+</p>
+<p>
+The structure is formed using a standard LDD NMOS process and
+regridding is performed in DEVEDIT to refine the mesh in the areas
+where high electric fields will occur in Atlas. This procedure is
+described under the Substrate and Gate current example in the MOS
+example section.
+</p>
+<p>
+There are two Atlas runs in this example file.  The first Atlas run
+uses Energy Balance Model, and the second run uses both the energy
+balance and heat flow equations.
+</p>
+<p>
+In both runs the
+<b> material </b> statement is used to assign an energy relaxation time for electrons.
+The
+<b> models </b> statement is used to select a set of physical models for this simulation.  In this case,
+these models are CONSRH and AUGER recombination, the CVT mobility model,
+Band Gap Narrowing, two carriers model (carriers=2), and the energy balance equation
+for electrons only (hcte.el).
+The
+<b> impact </b> statement is used to assign the energy relaxation length for the Selberherr model.
+The
+<b> contact </b> statement is used to assign the work function on the polysilicon gate.
+</p>
+<p>
+The gate voltage is ramped to 3V. At this stage, a combined algorithm is used by specifying
+<b> method gummel newton</b> . This means that if convergence is not reached in decoupled (or gummel)
+mode, the simulator will automatically switch to coupled (or newton)
+mode .  The the drain voltage is then ramped. The combined algorithm is
+typically used for low and moderate drain biases, and newton alone for high
+drain biases.
+</p>
+<p>
+The drain voltage is ramped to show the Id/Vds curves obtained up to
+8V. This demonstrates the convergence improvements possible by using a
+fully coupled solution for energy balance simulation. A decoupled
+solution generally would not converge at higher drain biases.
+</p>
+<p>
+In the second Atlas run, the same set of models is used, except that
+the solution of the  lattice energy balance equation is activated using
+<b> models lat.temp</b> .
+</p>
+<p>
+As with all lattice heat flow simulation, thermal boundary conditions must be defined.
+Thermal boundary conditions are defined in the
+<b> thermcontact </b> statement.  A value of the thermal conductance is specified at the
+thermal contact located along the substrate, whilst thermal isolation
+conditions are assumed on the all other surfaces.
+</p>
+<p>
+The final Id/Vds curves can be compared and overlaid using TonyPlot.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

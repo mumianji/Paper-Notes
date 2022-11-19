@@ -1,0 +1,71 @@
+go athena
+
+
+#                   ATHENA input file: anex03.in
+#                   --------------------------------
+
+#           This example illustrates exposure and development
+#	    over nonplanar topography using a user defined 
+#	    aerial image cross section.
+
+# 
+line x loc=0.00 spac=0.1
+line x loc=1.25  spac=0.05
+line x loc=1.75  spac=0.05
+line x loc=3.00 spac=0.1
+#
+line y loc=0.5  spac=.05
+line y loc=1.00 spac=.05
+line y loc=1.50 spac=.1
+# 
+init orientation=100
+# 
+# Etch the silicon to create a simple wedge structure
+etch silicon right p1.x=1.25 p1.y=.5 p2.x=1.75 p2.y=1.0
+# 
+deposit name.resist=AZ1350J thick=1.00 divisions=60
+# 
+# Etch photoresist to create a flat top surface
+etch name.resist=AZ1350J start x=0.00 y=-0.5 
+etch cont x=0.00 y=0.00 
+etch cont x=3.00 y=0.00 
+etch done x=3.00 y=-0.5 
+#
+expose inf=anex03.exp dose=200.0 num.refl=5
+bake diff.leng=0.03
+structure outfile=anex03_1.str
+#
+develop kim time=60 steps=8
+structure outfile=anex03_2.str
+
+#
+# 
+line x loc=0.00 spac=0.1
+line x loc=1.25  spac=0.05
+line x loc=1.75  spac=0.05
+line x loc=3.00 spac=0.1
+#
+line y loc=0.5  spac=.05
+line y loc=1.00 spac=.05
+line y loc=1.50 spac=.1
+# 
+init orientation=100
+# 
+# Etch the silicon to create a simple wedge structure
+etch silicon right p1.x=1.25 p1.y=.5 p2.x=1.75 p2.y=1.0
+# 
+# Define a machine for realistic resist deposit 
+rate.depo machine=test name.resist=AZ1350J u.m  cvd \
+          dep.rate=1.0 step.cov=0.6 smooth.win=0.75 smooth.step=4
+#
+deposit machine=test time=.5 divisions=30
+# 
+expose inf=anex03.exp dose=200.0 num.refl=5
+bake diff.leng=0.03
+structure outfile=anex03_3.str
+#
+develop kim time=60 steps=8
+structure outfile=anex03_4.str
+tonyplot anex03_2.str anex03_4.str
+#
+quit

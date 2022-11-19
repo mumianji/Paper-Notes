@@ -1,0 +1,14 @@
+0  # reverse of native.coordinates flag.
+1  # Cartesian.Spacing.On flag.
+1  # Line.Spacing.On flag.
+0  # ATHENAMASKMODE flag.
+0  # Resist barrier mode.
+0  # Print.zlines mode.
+0  # Z lines collection status.
+
+
+at_was_specified
+0
+
+merge_on
+1

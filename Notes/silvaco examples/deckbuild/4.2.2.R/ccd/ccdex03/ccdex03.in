@@ -1,0 +1,28 @@
+# (c) Silvaco Inc., 2018
+go atlas
+
+# extract line of maximum potential from solution file
+
+extract init inf="ccdex03_0.str"
+extract name="maxpot" max.conc.file material="Silicon" impurity="Potential" \
+	x.step=0.001 outfile="maxconc.dat" material="Silicon"
+tonyplot -ccd ccdex03_0.str -set ccdex03_0.set
+tonyplot maxconc.dat -set ccdex03_2.set
+
+
+# 2D integration of electron concentration in empty well
+
+extract init inf="ccdex03_1.str"
+extract name="empty" 2d.area impurity="Electron Conc" x.step=0.25  \
+                    x.min=0.0 y.min=0.0 x.max=3 y.max=0.5
+
+
+# 2D integration of electron concentration in full well
+
+extract init inf="ccdex03_2.str"
+extract name="full" 2d.area impurity="Electron Conc" x.step=0.25  \
+                    x.min=0.0 y.min=0.0 x.max=3 y.max=0.5
+
+tonyplot  ccdex03_1.str ccdex03_2.str -set ccdex03_1.set
+
+quit

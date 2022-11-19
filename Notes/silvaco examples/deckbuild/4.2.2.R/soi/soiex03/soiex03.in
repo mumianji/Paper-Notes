@@ -1,0 +1,73 @@
+# (c) Silvaco Inc., 2018
+go atlas
+#
+# Define deckbuild variables
+set simid=0.2
+set sibot=0.4
+set oxbot=1.0
+#
+TITLE SOI device simulation
+#
+# 0.4um of silicon on 0.6um oxide substrate     
+#
+mesh  space.mult=1.5
+# 
+x.mesh loc=0.00   spac=0.250
+x.mesh loc=1.15   spac=0.02
+x.mesh loc=1.5    spac=0.05
+x.mesh loc=1.85   spac=0.02
+x.mesh loc=3      spac=0.25
+#
+y.mesh loc=-0.017 spac=0.25
+y.mesh loc=0.00   spac=0.0025
+y.mesh loc=$simid spac=0.02
+y.mesh loc=$sibot spac=0.005
+y.mesh loc=$oxbot spac=0.1
+#
+region       num=1 y.max=0 oxide 
+region       num=2 y.min=0 y.max=$sibot silicon
+region       num=3 y.min=$sibot  oxide
+#
+#*********** define the electrodes ************
+# #1-GATE #2-SOURCE #3-DRAIN #4-SUBSTRATE(below oxide)
+#
+electrode    name=gate    x.min=1 x.max=2 y.min=-0.017 y.max=-0.017
+electrode    name=source x.max=0.5 y.min=0 y.max=0
+electrode    name=drain  x.min=2.5 y.min=0 y.max=0
+electrode    substrate
+#
+#*********** define the doping concentrations *****
+#
+doping       uniform conc=1.75e17 p.type  reg=2
+doping       gauss n.type conc=1e20 char=0.2 lat.char=0.05 reg=2 x.r=1.0 
+doping       gauss n.type conc=1e20 char=0.2 lat.char=0.05 reg=2 x.l=2.0 
+save         outf=soiex03_0.str
+tonyplot     soiex03_0.str -set soiex03_0.set
+#
+# set interface charge separately on front and back oxide interfaces
+interf       qf=3e10 y.max=$simid
+interf       qf=1e11 y.min=$simid
+#
+# set workfunction of gate
+contact     name=gate n.poly
+#
+# select models
+models      conmob srh  bgn fldmob print hcte
+impact      selb
+#
+solve init
+#
+method      newton autonr trap maxtrap=10 
+#
+# Perform leakage current analysis
+log         outf=soiex03_1.log
+solve       prev  
+solve       vdrain=0.05
+solve       vdrain=0.1 vfinal=3.3 vstep=0.1 name=drain
+#
+extract name="ids_leakage" max(abs(i."drain"))
+#
+# plot resultant IDVD leakage current curve 
+tonyplot    soiex03_1.log -set soiex03_1.set
+#
+quit

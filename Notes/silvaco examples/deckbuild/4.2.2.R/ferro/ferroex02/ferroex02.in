@@ -1,0 +1,78 @@
+# (c) Silvaco Inc., 2018
+go atlas
+# ferroelectric fet example
+# demonstrates Vt shift due to ferroelectric polarization
+# 
+# Ref: Miller, S.L. and McWhorter, P.J., "Physics of the Ferroelectric
+# Non-Volitile Memory  Field Effect Transistor", J. Appl. Phys. 72(12)
+# 15 Dec. 1992, pp. 5999-6010.
+# 
+# mesh and structure definition
+#
+mesh space.mult=1.0 outf=ferroex02.str
+x.m l=0    s=0.1
+x.m l=0.25 s=0.1
+x.m l=0.5  s=0.05
+x.m l=4.5  s=0.05
+x.m l=4.75 s=0.1
+x.m l=5.0  s=0.1
+
+y.m l=-0.131 s=0.015
+y.m l=-0.101 s=0.015
+y.m l=-0.051 s=0.025
+y.m l=-0.001 s=0.01
+y.m l=0.0  s=0.01
+y.m l=1.0  s=0.2
+
+eliminate y.dir y.min=0.2 x.min=0.5 x.max=4.5
+eliminate y.dir y.min=0.4
+
+region num=1 silicon y.min=0.0
+region num=2 oxide y.max=0.0 y.min=-0.001
+region num=3 oxide y.max=-0.001 y.min=-0.101
+region num=4 oxide y.max=-0.101 y.min=-0.131
+
+electrode num=1 name=source y.max=0.0 x.max=0.25
+electrode num=2 name=drain y.max=0.0 x.min=4.75
+electrode num=3 name=gate top x.min=0.5 x.max=4.5
+electrode num=4 name=substrate bottom
+
+doping uniform conc=3e16 p.type
+doping gaus conc=1e19 n.type x.right=0.5 char=0.075
+doping gaus conc=1e19 n.type x.left=4.5 char=0.075
+
+#
+# define ferroelectric material
+#
+model region=3 ferro
+material region=3 ferro.ps=0.5e-6 ferro.pr=0.4e-6 ferro.ec=100000.0 ferro.eps=10.0
+
+#
+# gate workfunction and channel mobility
+#
+contact num=3 n.poly
+material mun=800.0
+
+#
+# obtain Id - Vg characteristic
+#
+method newton autonr
+solve
+solve vd=0.1
+#
+# forward sweep
+#
+log outf=ferroex02.log
+solve vgate=0.0 vstep=0.1 vfinal=8.0 name=gate
+#
+# reverse sweep
+#
+material ferro.ec=-100000.0
+solve vstep=-0.1 vfinal=0.0 name=gate
+
+tonyplot ferroex02.str -set ferroex02_0.set 
+tonyplot ferroex02.log -set ferroex02_1.set 
+quit
+
+
+

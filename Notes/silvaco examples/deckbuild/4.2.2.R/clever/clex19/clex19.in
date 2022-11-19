@@ -1,0 +1,163 @@
+go clever 
+
+Init Layout="clex19.lay" Depth=1.0 Silicon Padding=0.0 \
+	Gasheight=10 Map="clex19.lmp"
+
+	
+Electrode Substrate
+material silicon conductivity = 1000
+
+#########################
+# and now the variables #
+#######################
+set fieldoxide_thick=0.35 
+set poly1_thick=0.19
+set ild_thick=0.5
+set metal1_thick=0.52
+set metal2_thick=0.62
+set metal3_thick=0.62 
+set metal4_thick=0.62 
+set metal5_thick=0.82 
+set IMD1_thick=0.82
+set IMD2_thick=0.82
+set IMD3_thick=0.82
+set IMD4_thick=0.82
+set passiv_thick_ox=1.5
+set passiv_thick_nit=1.2
+
+##########################
+# here are the constants #
+##########################
+set Perm_Gateox=0.01
+set Perm_OXIDE=3.9
+set Perm_PMD=4.2
+set Perm_FOX=3.9
+set Perm_TEOS=4.2
+set Perm_HDP=4.1
+set Perm_NIT=6
+set poly_conduct=1.0/(25*$poly1_thick*1e-4)
+set lil_conduct=1.0/(0.285*$poly1_thick*1e-4)
+set Al_conduct_1=1.0/(74e-3*$metal1_thick*1e-4)
+set Al_conduct_2=1.0/(74e-3*$metal2_thick*1e-4)
+set Al_conduct_3=1.0/(74e-3*$metal3_thick*1e-4)
+set Al_conduct_4=1.0/(74e-3*$metal4_thick*1e-4)
+set Al_conduct_5=1.0/(39e-3*$metal5_thick*1e-4)
+
+## Process Description ##
+
+Mask "AA"
+
+Etch Silicon Thickness=$"fieldoxide_thick" Max
+
+Strip Resist
+
+Deposit Oxide Thickness=0.0 Max
+
+Deposit Material("Gateox") Thickness=0.01 Max
+
+Mask "*GATE" reverse
+
+Etch Material("Gateox")
+
+Strip Resist
+
+deposit material("PMD") Thickness=0.0 Max
+
+Deposit material("poly") Thickness=$"poly1_thick" Max
+
+Mask "CPOL"
+
+Etch material("poly")
+
+Strip Resist
+
+Electrodes "*GATE" material("poly")
+
+## Contact ##
+
+deposit material("PMD") thickness=$"poly1_thick" max
+deposit material("PMD") thickness=$"ild_thick" max
+
+Mask "CCON" Reverse
+
+Etch material("PMD")
+
+Strip Resist
+
+## Stop Source/Drain/Substrate Contacts Shorting to Substrate ##
+## since substrate is treated as conductor here in other examples##
+## substrate is a dielectric and thus no problem of short circuit ##
+
+set high_water_mark = -( $"poly1_thick" + $"ild_thick" + $"poly1_thick")
+Deposit Material("Gateox") Thickness=$"high_water_mark" Max
+
+## Named polygons will be converted into electrodes ##
+
+Electrodes "*CONT" Material("Gateox")
+
+## Metal 1 ##
+
+deposit material("ALU1") thickness=$"metal1_thick" max
+Mask "CME1"
+Etch material("ALU1")
+Strip Resist
+Electrodes "CME1"  material("ALU1")
+
+## M1/M2 via ##
+
+deposit material("HDP") thickness=$"metal1_thick" max
+deposit material("TEOS") thickness=$"IMD1_thick" max
+Mask "CVIA" Reverse
+Etch material("TEOS")
+Etch material("HDP")
+Strip Resist
+
+## M2 ##
+
+deposit material("ALU2") thickness=$"metal2_thick" max
+Mask "CME2"
+Etch material("ALU2")
+Strip Resist
+
+deposit material("HDP") thickness=$"metal2_thick" max
+deposit material("TEOS") thickness=$"IMD2_thick" max
+Mask "CVI2" Reverse
+Etch material("TEOS")
+Etch material("HDP")
+Strip Resist
+
+## M3 ##
+
+deposit material("ALU3") thickness=$"metal3_thick" max
+Mask "CME3"
+Etch material("ALU3")
+Strip Resist
+Electrodes "CME3" material("ALU3")
+deposit material("HDP") thickness=$"metal3_thick" max
+
+## passiv ##
+deposit material("TEOS") thickness=$"passiv_thick_ox" max
+deposit material("NIT") thickness=$"passiv_thick_nit" max 
+
+#######################
+# Then some materials #
+#######################
+material material("poly")  conductivity=$poly_conduct
+material material("ALU1")  conductivity=$Al_conduct_1
+material material("TEOS")  permittivity=$Perm_TEOS
+material material("PMD")  permittivity=$Perm_PMD
+material material("NIT")  permittivity=$Perm_NIT
+material Material("Gateox") permittivity=$Perm_Gateox
+material material("ALU2")  conductivity=$Al_conduct_2
+material material("ALU3")  conductivity=$Al_conduct_3
+material material("HDP")  permittivity=$Perm_HDP
+
+save structure = "clex19.str"
+
+## Parasitic Extraction ##
+
+Interconnect capacitance AdaptC=0.04 structure="clex19" capsolver=1
+ 
+Save Spice="clex19.net" 
+
+quit

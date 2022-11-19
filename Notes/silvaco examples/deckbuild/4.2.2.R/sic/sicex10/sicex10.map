@@ -1,0 +1,12 @@
+#################################################################
+#
+#	MAP FILE 
+#
+#################################################################
+
+#layer name	nc		GDS number	Data type
+
+IMPLANT		drawing		1		0
+TRENCH		drawing		2		0
+GATE	        drawing		3		0
+CONTACT		drawing		4		0

@@ -1,0 +1,72 @@
+<html>
+  <head>
+    <title>2D BCA low energy boron source/drain implant</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>2D BCA low energy boron source/drain implant</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>SSuprem 4, MC IMPLANT</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="aniiex17_plot0.png" width="640" alt="aniiex17_plot0" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This two dimensional example of the
+<b> Monte Carlo Binary Collision Approximation (BCA) </b> model has two cases, the first of zero tilt,
+the second of thirty degree tilt.  (See the Athena_IMPLANT example
+on &quot;BCA Models for well channeled Boron Implant&quot; for a description
+of the BCA model.)
+</p>
+<p>
+The structure includes a thin oxide above the silicon, and polysilicon
+0.15 um long (such as used for a MOS gate).  In this example,
+the 2 keV boron implant is effectively a source/drain (or LDD) implant.
+(At this low energy, most analytic implant models are inaccurate.)
+</p>
+<p>
+The zero tilt case produces nearly symmetric dopant distribution.
+The thirty degree tilt case shows additional dopant
+on the left side of the structure, including the left side of
+the polysilicon, and a shadowing effect on the right side, as
+expected.
+</p>
+<p>
+A comparison of the zero tilt and the thirty degrees tilt will show
+a higher dose in the zero tilt case.  This is due to a larger number
+of incident ions reflected in the thirty degrees tilt case.
+</p>
+<p>
+The
+<b> beamwidth </b> parameter introduces a random tilt between zero and
+<b> +/- beamwidth/2 </b> degrees for Monte Carlo ion implant simulations.  For
+an accurate simulation, this parameter has been set to 0.1.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

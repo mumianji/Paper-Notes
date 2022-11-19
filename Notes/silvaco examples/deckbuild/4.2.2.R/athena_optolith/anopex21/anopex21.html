@@ -1,0 +1,55 @@
+<html>
+  <head>
+    <title>Demonstration of BPM for Non-planar Lithography</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Demonstration of BPM for Non-planar Lithography</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>SSuprem 4/Optolith</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="anopex21_plot0.png" width="640" alt="anopex21_plot0" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example shows the dose-dependence effect on patterning over a non-planar structure. The structure with symmetrical trench is created and saved in the
+<b> anopex21.str </b> file for subsequent lithography simulation. Also, the intensity distribution corresponding to a simple layout with the main feature aligned with the center
+of the trench is calculated and saved in the
+<b> anopex21_int.str </b> file.
+</p>
+<p>
+Two separate exposure-bake-development simulation sequences are performed. The
+first one uses the constant refraction index (n0 = 1.4 + i * 0.02) specified in
+the OPTICAL statement. In the second simulation the refraction index varies
+linearly with dose from n0 to n1=1.6 + i * 0.04. The comparison of final
+structures shows that the &quot;dose effect&quot; could be very strong. In the constant
+refraction index case the strong reflections from the walls with subsequent &quot;undercut&quot; during development may even result in complete removal of the feature.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

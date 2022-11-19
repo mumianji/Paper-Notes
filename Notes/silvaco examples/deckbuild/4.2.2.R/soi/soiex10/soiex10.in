@@ -1,0 +1,470 @@
+# (c) Silvaco Inc., 2018
+
+#----------------------------------------------------------------------#
+#
+# Definition of an SOI structure WITHOUT a body contact
+#
+#----------------------------------------------------------------------#
+
+go victoryprocess 
+
+Init material="oxide" GasHeight=1 Depth=0.4  from="0, 0" to ="3, 4"
+
+SpecifyMaskPoly maskID=1 istransparent=false p="1, 0" p="2, 0" p="2, 4" p="1, 4"
+
+SpecifyMaskPoly maskID=2 istransparent=false p="1, 0" p="2, 0" p="2, 4" p="1, 4"
+
+SpecifyMaskPoly maskID=2 ADD istransparent=false p="0, 0" p="0.45, 0" p="0.45, 4" p="0, 4"
+
+SpecifyMaskPoly maskID=2 ADD istransparent=false p="2.55, 0" p="3, 0" p="3, 4" p="2.55, 4"
+
+line x location=0 spacing=0.2
+line x location=1 spacing=0.025
+line x location=1.5 spacing=0.1
+line x location=2 spacing=0.025
+line x location=3 spacing=0.2
+
+line y loc=0 spac=0.25
+line y loc=2 spac=0.1
+line y loc=2.5 spac=0.2
+line y loc=4 spac=0.25
+
+line z location=-1 spacing=0.1
+line z location=-0.267 spacing=0.05
+line z location=-0.217 spacing=0.005
+line z location=-0.2 spacing=0.0025
+line z location=0 spacing=0.05
+line z location=0.4 spacing=0.2
+
+#
+deposit silicon thick=0.2 boron=2e17 max
+
+Mask MaskID=1 Reverse
+Doping silicon arsenic=1e20 min=0 max=0.2 
+strip resist
+
+deposit oxide thickness=0.017 max
+
+etch oxide MaskID=1 reverse thickness=0.017 max
+
+deposit aluminum thickness=0.05 min
+etch aluminum MaskID=2 Reverse thickness=0.05 max
+
+save name=soiex10_vp_vp_0_0
+
+
+go victorymesh
+
+load in=soiex10_vp_vp_0_0
+
+remesh conformal
+
+save out=soiex10_vp_0_0.str
+
+
+tonyplot3d soiex10_vp_0_0.str -set soiex10_0_0_str.set 
+
+#----------------------------------------------------------------------#
+#
+# This deck simulates an SOI device without a body contact,
+# demonstrating the Kink effect in the IV curve.
+#
+#----------------------------------------------------------------------#
+
+go victorydevice
+
+# Load the device structure
+mesh inf=soiex10_vp_0_0.str prism delaunay hybridx
+
+# Specify that the substrate is an electrode
+ELECTRODE name=source region=1
+ELECTRODE name=gate region=2
+ELECTRODE name=drain region=3
+electrode name=substrate z.min=0.4 z.max=0.4
+
+# For the gate, use a workfunction corresponding to n-type polysilicon
+contact name=gate n.poly
+
+# Specify the physical models
+models cvt srh auger bgn
+impact selb p.min=1e7
+
+# Set solver parameters
+#
+# This device is only marginally stable. Because of this, in order
+# to get the solution to converge, we must adjust some solver parameters. 
+#
+# ILUP PC.FILL_RATIO=3.0 changes the preconditioner for the linear solver
+# CX.TOL=1.0e-6 tightens the tolerance on the carrier concentration solution
+#
+method bicgst ilup pc.fill_ratio=3.0 cx.tol=1.0e-6
+
+# Initialize the solution
+solve init
+solve prev
+
+# Put a small initial bias on the drain
+solve vdrain=0.0001
+solve vdrain=0.005
+solve vdrain=0.010
+solve vdrain=0.025 vfinal=0.1 vstep=0.025 name=drain prev
+
+# Ramp the gate bias until current starts to flow
+log outf=soiex10_vp_0_1.log
+solve vgate=0.1  vfinal=0.4   vstep=0.1   name=gate prev
+
+# Now tweak the solver, and insist that it converge to relative tolerances
+method xnorm linear.tolerance=1e-15 linear.scaling=1 cx.tol=1.0e-6
+
+# Continue ramping the gate bias
+solve vgate=0.5  vfinal=1     vstep=0.1   name=gate
+solve vgate=1.05 vfinal=1.175 vstep=0.025 name=gate
+solve vgate=1.2  vfinal=3     vstep=0.2   name=gate
+
+# Bias the drain
+log outf=soiex10_vp_0_2.log
+solve vdrain=0.1025 vfinal=0.11 vstep=0.0025 name=drain
+solve vdrain=0.2    vfinal=4    vstep=0.1    name=drain
+
+# Output the final conditions
+output band.param band.temp u.auger u.srh e.mobility h.mobility qfn qfp charge
+save outf=soiex10_vp_0_1.str
+
+log off
+
+tonyplot3d soiex10_vp_0_1.str -set soiex10_0_1_str.set 
+
+#----------------------------------------------------------------------#
+#
+# This deck simulates an SOI device without a body contact,
+# demonstrating the Kink effect in the IV curve. The simulation also
+# includes lattice heating, illustrating the temperature rise in the
+# device.
+#
+#----------------------------------------------------------------------#
+
+go victorydevice
+
+# Load the device structure
+mesh inf=soiex10_vp_0_0.str prism delaunay hybridx
+
+# Specify electrodes
+ELECTRODE name=source region=1
+ELECTRODE name=gate region=2
+ELECTRODE name=drain region=3
+electrode name=substrate z.min=0.4 z.max=0.4
+
+# For the gate, use a workfunction and thermal parameters 
+# corresponding to n-type polysilicon
+contact  name=gate n.poly
+material name=gate \
+         tcon.power tc.const=1.5486 tc.npow=1.3333 \
+         hc.comp hc.beta=1.85 hc.c1=255.0 hc.c300=711.0 hc.rho=2.33
+
+# Define a thermal contact at the substrate, held at 300 K
+thermcontact num=1 temp=300 x.min=0 x.max=3 y.min=0 y.max=4 z.min=0.4 z.max=0.4
+
+# Specify the physical models
+models cvt srh auger bgn
+impact selb p.min=1e7
+
+# Set solver parameters
+#
+# This device is only marginally stable. Because of this, in order
+# to get the solution to converge, we must adjust some solver parameters. 
+#
+# ILUP PC.FILL_RATIO=3.0 changes the preconditioner for the linear solver
+# CX.TOL=1.0e-6 tightens the tolerance on the carrier concentration solution
+#
+method bicgst ilup pc.fill_ratio=3.0 cx.tol=1.0e-6
+
+# Initialize the solution
+solve init
+solve prev
+
+# Put a small initial bias on the drain
+solve vdrain=0.0001
+solve vdrain=0.005
+solve vdrain=0.010
+solve vdrain=0.025 vfinal=0.1 vstep=0.025 name=drain prev
+
+# Ramp the gate bias until current starts to flow
+log outf=soiex10_vp_0_3.log
+solve vgate=0.1  vfinal=0.4   vstep=0.1   name=gate prev
+
+# Now tweak the solver, and insist that it converge to relative tolerances
+method xnorm linear.tolerance=1e-15 linear.scaling=1 cx.tol=1.0e-6
+
+# Continue ramping the gate bias
+solve vgate=0.5  vfinal=1     vstep=0.1   name=gate
+solve vgate=1.05 vfinal=1.175 vstep=0.025 name=gate
+solve vgate=1.2  vfinal=3     vstep=0.2   name=gate
+log off
+
+# Activate lattice temperature simulation
+models lat.temp
+solve prev
+
+# Bias the drain
+log outf=soiex10_vp_0_4.log
+solve vdrain=0.1025 vfinal=0.11 vstep=0.0025 name=drain
+solve vdrain=0.2    vfinal=4    vstep=0.1    name=drain
+
+# Output the final conditions
+output band.param band.temp u.auger u.srh e.mobility h.mobility qfn qfp charge
+save outf=soiex10_vp_0_2.str
+
+log off
+
+tonyplot3d soiex10_vp_0_2.str -set soiex10_0_2_str.set 
+
+#----------------------------------------------------------------------#
+#
+# Definition of an SOI structure WITH a body contact
+#
+#----------------------------------------------------------------------#
+
+
+go victoryprocess 
+
+Init material="oxide" GasHeight=1 Depth=0.4 from="0, 0" to ="3, 4"
+
+SpecifyMaskPoly maskID=1 istransparent=false p="1, 0" p="2, 0" p="2, 3.5" p="1, 3.5"
+
+SpecifyMaskPoly maskID=2 istransparent=false p="1, 0" p="2, 0" p="2, 2.5" p="1, 2.5"
+
+SpecifyMaskPoly maskID=2 ADD istransparent=false p="0, 0" p="0.45, 0" p="0.45, 1" p="0, 1"
+
+SpecifyMaskPoly maskID=2 ADD istransparent=false p="2.55, 0" p="3, 0" p="3, 1" p="2.55, 1"
+
+SpecifyMaskPoly maskID=2 ADD istransparent=false p="1, 3.5" p="2, 3.5" p="2, 4" p="1, 4"
+
+SpecifyMaskPoly maskID=3 istransparent=false p="1, 3.5" p="2, 3.5" p="2, 4" p="1, 4"
+
+SpecifyMaskPoly maskID=4  istransparent=false p="0, 0" p="1, 0" p="1, 2" p="0, 2"
+SpecifyMaskPoly maskID=4 ADD istransparent=false p="2, 0" p="3, 0" p="3, 2" p="2, 2"
+
+line x location=0 spacing=0.2
+line x location=1 spacing=0.025
+line x location=1.5 spacing=0.1
+line x location=2 spacing=0.025
+line x location=3 spacing=0.2
+
+line y loc=0 spac=0.25
+line y loc=2 spac=0.1
+line y loc=2.5 spac=0.2
+line y loc=4 spac=0.25
+
+line z location=-1 spacing=0.1
+line z location=-0.267 spacing=0.05
+line z location=-0.217 spacing=0.005
+line z location=-0.2 spacing=0.0025
+line z location=0 spacing=0.05
+line z location=0.4 spacing=0.2
+
+deposit silicon thick=0.2 boron=2e17 max
+
+Mask MaskID=3 
+Doping silicon boron=1e20 min=0 max=0.2 
+strip resist
+
+Mask MaskID=4 
+Doping silicon arsenic=1e20 min=0 max=0.2
+strip resist
+
+deposit oxide thickness=0.017 max
+
+etch oxide MaskID=1 reverse thickness=0.017 max
+
+deposit aluminum thickness=0.05 min
+etch aluminum MaskID=2 Reverse thickness=0.05 max
+
+save name=soiex10_vp_vp_1_0
+
+
+go victorymesh
+
+load in=soiex10_vp_vp_1_0
+
+remesh conformal
+
+save out=soiex10_vp_1_0.str
+
+
+tonyplot3d soiex10_vp_1_0.str -set soiex10_0_0_str.set 
+
+
+#----------------------------------------------------------------------#
+#
+# This deck simulates an SOI device with a body contact,
+# demonstrating an IV curve without a kink.
+#
+#----------------------------------------------------------------------#
+
+go victorydevice
+
+# Load the device structure
+mesh inf=soiex10_vp_1_0.str prism delaunay hybridx 
+
+# Specify that the substrate is an electrode
+ELECTRODE name=source region=1
+ELECTRODE name=gate region=2
+ELECTRODE name=drain region=3
+ELECTRODE name=substrate z.min=0.4 z.max=0.4
+ELECTRODE name=bulk region=4
+
+# For the gate, use a workfunction corresponding to n-type polysilicon
+contact name=gate n.poly
+
+# Specify the physical models
+models cvt srh auger bgn
+impact selb 
+
+# Set solver parameters
+#
+# ILUP PC.FILL_RATIO=3.0 changes the preconditioner for the linear solver
+# CX.TOL=1.0e-6 tightens the tolerance on the carrier concentration solution
+#
+method bicgst ilup pc.fill_ratio=3.0 cx.tol=1.0e-6
+
+# Initialize the solution
+solve init
+solve prev
+
+# Put a small initial bias on the drain
+solve vdrain=0.0001
+solve vdrain=0.005
+solve vdrain=0.010
+solve vdrain=0.025 vfinal=0.1 vstep=0.025 name=drain prev
+
+# Ramp the gate bias until current starts to flow
+log outf=soiex10_vp_1_1.log
+solve vgate=0.1  vfinal=0.4   vstep=0.1   name=gate prev
+
+# Now tweak the solver, and insist that it converge to relative tolerances
+method xnorm linear.tolerance=1e-15 linear.scaling=1 cx.tol=1.0e-6
+
+# Continue ramping the gate bias
+solve vgate=0.5  vfinal=1     vstep=0.1   name=gate
+solve vgate=1.05 vfinal=1.175 vstep=0.025 name=gate
+solve vgate=1.2  vfinal=3     vstep=0.2   name=gate
+
+# Bias the drain
+log outf=soiex10_vp_1_2.log
+solve vdrain=0.1025 vfinal=0.11 vstep=0.0025 name=drain
+solve vdrain=0.2    vfinal=4    vstep=0.1    name=drain
+
+# Output the final conditions
+output band.param band.temp u.auger u.srh e.mobility h.mobility qfn qfp charge
+save outf=soiex10_vp_1_1.str
+
+log off
+
+tonyplot3d soiex10_vp_1_1.str -set soiex10_0_1_str.set 
+
+#----------------------------------------------------------------------#
+#
+# This deck simulates an SOI device with a body contact,
+# demonstrating an IV curve without a kink. The simulation also
+# includes lattice heating, illustrating the temperature rise in the
+# device.
+#
+#----------------------------------------------------------------------#
+
+go victorydevice
+
+# Load the device structure
+mesh inf=soiex10_vp_1_0.str prism delaunay hybridx
+
+# Specify electrodes
+ELECTRODE name=source region=1
+ELECTRODE name=gate region=2
+ELECTRODE name=drain region=3
+electrode name=substrate z.min=0.4 z.max=0.4
+ELECTRODE name=bulk region=4
+
+
+# For the gate, use a workfunction and thermal parameters 
+# corresponding to n-type polysilicon
+contact  name=gate n.poly
+material name=gate \
+         tcon.power tc.const=1.5486 tc.npow=1.3333 \
+         hc.comp hc.beta=1.85 hc.c1=255.0 hc.c300=711.0 hc.rho=2.33
+
+# Define a thermal contact at the substrate, held at 300 K
+thermcontact num=1 temp=300 x.min=0 x.max=3 y.min=0 y.max=4 z.min=0.4 z.max=0.4
+
+# Specify the physical models
+models cvt srh auger bgn
+impact selb 
+
+# Set solver parameters
+#
+# ILUP PC.FILL_RATIO=3.0 changes the preconditioner for the linear solver
+# CX.TOL=1.0e-6 tightens the tolerance on the carrier concentration solution
+#
+method bicgst ilup pc.fill_ratio=3.0 cx.tol=1.0e-6
+
+# Initialize the solution
+solve init
+solve prev
+
+# Put a small initial bias on the drain
+solve vdrain=0.0001
+solve vdrain=0.005
+solve vdrain=0.010
+solve vdrain=0.025 vfinal=0.1 vstep=0.025 name=drain prev
+
+# Ramp the gate bias until current starts to flow
+log outf=soiex10_vp_1_3.log
+solve vgate=0.1  vfinal=0.4   vstep=0.1   name=gate prev
+
+# Now tweak the solver, and insist that it converge to relative tolerances
+method xnorm linear.tolerance=1e-15 linear.scaling=1 cx.tol=1.0e-6
+
+# Continue ramping the gate bias
+solve vgate=0.5  vfinal=1     vstep=0.1   name=gate prev
+solve vgate=1.05 vfinal=1.175 vstep=0.025 name=gate
+solve vgate=1.2  vfinal=3     vstep=0.2   name=gate
+log off
+
+# Activate lattice temperature simulation
+models lat.temp
+solve prev
+
+# Bias the drain
+log outf=soiex10_vp_1_4.log
+solve vdrain=0.1025 vfinal=0.11 vstep=0.0025 name=drain
+solve vdrain=0.2    vfinal=4    vstep=0.1    name=drain
+
+# Output the final conditions
+output band.param band.temp u.auger u.srh e.mobility h.mobility qfn qfp charge
+save outf=soiex10_vp_1_2.str
+
+log off
+
+tonyplot3d soiex10_vp_1_2.str -set soiex10_0_2_str.set 
+
+# Compare and contrast the IV curves for the four cases:
+#
+# 1) No body contact, heating not considered (soiex10_vp_0_2.log)
+# 2) No body contact, with lattice heating   (soiex10_vp_0_4.log)
+# 3) Body contact, heating not considered    (soiex10_vp_1_2.log)
+# 4) Body contact, with lattic heating       (soiex10_vp_1_4.log)
+#
+extract init inf="soiex10_vp_0_2.log"
+extract name="IV" curve(abs(v."drain"),abs(i."drain")) outf="soiex10_vp_0_2.dat"
+        
+extract init inf="soiex10_vp_0_4.log"
+extract name="IV" curve(abs(v."drain"),abs(i."drain")) outf="soiex10_vp_0_4.dat"
+
+extract init inf="soiex10_vp_1_2.log"
+extract name="IV" curve(abs(v."drain"),abs(i."drain")) outf="soiex10_vp_1_2.dat"
+
+extract init inf="soiex10_vp_1_4.log"
+extract name="IV" curve(abs(v."drain"),abs(i."drain")) outf="soiex10_vp_1_4.dat"
+
+
+tonyplot -overlay soiex10_vp_0_2.dat  soiex10_vp_0_4.dat soiex10_vp_1_2.dat soiex10_vp_1_4.dat -set soiex10_1_log.set
+
+quit

@@ -1,0 +1,33 @@
+go clever
+
+## Process Description ##
+
+Init Layout="clex02.lay" Depth=1
+
+Deposit Oxide Thickness=0.5 Max
+
+Deposit Aluminum Thickness=0.5 Max
+
+Deposit Resist Thickness=0.1 Max
+
+Mask "MET1" 
+
+Etch Aluminum Rate=1 Time=1.0 Isotropic=0.05
+
+Strip Resist
+
+Electrodes "MET1" Aluminum
+
+Deposit Oxide Thickness=1 Max
+
+save Structure="clex02_0.str"
+
+## Parasitic Extraction ##
+
+Material Silicon Inherit(Oxide)
+
+Interconnect Capacitance AdaptC=0.02
+
+Save Spice="clex02.net"
+
+quit

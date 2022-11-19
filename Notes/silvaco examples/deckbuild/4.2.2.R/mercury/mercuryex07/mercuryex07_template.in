@@ -1,0 +1,61 @@
+go atlas
+mercury
+
+#######################################################################
+### This value on this line is set by the doe deck
+set doping=4e16
+
+#######################################################################
+### ATLAS example mercury07
+### (c) Silvaco Inc., 2018
+#######################################################################
+### Effect of doping in a MESFET
+#######################################################################
+### template input deck
+#######################################################################
+
+###--------------------------------------------------------------------
+network clear
+
+###--------------------------------------------------------------------
+mesh width=100
+
+###--------------------------------------------------------------------
+x.mesh location=0.0 spacing=0.1
+x.mesh location=2.5 spacing=0.1
+y.mesh location=0.0 spacing=0.05
+y.mesh location=3.0 spacing=0.05
+
+###--------------------------------------------------------------------
+### This is where the value defined on the "set doping" line is used.
+region number=1 material=GaAs thickness=0.2 donor=$doping acceptor=1e11
+region number=1 material=GaAs thickness=0.2 nd.top=$doping nd.bottom=1e11 acceptor=1e11
+region number=1 material=GaAs thickness=2.6 donor=1e11 acceptor=1e11
+
+###--------------------------------------------------------------------
+surface x=0.45 y=0.00
+surface x=0.50 y=0.10
+surface x=1.00 y=0.10
+surface x=1.05 y=0.00
+
+###--------------------------------------------------------------------
+electrode name=gate x.min=0.5 length=0.5
+
+###--------------------------------------------------------------------
+models n_depletion fldmob print
+options quiet
+
+###--------------------------------------------------------------------
+poisson look_up vg_min=-2.5 vg_max=0.1 vd_min=0.0 vd_max=0.8
+
+###--------------------------------------------------------------------
+output all
+
+###--------------------------------------------------------------------
+solve initial
+log out.file=mercuryex07_$'doping'.log
+solve vdrain=0.8 vgate=0.0 vstep=0.01 vfinal=-2.5 name=gate
+log off
+
+###--------------------------------------------------------------------
+quit

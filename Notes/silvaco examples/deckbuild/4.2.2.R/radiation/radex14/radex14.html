@@ -1,0 +1,176 @@
+<html>
+  <head>
+    <title>TCAD to SPICE - 6T SRAM SEU Simulation</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>TCAD to SPICE - 6T SRAM SEU Simulation</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Deckbuild / Victory Process2D / DevEdit 3D / Victory Mesh / Victory Device3D / SmartSpice</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Deckbuild 4.4.1.R / Victory Process 7.22.3.R /</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="radex14_plot0.png" width="640" alt="radex14_plot0" />
+      <p/>
+      <img src="radex14_plot1.png" width="640" alt="radex14_plot1" />
+      <p/>
+      <img src="radex14_plot2.png" width="640" alt="radex14_plot2" />
+      <p/>
+      <img src="radex14_plot3.png" width="640" alt="radex14_plot3" />
+      <p/>
+      <img src="radex14_plot4.png" width="640" alt="radex14_plot4" />
+      <p/>
+      <img src="radex14_plot5.png" width="640" alt="radex14_plot5" />
+      <p/>
+      <img src="radex14_plot6.png" width="640" alt="radex14_plot6" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+Devedit 2.8.26.R / Victory Mesh 1.2.4.R / Victory Device 1.12.1.R / SmartSpice 4.28.0.R
+</p>
+<p>
+This examples demonstrates how the response of a single transistor to a Single
+Event Strike, can first be simulated and calibrated using physics based TCAD
+simulation, and then how this exact response can be extracted into a data file
+and incorporated directly into user specified circuit nodes of a Spice circuit
+simulation, for fast Spice analysis of a circuit to Single Event Upsets.
+</p>
+<p>
+The example demonstrates how this entire TCAD to SPICE flow can be simulated
+with just a single input file, executed in it&apos;s entirety in the deckbuild run
+time environment, without any intermediate input required from the user.
+</p>
+<p>
+The example simulates the response of a single 65nm n-channel MOSFET to a
+Single Event Strike using physically based TCAD simulation.  The terminal
+response from this TCAD simulation, is then captured in a data file.  This
+MOSFET response to the Single Event Strike can then be passed to a 100%
+SmartSPICE simulation to evaluate the whole circuit response to a strike.
+Since the simulation is now 100% Spice, the total circuit simulation time of a
+Single Event Strike is just a few seconds for a logic cell sized circuit.  This
+allows many simulations of multiple Single Events, occurring in any transistor
+in any circuit, occurring at any time, once the response to a particular strike
+has been calibrated using physics based TCAD.
+</p>
+<p>
+The 65nm SRAM is simulated in it&apos;s low power state, where the supply voltage is
+reduced to 0.85 volts, as this represents the SRAM&apos;s most sensitive
+configuration to a Single Event Effect.
+</p>
+<p>
+The data flow in this particular example occurs in the following sequence:
+</p>
+<ul>
+  <li>
+ Start with a trusted Spice model from the foundry PDK that you are 
+currently using.
+<br/>
+  </li>
+  <li>
+ Using this PDK Spice model, simulate basic DC characteristics of the
+device type that is to be tested using a Single Event Strike,
+such as unsaturated and saturated threshold voltage, IdVd curve
+sets etc.
+<br/>
+  </li>
+  <li>
+ Create a TCAD model of the device to be tested, and use the Spice 
+generated DC characteristics above, to ensure that the TCAD
+simulations are a reasonable match to the Spice generated curves.
+<br/>
+  </li>
+  <li>
+ In TCAD, then simulate one or more strike events and capture the 
+device response by extracting a data file of time/current pairs.
+<br/>
+  </li>
+  <li>
+ The time/current pairs data file captured above, is then loaded into a
+pure Spice simulation as a time dependent current source at the
+circuit node under test, so the response of the whole circuit to
+a Single Event Strike can now be simulated directly in Spice.
+Multiple strikes at different times on different devices in the
+circuit can also be simulated using the same data file.
+<br/>
+  </li>
+</ul>
+<p>
+With the data flow above in mind, the input file below goes through the
+following simulation steps:
+</p>
+<p>
+First, a two dimensional, 65nm nMOS device is simulated in Victory Process,
+which enables a faster simulation than creating a full 3D structure.  The 2D
+structure is then extended into the third dimension using Devedit.  The 3D
+structure is now loaded into Victory Device, where several DC simulations,
+characterise the basic device electrical behaviour, which can then be compared
+with the Spice model, to validate that similar behaviour has been obtained.
+</p>
+<p>
+The energy of the Single Event Strike is characterized by a parameter called
+the
+<b> &quot;Linear Energy Transfer&quot;,</b> or
+<b> LET.  </b> The higher the LET, the greater the energy of the incoming particle or photon.
+In this example, the LET value of the incoming strike is set up as a variable,
+by the line
+<b> &quot;set LET=1&quot;,</b> which creates a variable called
+<b> &quot;$LET&quot;</b> and assigns it a unity value.  In order to convert the units of LET into units
+of pico Coulombs/um of track charge density, the
+<b> LET value needs to be multiplied by 0.01035 for silicon material.</b> A second variable called
+<b> &quot;$density&quot; </b> is assigned this converted pico coulomb value.  Lastly, the units of the strike
+are specified to be these same pico coulomb units, by the parameter
+<b> &quot;pcunits&quot; </b> in the
+<b> &quot;singleeventupset&quot; </b> statement that describes the time and track positional properties of the strike.
+</p>
+<p>
+Once the Single Event Strike has been simulated, the time versus current data
+is extracted using an extract statement, into a file called
+<b> radex14.dat.  </b> An important part of this extract statement is the
+<b> new &quot;no.header&quot; option, </b> which strips off the normal header associated with a standard Silvaco data
+file format, which is a requirement for the data file to be read directly by
+SmartSpice.
+</p>
+<p>
+Simulation of a 6 transistor SRAM cell, with a Single Event Strike on one of
+the nMOS transistors, can now be simulated directly in SmartSpice using the
+newly creted data file.  The strike can also be associated with a time delay
+before the strike occurs.  This delay is implemented in the
+<b> &quot;VSEU&quot; </b> line of the SmartSpice section of the input file, and is specified using the
+<b> &quot;TD&quot; </b> parameter.  In this simulation, the delay before the Single Event Strike is set
+to be 0.5 micro-seconds by setting the parameter
+<b> &quot;TD=0.5u&quot; </b> on the
+<b> &quot;VSEU&quot; </b> statement.
+</p>
+<p>
+The huge advantage of importing the TCAD generated data file of the Single
+Event Strike, directly into Spice, is that each Spice simulation, now only
+takes a couple of seconds, so many strikes at different times and for different
+transistors, allows fast characterization of a circuit sensitivity to SEU upset
+events.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

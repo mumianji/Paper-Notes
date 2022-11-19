@@ -1,0 +1,126 @@
+# (c) Silvaco Inc., 2018
+
+go atlas
+
+mesh three.d
+
+x.mesh loc=0.000  spac=0.100
+x.mesh loc=0.500  spac=0.400
+x.mesh loc=1.000  spac=0.100
+x.mesh loc=1.500  spac=0.400
+x.mesh loc=2.000  spac=0.100
+x.mesh loc=2.500  spac=0.400
+x.mesh loc=3.000  spac=0.100
+x.mesh loc=3.500  spac=0.400
+x.mesh loc=4.000  spac=0.100
+x.mesh loc=4.500  spac=0.400
+x.mesh loc=5.000  spac=0.100
+
+y.mesh loc=-0.250 spac=0.050
+y.mesh loc=-0.200 spac=0.050
+y.mesh loc=-0.100 spac=0.001
+y.mesh loc=-0.050 spac=0.020
+y.mesh loc=0.000  spac=0.001
+y.mesh loc=0.100  spac=0.050
+y.mesh loc=0.500  spac=0.300
+y.mesh loc=0.900  spac=0.050
+y.mesh loc=1.000  spac=0.050  
+
+z.mesh loc=0.000  spac=0.100
+z.mesh loc=0.500  spac=0.400
+z.mesh loc=1.000  spac=0.100
+z.mesh loc=1.500  spac=0.400
+z.mesh loc=2.000  spac=0.100
+z.mesh loc=2.500  spac=0.400
+z.mesh loc=3.000  spac=0.100
+
+region number=1 x.min=0 x.max=5 y.min=0 y.max=1 z.min=0 z.max=3       \
+                material=silicon
+region number=2 x.min=0 x.max=5 y.min=-0.25 y.max=0 z.min=0 z.max=3   \
+                material=oxide
+region number=3 x.min=2 x.max=5 y.min=-0.1 y.max=0 z.min=0 z.max=1    \
+                material=SiGe x.composition=0.2
+region number=4 x.min=2 x.max=3 y.min=-0.2 y.max=-0.1 z.min=0 z.max=1 \
+                material=poly
+
+electrode name=emitter   x.min=2 x.max=3 y.min=-0.25 y.max=-0.2 z.min=0 z.max=1
+electrode name=base      x.min=4 x.max=5 y.min=-0.25 y.max=-0.1 z.min=0 z.max=1
+electrode name=collector x.min=0 x.max=1 y.min=-0.25 y.max=0    z.min=0 z.max=1
+
+doping uniform conc=1e18 n.type region=1
+doping uniform conc=1e21 n.type x.min=0 x.max=5 y.min=0.9 y.max=1 \
+                         z.min=0 z.max=3
+doping uniform conc=1e21 n.type x.min=0 x.max=1 y.min=0 y.max=0.9 \
+                         z.min=0 z.max=3
+doping uniform conc=1e21 n.type x.min=1 x.max=5 y.min=0 y.max=0.9 \
+                         z.min=2 z.max=3
+doping uniform conc=1e19 p.type region=3
+doping uniform conc=1e21 n.type region=4
+
+save outfile=hbtex07.str
+
+
+###########################################################
+
+go atlas
+
+mesh     infile=hbtex07.str
+material material=SiGe align=0.0
+model    bipolar print
+output   band.param con.band val.band
+
+solve init
+solve vcollector=0.0
+save  outfile=hbtex07_0V.str
+solve vcollector=0.01
+solve vcollector=0.1
+solve vcollector=1.0
+save  outfile=hbtex07_1V.str
+solve vbase=0.01
+solve vbase=0.05
+
+log outfile=hbtex07_gum.log
+solve name=base vbase=0.20 vstep=0.02 vfinal=0.38
+solve name=base vbase=0.40 vstep=0.05 vfinal=0.95
+solve name=base vbase=0.96 vstep=0.01 vfinal=1.20
+
+tonyplot hbtex07_gum.log -set hbtex07_gum.set
+tonyplot3d hbtex07_0V.str -set hbtex07_str.set
+tonyplot3d hbtex07_1V.str -set hbtex07_str.set
+
+###########################################################
+
+go atlas
+
+mesh     infile=hbtex07.str
+material material=SiGe align=0.0
+model    bipolar print
+output   band.param con.band val.band
+
+solve init
+solve vbase=0.01
+solve vbase=0.05
+solve vbase=0.70
+
+contact  name=base current
+
+log outfile=hbtex07_IV.log
+solve ibase=1.0e-7
+solve vcollector=0.01
+solve name=collector vcollector=0.05 vstep=0.05 vfinal=0.50
+solve name=collector vcollector=0.60 vstep=0.20 vfinal=2.00
+solve ibase=2.0e-7
+solve vcollector=1.99
+solve name=collector vcollector=1.90 vstep=-0.20 vfinal=0.7
+solve name=collector vcollector=0.65 vstep=-0.05 vfinal=0.0
+solve ibase=3.0e-7
+solve vcollector=0.01
+solve name=collector vcollector=0.05 vstep=0.05 vfinal=0.90
+solve name=collector vcollector=1.00 vstep=0.20 vfinal=2.0
+solve ibase=4.0e-7
+solve vcollector=1.99
+solve name=collector vcollector=1.90 vstep=-0.20 vfinal=1.1
+solve name=collector vcollector=1.05 vstep=-0.05 vfinal=0.0
+tonyplot hbtex07_IV.log -set hbtex07_IV.set
+
+quit

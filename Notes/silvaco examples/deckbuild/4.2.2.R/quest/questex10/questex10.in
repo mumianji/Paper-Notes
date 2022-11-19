@@ -1,0 +1,80 @@
+go quest
+
+# Techno FILE
+
+layermapping layer.name = "MET1" gds.Number = 7 gds.Datatype = 0
+layermapping layer.name = "MET2" gds.Number = 9 gds.Datatype = 0
+layermapping layer.name = "MET3" gds.Number = 11 gds.Datatype = 0
+layermapping layer.name = "MET4" gds.Number = 13 gds.Datatype = 0
+layermapping layer.name = "MET5" gds.Number = 15 gds.Datatype = 0
+layermapping layer.name = "MET6" gds.Number = 17 gds.Datatype = 0
+layermapping layer.name = "VIA_M1_M2" gds.Number = 31 gds.Datatype = 0
+layermapping layer.name = "VIA_M2_M3" gds.Number = 33 gds.Datatype = 0
+layermapping layer.name = "VIA_M3_M4" gds.Number = 35 gds.Datatype = 0
+layermapping layer.name = "VIA_M4_M5" gds.Number = 37 gds.Datatype = 0
+layermapping layer.name = "VIA_M5_M6" gds.Number = 39 gds.Datatype = 0
+layermapping layer.name = "ELECTRODE" gds.Number = 70 gds.Datatype = 0
+layermapping layer.name = "ELECTRODE_T" gds.Number = 70 gds.Datatype = 1 isText
+
+attach electrode.layer = "ELECTRODE" metal.layer = "MET4"
+
+connection layer = "ELECTRODE" con.layer1 = "ELECTRODE_T"
+connection layer = "VIA_M1_M2" con.layer1 = "MET1" con.layer2 = "MET2"
+connection layer = "VIA_M2_M3" con.layer1 = "MET2" con.layer2 = "MET3"
+connection layer = "VIA_M3_M4" con.layer1 = "MET3" con.layer2 = "MET4"
+connection layer = "VIA_M4_M5" con.layer1 = "MET4" con.layer2 = "MET5"
+connection layer = "VIA_M5_M6" con.layer1 = "MET5" con.layer2 = "MET6"
+
+
+# PROCESS
+
+material name = "aluminum" cond = 3.76676e+07 permittivity = 1 permeability = 1 losstangent = 0
+material name = "oxide" cond =  0 permittivity = 3.9 permeability = 1 losstangent = 0
+material name = "silicon" cond = 100 permittivity = 11.8 permeability = 1 losstangent = 0
+material name = "copper" cond = 5.88235e+07 permittivity = 1 permeability = 1 losstangent = 0
+material name = "air" cond =  0 permittivity = 1 permeability = 1 losstangent = 0
+material name = "GaAs" cond = 0.008 permittivity = 12.9 permeability = 1 losstangent = 0.065
+material name = "polyimide" cond =  0 permittivity = 3.5 permeability = 1 losstangent = 0
+
+
+deposit type = "substrate" layer.name = "SUBS" thick = 100 matName = "GaAs"
+deposit type = "dielectric" layer.name = "PMD1" thick = 4 matName = "polyimide"
+deposit type = "metal" layer.name = "MET3" thick = 1 matName = "aluminum" anglex = 0 angley = 0
+deposit type = "dielectric" layer.name = "PMD2" thick = 2 matName = "polyimide"
+deposit type = "via" layer.name = "VIA_M3_M4" matName = "aluminum" from_layer ="MET3" to_layer="MET4" anglex = 0 angley = 0
+deposit type = "metal" layer.name = "MET4" thick = 2 matName = "aluminum" anglex = 0 angley = 0
+deposit type = "dielectric" layer.name = "PMD3" thick = 10 matName = "polyimide"
+deposit type = "dielectric" layer.name = "AIR" thick = 50 matName = "air"
+
+
+# SOLVER
+
+Init simulation.type = "PORT" \
+	 impedance.residual = 0.01 impedance.iteration = 50	\
+	 capacitance.residual = 0.01 capacitance.iteration = 50 \
+	 domainbase = "Grounded"	Z0 = 50	add.resistance = 0	\
+	 dx = 3 dy = 3 dz = 1	\
+	 computation.domain="Manual" xmin=-300 xmax=300 ymin=-300 ymax=300
+
+electrodes ports = "in", "subs_ground", "out", "subs_ground" 
+Frequency type = "Range" range = 10, 18000 nsteps = 15 range.variation = "Lin"
+
+
+# OUTPUT
+
+save	database.path = "questex10_db" \
+		 spice.file. = "questex10" tony.file= "questex10" \
+		 sparameter.file = "questex10" \
+                 3D.file = "questex10"   
+
+# RUN
+
+layout gdsfile = "questex10.gds" cell = "CELL"
+
+solve
+
+tonyplot questex10_db/questex10@@CELL/questex10_q.dat
+tonyplot questex10_db/questex10@@CELL/questex10_s.dat
+
+quit
+

@@ -1,0 +1,40 @@
+go athena
+
+#TITLE: Crystal and Amorphous MC Implantation Models
+
+#the x dimension definition
+line x loc = 0.0 
+line x loc = 0.25  spacing=0.25
+
+#the vertical definition
+line y loc = 0     spacing = 0.005
+line y loc = 0.25  spacing = 0.005
+
+#initialize the mesh
+init c.boron=1e14
+struct outf=initial.str
+
+# Amorphous model 
+implant sampling boron energy=10 dose=1e13 monte n.ion=4000 tilt=0 rotation=0 crystal=f
+structure outfile=aniiex13_1.str
+
+
+# Crystal model 
+init inf=initial.str
+implant sampling boron energy=10 dose=1e13 n.ion=4000 monte tilt=7 rotation=0
+structure outfile=aniiex13_2.str
+
+
+# Amorphous analytical model 
+init inf=initial.str 
+implant boron energy=10 dose=1.0e13  amorph tilt=7  print.mom
+structure outfile=aniiex13_3.str
+
+# Crystalline analytical SVDP model 
+init inf=initial.str
+implant boron energy=10 dose=1e13 tilt=7 rotation=0
+structure outfile=aniiex13_4.str
+#plot the current structure along with previous structures
+tonyplot  -overlay aniiex13_*.str -set aniiex13.set
+
+quit

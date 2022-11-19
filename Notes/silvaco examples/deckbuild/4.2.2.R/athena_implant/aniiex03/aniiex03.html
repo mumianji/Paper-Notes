@@ -1,0 +1,54 @@
+<html>
+  <head>
+    <title>Screen Oxide Thickness Dependence using the SVDP Model</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Screen Oxide Thickness Dependence using the SVDP Model</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>SSuprem 4</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="aniiex03_plot0.png" width="640" alt="aniiex03_plot0" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example shows how a 35 keV boron implant profile depends on the thickness of the surface oxide. Oxide is grown in DRY ambient at a temperature of 900 C.
+Oxidation time varies from 0 to 160 minutes which results in oxide thicknesses
+between approximately 50 and 400 Angstroms. The values of oxide thickness are extracted and
+then substituted into the
+<b> S.OXIDE </b> parameter of the
+<b> IMPLANT </b> statement. The surface screen oxide partially randomizes the ion flux which
+leads to less channeling with increasing oxide thickness.
+The SIMS Verified Dual Pearson (
+<b>SVDP</b> ) method allows us to properly predict this effect.
+Parameter
+<b> PRINT.MOM </b> specifies that moments used in each simulation should be printed out.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

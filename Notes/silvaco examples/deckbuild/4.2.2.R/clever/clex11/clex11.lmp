@@ -1,0 +1,31 @@
+
+Rename 	 impl 	 NSUBS
+Rename 	 well	 PSUBS
+
+And	 NSUBS 	 acti 	NACTIVE
+And	 PSUBS 	 acti 	PACTIVE
+And	 NACTIVE poly 	NMOS
+And	 PACTIVE poly 	PMOS
+And	 NACTIVE !poly 	NSD
+And	 PACTIVE !poly 	PSD
+
+export NSD
+export PSD
+
+Connect  poly 	 cont
+Connect  cont 	 M1
+Connect  M1 	 via1
+Connect  via1 	 M2
+Connect  M2 	 via2
+Connect  via2 	 M3
+Connect  M3 	 via3
+Connect  via3 	 M4
+
+Connect  NMOS 	 poly
+Connect  NSD 	 cont
+Connect  PMOS 	 poly
+Connect  PSD  	 cont
+
+Element	 MOS[N]	 NMOS	NSD	"gnd"	cont
+Element	 MOS[P]	 PMOS 	PSD 	"vdd" 	cont
+

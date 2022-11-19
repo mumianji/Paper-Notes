@@ -1,0 +1,356 @@
+
+{section} SONOS : SONOS Non-Volatile Memory Examples
+
+{subsection} sonosex01.in :  Nitride charging dependence on capture cross-section
+
+Requires: S-Pisces
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+The example shows :
+
+{bullet} How to create a simple SONOS structure.
+{newline}
+{bullet} How to activate and specify the parameters for the DYNASONOS model.
+{newline}
+{bullet} How to charge a SONOS structure.
+{newline}
+{bullet} How to specify and interpret the SONOS logfile output.
+
+Typical Atlas meshing commands are used to set up a MOSFET-like
+structure. The main difference is the presence of a layer of Silicon
+Nitride in the gate stack.  The insulating layer between the Nitride and the
+channel is termed the tunnel oxide,  and the insulating layer between
+the Nitride and the contacts is called the blocking layer.  The Atlas
+ SONOS model is invoked using the
+{bold} INTERFACE N.I DYNASONOS 
+statement.  The value of DYNASONOS flag is enabed by default,  and so 
+it is not necessary to specify this explicitly.
+
+To use the DYNASONOS model, the insulators in the gate stack must be changed
+to (wide-gap) semiconductors and given values for density of states, mobility
+and effective mass.  The effective mass values strongly affect the tunneling
+current through the gate stack.  
+
+Additionally, one must use the NITRIDECHARGE statement to set up the parameters
+of the nitride traps.  The density of traps can be set with the parameters
+NT.N (acceptor-like traps) and NT.P (donor-like traps). In this deck we
+want to trap electrons and so specify a non-zero value for NT.N. The
+parameter SIGMAT.N gives the cross-section for trapping the electrons in the
+Nitride conduction band and is set to 4 different values within this deck.
+
+The parameter ELEC.DEPTH specifies the energy depth of the electron 
+trap below the conduction band.  The parameter TAU.N gives the characteristic
+timescale for emission from the trap level to the conduction band. 
+ 
+The parameter SIGMAN.P controls hole capture from the valence band and is
+set to zero with loss of generality.
+
+The Nitride traps are charged up by ramping the bias to 16 V over 1 nanosecond
+and then maintaining this for 1 millisecond.
+
+The stored charge as a function of time (nettcharge) is plotted for the four 
+different values of SIGMAT.N.  The larger the cross-section then the
+more charge is stored.  The stored charge should be the integrated 
+difference between the current entering the Nitride region from the
+channel and that leaving to the gate contact.  This can also be seen in the
+other plots, and by using the TonyPlot integrate tool you can obtain an
+estimate of the nett stored charge to compare (within truncation errors) 
+with nett charge.
+ 
+As the trapping cross-section increases, less charge arrives at the interface
+with the blocking insulator and the out current decreases and is delayed,
+as can be seen in the plots of in and out current at the different values of
+capture cross-section.  In all cases a steady state is obtained where
+in and out current are matched and the nett charge is constant.
+
+The structure files of the charged device are plotted, the user can use the 
+TonyPlot cutline tool to view the Trapped Insulator Charge, Electron Charging
+Rate and other relevant parameters
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+{subsection} sonosex02.in : Threshold Voltage Shift Calculation
+
+Requires: S-Pisces
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+The example shows :
+
+{bullet} How to set up a SANOS device (variant of a SONOS device)
+{newline}
+{bullet} How to obtain the threshold Voltage of a SANOS device
+{newline}
+{bullet} How to obtain data for a range of Biases and time frames
+{newline}
+
+The blocking insulator need not be made of the same material as the
+tunnelling insulator.  In this case we have a blocking insulator made
+of Sapphire (Al203) and a tunnelling insulator made of Silicon dioxide.
+
+This example uses the DBINTERNAL feature of DeckBuild, and the deck
+sonosex02_aux.in is run for each value of the Gate Bias specified by
+the parameter sweep of vgate in the sonosex02.in deck.
+
+Each time sonosex02_aux.in is run,  it sets up a SANOS structure, very
+similar to the structure in sonosex01.in , but with the blocking insulator 
+layer made of Sapphire.  It is necessary to make this material into a widegap
+semiconductor and set other parameters on the MATERIAL statement.
+
+The DYNASONOS model is selected on the first INTERFACE statement.  Because
+of the relatively low conduction band offset between the Silicon Nitride
+and the sapphire,  the 
+{bold} INTERFACE S.S THERMIONIC
+statement is used to model any thermionically emitted current leaving the
+device.  This current will not appear in the SONOS outcurrent, but in the
+gate conduction current.
+
+In the
+{bold} NITRIDECHARGE
+ statement, we set up the relevant parameters 
+and also specify 
+{bold} PF.BARRIER.
+  This sets the barrier height for the
+Poole-Frenkel detrapping model, which is enabled by the PF.NITRIDE flag
+on the MODELS statement.
+
+The gate bias is ramped and the device charged for 1 second.  A structure file
+is saved out at various preset charging times.  The next part of the deck
+reads in these structure files in turn, and for each one it ramps the drain 
+bias and also the gate bias in order to calculate the threshold voltage using the
+deckbuild EXTRACT facility.  The gate stack layers are treated as insulators
+in this case, to make the simulation simpler.  The charge trapped in the
+Nitride layer affects the threshold voltage in the same way.
+
+After calculating the threshold voltage for the set of Gate biases and at each
+of the preset charging times,  the threshold data is plotted.  The threshold voltage 
+increases with Gate Bias and also with charging time.  For a charging 
+time of 1.0 seconds there is a roughly linear relationship between gate bias 
+and threshold voltage (0.65 V of threshold voltage change for every 1.0 V of
+bias volatge change).  The threshold voltage for the uncharged device is also
+shown, and threshold volatge shifts can be calculated relative to this.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} sonosex03.in : Erase example
+
+Requires: S-Pisces
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+The example shows:
+
+{bullet} How to create a SONOS device structure
+{newline}
+{bullet} How to charge and then erase the device 
+{newline}
+{bullet} Use of PROBE statement to obtain stored charge density
+
+This example illustrates how the position of the trapped charges in
+the Silicon Nitride vary with time as the device is charged up and then
+erased by changing the Gate Bias.  This example has a 2 nm thick
+tunnelling layer, a 5 nm Nitride layer and a 5 nm blocking oxide layer.
+
+The NITRIDECHARGING statement sets up a density of 10^20 /cm^3 of electron
+traps, having a relatively high capture cross-section of 10^-10 cm^2.
+A bias of 18 V is applied to the gate and the device is charged up.  The
+state of the structure is saved out to a structure file at certain
+values of charge time. It is charged for 1.0 seconds, after which SOLVE
+INIT is called, with the SONOS parameter specified.
+
+SOLVE INIT preserves the stored charge density,  but on its own tries
+to put in the steady state equibrium solution.  The combination of a
+large fixed charge, and weak coupling of the drift-diffusion equations
+through the wide band-gap semiconductors,  can result in erroneous
+free carrier screening of the fixed charge.  The SONOS parameter used with
+SOLVE INIT avoids this.
+
+After this, negative bias is applied to the gate, ramping for 1 nanosecond
+and then the device is erased for 1.0 seconds.  The structure file is
+output at preset intervals in order to allow the user to inspect the 
+progress of the erasing.
+
+The integrated nett stored charge in C/um is obtained using the PROBE statement
+
+{bold} PROBE NAME=nettcharge SONOS.CHARGE INTEGRATE  Y.MIN=-0.0075 Y.MAX=-0.0015 X.MIN=0.1 X.MAX=0.2 
+and this quantity can be plotted as a function of time.  When the device is
+ charged, the largest contribution is from the tunnel current into the
+Nitride conduction band.  For erase, it is the tunnelling direct from the traps
+to the channel. This is illustrated by doing a second erase,  with the only
+change being the parameter ELEC.DEPTH in the NITRIDECHARGING statement.
+This is increased from 1.5 eV to 2.0 eV, in order to reduce the direct
+trap-to-channel tunnel current.  It can be seen from the log file that 
+the erase takes longer with deeper traps.
+
+The user can employ the TonyPlot cutline tool to see the vertical profile
+of the Trapped Nitride Charge through the gate stack at various time points
+of the charging/erasing.
+ 
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} sonosex04.in : Retention example
+
+Requires: S-Pisces
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+The example shows:
+{bullet} How to create a SONOS device structure
+{newline}
+{bullet} How use the PF.NITRIDE model
+{newline}
+{bullet} How to study the long term retention properties of the device
+{newline}
+
+
+The device is set up using Atlas mesh commands to make a dielectric stack of
+ 4 nm of Silicon oxide, 5 nm of Silicon Nitride and 10 nm of Sapphire (Al2O3).
+
+The device is charged for 1 millisecond with a Gate Bias of 18 V, before the
+{bold} SOLVE INIT SONOS 
+statement resets all electrode biases to zero,  while preserving the fixed
+charge density in the Silicon Nitride and protecting the free charge
+densities in the insulator stack from numerical problems.
+
+The device is simulated for up to 10 years,  with progressively increasing 
+step sizes.  It saves out the structure files at preset time points, so that
+you can look at the change in charge profile and the (negative) Sonos 
+electron charging rate as time progresses. To do this, use the TonyPlot
+cutline tool to create sections through the gate stack.  The overall
+stored charge is shown in the logfile, and can be seen to be much
+diminished after 3 x 10^8 seconds
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+{subsection} sonosex05.in :  Example of simplified SONOS model
+
+Requires: S-Pisces
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+The example shows:
+{bullet} How to use the simplified SONOS model
+{newline}
+{bullet} How to charge the device using hot carrier gate current
+{newline}
+{bullet} How to erase the device using tunnelling
+{newline}
+
+The device is set up in a similar way to the DYNASONOS model.  The main
+difference is that the gate stack materials remain as insulators,
+they are not changed to wide bandgap semiconductors. The gate material
+parameters which will affect the simulation are the tunnel insulator
+effective masses, and the bandgap and affinity parameters.
+
+In this example case a device with a a 5/15/10 nm ONO gate stack is 
+constructed.  It is still necessary to specify N.I on the INTERFACE
+statement,  but the DYNASONOS model must be explicitly cleared by 
+using the syntax ^DYNASONOS.  The NITRIDECHARGE statement is not required.
+
+In this example the N.CONCANNON parameter on the MODELS statement is
+set, and this also has the effect of enabling the Hot Electron energy
+balance model. The gate is given a positive bias, in order to attract
+hot electrons leaving the channel.  The drain is then biased to half
+of the gate bias and the hot electrons follow field lines until they
+either leave the device or charge the traps at the edges of the Nitride
+region.  
+
+After the device is charged the threshold voltage is obtained.  The structure
+field is also saved, enabling you to look at the trapped charge under
+the "Insulator Charge" field, in units of cm^2.
+
+The device is then erased by applying a negative bias to the gate, with
+drain and source grounded.  The structure file is saved and the threshold
+voltage measured.
+
+The Idrain versus Vgate plots are shown for the uncharged, charged and
+erased state of the device. 
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} sonosex06.in :  Charging a SONOS device using the Lucky Electron model
+
+Requires: S-Pisces
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+The example shows:
+
+{bullet} How to charge the device using lucky electron gate current
+{newline}
+{bullet} How to obtain the threshold voltage for different charging times 
+{newline}
+
+The device structure is set up to be the same as in sonosex05.  The difference
+is that the gate stack materials are changed to semiconductors and the 
+necessary parameters are set.  This example uses lucky electron gate current
+and the values of effective mass in the tunnelling insulator do not affect
+the simulation (they may if set to be unphysically small).
+
+The NITRIDECHARGE statement is used to specify electron traps at a uniform density 
+of 5x10^19 /cm^3, and sets up various parameters for the capture cross-section
+and emission rates.  The emission rates are in fact overridden because on the 
+MODELS statement the PF.NITRIDE flag is specified.  With this choice,  the emission
+rates are calculated using the Poole-Frenkel formula (see the DYNASONOS section in
+ the manual).  The HEI flag is also used to select a hot carrier gate current 
+calculation using the lucky electron approximation along with the drift-diffusion
+simulation.  
+
+
+The gate bias is set to 8V and the drain is ramped to half of this.  At the 
+channel/insulator interface, the hot electron current is calculated and the
+electric field lines are used to determine where the current arrives at the
+interface between the Silicon Nitride and the surrounding insulator.  The
+Nitride is then charged at its interface according to the amount of hot
+carrier current arriving there.  
+
+The structure file is saved to file at certain preset simulation times.
+The SONOS.RATES flag was set on the OUTPUT statement and so you can see the
+location of the Nitride charging at each output time.  Only a subset of
+structure files are output by the example, but you can also view the
+other ones if desired.
+
+The next part of the deck uses dbinternal to obtain the threshold
+Voltage for each of the saved structure files.  It does this in the
+file sonos06_aux.in. The advantage of using dbinternal is that the
+data file containing the threshold values can be plotted using
+TonyPlot. These threshold voltages are plotted against charging time.
+The logfiles Idrain versus Vgate are also saved to file and can be viewed
+ in TonyPlot.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.

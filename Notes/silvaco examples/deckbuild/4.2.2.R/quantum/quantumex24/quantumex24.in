@@ -1,0 +1,164 @@
+# SILVACO 2017
+#
+# 2D Cylinderical NW-GAA-TFET
+#
+# Reference:
+# [1] Z. Y. Chen et al., "Demonstration of Tunneling FETs Based on Highly 
+#     Scalable Vertical Silicon Nanowires," in IEEE Electron Device Letters, 
+#     vol. 30, no. 7, pp. 754-756, July 2009.
+
+go atlas
+
+####### VARIABLES ############################################################
+#
+#Channel Length
+set Lg=.200
+
+#Radius
+set R=.035
+
+#Oxide Thickness
+set tOX=.0045
+
+#Source Doping
+set doping_p=1e19
+
+#Drain Doping
+set doping_n=1e19
+
+#Channel Doping
+set doping_channel=1e17
+
+#Gate Metal Work Function
+set gate_wf=4
+
+#Insulator Permittivity 
+set insul_perm=25
+
+#Drain and Source Length
+set Lds=.080
+#
+####### MESH #################################################################
+#
+MESH CYLINDRICAL
+#
+X.MESH loc=0.0  	 	spacing=.01
+X.MESH loc=$R-.005	 	spacing=.001
+X.MESH loc=$R		 	spacing=.0005
+X.MESH loc=$R+.005	 	spacing=.01
+X.MESH loc=$R+$tOX+.0015     	spacing=.01
+
+Y.MESH loc=0			spacing=.02
+Y.MESH loc=0.01			spacing=.02
+Y.MESH loc=$Lds-.005		spacing=.001
+Y.MESH loc=$Lds			spacing=.0001
+Y.MESH loc=($Lg+$Lds)/2		spacing=.02
+Y.MESH loc=$Lg+$Lds		spacing=.01
+Y.MESH loc=$Lg+$Lds+.005	spacing=.01
+Y.MESH loc=$Lg+$Lds+$Lds-.01 	spacing=.02
+Y.MESH loc=$Lg+$Lds+$Lds 	spacing=.02
+#
+####### REGIONS ##############################################################
+#
+# Source Left
+REGION NUM=1 NAME=Source MATERIAL=silicon \
+Y.MIN=0.01 Y.MAX=$Lds X.MIN=0 X.MAX=$R
+
+# Channel Right
+REGION NUM=3 NAME=Channel MATERIAL=silicon \
+Y.MIN=$Lds Y.MAX=$Lg+$Lds X.MAX=$R
+
+# Drain right
+REGION NUM=4 NAME=Drain MATERIAL=silicon \
+Y.MIN=$Lg+$Lds Y.MAX=$Lg+$Lds+$Lds-.01 X.MAX=$R
+
+# Gate Oxide
+REGION NUM=5 MATERIAL=sio2 \
+Y.MIN=$Lds Y.MAX=$Lg+$Lds X.MIN=$R 
+
+# Source Air Left
+REGION NUM=6 MATERIAL=air \
+Y.MIN=0 Y.MAX=$Lds X.MIN=$R 
+
+# Drain Air right
+REGION NUM=7 MATERIAL=air \
+Y.MIN=$Lg+$Lds Y.MAX=$Lg+$Lds+$Lds X.MIN=$R 
+#
+####### ELECTRODES ###########################################################
+#
+ELECTRODE NAME=SOURCE MATERIAL=Aluminum \
+Y.MIN=0 Y.MAX=.01 X.MIN=0 X.MAX=$R
+
+ELECTRODE NAME=DRAIN MATERIAL=Aluminum \
+Y.MIN=$Lg+$Lds+$Lds-.01 Y.MAX=$Lg+$Lds+$Lds X.MIN=0 X.MAX=$R
+
+ELECTRODE NAME=GATE MATERIAL=Aluminum \
+Y.MIN=$Lds Y.MAX=$Lg+$Lds X.MIN=$R+$tOX X.MAX=$R+$tOX+.0015
+#
+####### DOPING ###############################################################
+#
+DOPING  GAUSSIAN material=Si p.type concentration=$doping_channel  \
+	Y.min=$Lds Y.max=$Lds+$Lg X.max=$R \
+	Y.char=0.01 X.char=0
+
+DOPING  GAUSSIAN material=Si p.type concentration=$doping_p \
+	Y.min=0.01 Y.max=$Lds X.max=$R \
+	Y.char=0.025 X.char=0
+
+DOPING  GAUSSIAN material=Si n.type concentration=$doping_n \
+	Y.min=$Lds+$Lg Y.max=$Lg+$Lds+$Lds-.01 X.max=$R \
+	Y.char=0.025 X.char=0
+#
+####### QUANTUM MESH #########################################################
+#
+qtx.mesh 	loc=0	 		spac=0.0050  
+qtx.mesh 	loc=$R-.005 		spac=0.0005 
+qtx.mesh 	loc=$R	 		spac=0.0001 
+
+qty.mesh 	loc=$Lds-.050+.01	spac=0.00025 
+qty.mesh	loc=$Lds+.01		spac=0.00010  
+qty.mesh 	loc=$Lds+.050+.01 	spac=0.00025 
+#
+####### MODELS ###############################################################
+#
+material material=Si me.tunnel=.22 mh.tunnel=.12
+material material=SiO2 permittivity=$insul_perm
+contact name=GATE workfunc=$gate_wf
+
+models qtunn.dir=ydir bbt.nonlocal temperature=300 \
+fermi ni.fermi srh auger cvt \
+fldmob conmob bgn print
+
+method itlimit=5
+
+output band.temp band.param traps u.srh j.electron j.hole j.total qfn qfp
+#
+####### CALCULATIONS #########################################################
+#
+Loop steps=2
+
+# Fig. 3b in [1] Id-Vg characteristics values
+assign name=Vn n.value=(1.2, .05)
+
+solve init
+
+solve name=DRAIN vDRAIN=0 vstep=0.025 vfinal=$Vn
+save outf=quantumex24_Vg0_Vd$'Vn'.str
+
+log outf=quantumex24_idvg_Vd$'Vn'.log
+solve name=GATE vGATE=-0.0 vstep=-.05 vfinal=-.5
+solve name=GATE vGATE=-0.5 vstep=0.05 vfinal=1.5
+
+save outf=quantumex24_Vg1.5_Vd$'Vn'.str
+
+log off
+
+L.END
+#
+####### TONYPLOT #############################################################
+#
+tonyplot quantumex24_Vg1.5_Vd1.2.str
+tonyplot -overlay quantumex24_idvg_Vd0.05.log quantumex24_idvg_Vd1.2.log \
+-set quantumex24.set
+
+quit

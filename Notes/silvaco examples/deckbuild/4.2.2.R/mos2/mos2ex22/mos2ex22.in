@@ -1,0 +1,291 @@
+# (c) Silvaco Inc., 2018
+
+go victoryprocess
+
+Init meshdepth=3 material=silicon dopant=boron dopingvalue=1.34e15 \
+     orientation=100 from=-0.19,-0.1 to=0.125,0.1 depth=1 gasheight=2.2025 \
+     resolution=0.007875,0.02,0.01575 flow.dim=3D
+
+# DEFINE THE INITIAL 2D GRID
+
+Line x location=-0.19  spacing=0.01
+Line x location=-0.145 spacing=0.005
+Line x location=-0.125 spacing=0.005
+Line x location=-0.115 spacing=0.005
+Line x location=-0.07  spacing=0.005
+Line x location=-0.06  spacing=0.005
+Line x location=-0.03  spacing=0.005
+Line x location=0      spacing=0.01
+Line x location=0.03   spacing=0.005
+Line x location=0.06   spacing=0.005
+Line x location=0.07   spacing=0.005
+Line x location=0.125  spacing=0.01
+
+Line y location=-0.1  spacing=0.02
+Line y location=0     spacing=0.01
+Line y location=0.1   spacing=0.02
+
+Line z location=0     spacing=0.0005
+Line z location=0.035 spacing=0.005
+Line z location=1     spacing=0.1
+
+method model=fermi
+
+Deposit material=oxide thick=0.0015 divisions=3 conformal
+Implant boron dose=9e13 energy=30 tilt=0 rotation=0  
+Implant boron dose=4.5e13 energy=7  tilt=0 rotation=0
+Diffuse time=0.1 temperature=950
+
+# Add Extra Lines When Needed
+Line x location=-0.1 spacing=0.005
+
+Deposit material=polysilicon thick=0.1 conformal
+Etch material=polysilicon left.to=-0.03 dry thickness=2.2025
+Etch material=polysilicon right.to=0.03 dry thickness=2.2025
+
+Implant arsenic dose=4.5e13 energy=5 tilt=0 rotation=0 bca n.ion=2000000
+Deposit material=nitride     thick=0.03 conformal
+Diffuse time=0.1 temperature=950
+Etch    material=nitride dry thick=0.03
+
+Deposit material=barrier thick=0.03 conformal
+Etch material=barrier right.to=-0.125 dry thickness=2.2025
+Implant arsenic dose=2e14 energy=5 tilt=0 rotation=0 bca n.ion=2000000 
+Etch material=barrier dry
+Diffuse time=0.1 temperature=950
+
+Deposit material=barrier thick=0.03 conformal
+Etch material=barrier left.to=-0.125 dry thickness=2.2025
+Implant bf2 dose=2e14 energy=5 tilt=0 rotation=0  
+Etch material=barrier dry
+
+Diffuse time=0.1 temperature=1050
+Etch material=oxide dry thick=0.003
+
+Deposit material=aluminum thick=0.01 divisions=2 conformal
+Etch between=-0.07,0.07   material=aluminum thickness=0.2 dry
+Etch between=-0.145,-0.115 material=aluminum thickness=0.1 dry
+
+# DEFINE STRUCTURE ELECTRODES
+Electrode name=source x=-0.1 y=0 z=-0.009
+Electrode name=gate x=0 y=0 z=-0.05
+Electrode name=drain x=0.1 y=0 z=-0.009
+Electrode name=pwell x=-0.17 y=0 z=-0.009
+
+save name=mos2ex22_vp_0
+
+## EXPORT THE STRUCTURE AND THEN PLOT
+
+go victorymesh
+
+load in=mos2ex22_vp_0
+
+remesh delaunay
+
+refine max.size=0.05
+refine max.interface.size=0.0025 grading="quadratic"
+refine max.junction.size=0.005 grading="quadratic"
+refine max.distance=0.001
+
+save out=mos2ex22_0.str
+
+tonyplot3d mos2ex22_0.str
+
+
+# BEGIN THE DEVICE VERIFICATION PROCESS
+# INITIALIZE VICTORY DEVICE AND TO COMPARE TO PDK SPICE MODEL
+
+# Unsaturated Vt Simulation
+go victorydevice 
+
+# LOAD STRUCTURE INTO VICTORY DEVICE
+mesh infile=mos2ex22_0.str 
+
+mobility deln.cvt=5e17
+models material=silicon consrh cvt
+
+contact name=gate workf=4.17
+
+method pam.gmres norm.scaling.local
+
+solve init
+solve previous
+solve vdrain=0.01
+solve vdrain=0.05
+log outfile=mos2ex22_0.log
+solve vgate=0.01
+solve vgate=0.05 vstep=0.05 vfinal=0.85 name=gate
+
+# USING THE EXTRACT FUNCTION CALCULATE THE UNSATURATED Vt
+extract name="vt_uns" (xintercept(maxslope(curve(abs(v."gate"), \
+        abs(i."drain")))) - abs(ave(v."drain"))/2.0)
+
+# CLOSE OUT CURRENT LOG FILE
+log off
+
+
+# Saturated Vt
+go victorydevice 
+
+mesh infile=mos2ex22_0.str 
+
+mobility deln.cvt=5e17
+models material=silicon consrh cvt
+
+contact name=gate workf=4.17
+
+
+method pam.gmres norm.scaling.local
+solve init
+solve previous
+solve vdrain=0.01
+solve vdrain=0.05 vstep=0.05 vfinal=0.85 name=drain
+
+log outfile=mos2ex22_1.log
+solve vgate=0.01
+solve vgate=0.05 vstep=0.05 vfinal=0.85 name=gate
+extract init infile="mos2ex22_1.log"
+extract name="vt_sat" \
+        (xintercept(maxslope(curve(abs(v."gate"),sqrt(i."drain")))))
+extract name="Ion (uA/um Width)"  5e6*max(i."drain")
+extract name="Ioff (uA/um Width)" 5e6*min(i."drain")
+log off
+
+tonyplot mos2ex22_0.log -overlay mos2ex22_1.log
+
+
+# ID_VD CURVES
+go victorydevice 
+
+mesh infile=mos2ex22_0.str 
+
+mobility deln.cvt=5e17
+models material=silicon consrh cvt
+contact name=gate workf=4.17
+
+method pam.gmres
+solve init
+solve previous
+solve vgate=0.01
+solve vgate=0.05 vstep=0.05 vfinal=0.55 name=gate
+save outfile=mos2ex22_1.str
+solve vstep=0.05 vfinal=0.65 name=gate
+save outfile=mos2ex22_2.str
+solve vstep=0.05 vfinal=0.75 name=gate
+save outfile=mos2ex22_3.str
+solve vstep=0.05 vfinal=0.85 name=gate
+save outfile=mos2ex22_4.str
+
+load infile=mos2ex22_1.str master
+log outfile=mos2ex22_2.log
+solve vdrain=0.01
+solve vdrain=0.05 vstep=0.05 vfinal=0.85 name=drain
+log off
+
+load infile=mos2ex22_2.str master
+log outfile=mos2ex22_3.log
+solve vdrain=0.01
+solve vdrain=0.05 vstep=0.05 vfinal=0.85 name=drain
+log off
+
+load infile=mos2ex22_3.str master
+log outfile=mos2ex22_4.log
+solve vdrain=0.01
+solve vdrain=0.05 vstep=0.05 vfinal=0.85 name=drain
+log off
+
+load infile=mos2ex22_4.str master
+log outfile=mos2ex22_5.log
+solve vdrain=0.01
+solve vdrain=0.05 vstep=0.05 vfinal=0.85 name=drain
+log off
+
+tonyplot mos2ex22_2.log -overlay mos2ex22_3.log mos2ex22_4.log mos2ex22_5.log -set mos2ex22.set 
+# END DEVIVCE IV VERIFICATION
+
+
+# BEGIN MODEL EXTRACTION
+go utmost4
+script begin
+
+    var myDir, myDS;
+    var project, i, cnt;
+    var modelLibrary, netlist;
+    var allDataSets = [], dataSets = [];
+    var optimSetup, error;
+
+/* Convert TCAD data to Utmost IV format. */
+
+    myDir = Silvaco.Utmost4.openCurrentWorkingDirectory ();
+
+    myDS = myDir.dcImportFromTCADLogfile ("mos2ex22_0.log");
+    myDS.setKeys (myDS.getKeyVal ("temperature"), "mos2ex22","TCAD","TCAD","nmos","idvglin");
+    myDS.addPlot ("idvg", "XY (LIN LIN)", "vgate", "idrain", "");
+    myDS.remove ("plot", "plot1");
+    allDataSets.push (myDS);
+
+    myDS = myDir.dcImportFromTCADLogfile ("mos2ex22_1.log");
+    myDS.setKeys (myDS.getKeyVal ("temperature"), "mos2ex22","TCAD","TCAD","nmos","idvgsat");
+    myDS.addPlot ("idvg", "XY (LIN LIN)", "vgate", "idrain", "");
+    myDS.remove ("plot", "plot1");
+    allDataSets.push (myDS);
+
+    cnt = 0;
+
+    for (i=2; i<6; ++i)
+    {
+        myDS = myDir.dcImportFromTCADLogfile ("mos2ex22_" + i + ".log");
+        myDS.setKeys (myDS.getKeyVal ("temperature"), "mos2ex22","TCAD","TCAD","nmos","idvd" + ++cnt);
+        myDS.addPlot ("idvd", "XY (LIN LIN)", "vdrain", "idrain", "");
+        myDS.remove ("plot", "plot1");
+        allDataSets.push (myDS);
+    }
+
+    myDir.saveDataSets ("mos2ex22.uds", allDataSets);
+
+/* Perform model extraction. */
+
+    project      = myDir.readProject ("mos2ex22.prj");
+
+    modelLibrary = project.getModelLibrary ();
+    modelLibrary.setValue ("nmos", "TOXE", "optVal", 15e-10);
+    modelLibrary.setValue ("nmos", "LINT", "optVal", 6e-9);
+
+    netlist = Silvaco.Utmost4.makeNetlist (["Drain","Gate","Source","Pwell"],[], "M1 Drain Gate Source Pwell NMOS W='200e-9' L='60e-9'");
+
+    dataSets = project.getDataSubset ("idvglin").apply (allDataSets);
+
+print ("Datasets count is " + dataSets.length);
+
+    optimSetup = project   .getOptimSetup    ("idvg1");
+    error = Silvaco.Utmost4.optimize3 (dataSets, optimSetup, [], [], netlist, modelLibrary, "PT");
+
+    dataSets = project.getDataSubset ("idvd").apply (allDataSets);
+
+    optimSetup = project   .getOptimSetup    ("idvd1");
+    error = Silvaco.Utmost4.optimize3 (dataSets, optimSetup, [], [], netlist, modelLibrary, "PT");
+
+/* Save model library file. */
+
+    modelLibrary.exportModelCard ("nmos", "optVal", myDir, "mos2ex22.l", "", "");
+
+/* Generate simulated tonyplot data. */
+
+for (i = 0; i < allDataSets.length ; ++i)
+{
+    myDS = allDataSets[i];
+    myDS.simulate (netlist, modelLibrary, "optVal");
+    myDS.exportToTCADLogfile (myDir, "mos2ex22_ut_" + myDS.getKeyVal ("measSetupName") + ".log", "sim");
+}
+
+script end
+run script
+
+# END MODEL EXTRACTION
+
+# Overlay Plots of the TCAD and Spice Model Curves
+tonyplot mos2ex22_0.log -overlay mos2ex22_1.log mos2ex22_ut_idvglin.log mos2ex22_ut_idvgsat.log
+
+tonyplot mos2ex22_2.log -overlay mos2ex22_3.log mos2ex22_4.log mos2ex22_5.log mos2ex22_ut_idvd1.log  mos2ex22_ut_idvd2.log mos2ex22_ut_idvd3.log mos2ex22_ut_idvd4.log -set mos2ex22.set
+
+quit

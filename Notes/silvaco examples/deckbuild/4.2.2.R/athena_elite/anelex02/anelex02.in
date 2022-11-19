@@ -1,0 +1,44 @@
+go athena
+
+line x loc=0.00 spac=0.20 
+line x loc=1.5 spac=0.05 
+line x loc=3.0 spac=0.20 
+#
+line y loc=0.00 spac=0.05 
+line y loc=1.0  spac=0.5 
+#
+initialize
+deposit nitride      thick=1 divis=20
+etch nitride start x=1.0 y=-10
+etch         cont  x=1.0 y=10
+etch         cont  x=2.0 y=10
+etch         done  x=2.0 y=-10
+
+structure outfile=anelex02_0.str
+
+rate.depo machine=uni oxide a.m  sigma.dep=0.2 \
+        uni dep.rate=1000 angle1=0
+deposit machine=uni time=1 minute divis=4
+structure outfile=anelex02_1.str
+
+init infile=anelex02_0.str
+rate.depo machine=uni oxide a.m  sigma.dep=0.2 \
+        uni dep.rate=1000 angle1=45
+deposit machine=uni time=1 minute  divis=4
+structure outfile=anelex02_2.str
+
+init infile=anelex02_0.str
+rate.depo machine=uni oxide a.m  sigma.dep=0.2 \
+        uni dep.rate=1000 angle1=-45
+deposit machine=uni time=1 minute  divis=4
+structure outfile=anelex02_3.str
+
+init infile=anelex02_0.str
+rate.depo machine=uni oxide a.m  sigma.dep=0.2 \
+        uni dep.rate=1000 angle1=75
+deposit machine=uni time=1 minute  divis=4
+structure outfile=anelex02_4.str
+
+tonyplot anelex02_*.str -ttitle anelex02.in
+
+quit

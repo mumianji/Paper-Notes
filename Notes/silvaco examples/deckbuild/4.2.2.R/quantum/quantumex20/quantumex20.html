@@ -1,0 +1,91 @@
+<html>
+  <head>
+    <title>Non-local inelastic trap assisted tunnelling in a MOS-C</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Non-local inelastic trap assisted tunnelling in a MOS-C</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>S-Pisces</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="quantumex20_plot0.png" width="640" alt="quantumex20_plot0" />
+      <p/>
+      <img src="quantumex20_plot1.png" width="640" alt="quantumex20_plot1" />
+      <p/>
+      <img src="quantumex20_plot2.png" width="640" alt="quantumex20_plot2" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example shows how to model the tunneling current through an insulator defect level
+using the ITAT.SC.EL model.
+</p>
+<p>
+It demonstrates :
+</p>
+<ul>
+  <li>
+ Setting up a Trap level for tunnelling using the DOPING statement
+<br/>
+  </li>
+  <li>
+ Setting up a self-consistent version of the ITAT model.
+<br/>
+   </li>
+  <li>
+ Visualising the results of the ITAT model.
+  </li>
+</ul>
+<p>
+A simple MOS-C is set up using Atlas mesh commands,  and the statement
+<br/>
+<b> doping region=2 uniform tat.trap conc=1.0e19 acceptor sign=1.0e-13 sigp=1.0e-13  e.level=3.0</b> <br/>
+sets up a spatially uniform trap concentration with the tat.trap parameter.  These
+traps are unlike conventional traps and their occupancy fractions are determined solely
+by the tunnel current passing through them.  This statement also sets the trap capture cross
+sections (1.0e-13 cm^2), type (acceptor) and energy level below the conduction band (3.0 eV).
+The ITAT.SC model for electrons is enabled on the models statement
+<br/>
+<b> models itat.sc.el tat.slicepts=51 </b> <br/>
+This causes a quantum tunnelling region to be automatically set up, with 51
+points along each tunnelling slice.  The self-consistency means that the
+tunnel current is injected into the current continuity equations in the semiconductor.
+</p>
+<p>
+The next part is a steady state voltage ramp of the gate.  This causes a tunnel
+current to flow through the traps in the oxide, and affects their occupation
+probabilities by charging them up.  After this the gate voltage is returned
+to zero on a transient ramp and the current obtained up to a simulation time
+of 0.01 s. After the initial transients,  the tunnelling current decays with
+a power law dependence on time.  The change of charge in the device causes a
+displacement current to be present too.  The trap occupancy is shown as a
+function of depth in the oxide for the equilibrium case, when the steady-state
+bias is 2.0V and after partially discharging.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

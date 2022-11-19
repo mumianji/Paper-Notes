@@ -1,0 +1,129 @@
+# (c) Silvaco Inc., 2018
+go atlas
+TITLE  SOI ID/VDS @ VGS=10V with LATTICE HEATING
+
+mesh   space.mult=1.0
+# 
+x.mesh loc=0.00   spac=0.250
+x.mesh loc=1.15   spac=0.02
+x.mesh loc=1.5    spac=0.1
+x.mesh loc=1.85   spac=0.02
+x.mesh loc=3      spac=0.25
+#
+y.mesh loc=-0.017 spac=0.02
+y.mesh loc=0.00   spac=0.005
+y.mesh loc=0.1    spac=0.02
+y.mesh loc=0.2    spac=0.01
+y.mesh loc=0.6    spac=0.1
+#
+region      num=1 y.max=0 oxide 
+region      num=2 y.min=0 y.max=0.2 silicon
+region      num=3 y.min=0.2  oxide
+#
+#*********** define the electrodes ************
+# #1-GATE #2-SOURCE #3-DRAIN #4-SUBSTRATE(below oxide)
+#
+electrode   name=gate    x.min=1 x.max=2 y.min=-0.017 y.max=-0.017
+electrode   name=source x.max=0.5 y.min=0 y.max=0
+electrode   name=drain  x.min=2.5 y.min=0 y.max=0
+electrode   substrate
+#
+#*********** define the doping concentrations *****
+#
+doping       uniform conc=1e17 p.type  reg=2
+doping       gauss n.type conc=1e20 char=0.2 lat.char=0.05 reg=2 x.r=1.0 
+doping       gauss n.type conc=1e20 char=0.2 lat.char=0.05 reg=2 x.l=2.0
+#
+contact      name=gate n.poly
+#
+models       arora consrh auger bgn fldmob lat.temp
+impact       selb 
+#
+thermcontact number=1 y.min=0.6 ext.temper=300
+# 
+solve        init 
+save         outf=soiex05_0.str
+#
+tonyplot     soiex05_0.str -set soiex05_0.set
+#
+method       newton itlimit=15 trap dvmax=0.25
+solve        vgate=0.1
+solve        vgate=0.2
+solve        vgate=0.3
+solve        vgate=0.4
+solve        vgate=0.5
+solve        vgate=0.75
+solve        vgate=1 vstep=1 vfinal=10.0 name=gate
+#
+method       newton itlimit=15 trap dvmax=0.25 
+#
+log          outf=soiex05_1.log master
+solve        vstep=0.020 vfinal=0.1 name=drain
+solve        vstep=0.050 vfinal=1.2 name=drain  
+solve        vdrain=1.3 vstep=0.1 vfinal=3.5 name=drain
+save         outf=soiex05_2.str
+#
+go atlas
+TITLE  SOI ID/VDS @ VGS=10V without LATTICE HEATING
+#
+mesh  space.mult=1.0
+# 
+x.mesh loc=0.00   spac=0.250
+x.mesh loc=1.15   spac=0.02
+x.mesh loc=1.5    spac=0.1
+x.mesh loc=1.85   spac=0.02
+x.mesh loc=3      spac=0.25
+#
+y.mesh loc=-0.017 spac=0.02
+y.mesh loc=0.00   spac=0.005
+y.mesh loc=0.1    spac=0.02
+y.mesh loc=0.2    spac=0.01
+y.mesh loc=0.6    spac=0.1
+#
+region       num=1 y.max=0 oxide 
+region       num=2 y.min=0 y.max=0.2 silicon
+region       num=3 y.min=0.2  oxide
+#
+#*********** define the electrodes ************
+# #1-GATE #2-SOURCE #3-DRAIN #4-SUBSTRATE(below oxide)
+#
+electrode    name=gate    x.min=1 x.max=2 y.min=-0.017 y.max=-0.017
+electrode    name=source x.max=0.5 y.min=0 y.max=0
+electrode    name=drain  x.min=2.5 y.min=0 y.max=0
+electrode    substrate
+#
+#*********** define the doping concentrations *****
+#
+doping       uniform conc=1e17 p.type  reg=2
+doping       gauss n.type conc=1e20 char=0.2 lat.char=0.05 reg=2 x.r=1.0 
+doping       gauss n.type conc=1e20 char=0.2 lat.char=0.05 reg=2 x.l=2.0
+#
+contact      name=gate n.poly
+#
+models       arora consrh auger bgn fldmob 
+impact       selb 
+#
+solve        init 
+#
+method       newton itlimit=15 trap dvmax=0.25  
+solve        vgate=0.1
+solve        vgate=0.2
+solve        vgate=0.3
+solve        vgate=0.4
+solve        vgate=0.5
+solve        vgate=0.75
+solve        vgate=1 vstep=1 vfinal=10.0 name=gate
+#
+method       newton single itlimit=15 trap dvmax=0.25  
+#
+log          outf=soiex05_2.log master
+solve        vstep=0.020 vfinal=0.1 name=drain
+#
+method       newton itlimit=15 trap dvmax=0.25  
+solve        vstep=0.050 vfinal=1.2 name=drain  
+solve        vdrain=1.3 vstep=0.1 vfinal=3.5 name=drain
+#
+tonyplot -overlay  soiex05_1.log  soiex05_2.log -set soiex05_1.set
+tonyplot soiex05_2.str -set soiex05_2.set
+#
+quit

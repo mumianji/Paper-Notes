@@ -1,0 +1,85 @@
+<html>
+  <head>
+    <title>High Efficiency Silicon Solar Cell</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>High Efficiency Silicon Solar Cell</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>SSuprem 4/S-Pisces/Luminous</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R, Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="solarex16_plot0.png" width="640" alt="solarex16_plot0" />
+      <p/>
+      <img src="solarex16_plot1.png" width="640" alt="solarex16_plot1" />
+      <p/>
+      <img src="solarex16_plot2.png" width="640" alt="solarex16_plot2" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates solar cell performance increase by introducing
+pyramids at the top of the cell. Whether or not pyramids are used as well
+as their height and width were parameterized in this example.
+</p>
+<p>
+The solar cell was designed using a local back contact. This specific
+geometry requires 2D simulation. Athena and Devedit are used to define
+and mesh the solar cell.
+</p>
+<p>
+A bell shape is obtained and for this specific case a pyramid length of
+around 10um gives the higher efficiency.
+</p>
+<p>
+Simulation results show improvement of performance when pyramids are used.
+As an example simulations are made without and with pyramids with a length
+of 10um and a height of 5um.
+Results are shown below:
+</p>
+<b> with pyramids</b> <p>
+JscmAcm2=40mA/cm2
+<br/>
+Voc=0.70V
+<br/>
+FF=84%
+<br/>
+Eff=24%
+<br/>
+</p>
+<b> without pyramids</b> <p>
+JscmAcm2=34mA/cm2
+<br/>
+Voc=0.67V
+<br/>
+FF=84%
+<br/>
+Eff=19.35%
+<br/>
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

@@ -1,0 +1,59 @@
+<html>
+  <head>
+    <title>Deep Level Bulk Traps (EL2) - Transient Analysis</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Deep Level Bulk Traps (EL2) - Transient Analysis</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>SSuprem 4/Blaze</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="mesfetex05_plot0.png" width="640" alt="mesfetex05_plot0" />
+      <p/>
+      <img src="mesfetex05_plot1.png" width="640" alt="mesfetex05_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example is based on the structure created in example 4 within the
+MESFET section - the trap simulation is now performed in transient mode.
+</p>
+<p>
+In the transient turn-off simulation, the drain voltage is also set to
+0.5V. However the gate is then ramped in a transient from zero to
+-2.0V. The ramptime parameter sets the time for the gate voltage ramp,
+whilst tstop sets the time until which the simulation will continue. The
+parameter dt is used to set the first timestep of the transient. All
+other timesteps are calculated automatically by the program. A dt value
+of ramptime/100 is a safe one under most circumstances. Comparing the
+results of turn-off with and without traps shows how the presence of
+the fast trap states slows the time taken for the drain current to
+reduce to 1pA/um.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

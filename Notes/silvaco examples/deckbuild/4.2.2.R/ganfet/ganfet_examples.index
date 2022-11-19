@@ -1,0 +1,1200 @@
+
+
+{section} GANFET : GANFET Application Examples 
+
+
+{subsection} ganfetex01.in : Polarization Charge Analysis
+
+
+Requires: Blaze
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates the interaction between polarization charges,
+surface states and cap layer thickness in AlGaN/GaN HFETs.
+
+This example was the basis for the Simulation Standard article
+"Simulating the Source of Polarization Charge in AlGaN/GaN HFETs"
+Simulation Standard, V. 15, N. 8, Aug. 2006, Silvaco International.
+
+This article and example are based on the work of:
+J. P. Ibbetson, et. al., Appl. Phys. Lett. 77, 250 (2000).
+
+The input deck ganfetex01.in uses dbinternal to obtain the channel
+charge density for each of the saved structure files.  It does this using
+the file ganfetex01_aux.in. The advantage of using dbinternal is that the
+data file containing the charge densities can be plotted using
+TonyPlot. These charge densities are plotted against the cap layer thickness.
+
+The input deck containing the actual description of the devices is 
+contained in ganfetex01_aux.in.
+
+The Atlas specification consists of the following parts:
+
+{bullet} Construction of the device and the grid using Atlas syntax
+{newline}
+{bullet} Specification of material regions
+{newline}
+{bullet} Definition of electrodes and doping
+{newline}
+{bullet} Material, models, interface charge and interface trap parameters
+{newline}
+{bullet} Simulation of Id-Vds characteristic 
+{newline}
+
+In the first part of the input file the device is described using Atlas
+syntax including mesh, regions and electrodes locations, and doping distribution.
+The
+{bold} region 
+statements are used to define AlGaN and GaN regions. The Al composition
+fraction (x.composition=0.34)is defined here as well.
+After the device description, the
+{bold} material 
+statement is used to specify some of the material parameters different from
+the default values. Whenever any of the default values of material parameters
+or models are questioned you should specify the parameter values manually.
+
+The
+{bold} model 
+statement is used to specify the following set of models: field dependent 
+mobility, and Shockley-Read-Hall recombination, Fermi-Dirac statistics, and
+incomplete ionization.
+
+Next the interface characteristics are specified.  In particular the
+polarization charges and surface traps are specified.  We could have
+used the built-in polarization models that calculate the polarization 
+charges as a function of composition, strain and lattice constant for
+the various materials, but in this case we are specifying polarization
+charges directly to simplify calibration to the data presented in the paper.
+
+Next the 
+{bold} solve 
+statement is used to obtain a zero biassed solution.  The
+{bold} save 
+statement is used to save this solution for subsequent examination in
+TonyPlot.  TonyPlot is used to look at the channel electron
+charge as a function of cap layer thicknress.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} ganfetex02.in : GaN HEMT Breakdown
+
+Requires: Blaze
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates simulation of avalanche breakdown an
+AlGaN/GaN HEMT. It
+
+This example is based on the paper:
+
+Karmalkar and Mishra "Enhancement of Breakdown Voltage in AlGaN/GaN
+High Electron Mobility Transistors Using a Field Plate", ED 48, No. 8,
+pp 1515-1521,  August 2001.
+
+At the outermost level, the simulation uses the DeckBuild looping and 
+variable assignment capabilities of LOOP, L.END and SET.   Near the
+end of the input deck, the simulation again uses the built-in capabilities
+of DeckBuild to perform complex parameter extraction using the EXTRACT
+statements.
+
+This Atlas part of the example demonstrates:
+
+{bullet} Construction of the heterojunction structure using Atlas syntax
+{newline}
+{bullet} Material and models parameter specification 
+{newline}
+{bullet} Simulation of Id-Vds and breakdown characteristic 
+{newline}
+{bullet} Display of the results in TonyPlot
+
+The device under consideration consists of a simple 0.4 micron gate length
+GaN HEMT augmented with a field plate used to increase the breakdown
+voltage.  This simulation loops on increasing field plate lengths to 
+examine the relationship between field plate geometry and breakdown
+voltage.  
+
+In the first part of the input file, the device is described using
+the Atlas structural syntax. The description includes the mesh, regions
+locations, electrodes locations, and doping distribution.
+The
+{bold} region 
+statements are used to define the AlGaN and GaN regions. The Al
+composition fraction (x.composition=0.295) is defined here as well. 
+
+After the device description, 
+{bold} material 
+statement are used to define the characteristics of the various materials
+used in the simulation.
+
+The
+{bold} models 
+statements are used to specify the following set of models : field
+dependent mobility, SRH recombination  and Fermi-Dirac statistics.
+
+In order to simulate avalanche breakdown, the impact ionization-generation model
+should be turned on. This is done using the 
+{bold} impact selb 
+statement in which the Selberherr impact ionization model is activated.
+All basic impact ionization parameters are user-accessible and can be
+modified by the user.
+
+The gate electrode in HEMT structures is a Schottky contact. This is specified
+by using the 
+{bold} contact 
+statement to define the workfunction of the gate electrode.
+
+Here the 
+{bold} beam 
+statement is used to specify an optical source of carrier pair generation
+in addition to the thermal generation provided by SRH.  This is generally a
+good strategy for analyzing breakdown especially in wide bandgap materials
+or at low temperatures to improve convergence.  This is not recommended when
+estimating sub-breakdown diode leakage currents though.
+
+Next the drain voltage is ramped to 1200 volts.  At that point the 
+drain boundary is changed to a current boundary using the 
+{bold} contact current 
+statement.
+
+This is performed to improve convergence up throught the breakdown portion
+of the curve where current is changing much faster than voltage.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} ganfetex03.in : AlGaN/GaN HEMT Id-Vgs and Id-Vds Characterization
+
+Requires: Blaze
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates Id-Vds and Id-Vgs calculations in an
+AlGaN/GaN HEMT. 
+
+This example demonstrates:
+
+{bullet} Construction of the heterojunction structure using Atlas syntax
+{newline}
+{bullet} Material and models parameter specification 
+{newline}
+{bullet} Simulation of Id/Vds and Id/Vgs characteristics 
+{newline}
+{bullet} Display of the results in TonyPlot
+
+The device under consideration is a simple AlGaN/GaN HEMT. The main
+concept here is that the polarization charge is calculated using the 
+built-in models as specified by the 
+{bold} polarization 
+parameter on the
+{bold} model 
+statement.
+
+After the initial solution is obtained the gate voltage is ramped to -10 V,
+then the IdVg characteristic is extracted from Vg=-10 to Vg=1.0 V.
+
+A family of drain current characteristics are then simulated with
+and without lattice heating taken into account by ramping the drain 
+from 0 to 15 V at various gate voltages. 
+
+Finally, the family of curves is plotted using the TonyPlot tool.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} ganfetex04.in : InGaN/AlGaN/GaN HEMT Polarization Charge Calculation
+
+Requires: Blaze
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example illustrates the automatic calculation of polarization charges
+for the AlGaN/InGaN material system.. 
+
+This example demonstrates the calculation of polarization
+charge as a function of material composition fraction for InGaN and 
+AlGaN.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+{subsection} ganfetex05.in : Intrinsic Stress Effect on AlGaN/GaN HEMT IdVg Characteristic
+
+Requires: SSuprem 4/Victory Stress/Blaze 
+{newline}
+Minimum Versions: Athena 5.22.3.R, Victory Stress 2.14.0.R, Atlas 5.26.1.R
+
+This example demonstrates:
+
+{bullet} Construction of the heterojunction structure using Athena syntax
+{newline}
+{bullet} Stress simulation, Material and models parameter specification 
+{newline}
+{bullet} Simulation of Id/Vgs characteristics 
+{newline}
+{bullet} Display of the results in TonyPlot
+
+The device under consideration is a simple AlGaN/GaN HEMT. The 2D structure is 
+obtain by Athena and the stress distribution is simulated by VICTORYSTRESS. 
+This example produces stress distributions via the stress-liner made of nitride
+(tensile or compressive). Note that the stressor in this example is used to 
+illustrate strain polarization, on top of lattice and spontaneous polarization.
+
+The polarization model that supports dependency on loaded strain tensor 
+has been used in this example. The model is enabled by the 
+{bold} POLARIZATION 
+flag of the 
+{bold} MODELS 
+statement.  
+
+The main concept of GaN based power devices is to use epitaxial strain to create
+2DEG. The polarization model that supports epitaxial strain due to lattice 
+mismatch is enabled by the
+{bold} CALC.STRAIN 
+flag on the 
+{bold} MODEL 
+statement. 
+
+When both models are set in the simulation both the imported strain and the 
+lattice mismatch calculation are accounted for.  
+
+The lattice and imported strain dependent components of polarization can 
+be independently scaled using the scale factors 
+{bold} TENSO.SCALE 
+and
+{bold} PIEZO.SCALE 
+on the 
+{bold} MODEL 
+statement. By default these are set to 1.0.
+
+When enabling the
+{bold} POLARIZATION 
+flag spontaneous polarization is automatically included in the calculation. 
+The size of the spontaneous component can be scaled using the
+{bold} PSP.SCALE 
+parameter of the
+{bold} MODELS 
+statement.
+
+After the initial solution is obtained the drain voltage is ramped to 1 V,
+then the IdVg characteristic is extracted from Vg=-5 to Vg=1.0 V.
+
+The effect of strain is seen on IdVg characteristic. For illustration purpose 
+we combined, in this example, different intrinsic stress (compressive or tensile)
+leading to different stress distribution and sign in the channel and the source 
+and drain region. As a result IdVg curves change accordingly.
+
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+{subsection} ganfetex06.in : A Normally-off GaN MISFET with High Vth uniformity  
+
+Requires: Blaze 
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+    
+
+This example demonstrates the simulation of a GaN metal-insulator-semiconductor 
+field effect transistor (MISFET) with Piezo Neutralization Technique (PNT). 
+
+This example is based on the work of:
+
+Ota, K. et. al. "A Normally-off GaN FET with High Threshold Voltage 
+Uniformity Using A Novel Piezo Neutralization Technique", IEDM 2009, pp. 153-156.
+
+The features of the PNT structure are described below and simulated with Blaze
+                                                     
+The first feature is an AlGaN buffer layer to realize a
+normally-off operation. The polarization charges at the interface 
+between the AlGaN buffer and the GaN channel act as virtual p-type
+doping and contribute to simustaneously increase Vt and charge
+density in the channel.The band diagram and IdVg simulations 
+demonstrate the impact of the buffer Al-concentration on the 
+electron-channel energy beneath the gate and Vth respectively
+
+The second is an Al0.07Ga0.93N PNT layer having an identical 
+Al composition with the buffer layer to realize high Vth uniformity.
+Since PNT and buffer layers have an identical Al mole fraction, the polarization charges formed between these layers are completely 
+canceled and hence, a flat band condition occurs throughout the PNT 
+layer. Vth dependence on the AlGaN layer thickness under the gate
+electrode was simulated. For the GaN FETs with the PNT structure, 
+the Vth is not affected by the variation of AlGaN thickness whereas 
+it varies for the conventional Al0.15Ga0.85N/GaN single heterojunction 
+FETs.    
+
+The last is the 2nd supply layer at the region outside the gate 
+electrode to reduce on-resistance of the GaN FET. Since the 2nd 
+supply layer is consisted of AlGaN with higher Al composition than
+that for the 1st supply layer, a large amount of 2DEG is produced 
+both in the channel layer and the PNT layer when enabling the
+{bold} POLARIZATION 
+model of the
+{bold} MODELS 
+statement. This polarization model accounts for the fact that a 
+layer may not have homogenous strain due to e.g. recessed gates 
+so polarization charge is calculated locally. 
+  
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+              
+{subsection} ganfetex07.in : A Normally-off GaN HFET with p-type GaN gate  
+
+Requires: Blaze 
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+    
+
+This example demonstrates how to simulate a GaN HFET with p-type GaN gate
+and is based on the following paper: 
+
+"Normally-off AlGaN/GaN HEFT with p-type GaN Gate and AlGaN Buffer"
+
+O. Hilt, A. Knauer, F. Brunner, E. Bahat-Treidel and J. Würfl
+Ferdinand-Braun-Institut, Leibniz Institut fuer Hoechstfrequenztechnik
+Gustav-Kirchhoff-Strasse 4, 12489 Berlin, Germany.
+Proceedings of The 22nd International Symposium on Power Semiconductor 
+Devices & ICs, Hiroshima
+
+While a Schottky-type metal on the AlGaN barrier acts as gate for normally-on 
+HEMTs, a p-type doped semiconductor as gate is able to deplete the transistor 
+channel when unbiased, thus yielding a normally-off device. The simulation of
+the transfert characteristic reveals a Vt of around 1.25V.
+
+The sub-threshold leakage current drops significantly immediately below the
+threshold voltage, however the drop slows down to around 4uA/mm at VGS=0V.
+The leakage current is determined by traps. 
+
+The gate current in the on-state (defined as VGS=5V) is around 3uA/mm and 
+thus around 5 orders of magnitude below the drain current. In order to ensure
+that the charge are present at the interface between p-type GaN, AlGaN and Nitride the
+{bold} PCH.INS REGION=5 
+parameters of the
+{bold} MODELS 
+statement are used. 
+
+The output characteristic shows a negative differential resistance due
+to lattice heating and simulated by solving the lattice heating equation 
+set by the
+{bold} LAT.TEMP 
+parameter of the
+{bold} MODELS 
+statement. The maximum drain current is about 0.4A/mm.
+
+The Breakdown Voltage of thisdevice is 870V, and the leakage current 
+is controlled by the traps. 
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+     
+{subsection} ganfetex08.in : Enhancement-Mode N-Polar GaN MISFETs  
+
+Requires: Blaze 
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+    
+
+This example demonstrates how to simulate an Enhancement-Mode N-Polar GaN MISFETs
+based on the following paper: 
+
+"Enhancement-Mode N -Polar GaN MISFETs With Self_Aligned Source/Drain Regrowth"
+Uttam Singisetti, et al., IEEE Electron De3vice Letters. Vol,32, NO. 2 feb 2011
+
+There is a growing interest in high performance enhancement mode GaN channel
+devices because of single voltage operation and simpler circuit topologies. The
+advantages of the enhancement mode GaN FETs fabricated on N-polar GaN include 
+reduced source/drain access resistance and wide bandgap barrier layers 
+used for polarization-induced field allowing 2DEG depletion under the channel.
+Removal of the AlN layer from the access region recovers the 2DEG induced by 
+the bottom AlN layer. Plots of the bang diagram under the gate and under the 
+nitride sidewall reveal indeed 2DEG under the access region but not under the
+gate.
+
+Since in this structure N-Polar GaN (instead of Ga-polar GaN) was used the
+parameter 
+{bold} polar.scale 
+was set to
+{bold} -1 
+
+Charge was also set at the interface between the nitride and AlN layer under
+the gate. To do so the model
+{bold} pch.ins 
+was set for region=2 (i.e capping AlN layer)
+
+The simulation of the transfert characteristic reveals a Vt of around 1V 
+and a maximum Ids of around 0.7A/mm at Vgs=5V.
+
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+     
+
+
+{subsection} ganfetex09.in : General Current Collapse and Recovery Phenomenon
+
+Requires: Blaze 
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates simulation of the "Current Collapse" and "Current
+Recovery" phenomenon resulting from population and de-population of 
+both un-intentional insulator interface traps and intentional iron (Fe)
+traps near and under the gate of the GaN FET as a result of Gate to Drain 
+Electric Fields.
+
+The device structure in this example is based on work by Daniel Balaz from 
+his PhD Thesis from University of Glasgow in 2011 entitled "Current collapse
+and device degradation in AlGaN/GaN heterostructure field effect transistors"
+
+The structure is created using Atlas syntax and the spontaneous and piezo-
+electric charge concentrations are automatically calculated using the
+"substrate, polarization and calc.strain" parameters in the region statements.
+
+Substrate leakage current is controlled by a graduated concentration of 
+deep level iron (Fe) acceptor traps located 1eV below the conduction band 
+edge using the doping statement and the key parameter "trap".
+
+The insulator interface traps are created using the "inttrap" statement.  
+For analytical simplicity, only a single level interface acceptor trap, 
+located 0.8eV below the conduction band edge was used.
+The areal density of the interface traps used in this example, was 2e12/cm2.
+Using a different energy location in the bandgap for the intentional Fe
+doping and the un-intentional insulator interface traps, allowed the
+contribution from both types of trap to be distinguished on the resulting
+transient I-V curves.
+
+The device is first biased with zero volts on the gate and 5 volts 
+on the drain. After 1 mili-second at this bias, the device is field stressed
+for only one further milli-second at 25 volts on the drain 
+and -4 volts on the gate. After this short bias stress, 
+the device was returned to it's original bias of 
+zero volts on the gate and 5 volts on the drain.
+
+After only one milli-second of bias stress, the drain current is 
+significantly reduced demonstrating the currnet collapse phenomenon.
+For completeness, the unstressed bias remained on the device until the traps
+became de-populated with electrons and the drain current returned to it's
+original value.  Interestingly, it takes over one week for the device to 
+recover !  (6e5 seconds).  This very long recovery time may be incorrectly 
+interpreted as device degredation from field induced traps which is an
+irreversible effect resulting from electric field induced 
+reverse piezo-electric stress.
+
+It will be seen from the transient recovery curve that there are two recovery
+'bumps".  The first current recovery "bump" at a time of around 30 seconds,
+is from the re-population of the interface traps and the main recovery at
+approximately 1e5 seconds, is from the intentionally doped bulk iron (Fe) 
+traps.  Obviously a wide distribution of insulastor interface trap energies
+will "smear out" this initial recovery bump making it difficult to 
+distinguish this individual contribution from the bulk iron traps.  That is
+why a single interface trap energy was selected for this example to clarify
+the effect on the current recovery curve.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+{subsection} ganfetex10.in : Fe Bulk Doping Related Current Collapse Phenomenon
+
+Requires: Blaze 
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates simulation of the "Current Collapse" and "Current
+Recovery" phenomenon resulting from population and de-population of 
+Intentional Iron (Fe) Doping Traps under the gate of a GaN FET as a result 
+of Gate to Drain Electric Fields.
+
+Many publications suggest that un-intentional surface traps are the main cause
+of the GaN current collapse phenomenon.  In this example, we show that 
+sometimes this is not actually the case.  Current collapse in this device, is
+mostly caused by intentional iron doping, whose main purpose is to create a 
+semi-insulating buried layer to reduce the buried layer source to drain 
+leakage path.
+
+The device structure in this example is based on work by Daniel Balaz from his
+PhD Thesis from University of Glasgow in 2011 entitled "Current collapse and 
+device degradation in AlGaN/GaN heterostructure field effect transistors"
+
+The structure is created using Atlas syntax and the spontaneous and piezo-
+electric charge concentrations are automatically calculated using the
+"substrate, polarization and calc.strain" parameters in the region statements.
+
+Substrate leakage current is controlled by a graduated concentration of 
+deep level iron acceptor traps located 1eV below the conduction band edge
+using the doping statement and the key parameter "trap".
+
+The device is first biased with zero volts on the gate and 5 volts 
+on the drain. After 1 mili-second at this bias, the device is field stressed
+for only one further milli-second at 25 volts on the drain 
+and -4 volts on the gate. After this short bias stress, 
+the device was returned to it's original bias of 
+zero volts on the gate and 5 volts on the drain.
+After only one milli-second of bias stress, the drain current is 
+significantly reduced demonstrating the currnet collapse phenomenon.
+
+A comparason structure file plot of the pre and post stress ionized Fe trap
+density, shows the cause of the current collapse is actually the change in
+charge state of the Fe doping deep in the substrate under the gate and
+also on the drain side between the gate and drain contacts.
+
+For completeness, the unstressed bias remained on the device until the traps
+became de-populated with electrons and the drain current returned to it's
+original value.  Interestingly, it takes over one week for the device to 
+recover !  (6e5 seconds).  This very long recovery time may be incorrectly 
+interpreted as device degredation from field induced traps which is an
+irreversible effect resulting from electric field induced 
+reverse piezo-electric stress.  
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+{subsection} ganfetex11.in : Large Signal Output Power Analysis
+
+
+Requires: Blaze
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example describes how to simulate typical 10 GHz large signal measured 
+performance quantities related to power output, such as power out versus 
+power in, power gain and amplifier efficiency as the device is over-driven 
+into high distortion.  The example also plots the output signal shape versus
+time for each of the ten input signal levels simulated.
+
+Ten large signal input amplitudes are defined using
+{bold} WAVEFORM 
+statements.  Each of these waveforms are applied to the gate in order of
+increasing amplitude by using the
+{bold} LOOP 
+statements. After each waveform simulation is complete, a number of
+large signal parameters are calculated using a number of
+{bold} EXTRACT 
+statments.
+
+First the peak input and output voltages are extracted, followed by the exact
+times at which these peak voltages occurred.  Then the input and output 
+currents are extracted at the same times as the peak voltages occur.  It is
+important to extract the currents at the same time as the peak voltages in
+order to take account of the phase between current and voltage, so that the
+correct power values can be calculated.  For example, if the current is zero
+at the time the peak output voltage occurs, the calculated power is correctly
+calculated to be also zero, since in this case the output signal would be 
+purely reactive. 
+
+After each waveform simulation, all the calculated quantities are entered into
+a data file format using
+{bold} SYSTEM 
+statements.  At the end of the last simulation, the tonyplot format data file
+is complete and the results are displayed as a number of plots.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+{subsection} ganfetex12.in : Normally-off AlGaN/GaN Transistor with Conductivity Modulation
+
+Requires: Blaze 
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+The device structure in this example is based on the work from Yasuhiro Uemoto 
+published at IEDM 2006 "A Normally-off AlGaN/GaN Transistor with Ron=2.6mOhmcm2
+and BVds=640V Using Conductivity Modulation"
+
+This example demonstrates simulation of a normally-off AlGaN/GaN transistor 
+with conductivity modulation resulting from hole injection from a p-AlGaN 
+gate to the AlGaN/GaN heterojunction. The p-AlGaN gate allows normally-off
+operation. 
+
+When the gate voltage increases and reaches the built-in pn junction
+voltage at the gate (around 3.5V here) hole starts to inject into the channel 
+and generate the equal number of electrons increasing the 2DEG. Electrons with
+high mobility will reach the drain under the effect of the electric field 
+whereas the hole will stay since their mobility is much lower than the 
+electron. The current is thus modulated by the number of holes injected.
+It is also interesting to notice that this device exhibit a double peak
+in the transconductance curve a second proof of hole injection.
+
+Electrons injection from the channel to the gate is limited by the AlGaN/GaN 
+heterojunction. As a consequence no current offset is observed at zero drain 
+since gate current is very low. 
+
+This device exhibit a threshold voltage around 1V, a maximum drain current at
+vd=10V and Vg=5V of 200mA/mm and a breakdown voltage of 640V.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+{subsection} ganfetex13.in : 3D AlGaN/GaN HEMT Including Intrinsic Stress Effect  
+
+Requires: Victory Stress/Blaze 
+{newline}
+Minimum Versions: Victory Stress 2.14.0.R, Atlas 5.26.1.R
+
+This example demonstrates:
+
+{bullet} Construction of the 3D heterojunction structure
+{newline}
+{bullet} 3D Stress simulation, Material and models parameter specification 
+{newline}
+{bullet} 3D Simulation of Id/Vgs characteristics and comparison with 2D for validation
+
+
+The device under consideration is a 3D AlGaN/GaN HEMT. The 2D structure is first
+obtained by Athena and then extruded in 3D using DEVEDIT. This is in fact the structure
+created in ganfetex05.  3D stress distribution is simulated by VICTORYSTRESS. 
+This example produces stress distributions via the stress-liner made of nitride.
+Note that the stressor in this example is used to illustrate strain polarization, 
+on top of lattice and spontaneous polarization.
+
+The polarization model that supports dependency on loaded strain tensor 
+has been used in this example. The model is enabled by the 
+{bold} POLARIZATION 
+flag of the 
+{bold} MODELS 
+statement.  
+
+The main concept of GaN based power devices is to use epitaxial strain to create
+2DEG. The polarization model that supports epitaxial strain due to lattice 
+mismatch is enabled by the
+{bold} CALC.STRAIN 
+flag on the 
+{bold} MODEL 
+statement. 
+
+When both models are set in the simulation both the imported strain and the 
+lattice mismatch calculation are accounted for.  
+
+The lattice and imported strain dependent components of polarization can 
+be independently scaled using the scale factors 
+{bold} TENSO.SCALE 
+and
+{bold} PIEZO.SCALE 
+on the 
+{bold} MODEL 
+statement. 
+
+When enabling the
+{bold} POLARIZATION 
+flag spontaneous polarization is automatically included in the calculation. 
+The size of the spontaneous component can be scaled using the
+{bold} PSP.SCALE 
+parameter of the
+{bold} MODELS 
+statement.
+
+After the initial solution is obtained the drain voltage is ramped to 1 V,
+then the IdVg characteristic is extracted from Vg=-8 to Vg=1.0 V.
+
+The effect of strain is seen on IdVg characteristic. Overlay of 2D simulation
+results with 3D simulation results obtained with width=1 validates our 3D
+implementation.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+{subsection} ganfetex14.in : GaN HEMT Thermal Optimization using Flip Chip structure   
+
+Requires: Blaze 
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates two-dimensional electro-thermal simulations with heat sink structures.
+
+Although the superiority of GaN HFET device characteristics has been demonstrated, the self
+heating effect has hindered the production of high power and high speed GaN-based switching 
+devices. This effect can be significantly reduced by the cost effective heat-sink approach. 
+in this EXAMPLE, in order to understand and control the self heating effect, GaN HFET with 
+flip chip concept is simulated, and device characteristics  are compared versus normal 
+structure using Atlas.
+
+For HFETs, the GaN/AlGaN epitaxial layers have been grown on either sapphire or SiC substrates.
+Although sapphire has the advantage of lower cost and availability in larger  wafer sizes, its
+poor thermal conductivity (0.3 W/cm-K) limits the achievable powers due  to severe self-heating.
+The self heating effect can be significantly reduced by flip-chip mounting the devices 
+onto highly conducting substrates such as AlN (1.8 W/cm-K).
+
+The typical GaN HFET flip chip structure in this example is a Al0.25Ga0.75 N-GaN HFET on a 
+sapphire substrate. The structure consists of an AlN layer as a heat sink, a 2.7nm undoped
+AlGaN layer, and 2 GaN layers which includes 20nm doped 1e15 GaN and 1um undoped GaN.
+
+The self-heating is a local increase of crystal temperature due to dissipated Joule electric 
+power, this effect can significantly reduce the electron mobility and degrade device performance.
+
+DC, Transient and AC simulations are done and compare with and without the flip chip
+structure. As expected the performance of the device is better when lattice temperature is reduced. 
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+{subsection} ganfetex15.in : GaN HEMT BV versus Gate to Drain distance   
+
+Requires: Blaze 
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+
+This example demonstrates the influence of the Gate to Drain distance on the
+breakdown voltage with and without silicon substrate. This example is based on 
+the following reference
+
+Experimental and simulation study of breakdown voltage enhancement of AlGaN/gaN 
+heterostructures by Si substrate removal. D.Visalli et al Apl. Phys. Lett. 97, 113501 2010.
+
+The structure consists of 20nm AlGaN with xcomp=0.2 and 1um GaN buffer layer. 
+Donor and acceptor traps are included in the simulation. Gaussian profile 
+acceptor traps are used with a peak concentration close to the bottom of the
+buffer layer to mimic the fact that the material quality improves toward
+the surface of the device. 
+
+Donor Interface traps at the AlGaN/Nitride interface and acceptor interface
+traps at the GaN/Silicon interface are also included during the simulation.
+
+Forward charateristic simulation reveals a threshold voltage of around -2V.
+Slow transient simulation is used to simulate the breakdown voltage curve.
+
+The deck is parametrized so that we can make variation of the distance between
+gate and drain (LGD). Deckbuild DoE capability is used to automate simulations
+of BV versus LGD with and without substrate.
+
+We can observe in tonyplot an almost linear increase of BV versus LGD when silicon
+substrate is not present. An increase of the gate current is observed near breakdown
+and the value is of the same order as the drain current. This result indicates
+that BV is defined by an avalanche phenomenon between the gate and the drain.
+
+BV does not depend significantly on LGD when silicon substrate is present due to 
+charge accumulation at the GaN/Silicon interface, related to the presence of interface
+traps, which screen the electric field. During the simulation and for comparison
+purpose, a resistance is added to the substrate so that the current leakage through
+the substrate is reduced. Note that if no resistance is added to the substrate
+an increase of the substrate current is observed near breakdown and the value is
+of the same order as the drain current. This result indicates that BV is defined 
+by an avalanche phenomenon between the gate and the substrate in this case.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+{subsection} ganfetex16.in : GaN Super Heterojunction Field Effect Transistor 
+
+Requires: Blaze 
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+Field plate (FP) technologies are generally used in order to manage surface electric 
+field distribution of GaN HEMTs. Recently, GaN Super Heterojunction Field Effect 
+Transistors (Super HFETs) based on the polarization junction (PJ) concept have been 
+demonstrated [1, 2]. This concept is based on the compensation of positive and negative
+polarization charges at heterointerfaces such as AlGaN/GaN to achieve similar effect 
+to RESURF or Super Junction (SJ) in silicon devices. In this example, we will 
+demonstrate device simulation of GaN Super HFETs in comparison with the experimental 
+data based on [1, 2].
+
+The Super HFET structure consists of an undoped double-hetero GaN/AlGaN/GaN structure 
+with a p-GaN cap layer. The feature of the Super HFET structure is the presence of 
+the 2-D hole gas (2DHG) induced by negative polarization charge at the upper GaN/AlGaN 
+heterointerface as well as the 2-D electron gas (2DEG) at the lower AlGaN/GaN heterointerface. 
+The computation of 2DEG and 2DHG due to polarization effect was performed automatically 
+during the simulation with our built-in model and can be seen in tonyplot.
+
+Performance of GaN device and convergence can be significantly influenced by the presence
+of defects. We introduced bulk and interface traps in the simulation. Threshold voltage 
+and substrate leakage current are controlled by a concentration of acceptor and donor 
+traps in the GaN buffer layer, respectively. Moreover, we put the interface traps to 
+represent Fermi level pinning at the bottom of the GaN buffer. This assumption is properly 
+valid because an actual GaN epitaxial layer has quite many defects around the interface 
+with the substrate. It should be noticed that even with traps and a floating undoped-GaN 
+buffer region convergence is very ggod.
+
+The simulation results of the Id-Vg and Id-Vd characteristics can be seen in tonyplot.
+Very good agreement between simulations and experiments were obtained.
+
+Breakdown characteristics and impact ionization rate distribution is also shown in tonyplot
+and were simulated by using slow transient simulation. An increase of the gate current 
+(including the base current) is observed near breakdown and the value is of the same order
+as the drain current. In addition, it should be noticed that impact ionization occurs near 
+the drain-side edge of p-GaN region. These results indicate that breakdown voltage is 
+dominated by the hole current into the base electrode through the p-GaN layer.
+
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+References:
+
+[1]. A. Nakajima, Y. Sumida, M. H. Dhyani, H. Kawai, and E. M. S. Narayanan,
+"GaN-based super heterojunction field effect transistors using the polarization junction concept "
+EEE Electron Device Lett., vol. 32, no. 4, p.p. 542-544, Apr. 2011.
+
+[2]. A. Nakajima, Y. Sumida, M. H. Dhyani, H. Kawai, and E. M. S. Narayanan,
+"High density 2-D hole gas induced by negative polarization at GaN/AlGaN heterointerface "
+Appl. Phys. Express, vol. 3, no. 12, p. 121004, Dec. 2010.
+
+
+{subsection} ganfetex17.in : HEMT: AlGaN/GaN Electro-Thermal simulation
+
+Requires: Victory Device
+{newline}
+Minimum Versions: Victory Device 1.12.1.R
+
+This example demonstrates Id-Vds and Id-Vgs simulations for a 2D and 3D
+AlGaN/GaN HEMT. 
+
+This example demonstrates:
+
+{bullet} Construction of the heterojunction structure using Victory Device syntax
+{newline}
+{bullet} Material and models parameter specification 
+{newline}
+{bullet} Simulation of Id/Vds and Id/Vgs characteristics 
+{newline}
+{bullet} Display of the results in TonyPlot and TonyPlot 3D
+
+
+By default Victory Device run on just one processor.
+To ensure better perfomance on your computer the following simulation condition
+{bold} simflags="-P all" 
+could be specidied in the 
+{bold} go 
+line starting Victory Device. This means that all processors available will be used.
+If you want to use a smaller number of processors you can substitute "all" with a desired number, e.g.
+{bold} simflags="-P 4".
+
+The device under consideration is a AlGaN/GaN HEMT. The main concept here 
+is that the polarization charge is calculated using the 
+built-in models as specified by the 
+{bold} POLARIZATION 
+parameter on the
+{bold} MODEL 
+statement.
+
+After the initial solution is obtained, the gate voltage is ramped from 0V 
+to -7.6 V to get the IdVg characteristic at Vd=1 V.
+
+A family of drain current characteristics are then simulated with
+lattice heating taken into account by ramping the drain from 0 to 15 V 
+at various gate voltages. 
+
+Since the width of the 3D device is set to 1um a direct comparison with 2D
+results is possible for validation purpose.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+{subsection} ganfetex18.in : Polarization Charge Analysis
+
+Requires: Victory Device
+{newline}
+Minimum Versions: Victory Device 1.12.1.R
+
+This example demonstrates the interaction between polarization charges,
+surface states, cap layer thickness and Al composition in AlGaN/GaN HFETs.
+
+By default Victory Device run on just one processor.
+To ensure better perfomance on your computer the following simulation condition
+{bold} simflags="-P all" 
+could be specidied in the 
+{bold} go 
+line starting Victory Device. This means that all processors available will be used.
+If you want to use a smaller number of processors you can substitute "all" with a desired number, e.g.
+{bold} simflags="-P 4".
+
+The input deck vdex06.in uses dbinternal to obtain the channel charge density 
+(i.e 2DEG) for each of the saved structure files.  It does this using the file 
+vdex06_aux_0.in and vdex06_aux_1.in. The advantage of using dbinternal is that
+the data file containing the charge densities can be plotted using 
+{bold} TonyPlot
+. 
+These charge densities are plotted  against the cap layer thickness and Al 
+composition in AlGaN Cap layer.
+
+The input deck containing the actual description of the devices is found in 
+ganfetex01_aux_0.in and ganfetex01_aux_0.in.
+
+Victory device is a 2D and 3D device simulator.In this example we demonstrate 
+the use of Victory Device in 2D mode. 
+
+The Victorydevice input deck consists of the following parts:
+
+{bullet} Construction of the device and the grid using victorydevice syntax
+{newline}
+{bullet} Specification of material regions
+{newline}
+{bullet} models, interface charge and interface trap parameters
+{newline}
+{bullet} Extraction of the 2DEG. 
+{newline}
+
+In the first part of the input deck (ganfetex01_aux_0.in) the device is described 
+using Victorydevice syntax, including mesh, regions and electrodes locations.
+The
+{bold} REGION 
+statements are used to define AlGaN and GaN regions. The Al composition
+fraction (x.composition=0.27) is defined here as well.
+After the device description, the
+{bold} MODEL 
+statement is used to specify the built-in polarization model set by specifying
+{bold} POLARIZATION 
+for spontaneous polarization and
+{bold} CALC.STRAIN 
+for piezoelectric polarization. 
+{bold} PCH.INS and PCH.ELEC 
+are set in order to allow charges at the interface between AlGaN and Oxide
+(pch.ins) and between GaN and conductor at the bottom of the structure (pch.elec).
+
+Next the 
+{bold} SOLVE 
+statement is used to obtain a zero biased solution.  The
+{bold} SAVE 
+statement is used to save this solution for perform extraction of the 2DEG.
+
+In the second part of the input deck we do the same simulation but instead
+of using the built-in polarization model that calculate the polarization charges 
+as a function of composition, strain and lattice constant for the various materials, 
+we set polarization charges directly using the
+{bold} INTERFACE CHARGE=
+statement.  
+
+2DEG simulation results using the built-in polarization model, manually added 
+charges and measurement taken from the dissertation "High voltage GaN HEMTs with 
+low on-resistance for switching  applications" written by Naiqian Zhang UNIVERSITY 
+of CALIFORNIA Santa Barbara September 2002 are compared and show good correlation.
+
+The built-in polarization model being validated, it can be used to perform the same
+simulation but instead of making variation of cap layer thickness, Al composition
+is used instead (ganfetex18_aux_1.in). As expected 2DEG increases with Al composition.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+{subsection} ganfetex19.in : Effect of Nitride Intrinsic Stress Simulated with Victory Process
+
+Requires: Victory Process / Victory Mesh / Victory Device 
+{newline}
+Minimum Versions: Victory Process 7.22.3.R / Victory Mesh 1.2.4.R / Victory Device 1.12.1.R
+
+In this example, a 2D GaN HEMT structure with the stress distribution resulting from intrinsic stress in the nitride passivation layer is produced by Victory Process in process mode. The process modeling is then inputted into Victory Device for device simulation of IdVg characteristics.
+
+In order to accomplish stress simulation with Victory Process, the
+{bold} STRESS.HIST 
+parameter of the 
+{bold} METHOD 
+statement must be activated as follows: 
+{bold} METHOD STRESS.HIST=ON
+
+This will instruct Victory Process to calculate the stresses and evolutions of geometry after each processing step using the so-called "stress evolution" or "stress history" model. Since this example is intended for illustrating stress polarization as a consequence of nitride intrinsic stress, besides spontaneous and piezoelectric polarization, lattice mismatch stress must be explicitly excluded from stress calculation by 
+{bold} METHOD 
+statement:
+{bold} METHOD STRESS.HIST=ON STRESS.LATTICEMISMATCH=OFF
+
+An intrinsic stress can be introduced into the nitride passivation layer during the deposition using the parameters
+{bold} STRESSXX
+and
+{bold} STRESSZZ 
+of the
+{bold} DEPOSIT
+statement for the xx-component and the zz-component of the stress tensor. The default unit of intrinsic stress is dyne/cm2.
+
+The IdVg characteristics at a drain bias of 1 V are ramped from -6 to 1.0 V. With the scale factor 
+{bold} TENSOR.SCALE 
+on the 
+{bold} MODEL 
+statement, Victory Device allows piezoelectric charges due to imported stress to be scaled independently from those due to lattice mismatch stress and spontaneous polarization. 
+
+The effect of nitride intrinsic stress, which can be either compressive or tensile, is visible on IdVg characteristics. The results are also compared for different 
+{bold} TENSOR.SCALE
+factors as well as different nitride layer thicknesses.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+{subsection} ganfetex20.in : A Normally-on Vertical GaN FET (CAVET) I-V Characteristics
+
+Requires: Victory Device  or  Atlas
+{newline}
+Minimum Versions: Victory Device 1.12.1.R  or  Atlas 5.26.1.R
+
+This example demonstrates TCAD computation of Id-Vd, Id-Vg, and transconductance gm-Vg characteristics of a gallium nitride (GaN) field-effect transistor (FET) called CAVET (Current Aperture Vertical Electron Transistor).
+
+This example is based on the following reference paper:
+
+[1] S. Chowdhury, M. H. Wong, B. L. Swenson, and U. K. Mishra, "CAVET on bulk GaN substrates achieved with MBE-regrown AlGaN/GaN layers to suppress dispersion", IEEE Electron Device Letters, vol.33, Jan. 2012, pp.41-43.
+
+The input deck provided with this example can be run by either Victory Device or Atlas simulator, just by changing the solver name in the command  
+{bold} go victorydevice 
+into
+{bold} go atlas
+. It shows that both Victory Device and Atlas device simulators can be fully compatible in terms of input commands, producing same results, and allowing easy transition between Atlas and Victory Device.
+
+This example demonstrates:
+
+{bullet} Construction of the Vertical GaN-FET structure using the device simulator syntax
+{newline}
+{bullet} Material and models parameter specification 
+{newline}
+{bullet} Simulation of Id-Vg, gm-Vg, and Id-Vd characteristics 
+{newline}
+{bullet} Display of the results in TonyPlot
+
+The device under consideration is a normally-on Vertical AlGaN/GaN HEMT of type CAVET (Current Aperture Vertical Electron Transistor). The main concept here is that the polarization charge is calculated using the built-in models as specified by the 
+{bold} polarization 
+parameter on the
+{bold} model 
+statement.
+
+First, the initial solution is obtained (for zero bias), which includes also calculation of the 2D Electron Gas (2DEG) sheet density. 
+
+Then, the Id-Vg transfer characteristics are computed, for several selected Vds voltages, from which the transconductance gm-Vg characteristics are extracted. Next, the Id-Vd output characteristics are computed, for several selected Vgs voltages.
+
+The family of I-V curves is plotted using the TonyPlot tool. All the computed I-V curves compare quite well with the CAVET experimental curves published in the reference paper [1] (Fig. 2).
+
+You can plot similar overlaid plots yourself if you use 
+{bold} Overlay 
+feature in
+{bold} TonyPlot
+. The transconductance 
+{bold} gm (dId/dVg) 
+curve can be plotted using  
+{bold} Display > Functions... 
+feature in TonyPlot. 
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} ganfetex21.in : A Normally-OFF Vertical Superjunction HEMT I-V Characteristics and Breakdown
+
+Requires: Victory Device  or  Atlas
+{newline}
+Minimum Versions: Victory Device 1.12.1.R  or  Atlas 5.26.1.R
+
+This example demonstrates TCAD computation of Id-Vg, Id-Vd, and Breakdown I-V characteristics of a gallium nitride (GaN) field-effect transistor (FET) called Enhancement-Mode Vertical Superjunction HEMT, with P+ Gate and P-pillar. The P+ gate region makes it a Normally-OFF (Enhancement-Mode) HEMT device.
+
+The example is based on the following reference paper:
+
+[1] L. Zhongda, T.P. Chow, "Design and simulation of 5-20-kV GaN enhancement-mode vertical superjunction HEMT", IEEE Trans. Electron Dev, vol.60, no.10, 2013, pp.3230-3237.
+
+The input deck provided with this example can be run by either Victory Device or Atlas simulator, just by changing the solver name in the command  
+{bold} go victorydevice 
+into
+{bold} go atlas
+. It shows that both Victory Device and Atlas device simulators can be fully compatible in terms of input commands, producing same results, and allowing easy transition between Atlas and Victory Device.
+
+This example demonstrates:
+
+{bullet} Construction of the Vertical GaN-FET structure using the device simulator syntax
+{newline}
+{bullet} Material and models parameter specification 
+{newline}
+{bullet} Simulation of Id-Vg, Id-Vd, and Breakdown I-V characteristics 
+{newline}
+{bullet} Display of the results in TonyPlot
+
+The device under consideration is a Normally-OFF Vertical Superjunction AlGaN/GaN HEMT. The main concept here is that the polarization charge is calculated using the built-in models as specified by the 
+{bold} polarization 
+parameter on the
+{bold} models 
+statement.
+
+First, the initial solution is obtained (for zero bias), which includes also calculation of the 2D Electron Gas (2DEG) sheet density. 
+
+Then, the Id-Vg transfer characteristic is computed, for one selected Vds voltage (corresponding to Fig. 9 in the reference [1]), and then the Id-Vd output characteristics are computed, for several selected Vgs voltages (corresponding to Fig. 8 in [1]). Finally, four Breakdown I-V curves are computed for Vg = 0, 1, 2, and 3 V (corresponding to Fig. 13 in [1]).
+
+Note that in the reference [1] a different device structure was used for the Id-Vg and Id-Vd analysis, and a different design (different dimensions and doping) for the Breakdown I-V. Therefore, the input deck has two separate sections: 
+
+ - PART I: Id-Vg and Id-Vd curves computation
+
+ - PART II: Breakdown I-V curve simulation 
+
+The Part I computations are run with the standard precision of 64 bits, since increasing precision (e.g. to 80 bits) makes no visible difference in the computed I-V curves, while simulation time gets about 2X longer. However, the Breakdown I-V computations require higher precision: 80-bit for Vg > 0 V, and 128-bit for Vg close to 0 V. This is set in the very first command of the input deck, by 
+{bold} simflags="-80" 
+.
+
+The families of I-V curves are plotted using the TonyPlot tool. All the computed I-V curves compare quite well with the I-V characteristics published in the reference paper [1]. You can plot similar overlaid plots yourself if you use 
+{bold} Overlay 
+feature in
+{bold} TonyPlot
+.  
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+

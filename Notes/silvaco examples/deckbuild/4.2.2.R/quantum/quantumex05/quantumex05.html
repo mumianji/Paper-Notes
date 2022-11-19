@@ -1,0 +1,85 @@
+<html>
+  <head>
+    <title>Calibration of Electron Bohm Quantum Potential</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Calibration of Electron Bohm Quantum Potential</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>S-Pisces/Quantum</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="quantumex05_plot0.png" width="640" alt="quantumex05_plot0" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates:
+</p>
+<ul>
+  <li>
+ Use of the BQP model and Schrodinger-Poisson model on same structure
+<br/>
+  </li>
+  <li>
+ Calculation of very low frequency C-V curves using QSCV  
+<br/>
+  </li>
+  <li>
+ Calibration process
+<br/>
+  </li>
+</ul>
+<p>
+This example illustrates calibration of the Bohm Quantum Potential model against
+the Schrodinger-Poisson model for an N-MOS capacitor being biased into
+inversion. Because the calibration takes place under conditions of negligible
+current flow, the CARRIERS=0 option may be specified on the METHOD statement.
+The N-MOS has a nominal gate oxide thickness of 20 A. The quantity which was
+chosen to compare the results of the two models was the quasistatic
+capacitance. The voltage range was 0V to 1V which includes the depletion
+to inversion transition region.
+</p>
+<p>
+The first section calculates the Quasi-static C-V curves using the Schrodinger
+Poisson model.  Note the NUM.DIRECT = 3 specification on the MODELS statement.
+This ensures that the anisotropic conduction band structure of Silicon is
+accounted for.  Note also that NEW.EIG is also specified on the MODELS statement, this
+causes a more efficient method to be used to solve the Schrodinger-Poisson
+equation. QSCV is specified on the solve statement and a fine voltage increment
+is used in order to give accurate calculation of the Quasi-static Capacitance
+as a function of voltage.
+The next three sections calculate the C-V curves over the same voltage range
+and with the same voltage increment as for the S-P model.  Three different
+sets of BQP parameters are used,  the last set gives C-V curves with very good
+agreement with the S-P results.  It is possible that a different set will
+give even better results, but the ones shown give the same threshold voltage
+as for S-P and excellent agreement going into inversion.  It may take many
+attempts to obtain close calibration.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

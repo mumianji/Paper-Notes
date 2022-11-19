@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!DOCTYPE rto SYSTEM "rto.dtd">
+<rto>
+
+  <text deck-line="-1" is-extract="false" line-id="-1" simulator="deckbuild" timestamp="1512427959" type="out">
+*** this is deckbuild version 4.5.11.R ***
+
+</text>
+
+  <text deck-line="-1" is-extract="false" line-id="-1" simulator="EXTRACT" timestamp="1512427959" type="out">EXTRACT&gt; </text>
+
+  <text deck-line="-1" is-extract="false" line-id="-1" simulator="EXTRACT" timestamp="1512427959" type="out">extract name="final vt" ((xintercept(maxslope(curve(v."ContGate",i."Drain"))))-abs(ave(v."Drain"))/2.0)
+</text>
+
+  <text deck-line="-1" is-extract="false" line-id="-1" simulator="EXTRACT" timestamp="1512427959" type="err">ERROR : Initialization has not been performed.
+</text>
+
+</rto>

@@ -1,0 +1,116 @@
+<html>
+  <head>
+    <title>Circuit Analysis of NMOS Inverters</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Circuit Analysis of NMOS Inverters</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>S-Pisces/MixedMode</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="mos2ex01_plot0.png" width="640" alt="mos2ex01_plot0" />
+      <p/>
+      <img src="mos2ex01_plot1.png" width="640" alt="mos2ex01_plot1" />
+      <p/>
+      <img src="mos2ex01_plot2.png" width="640" alt="mos2ex01_plot2" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example uses the MixedMode module in Atlas to simulate the circuit
+performance of two NMOS inverters in series. The first inverter is
+simulated using Atlas, the second inverter using SPICE level 1 models.
+This simulation shows how to:
+</p>
+<ul>
+  <li>
+ Create an NMOS structure using Atlas syntax
+<br/>
+  </li>
+  <li>
+ Calculate the initial DC state in circuit mode
+<br/>
+  </li>
+  <li>
+ Simulate the DC transfer curve of the inverters.
+<br/>
+  </li>
+  <li>
+ Simulate the transient switching curve of the inverters.
+  </li>
+</ul>
+<p>
+The input file consists of four separate runs, each starting with the statement
+<b> go atlas. </b> The first one uses the Atlas syntax to construct an NMOS transistor.
+The mesh, regions and electrodes are specified as coordinates in the
+syntax. It is compulsory to use electrode names (and not just numbers)
+when the structure is used in MixedMode. The doping distribution for
+the device is constructed from several gaussian and uniform analytical
+functions. The final structure is saved for later use.
+</p>
+<p>
+The second run calculates the initial operating point of the circuit.
+The syntax for this run is split into two parts. The first is a
+SPICE-like circuit description and control cards. This part is bounded by
+<b> .begin </b> and
+<b> .end</b> . The second is device
+parameter syntax. The circuit netlist is written using standard SPICE
+syntax. This example has two inverters composed of an NMOS transistor
+and resistor connected in series feeding into a capacitor.
+</p>
+<p>
+The two NMOS transistors are defined is different ways. The first labeled
+<b> an </b> is to be simulated in Atlas. The syntax specifies the structure file
+name from the previous run, and also connects the circuit nodes to
+electrode names. The other NMOS transistor labeled &apos;mn&apos; is simulated
+using using SPICE level 1 model labeled &apos;simple&apos;.
+</p>
+<p>
+After the .end statement the device parameter syntax is given. This
+sets the models, material and contact parameters for the Atlas device.
+</p>
+<p>
+The second run solves a single DC operating point as the initial guess
+to the third run. The third run uses the command
+<b> .dc </b> to set a DC ramp of the input voltage &apos;vin&apos; from zero to 5.0V in 0.25V
+steps. The currents and voltages for each node are stored in the file
+specified in the
+<b> .log </b> statement.
+</p>
+<p>
+The final run uses the
+<b> .tran </b> statement combined with a time dependent definition of &apos;vin&apos; using the
+PULSE parameter to set up a switching transient. The PULSE syntax
+specifies that the pulse of &apos;vin&apos; has a peak value of 5.0V, a rise and
+fall time of 50ps, and a time at peak value of 1ns. On the .tran
+statement, 1ps specifies the initial timestep only. All other timesteps
+are automatically calculated by Atlas. This differs from the .tran card
+in standalone SPICE programs. The maximum simulation time is set to 3ns.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

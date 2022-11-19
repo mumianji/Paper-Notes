@@ -1,0 +1,137 @@
+
+# VICTORY Process example 6 - 3D process simulation of DRIE deep trench formation
+# illustrating 
+#   structure initialisation, 
+#   mask polygon definition
+#   geometrical deposition and 
+#   physical deposition and etching using the 
+#   reactive ion etch model
+# Silvaco 2014
+# 
+
+
+go victoryprocess 
+
+# Define the simulation domain, the wafer material and the simulation mesh resolution
+# and start the simulation in 3D mode
+
+Init material="silicon" depth=1.0 gasHeight=0.5 from="0, 0" to="0.50, 0.15" \
+ resolution="0.05,0.05,0.05"  flow.dim=3d
+
+
+# Define simple mask polygon
+
+SpecifyMaskPoly maskID=1 istransparent=false p1="-1, -1" p2="-1, 1" p3="0.25, 1" p4="0.25, -1"
+
+
+# Deposit 250nm of resist
+
+Depo conformal thickness=0.25 material="photoresist" maskID=1 angle=75
+
+# Export data in tonyplot3d format
+
+Export structure=vpex06_1.str
+
+tonyplot3d vpex06_1.str -set vpex06.set
+
+
+# ======================
+# Set up RIE etch models
+# ======================
+
+# Define material properties : 
+#  The material specific property :  
+#    rate
+#  is required by the surface reaction model in this example  
+
+Etchdepoproperties name="rieetcherrate"  \
+ material="silicon"     rate=5.50 \
+ material="photoresist" rate=0.02 \
+ material="polymer"     rate=0.10  
+
+
+# Define the etch flux model parameters:
+# Model parameters :  1) Etch beam width
+#                     2) Ratio ion / neutral
+# Model dependencies: 1) Angle between surface normal and beam
+#                     2) Surface material
+
+Flux  name="rieetcherflux"  \
+      primaryfunctionname="rieflux" \
+          primaryparam="60.0"   primaryparam="0.05" \
+          primarydepend="theta" primarydepend="surfacematerial"
+
+
+# Define the surface reaction
+
+#  In this example we do not define a surface reaction but use a predefined model :
+#     fluxdependent  - rate is linear proportional to the flux
+#  for the surface reaction
+
+
+# Define the topography model to combine surface reaction + transport (flux) models
+
+TopographyModel name="rieetchmodel" reactionmodelname="fluxdependent" fluxmodelname="rieetcherflux"
+
+
+# ============================================
+# Run the iterative passivation + etch process
+# ============================================
+
+# Perform the DRIE cycles - 1 used here
+
+loop steps=1 print 
+assign name=stepfile c.value = "vpex06_cycle_01" delta = 1
+
+# Passivation
+# -----------
+# Note : We assume that the deposition process is conformal
+#        You may improve the DRIE model by applying a more sophisticated
+#         model for the deposition step here
+Depo model="conformal" material="polymer" depositionrate=0.07 time=5 sec
+
+
+# Export data in tonyplot3d format
+
+Export structure=vpex06_2.str
+tonyplot3d vpex06_2.str -set vpex06.set
+
+
+# Etching
+# -------
+# Note : We use the parameter maxCFL here because the rieetchmodel takes visibility
+#         into account and hence the etch rate may jump along the surface. In order
+#         to get good numerical accuracy for those cases, we recomment to use
+#         maxCFL <= 1.
+Etch model="rieetchmodel" materialproperties="rieetcherrate" time=10 sec maxCFL=1.0
+
+
+
+# Save simulation status
+
+Save name=$stepfile
+
+
+# Export data in tonyplot3d format
+
+Export structure=$"stepfile".str
+
+
+
+# End of the loop defining the cycles
+
+l.end
+
+
+# Save simulation status
+
+Save name="vpex06_3"
+
+# Export data in tonyplot3d format
+
+Export structure=vpex06_3.str
+
+tonyplot3d vpex06_3.str -set vpex06.set
+
+
+quit

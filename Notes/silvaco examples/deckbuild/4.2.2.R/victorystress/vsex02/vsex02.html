@@ -1,0 +1,101 @@
+<html>
+  <head>
+    <title>Effects of Stress/Strain on a 50 nm Silicon FinFET</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Effects of Stress/Strain on a 50 nm Silicon FinFET</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Victory Process, Victory Mesh, Victory Stress and Victory Device</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Victory Process 7.22.3.R, Victory Mesh 1.2.4.R, Victory Stress 2.14.3.R, Victory Device 1.12.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="vsex02_plot0.png" width="640" alt="vsex02_plot0" />
+      <p/>
+      <img src="vsex02_plot2.png" width="640" alt="vsex02_plot2" />
+      <p/>
+      <img src="vsex02_plot3.png" width="640" alt="vsex02_plot3" />
+      <p/>
+      <img src="vsex02_plot4.png" width="640" alt="vsex02_plot4" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+In modern semiconductor devices, the effects of physical lattice strain are
+playing an increasingly important role. One reason for this is that as device
+dimensions have shrunk, strains due to lattice mismatch or differences in
+thermal expansion have become more prevalent. Another is that strain has
+become an important tool in modifying and enhancing the electrical properties
+of the semiconductor materials. Large strain induced gains in both electron
+and hole mobilities have been reported.
+</p>
+<p>
+This example demonstrates how SILVACO tools can be used to simulate the
+creation of a 3D FinFET using Victory Process, calculate the internal strains
+using Victory Stress, and analyze its electrical characteristics using
+Victory Device.
+</p>
+<p>
+Victory Process was used to generate the FinFET structure based on specifications
+provided in a mask layout file using the
+<b> Layout </b> statement.
+Victory Process was used to build up a FinFET structure with a 50x50 nm fin, 1um
+in length. The fin was deposited on a SiO2 substrate layer and a 2 nm gate
+isolation layer separated it from the 50 nm polysilicon gate crossing it
+at right angles. A 100 nm Si3N4 capping layer was deposited on top of the
+structure.
+</p>
+<p>
+The structure created by Victory Process was imported into Victory Stress, which
+was used to perform a stress analysis over the whole FinFET device structure.
+The Si3N4 capping layer was set to have uniform hydrostatic tensile stress of
+1 GPa using the statement
+<b> material nitride intrin.sig=1e10 </b> The evaluation of mobility enhancement factors along the fin is based on a full
+3D piezoresistive model.
+</p>
+<p>
+The structure, along with the stress/strain and mobility enhancement data, was
+then loaded into Victory Device for electrical simulation and analysis. Source
+and drain electrodes were defined at either end of the Silicon fin, the Polysilicon
+region was defined to be the gate, and we put a substrate contact at the bottom
+of the device. We also set the workfunction of the gate to 4.17 eV.
+</p>
+<p>
+Aside from the standard silicon models (cvt, consrh, etc), we used the strain
+dependent mobility enhancement models
+<b> nhance </b> and
+<b> phance </b> defined in the
+<b> mobility </b> statement for this simulation. The mobility enhancement models apply the second
+order mobility enhancement tensor (calculated by Victory Stress) directly to the
+low field mobility. This results in directionally dependent (anisotropic) electron
+and hole mobilities.
+</p>
+<p>
+Electrical simulations show that the effect of stress/strain results in drive
+current increase as expected.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

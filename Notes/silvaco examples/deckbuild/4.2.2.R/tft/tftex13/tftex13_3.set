@@ -1,0 +1,86 @@
+# TPCS version: 8
+# various properties
+log label 0
+key opaque 1
+mark frequency 0
+mark overlay 0
+graph width 0 1
+graph width 1 1
+graph width 2 1
+graph width 3 1
+graph width 4 4
+graph width 5 1
+sequence size 2
+sequence width 2
+log zero 0
+sequence mark 0 4
+sequence mark 1 1
+sequence mark 2 2
+sequence mark 3 3
+sequence mark 4 4
+sequence mark 5 5
+# Functions
+function 1 "" ""
+function 2 "" ""
+function 3 "" ""
+function 4 "" ""
+select 1
+# xygraph flags
+show points on
+show lines on
+# xygraph types
+xygraph type 0 convert 0
+xygraph yaxis scale linear
+# xygraph x-axis
+xygraph xaxis "drain bias" linear
+# xygraph y-axes
+xygraph yaxis none
+xygraph yaxis "drain current" linear
+# xygraph group
+xygraph group "(unknown electricals)"
+# xygraph cie
+xygraph cie off
+# key positions
+key contours 1 at 2
+key contours 2 at 1
+key contours 3 at 6
+key electrical at 1
+key vectors at 6
+key overlay at 0
+key regions at 4
+key apply 
+# annotation, titles
+title main "Experiment v.s Simulation"
+title sub "IDVD@Vg=8,10,12"
+# annotation, footers
+footer right none
+footer left none
+# annotation, show
+show xaxis on
+show yaxis on
+show grid on
+show label xaxis on
+show label yaxis on
+# annotation, axes
+range xaxis 0, 10 increment 2,4,1
+range yaxis 0, 2.5e-06 increment 5e-07,4,1
+label xaxis "Drain Current(A)"
+label yaxis "Drain Voltage(A)"
+# zoom
+zoom from 0, 0 scale 1, 1
+# user labels
+label "Red:Experiment" from 7.69343, 1.65332e-06 color 0 scale 0
+label 0 at 7 7
+label "Vg=10" from 7.59584, 1.09048e-06 color 0 scale 0
+label 1 at 7 7
+label "Vg=12" from 7.20864, 2.17027e-06 color 0 scale 0
+label 2 at 7 7
+label "Vg=8" from 7.49904, 4.74271e-07 color 0 scale 0
+label 3 at 7 7
+# overlay level names
+label overlay 0 "idvd_vg1.dat"
+label overlay 1 "idvd_vg2.dat"
+label overlay 2 "idvd_vg3.dat"
+label overlay 3 "idvd3_sim.dat"
+label overlay 4 "idvd4_sim.dat"
+label overlay 5 "idvd5_sim.dat"

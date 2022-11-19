@@ -1,0 +1,416 @@
+# (c) Silvaco Inc., 2018
+# Vertical Superjunction GaN HEMT with P+ Gate and P-pillar
+#
+# Reference:
+# [1] L. Zhongda, T.P. Chow, "Design and simulation of 5-20-kV GaN 
+#     enhancement-mode vertical superjunction HEMT", IEEE Trans. 
+#     Electron Dev, vol.60, no.10, 2013, pp.3230-3237.
+
+#######  PART I: Id-Vg and Id-Vd curves computation   ##############
+
+#go victorydevice
+go atlas
+
+# 80-bit precision: no visible difference in IV curves, sim.time 2X longer
+#go atlas simflags="-80"
+
+#--------------------------------------
+# Select simulations to be performed:
+set run_IdVg = true
+set run_IdVd = true
+#--------------------------------------
+
+##########  DEVICE PARAMETERS AND GEOMETRY  ##############
+
+# Aluminum mole fraction in AlGaN:
+set xAl=0.1
+# Length of Aperture (half-pillar) [um]:
+set Lap = 3
+# Length of the Source contact [um]:
+set Lsrc = 1
+# Length of the Source-to-Gate distance [um]:
+set Lsg = 1
+# Length of gate overlap [um]
+set Lgo = 1
+# Left Gate End X position [um]: 
+set Lgx = $Lsrc+$Lsg
+# Length of the P+ (left) half-pillar [um]:
+set LenP = $Lgx+$Lgo
+# Total model length [um] (half of device):
+set Xmax = $LenP+$Lap
+#
+# Gate contact thickness [um]:
+set Tgate = 0.025
+set AlGaNtop = 0.225
+set AlGaNbot = 0.250
+set Tchan = 0.100
+set PPtop = $AlGaNbot+$Tchan
+set Tpplus = 1.0
+set PPbot = $PPtop+$Tpplus
+#
+# Epi-layer thickness [um]:
+set epi = 60.0
+# N+ substrate at Drain, thickness [um]:
+set nd = 1.0
+set Ymax = $PPbot+$epi+$nd
+
+# SCALING FACTOR to obtain Currents in [A/cm2]
+# (Active Area = Xmax[um]*1[um]):
+set ActiveArea_cm2 = ($Xmax)*1e-8
+set scale_Acm2 = 1.0/$ActiveArea_cm2
+set CurScale = $scale_Acm2
+
+##=============================================
+
+# For currents in mA/mm (as published in [1] for IV curves) 
+# - use width=1e6 *2 because half of device is simulated
+set CurScale = 2e6
+
+mesh width = $CurScale
+
+x.mesh location=0.0           spac=$Lsrc/2
+x.mesh location=$Lsrc         spac=$Lsrc/10
+x.mesh location=$Lsrc+$Lsg/2  spac=$Lsg/4 
+x.mesh location=$Lgx          spac=$Lsg/10
+x.mesh location=$Lgx+$Lgo/2   spac=$lgo/4 
+x.mesh location=$LenP         spac=$LenP/50 
+x.mesh location=$Xmax         spac=$Lap/8
+
+y.mesh location=0		spac=$Tgate
+y.mesh location=$Tgate   	spac=0.05
+y.mesh location=$AlGaNtop	spac=0.002
+y.mesh location=$AlGaNbot       spac=0.002
+y.mesh location=$PPtop     	spac=0.01
+y.mesh location=0.85  	        spac=0.1
+y.mesh location=$PPbot 	        spac=0.05
+y.mesh location=$PPbot+$epi/2   spac=$epi/10
+y.mesh location=$PPbot+$epi     spac=0.25
+y.mesh location=$Ymax  		spac=0.1
+
+########################  Structure Specification  #############################
+
+region num=1  material=GaN   y.min=$Tgate y.max=$AlGaNtop x.min=$Lgx  x.max=$Xmax
+region num=2  material=AlGaN y.min=$AlGaNtop y.max=$AlGaNbot  x.min=0 x.max=$Xmax  \
+              x.composition=$xAl
+region num=3  material=GaN y.min=$AlGaNbot y.max=$PPtop x.min=0 x.max=$Xmax
+region num=4  material=GaN y.min=$PPtop    y.max=$Ymax  x.min=0 x.max=$Xmax \
+              substrate
+region num=5  material=Si3N4 y.min=0  y.max=$AlGaNtop   x.min=$Lsrc x.max=$Lgx
+
+# ELECTRODES specification
+elec num=1 name=source y.min=0 y.max=$PPtop  x.min=0 x.max=$Lsrc  
+elec num=2 name=drain  y.min=$Ymax-0.2 y.max=$Ymax  x.min=0 x.max=$Xmax
+elec num=3 name=gate   x.min=$Lgx   x.max=$Xmax y.min=0.0  y.max=0.025
+
+# DOPING
+# n- GaN Epi n-pillar doping
+doping uniform y.min=$PPtop y.max=$Ymax  x.min=$LenP x.max=$Xmax  n.type conc=1e16
+# P-type pillar (left half)
+doping uniform y.min=$PPbot y.max=$PPbot+$epi x.min=0 x.max=$LenP  p.type conc=2.67e16
+# P+ layer (1um) on top of p-pillar
+doping uniform y.min=$PPtop  y.max=$PPbot  x.min=0 x.max=$LenP  p.type conc=1e18
+# AlGaN
+doping uniform y.min=$AlGaNtop y.max=$AlGaNbot x.min=0 x.max=$Xmax  n.type conc=1e15
+# UID GaN channel doping
+doping uniform y.min=$AlGaNbot y.max=$PPtop  x.min=0 x.max=$Xmax  n.type conc=1e16
+# GaN cap P+ doping
+doping uniform y.min=$Tgate y.max=$AlGaNtop x.min=$Lgx x.max=$Xmax  p.type conc=1e18
+
+# N+ doping at the Drain ohmic contact (bottom)
+doping uniform y.min=$PPbot+$epi y.max=$Ymax  x.min=0 x.max=$Xmax  n.type conc=1e18
+
+##### CONTACTS:
+# Metal on P-type GaN:  WORKFUNCTION  = Affinity + Eg - Barrier
+set workfunc_Pdop = 4.31 + 3.43 - 1.0
+contact name=gate   workfun=$workfunc_Pdop
+
+#################  Physics Models  ###################################
+# 
+# Material parameters are used from the Silvaco default database
+#  
+models consrh auger temp=300  print
+## POLARIZATION CHARGE:
+model polarization calc.strain  polar.scale=1.0
+
+## MOBILITIES
+# P+ GaN:
+mobility region=1 FMCT.n FMCT.p
+# AlGaN:
+mobility region=2 MUN=300 MUP=10
+# 2DEG channel:
+#mobility region=3 MUN=1500
+mobility region=3 FMCT.n FMCT.p
+# Bulk GaN:
+mobility region=4  FMCT.n FMCT.p
+# FMCT + High-Field Model (GaNsat.n) 
+mobility region=4  FMCT.n FMCT.p  GaNsat.n
+
+### IMPACT IONIZATION 
+impact SELB 
+
+output band.param con.band val.band charge traps qss polar.charge e.mobility h.mobility
+
+method climit=1e-4
+
+#==================================================================
+#=====================  RUN SOLUTION ==============================
+# solve initial and zero-bias DC solution:
+solve initial
+solve previous
+
+save outfile=ganfetex21_0V.str
+tonyplot ganfetex21_0V.str -set ganfetex21_str.set
+
+# Extract 2DEG surface density [per cm2]:
+extract init infile="ganfetex21_0V.str"
+extract name="2DEG_density_1" 1e-4 * area from curve(depth, impurity="Electron Conc" \
+        material="All" mat.occno=1 x.val=($Lsrc+$Lsg/2) ) \
+	where x.min=$AlGaNtop and x.max=$PPtop 
+
+###################################################################
+
+if cond = ($run_IdVg = true) 
+
+  ################   Id-Vg Calculation  ##########################
+  solve vdrain=0.01 prev
+  solve vdrain=0.1 
+
+  ################ transfer curve: Id-Vg  ########################
+  log outfile=ganfetex21_idvg.log
+  solve vgate=0 prev 
+  solve vstep=0.1 vfinal=4 name=gate
+  log off
+
+  save outfile=ganfetex21_Vg_ramped.str  
+
+tonyplot ganfetex21_idvg.log -set ganfetex21_idvg.set
+
+if.end
+
+###################################################################
+
+if cond = ($run_IdVd = true) 
+  ##---------- Id-Vd curves, for various Vg:  ---------------------
+  loop steps=4
+
+    assign name=Vg  n.value=(0, 2, 3, 4)
+
+    load infile=ganfetex21_0V.str master
+    solve previous 
+    solve name=gate vstep=0.1 vfinal=$Vg
+    save outfile=ganfetex21_IdVg_computed.str
+
+    log outfile=ganfetex21_IdVg_$'Vg'V.log
+    solve vdrain=0.0 
+    solve name=drain vstep=0.5 vfinal=12
+    solve name=drain vstep=1.0 vfinal=25
+    log off
+
+  l.end
+
+  save outfile=ganfetex21_VD_ramped.str  
+
+tonyplot -overlay ganfetex21_IdVg_0V.log ganfetex21_IdVg_2V.log ganfetex21_IdVg_3V.log ganfetex21_IdVg_4V.log -set ganfetex21_idvd.set
+
+if.end
+
+#########################################################################
+#######  PART II:  Breakdown I-V curve simulation 
+#                  (described in sec.III of [1])
+#
+# NOTE: the BV structure is different than the one used for Id-Vg, Id-Vd
+#########################################################################
+
+#go victorydevice simflags="-80"
+
+go atlas simflags="-80"
+
+##########  DEVICE PARAMETERS AND GEOMETRY  ##############
+
+# Aluminum mole fraction in AlGaN:
+set xAl=0.1
+# Length of Aperture (half-pillar) [um]:
+set Lap = 8
+# Length of the Source contact [um]:
+set Lsrc = 2
+# Length of the Source-to-Gate distance [um]:
+set Lsg = 2
+# Length of gate overlap [um]
+set Lgo = 4
+# Left Gate End X position [um]: 
+set Lgx = $Lsrc+$Lsg
+# Length of the P+ (left) half-pillar [um]:
+set LenP = $Lgx+$Lgo
+# Total model length [um] (half of device):
+set Xmax = $LenP+$Lap
+#
+# Gate contact thickness [um]:
+set Tgate = 0.025
+set AlGaNtop = 0.225
+set AlGaNbot = 0.250
+set Tchan = 0.100
+set PPtop = $AlGaNbot+$Tchan
+set Tpplus = 1.0
+set PPbot = $PPtop+$Tpplus
+#
+# Epi-layer thickness [um]:
+set epi = 60.0
+# N+ substrate at Drain thickness [um]:
+set nd = 1.0
+set Ymax = $PPbot+$epi+$nd
+
+# SCALING FACTOR to obtain Currents in [A/cm2] - as published in [1]
+# (Active Area = Xmax[um]*1[um], multiplied by 2 due to symmetry):
+set ActiveArea_cm2 = $Xmax*1e-8
+set scale_Acm2 = 1.0/$ActiveArea_cm2
+set CurScale = $scale_Acm2
+
+##=============================================
+
+# mesh width  in the 3rd (Z) direction
+# = CURRENT SCALING:
+#
+mesh width = $CurScale
+
+x.mesh location=0.0           spac=$Lsrc/2
+x.mesh location=$Lsrc         spac=$Lsrc/10
+x.mesh location=$Lsrc+$Lsg/2  spac=$Lsg/4 
+x.mesh location=$Lgx          spac=$Lsg/10
+x.mesh location=$Lgx+$Lgo/2   spac=$lgo/4 
+x.mesh location=$LenP         spac=$LenP/50 
+x.mesh location=$Xmax         spac=$Lap/10
+
+y.mesh location=0		spac=$Tgate
+y.mesh location=$Tgate   	spac=0.05
+y.mesh location=$AlGaNtop	spac=0.002
+y.mesh location=$AlGaNbot       spac=0.002
+y.mesh location=0.3	        spac=0.01
+y.mesh location=$PPtop     	spac=0.01
+y.mesh location=0.85  	        spac=0.1
+y.mesh location=$PPbot 	        spac=0.05
+y.mesh location=$PPbot+$epi/2   spac=$epi/10
+y.mesh location=$PPbot+$epi     spac=0.25
+y.mesh location=$Ymax  		spac=0.1
+
+########################  Structure Specification  #############################
+
+region num=1  material=GaN   y.min=$Tgate y.max=$AlGaNtop x.min=$Lgx  x.max=$Xmax
+region num=2  material=AlGaN y.min=$AlGaNtop y.max=$AlGaNbot  x.min=0 x.max=$Xmax  \
+              x.composition=$xAl
+region num=3  material=GaN y.min=$AlGaNbot y.max=$PPtop x.min=0 x.max=$Xmax
+region num=4  material=GaN y.min=$PPtop    y.max=$Ymax  x.min=0 x.max=$Xmax \
+              substrate
+region num=5  material=SiN y.min=0  y.max=$AlGaNtop   x.min=$Lsrc x.max=$Lgx
+
+# ELECTRODES specification
+elec num=1 name=source y.min=0 y.max=$PPtop  x.min=0 x.max=$Lsrc  
+elec num=2 name=drain  y.min=$Ymax-0.1 y.max=$Ymax  x.min=0 x.max=$Xmax
+elec num=3 name=gate   x.min=$Lgx   x.max=$Xmax y.min=0.0  y.max=0.025
+
+# DOPING
+# n- GaN Epi n-pillar doping
+doping uniform y.min=$PPtop y.max=$Ymax  x.min=$LenP x.max=$Xmax  n.type conc=1e16
+# P-type pillar (left half)
+doping uniform y.min=$PPbot y.max=$PPbot+$epi x.min=0 x.max=$LenP  p.type conc=1e16
+# P+ layer (1um) on top of p-pillar
+doping uniform y.min=$PPtop  y.max=$PPbot  x.min=0 x.max=$LenP  p.type conc=1e18
+# AlGaN
+doping uniform y.min=$AlGaNtop y.max=$AlGaNbot x.min=0 x.max=$Xmax  n.type conc=1e16
+# UID GaN channel doping
+doping uniform y.min=$AlGaNbot y.max=$PPtop  x.min=0 x.max=$Xmax  n.type conc=2e16
+# GaN cap P+ doping
+doping uniform y.min=$Tgate y.max=$AlGaNtop x.min=$Lgx x.max=$Xmax  p.type conc=1e18
+
+# N+ doping at the Drain ohmic contact (bottom)
+doping uniform y.min=$PPbot+$epi y.max=$Ymax  x.min=0 x.max=$Xmax  n.type conc=1e18
+
+##### CONTACTS:
+# Metal on P-type:  WORKFUNCTION  = Affinity + Eg - Barrier
+set workfunc_Pdop = 4.31 + 3.43 - 1.0
+contact name=gate   workfun=$workfunc_Pdop
+
+####################  MODELS  ####################################
+# 
+# Material parameters are used from the Silvaco default database
+#  
+
+material material=AlGaN TAUN0=1e-8 TAUP0=1e-8
+
+models conSRH auger temp=300  print
+
+## POLARIZATION CHARGE:
+model polarization calc.strain  polar.scale=1.0
+
+## MOBILITIES
+# P+ GaN:
+mobility region=1 FMCT.n FMCT.p
+# AlGaN:
+mobility region=2 MUN=300 MUP=10
+# 2DEG:
+mobility region=3 FMCT.n FMCT.p
+# Bulk GaN:
+# FMCT + High-Field Model (GaNsat.n) 
+# - FMCT parameters adjusted per [1]:
+mobility region=4 FMCT.n MU2N.FMCT=1000 MU1N.FMCT=55 NCRITN.FMCT=2e17 ALPHAN.FMCT=1.0 \
+                  FMCT.p MU2P.FMCT= 170 MU1P.FMCT= 3 NCRITP.FMCT=3e17 ALPHAP.FMCT=2.0 \
+                  GaNsat.n
+
+### IMPACT IONIZATION 
+# JNY.MIN and JPY.MIN are needed to initiate ii at very low currents (Vg=0)
+#
+impact SELB e.side \
+       JNY.MIN=1E-16 JPY.MIN=1E-16 JNX.MIN=1E-16 JPX.MIN=1E-16
+
+method climit=1e-4  maxtraps=5
+
+#==================================================================
+#=====================  RUN SOLUTION ==============================
+# solve initial and zero-bias DC solution:
+solve initial
+solve previous
+
+save outfile=ganfetex21_bv_0V.str
+tonyplot ganfetex21_bv_0V.str -set ganfetex21_str.set
+
+# Extract 2DEG surface density [per cm2]:
+extract init infile="ganfetex21_bv_0V.str"
+extract name="2DEG_density_2" 1e-4 * area from curve(depth, impurity="Electron Conc" \
+        material="All" mat.occno=1 x.val=($Lgx-0.5) ) \
+	where x.min=$AlGaNtop and x.max=$PPtop 
+
+###################################################################
+## -------------  BREAKDOWN I-V CURVE  ------------------------ ##
+#
+# GATE BIAS [V]:
+# set Vg = 0
+#---------------
+
+loop steps=4
+
+  assign name=Vg n.value=(3, 2, 1, 0)
+
+  load infile=ganfetex21_bv_0V.str master
+  solve previous 
+
+  # GATE BIAS:
+  solve name=gate vstep=0.05 vfinal=$Vg
+
+  log outfile=ganfetex21_bv_Vg_$'Vg'V.log
+  solve vdrain=0.1 
+  solve vdrain=0.5 
+  solve vdrain=1.0 
+  solve name=drain vstep=1 vfinal=10
+  solve name=drain vstep=5 vfinal=100
+  solve name=drain vstep=20 vfinal=500 
+  solve name=drain vstep=50 vfinal=1000 
+  solve name=drain vstep=100 vfinal=10000
+
+  solve vstep=100 vfinal=11400 name=drain 
+  solve vstep= 10 vfinal=12500 name=drain  COMPLIANCE=7e2 CNAME=drain  
+  log off
+
+l.end
+
+tonyplot -overlay ganfetex21_bv_Vg_3V.log ganfetex21_bv_Vg_2V.log ganfetex21_bv_Vg_1V.log ganfetex21_bv_Vg_0V.log -set ganfetex21_bv_iv.set
+
+quit

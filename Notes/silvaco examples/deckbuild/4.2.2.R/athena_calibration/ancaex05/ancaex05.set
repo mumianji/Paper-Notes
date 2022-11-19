@@ -1,0 +1,84 @@
+# TPCS version: 7
+# various properties
+log label 0
+key opaque 0
+mark frequency 0
+mark overlay 0
+graph width 0 2
+graph width 1 1
+graph width 2 1
+graph width 3 1
+graph width 4 2
+graph width 5 1
+sequence size 1
+sequence width 0
+log zero 0
+sequence mark 0 0
+sequence mark 1 1
+sequence mark 2 2
+sequence mark 3 3
+sequence mark 4 4
+sequence mark 5 5
+# Functions
+function 1 "" ""
+function 2 "" ""
+function 3 "" ""
+function 4 "" ""
+select 1
+# xygraph flags
+show points on
+show lines on
+# xygraph types
+xygraph type 0 convert 0
+xygraph yaxis scale linear
+# xygraph x-axis
+xygraph xaxis "theta0" linear
+# xygraph y-axes
+xygraph yaxis none
+xygraph yaxis "1dvt" linear
+# xygraph group
+xygraph group "seg0"
+# key positions
+key contours 1 at 3
+key contours 2 at 1
+key contours 3 at 6
+key electrical at 6
+key vectors at 6
+key overlay at 2
+key regions at 4
+key apply 
+# annotation, titles
+title main "ATHENA/DBInternal"
+title sub "Calibration of Vt using Seg.0 and theta.0"
+# annotation, footers
+footer right none
+footer left none
+# annotation, show
+show xaxis on
+show yaxis on
+show grid on
+show label xaxis on
+show label yaxis on
+# annotation, axes
+range xaxis auto
+range yaxis 0.44, 0.6 increment 0.02,4
+label xaxis "theta0"
+# zoom
+zoom from 0, 0 scale 1, 1
+# user labels
+label "Seg.0=1000" from 7.66129e+08, 0.51364 color 0 scale 0
+label 0 at 3 3
+label "Seg.0=1250" from 7.78654e+08, 0.529038 color 0 scale 0
+label 1 at 3 3
+label "Seg.0=1500" from 7.73287e+08, 0.540084 color 0 scale 0
+label 2 at 3 3
+label "Seg.0=1750" from 7.69708e+08, 0.548787 color 0 scale 0
+label 3 at 3 3
+label "Seg.0=2000" from 7.66129e+08, 0.559163 color 0 scale 0
+label 4 at 3 3
+label "Seg.0=500" from 7.46447e+08, 0.461423 color 0 scale 0
+label 5 at 3 3
+label "Seg.0=750" from 7.44658e+08, 0.492887 color 0 scale 0
+label 6 at 3 3
+# overlay level names
+label overlay 0 "ancaex05.dat"

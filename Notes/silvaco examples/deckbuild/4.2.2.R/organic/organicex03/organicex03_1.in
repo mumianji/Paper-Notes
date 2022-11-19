@@ -1,0 +1,54 @@
+go atlas
+
+set doping=1e18
+set sigma=0.34
+set gamma=3.3e7
+
+mesh
+
+x.mesh l=0 s=0.5
+x.mesh l=1 s=0.5
+
+y.mesh l=0   s=0.002
+y.mesh l=0.1 s=0.002
+
+region num=1 material=Alq3 
+
+electrode name=anode   top
+electrode name=cathode bottom
+
+doping uniform n.type conc=$doping
+
+odefects cont hopping \
+         ea=0 na=$doping nia=1e20 sigmaia=0.05 sigmaa=$sigma \
+         ed=0 nd=$doping nid=1e20 sigmaid=0.05 sigmad=$sigma
+
+models hopmob langevin print
+
+material material=Alq3 hopn.gamma=$gamma hopp.gamma=$gamma
+material material=Alq3 hopn.beta=2.5 hopp.beta=2.5
+material material=Alq3 hopn.v0=8e12 hopp.v0=8e12
+material material=Alq3 affinity=3.2 eg300=2.8 nc300=1e21 nv300=1e21 \
+         permi=3.0
+
+mobility material=Alq3 hopmob.n hopmob.p
+
+contact name=anode   workf=5.8
+contact name=cathode workf=5.4
+
+solve init
+solve prev
+
+output con.band val.band e.mobility h.mobility
+
+save outf=organicex03_0.str
+
+solve vstep=0.2 vfinal=1.0 name=anode
+
+save outf=organicex03_1.str
+
+extract init infile="organicex03_1.str"
+extract name="mobility" 2d.max.conc impurity="e- Mobility" material="All"
+
+quit
+

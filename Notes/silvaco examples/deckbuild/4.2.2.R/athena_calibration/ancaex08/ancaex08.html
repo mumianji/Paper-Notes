@@ -1,0 +1,148 @@
+<html>
+  <head>
+    <title>Extraction of Implant Moments from Measured Data</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Extraction of Implant Moments from Measured Data</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>SSuprem 4 and OPTIMIZER</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="ancaex08_plot0.png" width="640" alt="ancaex08_plot0" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example shows how the general purpose OPTIMIZER can be used for
+extraction of dual-Pearson implant parameters from an experimental
+profile. This technique could be useful when Athena&apos;s implant look-up
+tables do not include moments for a specific implant (e.g. 0 degrees angle,
+very high or low energy, &quot;exotic&quot; ion-material combination, etc.) or
+when it appears that a simulated profile does not match an experimental one.
+This example can also be used as a tutorial for setting up an optimization
+procedure with a so-called curved target.
+</p>
+<p>
+An experimental profile for 1e13 ion/cm**2, 15 keV, 0 degrees Boron implant
+into &lt;100&gt; crystalline silicon is used in this example. This SIMS profile
+published by H. Kinoshita of the Microelectronic Research Center (Austin, TX).
+The profile is in a simple XY format which can be read into the OPTIMIZER
+<b> ancaex08_4256.opt</b> .
+</p>
+<p>
+To load and execute this example, display this text and select the
+<b> Load example </b> button while this text is displayed. This will copy the input file and several support
+files including ancaex08_4256.dat and ancaex08_4256.opt will be copied
+to your current working directory at this time.
+</p>
+<p>
+Selection of initial values for optimization is usually very important
+in the setup of the optimization task. In thr case of implantation one can use
+parameters available for a similar implant. To demonstrate the flexibility
+of this approach, parameters corresponding to the same implant but at
+7 degrees are used. It can be performed by using default a SVDP model and
+PRINT.MOM parameter in the IMPLANT statement.
+</p>
+<p>
+If you want to compare this initial approximation with the experimental one,
+just  select the
+<b> run </b> button to execute the example. In the end the two profiles will be
+overlaid in TonyPlot, so one can see that the experimental profile
+has a much bigger and deeper channeling peak than the default 7 degrees
+profile.
+</p>
+<p>
+The Optmizer is used to find a better set of dual-Pearson parameters
+<b> range, std.dev, gamma, </b> etc. that will result in a simulated profile which better match the experimental one.
+In order to achieve this, select
+<b> Optimizer... </b> from the
+<b> Main Control </b> menu. The
+<b> Deckbuild: Optimizer </b> screen will appear in a moment. Unlike the first example ancaex08.in, this example
+does not use a special optimizer file with preset parameters and targets,
+so you should repeat the following steps in order to set the optimization task.
+</p>
+<p>
+First, select
+<b> Parameters </b> from the
+<b> Mode </b> menu, this will display the Parameter worksheet. Select (highlight) the
+MOMENTS statement and choose
+<b> Add </b> from the
+<b> Edit </b> pull-down menu. The
+<b> Parameter define </b> pop-up will appear. Check all check-boxes excluding the first two which
+correspond to dose and energy, then press
+<b> Apply</b> .
+Nine new rows will be inserted into the Parameter worksheet.  By
+default all min/max values for parameters are +-50%. This should be
+changed for some parameters. For example, we may expect a wider range
+for skewness (asymmetry) for Pearson distributions, therefore we set
+<br/>
+{bold} Minimum value
+to -1.0
+and
+<b> Maximum value </b> to +3.0 for
+<b> gamma </b> and
+<b> sgamma </b> parameters.
+Also, the intervals for the fourth moment
+<b> kurtosis </b> of both first and second Pearson functions should be wider (2.7,10.0).
+<b> dratio </b> should not be higher than 1.0 therefore its maximum value should be set
+to 1.0. To edit any of these numeric values position the pointer over
+the corresponding cell of the worksheet, click the left-hand mouse
+button, edit the value, and do not forget to push the return button
+after finishing the editing.
+</p>
+<p>
+The next step is setting the curved target. Select
+<b> Targets </b> from the
+<b> Mode </b> menu. Highlight the
+<b> extract </b> line. This line extracts the Boron chemical concentration profile which
+corresponds to the SIMS measured profile. After that choose
+<b> Add </b> from the
+<b> Edit </b> pull-down menu. A new row will be inserted into the Target worksheet.
+The target name will correspond to the name in the extract statement.
+Now, to insert experimental profiles as a curved target select the only
+row in the worksheet by double-clicking the left-hand button while the
+pointer is positioned anywhere in the row, then choose
+<b> Edit &gt; X/Y Data &gt; Insert &gt; From File</b> . The
+<b> Optimizer X/Y Target Data </b> pop-up will appear. Select
+<b> ancaex08_4256.opt </b> file and then press
+<b> Load</b> .
+</p>
+<p>
+The next step is to change the response type of the curved target from
+<b> log </b> to
+<b> linear</b> .
+Otherwise the estimated error would be very small because Optimizer
+would take the log of the result and target at each point before
+computing the error. Select the
+<b> Edit &gt; Select all</b> . All the rows will appear raised. Then choose
+<b> Lin/Log</b> from the same menu and all row&apos;s response type will be toggled.
+</p>
+<p>
+Now, once the parameters, targets, and setup information have been
+defined, the Optimization process can be started by pressing the
+<b> Optimize </b> button. During the optimization run, the
+<b> Graphics </b> mode shows real-time updates of parameter, target, and error values.
+After optimization is completed you may execute
+<b> TonyPlot </b> which will plot the comparison between optimized and measured profiles.
+  </div></body>
+</html>

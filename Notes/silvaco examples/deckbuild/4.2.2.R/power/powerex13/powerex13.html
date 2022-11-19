@@ -1,0 +1,76 @@
+<html>
+  <head>
+    <title>Merged PiN Schottky Power Diode</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Merged PiN Schottky Power Diode</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>SSuprem 4/S-Pisces</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R, Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="powerex13_plot0.png" width="640" alt="powerex13_plot0" />
+      <p/>
+      <img src="powerex13_plot1.png" width="640" alt="powerex13_plot1" />
+      <p/>
+      <img src="powerex13_plot2.png" width="640" alt="powerex13_plot2" />
+      <p/>
+      <img src="powerex13_plot3.png" width="640" alt="powerex13_plot3" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates modeling of a combination PiN and Schottky Power Diode device based on the paper:
+</p>
+<p>
+S.Musumeci et. al. &quot;Modeling and Characterization of a Merged PiN Schottky Diode with Doping Compensation of the Drift Region&quot;,
+Industry Application Conference, 2004. 39th IAS Annual Meeting.  Publication date: 3-7 Oct.2004  Volume 2, pp. 1244-1251
+</p>
+<p>
+It shows:
+</p>
+<ul>
+  <li>
+ Structure definition using Athena 
+<br/>
+  </li>
+  <li>
+ Forward and Reverse Voltage Characteristics using Atlas
+<br/>
+   </li>
+</ul>
+<p>
+The device is first constructed in the process simulator, Athena (SSuprem 4), using three stages of epitaxial growth with masked boron implants prior to each stage.
+A long, high temperature anneal then diffuses these implanted regions together to create a deep p-doped region to help spread the electric field at high reverse bias.
+</p>
+<p>
+Once constructed, the device forward and reverse characteristics are then simulated in Atlas (SPISCES), using the &quot;
+<b>Universal Schottky Tunneling</b> &quot;
+<b>model (UST)  </b> and the final results are plotted using the same X and Y axes as in the paper for a direct comparison with measured results.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

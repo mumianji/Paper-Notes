@@ -1,0 +1,434 @@
+# Effects of hydrogen on InGaZnO TFT
+# Results from: Tatsuya Toda, Deapeng Wang, Jingxin Jiang, Mai Phi Hung, and Mamoru Furuta, "Quantitative Analysis of the Effect of Hydrogen Diffusion from Silicon Oxide Etch-Stopper Layer into Amorphous In–Ga–Zn–O on Thin-Film Transistor", IEEE Trans. Elecron Devices, Vol. 61, No. 11 (2014): 3762-3767
+go internal
+
+set index=0
+set name=low
+set hydrogen=4e16
+
+loop steps=3 print
+set index=$index+1
+
+#select low hydrogen concentration (0.91Pa)
+if cond=(@index=1)
+  set name=low
+  set hydrogen=4e16
+if.end
+
+#select med hydrogen concentration (1.28Pa)
+if cond=(@index=2)
+  set name=medium
+  set hydrogen=4e16*5
+if.end
+
+#select high hydrogen concentration (1.36Pa)
+if cond=(@index=3)
+  set name=high
+  set hydrogen=4e16*45
+if.end
+
+# create the device
+go victoryprocess
+#initial H in IGZO
+set active_h=1e16*0.1
+
+# same Partial pressure which is larger than deposit IGZO
+set GI=2e16
+set PS=2e16
+
+# simulation guide
+# add slight doping to thermal budget during PECVD depo cond.
+# it accelerate the diffusion simulation
+
+#title  Amorphous InGaZnO thin-film transistors
+
+set L=20
+set W=50
+set Lover=2
+
+# mesh initialize 
+
+Init meshdepth=3 material=oxide from=0 to=12 depth=2 gasheight=5 resolution="0.5*0.2,0.5*0.2" dopant=hydrogen dopingvalue=1e1
+
+Line x location=0 s=1*0.5
+Line x loc=$L/2 s=0.15*0.25
+Line x location=12.0 s=0.5*0.5
+
+line z location=-0.6 spac=0.05
+line z location=-0.245 spac=0.002
+line z location=-0.20-0.045/2 s=0.0045
+line z location=-0.20 spac=0.002
+line z location=-0.15 spac=0.05
+
+line z location=-0.06 spac=0.05
+line z location=-0.05 spac=0.025
+Line z location=0 spacing=0.025
+Line z location=5 spacing=0.5
+
+#diffusivity 
+material material="ingazno" dif.parameter="streamfermiwithoutfield/H_A/D" \
+	dif.parametervalue="(chargedependent)(neutral)(arrhenius)(1.3e-14/0.11)" 
+
+material material="sio2" dif.parameter="streamfick/H/D" dif.parametervalue="(chargedendent)(neutral)(arrhenius)(1.3e-11/0.5)" 
+material material="si3n4" dif.parameter="streamfick/H/D" dif.parametervalue="(chargedendent)(neutral)(arrhenius)(1/1)" 
+material material="aluminum" dif.parameter="streamfick/H/D" dif.parametervalue="(chargedendent)(neutral)(arrhenius)(1.75e-4/0.1685)" 
+
+interface material1="sio2" material2="ingazno" dif.parameter="segregation/H/Seg" dif.parametervalue="1.0/0" 
+interface material1="sio2" material2="ingazno" dif.parameter="segregation/H/Trn"  dif.parametervalue="1.66e-7/0.0" 
+
+interface material1="ingazno" material2="si3n4" dif.parameter="segregation/H/Seg" dif.parametervalue="1.0/0" 
+interface material1="ingazno" material2="si3n4" dif.parameter="segregation/H/Trn"  dif.parametervalue="1.66e-7/0.0" 
+
+interface material1="aluminum" material2="sio2" dif.parameter="segregation/H/Seg" dif.parametervalue="1.0/0" 
+interface material1="aluminum" material2="sio2" dif.parameter="segregation/H/Trn"  dif.parametervalue="1.66e-7/0.0" 
+
+interface material1="ito" material2="sio2" dif.parameter="segregation/H/Seg" dif.parametervalue="1.0/0" 
+interface material1="ito" material2="sio2" dif.parameter="segregation/H/Trn"  dif.parametervalue="1.66e-7/0.0" 
+
+interface material1="aluminum" material2="ingazno" dif.parameter="segregation/H/Seg" dif.parametervalue="1.0/0" 
+interface material1="aluminum" material2="ingazno" dif.parameter="segregation/H/Trn"  dif.parametervalue="1.66e-7/0.0" 
+
+OPTION noExtraInterfacePoints
+
+Method material=oxide model=direct 
+Method material=nitride model=direct 
+Method material=aluminum model=direct 
+
+#Gate metal 50nm Cr
+Deposit material=aluminum thick=0.05 division=5 max
+
+# Gate metal pattern
+# Loverlap=?um
+Deposit material=photoresist thick=1 divisions=10 max
+Etch material=photoresist left.to=-$L/2-$Lover dry thickness=1.5
+Etch material=photoresist right.to=$L/2+$Lover dry thickness=1.5
+Etch material=aluminum thick=0.06 dry
+#angle=45
+strip
+
+# SiOx Gate ins depo: 150nm 350'C 0.99Pa as same as PS cond.
+Deposit material=oxide thick=0.15 divisions=15 conformal dopant=hydrogen dopingvalue=$GI
+diffuse temp=350 time=10 c.hydrogen=$GI
+
+###################################3
+# active a-IGZO : 45nm DC spurtering
+Deposit material=IGZO thick=0.045  conformal  dopant=hydrogen dopingvalue=$active_h
+Diffuse time=5 temperature=160 c.hydrogen=$active_h
+#####################################################
+
+# active channel pattern
+Deposit material=photoresist thick=1 divisions=10 max
+Etch material=photoresist left.to=-$L/2-5 dry thickness=1.5
+Etch material=photoresist right.to=$L/2+5 dry thickness=1.5
+Etch material=IGZO thick=0.06 dry
+strip
+
+#################hydrogen contraol############# 110 Pa ##############
+# Etch stopper 200nm : SiH4 PEVCD
+Deposit material=oxide thick=0.20 divisions=20 dopant=hydrogen dopingvalue=$hydrogen max
+diffuse time=25 temp=170 c.hydrogen=$hydrogen
+###############################################
+
+Etch material=oxide between.x=-$L/2-$Lover , -10 thickness=0.5 dry
+Etch material=oxide between.x="10, 12" thickness=0.5 dry
+
+# S/D metal 50nm ITO
+Deposit material=ITO thick=0.05 divisions=5 conformal
+
+Etch between.x=-8,8 material=ITO thickness=0.1 max
+
+# passivation 200nm SiOx 170nm 170'C PECVD : 0.99 Pa
+Deposit material=oxide thick=0.170 divisions=5 conformal dopant=hydrogen dopingvalue=$PS
+diffuse time=20 temp=170 c.hydrogen=$PS
+
+#aneal 350'C 1h
+diffuse time=60 temp=350 
+
+mirror mirror="-x"
+
+# S/D electrode definition 
+Electrode name=gate x=0 material=aluminum
+Electrode name=source x=-$L/2 material=ito
+Electrode name=drain x=$L/2 material=ito
+
+export structure=tftex19_$"name".str
+
+go atlas
+mesh infile=tftex19_$"name".str width=50
+
+doping f.doping=tftex19_0.lib species1
+
+contact name=source workfunc=4.16 species1.ohmic  species1.ambient=1e12
+contact name=drain  workfunc=4.16  species1.ohmic  species1.ambient=1e12
+contact name=gate   workfunc=4.53  species1.ohmic species1.ambient=1e12
+
+#front
+interface s.i qf=-0.2e11 y.min=-0.2-0.01 y.max=-0.2 + 0.01
+
+# GI and passivation insulator epsilon
+material material=Si3N4 permit=7
+material material=nitride permit=7
+material material=oxide permit=3.9
+
+if cond=(@index=1)
+  mobility material=IGZO mun0=14.0 mup0=0.1
+if.end
+
+if cond=(@index=2)
+  mobility material=IGZO mun0=15.3 mup0=0.1
+if.end
+
+if cond=(@index=3)
+  mobility material=IGZO mun0=18.2 mup0=0.1
+if.end
+
+# a-IGZO bandgap, density of states, and affinity
+material material=IGZO nc300=5.2e18 nv300=5e20 eg300=3.0 affinity=4.16 taun0=1e-9 taup0=1e-9 
+
+#diffusivity of H
+material  species1.ea=1.5 species1.af=1.5e10 species1.hop=1e-6
+
+#multiple charge state
+# Vo2+ double donor fixed charge
+trap density=1.5e17*0.7 degen.fac=1 sign=1.0e-16 sigp=2.0e-18 msctrap msc.nstates=3 \
+	msc1.ft0=1.0 msc1.sp1=0 msc1.charge=2 msc1.et.cb msc1.elevel=0.2  \
+	msc2.ft0=0.0  msc2.sp1=1 msc2.charge=2  \
+	msc3.ft0=0.0 msc3.sp1=1  msc3.charge=0 msc3.elec=2 f.extmscrates=tftex19_1.lib \
+	x.min=-12.0 x.max=12.0 y.min=-0.245 y.max=-0.2
+
+#bulk 
+trap density=1.5e17*0.7 degen.fac=1 sign=1.0e-27*0.4*0.5*5 sigp=2.0e-29 msctrap msc.nstates=3 \
+	msc1.ft0=1.0 msc1.sp1=0 msc1.charge=-1 msc1.elec=1  \
+	msc2.ft0=0.0   msc2.sp1=0 msc2.charge=-2 msc2.elec=2 \
+	msc3.ft0=0.0 msc3.sp1=1  msc3.charge=-1 msc3.elec=1 \
+	f.extmscrates="tftex19_2.lib" x.min=-12.0 x.max=12.0 y.min=-0.245 y.max=-0.2 probe_id=1
+
+#back
+inttrap s.i density=2e11 degen.fac=1 sign=1.8e-31 sigp=2.0e-29 msctrap msc.nstates=3 \
+	msc1.ft0=1.0 msc1.sp1=0 msc1.charge=-1 msc1.elec=1 \
+	msc2.ft0=0.0   msc2.sp1=0 msc2.charge=-2 msc2.elec=2 msc2.et.cb msc2.elevel=0.2  \
+	msc3.ft0=0.0 msc3.sp1=1  msc3.charge=-1 msc3.elec=1 \
+	f.extmscrates="tftex19_3.lib" x.min=-12.0 x.max=12.0 y.min=-0.245-0.01 y.max=-0.245+0.01 probe_id=2
+
+#front
+inttrap s.i density=5e11 degen.fac=1 sign=1.8e-31*2*0.45 sigp=2.0e-29 msctrap msc.nstates=3 \
+	msc1.ft0=1.0 msc1.sp1=0 msc1.charge=-1 msc1.elec=1 \
+	msc2.ft0=0.0   msc2.sp1=0 msc2.charge=-2 msc2.elec=2 msc2.et.cb msc2.elevel=0.2  \
+	msc3.ft0=0.0 msc3.sp1=1  msc3.charge=-1 msc3.elec=1 \
+	f.extmscrates="tftex19_3.lib" x.min=-12.0 x.max=12.0 y.min=-0.21 y.max=-0.19 probe_id=3
+
+models srh bound.trap nspecies=1 species1.z=0 
+
+material material=IGZO egalpha=4.73e-4 egbeta=636
+
+models temp=370 print
+
+defects ^cont nta=5.2e18*2 ntd=5e20 wta=0.04 wtd=0.1 \
+	nga=0.0 ngd=2e16 egd=2.9 wgd=0.1 \
+	sigtae=1e-14 sigtah=2e-14 sigtde=1e-14 sigtdh=2e-14 \
+	siggae=1e-14 siggah=2e-14 siggde=1e-14 siggdh=2e-14 \
+	 numa=48 numd=24
+
+defect ^cont numa=48 numd=0 nta=2e16*6*1.2 wta=0.65 ntd=0 \
+        nga=0 ngd=0 sigtae=1e-14 sigtah=2e-14 sigtde=1e-14 \
+        sigtdh=2e-14 siggae=1e-14 siggah=2e-14 siggde=1e-14 siggdh=2e-14 
+
+probe ftacc.inttrap x=0 y=-0.2
+probe acc.inttrap x=0 y=-0.2
+
+#probe each state fT at front/center/back
+#back
+probe name=back_etrantrap x=0.0 y=-0.245 e.trantrap 
+probe name=back_htrantrap x=0.0 y=-0.245 h.trantrap
+probe name=back_usp1trap x=0.0 y=-0.245 u.sp1trap
+
+probe name=back_sp1 x=0.0 y=-0.245 species1
+probe name=back_sp2 x=0.0 y=-0.245 species2
+probe name=back_sp3 x=0.0 y=-0.245 species3
+probe name=back_pot x=0.0 y=-0.245 potential
+
+############################################################
+#front
+probe name=front_ft1 x=0 y=-0.2 ft.msc msc.state=1 trap_id=3
+probe name=front_ft2 x=0 y=-0.2 ft.msc msc.state=2 trap_id=3
+probe name=front_ft3 x=0 y=-0.2 ft.msc msc.state=3 trap_id=3
+
+#bulk
+probe name=bulk_ft1 x=0 y=-0.2-0.045/2 ft.msc msc.state=1 trap_id=1
+probe name=bulk_ft2 x=0 y=-0.2-0.045/2 ft.msc msc.state=2 trap_id=1
+probe name=bulk_ft3 x=0 y=-0.2-0.045/2 ft.msc msc.state=3 trap_id=1
+
+# back
+probe name=back_ft1 x=0 y=-0.245 ft.msc msc.state=1 trap_id=2
+probe name=back_ft2 x=0 y=-0.245 ft.msc msc.state=2 trap_id=2
+probe name=back_ft3 x=0 y=-0.245 ft.msc msc.state=3 trap_id=2
+
+################################################################
+probe name=front_etrantrap x=0.0 y=-0.2 e.trantrap 
+probe name=front_htrantrap x=0.0 y=-0.2 h.trantrap
+probe name=front_uspltrap x=0.0 y=-0.2 u.sp1trap
+
+#########
+probe name=front_sp1 x=0.0 y=-0.2 species1
+probe name=front_sp2 x=0.0 y=-0.2 species2
+probe name=front_sp3 x=0.0 y=-0.2 species3
+probe name=front_pot x=0.0 y=-0.2 potential
+
+# generic reaction : net reaction rate of the ionic species
+probe reaction.elec x=0 y=-0.2
+probe reaction.sp1 x=0 y=-0.2
+probe reaction.sp2 x=0 y=-0.2
+probe reaction.sp3 x=0 y=-0.2
+
+#mid
+probe name=mid_ft1 x=0.0 y=-0.22 ft.msc msc.state=1
+probe name=mid_ft2 x=0.0 y=-0.22 ft.msc msc.state=2
+probe name=mid_ft3 x=0.0 y=-0.22 ft.msc msc.state=3
+probe x=0.0 y=-0.22 e.trantrap 
+probe x=0.0 y=-0.22 h.trantrap
+probe x=0.0 y=-0.22 u.sp1trap
+probe name=mid_sp1 x=0.0 y=-0.22 species1
+probe name=mid_sp2 x=0.0 y=-0.22 species2
+probe name=mid_sp3 x=0.0 y=-0.22 species3
+probe name=mid_pot x=0.0 y=-0.22 potential
+probe name=back_elec n.conc x=0.0 y=-0.22
+
+output con.band val.band u.trap traps traps.ft
+
+solve init 
+save outfile=tftex19_1_$"name".str
+
+############## BTS ###############
+method autonr maxtrap=10 dt.max=10000 lte2step carr=1 electron ratio.time=0.1 
+
+solve prev freezespecies
+
+solve vdrain=0.1 freezespecies
+save outf=tftex19_2_$"name".str 
+
+if cond=(@index = 1) 
+  set vg_start=-2
+if.end
+
+if cond=(@index=2)
+  set vg_start=-5
+if.end
+
+if cond=(@index=3)
+  set vg_start=-17
+if.end
+
+log outfile=tftex19_0_$"name".log no.trap
+solve vgate=$vg_start vstep=0.25 vfinal=20 name=gate freezespecies
+log off
+
+system rm tftex19_sim_$"name".dat
+system echo "delta Vth sim data ($"name")" >> tftex19_sim_$"name".dat
+system echo "13 2 2" >> tftex19_sim_$"name".dat
+system echo "time" >> tftex19_sim_$"name".dat
+system echo "delta vth" >> tftex19_sim_$"name".dat
+system echo "0 0" >> tftex19_sim_$"name".dat
+
+extract init infile="tftex19_0_$"name".log"
+extract name="VT0" x.val from curve(v."gate", i."drain") where y.val=1e-9 
+extract name="dc" curve(v."gate", i."drain") outfile="tftex19_0_$"name".dat"
+
+### stress voltage
+set vs=$VT0 + 20
+
+solve init
+
+#load initial structure
+load infile=tftex19_2_$"name".str master
+
+#stress at Vs = vt0 + 20, dV0=Vs-Vth_initial=const at each TFT
+solve name=gate vgate=$vg_start vstep=0.5 vfinal=$vs freezespecies
+
+log outf=tftex19_1_$"name".log
+
+solve tstop=1e-3 ramptime=1e-6 dt=1e-9 
+
+solve tstop=100.0  
+save outfile=tftex19_100s_$"name".str
+
+solve tstop=500.0 
+save outfile=tftex19_500s_$"name".str
+
+solve tstop=1000.0
+save outfile=tftex19_1000s_$"name".str
+
+solve tstop=2000.0
+save outfile=tftex19_2000s_$"name".str
+
+solve tstop=3000.0 
+save outfile=tftex19_3000s_$"name".str
+
+solve tstop=4000.0 
+save outfile=tftex19_4000s_$"name".str
+
+solve tstop=5000.0
+save outfile=tftex19_5000s_$"name".str
+
+solve tstop=6000.0
+save outfile=tftex19_6000s_$"name".str
+
+solve tstop=7000.0
+save outfile=tftex19_7000s_$"name".str
+
+solve tstop=8000.0
+save outfile=tftex19_8000s_$"name".str
+
+solve tstop=9000.0
+save outfile=tftex19_9000s_$"name".str
+
+solve tstop=10000.0
+save outfile=tftex19_10000s_$"name".str
+
+log off
+
+########### obtain IdVg@each stress time  ###############
+loop steps=12 print
+assign name=time n.value = (100, 500, 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000)
+
+solve init freezespecies
+
+load infile=tftex19_$"time"s_$"name".str master
+log outfile=tftex19_$"time"s_$"name".log no.trap
+solve vgate=20 vstep=-0.25 vfinal=$vg_start name=gate freezespecies 
+log off
+
+extract init infile="tftex19_$"time"s_$"name".log"
+extract name="VT" curve(v."gate", i."drain") outfile="tftex19_$"time"s_$"name".dat"
+extract name="VT" x.val from curve(v."gate", i."drain") where y.val=1e-9 
+extract name="DVT" $"VT"-$"VT0"
+system echo "$"time" $"DVT"" >> tftex19_sim_$"name".dat
+
+#end of time loop 
+l.end
+
+#end of hydrogen concentration loop
+l.end
+
+# plot structure files (low, medium and high hydrogen concentration)
+tonyplot tftex19_low.str tftex19_medium.str tftex19_high.str -set tftex19_0.set
+
+# plot initial IdVg @Vds=0.1V (low, medium and high hydrogen concentration)
+tonyplot -overlay tftex19_0_low.dat tftex19_exp_1.dat tftex19_0_medium.dat tftex19_exp_2.dat tftex19_0_high.dat tftex19_exp_3.dat -set tftex19_1.set
+
+# plot initial hydrogen and multi-state trap concentration (low, medium and high hydrogen concentration)
+tonyplot tftex19_1_low.log tftex19_1_medium.log tftex19_1_high.log -set tftex19_2.set
+
+# plot IdVg @Vds=0.1V after stress (low, medium and high hydrogen concentration)
+tonyplot -overlay tftex19_100s_low.dat tftex19_500s_low.dat tftex19_1000s_low.dat tftex19_2000s_low.dat tftex19_3000s_low.dat tftex19_4000s_low.dat tftex19_5000s_low.dat tftex19_6000s_low.dat tftex19_7000s_low.dat tftex19_8000s_low.dat tftex19_9000s_low.dat -set tftex19_3.set
+
+tonyplot -overlay tftex19_100s_medium.dat tftex19_500s_medium.dat tftex19_1000s_medium.dat tftex19_2000s_medium.dat tftex19_3000s_medium.dat tftex19_4000s_medium.dat tftex19_5000s_medium.dat tftex19_6000s_medium.dat tftex19_7000s_medium.dat tftex19_8000s_medium.dat tftex19_9000s_medium.dat -set tftex19_4.set
+
+tonyplot -overlay tftex19_100s_high.dat tftex19_500s_high.dat tftex19_1000s_high.dat tftex19_2000s_high.dat tftex19_3000s_high.dat tftex19_4000s_high.dat tftex19_5000s_high.dat tftex19_6000s_high.dat tftex19_7000s_high.dat tftex19_8000s_high.dat tftex19_9000s_high.dat -set tftex19_5.set
+
+# plot Vth shift: Experiment v.s Simulation (low, medium and high hydrogen concentration)
+tonyplot -overlay tftex19_sim_low.dat tftex19_exp_4.dat tftex19_sim_medium.dat tftex19_exp_5.dat tftex19_sim_high.dat tftex19_exp_6.dat -set tftex19_6.set
+
+quit
+
+
+

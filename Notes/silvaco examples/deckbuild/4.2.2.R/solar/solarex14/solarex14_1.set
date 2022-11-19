@@ -1,0 +1,136 @@
+#silvaco.file ASCII version=1.14.9 format=1
+""
+
+#non-visible objects 
+number-of-non-visible-objects 1
+non-visible-object "Material Air"
+
+#non-enable-contour objects 
+number-of-non-enable-contour-objects 0
+
+#Cut Plane Settings   
+point_1 0 0 0
+point_2 1 0 0
+point_3 0 1 0
+three_points 0
+PAN 0
+PITCH 90
+ELEV 1
+#Cut Plane Axes Settings   
+X_REVERSE 0
+Y_REVERSE 0
+XY_SWAP 0
+
+#Define the scene matrix
+sm_00 -0.54142205345389849
+sm_01 -0.6496243529015242
+sm_02 -0.53371374364076518
+sm_03 0.7155008049655327
+
+sm_10 0.71387859137460563
+sm_11 -0.019883574652749786
+sm_12 -0.69998714290766673
+sm_13 0.99895213402881178
+
+sm_20 0.4441165576858998
+sm_21 -0.75999529181193337
+sm_22 0.47451832379047471
+sm_23 -0.99712579996117245
+
+sm_30 0
+sm_31 0
+sm_32 0
+sm_33 1
+
+#Define the camera matrix
+cm_00 1
+cm_01 0
+cm_02 0
+cm_03 0
+
+cm_10 0
+cm_11 1
+cm_12 0
+cm_13 0
+
+cm_20 0
+cm_21 0
+cm_22 1
+cm_23 -6.8120074330771549
+
+cm_30 0
+cm_31 0
+cm_32 0
+cm_33 1
+
+#Define the scene scaling factors
+ss_xyz 1 1 1
+
+#Define 3D projection 
+proj_3d_aspect 1.1902718168812589
+proj_3d_z_near 4.6801655563931241
+proj_3d_z_far 9.4012817666968331
+proj_3d_height 2.3887632818524507
+proj_3d_fovy 25
+proj_3d_type 0
+proj_3d_depth_cue 2
+coord_selection 0
+coord_type 0
+modelview_x_scale 1
+modelview_y_scale 1
+modelview_z_scale 1
+
+#Global BBox Settings   
+global_bbox_min -0.31624048041371811 -0.3159190304852591 -2
+global_bbox_max 0.37936072062057713 0.37903927069211824 5.2807109999999993
+#Define x-y-z Axis Visibility
+x_axis_visibility 1
+y_axis_visibility 1
+z_axis_visibility 1
+#Define Legend Visibility
+contour_legend 1
+region_legend 1
+#Define the DisplayMode
+display_mode_id 7
+#Define Show Cut Plane
+show_cut_plane 0
+#Define Show Cut Plane X Y Axes
+show_cut_plane_x_axis 1
+show_cut_plane_y_axis 1
+#Define the DrawMode
+draw_mode_id 0
+#Define the Region_Color_Type
+region_color_type 0
+
+#Define Title and Sub_Title
+title ATLAS
+sub_title "Data from solarex14_1.str"
+mat_info "Silicon 7 1"
+#Define light0 and light1 information
+light0_enabled 1
+light0_color 255 255 255
+light0_intensity 0.52999997138977051
+light0_latitude 30
+light0_longitude 0
+
+light1_enabled 1
+light1_color 255 255 255
+light1_intensity 0.52999997138977051
+light1_latitude 0
+light1_longitude 270
+#Define contours information
+imp_menu_index 23
+name-of-doping "Net Doping"
+limit_select_type 0
+auto_max_limit 1
+auto_min_limit 1
+contour_max_imp_value 5.0000000000000006e+17
+contour_min_imp_value -4e+16
+legend_type 0
+legend_auto_mapping 1
+legend_mapping 0
+legend_palette 0
+legend_nbr_of_colors 5
+
+
+EOF 1563929278

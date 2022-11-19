@@ -1,0 +1,297 @@
+<html>
+  <head>
+    <title>Optical Output Coupling Efficiency of a III-V LED Device</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Optical Output Coupling Efficiency of a III-V LED Device</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>BLAZE/LED</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="ledex05_plot0.png" width="640" alt="ledex05_plot0" />
+      <p/>
+      <img src="ledex05_plot1.png" width="640" alt="ledex05_plot1" />
+      <p/>
+      <img src="ledex05_plot2.png" width="640" alt="ledex05_plot2" />
+      <p/>
+      <img src="ledex05_plot3.png" width="640" alt="ledex05_plot3" />
+      <p/>
+      <img src="ledex05_plot4.png" width="640" alt="ledex05_plot4" />
+      <p/>
+      <img src="ledex05_plot5.png" width="640" alt="ledex05_plot5" />
+      <p/>
+      <img src="ledex05_plot6.png" width="640" alt="ledex05_plot6" />
+      <p/>
+      <img src="ledex05_plot7.png" width="640" alt="ledex05_plot7" />
+      <p/>
+      <img src="ledex05_plot8.png" width="640" alt="ledex05_plot8" />
+      <p/>
+      <img src="ledex05_plot9.png" width="640" alt="ledex05_plot9" />
+      <p/>
+    </div>
+    <div id="text" >
+<p>
+This example demonstrates how to extract the optical output coupling efficiency
+of an LED/OLED device by using various techniques including reverse ray-tracing,
+the source term method and finite-difference time-domain (FDTD).
+</p>
+<p>
+Reverse ray-tracing is a technique that allows us to obtain optical output
+characteristics of an active optoelectronic device based on material
+properties and device geometry. Ray-tracing is most commonly used for the modeling
+of passive optoelectronic components such as photo-detectors. Rays originating
+at the external light source are traced into the device and are absorbed to
+form electron/hole pairs, which are subsequently detected.  Use of ray-tracing
+method in LUMINOUS is shown in examples optoex08 - optoex15.
+</p>
+<p>
+Contrary to
+direct ray-tracing, the rays in the reverse method originate inside the active
+region and are traced until they exit the device. One or multiple origin points
+(user-specified) for rays are considered. Interference effects for rays originating
+at the common source point can be taken into account. When interference is enabled,
+the spectral selectivity of the device structure can be analyzed by performing
+ray-tracing at multiple wavelengths.
+</p>
+<p>
+The source term method works in a similar fashion but directly accounts
+for interference effects by applying an algorithm akin to the
+transfer matrix method which only applies to truely 1D devices.
+</p>
+<p>
+The finite-difference time-domain method works by direct solution of
+Maxwell&apos;s equations in the time domain and thus explicitly accounts for
+interference and diffraction in 1, 2 or 3 dimensions.
+</p>
+<p>
+Both the source term method and FDTD use the same method as for ray
+tracing in that the emission from a set of dipoles located at user
+specified locations is integrated/averaged over the device.
+</p>
+<p>
+The device structure and settings in this example are identical to those of
+optoex06, where LED luminous efficiency calculation is demonstrated. See
+the description of example optoex06 for more detailed
+information.
+</p>
+<p>
+An additional functionality of LUMINOUS to assess light extraction
+from the device is implemented in the
+<b> SAVE  </b> statements (after biasing). Five different sets of parameters for reverse
+ray-tracing are used in successive
+<b> SAVE </b> statements to demonstrate the features
+available for the modeling of LEDs. The parameter sets are given in the order of
+increasing complexity of simulation. Computation times also vary. It takes
+approximately 200 times longer to run the last
+<b> SAVE </b> line compared to the first
+one.
+</p>
+<p>
+The parameter
+<b> angpower</b> should be set in the
+<b> SAVE </b> statement in order to start the reverse ray-tracing algorithm. The name of the
+output file containing the angular power density vs. output angle dependence
+is specified as a value of the
+<b> angpower </b> parameter. The information in the angpower file includes the angular power density
+for TE- and TM- polarized light, as well as total angular power density and total
+flux angular density vs. output angle.
+Note: In TonyPlot polar charts, the y-axis is directed upward (in the opposite
+direction to the internal coordinate system used in Atlas). Therefore, the plots
+appear to be flipped around the x-axis (top of the structure is at the bottom of the
+chart).
+</p>
+<p>
+The parameter
+<b> rayplot </b> specifies the name of the output file containing the information on each ray
+exiting the device. This file is only created when a single origin for all rays
+is assumed. The information includes ray output angle, relative ray power
+(TE-, TM-polarization, and total), and initial internal angle at the origin
+(only if the
+<b> interfere </b> parameter is not specified). 0-degree angle corresponds to
+the rays in the X axis direction, 90-degree angle corresponds to the rays in
+the Y axis direction.
+</p>
+<p>
+To start ray-tracing from one point of origin the user has to specify the
+following parameters:
+coordinates of the origin of rays
+<b> X </b> and
+<b> Y </b> and wavelength
+<b> L.WAVE</b> . It is important that the origin be chosen in the active region of the device.
+Rays are not traced if the radiative recombination is zero at the ray origin.
+All remaining parameters, outlined below, are optional and their default values
+are assumed if the parameters are not specified.
+</p>
+<b> Reflects </b> <p>
+specifies a number of reflections to be traced for each ray originating at the point
+<b> X </b> ,
+<b> Y </b> (similar to
+<b> reflects </b> parameter in the
+<b> BEAM </b> statement). The default value (
+<b> REFLECTS</b> =0) provides for a quick estimate of the coupling efficiency.
+<b> REFLECTS</b> &gt;0 should be used to obtain a more accurate result, especially if
+<b> MIR.TOP </b> or
+<b> MIR.BOTTOM </b> are specified. The choice of this parameter is based on a compromise between
+calculation time and accuracy. The maximum allowed value is
+<b> REFLECTS</b> =10. the number of reflections set to 3 or 4 is often a good choice. The parameter
+set #1 produces a simple ray-tracing analysis of an LED considered in this
+example.
+</p>
+<p>
+The
+<b> MIR.TOP </b> parameter specifies that the top surface of the device be treated as an ideal mirror.
+</p>
+<p>
+The
+<b> MIR.BOTTOM </b> parameter specifies that the bottom surface of the device be treated as an ideal
+mirror.
+</p>
+<b> SIDE </b> <p>
+specifies that the rays reaching the sides of the device are terminated
+there and do not contribute to the total light output. This is often a good
+assumption for realistic LEDs as these rays tend to be either absorbed internally
+or blocked by the casing of the device.
+</p>
+<b> TEMPER </b> <p>
+is the temperature needed for using appropriate refractive indexes of the
+materials. A default setting of 300 K will be used if not specified.
+</p>
+<b> POLAR </b> <p>
+specifies polarization of the emitted photons in degrees (linearly polarized
+light is assumed). Parallel (TM-mode,
+<b> POLAR</b> =0.0) and perpendicular (TE-mode,
+<b> POLAR</b> =90.0) polarizations result in significantly different output coupling values.
+The default value (
+<b> POLAR</b> =45.0) should be used if there is no preferred direction of polarization of
+emitted photons (unpolarized light emission).
+</p>
+<b> MIN.POWER </b> <p>
+specifies the minimum relative power of a ray (similar to
+<b> min.power </b> parameter in the
+<b> BEAM </b> statement). The ray is not traced after its power falls below
+<b> min.power </b> value. This is useful for limiting the number of rays traced, and the default
+value is 1e-4.
+</p>
+<b> NUMRAYS </b> <p>
+is used to specify the number of rays starting from the origin. The default is 180,
+the acceptable range 36 - 3600.
+</p>
+<p>
+Parameter set #2 shows how some of the parameters described above are used for
+modeling a realistic LED. The angular distribution of light power obtained
+in optoex18ang_2.log exhibits a Lambertian pattern, which is what we expect for
+a simple LED considered in this example. Note that the optical coupling coefficient
+produced in this calculation reflects the 2D nature of the example (the light
+origin is not a point but rather an infinite line in z-direction). Simultaneously,
+it is possible to calculate the optical coupling efficiency for an axially
+symmetric 3D device (normally this is the value to be compared with experimental
+results). This calculation is enabled if
+<b> coupling3D </b> parameter is specified (while
+<b> side </b> is also set). For this calculation the light source is assumed to be
+a point located on the axis of symmetry.
+</p>
+<p>
+The rays are assummed to be incoherent by default. This is a good approximation
+if the thickness of the active layer of the device is on the order of a
+wavelength/index. For layer thicknesses &lt;&lt; wavelength coherent effects might be
+important. When the
+<b> interfere </b> parameter is set, the rays originating at the common source point are taken to
+be 100% coherent. In this case the phase information upon propagation is
+preserved. Phase change upon reflection is also considered. Thus, interference
+of rays exiting the device at the same angle is taken into account. The internal
+angle information is not written to the output rayfile in this case. The parameter
+set #3 takes interference into account.
+</p>
+<p>
+Absorption of rays can be taken into account when the
+<b> absorb</b> parameter is set. The absorption is assumed to be constant specified for each
+material by the imaginary part of the refractive index.
+Carrier density dependent absorption and photon-recycling are not considered
+at this point.
+</p>
+<p>
+Although ray-tracing from one point of origin can give a reasonable estimate
+of optical output coupling and angular distribution of light power, it is often
+desirable to consider multiple points within the active layer of the device to
+obtain more accurate results. Multiple origin points can be set using the
+following parameters:
+</p>
+<b> XMIN</b> <p>
+,
+<b> XMAX</b> ,
+<b> YMIN</b> ,
+<b> YMAX </b> define a rectangular area containing all origin points.
+<b> XNUM </b> and
+<b> YNUM </b> specify the number of points along x- and y- axes within the rectangular area.
+If
+<b> XNUM </b> is equal to 1, the x-coordinate of all origin points is set to
+<b> XMIN </b> so that the points are chosen along the line x =
+<b> XMIN</b> . Similarly, points along the specific y-line can be chosen.
+Ray-tracing from multiple origins is realized by repeating a single
+origin algorithm for each point and by adding up the normalized angular power
+density values thus obtained. The luminous power assigned to each source (origin)
+is proportional to the radiative recombination at that point. Luminous power of
+all sources adds up to the value obtained by integration of radiative recombination
+over the entire device. Rays originating at different source points are completely
+incoherent (even when
+<b> interfere </b> is set), which is consistent with the spontanuous character of the radiation produced
+by an LED. The rayplot file is not written for multiple origins (even if parameter
+<b> rayplot </b> is specified). The parameter set #4 shows how multiple origin simulation can be done.
+</p>
+<p>
+Spectral selectivity of optical output coupling for LEDs can also be taken into
+account. Reverse ray-tracing at multiple wavelengths is
+considered if the
+<b> spectrum </b> parameter specifies a filename for spectral selectivity output, while the
+<b> angpower </b> parameter is also set.
+<b> EMIN </b> and
+<b> EMAX </b> , or
+<b> LMIN </b> and
+<b> LMAX</b> specify the energy or wavelength range respectively.
+<b> NSAMP </b> specifies the number of spectral components to be considered. It is suggested
+that the
+<b> SPECTRUM </b> file is specified only when
+<b> interfere </b> is set (a warning is issued otherwise, while ray-tracing proceeds).  When
+<b> ANGPOWER </b> and
+<b> SPECTRUM </b> parameters are set in the
+<b> SAVE</b> statement, the resulting optical output coupling is averaged over the
+entire energy (wavelength) range from
+<b> EMIN </b> to
+<b> EMAX </b> (from
+<b> LMIN </b> to
+<b> LMAX</b> ). The same applies to the quantities in the output angular distribution
+file. The spectrum file only shows how output coupling changes with wavelength.
+At the moment the shape of the gain curve is not taken into account (flat gain).
+The set of parameters #5 shows how multiple spectral components can be considered.
+The results obtained after averaging over spectral components and multiple origin
+points while taking interference into account are remarkably similar to the single
+point source model, where interference and multiple spectral content has been
+ignored (parameter set #2). This demonstrates the applicability of a simpler model
+in this case.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

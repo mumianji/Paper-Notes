@@ -1,0 +1,209 @@
+# (c) Silvaco Inc., 2018
+
+# Create the Power MOSFET using VictoryProcess
+
+go victoryprocess
+
+init silicon c.phosphor=1.0e20 orientation=100 resolution="0.2,0.2" from=0 to=8 depth=8.5 gasheight=3 meshdepth=3
+
+line x location=0   spacing=0.02
+line x location=1.3 spacing=0.5
+line x location=2.5 spacing=0.1
+line x location=3.5 spacing=0.1
+line x location=4.5 spacing=0.5
+line x location=5.5 spacing=0.1
+line x location=6   spacing=0.1
+line x location=8   spacing=0.5
+
+line z location=0   spacing=0.01
+line z location=1.5 spacing=0.2
+line z location=7.5 spacing=0.2
+line z location=8.5 spacing=0.3
+
+etch material=silicon thickness=7.5 dry
+
+loop steps=10
+deposit material=silicon thickness=0.3 c.phos=5e15 max
+diffuse time=0.3 temp=1000
+l.end
+
+loop steps=10
+deposit material=silicon thickness=0.3 c.phos=2e15 max
+diffuse time=0.3 temp=1000
+l.end
+
+loop steps=15
+deposit material=silicon thickness=0.1 c.phos=1e16 max
+diffuse time=0.1 temp=1000
+l.end
+
+# Gate Formation
+deposit oxide thick=0.05 max
+deposit polysilicon thick=0.6 max 
+deposit photoresist thick=1 max
+etch material=photoresist right.to=3.5 thick=1.1 dry
+etch material=polysilicon thickness=0.8 dry
+
+# P-Body Formation
+implant boron dose=1e13 energy=180 tilt=30 rotation=180 bca n.ion=200000
+implant boron dose=1e13 energy=300 tilt=0 rotation=0 bca n.ion=200000
+etch photoresist dry
+
+# P-Plus Body Contact Formation
+deposit photoresist thick=1 max
+etch photoresist right.to=5.5 thick=1.1 dry
+implant boron dose=5e14 energy=30 tilt=45 rotation=0 bca n.ion=200000
+etch photoresist dry
+
+# N-Plus Source Contact Formation
+deposit photoresist thick=1 max
+etch photoresist left.to=6 thick=2 dry
+implant arsenic dose=5e14 energy=120 tilt=7 rotation=27 bca n.ion=200000
+implant arsenic dose=5e14 energy=120 tilt=7 rotation=207 bca n.ion=200000
+etch photoresist dry
+
+# Deposit Passivation and Anneal
+deposit nitride thickness=1 conformal
+
+diffus time=30 temp=1050 
+etch nitride right.to=5.5 thick=1.1 dry
+etch oxide right.to=5.5 thick=0.1 dry
+
+# Make Source Contact
+deposit aluminum thick=0.5 conformal
+electrode name=source x=6
+electrode name=gate x=2.5 z=-0.4
+
+electrode name=drain substrate
+
+save name=radex11_vp_0
+
+go victorymesh
+
+load in=radex11_vp_0
+
+remesh conformal
+refine max.obtuseness=1
+
+save out=radex11_0.str
+
+
+# Single Event Upset Simulation
+
+
+go devedit 
+
+init infile=radex11_0.str
+
+base.mesh height=0.5 width=0.5
+#
+bound.cond !apply max.slope=28 max.ratio=300 rnd.unit=0.001 line.straightening=1 align.points when=automatic
+#
+imp.refine imp="Net Doping" scale=log
+imp.refine min.spacing=0.02
+#
+constr.mesh max.angle=90 max.ratio=300 max.height=10000 \
+	max.width=10000 min.height=0.0001 min.width=0.0001
+#
+constr.mesh region=2 default max.height=0.01
+#
+constr.mesh id=1 under.mat=Polysilicon depth=0.005 default max.height=0.001
+Mesh Mode=MeshBuild
+
+base.mesh height=0.5 width=0.5
+
+bound.cond !apply max.slope=28 max.ratio=300 rnd.unit=0.001 line.straightening=1 align.Points when=automatic
+
+struct outfile=radex11_1.str
+
+
+go victorydevice 
+
+mesh infile=radex11_1.str cylindrical
+
+## Define Single Event Parameters
+set let=37.2
+set density=$let*0.011
+
+# Self-Consistent Fowler-Nordheim Gate Current
+models consrh cvt auger fn.cur nearflg
+
+# Define Gate Contact
+contact name=gate n.poly
+
+# Define Single Event Strike
+singleeventupset entrypoint="0,0,0" exitpoint="0,8.5,0" radialgauss \
+      b.density=$density pcunits radius=0.07 t0=1e-14 tc=1e-15
+
+# Probe Strike Field
+probe name=Strike_Field field dir=270 x=0.02 y=-0.02
+
+method climit=1e-4 seu.integrate
+
+# Set Up DC Bias Condition
+solve init
+solve previous
+solve vgate=-0.1
+solve vgate=-0.4 vstep=-0.5 vfinal=-13.9 name=gate
+solve vdrain=0.1
+solve vdrain=0.5 vstep=0.5 vfinal=30 name=drain
+
+# Start SEU Transient Simulation
+log outfile=radex11_0.log 
+solve tfinal=8e-15 dt=1e-16
+
+# Reduce Time Step Near SEU Strike for Better Resolution
+solve tfinal=1e-14 dt=1e-17
+save outfile=radex11_2.str
+solve tfinal=5e-12 dt=1e-17
+
+save outfile=radex11_3.str
+solve tfinal=50e-12 dt=1e-15
+save outfile=radex11_4.str
+solve tfinal=150e-12 dt=1e-14
+save outfile=radex11_5.str
+solve tfinal=1e-9 dt=1e-12
+log off
+tonyplot radex11_0.log -set radex11_1.set
+tonyplot radex11_2.str radex11_3.str radex11_4.str radex11_5.str -set radex11_2.set
+tonyplot radex11_0.log -set radex11_3.set
+
+
+# DC Breakdown Simulation
+
+go victorydevice
+
+mesh infile=radex11_1.str cylindrical
+
+models consrh cvt
+impact selb
+contact name=gate n.poly
+method climit=1e-4 maxtraps=6
+
+solve init
+solve previous
+log outfile=radex11_1.log
+solve vdrain=0.1
+solve vdrain=0.5
+solve vdrain=1 vstep=1 vfinal=200 name=drain previous
+tonyplot radex11_1.log -set radex11_4.set
+save outfile=radex11_6.str
+log off
+
+
+# Unsaturated Threshold Voltage Simulation
+
+go victorydevice
+
+mesh infile=radex11_1.str cylindrical
+
+models consrh cvt
+contact name=gate n.poly
+method climit=1e-4
+
+solve init
+solve previous
+solve vdrain=0.1
+log outfile=radex11_2.log
+solve vgate=0.1 vstep=0.1 vfinal=10 name=gate
+tonyplot radex11_2.log

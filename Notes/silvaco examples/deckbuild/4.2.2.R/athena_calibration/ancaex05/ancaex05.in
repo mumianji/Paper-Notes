@@ -1,0 +1,33 @@
+go internal
+set example=ancaex05
+load infile=$"example"_tmpl.in
+sweep parameter=theta0 type=linear range="1.0e8, 9.0e8, 5"  \
+      parameter=seg0 type=linear range="500, 2000, 7"
+save type=sdb outfile=$"example".dat
+tonyplot $"example".dat -set $"example".set
+quit
+
+################## Content of ancaex05_tmpl.in file ##############
+# go athena                                                      #
+# set example=ancaex05                                           #
+#                                                                #
+# line x loc = 0.0                                               #
+# line x loc = 0.25  spacing=0.25                                #
+# line y loc = 0     spacing=0.005                               #
+# line y loc = 1.50  spacing=0.05                                #
+# line y loc = 10.0   spacing=1.0                                # 
+# init silicon c.boron=7.0e16                                    #
+#                                                                #
+# method grid.ox=0.002                                           #                                              #                                                                #
+# implant boron dose=1.5e12 energy=20                            #
+#                                                                #
+# set seg0=1126.0                                                #
+# set theta0=4.58e8                                              #
+# impurity i.boron silicon /oxide Seg.0=$seg0                    #
+# interst silicon /oxide theta.0=$theta0 theta.E=2.36 dryo2      #
+# method two.dim                                                 #
+# diffuse time=20 temperature=920 dry                            #
+# deposit poly thick=0.4 div=5 c.phos=1e20                       #
+#                                                                #
+# extract name="1dvt" 1dvt ntype x.val=0.0                       #
+##################################################################

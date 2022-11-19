@@ -1,0 +1,103 @@
+<html>
+  <head>
+    <title>AlGaAs/GaAs HBT Avalanche Breakdown</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>AlGaAs/GaAs HBT Avalanche Breakdown</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Blaze</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="hbtex03_plot0.png" width="640" alt="hbtex03_plot0" />
+      <p/>
+      <img src="hbtex03_plot1.png" width="640" alt="hbtex03_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates avalanche breakdown in an AlGaAs/GaAs HBT with an
+<b> abrupt heterojunction.</b> It shows:
+</p>
+<ul>
+  <li>
+ Device formation using Atlas syntax
+<br/>
+  </li>
+  <li>
+ Specification of an abrupt AlGaAs/GaAs heterojunction
+<br/>
+  </li>
+  <li>
+ Selection of models for AlGaAs and GaAs
+<br/>
+  </li>
+  <li>
+ Ramping of the collector with an applied resistor until the breakdown voltage 
+  </li>
+</ul>
+<p>
+The structure specification part of this example is similar to the
+previous example. The major difference is that this HBT as an abrupt
+AlGaAs/GaAs heterojunction as opposed to the graded composition
+fraction used before. Specifying an abrupt junction is simple. No
+grad.* parameters are used and the value of
+<b> x.comp</b> on the
+<b> region</b> statement is taken as the composition fraction throughout the AlGaAs
+region right up to the GaAs region.
+</p>
+<p>
+The models and material parameters are set exactly as in the previous
+example. The only addition is the impact ionization model specified by
+<b> impact selb.</b> Impact ionization parameters for ternary compounds such as AlGaAs are
+not well defined and their dependence on composition fraction is known
+even less. Tuning of the parameters of the impact statement might be
+needed to match experimental results.
+</p>
+<p>
+The
+<b> contact</b> statement is used to specify a high value resistor at the collector electrode. This
+provides for a smooth transition from voltage boundary conditions to current boundary
+conditions during the ramping of external collector voltage. Note that such kind
+of simulation could be performed using the curve tracing algorithm, providing automatic
+selection of the loaded resistor.
+</p>
+<p>
+The emitter voltage is ramped to -1.1V. Then, holding the
+emitter voltage constant, the external collector voltage is ramped to 1.e9 V.
+Due to the high value resistor, the value seen on the
+semiconductor-to-collector contact will, of course, not increase to
+such high levels.
+</p>
+<p>
+The results of simulation are then displayed using TonyPlot. The x-axis
+of the Ic/Vcb curve should be set to
+<b> collector int. bias. </b> This is the collector voltage on the semiconductor contact as opposed
+to the applied voltage across the resistor.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

@@ -1,0 +1,84 @@
+go athena 
+
+# 
+line x loc=-0.5 spac= 0.3
+line x loc=0.00 spac=0.01
+line x loc=0.2 spac=0.15
+#
+line y loc=0.00 spac=0.01
+line y loc=0.2 spac=0.02
+line y loc=20 spac=6
+
+init silicon c.boron=5e16 
+
+# deposit gate oxide
+deposit oxide thickness=0.010 div=3
+
+#threshold adjust implant
+implant bf2 dose=3e12 energy=45
+
+#deposit gate
+deposit poly thickness=0.2 div=6
+
+# poly heat cycle
+diff time=10 temp=900
+
+etch poly left p1.x=0.0
+structure mirror right
+relax y.min=0.75
+relax y.min=1.5 dir.y=f
+relax y.min=3.0 dir.y=f
+
+# set gate length through stretch command
+set drawn_l=0.4
+stretch length=$drawn_l poly snap div=15
+
+# extract poly length
+extract name="poly_len" thickness poly y.val=-0.1
+extract name="poly_len_um" $poly_len*0.0001
+
+
+#LDD implant
+implant arsenic dose=1e14 energy=50 amorph
+
+#set cluster models implant damage
+method full.cpl cluster.dam i.loop.sink high.conc
+cluster min.clust=1e16 max.clust=5e18 clust.fact=1.0 i.arsenic
+disloc  min.loop=1e15  max.loop=1e16  loop.fact=1    i.arsenic
+#spacer definition
+deposit oxide thickness=0.1 div=5
+etch oxide thickness=0.1
+
+# source/drain implant
+implant arsenic dose=1e15 energy=50 amorph
+
+# source/drain anneal
+diff time=30 temp=800 
+
+#this is an alternative command to create a diffusion movie
+#diff time=30 temp=800 dump=1 dump.pref=andfex13m
+
+etch below p1.y=2.0
+structure outf=andfex13_0.str
+
+# Extract the two sd junction depths....
+extract name="n++ xj" xj silicon mat.occno=1 x.val=-0.5 junc.occno=1
+extract name="lat1" xj silicon mat.occno=1 y.val=0.01 junc.occno=1
+extract name="lat2" xj silicon mat.occno=1 y.val=0.01 junc.occno=2
+extract name="met_leff" $lat2 - $lat1
+extract name="peak_B" max.conc impurity="Active Boron" material="Silicon" \
+        mat.occno=1 y.val=0.01
+extract name="surf_B" surf.conc impurity="Active Boron" material="Silicon" \
+        mat.occno=1 x.val=$drawn_l/2
+
+#extract VT at different locations in the channel
+extract name="1dnvt_center" 1dvt ntype x.val=$drawn_l/2
+extract name="1dnvt_edge"   1dvt ntype x.val=0.05
+
+set xgate=$drawn_l/2.0
+electrode name=gate x=$xgate
+electrode name=substrate backside
+
+tonyplot  andfex13_0.str -set andfex13.set
+
+quit

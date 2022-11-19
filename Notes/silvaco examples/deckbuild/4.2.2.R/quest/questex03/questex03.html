@@ -1,0 +1,90 @@
+<html>
+  <head>
+    <title>Comparison of simulated and measured results for a square sided inductor</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Comparison of simulated and measured results for a square sided inductor</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>QUEST</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>QUEST 2.0.2.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="questex03_plot0.png" width="640" alt="questex03_plot0" />
+      <p/>
+      <img src="questex03_plot1.png" width="640" alt="questex03_plot1" />
+      <p/>
+      <img src="questex03_plot2.png" width="640" alt="questex03_plot2" />
+      <p/>
+      <img src="questex03_plot3.png" width="640" alt="questex03_plot3" />
+      <p/>
+    </div>
+    <div id="text" >
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+<p>
+This example is based on an IBM paper by Rob Groves et al. &quot;Temperature Dependence of
+Q in Spiral Inductors Fabricated in a Silicon Germanium BiCMOS Technology&quot; IEEE BCTM
+9.3 pp. 153-156 1996.  It shows the modeling of a 10nH spiral inductor that can be
+compared to measured results from the reference.
+</p>
+<p>
+The GDSII file can be viewed in Maskviews, Expert or any other Layout editing tool that
+can read GDSII format. The input file was created using information from the paper.
+</p>
+<p>
+The example demonstrates how to write the technology part of the input file. The
+attachment of electrode names in the GDSII layout file to bond/probe pads in the
+circuit is achieved by declaring the layer containing the text for the electrode names
+twice, once with text declared and once without text declared. These two layers (one
+with text declared and one without) are then electrically connected with the CONNECTION
+command to give the structure its electrode names.
+</p>
+<p>
+Of note in the process part is the depth of the substrate and the height of the air
+above the device which is included into the modelled structure volume.
+It is vital for accurate inductance calculations, that the full volume of inductive
+flux lines are included.  As a general rule, a safe substrate depth and air height
+would be the diameter of the inductor being simulated.  Since the inductor in this
+example has a diameter of approximately 400um, the depth of the substrate in the
+simulation was chosen to be 400um.
+</p>
+<p>
+It is also important to define both the conductivity and permittivity of the
+substrate for accurate modeling of the quality factor, Q, versus frequency.
+</p>
+<p>
+A two port simulation is defined by using the reserved electrode name called
+&quot;subs_ground&quot;. This grounds out the reference electrode for both the &quot;IN&quot; port
+and the &quot;OUT&quot; port of the two port network.
+</p>
+<p>
+All the results will be placed in a directory structure under the name
+&quot;questex03_db&quot; which was defined with SAVE command.
+</p>
+<p>
+Three dimensional structure files can be viewed with TonyPlot3d.  All other RLCG and
+Q versus frequency data can be viewed with TonyPlot.
+</p>
+  </div></body>
+</html>

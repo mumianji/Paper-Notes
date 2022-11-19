@@ -1,0 +1,119 @@
+# (c) Silvaco Inc., 2018
+go  athena
+#
+line x loc=0 spac=0.4 
+line x loc=0.5 spac=0.1
+line x loc=0.6 spac=0.1
+line x loc=1 spac=0.08
+line x loc=2 spac=0.3
+
+line x loc=3 spac=0.5
+line x loc=5 spac=0.05
+line x loc=6 spac=0.3 
+line x loc=7 spac=0.1
+line x loc=7.4 spac=0.1
+line x loc=7.5 spac=0.1
+line x loc=8 spac=0.4
+
+#
+line y loc=0.00 spac=0.01
+line y loc=0.2 spac=0.015
+line y loc=0.5 spac=0.06
+line y loc=1    spac=0.12
+line y loc=10.0 spac=2.0
+#
+init orientation=100 c.boron=1e15 
+# sacrificial oxide
+diffus time=30 temp=1000 dryo2
+#
+etch oxide all
+#
+# gate oxide growth 
+# make sure more than one grid point is included within the gate oxide thickness
+method grid.ox=0.01
+diffus time=50 temp=1000 dryo2 press=1.00 hcl=3
+#
+extract name="gateox" thickness material="SiO~2" mat.occno=1 x.val=-10
+
+# vt adjust implant 
+implant boron dose=6e11 energy=20 pearson 
+
+# Poly deposition
+depo poly thick=0.35 divi=10 
+
+# Poly definition
+etch poly left p1.x=1
+etch poly right p1.x=5
+# slightly relax grid 
+relax y.min=0.4 dir.y=f
+relax y.min=0.4 dir.y=f
+
+# Light n+ implant
+implant phosphor dose=2e12 energy=100 pearson 
+# S/D mask and implant
+depo barrier thick=0.01 div=1
+etch barrier left p1.x=2
+etch barrier right p1.x=7
+implant phos dose=3.0e15 energy=100 pearson 
+strip
+
+# final anneal
+method fermi compress
+impurity i.phosph poly /oxide trn.0=0.0
+diffuse time=30 temp=1000 nitro press=1.0
+
+# contact holes
+etch oxide left p1.x=0.5
+etch oxide right p1.x=7.5
+
+# Contact metal deposition and etching
+deposit alumin thick=0.1 divi=2
+etch alumin start x=0.6 y=-10
+etch cont x=0.6 y=10
+etch cont x=7.4 y=10
+etch done x=7.4 y=-10
+
+# electrode naming
+electrode name=source x=0.3
+electrode name=gate x=2 y=0.0
+electrode name=drain x=7.7
+electrode name=substrate backside
+
+
+# estimate threshold voltage
+extract name="1dvt" 1dvt ntype x.val=3.0
+
+structure outf=powerex07_0.str
+tonyplot powerex07_0.str -set powerex07_0.set
+
+
+go atlas
+
+models cvt  srh print 
+impact selb
+
+
+contact name=gate n.poly
+interface qf=3e10
+#
+solve init
+method newton trap maxtraps=10 climit=1e-4  ir.tol=1e-30 ix.tol=1e-30
+
+
+solve init
+#
+log outf=powerex07.log
+solve vdrain=0.03
+solve vdrain=0.1
+solve vdrain=0.25 vstep=0.25 vfinal=2 name=drain 
+
+solve  vstep=1 vfinal=10 name=drain  
+
+solve  vstep=2.0 vfinal=44 name=drain 
+solve  vstep=0.25 vfinal=50 name=drain compl=1.e-7 cname=drain \
+    outf=powerex07_1.str master onefile 
+extract name="bv" max(v."drain")
+
+tonyplot powerex07.log -set powerex07_log.set
+tonyplot powerex07_1.str -set powerex07_1.set
+quit

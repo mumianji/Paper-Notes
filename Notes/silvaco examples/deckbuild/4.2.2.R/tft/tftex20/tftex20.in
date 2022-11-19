@@ -1,0 +1,25 @@
+
+go internal
+
+system rm tftex20_dvth_vs_ramptime.dat
+system echo "Hysteresis Simulation: Vth Shift vs. Ramp Time" >> tftex20_dvth_vs_ramptime.dat
+system echo "5 2 2" >> tftex20_dvth_vs_ramptime.dat
+system echo "Ramp Time" >> tftex20_dvth_vs_ramptime.dat
+system echo "Vth Shift" >> tftex20_dvth_vs_ramptime.dat
+
+load infile=tftex20_aux.in
+
+# forward and reverse gate bias ramping time is controlled by 'dt' variable
+sweep parameter=dt type=list range="10e-3, 50e-3, 100e-3, 150e-3, 200e-3" 
+
+
+#plot hysteresis curve for each ramp time
+tonyplot -overlay tftex20_1_0.01.log tftex20_2_0.01.log -set tftex20_1.set
+tonyplot -overlay tftex20_1_0.05.log tftex20_2_0.05.log -set tftex20_2.set
+tonyplot -overlay tftex20_1_0.1.log tftex20_2_0.1.log -set tftex20_3.set
+tonyplot -overlay tftex20_1_0.15.log tftex20_2_0.15.log -set tftex20_4.set
+tonyplot -overlay tftex20_1_0.2.log tftex20_2_0.2.log -set tftex20_5.set
+tonyplot tftex20_dvth_vs_ramptime.dat -set tftex20_6.set
+
+quit
+

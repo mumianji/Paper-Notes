@@ -1,0 +1,82 @@
+# TPCS version: 8
+# various properties
+log label 0
+key opaque 1
+mark frequency 0
+mark overlay 0
+graph width 0 1
+graph width 1 1
+graph width 2 1
+graph width 3 1
+graph width 4 4
+graph width 5 1
+sequence size 2
+sequence width 1
+log zero 0
+sequence mark 0 4
+sequence mark 1 1
+sequence mark 2 2
+sequence mark 3 3
+sequence mark 4 4
+sequence mark 5 5
+# Functions
+function 1 "" ""
+function 2 "" ""
+function 3 "" ""
+function 4 "" ""
+select 1
+# xygraph flags
+show points on
+show lines on
+# xygraph types
+xygraph type 0 convert 0
+xygraph yaxis scale linear
+# xygraph x-axis
+xygraph xaxis "gate bias" linear
+# xygraph y-axes
+xygraph yaxis none
+xygraph yaxis "gate-drain capacitance" linear
+xygraph yaxis "(unknown electricals)" linear
+# xygraph group
+xygraph group "(unknown electricals)"
+# xygraph cie
+xygraph cie off
+# key positions
+key contours 1 at 1
+key contours 2 at 1
+key contours 3 at 6
+key electrical at 0
+key vectors at 6
+key overlay at 0
+key regions at 4
+key apply 
+# annotation, titles
+title main "CV Plot"
+title sub "Multi-Frequency ac small signal analysis"
+# annotation, footers
+footer right none
+footer left none
+# annotation, show
+show xaxis on
+show yaxis on
+show grid on
+show label xaxis on
+show label yaxis on
+# annotation, axes
+range xaxis 0, 20 increment 5,4,1
+range yaxis 0, 3.5 increment 0.5,4,1
+label xaxis "Gate Voltage(V)"
+label yaxis "Gate Capacitance(pF)"
+# zoom
+zoom from 0, 0 scale 1, 1
+# user labels
+label "100KHz" from 9.92, 2.16704 color 0 scale 0
+label 0 at 7 7
+label "1MHz" from 13.152, 1.20045 color 0 scale 0
+label 1 at 7 7
+label "2KHz" from 4.064, 2.35412 color 0 scale 0
+label 2 at 7 7
+# overlay level names
+label overlay 0 "cv1_f_sim.dat"
+label overlay 1 "cv2_f_sim.dat"
+label overlay 2 "cv3_f_sim.dat"

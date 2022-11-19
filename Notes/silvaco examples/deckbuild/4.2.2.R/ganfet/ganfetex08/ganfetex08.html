@@ -1,0 +1,80 @@
+<html>
+  <head>
+    <title>Enhancement-Mode N-Polar GaN MISFETs</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Enhancement-Mode N-Polar GaN MISFETs</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Blaze</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="ganfetex08_plot0.png" width="640" alt="ganfetex08_plot0" />
+      <p/>
+      <img src="ganfetex08_plot1.png" width="640" alt="ganfetex08_plot1" />
+      <p/>
+      <img src="ganfetex08_plot2.png" width="640" alt="ganfetex08_plot2" />
+      <p/>
+      <img src="ganfetex08_plot3.png" width="640" alt="ganfetex08_plot3" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates how to simulate an Enhancement-Mode N-Polar GaN MISFETs
+based on the following paper:
+</p>
+<p>
+&quot;Enhancement-Mode N -Polar GaN MISFETs With Self_Aligned Source/Drain Regrowth&quot;
+Uttam Singisetti, et al., IEEE Electron De3vice Letters. Vol,32, NO. 2 feb 2011
+</p>
+<p>
+There is a growing interest in high performance enhancement mode GaN channel
+devices because of single voltage operation and simpler circuit topologies. The
+advantages of the enhancement mode GaN FETs fabricated on N-polar GaN include
+reduced source/drain access resistance and wide bandgap barrier layers
+used for polarization-induced field allowing 2DEG depletion under the channel.
+Removal of the AlN layer from the access region recovers the 2DEG induced by
+the bottom AlN layer. Plots of the bang diagram under the gate and under the
+nitride sidewall reveal indeed 2DEG under the access region but not under the
+gate.
+</p>
+<p>
+Since in this structure N-Polar GaN (instead of Ga-polar GaN) was used the
+parameter
+<b> polar.scale </b> was set to
+<b> -1 </b> </p>
+<p>
+Charge was also set at the interface between the nitride and AlN layer under
+the gate. To do so the model
+<b> pch.ins </b> was set for region=2 (i.e capping AlN layer)
+</p>
+<p>
+The simulation of the transfert characteristic reveals a Vt of around 1V
+and a maximum Ids of around 0.7A/mm at Vgs=5V.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

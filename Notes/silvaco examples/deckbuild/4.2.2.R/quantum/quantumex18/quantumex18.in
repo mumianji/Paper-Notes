@@ -1,0 +1,189 @@
+# (c) Silvaco Inc., 2018
+go atlas
+
+# n-type GaAs RTD example 
+# 2nm-2nm-2nm double barrier
+
+
+
+
+mesh   diag.flip   
+
+   
+#This mesh is not important. Normally we'll use only one slice.
+x.mesh loc=0.00 spac=0.01
+x.mesh loc=0.01  spac=0.01
+
+
+# non-uniform mesh in transport direction. Need higher resolution around the barriers. 
+y.mesh loc=-0.072  spac=0.0005
+y.mesh loc=-0.01  spac=0.0002
+y.mesh loc=0.011  spac=0.0001
+y.mesh loc=0.013  spac=0.0001
+y.mesh loc=0.015  spac=0.0001
+y.mesh loc=0.017  spac=0.0001
+y.mesh loc=0.04    spac=0.0002
+y.mesh loc=0.1    spac=0.0005
+
+
+
+#
+# Source and drain regions have to be specified as EQUIL.NEGF
+# to impose quasi-equilibrium condition.
+
+
+region num=1 material=GaAs      \
+	   y.max=0.011 equil.negf
+
+region num=2 material=AlGaAs x.comp=0.5 \
+	   y.min=0.011 y.max=0.013 
+	   
+region num=3 material=GaAs  \
+	   y.min=0.013 y.max=0.015  
+
+region num=4 material=AlGaAs x.comp=0.5 \
+	   y.min=0.015 y.max=0.017 
+	   
+region num=5 material=GaAs     \
+	   y.min=0.017 equil.negf
+
+
+elec num=1 name=emitter top
+elec num=2 name=collector bottom
+
+  
+
+material  material=AlGaAs  align=0.4
+
+doping reg=1 y.max=-0.01 uniform n.type conc=1e18
+doping reg=5 y.min= 0.04 uniform n.type conc=1e18
+
+
+#SP mesh can be used
+
+#spx.mesh loc=0.00 spac=0.002
+#spx.mesh loc=0.01  spac=0.002
+
+#spy.mesh loc=-0.072 spac=0.001
+#spy.mesh loc= 0.011 spac=0.0002
+#spy.mesh loc= 0.17   spac=0.0002
+#spy.mesh loc= 0.1   spac=0.001
+
+
+
+
+
+models  n.negf_pl1d  eta.negf=0.0066 esize.negf=2001  eig.ymin=-0.01 eig.ymax=0.015
+
+
+method carr=0 
+
+#
+#  Transmission, DOS and Current spectra
+#
+probe transmission x=0 filename="quantumex18_TranvsE_"
+probe dosvse  x=0     y=-0.03
+probe dosvse  x=0     y=0.01
+probe dosvse  x=0     y=0.014
+probe dosvse  x=0     y=0.018
+probe dosvse  x=0     y=0.06
+probe curdvse  x=0     y=0.06
+
+#
+# Additionally, we probe total charge and resonant energies at each bias point 
+# and store them in the IV log file.
+#
+probe name="Well charge " integrate charge  y.min=0.012 y.max=0.016
+probe name="Emitter charge " integrate charge  y.min=-0.072 y.max=0.012
+
+probe name="Well state energy (eV)"  nbnd.ener  state=1     y=0.014 x=0
+probe name="Emitter state energy (eV)"  nbnd.ener  state=2  y=0.01 x=0
+
+
+
+# ESIZEOUT.NEGF on the OUTPUT statement is the size of energy grid in the output file TranvsE_quantumex18_0.log
+# If you don't set it, it will be the same as ESIZE.NEGF on the MODELS statement.
+ 
+output con.band val.band  eigen=5
+#esizeout.negf=10001
+
+# Store IV
+log outf=quantumex18_IV.log
+
+
+# Use NEGF.LOG on the SAVE statement to output Transmission and DOS vs. Energy
+
+solve init
+save outf=quantumex18_init.str negf.log negf.eig
+
+solve v2=0 name=collector vstep=0.02 vfinal=0.1   negf.eig
+save outf=quantumex18_v01.str negf.log  negf.eig
+
+solve name=collector vstep=0.02 vfinal=0.2  negf.eig
+save outf=quantumex18_v02.str negf.log negf.eig
+
+solve name=collector vstep=0.02 vfinal=0.3  negf.eig
+save outf=quantumex18_v03.str negf.log negf.eig
+
+solve name=collector vstep=0.02 vfinal=0.4  negf.eig
+save outf=quantumex18_v04.str negf.log negf.eig
+
+solve name=collector vstep=0.02 vfinal=0.48  negf.eig
+
+solve name=collector vstep=0.005 vfinal=0.5  negf.eig
+save outf=quantumex18_v05.str negf.log negf.eig
+
+
+solve name=collector vstep=0.005 vfinal=0.6  negf.eig
+save outf=quantumex18_v06.str negf.log negf.eig
+
+solve name=collector vstep=0.005 vfinal=0.68  negf.eig
+save outf=quantumex18_v068.str negf.log negf.eig
+
+solve name=collector vstep=0.005 vfinal=0.7  negf.eig
+save outf=quantumex18_v07.str negf.log negf.eig
+
+
+solve name=collector vstep=0.005 vfinal=0.8  negf.eig
+save outf=quantumex18_v08.str negf.log negf.eig
+
+
+solve name=collector vstep=0.005 vfinal=0.9  negf.eig
+save outf=quantumex18_v09.str negf.log negf.eig
+
+
+solve name=collector vstep=0.02 vfinal=1  negf.eig
+save outf=quantumex18_v1.str negf.log negf.eig
+
+solve name=collector vstep=0.02 vfinal=2  negf.eig
+save outf=quantumex18_v2.str negf.log negf.eig
+
+solve name=collector vstep=0.02 vfinal=3  negf.eig
+save outf=quantumex18_v3.str negf.log negf.eig
+
+solve name=collector vstep=0.02 vfinal=4  negf.eig
+save outf=quantumex18_v4.str negf.log negf.eig
+
+log off
+
+
+tonyplot quantumex18_v06.str -set quantumex18_fig1.set
+
+tonyplot quantumex18_v06.str -set quantumex18_fig2.set
+
+tonyplot quantumex18_IV.log -set quantumex18_fig3.set
+
+tonyplot quantumex18_IV.log -set quantumex18_fig4.set
+
+tonyplot quantumex18_TranvsE_6.log -set quantumex18_fig5.set
+
+
+quit
+
+
+
+
+
+
+
+

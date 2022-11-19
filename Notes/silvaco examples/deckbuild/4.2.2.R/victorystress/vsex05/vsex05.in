@@ -1,0 +1,267 @@
+# Creation of the structure 
+
+go athena
+
+# vertical RSD
+
+line x loc=0 spac=0.001 tag=x_b
+line x loc=0.013 spac=0.001 tag=x_g
+line x loc=0.02 spac=0.001 tag=x_sd1
+line x loc=0.038 spac=0.001 tag=x_sd2
+line x loc=0.043 spac=0.001 tag=x_e
+
+line y loc=-0.045 spac=0.001 tag=y_t
+line y loc=-0.023 spac=0.001 tag=y_sd
+line y loc=-0.002 spac=0.001 tag=y_p
+line y loc=0 spac=0.001 tag=y_0
+line y loc=0.005 spac=0.001 tag=y_s
+line y loc=0.025 spac=0.001 tag=y_ox
+
+region silicon xlo=x_b xhi=x_e ylo=y_0 yhi=y_s
+region polysilicon xlo=x_b xhi=x_g ylo=y_t yhi=y_p
+region oxide xlo=x_b xhi=x_g ylo=y_p yhi=y_0
+region oxide xlo=x_b xhi=x_e ylo=y_s yhi=y_ox
+region material=RSD_stressor xlo=x_sd1 xhi=x_e ylo=y_sd yhi=y_0
+region material=Stress_liner xlo=x_g xhi=x_sd1 ylo=y_t yhi=y_0
+region aluminum xlo=x_sd1 xhi=x_e ylo=y_t yhi=y_sd
+
+init two.d
+
+etch material=Stress_liner above p1.y=0
+etch aluminum above p1.y=0.0
+
+method etch.eps=1e-8
+
+set name="vsex05_1.str"
+
+deposit material=Stress_liner thick=0.005 div=5
+
+structure mirror left
+
+structure outfile=$name
+
+go athena
+
+# faceted RSD
+
+line x loc=0 spac=0.001 tag=x_b
+line x loc=0.013 spac=0.001 tag=x_g
+line x loc=0.02 spac=0.001 tag=x_sd1
+line x loc=0.038 spac=0.001 tag=x_sd2
+line x loc=0.043 spac=0.001 tag=x_e
+
+line y loc=-0.045 spac=0.001 tag=y_t
+line y loc=-0.023 spac=0.001 tag=y_sd
+line y loc=-0.002 spac=0.001 tag=y_p
+line y loc=0 spac=0.001 tag=y_0
+line y loc=0.005 spac=0.001 tag=y_s
+line y loc=0.025 spac=0.001 tag=y_ox
+
+region silicon xlo=x_b xhi=x_e ylo=y_0 yhi=y_s
+region polysilicon xlo=x_b xhi=x_g ylo=y_t yhi=y_p
+region oxide xlo=x_b xhi=x_g ylo=y_p yhi=y_0
+region oxide xlo=x_b xhi=x_e ylo=y_s yhi=y_ox
+region material=RSD_stressor xlo=x_sd1 xhi=x_e ylo=y_sd yhi=y_0
+region material=Stress_liner xlo=x_g xhi=x_sd1 ylo=y_t yhi=y_0
+region aluminum xlo=x_sd1 xhi=x_e ylo=y_t yhi=y_sd
+
+init two.d
+
+etch material=Stress_liner above p1.y=0
+etch aluminum above p1.y=0.0
+
+method etch.eps=1e-8
+
+set name="vsex05_2.str"
+
+etch material=RSD_stressor start x=0.02 y=-0.023
+etch cont x=0.02 y=0
+etch done x=0.038 y=-0.023
+
+deposit material=Stress_liner thick=0.005 div=5
+
+structure mirror left
+
+structure outfile=$name
+
+
+# Vertical RSD, Nitride liner as stressor and corresponding IV characteristics
+
+go victorystress 
+
+init structure="vsex05_1.str"
+
+material material("Stress_liner") intrin.sig=-1.0e10 
+
+material silicon model.iso=0
+
+material material("RSD_stressor") young.m=1.87e12
+material material("RSD_stressor") poiss.r=0.28
+
+material material("Stress_liner") young.m=3.89e12
+material material("Stress_liner") poiss.r=0.3
+
+material polysilicon young.m=1.87e12
+material polysilicon poiss.r=0.28
+
+stress exposed strain rebalance
+
+mobility nhance phance
+
+save structure="vsex05_3.str"
+
+go atlas
+
+mesh inf=vsex05_3.str ^diag.flip
+
+region modify number=5 material=silicon
+region modify number=7 material=silicon
+region modify number=6 material=nitride
+
+electrode   name=gate   x.min=-0.013 x.max=0.013 y.min=-0.045  y.max=-0.002
+electrode   name=drain x.min=0.038 x.max=0.05 y.min=-0.023  y.max=-0.02
+electrode   name=source  x.min=-0.05 x.max=-0.038 y.min=-0.023  y.max=-0.02
+electrode name=substrate bottom
+
+doping uniform acceptor conc=1e20 region=5
+doping uniform acceptor conc=1e20 region=7
+doping uniform acceptor conc=1e20 region=3 x.min=-0.05 x.max=-0.02 y.min=0  y.max=0.005
+doping uniform acceptor conc=1e20 region=3 x.min=0.02 x.max=0.05 y.min=0  y.max=0.005
+doping uniform donor conc=1e18 region=3
+
+contact  name=gate workf=4.5
+
+models cvt srh print
+mobility  nhance  phance
+
+method      newton trap maxtrap=10 
+
+solve       vdrain=-0.01
+solve       vdrain=-0.03 
+solve       vdrain=-0.05
+solve       vdrain=-0.1
+
+log outf=vsex05_0.log
+solve  vgate=0 vstep=-0.2 name=gate vfinal=-3
+log off
+
+solve init
+solve vgate=-3
+log outf=vsex05_1.log
+solve  vdrain=0 vstep=-0.2 name=drain vfinal=-3
+
+
+# Faceted RSD, Nitride liner as stressor and corresponding IV characteristics
+
+go victorystress
+
+init structure="vsex05_2.str"
+
+material material("Stress_liner") intrin.sig=-1.0e10 
+
+material silicon model.iso=0
+
+material material("RSD_stressor") young.m=1.87e12
+material material("RSD_stressor") poiss.r=0.28
+
+material material("Stress_liner") young.m=3.89e12
+material material("Stress_liner") poiss.r=0.3
+
+material polysilicon young.m=1.87e12
+material polysilicon poiss.r=0.28
+
+stress exposed strain rebalance
+
+mobility nhance phance
+save structure="vsex05_4.str"
+
+tonyplot vsex05_3.str vsex05_4.str -set vsex05_1.set
+tonyplot vsex05_3.str vsex05_4.str -set vsex05_1_mob.set
+
+go atlas
+
+mesh inf=vsex05_4.str ^diag.flip
+
+region modify number=5 material=silicon
+region modify number=7 material=silicon
+region modify number=6 material=nitride
+
+electrode   name=gate   x.min=-0.013 x.max=0.013 y.min=-0.045  y.max=-0.002
+electrode   name=drain x.min=0.038 x.max=0.05 y.min=-0.023  y.max=-0.02
+electrode   name=source  x.min=-0.05 x.max=-0.038 y.min=-0.023  y.max=-0.02
+electrode name=substrate bottom
+
+doping uniform acceptor conc=1e20 region=5
+doping uniform acceptor conc=1e20 region=7
+doping uniform acceptor conc=1e20 region=3 x.min=-0.05 x.max=-0.02 y.min=0  y.max=0.005
+doping uniform acceptor conc=1e20 region=3 x.min=0.02 x.max=0.05 y.min=0  y.max=0.005
+doping uniform donor conc=1e18 region=3
+
+contact  name=gate workf=4.5
+
+models cvt srh print
+mobility  nhance  phance
+
+method      newton trap maxtrap=10 
+
+solve       vdrain=-0.01
+solve       vdrain=-0.03 
+solve       vdrain=-0.05
+solve       vdrain=-0.1
+
+log outf=vsex05_2.log
+solve  vgate=0 vstep=-0.2 name=gate vfinal=-3
+log off
+
+solve init
+solve vgate=-3
+log outf=vsex05_3.log
+solve  vdrain=0 vstep=-0.2 name=drain vfinal=-3
+
+
+# NO stress 
+
+go atlas
+
+mesh inf=vsex05_1.str ^diag.flip
+
+region modify number=5 material=silicon
+region modify number=7 material=silicon
+region modify number=6 material=nitride
+
+electrode   name=gate   x.min=-0.013 x.max=0.013 y.min=-0.045  y.max=-0.002
+electrode   name=drain x.min=0.038 x.max=0.05 y.min=-0.023  y.max=-0.02
+electrode   name=source  x.min=-0.05 x.max=-0.038 y.min=-0.023  y.max=-0.02
+electrode name=substrate bottom
+
+doping uniform acceptor conc=1e20 region=5
+doping uniform acceptor conc=1e20 region=7
+doping uniform acceptor conc=1e20 region=3 x.min=-0.05 x.max=-0.02 y.min=0  y.max=0.005
+doping uniform acceptor conc=1e20 region=3 x.min=0.02 x.max=0.05 y.min=0  y.max=0.005
+doping uniform donor conc=1e18 region=3
+
+contact  name=gate workf=4.5
+
+models cvt srh print
+#mobility  nhance  phance
+
+method      newton trap maxtrap=10 
+
+solve       vdrain=-0.01
+solve       vdrain=-0.03 
+solve       vdrain=-0.05
+solve       vdrain=-0.1
+
+log outf=vsex05_4.log
+solve  vgate=0 vstep=-0.2 name=gate vfinal=-3
+log off
+
+solve init
+solve vgate=-3
+log outf=vsex05_5.log
+solve  vdrain=0 vstep=-0.2 name=drain vfinal=-3
+
+tonyplot -overlay vsex05_4.log vsex05_0.log vsex05_2.log -set vsex05_2.set
+tonyplot -overlay vsex05_5.log vsex05_1.log vsex05_3.log -set vsex05_3.set
+
+quit

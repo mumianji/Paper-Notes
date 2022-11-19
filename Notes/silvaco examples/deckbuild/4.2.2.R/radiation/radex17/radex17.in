@@ -1,0 +1,218 @@
+# (c) Silvaco Inc., 2018
+
+go victoryprocess
+
+init layout=radex17.lay material=silicon depth=1 gasheight=1
+
+# Create Base Mesh
+set X=0
+loop steps=15
+line x location=$X
+set X=0.0325+$X
+l.end
+set X=0
+loop steps=33
+line y location=$X
+set X=0.0325+$X
+l.end
+
+# Add Mesh for Single Event Upset Strike
+line x location=0.315
+line x location=0.335
+line y location=0.51
+line y location=0.53
+
+# Add mesh for Active Channel Regions
+line y location=0.19
+line y location=0.2
+line y location=0.205
+line y location=0.21
+line y location=0.245
+line y location=0.25
+line y location=0.255
+line y location=0.265
+
+line y location=0.775
+line y location=0.785
+line y location=0.79
+line y location=0.795
+line y location=0.83
+line y location=0.835
+line y location=0.84
+line y location=0.85
+
+# Add Depth Mesh
+line z location=-1
+line z location=-0.3315
+line z location=-0.2315
+line z location=-0.1315
+line z location=-0.1215
+line z location=-0.1115
+line z location=-0.1015
+line z location=-0.0915
+line z location=-0.0015
+line z location=-0.001
+line z location=-0.0005
+line z location=0
+line z location=0.2
+line z location=1
+
+# Trench Formation
+etch material=silicon thick=0.2 max mask=ACTIVE
+deposit material=oxide thick=0 max
+
+# Well Implants
+deposit material=oxynitride thick=0.003 max
+doping material=silicon boron=5e15
+material material=oxynitride inherit=oxide
+
+mask mask=NWELL reverse
+implant bf2 dose=3e12   energy=5  tilt=7 rotation=27
+implant bf2 dose=6e12   energy=10 tilt=7 rotation=27
+implant bf2 dose=1.2e13 energy=20 tilt=7 rotation=27
+implant bf2 dose=8e13   energy=50 tilt=7 rotation=27
+strip material=barrier
+
+mask mask=NWELL
+implant arsenic dose=8e11   energy=5  tilt=7 rotation=27
+implant arsenic dose=1.6e12 energy=10 tilt=7 rotation=27
+implant arsenic dose=3.2e12 energy=20 tilt=7 rotation=27
+implant arsenic dose=8e13   energy=50 tilt=7 rotation=27
+strip material=barrier
+
+# Gate Formation
+etch material=oxynitride thick=0.0015 max
+deposit material=polysilicon thick=0.1 max
+# Leave some polysilicon to bring peak of nLDD implant close to the surface
+etch material=polysilicon thick=0.086 max mask=POLY
+
+# LDD Implants
+mask mask=NWELL reverse
+implant arsenic dose=2e14 energy=5 tilt=0 rotation=0
+strip material=barrier
+etch material=polysilicon thick=0.11 max mask=POLY
+mask mask=NWELL
+implant bf2 dose=1e13 energy=5 tilt=0 rotation=0
+strip material=barrier
+
+# Spacer
+deposit material=nitride thick=0.03 conformal curved
+deposit material=nitride thick=0.07 min
+etch material=nitride thick=0.1 angle=80 dry mask=POLY deltacd=0.0305
+etch material=nitride thick=0.031 min mask=POLY reverse
+
+# Source Drain Implants
+mask mask=NWELL reverse
+implant arsenic dose=1e15 energy=5 tilt=0 rotation=0
+strip material=barrier
+mask mask=NWELL
+implant bf2 dose=1e15 energy=5 tilt=0 rotation=0
+strip material=barrier
+
+# Spike RTA
+diffuse temperature=800 t.final=1100 time=0.2
+
+# Polycide
+mask mask=POLY reverse
+deposit material=CoSix thickness=0.03 min
+strip material=barrier
+
+# Contact Holes
+deposit material=BPSG thickness=0.1 max
+etch material=BPSG thickness=0.25 max mask=CONT angle=86 reverse
+etch material=oxynitride thick=0.002 min
+
+# Metal 1
+deposit material=aluminum thick=0.1 max 
+etch material=aluminum thick=0.2 max mask=METAL
+
+electrodes mask=METAL material=aluminum
+
+save name=radex17_vp_0
+
+
+go victorymesh
+
+load in=radex17_vp_0
+
+remesh conformal
+
+save out=radex17_0.str
+
+
+go victorydevice 
+
+mesh infile=radex17_0.str
+
+material material=oxynitride permittivity=6
+models   material=silicon     consrh cvt
+models   material=polysilicon consrh
+contact  name=drain current
+method   climit=1e-4 linear.max.iterations=2500 px.tol=1e-8 cx.tol=1e-8 \
+         seu.integrate pas norm.scaling.local
+
+set let=1
+set density=$let*0.011
+singleeventupset b.density=$density pcunits radius=0.02 t0=5e-12 tc=2e-13 \
+      entrypoint="0.325,0.52,-0.001" exitpoint="0.325,0.52,1.001" radialgauss
+
+solve init
+solve previous
+# save outfile=0V.str
+
+# Ramp Up DC  Bias Condition
+log outfile=radex17_0.log
+solve vvdd=0.001
+solve vvdd=0.015 vstep=0.015 vfinal=1.2 name=vdd
+# save outfile=Vdd_1p2V.str
+log off
+tonyplot radex17_0.log -set radex17_0.set
+
+# ION STRIKE ANALYSIS SIMULATION
+log outfile=radex17_1.log
+solve tstop=4.7e-12 dt=1e-13 prev
+solve tstop=5e-12 dt=1e-13 prev
+save outfile=radex17_1.str
+solve tstop=5.3e-12 dt=1e-13 prev
+solve tstop=1e-3 dt=1e-13 prev
+log off
+tonyplot radex17_1.log -set radex17_1.set
+
+
+# Optional Check of n- and p-channel Transistor Vt Characteristics
+
+go victorydevice 
+
+mesh infile=radex17_0.str
+
+material material=oxynitride permittivity=6
+models   material=silicon     consrh cvt
+models   material=polysilicon consrh
+method   climit=1e-4 linear.max.iterations=2500 px.tol=1e-8 cx.tol=1e-8 \
+         seu.integrate pas norm.scaling.local pas.minpivot=0
+
+solve init
+solve previous
+# save outfile=0V.str
+solve vvdd=0.001
+solve vvdd=0.01
+solve vvdd=0.05
+solve vdrain=0.01
+solve vdrain=0.05
+log outfile=radex17_2.log
+solve vgate=0.01
+solve vgate=0.05 vstep=0.05 vfinal=1 name=gate
+log off
+
+solve init
+solve previous
+solve vvss=-0.01
+solve vvss=-0.05
+solve vdrain=-0.01
+solve vdrain=-0.05
+log outfile=radex17_3.log
+solve vgate=-0.01
+solve vgate=-0.05 vstep=-0.05 vfinal=-1 name=gate
+log off
+
+tonyplot radex17_2.log -overlay radex17_3.log -set radex17_2.set

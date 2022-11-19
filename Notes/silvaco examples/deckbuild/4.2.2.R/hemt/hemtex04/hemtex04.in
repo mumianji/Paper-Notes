@@ -1,0 +1,166 @@
+# (c) Silvaco Inc., 2018
+go atlas
+# EB simulation
+# SECTION 1: Mesh input
+
+mesh
+
+x.mesh loc=0.0  spac=0.025
+x.mesh loc=0.1  spac=0.025
+x.mesh loc=0.35 spac=0.01
+x.mesh loc=0.45 spac=0.025
+x.mesh loc=0.5  spac=0.025
+
+y.mesh loc=-0.02  spac=0.01
+y.mesh loc=0.0    spac=0.005
+y.mesh loc=0.03   spac=0.0005
+y.mesh loc=0.0425 spac=0.005
+y.mesh loc=0.055  spac=0.0005
+y.mesh loc=0.2    spac=0.05
+
+
+# SECTION 2: Structure Specification
+
+region     num=1   material=GaAs y.min=0.03 y.max=0.055
+region     num=2  material=AlGaAs y.max=0.03 x.composition=0.3 
+region     num=3  material=AlGaAs y.min=0.055 x.composition=0.3
+region     num=4  oxide y.min=-0.02 y.max=0 
+  
+elec       num=1  name=source x.min=0.0 x.max=0.0 y.min=0.0 y.max=0.05
+elec       num=2  name=gate   x.min=0.1 x.max=0.35 y.min=0.0 y.max=0.0
+elec       num=3  name=drain  x.min=0.5 x.max=0.5 y.min=0.0 y.max=0.05
+
+doping     uniform y.min=0 y.max=0.03 n.type conc=1.e18
+doping     uniform y.min=0.03 n.type conc=1.e15
+doping     uniform x.min=0.0 x.max=0.05 y.min=0.03 y.max=0.05 n.type conc=1.e18
+doping     uniform x.min=0.45 x.max=0.5 y.min=0.03 y.max=0.05 n.type conc=1.e18
+
+interface x.min=0 x.max=0.5 y.min=-0.01 y.max=0.005 qf=-1.e12
+
+
+# SECTION 3: Material Models
+
+material material=GaAs mun=6500 taurel.el=1.e-12 taumob.el=1.e-12 vsat=1.e7
+material material=AlGaAs mun=2000 taurel.el=1.e-12 taumob.el=1.e-12 align=0.6
+
+model     fldmob    print hcte.el 
+model    material=GaAs  print  evsatmod=1 
+
+contact  number=2 workfun=4.64 
+
+
+# SECTION 4: Initial solution
+
+solve init
+save outf=hemtex04_0.str
+tonyplot  hemtex04_0.str -set hemtex04_0.set
+ 
+method gummel block newton  maxtrap=6 \
+  ir.tol=1.e-20 ix.tol=1.e-20 vsatmod.inc=0.05 carriers=1 electron
+
+
+# SECTION 5: Bias gate
+output con.band val.band e.velocity
+
+solve vgate=0
+  
+
+# SECTION 6: Drain ramp
+
+log outf=hemtex04_eb.log master
+
+method newton  maxtrap=6  \
+  ir.tol=1.e-20 ix.tol=1.e-20 vsatmod.inc=0.05 carriers=1 electron
+
+solve 
+solve vdrain=0.01  
+solve vdrain=0.025 vstep=0.025 vfinal=0.2 name=drain
+solve vdrain=0.25  vstep=0.05  vfinal=0.9 name=drain 
+solve vdrain=1  vstep=0.2  electr=3 vfinal=1.6 
+save outf=hemtex04_eb.str
+solve vdrain=1.8  vstep=0.2  electr=3 vfinal=3.0 
+
+ 
+go atlas
+# DD Simulation
+# SECTION 1: Mesh input
+
+mesh
+
+x.mesh loc=0.0  spac=0.025
+x.mesh loc=0.1  spac=0.025
+x.mesh loc=0.35 spac=0.01
+x.mesh loc=0.45 spac=0.025
+x.mesh loc=0.5  spac=0.025
+
+y.mesh loc=-0.02  spac=0.01
+y.mesh loc=0.0    spac=0.005
+y.mesh loc=0.03   spac=0.0005
+y.mesh loc=0.0425 spac=0.005
+y.mesh loc=0.055  spac=0.0005
+y.mesh loc=0.2    spac=0.05
+
+
+# SECTION 2: Structure Specification
+#
+region     num=1   material=GaAs y.min=0.03 y.max=0.055
+region     num=2  material=AlGaAs y.max=0.03 x.composition=0.3 
+region     num=3  material=AlGaAs y.min=0.055 x.composition=0.3
+region     num=4  oxide y.min=-0.02 y.max=0 
+  
+elec       num=1  name=source x.min=0.0 x.max=0.0 y.min=0.0 y.max=0.05
+elec       num=2  name=gate   x.min=0.1 x.max=0.35 y.min=0.0 y.max=0.0
+elec       num=3  name=drain  x.min=0.5 x.max=0.5 y.min=0.0 y.max=0.05
+
+doping     uniform y.min=0 y.max=0.03 n.type conc=1.e18
+doping     uniform y.min=0.03 n.type conc=1.e15
+doping     uniform x.min=0.0 x.max=0.05 y.min=0.03 y.max=0.05 n.type conc=1.e18
+doping     uniform x.min=0.45 x.max=0.5 y.min=0.03 y.max=0.05 n.type conc=1.e18
+
+interface x.min=0 x.max=0.5 y.min=-0.01 y.max=0.005 qf=-1.e12
+
+
+# SECTION 3: Material Models
+
+material material=GaAs mun=6500 taurel.el=1.e-12 taumob.el=1.e-12 vsat=1.e7
+material material=AlGaAs mun=2000 taurel.el=1.e-12 taumob.el=1.e-12 align=0.6
+
+model     fldmob    print  
+model    material=GaAs  print  evsatmod=1 
+
+contact  number=2 workfun=4.64 
+
+
+# SECTION 4: Initial solution
+
+solve init
+ 
+method gummel  newton  maxtrap=6 \
+  ir.tol=1.e-20 ix.tol=1.e-20 vsatmod.inc=0.05 electron carr=1
+
+
+# SECTION 5: Bias gate
+output con.band val.band e.velocity
+
+solve vgate=0
+  
+
+# SECTION 6: Drain ramp
+
+log outf=hemtex04_dd.log master
+
+method newton  maxtrap=6  \
+  ir.tol=1.e-20 ix.tol=1.e-20 vsatmod.inc=0.05 electron carr=1
+
+solve
+solve vdrain=0.01
+solve vdrain=0.025 vstep=0.025 vfinal=0.2 name=drain
+solve vdrain=0.25 vstep=0.05 vfinal=0.9 name=drain 
+solve vdrain=1  vstep=0.2  electr=3 vfinal=1.6 
+save outf=hemtex04_dd.str
+solve vdrain=1.8  vstep=0.2  electr=3 vfinal=3.0 
+
+tonyplot -overlay hemtex04_dd.log hemtex04_eb.log -set hemtex04_log.set
+
+quit
+

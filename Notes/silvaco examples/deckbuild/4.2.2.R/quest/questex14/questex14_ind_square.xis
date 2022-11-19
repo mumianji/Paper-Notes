@@ -1,0 +1,120 @@
+
+DEFINE COMMAND/replace "inductance";
+DEFINE ACTION
+PARAMETER wire_width
+PARAMETER space
+PARAMETER nb_coils
+PARAMETER radius
+DO BEGIN
+  ! UPDATE THE GDS BUMBER OF THESE LAYERS TO FIT WITH YOUR TECHNO. 
+  ! DO NOT CHANGE THE NAME
+  new layer "METAL_COIL" /datatype=0 /gdsnumber=1 /red=0 /green=0 /blue=255;
+  new layer "METAL_PATH_OUT" /datatype=0 /gdsnumber=2 /red=0 /green=255 /blue=0; 
+  new layer "VIA" /datatype=0 /gdsnumber=3 /red=255 /green=0 /blue=0;
+  new layer "ELEC_COIL" /gdsnumber=100 /red=0 /green=125 /blue=255;
+  new layer "ELEC_PATH" /gdsnumber=101 /red=0 /green=255 /blue=125; 
+  ! END OF EDITION
+   units /um;  
+  couche="METAL_COIL";
+  couche2="METAL_PATH_OUT";
+  wire_coords={};
+  nb_tours=1;
+  e=space+wire_width;
+  d1=(radius*2);
+  d2=d1;
+  x0=0;
+  y0=0;
+  ! Start the first coil
+  seq_add_last(wire_coords,x0);
+  seq_add_last(wire_coords,y0);
+  x_tmp2=x0;
+  y_tmp2=y0+(d2/2);
+  seq_add_last(wire_coords,x_tmp2);
+  seq_add_last(wire_coords,y_tmp2);
+  x_tmp3=x_tmp2-d1;
+  y_tmp3=y_tmp2;
+  seq_add_last(wire_coords,x_tmp3);
+  seq_add_last(wire_coords,y_tmp3);
+  x_tmp4=x_tmp3;
+  y_tmp4=y_tmp3-d2;
+  seq_add_last(wire_coords,x_tmp4);
+  seq_add_last(wire_coords,y_tmp4);
+  x5=x_tmp4;
+  y5=y_tmp4;
+  seq_add_last(wire_coords,x5);
+  seq_add_last(wire_coords,y5);
+  !next coils:
+  LOOP
+  BEGIN
+    if (nb_tours GTR nb_coils)  THEN (LEAVE LOOP);
+	x1 = x5;
+    y1 = y5-nb_tours*e; 
+    seq_add_last(wire_coords,x1);
+    seq_add_last(wire_coords,y1);
+    x2 = x1 + d1+(2*nb_tours-1)*e;
+    y2 = y1;
+    seq_add_last(wire_coords,x2);
+    seq_add_last(wire_coords,y2);             
+    x3 = x2;
+    y3 = y2+2*nb_tours*e+d2;
+    seq_add_last(wire_coords,x3);
+    seq_add_last(wire_coords,y3); 
+    x4 = x3 -2*nb_tours*e-d1;
+    y4 = y3 ;
+    seq_add_last(wire_coords,x4);
+    seq_add_last(wire_coords,y4); 
+    x5 = x4;
+    y5 = y4-nb_tours*e-d2 ;
+    !If it is the last coil:
+    if (nb_tours EQL nb_coils)  THEN (y5=y0);  
+    seq_add_last(wire_coords,x5);
+    seq_add_last(wire_coords,y5); 
+    nb_tours=nb_tours+1;              
+  END; 	
+!Input of the inductance
+x6=x5-50;
+y6=y0;
+seq_add_last(wire_coords,x6);
+seq_add_last(wire_coords,y6); 
+wire (wire_coords) /layer=("METAL_COIL") /width=(wire_width);
+!Output of the inductance
+wire_coords2={};
+seq_add_last(wire_coords2,x0);
+seq_add_last(wire_coords2,y0);
+x1_out = x0+48+(nb_coils*e);
+y1_out = y0; 
+seq_add_last(wire_coords2,x1_out);
+seq_add_last(wire_coords2,y1_out);
+wire (wire_coords2) /layer=("METAL_PATH_OUT") /width=(wire_width);
+! Via
+x0_via=x0-(wire_width/2)+2;;
+y0_via=y0-(wire_width/2)+2;
+via_size=(wire_width)-4;
+box (x0_via) (y0_via) (via_size) (via_size) /layer=("VIA");
+
+! Electrode IN
+x10_e=x6;
+y10_e=y6-3;
+x10_size=6;
+box (x10_e) (y10_e) (x10_size) (x10_size) /layer=("ELEC_COIL");
+text (x10_e+3) (y10_e+3) "IN" /height=(wire_width) /width=(wire_width/2) /layer=("ELEC_COIL");
+! Electrode OUT
+x11_e=x1_out-8;
+y11_e=y1_out-3;
+x11_size=6;
+box (x11_e) (y11_e) (x11_size) (x11_size) /layer=("ELEC_PATH");
+text (x11_e+3) (y11_e+3) "OUT" /height=(wire_width) /width=(wire_width/2) /layer=("ELEC_PATH");
+
+
+END;
+
+DEFINE ARGUMENT wire_width /COERCE=(FLOAT)/NAMED/IS_DEFAULT/VALUE_REQUIRED;
+DEFINE ARGUMENT space /COERCE=(FLOAT)/NAMED/IS_DEFAULT/VALUE_REQUIRED;
+DEFINE ARGUMENT nb_coils /COERCE=(FLOAT)/NAMED/IS_DEFAULT/VALUE_REQUIRED;
+DEFINE ARGUMENT radius /COERCE=(FLOAT)/NAMED/IS_DEFAULT/VALUE_REQUIRED;
+
+COMPLETE COMMAND;
+
+
+
+		

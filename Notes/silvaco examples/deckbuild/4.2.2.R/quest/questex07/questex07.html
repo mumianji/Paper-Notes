@@ -1,0 +1,77 @@
+<html>
+  <head>
+    <title>Octagonal inductor with surround earth shield</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Octagonal inductor with surround earth shield</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>QUEST</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>QUEST 2.0.2.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="questex07_plot0.png" width="640" alt="questex07_plot0" />
+      <p/>
+      <img src="questex07_plot1.png" width="640" alt="questex07_plot1" />
+      <p/>
+      <img src="questex07_plot2.png" width="640" alt="questex07_plot2" />
+      <p/>
+    </div>
+    <div id="text" >
+<p>
+This example is an octagonal inductor.  To load and run this example, select the
+<b> Load  </b> button in DeckBuild. This will copy the input file, GDSII file and results to your current working directory. Select the
+<b> Run </b> button to execute the example.
+</p>
+<p>
+The GDSII file can be viewed in MaskViews, Expert or other any layout editing tool that can
+read GDSII format. The process is a generic process using six metal levels and
+standard values for the conductivity and permittivity.
+</p>
+<p>
+Since the inductor in this example has a diameter of approximately 300um, the depth
+of the substrate in the simulation was chosen to be 400um. A pattern is around the
+inductor.
+</p>
+<p>
+A two port simulation is defined. The first port is between the electrodes &quot;in&quot; and
+&quot;gnd1&quot;. The second port is between the electrodes &quot;out&quot; and &quot;gnd2&quot;. The reference
+electrodes &quot;gnd1&quot; and &quot;gnd2&quot; are on the pattern around the inductor.
+</p>
+<p>
+All the results will be placed in a directory structure under the name &quot;questex07_db&quot;
+which was defined with SAVE command.
+</p>
+<p>
+Three dimensional structure files can be viewed with TonyPlot3d.  All other RLCG and
+Q versus frequency data can be viewed with TonyPlot.
+</p>
+<p>
+This example can be compared with the examples &apos;questex04&apos;, &apos;questex05&apos; and &apos;questex06&apos;
+because this is the same inductor but in the other examples the inductor is alone or
+a plate or a grid are below the inductor.
+</p>
+<p>
+For example in this case (inductor with surround shield), the Q factor is large but
+the resistance decreases with the frequency because the current return goes via the
+substrate (no plate or grid is below the inductor).
+</p>
+  </div></body>
+</html>

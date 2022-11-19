@@ -1,0 +1,57 @@
+# TPCS version: 6
+# key positions
+key contours 1 at 3
+key contours 2 at 1
+key contours 3 at 6
+key electrical at user 0.020333, 0.027197
+key vectors at 6
+key overlay at 0
+key regions at 4
+select 1
+# xygraph flags
+show points on
+show lines on
+# xygraph types
+xygraph type 0 convert 0
+xygraph yaxis scale linear
+# xygraph x-axis
+xygraph xaxis "collector bias" linear
+# xygraph y-axes
+xygraph yaxis none
+xygraph yaxis "collector current" linear
+# annotation, titles
+title main auto
+title sub auto
+# annotation, footers
+footer right none
+footer left none
+# annotation, show
+show xaxis on
+show yaxis on
+show grid off
+show label xaxis on
+show label yaxis on
+# annotation, axes
+range xaxis auto
+range yaxis auto
+label xaxis "collector bias (V)"
+# zoom
+zoom from 0.000000, 0.000000 scale 1.000000, 1.000000
+# user labels
+label "Ib=1.e-6 A/~mm" from 3.604159, 0.000243 color 0 scale 1
+label 0 at 5 0
+label "Ib=2.e-6 A/~mm" from 2.765434, 0.000383 color 0 scale 1
+label 1 at 5 0
+label "Ib=3.e-6 A/~mm" from 2.944362, 0.000491 color 0 scale 1
+label 2 at 5 0
+label "Ib=4.e-6 A/~mm" from 3.078558, 0.000585 color 0 scale 1
+label 3 at 5 0
+label "Ib=5.e-6 A/~mm" from 4.297505, 0.000685 color 0 scale 1
+label 4 at 5 0
+# overlay level names
+label overlay 0 "bjtex04_1.log"
+label overlay 1 "bjtex04_2.log"
+label overlay 2 "bjtex04_3.log"
+label overlay 3 "bjtex04_4.log"
+label overlay 4 "bjtex04_5.log"
+draw all

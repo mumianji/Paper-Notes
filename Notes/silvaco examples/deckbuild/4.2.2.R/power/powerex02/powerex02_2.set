@@ -1,0 +1,69 @@
+# TPCS version: 4
+key contours 1 at 3
+key contours 2 at 1
+key contours 3 at 6
+key materials at 4
+key electrical at 6
+key profile at 6
+key vectors at 6
+key overlay at 2
+key regions at 4
+select 1
+show mesh off
+show edges on
+show materials on
+show contours on
+show light off
+show vectors off
+show junctions off
+show electrodes off
+show threed off
+mesh2d apply
+draw 1
+contours select 1
+contours impurity "Lattice Temperature"
+contours materials all
+contours min auto
+contours max auto
+contours nsteps 33
+contours type fill
+contours outline off
+contours color 0
+contours apply
+contours select 2
+contours impurity "None"
+contours materials all
+contours min auto
+contours max auto
+contours nsteps 33
+contours type fill
+contours outline off
+contours color 0
+contours apply
+contours select 3
+contours impurity "None"
+contours materials all
+contours min auto
+contours max auto
+contours nsteps 33
+contours type fill
+contours outline off
+contours color 0
+contours apply
+contours select 1
+title main "ATLAS II / SPISCES"
+title sub auto
+show xaxis on
+show yaxis on
+show grid off
+show label xaxis on
+show label yaxis on
+range xaxis auto
+range yaxis auto
+label xaxis "Microns"
+label yaxis "Microns"
+annotation apply
+zoom from 0.000000, 0.000000 scale 1.000000, 1.000000
+label overlay 0 "mosex05_2.str"
+overlay apply
+draw all

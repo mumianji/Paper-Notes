@@ -1,0 +1,102 @@
+<html>
+  <head>
+    <title>GaN Super Heterojunction Field Effect Transistor</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>GaN Super Heterojunction Field Effect Transistor</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Blaze</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="ganfetex16_plot0.png" width="640" alt="ganfetex16_plot0" />
+      <p/>
+      <img src="ganfetex16_plot1.png" width="640" alt="ganfetex16_plot1" />
+      <p/>
+      <img src="ganfetex16_plot2.png" width="640" alt="ganfetex16_plot2" />
+      <p/>
+      <img src="ganfetex16_plot3.png" width="640" alt="ganfetex16_plot3" />
+      <p/>
+      <img src="ganfetex16_plot4.png" width="640" alt="ganfetex16_plot4" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+Field plate (FP) technologies are generally used in order to manage surface electric
+field distribution of GaN HEMTs. Recently, GaN Super Heterojunction Field Effect
+Transistors (Super HFETs) based on the polarization junction (PJ) concept have been
+demonstrated [1, 2]. This concept is based on the compensation of positive and negative
+polarization charges at heterointerfaces such as AlGaN/GaN to achieve similar effect
+to RESURF or Super Junction (SJ) in silicon devices. In this example, we will
+demonstrate device simulation of GaN Super HFETs in comparison with the experimental
+data based on [1, 2].
+</p>
+<p>
+The Super HFET structure consists of an undoped double-hetero GaN/AlGaN/GaN structure
+with a p-GaN cap layer. The feature of the Super HFET structure is the presence of
+the 2-D hole gas (2DHG) induced by negative polarization charge at the upper GaN/AlGaN
+heterointerface as well as the 2-D electron gas (2DEG) at the lower AlGaN/GaN heterointerface.
+The computation of 2DEG and 2DHG due to polarization effect was performed automatically
+during the simulation with our built-in model and can be seen in tonyplot.
+</p>
+<p>
+Performance of GaN device and convergence can be significantly influenced by the presence
+of defects. We introduced bulk and interface traps in the simulation. Threshold voltage
+and substrate leakage current are controlled by a concentration of acceptor and donor
+traps in the GaN buffer layer, respectively. Moreover, we put the interface traps to
+represent Fermi level pinning at the bottom of the GaN buffer. This assumption is properly
+valid because an actual GaN epitaxial layer has quite many defects around the interface
+with the substrate. It should be noticed that even with traps and a floating undoped-GaN
+buffer region convergence is very ggod.
+</p>
+<p>
+The simulation results of the Id-Vg and Id-Vd characteristics can be seen in tonyplot.
+Very good agreement between simulations and experiments were obtained.
+</p>
+<p>
+Breakdown characteristics and impact ionization rate distribution is also shown in tonyplot
+and were simulated by using slow transient simulation. An increase of the gate current
+(including the base current) is observed near breakdown and the value is of the same order
+as the drain current. In addition, it should be noticed that impact ionization occurs near
+the drain-side edge of p-GaN region. These results indicate that breakdown voltage is
+dominated by the hole current into the base electrode through the p-GaN layer.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+<p>
+References:
+</p>
+<p>
+[1]. A. Nakajima, Y. Sumida, M. H. Dhyani, H. Kawai, and E. M. S. Narayanan,
+&quot;GaN-based super heterojunction field effect transistors using the polarization junction concept &quot;
+EEE Electron Device Lett., vol. 32, no. 4, p.p. 542-544, Apr. 2011.
+</p>
+<p>
+[2]. A. Nakajima, Y. Sumida, M. H. Dhyani, H. Kawai, and E. M. S. Narayanan,
+&quot;High density 2-D hole gas induced by negative polarization at GaN/AlGaN heterointerface &quot;
+Appl. Phys. Express, vol. 3, no. 12, p. 121004, Dec. 2010.
+</p>
+  </div></body>
+</html>

@@ -1,0 +1,34 @@
+# (c) Silvaco Inc., 2018
+go atlas
+
+mesh three.d
+x.m loc=0 spac=1
+x.m loc=10 spac=1
+
+y.m loc=0 spac=1
+y.m loc=10 spac=1
+
+z.m loc=0 spac=1
+z.m loc=10 spac=1
+
+region num=1 silicon
+
+electrode name=anode top
+electrode name=cathode bottom
+
+doping uniform n.type conc=1e15
+doping uniform p.type conc=1e20 y.bot=2.1
+
+# The radiation function is specified here
+
+beam f3.radiate=radex04_0.lib
+
+solve init
+# setting the intensity of the "beam" turns on the 
+# pair generation function specified above.
+
+solve b1=1 
+save outf=radex04_0.str
+tonyplot3d radex04_0.str -set radex04.set
+quit
+

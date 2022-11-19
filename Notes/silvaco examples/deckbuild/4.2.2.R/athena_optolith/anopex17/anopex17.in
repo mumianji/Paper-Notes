@@ -1,0 +1,38 @@
+go internal
+
+load infile=anopex17_tmpl.in
+sweep parameter=dose type=linear range="100, 160, 7" \
+      parameter=defocus type=linear range="-1, 1, 11"
+
+save type=sdb outfile=anopex17.dat
+tonyplot anopex17.dat -set anopex17.set
+quit
+
+################ Content of anopex17_tmpl.in file ##########################
+# set defocus=0                                                            #
+# set dose=110                                                             #
+# projection na=.52                                                        #
+# illumination i.line                                                      #
+# illum.filter clear.fil circle sigma=0.5                                  #
+# projection na=.52                                                        # 
+# pupil.filter clear.fil circle                                            #
+# layout lay.clear x.low=-0.2 z.low=-0.5 x.high= 0.2 z.high=0.5            #
+#                                                                          #
+# line x loc=-0.5 spac=0.01                                                #
+# line x loc=0   spac=0.05                                                  #
+# line x loc=.5    spac=0.01                                               #
+# line y loc=1.5     spac=1.0                                              # 
+# line y loc=2.5     spac=1.0                                              #    
+#                                                                          #
+# init silicon                                                             #
+# deposit photoresist name.resist=OiR32 thick=.97 div=40 min.space=0.01    #
+# rate.develop name.resist= OiR32 i.line c.dill=0.027                      #                                                 #                                                                          #
+# image win.x.lo=-.4 win.z.lo=0 win.x.hi=.4 win.z.hi=0 dx=0.5 \            #
+# 	defocus=$defocus clear one.dim                                     #
+# expose dose=$dose num.refl=10                                            #
+# bake diff.length=0.055                                                   #
+# develop mack time=75 steps=4 substeps=20                                 #
+#                                                                          #
+# extract name="cd_in_A" thickness material="OiR32" mat.occno=1 y.val=1.48 #
+# extract name="CD" 1.0e-4*$"cd_in_A"                                      #
+############################################################################

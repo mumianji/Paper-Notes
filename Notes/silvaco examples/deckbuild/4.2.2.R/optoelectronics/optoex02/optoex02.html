@@ -1,0 +1,89 @@
+<html>
+  <head>
+    <title>DC Characterization</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>DC Characterization</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>S-Pisces/Luminous</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="optoex02_plot0.png" width="640" alt="optoex02_plot0" />
+      <p/>
+      <img src="optoex02_plot1.png" width="640" alt="optoex02_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+The first example involves characterization of steady state
+characteristics of the device, and demonstrates extraction of
+DC currents as a function of optical source power.  It
+also demonstrates the use of multi-spectral sources.  The source
+spectrum is described in the file &quot;optoex02.spec&quot;.
+</p>
+<p>
+The first section of the input file specifies that the mesh
+and device structure is taken from the previous example. The second section
+of the file sets the same material models that were specified
+in the previous example.
+</p>
+<p>
+The third section of the input file specifies the optic source.
+In this example the source originates 1 micron above the device
+and is directed normal to the front surface of the device.  The
+source spectrum is described in the file &quot;optoex02.spec&quot;.  This
+spectrum is sampled at 5 discrete samples between the wavelengths
+of 0.5 and 0.8 microns.
+</p>
+<p>
+The fourth section of the file sets up the initial operating
+bias for the simulation.  In this case an operating bias of 2.0 volts
+is chosen.
+</p>
+<p>
+The last section of the input file specifies that the optical
+source intensity will be ramped from 0 to 1 W/cm^2.  During
+this ramp, steady state currents are extracted and saved in
+the log file.
+</p>
+<p>
+The results are displayed by TonyPlot. The first figure shows several
+curves.  The first, source photo current, is the equivalent current
+what would be observed if all the light from the source were detected.
+The second curve, available photo current is the equivalent current
+that would be observed if all the light absorbed were converted to
+terminal current.  The difference between the source and available
+photo currents is due to part of the light passing all the way through
+the device.  The third curve is the cathode current.  By taking the
+ration of the cathode current with the source photo current, the quantum
+efficiency as a function of source intensity is plotted in the second
+figure.  Here the device quantum efficiency is about 91% and is
+relatively independent of source intensity.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

@@ -1,0 +1,96 @@
+<html>
+  <head>
+    <title>AlGaN/GaN Electro-Thermal simulation</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>AlGaN/GaN Electro-Thermal simulation</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Victory Device</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Victory Device 1.12.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="ganfetex17_plot0.png" width="640" alt="ganfetex17_plot0" />
+      <p/>
+      <img src="ganfetex17_plot1.png" width="640" alt="ganfetex17_plot1" />
+      <p/>
+      <img src="ganfetex17_plot2.png" width="640" alt="ganfetex17_plot2" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates Id-Vds and Id-Vgs simulations for a 2D and 3D
+AlGaN/GaN HEMT.
+</p>
+<p>
+This example demonstrates:
+</p>
+<ul>
+  <li>
+ Construction of the heterojunction structure using Victory Device syntax
+<br/>
+  </li>
+  <li>
+ Material and models parameter specification 
+<br/>
+  </li>
+  <li>
+ Simulation of Id/Vds and Id/Vgs characteristics 
+<br/>
+  </li>
+  <li>
+ Display of the results in TonyPlot and TonyPlot 3D
+  </li>
+</ul>
+<p>
+By default Victory Device run on just one processor.
+To ensure better perfomance on your computer the following simulation condition
+<b> simflags=&quot;-P all&quot; </b> could be specidied in the
+<b> go </b> line starting Victory Device. This means that all processors available will be used.
+If you want to use a smaller number of processors you can substitute &quot;all&quot; with a desired number, e.g.
+<b> simflags=&quot;-P 4&quot;.</b> </p>
+<p>
+The device under consideration is a AlGaN/GaN HEMT. The main concept here
+is that the polarization charge is calculated using the
+built-in models as specified by the
+<b> POLARIZATION </b> parameter on the
+<b> MODEL </b> statement.
+</p>
+<p>
+After the initial solution is obtained, the gate voltage is ramped from 0V
+to -7.6 V to get the IdVg characteristic at Vd=1 V.
+</p>
+<p>
+A family of drain current characteristics are then simulated with
+lattice heating taken into account by ramping the drain from 0 to 15 V
+at various gate voltages.
+</p>
+<p>
+Since the width of the 3D device is set to 1um a direct comparison with 2D
+results is possible for validation purpose.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

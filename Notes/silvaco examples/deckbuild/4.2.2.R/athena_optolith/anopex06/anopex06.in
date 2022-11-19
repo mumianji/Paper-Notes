@@ -1,0 +1,41 @@
+go athena
+#
+#
+#                   OPTOLITH input file: anopex06.in
+#                   -------------------------------
+#
+#                Aerial Image simulation and
+#                aberrated aerial image (astigmatism)
+#                simulation.
+#
+illumination g.line
+#
+# Circular aperture
+#
+illum.filter clear.fil circle sigma=0.5
+#
+projection na=.43 
+#
+pupil.filter clear.fil circle
+#
+# define mask 
+#
+layout lay.clear x.low=-.3 z.low=-.3 x.high=.3 z.high=.3
+#
+# Image without astigmatism
+#
+image win.x.lo=-1 win.z.lo=-1 win.x.hi=1 win.z.hi=1 x.p=25 z.p=25 n.pupil=10
+#
+structure outfile=anopex06_1.str intensity mask
+#
+# Image with astigmatism
+#
+aberration astigmatism=0.5 x.field=.7 z.field=.7
+#
+image win.x.lo=-1 win.z.lo=-1 win.x.hi=1 win.z.hi=1 x.p=25 z.p=25 n.pupil=10    
+#
+structure outfile=anopex06_2.str intensity mask
+#
+tonyplot anopex06_1.str anopex06_2.str -set anopex06.set
+#
+quit

@@ -1,0 +1,134 @@
+<html>
+  <head>
+    <title>modeling Low-Voltage Power MOSFET</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>modeling Low-Voltage Power MOSFET</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>SSuprem 4/DevEdit/S-Pisces</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R, Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="powerex12_plot0.png" width="640" alt="powerex12_plot0" />
+      <p/>
+      <img src="powerex12_plot1.png" width="640" alt="powerex12_plot1" />
+      <p/>
+      <img src="powerex12_plot2.png" width="640" alt="powerex12_plot2" />
+      <p/>
+      <img src="powerex12_plot3.png" width="640" alt="powerex12_plot3" />
+      <p/>
+      <img src="powerex12_plot4.png" width="640" alt="powerex12_plot4" />
+      <p/>
+      <img src="powerex12_plot5.png" width="640" alt="powerex12_plot5" />
+      <p/>
+      <img src="powerex12_plot6.png" width="640" alt="powerex12_plot6" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates modeling of Low-Voltage Power MOSFET
+based on the following reference:
+</p>
+<p>
+K.Shenai, C.Cavallaro, S.Musumeci, R. Pagano, A.Raciti
+&quot;Modeling Low-Voltage Power MOSFETs as Synchronous rectifiers in Buck Converter
+Applications&quot;, Industry Applications Conference, 2003. 38th IAS Annual Meeting
+pp. 1794- 1801 vol.3.
+</p>
+<p>
+It shows:
+</p>
+<ul>
+  <li>
+ Structure definition using Athena 
+<br/>
+  </li>
+  <li>
+ Remeshing using DevEdit
+<br/>
+   </li>
+  <li>
+ Transfer and Breakdown Voltage Characteristics using Atlas
+<br/>
+   </li>
+  <li>
+ Output and AC small signal Characteristics using Atlas
+<br/>
+   </li>
+</ul>
+<p>
+The file starts with the definition of the process flow for a low
+voltage MOSFET transistor in Athena. Often a mesh that is used for
+process simulation, is not optimal for use with device simulation.
+In this example, the mesh generation tool
+<b> DevEdit </b> is used to recreate a mesh that has zero obtuse triangles in the
+semiconductor region. It is then refined as a function of a number
+of solution quantities on the mesh (eg: Nte Doping).
+</p>
+<p>
+Popup windows under the DeckBuild Command window can be used to create
+this set of commands to control DevEdit. The DevEdit GUI can be used as
+well by loading the structure file from Athena, remeshing it using DevEdit
+GUI and saving a DevEdit command file. The mesh syntax from this file can
+then be copied and pasted into deckbuild.
+</p>
+<p>
+In Atlas the transfer characteristic is simulated by setting the Drain
+Voltage to 25V and ramping the Gate Voltage to 4V. The Threshold Voltage
+is adjusted using the
+<b> workf </b> parameter from the contact statement.
+</p>
+<p>
+In order to simulate the Breakdown Voltage, the initial Athena structure
+has been modified by providing the body region with a contact, thus, ensuring
+a short with the source region. This is done directly in Atlas by adding a
+body contact using the
+<b> electrode name=body x.min=0 x.max=0 y.min=0.3 y.max=0.6 </b> statement. The breakdown Voltage can be adjusted using the parameter
+<b> AN2 </b> from the impact statement. To simulate the breakdown curve, the drain
+electrode is ramped until the current reaches a specified compliance value.
+</p>
+<b> solve vstep=1 vfinal=30 name=drain cname=drain compliance=1 </b> <p>
+The output characteristic is obtained by ramping the Gate Voltage
+to the desired value and then ramping the drain voltage from 0V
+to 5V. The
+<b> log off </b> statement allows us to save multiple log files.
+</p>
+<p>
+The body-drain diode behavior has also been simulated. The forward
+characteristic is dependent on the drain and dource contacts
+resistance as well as the epi-layer resistance. A drain contact
+resistance is added using the statement
+<b> contact name=drain resist=5e03</b> .
+</p>
+<p>
+The capacitances are collected by applying a bias ramp on the
+drain electrode up to 15V.  The parameter
+<b> ac </b> on the solve statement sets the ac analysis on. The frequency of this
+signal is set to 1MHz.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

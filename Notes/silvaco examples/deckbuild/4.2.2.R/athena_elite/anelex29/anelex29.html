@@ -1,0 +1,151 @@
+<html>
+  <head>
+    <title>Simple Plasma Etched Trench with Sidewall Implant</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Simple Plasma Etched Trench with Sidewall Implant</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Elite, MC DEPOSIT/ETCH</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="anelex29_plot0.png" width="640" alt="anelex29_plot0" />
+      <p/>
+      <img src="anelex29_plot1.png" width="640" alt="anelex29_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates the use of plasma etching to etch a simple
+trench structure.
+</p>
+<p>
+The example etch machine uses a Monte Carlo simulated plasma model to
+describe the angular ion distribution incident on the substrate surface.
+At each point on the surface, an angular &quot;window&quot; of visibility is
+calculated.  This window of visibility is used in the integration of
+the angular distribution to calculate the etch rate.
+</p>
+<p>
+Each surface string is then moved and remeshed at the end of the
+etch step. This windowing, ray tracing technique is highlighted in this
+example if you change the SPR500 resist thickness.
+</p>
+<p>
+After trench etch, the structure is implanted at an angle and the
+trench is oxidized. This highlights the ability of Elite to perform
+physical etch alongside oxidation and implant functions.
+</p>
+<p>
+In the first
+<b> rate.etch </b> command, the parameters for the plasma etcher are defined.  These
+parameters define the characteristics of the machine and are used to
+calculate the ion angular and energy distributions which, in turn, are
+used to calculate the ion flux at each point on the surface during
+etching.
+</p>
+<p>
+The first parameter,
+<b> plasma </b> is used to select the plasma etching model.
+</p>
+<p>
+The parameters for the Monte Carlo plasma etching simulation are
+<b> pressure </b> in mT which will effect the mean free path and
+therefore the fractional angular window &quot;seen&quot; by the plasma
+by a given surface string element.
+</p>
+<b> tgas </b> <p>
+is the gas temperature in Kelvin and and will effect the
+pressure and hence the mean free path calculation.
+</p>
+<b> tion </b> <p>
+is the temperature of the ion and is typically at a higher value
+than that of the gas.
+</p>
+<b> vpdc </b> <p>
+is the specified DC bias on the cathode electrode. This will
+control the energy and angular anisotropy of the incoming ions energy.
+</p>
+<b> vpac </b> <p>
+is the AC component of the electrodes bias.
+</p>
+<b> lshdc </b> <p>
+in meters is the mean debye sheath thickness.
+</p>
+<b> lshac </b> <p>
+is the alternating component of the sheath thickness in meters.
+</p>
+<b> freq </b> <p>
+is the AC frequency of the RF power supply in MegaHertz.
+</p>
+<b> nparticles </b> <p>
+is the number of Monte Carlo particles used in the calculation.
+</p>
+<b> mgas </b> <p>
+is the gas atomic mass in AMUs. This is used in the collision calculation
+and will affect the momentum transfer characteristics.
+</p>
+<b> mion </b> <p>
+is the atomic mass of the ion in AMUs.
+</p>
+<b> elec.model </b> <p>
+selects the type of plasma electric field model to be used. Here
+there are four options,
+</p>
+<b> constant, linear, collision, child</b> <p>
+. These four models respectively include Constant, Linear electric field
+models and then Collision dominated and collisionless Child-Langmuir
+models for the spatial dependence of the electric field.
+</p>
+<b> energy.div </b> <p>
+relates to the number of energy divisions for the energy distribution.
+</p>
+<b> angle.div </b> <p>
+relates the the number of angular quantizations for the angular energy
+distribution.
+</p>
+<b> qio </b> <p>
+is the momentum transfer cross section in meters^2.
+</p>
+<b> qcht </b> <p>
+is the charge exchange cross section in meters^2.
+</p>
+<p>
+Subsequent
+<b> rate.etch </b> statements define the parameters for each of the materials etched.
+</p>
+<p>
+When the plasma model is invoked, the angular window calculation is very
+important to the final profile. The Thickness of the photoresist, in this
+example, will determine largely the angular ion energy distribution via a
+resist
+shadowing calculation. Thus, making the resist thicker will result in less
+&apos;bowing&apos; of the sidewall. Try making the resist thinner to say, 0.1 um to
+see this effect.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

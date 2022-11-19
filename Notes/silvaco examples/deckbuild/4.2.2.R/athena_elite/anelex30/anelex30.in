@@ -1,0 +1,158 @@
+#
+# $Id: anelex30.in,v 1.2 2014/11/24 08:15:22 thomasb Exp $
+#
+# Example Athena input deck demonstrating the dopant enhancement
+# features of the Athena etching module.
+#
+# Note:
+#  The process flow used in this example does not represent a
+#  realistic process flow.  It is used purely to demonstrate the
+#  dopant enhanced etching capabilities.
+#
+
+go athena
+
+#
+# Define the structure dimensions and the mesh spacing (density)
+#   to use
+# Define the mesh spacing in the x direction
+line x  loc=0.0 spac=0.20 
+line x  loc=0.5 spac=0.05
+line x  loc=1.0 spac=0.05
+line x  loc=1.5 spac=0.05
+line x  loc=2.0 spac=0.05
+line x  loc=2.5 spac=0.05
+line x  loc=3.0 spac=0.20 
+#
+#  and the y direction
+line Y  loc=0.0 spac=0.02
+line Y  loc=2.5 spac=0.10 
+
+#
+# Initialize the structure: For this example, the mesh spacing
+#   defined by the line statements above are scaled by 2 to speed
+#   up the simulation
+initialize c.boron=1e16 space.mult=2
+
+#
+# Deposit some nitride and etch a window in it.  
+#  
+deposit nitride thick=0.5 div=12
+
+#
+# etch the left half of the structure
+etch nitride left p1.x=1.35
+
+#
+# Implant some phosphorus.  The etch step below will be enhanced
+#   by this implanted phosphorus.
+implant phosphorus dose=1.0e14 energy=120
+
+#
+# Remove the remaining nitride
+strip nitride
+
+#
+# Deposit a thin layer of oxide prior to the diffusion step.  Only 2
+#   mesh layers are used in the deposited oxide
+deposit oxide thick=0.05 div=2
+
+#
+# Anneal the implanted Phosphorus for 45 minutes in an inert ambient
+#   
+diffuse time=45 temp=950
+#
+structure outfile=anelex30.str
+# Plot the structure showing the Phosphorus concentration after
+#   the anneal
+tonyplot anelex30.str -set anelex30_1.set
+
+#
+# Strip the oxide
+strip oxide
+
+#
+# Deposit some masking oxide
+deposit oxide thick=0.25 div=8
+
+#
+# etch a window in the oxide to prepare for the deep etch of the silicon
+etch oxide start x=1.1 y=-10.0
+etch       cont  x=1.1 y= 10.0
+etch       cont  x=2.5 y= 10.0
+etch       done  x=2.5 y=-10.0
+
+#
+# Define out etching machine.  This is a plasma etching machine, the long
+#   list of parameters are needed to define the conditions of the plasma.
+#   The name of the machine is PEMach
+rate.etch machine=PEMach \
+          Plasma \
+          Pressure = 50 \
+          TGas = 300.0 \
+          TIon = 3000.0 \
+          Vpdc = 32.5 \
+          Vpac = 32.5 \
+          Lshdc = 0.005 \
+          Lshac = 0.0 \
+          Freq = 13.56 \
+          NParticles = 10000 \
+          MGas = 40.0 \
+          MIon = 40.0 \
+          Constant \
+          Energy.Div = 50 \
+          Qio = 1.7e-19 \
+          Qcht = 2.1e-19
+
+#
+# Define the characterization parameters for etching silicon using this
+#   machine.  Only the parameters k.n, k.x and k.y need be defined for
+#   material etched by this machine
+#
+rate.etch machine=PEMach plasma silicon k.i = 0.1
+
+#
+# Define the characterization parameters for etching oxide
+#
+rate.etch machine=PEMach plasma oxide k.i = 0.01
+
+#
+# Save the current structure before the silicon etch to allow a
+#   comparison between doping enhanced etching and the normal
+#   etching
+structure outfile=anelex30_0.str
+
+#
+# etch a trench in the silicon.  This etch is not dopant enhanced.
+#
+etch machine=PEMach time=7.0 minutes dx.mult=0.5
+
+#
+# Save the structure after etching for comparison later
+structure outfile=anelex30_1.str
+
+#
+# Re-initialize the simulation to the point before the silicon etch
+initialize infile=anelex30_0.str
+
+#
+# Define a doping enhancement based on the Phosphorus concentration
+rate.dope Machine=PEMach silicon i.phosphor \
+          Enh.Max = 2 \
+          Enh.Scale = 5.0 \
+          Enh.MinC = 17
+
+#
+# Re-perform the silicon etch, this time with doping enhancement
+etch machine=PEMach time=7.0 minutes dx.mult=0.5
+
+#
+# Save the structure after doping enhanced etch for comparison later
+structure outfile=anelex30_2.str
+
+#
+# Plot the two etch result files to compare the results of the
+#   doping enhanced etching
+tonyplot -overlay anelex30_1.str anelex30_2.str -set anelex30_2.set
+
+quit

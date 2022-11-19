@@ -1,0 +1,288 @@
+# (c) Silvaco Inc., 2018
+
+go victorydevice simflags="-128"
+
+# tftex16.in 
+# PBTS by oxygen trap: O + e <=> O-
+
+#device length(um)
+set l=20
+
+# material thickness(um)
+set sin_gi=0.1
+set sio_gi=0.15
+set igzo_thick=0.02
+set pass=0.3/2
+set sd_thick=0.15
+
+
+# Device Width(um)
+# Simulated current Unit: A
+mesh width=20
+
+x.m l=-$l/2-3 s=0.5
+x.m l=-$l/2 s=0.5
+x.m l=0  s=1
+x.m l=$l/2  s=0.5
+x.m l=$l/2+3 s=0.5
+
+y.m l=-$sin_gi-$sio_gi-$igzo_thick-$sd_thick-$pass s=0.05
+y.m l=-$sin_gi-$sio_gi-$igzo_thick-$sd_thick s=0.05
+y.m l=-$sin_gi-$sio_gi-$igzo_thick s=$igzo_thick/10
+y.m l=-$sin_gi-$sio_gi s=$igzo_thick/10
+y.m l=-$sin_gi s=0.05
+y.m l=-$sin_gi/2 s=0.05
+y.m l=0 s=0.03
+y.m l=0.06 s=0.03
+y.m l=0.5 s=0.1
+
+region num=1 oxide name=pass
+region num=2 nitride name=gi1 y.min=-$sin_gi y.max=0
+region num=3 oxide name=gi2 y.min=-$sin_gi-$sio_gi y.max=-$sin_gi
+region num=4 material=igzo name=channel y.min=-$sin_gi-$sio_gi-$igzo_thick y.max=-$sin_gi-$sio_gi
+#region num=5 oxide name=pass y.min=-$sin_gi-$sio_gi-$igzo_thick-$sd_thick y.max=-$sin_gi-$sio_gi-$igzo_thick
+
+elec num=1 name=gate y.min=0 y.max=0.06 mat=aluminum
+
+elec num=2 name=source x.min=-$l/2-3 x.max=-$l/2 \
+	y.min=-$sin_gi-$sio_gi-$igzo_thick-$sd_thick y.max=-$sin_gi-$sio_gi-$igzo_thick mat=aluminum
+
+elec num=3 name=drain x.min=$l/2 x.max=$l/2+3 \
+	y.min=-$sin_gi-$sio_gi-$igzo_thick-$sd_thick y.max=-$sin_gi-$sio_gi-$igzo_thick mat=aluminum
+
+save outfil=tftex16_0.str
+
+#plot the simulation strcuture
+tonyplot tftex16_0.str -set tftex16_0.set
+
+# Oi(acceptor-like trap): neutral when empty
+species formula="In:Ga:Zn:O"    charge=0  name="O"
+species formula="In:Ga:Zn:O"    charge=-1  name="O-"
+
+#
+doping reg=4 n.type conc=2e16 uniform
+
+# Initial Ion concentration
+doping reg=4 species.name="O"  uniform conc=1e17
+doping reg=4 species.name="O-"  uniform conc=1e16
+
+# Soruce/Drain/Gate metal workfunction
+contact name=gate workf=4.53
+contact name=source workf=4.16
+contact name=drain workf=4.16
+
+# a-IGZO bandgap, density of states, and affinity
+material material=IGZO nc300=5e19 nv300=1.55e20 eg300=3.05 affinity=4.16 taun0=1e-9 taup0=1e-9 
+
+# SiNx GI
+material material=nitride permit=7
+
+#Mobility
+mobility mun=12 mup=0.1
+
+# Models
+models bound.trap fermi srh temp=300 
+
+#front interface trap
+interface s.i  x.min=-$l/2-3 x.max=$l/2+3 y.min=-0.26 y.max=-0.24 \
+          species.name="O"   concentration=5e11
+interface s.i  x.min=-$l/2-3 x.max=$l/2+3 y.min=-0.26 y.max=-0.24 \
+          species.name="O-"   concentration=0.5e11
+
+material material=IGZO species.name="O" species.ea=1.14 species.af=1e7 species.hop=1e-6 
+material material=IGZO species.name="O-" species.ea=1.14 species.af=1e7 species.hop=1e-6 
+	
+#O is acceptor like trap
+#PBTS
+reaction formula="O + e- <=> O-" forward.ea=0.83 forward.rate=1e-7  \
+	reverse.ea=0 reverse.rate=1e-7
+
+# initial Vo, Vo2+, O(nga), native
+defect ^cont numa=24 numd=24 nta=5e19 wta=0.015 ntd=1.55e20 wtd=0.195+0.025 \
+	nga=1e16 ega=0.51 wga=0.26+0.02 ngd=2e16 egd=2.85 wgd=0.13+0.05  \
+	sigtae=1e-15 sigtah=1e-15 sigtde=1e-15 sigtdh=1e-15 \
+	siggae=1e-14 siggah=1e-14 siggde=1e-14 siggdh=1e-14 
+#
+probe x=0.0 y=-0.25 material=IGZO ft.species="O" name="ft_O_front"
+probe x=0.0 y=-0.25 material=IGZO species.name="O" name="O_front"
+probe x=0.0 y=-0.27 material=IGZO ft.species="O" name="ft_O_back"
+probe x=0.0 y=-0.27 material=IGZO species.name="O" name="O_back" 
+
+probe x=0.0 y=-0.25 material=IGZO ft.species="O-" name="ft_O-_front"
+probe x=0.0 y=-0.25 material=IGZO species.name="O-" name="O-_front"
+probe x=0.0 y=-0.27 material=IGZO ft.species="O-" name="ft_O-_back"
+probe x=0.0 y=-0.27 material=IGZO species.name="O-" name="O-_back"
+
+output charge con.band val.band recomb u.srh u.species u.trap species traps traps.ft
+
+# numerical option
+method maxtrap=10 norm.scaling.local dt.max=1e7 lte.timestep itlimit=100
+
+solve init
+
+# Obtain initial threshold voltage
+solve vdrain=0.1 freezespecies
+
+log outfile=tftex16_0.log no.trap
+solve  vgate=-5 vstep=0.2 vfinal=2 name=gate freezespecies 
+solve  prev vstep=0.5 vfinal=20 name=gate freezespecies 
+log off
+
+extract init infile="tftex16_0.log"
+extract name="vt0" x.val from curve(v."gate", i."drain") where y.val=10e-12
+extract name="vergin" curve(v."gate", i."drain") outfile="tftex16_0.dat"
+
+
+#
+solve init
+
+# Solution#1: Equilibrium concentration
+log outfile=tftex16_1.log
+solve ramptime=1e-9 tstop=1e-6 tstep=1e-12
+solve prev tstop=1e-3 
+solve prev tstop=1e-1
+solve prev tstop=1
+solve prev tstop=10
+solve prev tstop=100
+solve prev tstop=1e3
+solve prev tstop=1e4 tstep=1e3
+solve prev tstop=1e5 tstep=1e4
+solve prev tstop=1e6 tstep=1e5
+save outfile=tftex16_1.str
+
+
+# Solution#2: PBTS
+# initialize the solution
+solve init
+solve prev freezespecies
+
+#
+log outfile=tftex16_2.log no.trap
+solve prev vgate=+20 vdrain=0 vsource=0 ramptime=1e-9 tstop=1e-6 tstep=1e-10 
+save outfile=tftex16_2.str
+
+solve tstop=1
+save outfile=tftex16_3.str
+
+solve tstop=100
+save outfile=tftex16_4.str
+
+solve tstop=500
+save outfile=tftex16_5.str
+
+solve tstop=1000
+save outfile=tftex16_6.str
+
+solve tstop=2e3
+save outfile=tftex16_7.str
+
+solve tstop=5e3
+save outfile=tftex16_8.str
+
+
+# Solution#3: Reverse recovery: reverse reaction
+log outfile=tftex16_3.log no.trap
+solve prev vgate=0 vdrain=0 vsource=0 ramptime=1e-9 tstop=1e-6 tstep=1e-10 relative
+solve tstop=1 relative
+solve tstop=100 relative
+solve tstop=1e3 relative
+solve tstop=2e3 relative
+solve tstop=5e3 relative
+solve tstop=1e4 relative
+solve tstop=1e5 relative
+solve tstop=1e6 relative
+solve tstop=1e7 relative
+save outfil=tftex_9.str.str
+
+log off
+
+# plot  ion concentration at the front and back interface.
+tonyplot -overlay tftex16_2.log tftex16_3.log -set tftex16_1.set
+
+###################
+#IdVg@t=1 sec
+load infile=tftex16_3.str
+solve prev freezespecies
+log outfile=tftex16_4.log no.trap
+solve prev vstep=-0.5 vfinal=-5 name=gate freezespecies vdrain=0.1
+log off
+
+#extract vth@10pA
+extract init infile="tftex16_4.log"
+extract name="1s" curve(v."gate", i."drain") outfile="tftex16_1.dat"
+
+###################
+#IdVg@t=100 sec
+load infile=tftex16_4.str
+solve prev freezespecies
+log outfile=tftex16_5.log no.trap
+solve prev vstep=-0.5 vfinal=-5 name=gate freezespecies vdrain=0.1
+log off
+
+#extract vth@10pA
+extract init infile="tftex16_5.log"
+extract name="100s" curve(v."gate", i."drain") outfile="tftex16_2.dat"
+
+###################
+#IdVg@t=500 sec
+load infile=tftex16_5.str
+solve prev freezespecies
+log outfile=tftex16_6.log no.trap
+solve prev vstep=-0.5 vfinal=-5 name=gate freezespecies vdrain=0.1
+log off
+
+#extract vth@10pA
+extract init infile="tftex16_6.log"
+extract name="500s" curve(v."gate", i."drain") outfile="tftex16_3.dat"
+
+#IdVg@t=1k sec
+load infile=tftex16_6.str 
+solve prev freezespecies
+log outfile=tftex16_7.log no.trap
+solve prev vstep=-0.5 vfinal=-5 name=gate freezespecies vdrain=0.1
+log off
+
+#extract vth@10pA
+extract init infile="tftex16_7.log"
+extract name="1k" curve(v."gate", i."drain") outfile="tftex16_4.dat"
+
+#IdVg@t=2k sec
+#####################
+load infile=tftex16_7.str
+solve prev freezespecies
+log outfile=tftex16_8.log no.trap
+solve prev  vstep=-0.5 vfinal=-5 name=gate freezespecies vdrain=0.1
+log off
+
+#extract vth@10pA
+extract init infile="tftex16_8.log"
+extract name="2k" curve(v."gate", i."drain") outfile="tftex16_5.dat"
+
+#IdVg@t=5k sec
+#####################
+load infile=tftex16_8.str
+solve prev freezespecies
+log outfile=tftex16_9.log no.trap
+solve prev  vstep=-0.5 vfinal=-5 name=gate freezespecies vdrain=0.1
+log off
+
+#extract vth@10pA
+extract init infile="tftex16_9.log"
+extract name="5k" curve(v."gate", i."drain") outfile="tftex16_6.dat"
+
+tonyplot -overlay tftex16_0.dat tftex16_1.dat  tftex16_2.dat  tftex16_3.dat tftex16_4.dat tftex16_5.dat tftex16_6.dat -set tftex16_2.set
+
+# Now, get reverse recovery transfer curve
+load infile=tftex_9.str.str 
+solve prev freezespecies
+log outfile=tftex16_10.log no.trap
+solve vgate=-5  vstep=0.5 vfinal=20 name=gate freezespecies vdrain=0.1
+log off
+
+extract init infile="tftex16_10.log"
+extract name="0s" curve(v."gate", i."drain") outfile="tftex16_7.dat"
+
+# Compare stressed transfer curve@5e3 sec with recovery transfer curve
+tonyplot -overlay tftex16_0.dat tftex16_6.dat tftex16_7.dat -set tftex16_3.set
+
+quit

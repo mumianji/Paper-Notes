@@ -1,0 +1,35 @@
+go athena
+line x loc=0 spac=0.1 
+line x loc=0.35 spac=0.02
+line x loc=0.5 spac=0.1
+#
+line y loc=0.00 spac=0.02  
+line y loc=0.8 spac=0.05
+line y loc=4.0 spac=0.2 
+#
+init orientation=100 c.phos=1e14 
+# 
+deposit oxide thick=0.02 div=1
+#
+# implants with different energies and doses 
+# are made here to obtain constant concentration 
+# over 1 micron of silicon
+# 
+implant boron dose=1.0e12 energy=20 
+implant boron dose=1.0e12 energy=100 
+implant boron dose=1.0e12 energy=200 
+implant boron dose=1.0e12 energy=400 
+
+diffus time=30 temp=1000 nitro press=1
+
+# Now extraact the profile and pn-junction depth
+extract name="bcurve" curve(depth,boron silicon mat.occno=1 x.val=0.001) outfile="extract.dat"
+#
+extract name="xj" xj silicon mat.occno=1 x.val=0.001 junc.occno=1
+
+structure outf=ancaex07_0.str
+
+tonyplot ancaex07_0.str -ttitle "Optimized Profile"
+
+
+

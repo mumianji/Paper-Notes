@@ -1,0 +1,76 @@
+<html>
+  <head>
+    <title>Multiple SEU Strikes in a 6 Transistor 22nm SRAM</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Multiple SEU Strikes in a 6 Transistor 22nm SRAM</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Victory Process/Victory Mesh/Victory Device/SEE</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Victory Process 7.22.3.R, Victory Mesh 1.2.4.R, Victory Device 1.12.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="radex08_plot0.png" width="640" alt="radex08_plot0" />
+      <p/>
+      <img src="radex08_plot1.png" width="640" alt="radex08_plot1" />
+      <p/>
+      <img src="radex08_plot2.png" width="640" alt="radex08_plot2" />
+      <p/>
+      <img src="radex08_plot3.png" width="640" alt="radex08_plot3" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This examples demonstrates Multiple Strike SEU Simulation in a 6 Transistor
+22nm SRAM Cell.
+</p>
+<p>
+Victory Process in Cell Mode is used to create the 6 transistor SRAM cell
+structure.  The 4 layers of metal interconnect are left off in this example in
+an effort to speed up the device simulation.  A mixture of mask features and
+traditional &quot;line&quot; statements are used to create the structure mesh.  Monte-
+Carlo implant is used extensively in the process flow, so the process
+simulation run time can be greatly reduced by taking advantage of the mult-
+threaded option on the &quot;go victoryprocess&quot; line.
+</p>
+<p>
+In the device simulation, a large number of &quot;contact&quot; statements are required
+to connect the various parts of the circuit, that would have been connected by
+the 4 layers of interconnect, that were omitted from the original design, in
+the interests of device simulation speed.  Also of note is the
+<b> &quot;seu.integrate&quot;</b> parameter in the method statement that ensures correct total charge integration
+in the SEU charge track, reducing still further the required mesh count in the
+vicinity of the strike locations.
+</p>
+<p>
+The device simulation hits the nMOS devices in the main Flip-Flop of the SRAM
+with SEU strikes, staggered in time to allow for circuit recovery before the
+next strike.  Striking each nMOS device in turn ensures that at least one of
+the strikes will occur to an nMOS device in an &quot;off state&quot; ensuring that the
+SRAM will change state at least once as a result of the strikes.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

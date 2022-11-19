@@ -1,0 +1,57 @@
+<html>
+  <head>
+    <title>LDD Formation using High Tilt Angle Implant (LATID)</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>LDD Formation using High Tilt Angle Implant (LATID)</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>SSuprem 4</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="aniiex10_plot0.png" width="640" alt="aniiex10_plot0" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates the use of the analytical angled implant model.
+A MOS structure is created with angled full rotation LDD implants.
+Full rotation is used to provide symmetry of 2D profiles. LDD implant
+uses off-axes direction (48 degrees) to exclude very deep penetration along
+45 degrees direction. A very detailed Monte Carlo simulation would be needed
+to obtain a reliable set of moments for 45 degree implants. Source and
+drain As implant is performed at 0 degrees.
+</p>
+<b> Note: </b> <p>
+The parameter
+<b> STD_TABLE </b> is used in the
+<b> MOMENTS </b> statement. Otherwise the SVDP model would
+overestimate the implant tail because it does not have surface oxide
+dependence for arsenic.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

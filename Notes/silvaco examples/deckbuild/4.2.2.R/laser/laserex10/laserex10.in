@@ -1,0 +1,92 @@
+# (c) Silvaco Inc., 2018
+go atlas
+
+mesh width=300
+
+x.mesh l=0.0   s=0.1
+x.mesh l=1.0   s=0.1
+x.mesh l=2.0   s=0.1
+x.mesh l=3.0   s=0.1
+
+y.mesh l=0   s=0.1
+y.mesh l=2   s=0.05
+y.mesh l=2.3   s=0.05
+y.mesh l=4.3   s=0.1
+
+region num=1 material=AlGaAs x.comp=0.3 \ 
+       x.min=0  x.max=3 y.min=0 y.max=2
+
+
+region num=2 material=GaAs \
+       x.min=0  x.max=3 y.min=2 y.max=2.3  led
+
+       
+region num=3 material=AlGaAs x.comp=0.5 \
+       x.min=0  x.max=3.0 y.min=2.3 y.max=4.3     
+
+
+elec       num=1  name=anode       top
+elec       num=2  name=cathode     bottom
+
+#
+# Anisotropic dielectric constant can user defined
+#   
+
+material reg=1         epsim.iso=0
+material reg=2         epsim.iso=0
+material reg=3         epsim.iso=0
+
+
+#
+doping reg=1 p.type uniform conc=1.e18
+doping reg=3 n.type uniform conc=1.e18
+
+
+models fldmob srh optr auger fermi consrh  
+model spontaneous zb.three
+
+output con.band val.band u.rad u.srh u.aug  las.loss las.refr flowlines hx.opt hy.opt ex.opt ey.opt hz.opt ez.opt
+
+method itlimit=100 schur helm1d=LR
+
+
+#
+# Effective index solver,launched by  HELM.GEOM=15DY, combines 1D solutions in in X and Y directions.
+
+laser  s.helm  helm.geom=15dy helm.te ^helm.tm helm.sym.helm.asy nmodes=10  effmodes=2 prt.eval   \
+photon.energy=1.425 reflect index.model=0 gainmod=5 itmax=10 fcarrier absorption 
+ 
+
+solve init 
+
+
+log outf=laserex10_IV.log
+
+solve vstep=0.1 vfinal=1 name=anode
+
+
+laser start
+
+solve vstep=0.1 vfinal=2 name=anode
+save outf=laserex10_v2.str spectrum=laserex10_spec_v2.log emin=1.41 emax=1.45
+
+tonyplot laserex10_spec_v2.log -set laserex10_spec_v2.set
+
+solve vstep=0.1 vfinal=3 name=anode
+save outf=laserex10_v3.str spectrum=laserex10_spec_v3.log emin=1.41 emax=1.45
+
+tonyplot laserex10_spec_v3.log -set laserex10_spec_v3.set
+tonyplot laserex10_v3.str -set laserex10_v3.set
+
+solve vstep=0.1 vfinal=4 name=anode
+save outf=laserex10_v4.str spectrum=laserex10_spec_v4.log  emin=1.41 emax=1.45
+
+solve vstep=0.1 vfinal=5 name=anode
+save outf=laserex10_v5.str spectrum=laserex10_spec_v5.log  emin=1.41 emax=1.45
+
+tonyplot laserex10_IV.log -set laserex10_IV.set
+
+
+log off
+
+

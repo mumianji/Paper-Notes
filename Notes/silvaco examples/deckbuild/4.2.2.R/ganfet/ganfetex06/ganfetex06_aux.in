@@ -1,0 +1,64 @@
+# Ota, K. et. al. "A Normally-off GaN FET with High Threshold Voltage 
+# Uniformity Using A Novel Piezo Neutralization Technique", IEDM 2009, 
+# pp. 153-156.
+
+go atlas simflags="-80"
+
+set xcomp=0.07
+
+mesh width=1e03 ^diag.flip
+
+x.m l=-1 s=0.5
+x.m l=0 s=0.2
+x.m l=1 s=0.02
+x.m l=1.5 s=0.1
+x.m l=2 s=0.02
+x.m l=3 s=0.2
+x.m l=17 s=1
+x.m l=18 s=1
+
+y.m l=0     s=0.01
+y.m l=0.025 s=0.0002
+y.m l=0.0275 s=0.0005
+y.m l=0.03 s=0.0002
+y.m l=0.0325 s=0.0005
+y.m l=0.035 s=0.0002
+y.m l=0.04 s=0.002
+y.m l=0.045 s=0.0002
+y.m l=0.0525 s=0.005
+y.m l=0.06  s=0.001
+y.m l=0.080 s=0.01
+
+region num=1 material=AlGaN   y.min=0     y.max=0.025 		x.comp=0.25 
+region num=2 material=AlGaN   y.min=0.025 y.max=0.035 		x.comp=$xcomp
+region num=3 material=AlGaN   y.min=0.035 y.max=0.045 		x.comp=0.15
+region num=4 material=GaN     y.min=0.045 y.max=0.060   	substrate 
+region num=5 material=AlGaN   y.min=0.060 y.max=0.080 		x.comp=$xcomp
+region num=6 material=Al2O3   y.min=0.0   y.max=0.03	x.min=1.000 x.max=2.000
+
+elec num=1 name=source x.min=-1 x.max=0 y.min=0 y.max=0
+elec num=2 name=drain  x.min=17 x.max=18 y.min=0 y.max=0
+elec num=3 name=gate   x.min=1.1 x.max=1.9 y.min=0 y.max=0.029
+
+contact name=source     workf=4.01
+contact name=gate       workf=5.5
+contact name=drain      workf=4.01
+
+model POLARIZATION psp.scale=1 piezo.scale=1 calc.strain print
+model ni.fermi srh fermi
+mobility albrct.n bn.albrct=1e-3 cn.albrct=8.02e-2
+
+output val.band con.band band.par polar qss
+
+method dvmax=0.05 climit=1.0e4
+
+solve init
+save outf=ganfetex06_0_xcomp_$'xcomp'.str
+
+solve vdrain=0 vfinal=10 vstep=1 name=drain
+solve Vgate=-1 
+log outf=ganfetex06_0_xcomp_$'xcomp'.log
+solve vfinal=0 vstep=0.1 name=gate prev
+solve vfinal=4 vstep=0.2 name=gate prev
+
+quit

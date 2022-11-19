@@ -1,0 +1,53 @@
+<html>
+  <head>
+    <title>Non Planarized, Low k Dielectric Capacitance Analysis</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Non Planarized, Low k Dielectric Capacitance Analysis</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>CLEVER</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="clex14_plot0.png" width="640" alt="clex14_plot0" />
+      <p/>
+    </div>
+    <div id="text" >
+<p>
+This example demonstrates the ability of CLEVER
+to deposit and field solve non planarised, multi-layer films for interconnect
+capacitance analysis using CLEVER.
+The simulation is run in 2D
+as there is little to be gained by running the demonstration in 3D.  The user
+may force the simulator to do the full 3D simulation by simply commenting
+out the
+<b> cut line</b> statement, together with the TonyPlot statement (since in this case there will
+be no 2D structure for TonyPlot to plot).  As with example 14, the message:
+</p>
+<i> Warning: point is outside of layout domain</i> <p>
+in the runtime output may be ignored since the program is merely informing the
+user that the cut line is bigger than the mask size due to the use of the
+<b> padding</b> statement which creates a larger boarder volume in order to improve accuracy.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

@@ -1,0 +1,217 @@
+
+
+go victoryprocess 
+
+Init material="silicon" \
+     from="0, 0" to="0.2, 0.2" depth=0.2 gasHeight=0.8 \
+     resolution="0.005"
+
+SpecifyMaskPoly maskID=1 istransparent=true p="-0.02, -0.02" p="-0.02, 0.02" p="0.02, 0.02" p="0.02, -0.02"
+
+#Gate
+Deposit material="poly" DIRECTIONAL thickness=0.06  maskID=1
+Deposit material="aluminum" DIRECTIONAL thickness=0.04 maskID=1
+
+
+# Conformal deposition of oxide spacer
+Deposit material="oxide" CONFORMAL thickness=0.030
+Etch material=oxide DRY thickness=0.05
+
+# Need a finer grid to better simulate stresses
+# x-direction
+
+Line X position=0.0 spacing=0.005
+Line X position=0.02 spacing=0.006
+Line X position=0.05 spacing=0.006
+Line X position=0.2 spacing=0.008
+
+# Z-direction
+Line Z position=-0.3 spacing=0.005
+line Z position= 0.0 spacing=0.005
+Line Z position= 0.1 spacing=0.02
+line Z position= 0.2 spacing=0.05
+
+# y-direction
+Line Y position=0.0 spacing=0.005
+Line Y position=0.02 spacing=0.006
+Line Y position=0.05 spacing=0.006
+Line Y position=0.2 spacing=0.008
+
+
+# Nitride one-layer stressor
+
+Deposit material="nitride" CONFORMAL thickness=0.160 PRESSURE=1e10
+Save name=vsex09_thick
+
+Export Victory(Conformal) structure=vsex09_thick.str
+tonyplot3d vsex09_thick.str -set vsex09_3d.set
+
+go victorystress
+init structure="vsex09_thick.str"
+
+# One-step model simulation
+
+
+material nitride intrin.sig=1.0e10
+
+material silicon young.m=1.67e12
+material silicon poiss.r=0.28
+
+material poly young.m=1.67e12
+material poly poiss.r=0.28
+
+material oxide young.m=1.0e12
+material oxide poiss.r=0.25
+
+material aluminum young.m=0.715e12
+material aluminum poiss.r=0.35
+
+stress exposed rebalance
+save structure="vsex09_0.str"
+
+
+###########
+# Case 2  #
+###########
+ 
+go victoryprocess 
+
+Init material="silicon" \
+     from="0, 0" to="0.2, 0.2" depth=0.2 gasHeight=0.8 \
+     resolution="0.0045"
+
+SpecifyMaskPoly maskID=1 istransparent=true p="-0.02, -0.02" p="-0.02, 0.02" p="0.02, 0.02" p="0.02, -0.02"
+
+#Gate
+Deposit material="poly" DIRECTIONAL thickness=0.06  maskID=1
+Deposit material="aluminum" DIRECTIONAL thickness=0.04 maskID=1
+
+
+# Conformal deposition of oxide spacer
+Deposit material="oxide" CONFORMAL thickness=0.030
+Etch material=oxide DRY thickness=0.05
+
+# Need a finer grid to better simulate stresses
+# x-direction
+
+Line X position=0.0 spacing=0.005
+Line X position=0.02 spacing=0.006
+Line X position=0.05 spacing=0.006
+Line X position=0.2 spacing=0.008
+
+# Z-direction
+Line Z position=-0.3 spacing=0.005
+line Z position= 0.0 spacing=0.005
+Line Z position= 0.1 spacing=0.02
+line Z position= 0.2 spacing=0.05
+
+# y-direction
+Line Y position=0.0 spacing=0.005
+Line Y position=0.02 spacing=0.006
+Line Y position=0.05 spacing=0.006
+Line Y position=0.2 spacing=0.008
+
+
+# Multi-layer stressor
+
+set i_layer=0
+loop steps=20
+set i_layer=$i_layer+1
+set mat1=user$i_layer
+Deposit material="$mat1" CONFORMAL thick=0.008 pressure=1e10
+l.end
+
+
+Save name=vsex09_layers
+
+Export Victory(Conformal) structure=vsex09_layers.str
+tonyplot3d vsex09_layers.str -set vsex09_3dl.set
+
+
+go victorystress
+
+# Stress evolution model simulation
+
+init structure="vsex09_layers.str"
+
+# set elastic properties of all standard materials in the structure
+
+material silicon young.m=1.67e12
+material silicon poiss.r=0.28
+
+material poly young.m=1.67e12
+material poly poiss.r=0.28
+
+material oxide young.m=1.0e12
+material oxide poiss.r=0.25
+
+material aluminum young.m=0.715e12
+material aluminum poiss.r=0.35
+
+
+set i_end=20
+
+set i_layer=0
+
+#  Loop through 20 layers
+loop steps=20
+  set i_layer=$i_layer+1
+
+  # set all sub-layers up to the current one to inherit nitride properties
+  # and keep stresses calculated during previous step
+
+  if cond=($i_layer>1)
+    set i_before=1
+    loop steps=$i_layer-1
+      set mat1="user$i_before"
+      material material("$mat1") inherit(nitride)
+      material material("$mat1") intrin.sig=0
+      set i_before=$i_before+1
+    l.end
+  if.end
+
+  # set the new  sub-layer to inherit nitride properties
+  # and to acquire intrinsic stress of 1 GPa
+
+  set mat1=user$i_layer
+  material material("$mat1") inherit(nitride)
+  material material("$mat1") intrin.sig=1.0e10
+
+  # Set all sub-layers "above" the current layer to inherit properties of "air" 
+
+  set i_after=$i_layer+1
+  set rest=$i_end-$i_layer
+  if cond=($rest > 0)
+    loop steps=$rest
+      set mat1="user$i_after"
+      material material("$mat1") inherit(air)
+      material material("$mat1") intrin.sig=0
+      set i_after=$i_after+1
+    l.end
+  if.end
+
+  # Calculate stresses in the structure 
+  stress exposed rebalance
+
+  # save "history" stresses in the currrent structure
+  history structure="vsex09_hist.str"
+
+l.end
+
+save structure="vsex09_1.str"
+
+# Visualization of stresses in 3D
+
+tonyplot3d vsex09_0.str -set vsex09_3dSxx.set
+tonyplot3d vsex09_1.str -set vsex09_3dSxxl.set
+
+tonyplot3d vsex09_1.str -set vsex09_yz.set -cut vsex09_1_2dyz.str
+tonyplot3d vsex09_0.str -set vsex09_yz.set -cut vsex09_0_2dyz.str
+tonyplot vsex09_1_2dyz.str vsex09_0_2dyz.str -set vsex09_2dyz.set
+
+tonyplot3d vsex09_1.str -set vsex09_xy.set -cut vsex09_1_2dxy.str
+tonyplot3d vsex09_0.str -set vsex09_xy.set -cut vsex09_0_2dxy.str
+tonyplot vsex09_1_2dxy.str vsex09_0_2dxy.str -set vsex09_2dxy.set
+
+
+quit

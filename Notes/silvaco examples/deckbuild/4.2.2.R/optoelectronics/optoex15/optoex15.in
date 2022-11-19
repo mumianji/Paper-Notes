@@ -1,0 +1,46 @@
+# (c) Silvaco Inc., 2018
+go atlas
+Title 3D Lenslet Example
+#
+# SECTION 1: Mesh Specification
+#
+mesh three.d
+#
+x.m l=0    s=0.2
+x.m l=5    s=0.2
+y.m l=0.0  s=0.05
+y.m l=5.0  s=0.5
+y.m l=10.0 s=0.1
+z.m l=0    s=0.2
+z.m l=5    s=0.2
+#
+# SECTION 2: Structure Specification
+#
+regi num=1 silicon
+#
+elec num=1 top
+elec num=2 bottom
+#
+doping unif p.type conc=2e16
+doping gaus peak=0.0  char=0.1 conc=1e18 p.type dir=y
+doping gaus peak=10.0 char=0.1 conc=1e18 n.type dir=y
+#
+# SECTION 3: Lenslet and Source Specification
+#
+beam num=1 x.origin=2.5 y.origin=-5.0 z.origin=2.5 angle=90 theta=90 wavelength=0.623 front.refl nx=21 nz=21 raytrace=optoex15_0 lens.x=2.5 lens.y=-1.63 lens.z=2.5 lens.radius=3.03 lens.index=1.57 lens.plane=-3.8
+#
+# SECTION 4: Solution Proceedure
+#
+method newton carr=2
+#
+solve 
+solve v1=-0.5
+#
+solve b1=1.0
+#
+save outf=optoex15_1.str
+#
+tonyplot3d optoex15_0.str -set optoex15_0.set
+tonyplot3d optoex15_1.str -set optoex15_1.set
+#
+quit

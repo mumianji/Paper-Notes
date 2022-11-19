@@ -1,0 +1,147 @@
+<html>
+  <head>
+    <title>Vertical DMOS Gate Charging Simulation</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Vertical DMOS Gate Charging Simulation</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>SSuprem 4/DevEdit/MixedMode</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R, Victory Device 1.12.1.R  or  Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="powerex11_plot0.png" width="640" alt="powerex11_plot0" />
+      <p/>
+      <img src="powerex11_plot1.png" width="640" alt="powerex11_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+In modern power devices the total power loss comprises both a conductance power loss
+component and a capacitive loss component. As the cell pitch decreases, the conduction
+loss will decrease while the capacitive loss will increase. Therefore for small cell
+pitch the capacitive power loss may be the dominant component in the total power loss
+in the device. The need is now clear for a method that will allow analysis of the
+capacitive component of the power loss. One technique for doing this in a DMOS device is
+to analyze the gate charging time. This example illustrates a technique whereby the
+gate charging time for a vertical DMOS structure may be simulated, and the gate charge (Qg) required for switching the MOSFET can be determined.
+</p>
+<p>
+The example contains the following parts:
+</p>
+<ul>
+  <li>
+ Process simulation to create the vertical DMOS
+<br/>
+  </li>
+  <li>
+ The SPICE-like command syntax for simulating MixedMode circuits
+<br/>
+   </li>
+  <li>
+ Steady state analysis that defines the DC operating point
+<br/>
+   </li>
+  <li>
+ Time domain analysis that illustrates gate charging
+  </li>
+</ul>
+<p>
+The Device/MixedMode simulation in this example (the last three bullets above) can be run by either Victory Device or Atlas simulator, just by changing the solver name in the command
+<b> go victorydevice </b> into
+<b> go atlas</b> . It shows that both Victory Device and Atlas device simulators can be fully compatible in terms of input commands, producing same results, and allowing easy transition between Atlas and Victory Device.
+</p>
+<p>
+The first section uses Athena/SSuprem 4 to build a vertical DMOS power device. This section is identical to that used in the example powerex02.in which is described earlier in this power device section. For information on the process description please refer to this prior example.
+</p>
+<p>
+After the process simulation, the structure is remeshed with DevEdit using the command
+<b> go devedit</b> .
+</p>
+<p>
+At this point the solution only contains quantities from the process simulator, so only impurity values are available as remeshing criteria. These are selected with the commands:
+</p>
+<b> imp.refine imp=&quot;Net Doping&quot; scale=log transition=1e+10 sensitivity=2</b> <b> imp.refine  min.spacing=0.2</b> <p>
+In addition to the doping profile, DevEdit is used to obtain a denser mesh within the channel region underneath the gate. This is performed in two stages with the commands:
+</p>
+<b> constr.mesh id=1 x1=2.5 y1=0 x2=1e+06 y2=0.5 default max.height=0.1 max.width=2</b> <b> constr.mesh id=2 x1=2 y1=0 x2=4.5 y2=0.5 default max.height=0.1 max.width=0.2</b> <p>
+The mesh is then created using the DevEdit command
+</p>
+<b> Mesh Mode=MeshBuild</b> <p>
+Once the mesh has been designed for the electrical analysis it is passed on to the device simulator. This analysis is conducted using the mixed device and circuit simulator MixedMode. First, a steady-state simulation of the power circuit is performed.
+</p>
+<p>
+The
+<b> .begin </b> and
+<b> .end </b> statements indicate the beginning and end of the MixedMode syntax.  The MixedMode commands are similar to those used in SmartSpice.  Circuit components, topology, and analysis are defined within these statements. In general, the circuit component definition consists of three parts: the type of component, the lead or terminal node assignments, and the component value or model name.
+</p>
+<p>
+For example, the  first component definition in this simulation is an independent current source defined by
+<b> iin </b> between the circuit nodes
+<b> 0 </b> and
+<b> GG</b> .  The final value of
+<b> 0 </b> indicates that the initial current source value is 0 Amps. The remaining circuit components are a resistor
+<b> Rg</b> , another independent current source
+<b> iout </b> a compact diode model
+<b> dout </b> and a voltage source
+<b> vdd</b> .
+</p>
+<p>
+The
+<b> amos </b> statement specifies a device to be analyzed by Atlas.
+The
+<b> a </b> part of the amos
+command specifies that this is a TCAD device statement.  The
+<b> mos </b> portion simply defines the device name.  The option
+<b> infile= </b> indicates which device structure file is to be used.  The
+<b> .nodeset </b> statement defines the initial values for node voltages. The
+<b> .dc </b> statement indicates that a dc ramp is applied to the source
+<b> iout</b> . Additionally, the
+<b> .options </b> command specifies the numerical method used in the simulation. The
+<b> .save outfile= </b> statement saves the final solution to the indicated file, once the .dc ramp is complete.
+</p>
+<p>
+Other command line options exist.  Please refer to the MixedMode section of the Atlas or Victory Device user&apos;s manual for a complete list.
+</p>
+<p>
+To completely specify the simulation, the physical models used by Atlas/Victory Device must be specified.  The
+<b> models </b> statement is used to turn on the appropriate transport models.  This set includes: cvt - mobility model for MOSFETs, srh - Shockley-Read-Hall recombination, auger - recombination accounting for high level injection effects, and bgn - band gap narrowing. Refer to the user&apos;s manual for a description of these models.  Finally, an impact ionization model is enabled using the
+<b> impact </b> statement with the
+<b> selb </b> option.  This specifies that the Selberherr impact ionization model is to be used.
+</p>
+<p>
+The next step is the transient MixedMode analysis, which is specified in a similar manner as the steady-state MixedMode simulation described above.  The charging effect of the gate is simulated by applying a long current pulse of constant value to the gate, by the independent current source
+<b> iin</b> . The
+<b> .tran </b> statement is used to specify the initial time step and total duration of the transient analysis.  In addition, the
+<b> .log </b> statement saves all the transient simulation results over the time interval specified.
+</p>
+<b> TonyPlot </b> <p>
+is used to plot the transient response of the device and circuit. The Gate Charge, Qg (in Coulombs)
+can be calculated and plotted in TonyPlot using
+<b> Display &gt; Functions... </b> feature.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

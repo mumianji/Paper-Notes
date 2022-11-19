@@ -1,0 +1,56 @@
+go athena 
+#Stanford full coupled model for high concentration P diffusion
+
+#the x dimension definition
+line x loc = 0.0   spacing=0.25 
+line x loc = 0.25  spacing=0.25
+
+#the vertical definition
+line y loc = 0     spacing = 0.02 
+line y loc = 0.50  spacing = 0.02
+line y loc = 2.0   spacing = 0.25 
+line y loc = 25.0  spacing = 2.5 
+
+#initialize the mesh
+init silicon  c.phos=1.0e14
+#set implant damage parameters
+clust max.clust=1e19 clust.fact=1.0 i.phos
+#perform high dose phos implant
+implant phos dose=5e15 energy=50 amorp
+
+deposit oxide thick=0.01 div=1
+struct outf=andfex06_0.str
+
+# diffusion without the high concentration model switched on...
+method full.cpl cluster.dam i.loop phos
+
+trap silicon total=0 enable=f
+
+diffuse time=30 temp=850 
+
+#save the structure
+structure outfile=andfex06_1.str
+
+
+# diffusion with the high concentration model switched on ....
+
+init inf=andfex06_0.str
+
+method full.cpl cluster.dam i.loop high.conc
+
+trap silicon total=0 enable=f
+
+#high concentration model parameters
+interstitial iifactor=0.3 ivfactor=0.3
+interstitial silicon neu.0=1.0e-10 neu.E=1.0
+
+diffuse time=30 temp=850 
+
+#save the structure
+structure outfile=andfex06_2.str
+
+
+tonyplot -overlay andfex06_1.str andfex06_2.str -set andfex06.set
+
+
+

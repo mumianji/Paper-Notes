@@ -1,0 +1,45 @@
+v DBInternal
+# silvaco.file ASCII version=1.14.21 format=1 contents=SDB,Tables=1
+
+Copyright "###################################################################"
+Copyright "#                    Copyright Silvaco Inc. (c)                   #"
+Copyright "#                            1992-2014                            #"
+Copyright "#                                                                 #"
+Copyright "# This file format and the following Key are copyright Silvaco    #"
+Copyright "# International. You may not use, this format or key without      #"
+Copyright "# reproducing this message in full and obtaining                  #"
+Copyright "# express written permission from Silvaco Inc.                    #"
+Copyright "#                                                                 #"
+Copyright "# To obtain such permission please contact: Silvaco Inc.          #"
+Copyright "#                                           support@silvaco.com   #"
+Copyright "#                                                                 #"
+Copyright "# KEY=SVC86hn7562asdx                       PROD=345              #"
+Copyright "###################################################################"
+#dbinternal 2.11.6.R (Mon Apr 24 14:15:36 BST 2017)
+#libSDB 1.12.39 (Mon Mar 27 17:52:11 PDT 2017)
+p 3 10000 10001 10002
+d 1 -10 3.5377800000000002e-09
+d 2 -9 5.0257199999999999e-09
+d 3 -8 6.8786799999999997e-09
+d 4 -7 9.0716599999999993e-09
+d 5 -6 1.15286e-08
+d 6 -5 1.41189e-08
+d 7 -4 1.6664299999999999e-08
+d 8 -3 1.89564e-08
+d 9 -2 2.07837e-08
+d 10 -1 2.1963299999999999e-08
+d 11 0 2.23712e-08
+d 12 1 2.1963299999999999e-08
+d 13 2 2.07837e-08
+d 14 3 1.8956499999999998e-08
+d 15 4 1.6664400000000001e-08
+d 16 5 1.41189e-08
+d 17 6 1.15286e-08
+d 18 7 9.0716700000000008e-09
+d 19 8 6.8786799999999997e-09
+d 20 9 5.0257199999999999e-09
+d 21 10 3.53779e-09
+Q 10000 1 ex_id
+Q 10001 1 xm
+Q 10002 1 photocurrent
+EOF 55898165

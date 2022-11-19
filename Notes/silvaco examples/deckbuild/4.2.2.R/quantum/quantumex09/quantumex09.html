@@ -1,0 +1,71 @@
+<html>
+  <head>
+    <title>AlGaAs/InGaAs/GaAs PHEMT - Approximate calibration</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>AlGaAs/InGaAs/GaAs PHEMT - Approximate calibration</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Blaze/Quantum</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="quantumex09_plot0.png" width="640" alt="quantumex09_plot0" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates:
+</p>
+<ul>
+  <li>
+ Application of the BQP model to III-V materials.
+<br/>
+  </li>
+  <li>
+ Example of setting BQP parameters on a material by material basis.
+<br/>
+  </li>
+  <li>
+ Rough calibration of BQP by comparing with S-P charge density.
+<br/>
+  </li>
+</ul>
+<p>
+In this deck, a pHEMT structure is solved at equilibrium for the Schrodinger
+-Poisson model and BQP model.  The BQP parameters are set on a material by
+material basis, and the ones that are chosen represent a reasonable fit of the electron
+density profile. The electron density profile in the channel is matched by
+varying the BQP parameters. By observing the change of the key features of
+the profile as the BQP parameters are varied, one can arrive at values which
+give close agreement.  This is a time consuming activity.
+By comparing Q-V or C-V curves one can verify that the chosen parameters are
+good enough or refine the calibration further. In this case, fairly good
+agreement was found with the C-V curves from a Schrodinger-Poisson model,
+and so these parameters are used in the next example.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

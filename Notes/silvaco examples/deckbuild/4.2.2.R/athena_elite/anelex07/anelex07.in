@@ -1,0 +1,49 @@
+go athena
+
+# Etching simulation using "RIE" model
+# 
+line x loc=0.00 spac=0.05 
+line x loc=2.00 spac=0.05 
+#
+line y loc=0.00 spac=0.05 
+line y loc=1.00 spac=0.05 
+# 
+init orientation=100
+# 
+deposit photoresist  thick=0.5 div=8
+etch photo start x=.65 y=-10
+etch       cont  x=.75 y=10
+etch       cont  x=1.25 y=10
+etch       done  x=1.35 y=-10
+#
+structure outfile=anelex07_0.str
+#
+rate.etch machine=ad2 silicon a.s rie chemical=50.0 divergence=0.1
+#
+etch machine=ad2 time=2 minute dx.mult=0.5
+#
+# 
+structure outfile=anelex07_1.str 
+# 
+init infile=anelex07_0.str
+#
+rate.etch machine=ad2 silicon a.s rie chemical=50.0 divergence=10
+#
+etch machine=ad2 time=2 minute dx.mult=0.5
+#
+# 
+structure outfile=anelex07_2.str 
+# 
+init infile=anelex07_0.str
+#
+#
+rate.etch machine=ad2 silicon a.s rie chemical=50.0 divergence=45
+#
+etch machine=ad2 time=2 minute dx.mult=0.5
+#
+# 
+structure outfile=anelex07_3.str 
+# 
+tonyplot anelex07_*.str
+#
+quit

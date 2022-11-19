@@ -1,0 +1,31 @@
+go athena
+
+#TITLE: Substrate Shear Stress Example
+#
+#  This example shows a calculation of shear stress
+#   after deposition and etching of 0.1 micron nitride layer. 
+line x loc=-2.5 spac=0.2
+line x loc=-2 spac=0.1
+line x loc= 0 spac=0.05
+line x loc= 2 spac=0.1
+line x loc=2.5 spac=0.2
+
+line y loc=0 spac=0.05 
+line y loc=2 spac=0.2
+line y loc=5
+
+initial orient=111
+
+# deposit and pattern nitride stripe
+deposit    nitride thick=0.1 div=5
+etch       nitride left       p1.x=0
+
+# set the value of the intrinsic stress... 
+material   nitride intrin.sig=1.4e10 
+
+# perform the stress analysis 
+stress  temp1=1000 temp2=1000
+structure outfile=anstex01.str
+tonyplot anstex01.str -set anstex01.set
+
+quit

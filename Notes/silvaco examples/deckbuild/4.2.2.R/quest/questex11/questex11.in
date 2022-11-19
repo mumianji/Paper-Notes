@@ -1,0 +1,19 @@
+go quest
+
+source questex11_command.in
+
+layout gdsfile = "questex11_line_ind.gds" cell = "CELL"
+
+solve
+
+go quest 
+
+source questex11_command.in
+
+layout gdsfile = "questex11_one_turn.gds" cell = "CELL"
+
+solve
+
+tonyplot -overlay questex11_db/questex11_one_turn@@CELL/questex11_q.dat questex11_db/questex11_line_ind@@CELL/questex11_q.dat -set questex11.set
+
+quit

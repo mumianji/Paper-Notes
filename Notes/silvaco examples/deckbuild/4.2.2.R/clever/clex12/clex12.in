@@ -1,0 +1,134 @@
+go clever
+
+#####   2D CALCULATION   #####
+
+Init Layout="clex12.lay" Depth=1 padding=5
+
+Cut line=(-3.0, 2.5, 13.0, 2.5)
+
+## Metal 1 definition ##
+
+Deposit Oxide Thicknes=0.5 Max
+
+Deposit Aluminum Thickness=0.5 Max
+
+Deposit Resist Thickness=0.1 Max
+
+Mask "MET1"
+
+Etch Aluminum Thickness=0.5 Max
+
+Strip Resist
+
+Electrodes "MET1" Aluminum
+
+Deposit Oxide Thickness=0.5 Max
+
+## Metal 2 definition ##
+
+Deposit Aluminum Thickness=0.5 Max
+
+Deposit Resist Thickness=0.1 Max
+
+Mask "MET2"
+
+Etch Aluminum Thickness=0.5 Max
+
+Strip Resist
+
+Electrodes "MET2" Aluminum
+
+Deposit Oxide Thickness=0.5 Max
+
+## Metal 3 definition ##
+
+Deposit Aluminum Thickness=0.5 Max
+
+Deposit Resist Thickness=0.1 Max
+
+Mask "MET3"
+
+Etch Aluminum Thickness=0.5 Max
+
+Strip Resist
+
+Electrodes "MET3" Aluminum
+
+Deposit Oxide Thickness=0.5 Max
+
+Electrodes Substrate
+
+## Parasitic Extraction ##
+
+Interconnect Capacitance AdaptC=0.05
+
+Save Structure="clex12_2D.str" Spice="clex12_2D.net"
+
+tonyplot clex12_2D.str
+
+
+#####    NOW DO THE SAME CALCULATION IN 3D AND COMPARE   #####
+
+Reset
+
+Init Layout="clex12.lay" Depth=1 padding=5
+
+## Metal 1 definition ##
+
+Deposit Oxide Thicknes=0.5 Max
+
+Deposit Aluminum Thickness=0.5 Max
+
+Deposit Resist Thickness=0.1 Max
+
+Mask "MET1"
+
+Etch Aluminum Thickness=0.5 Max
+
+Strip Resist
+
+Electrodes "MET1" Aluminum
+
+Deposit Oxide Thickness=0.5 Max
+
+## Metal 2 definition ##
+
+Deposit Aluminum Thickness=0.5 Max
+
+Deposit Resist Thickness=0.1 Max
+
+Mask "MET2"
+
+Etch Aluminum Thickness=0.5 Max
+
+Strip Resist
+
+Electrodes "MET2" Aluminum
+
+Deposit Oxide Thickness=0.5 Max
+
+## Metal 3 definition ##
+
+Deposit Aluminum Thickness=0.5 Max
+
+Deposit Resist Thickness=0.1 Max
+
+Mask "MET3"
+
+Etch Aluminum Thickness=0.5 Max
+
+Strip Resist
+
+Electrodes "MET3" Aluminum
+
+Deposit Oxide Thickness=0.5 Max
+
+Electrodes Substrate
+
+## Parasitic Extraction ##
+
+Interconnect Capacitance AdaptC=0.05
+
+Save Structure="clex12_3D.str" Spice="clex12_3D.net"
+
+quit

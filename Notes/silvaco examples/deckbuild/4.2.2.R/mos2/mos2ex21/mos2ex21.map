@@ -1,0 +1,16 @@
+#################################################################
+#
+#	MAP FILE 
+#
+#################################################################
+
+#layer name	nc		GDS number	Data type
+
+ACTIVE		drawing		2		0
+POLY		drawing		3		0
+SD_ETCH		drawing		4		0
+CONT		drawing		5		0
+ELECTRODE       drawing         5               1
+
+
+

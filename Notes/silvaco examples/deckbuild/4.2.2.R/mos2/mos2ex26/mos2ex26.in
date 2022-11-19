@@ -1,0 +1,165 @@
+
+go victoryprocess
+
+init layout=mos2ex26.lay depth=0.105 gasheight=0.56 material=Silicon \
+     dopants=arsenic dopingvalues=5e18
+
+line x location=0
+line x location=0.0175
+line x location=0.0245
+line x location=0.0253
+line x location=0.0269
+line x location=0.0431
+line x location=0.0447
+line x location=0.0455
+line x location=0.0525
+line x location=0.07
+
+line y location=0
+line y location=0.0035
+line y location=0.0151
+line y location=0.0167
+line y location=0.0175
+line y location=0.0245
+line y location=0.0253
+line y location=0.0269
+line y location=0.0385
+line y location=0.042
+
+line z location=-0.56
+line z location=-0.063
+line z location=-0.042
+line z location=-0.028
+line z location=-0.0234
+line z location=-0.0218
+line z location=-0.021
+line z location=-0.0024
+line z location=-0.0008
+line z location=0
+line z location=0.035
+line z location=0.105
+
+# Create Fin and Vt Adjust Implant
+etch    material=silicon thick=0.035 dry mask=FIN angle=87
+deposit material=oxide   thick=0 max
+deposit material=silicon thick=0.021 max dopants=boron dopingvalues=1e15
+deposit material=oxide   thick=0.007 max
+etch    material=oxide   thick=0.014 dry mask=FIN
+etch    material=silicon thick=0.021 dry mask=FIN
+
+# Poly Gate and Spacer
+deposit material=polysilicon thick=0.063 min 
+etch    material=polysilicon thick=0.07  max mask=GATE
+deposit material=nitride     thick=0     max 
+etch    material=nitride     thick=0.07  max mask=SPACER
+
+# Source-Drain Epitaxy
+etch    material=oxide   thick=-0.007 min mask=SPACER
+etch    material=silicon thick=0.021  max
+deposit material=SiGe    thick=0.021  min dopants=boron dopingvalues=1e20 \
+        x.comp=0.5 comp.doping=off
+etch    material=SiGe    thick=0.021  min mask=SD_EPI angle=120
+deposit material=BPSG    thick=0.021  min
+deposit material=SiGe    thick=0.021  min dopants=boron dopingvalues=1e20 \
+        x.comp=0.5 comp.doping=off
+etch    material=SiGe    thick=0.021  min mask=FIN angle=60 deltacd=0.002
+
+# Initial Stress Calculation
+Stress exposed
+
+# Remove Sacrificial Polysilicon and Fabricate Metal Gate
+etch    material=polysilicon thick=0.07    max
+deposit material=oxide       thick=0.0008  conformal 
+etch    material=oxide       thick=0.056   max mask=GATE
+etch    material=oxide       thick=0.0008  max
+deposit material=hfo2        thick=0.0016  conformal 
+etch    material=hfo2        thick=0.056   max mask=GATE
+etch    material=hfo2        thick=0.0016  max
+strip   material=BPSG
+
+# Thermal Budget
+diffuse time=0.1 temperature=935
+
+# Contact Metal
+deposit material=aluminum thick=0.063 min
+
+# Rebalance Stess Calculation
+Stress exposed rebalance
+
+# Electrode Labels
+electrodes mask=GATE material=aluminum
+electrodes mask=SD   material=aluminum
+
+save name=mos2ex26_vp
+
+# Generate conformal device mesh
+
+go victorymesh
+
+load in=mos2ex26_vp
+
+remesh conformal
+
+save out=mos2ex26_0.str
+
+tonyplot3d mos2ex26_0.str
+
+
+# Un-Saturated Vt WITHOUT Strain Inudced Mobility Enhancement
+
+go victorydevice
+
+mesh infile=mos2ex26_0.str
+
+electrode name=substrate x.min=0 x.max=0.07 y.min=0 y.max=0.042 \
+          z.min=0.104 z.max=0.106
+
+material material=hfo2    permittivity=20
+material material=silicon align=1
+models   material=silicon consrh cvt
+models   material=SiGe    consrh conmob
+contact name=gate workfunc=4.8
+
+method   pas pas.minpivot=0 dvmax=0.05 px.tol=1e-10 cx.tol=1e-10
+output   con.band val.band band.param u.srh u.auger
+
+solve init
+solve previous
+solve vdrain=-0.001
+solve vdrain=-0.01
+solve vdrain=-0.05
+log outfile=mos2ex26_0.log
+solve vgate=-0.01
+solve vgate=-0.05 vstep=-0.05 vfinal=-0.8 name=gate
+log off
+
+
+# Un-Saturated Vt WITH Strain Inudced Mobility Enhancement
+
+go victorydevice
+
+mesh infile=mos2ex26_0.str
+
+electrode name=substrate x.min=0 x.max=0.07 y.min=0 y.max=0.042 \
+          z.min=0.104 z.max=0.106
+
+material material=hfo2    permittivity=20
+material material=silicon align=1
+mobility material=silicon model.iso=1 nhance phance
+models   material=silicon consrh cvt
+models   material=SiGe    consrh conmob
+contact name=gate workfunc=4.8
+
+method   pas pas.minpivot=0 dvmax=0.05 px.tol=1e-10 cx.tol=1e-10
+output   con.band val.band band.param u.srh u.auger
+
+solve init
+solve previous
+save outfile=0V.str
+solve vdrain=-0.001
+solve vdrain=-0.01
+solve vdrain=-0.05
+log outfile=mos2ex26_1.log
+solve vgate=-0.01
+solve vgate=-0.05 vstep=-0.05 vfinal=-0.8 name=gate
+tonyplot mos2ex26_0.log -overlay mos2ex26_1.log -set mos2ex26.set

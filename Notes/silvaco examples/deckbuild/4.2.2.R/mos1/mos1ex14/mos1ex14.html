@@ -1,0 +1,130 @@
+<html>
+  <head>
+    <title>Breakdown Voltage Extraction</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Breakdown Voltage Extraction</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>SSuprem 4/DevEdit/S-Pisces</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R, Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="mos1ex14_plot0.png" width="640" alt="mos1ex14_plot0" />
+      <p/>
+      <img src="mos1ex14_plot1.png" width="640" alt="mos1ex14_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This is an Athena/DevEdit/Atlas interface example simulating the breakdown
+voltage of a PMOS transistor. This example demonstrates:
+</p>
+<ul>
+  <li>
+ Process simulation of a MOS transistor in Athena
+<br/>
+  </li>
+  <li>
+ Process parameter extraction (eg. oxide thicknesses)
+<br/>
+  </li>
+  <li>
+ Autointerface between Athena and DevEdit
+<br/>
+  </li>
+  <li>
+ Remeshing using DevEdit
+<br/>
+  </li>
+  <li>
+ Autointerface between DevEdit and Atlas
+<br/>
+  </li>
+  <li>
+ Solution for a Vds ramp with Vgs=0.0V to get breakdown
+  </li>
+</ul>
+<p>
+The process simulation, process parameter extraction and electrode
+definition for this example are exactly as described in the first
+example in this section.
+</p>
+<p>
+The grid requirements for Atlas simulation of impact ionization effects
+are more stringent than for the low electric field cases described
+earlier.
+<b> DevEdit </b> is used to remesh the Athena structure before proceeding to Atlas.
+The remeshing commands are described in the previous example in this section.
+</p>
+<p>
+The Atlas simulation contains similar syntax to the simpler examples
+described earlier in this section. The models, contact and interface
+parameters are the same, except that the concentration dependent SRH
+model is used. This provides a more accurate simulation of the
+pre-breakdown leakage current. The Selberherr impact ionization model
+is also selected.
+</p>
+<p>
+On the method statement two parameters are chosen to restrict the use
+of the current convergence criteria used in Atlas. Since the
+pre-breakdown leakage current is very low, it is necessary to tighten
+the tolerances on current convergence. The parameter setting
+<b> method climit=1e-4 </b> is also recommended in cases where the mesh is not as tight as the one
+used here.
+</p>
+<p>
+The sequence of solve statements shows a ramp in drain voltage.
+Small steps are taken at first, but the main simulation is performed in 0.5V
+steps. A compliance limit of 5.0e-8A/um is set on the drain. Compliance
+limits are useful in breakdown simulations to stop the simulation once
+the breakdown point is reached.
+</p>
+<p>
+The value used here might seem rather low compared to typical values
+used in measurements. This is simply an issue of CPU time. Running the
+simulation up into microamp or milliamp ranges is possible, however the
+extra information gained is usually not worth the CPU time spent. Once
+the voltage exceeds the breakdown voltage no solutions will be
+possible. Atlas will cut the voltage step and try again. It does this
+four times resulting in a minimum step of (0.5)^4 or 0.0625V. This is
+sufficient to resolve most breakdown voltages.  It is possible for
+users to ramp using smaller voltage steps, to use current boundary
+conditions, or curve tracing to further trace the IV curve to higher
+values of current. However this is not usually needed. Much extra CPU
+time might be required and yet the value of breakdown voltage remains
+the same to within the accuracy expected by simulation. Examples
+demonstrating snapback and curve tracing are included in other
+sections.
+</p>
+<p>
+The
+<b> extract </b> syntax used to measure the breakdown voltage is of the current search
+type. This is preferred over the simple max(v.&quot;drain&quot;) syntax that could
+be used as it gives more consistent results.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

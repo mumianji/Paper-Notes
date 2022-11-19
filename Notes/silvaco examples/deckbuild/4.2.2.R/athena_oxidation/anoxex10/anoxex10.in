@@ -1,0 +1,30 @@
+go athena 
+#simflags="-V 5.6.0.R"
+
+#TITLE: Oxidation Overlap in Narrow Trench Example
+#
+# This example simulates oxidation in a narrow trench
+#
+line x loc=0.0  spac=0.2
+line x loc=1.0  spac=0.05
+#
+line y loc=0.0  spac=0.05
+line y loc=0.7  spac=0.25
+line y loc=1.4  spac=0.05
+line y loc=2    spac=0.25 
+initialize
+#
+etch silicon start x=0.95 y=0.0
+etch continue x=1.0 y=0.0
+etch continue x=1.0 y=1.5
+etch done x=0.8 y=1.5
+#
+structure mirror right
+#
+# Specifying fill on method statement causes voids in oxide to be filled
+method compress fermi 
+diffuse time=8 temp=1150 wet dump=1 dump.prefix=anoxex10m
+structure outfile=anoxex10.str
+#
+tonyplot anoxex10m*.str anoxex10.str
+quit

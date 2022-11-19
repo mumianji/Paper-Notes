@@ -1,0 +1,84 @@
+# TPCS version: 7
+# various properties
+log label 0
+key opaque 0
+mark frequency 0
+mark overlay 0
+graph width 0 2
+graph width 1 1
+graph width 2 1
+graph width 3 1
+graph width 4 2
+graph width 5 1
+sequence size 1
+sequence width 0
+log zero 0
+sequence mark 0 0
+sequence mark 1 1
+sequence mark 2 2
+sequence mark 3 3
+sequence mark 4 4
+sequence mark 5 5
+# Functions
+function 1 "" ""
+function 2 "" ""
+function 3 "" ""
+function 4 "" ""
+select 1
+# xygraph flags
+show points on
+show lines on
+# xygraph types
+xygraph type 0 convert 0
+xygraph yaxis scale linear
+# xygraph x-axis
+xygraph xaxis "defocus" linear
+# xygraph y-axes
+xygraph yaxis none
+xygraph yaxis "CD" linear
+# xygraph group
+xygraph group "dose"
+# key positions
+key contours 1 at 3
+key contours 2 at 1
+key contours 3 at 6
+key electrical at 6
+key vectors at 6
+key overlay at 2
+key regions at 4
+key apply 
+# annotation, titles
+title main "OPTOLITH"
+title sub "Smile Plot (CD vs defocus for different doses)"
+# annotation, footers
+footer right none
+footer left none
+# annotation, show
+show xaxis on
+show yaxis on
+show grid on
+show label xaxis on
+show label yaxis on
+# annotation, axes
+range xaxis -1.1, 1.1 increment 0.2,4
+range yaxis 0.25, 0.7 increment 0.05,5
+label xaxis "defocus"
+# zoom
+zoom from 0, 0 scale 1, 1
+# user labels
+label "100" from 0.0508318, 0.523013 color 0 scale 2
+label 0 at 5 5
+label "110" from 0.0467652, 0.471234 color 0 scale 2
+label 1 at 5 5
+label "120" from 0.0508318, 0.444874 color 0 scale 2
+label 2 at 5 5
+label "130" from 0.0548983, 0.423222 color 0 scale 2
+label 3 at 5 5
+label "140" from 0.0548983, 0.405335 color 0 scale 2
+label 4 at 5 5
+label "150" from 0.0589649, 0.391213 color 0 scale 2
+label 5 at 5 5
+label "160" from 0.0630314, 0.372385 color 0 scale 2
+label 6 at 5 5
+# overlay level names
+label overlay 0 "anopex17.dat"

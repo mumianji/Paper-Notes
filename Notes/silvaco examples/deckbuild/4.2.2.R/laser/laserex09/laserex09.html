@@ -1,0 +1,142 @@
+<html>
+  <head>
+    <title>Disk MQW Laser</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Disk MQW Laser</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Blaze/Quantum/Laser</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="laserex09_plot0.png" width="640" alt="laserex09_plot0" />
+      <p/>
+      <img src="laserex09_plot1.png" width="640" alt="laserex09_plot1" />
+      <p/>
+      <img src="laserex09_plot2.png" width="640" alt="laserex09_plot2" />
+      <p/>
+      <img src="laserex09_plot3.png" width="640" alt="laserex09_plot3" />
+      <p/>
+      <img src="laserex09_plot4.png" width="640" alt="laserex09_plot4" />
+      <p/>
+      <img src="laserex09_plot5.png" width="640" alt="laserex09_plot5" />
+      <p/>
+      <img src="laserex09_plot6.png" width="640" alt="laserex09_plot6" />
+      <p/>
+      <img src="laserex09_plot7.png" width="640" alt="laserex09_plot7" />
+      <p/>
+      <img src="laserex09_plot8.png" width="640" alt="laserex09_plot8" />
+      <p/>
+      <img src="laserex09_plot9.png" width="640" alt="laserex09_plot9" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates the simulation of a tunnel injection
+InGaAsP/InAsP disk laser. The Disk laser has a cylindrical cavity, which
+favors lasing of modes with high azimuthal (orbital) number. The fact
+that this is a tunnel injection laser has an important modeling
+implication. Since hot carriers are suppressed in the active region due
+to tunnel injection directly to low energy bound states, the carrier
+density in active region is predominantly fully 2 dimensional. Thus as
+opposed to a conventional laser, the capture-escape model is not
+necessary to dynamically couple the bound state density to bulk carriers
+in the active region.
+</p>
+<p>
+To model the optical response in the active region, the deck employs the
+Luttinger-Kohn model k.p band structure model using the KP.CV2 parameter
+on the MODELS statement. The quantum wells are treated as coupled. The
+optical gain and spontaneous emission are computed using integration over
+k-space. The integration can be activated by the KP.ADAPTIVE parameter on
+MODELS statement. It is not activated by default in this example to reduce
+simulation time.
+</p>
+<p>
+The deck employs a 2D cylindrical vector Helmholtz solver to find
+intensity and optical field distribution in R-Z plane of the cavity. The
+orbital number is set by ORBIT parameter on the LASER statement. If a
+range of orbital numbers is desired, set parameters ORB.MIN and ORB.MAX.
+Metal electrodes are excluded from the solution domain by swtching off
+HELMHOLTZ parameter on the REGION statement. Perfect Electric Conductor
+boundary conditions are used at the boundaries of the domain.
+</p>
+<p>
+Details of extraction of light from the cavity is not modeled here.
+Instead, exctraction losses are set by parameter EXTR.LOSS [1/cm], which
+is included in the photon rate equations. Mirror losses are kept at zero
+by setting mirror reflectivities to 100% . Parameter PHOTON.ENERGY is
+the initial guess for the cavity eigen mode&apos;s energy. The actual eigen
+energies are printed on the screen, when parameter PRT.EVAL is specified
+on the LASER statement.
+</p>
+<p>
+The deck uses voltage boundary conditions throughout the simulation. The
+voltage boundary conditions were found to provide better stability and
+performance in the simulation.
+</p>
+<p>
+The important modeling highlights are:
+</p>
+<ul>
+  <li>
+ k.p bandstructure based calculation of gain and spontaneous
+emission in the active region. The band structure is computed with
+strain effects and full coupling to the electrostatic potential at every
+bias step.
+<br/>
+  </li>
+  <li>
+ Multi-transverse  mode simulation of disk laser, with mode
+competition
+<br/>
+  </li>
+  <li>
+ Demonstration of a 2D vector Helmholtz solver for disk geometry
+with full coupling to the changes in the complex refractive index due to
+the gain computed from the k.p model, and free-carrier absorption from
+the bulk carrier density in the device.
+<br/>
+  </li>
+  <li>
+ Tunnel injection modeled using a non-local tunneling junction. 
+<br/>
+  </li>
+</ul>
+<p>
+The results show the total power emitted, modal photon density, gain and
+loss of the lasing mode as a function of anode current. The family of
+k.p gain and spontaneous emission spectra are shown at the sub-threshold
+point of  micro Amps, near threshold, and above threshold. Flattening of
+the electrostatic potential across the active region above threshold reduces
+the energy differences between states localized in different wells.
+This effect is clearly seen by comparing the valence bands at the
+sub-threshold and above threshold points. The 2D plots optical intensity
+above threshold show the spatial profile of the lasing mode.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

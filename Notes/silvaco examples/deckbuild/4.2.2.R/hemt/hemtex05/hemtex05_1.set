@@ -1,0 +1,92 @@
+# TPCS version: 6
+# key positions
+key contours 1 at 3
+key contours 2 at 1
+key contours 3 at 6
+key electrical at 0
+key vectors at 6
+key overlay at 0
+key regions at 4
+# various properties
+log label 0
+select 1
+# plot flags, special
+show mesh off
+show edges on
+show materials off
+show contours on
+show light off
+show vectors off
+show junctions off
+show electrodes on
+show threed off
+draw 1
+# contour set 1
+contours 1 impurity "Electron Conc"
+contours 1 materials all
+contours 1 min auto
+contours 1 max auto
+contours 1 nsteps 33
+contours 1 type fill
+contours 1 outline off
+contours 1 color 0
+contours 1 apply
+# contour set 2
+contours 2 impurity "None"
+contours 2 materials all
+contours 2 min auto
+contours 2 max auto
+contours 2 nsteps 33
+contours 2 type fill
+contours 2 outline off
+contours 2 color 0
+contours 2 apply
+# contour set 3
+contours 3 impurity "None"
+contours 3 materials all
+contours 3 min auto
+contours 3 max auto
+contours 3 nsteps 33
+contours 3 type fill
+contours 3 outline off
+contours 3 color 0
+contours 3 apply
+# annotation, titles
+title main "ATLAS / BLAZE"
+title sub "HEMT Electron Concentration  Zero Bias"
+# annotation, footers
+footer right none
+footer left none
+# annotation, show
+show xaxis on
+show yaxis on
+show grid off
+show label xaxis on
+show label yaxis on
+# annotation, axes
+range xaxis auto
+range yaxis auto
+label xaxis "Microns"
+label yaxis "Microns"
+# zoom
+zoom from 0, 0.013467 scale 1, 2.30192
+# user labels
+label "Al~0.~2~2Ga~0.~7~8As" from 1.28928, 0.0601363 color 0 scale 2
+label 0 at 5 5
+label "Al~0.~2~2Ga~0.~7~8As" from 2.7366, 0.120392 color 0 scale 2
+label 1 at 5 5
+label "GaAs" from 0.665434, 0.0167524 color 0 scale 2
+label 2 at 5 5
+label "GaAs" from 2.23752, 0.178237 color 0 scale 2
+label 3 at 5 5
+label "GaAs" from 4.07579, 0.0177165 color 0 scale 2
+label 4 at 5 5
+label "In~0.~2~2Ga~0.~7~8As" from 1.28928, 0.0847204 color 0 scale 2
+label 5 at 5 5
+label "delta-doping" from 3.03604, 0.0702592 color 0 scale 2 to 2.79482, 0.0789359
+label 6 at 3 3
+label "delta-doping" from 3.21072, 0.10111 color 0 scale 2
+label 7 at 5 5
+# overlay level names
+label overlay 0 "hemtAd2.out"
+draw all

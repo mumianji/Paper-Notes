@@ -1,0 +1,91 @@
+<html>
+  <head>
+    <title>Semi-classical versus BQP Quasistatic Capacitance for an N-MOS.</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Semi-classical versus BQP Quasistatic Capacitance for an N-MOS.</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>S-Pisces/Quantum</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="quantumex06_plot0.png" width="640" alt="quantumex06_plot0" />
+      <p/>
+      <img src="quantumex06_plot1.png" width="640" alt="quantumex06_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates:
+</p>
+<ul>
+  <li>
+ Use of the BQP model.
+<br/>
+  </li>
+  <li>
+ Calculation of very low frequency C-V curves using QSCV  
+<br/>
+  </li>
+  <li>
+ Effects of quantum mechanics on C-V characteristics of NMOS.
+<br/>
+  </li>
+</ul>
+<p>
+In this example we illustrate the effects of quantum mechanics on the
+quasi-static (i.e. very low frequency) capacitance of an N-MOS capacitor
+as the gate bias varies, taking the device from being in accumulation
+through to strong inversion.  The main features are the shift in threshold
+voltage, equality of the capacitances near flat band and in depletion, and
+the different asymptotic capacitance as the gate voltage becomes large,
+both +ve and -ve.
+</p>
+<p>
+The first part invokes the BQP model for both electrons and holes. This
+is because quantum effects for both electrons and holes are important on
+the same bias sweep.  There is negligible current flow in this device and
+so CARRIERS=0 mode can be used,  which is sufficiently robust that the
+model can be solved with the gate bias at -3.0 V directly.  A structure file
+is saved at this point as an example of the device in accumulation. By
+specifying P.Quantum on the output statement the BQP is written to the
+structure file. The gate bias is then ramped all the way up to 3.0V with
+QSCV specified on the solve statement in order to calculate and save the
+quasistatic C-V curves. After the final voltage,  another structure file
+is output as an example of inversion.  The quantum effects are only apparent
+near the Si/SiO2 interface.
+</p>
+<p>
+The second part does the semi-classical calculation over the same bias
+range.
+</p>
+<p>
+Remarks :  The BQP calculation is a self-consistent one and can take much
+longer to run than the equivalent semi-classical one.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

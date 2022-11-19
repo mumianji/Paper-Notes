@@ -1,0 +1,64 @@
+go athena
+set example=anopex09
+#
+#                   OPTOLITH input file: anopex09.in
+#                   --------------------------------
+#
+#              Imaging using SHRINC illumination aperture with varying 
+#	       defocussed images superimposed. This example demonstrates the 
+#	       multiple image superposition technique.
+#
+# Illumination system
+#
+illumination lambda=.365 intensity=.2
+#
+# Define the Shrinc illuminator using the arbitrary source technique
+#
+illum.filter clear.fil circle sigma=1 radius=0 angle=0 
+illum.filter square sigma=0.2 radius=0 angle=0 trans=0 
+illum.filter square sigma=0.2 radius=.4 angle=0 trans=0 
+illum.filter square sigma=0.2 radius=.8 angle=0 trans=0 
+illum.filter square sigma=0.2 radius=.4 angle=180 trans=0
+illum.filter square sigma=0.2 radius=.8 angle=180 trans=0
+illum.filter square sigma=0.2 radius=.4 angle=90 trans=0
+illum.filter square sigma=0.2 radius=.8 angle=90 trans=0
+illum.filter square sigma=0.2 radius=.4 angle=-90 trans=0
+illum.filter square sigma=0.2 radius=.8 angle=-90 trans=0
+#
+projection na=.54 
+#
+pupil.filter clear.fil circle
+#
+# Define the mask
+#
+layout lay.clear x.lo=-1.575 z.lo=-1.50 x.hi=-1.225 z.hi=1.50
+layout x.lo=-0.875 z.lo=-1.50 x.hi=-0.525 z.hi=1.50
+layout x.lo=-0.1750 z.lo=-1.50 x.hi=0.175 z.hi=1.50
+layout x.lo=0.525 z.lo=-1.50 x.hi=0.875 z.hi=1.50
+layout x.lo=1.225 z.lo=-1.50 x.hi=1.575 z.hi=1.50
+#
+# Run the imaging module 
+#
+image win.x.lo=-0.70 win.z.lo=-0.1 win.x.hi=0.70 win.z.hi=0.1 dx=0.01 n.pupil=10 defocus=0.1
+#
+structure outfile=$"example"_1.str intensity mask
+
+# Now use mult.image in the image command
+
+#
+image mult.image win.x.lo=-0.70 win.z.lo=-0.1 win.x.hi=0.70 win.z.hi=0.1 dx=0.01 n.pupil=10 defocus=0.2
+#
+structure outfile=$"example"_2.str intensity mask
+#
+image mult.image win.x.lo=-0.70 win.z.lo=-0.1 win.x.hi=0.70 win.z.hi=0.1 dx=0.01 n.pupil=10 defocus=0.3
+#
+structure outfile=$"example"_3.str intensity mask
+#
+image mult.image win.x.lo=-0.70 win.z.lo=-0.1 win.x.hi=0.70 win.z.hi=0.1 dx=0.01 n.pupil=10 defocus=0.4
+#
+structure outfile=$"example"_4.str intensity mask
+#
+tonyplot $"example"_*.str -set $"example".set
+#
+quit
+

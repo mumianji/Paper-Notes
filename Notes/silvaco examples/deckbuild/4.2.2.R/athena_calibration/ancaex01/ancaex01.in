@@ -1,0 +1,31 @@
+go athena
+
+#TITLE: OED using two.dim for dryo2
+line x loc = 0.0 
+line x loc = 0.25  spacing=0.25
+line y loc = 0     spacing=0.02
+line y loc = 1.50  spacing=0.05
+line y loc = 5.0   spacing=1.0
+line y loc = 100.0               
+init silicon c.boron=1.0e14
+#
+#perform uniform boron implant
+implant boron dose=3e14 energy=70
+#
+structure outfile=ancaex01_0.str
+method fermi compress
+diffuse time=30 temperature=1000 dryo2
+#
+structure outfile=ancaex01_1.str
+
+init infile=ancaex01_0.str
+#perform diffusion with point defects
+method two.dim compress
+diffuse time=30 temperature=1000 dryo2
+structure outfile=ancaex01_2.str
+
+tonyplot -overlay ancaex01_*.str -set ancaex01.set
+
+quit
+
+

@@ -1,0 +1,59 @@
+<html>
+  <head>
+    <title>Simulation of Phosphorus Predeposition Using PLS Model</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Simulation of Phosphorus Predeposition Using PLS Model</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>SSuprem 4 with DIFSIM Module</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="advdifex06_plot0.png" width="640" alt="advdifex06_plot0" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+To illustrate the improvements that result from an
+<b> advanced diffusion model</b> , we show simulations of phosphorus predeposition profiles at high and intermediate concentrations. The
+simulation results are compared to the SIMS data of Yoshida and Matsumoto.  This
+experiment is representative of high dopant concentration features which reveal
+the complex couplings between dopants and point defects. It is therefore considered a meaningful test for advanced diffusion models.
+</p>
+<p>
+As our simulations prove, the PLS model accurately reproduces the features of the
+experimental profiles. In particular, the simulated profiles exhibit the enhanced tail, with
+more or less pronounced inflexion in the surface region. This inflexion is the result of the
+strong coupling between the defect gradients and the dopant.
+</p>
+<p>
+To activate the new advanced diffusion model, specify
+<b> PLS </b> in the
+<b> METHOD </b> statement before the diffusion step to take into account Classical Dopant Diffusion models.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

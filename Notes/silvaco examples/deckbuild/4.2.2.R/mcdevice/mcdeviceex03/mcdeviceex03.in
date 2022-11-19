@@ -1,0 +1,106 @@
+# (c) Silvaco Inc., 2018
+go atlas
+mcdevice
+# This n-MOSFET example with quantum correction
+# was created by adding input associated with the quantum
+# correction model to the n-MOSFET example (mcdeviceex02).
+# Please see comments in mcdeviceex02.in for a description
+# of the key parameter settings.
+algo mode=2 carrier=e iter=2500 dt=0.1e-15
+poisson tstep=2
+output restart=-1 outfiles=no init=1 \
+  currentlogfile    ="mcdeviceex03_current.log" \
+  currentramplogfile="mcdeviceex03_current_ramp.log" \
+  solstrfile        ="mcdeviceex03_sol.str" \
+  summaryoutfile    ="mcdeviceex03_summary.out" \
+  tstep=1000
+particle n=60000
+# X Mesh Lines
+xmesh node=1   loc=0.0000
+xmesh node=76  loc=0.0225 ratio=1.00
+xmesh node=243 loc=0.0725 ratio=1.00
+xmesh node=318 loc=0.0950 ratio=1.00
+# Y Mesh Lines
+ymesh node=1  loc=-0.0615
+ymesh node=6  loc=-0.0015 ratio=0.4000
+ymesh node=9  loc=-0.0008 ratio=0.4000
+ymesh node=10 loc= 0.0000 ratio=0.8000
+ymesh node=15 loc= 0.0005 ratio=1.0000
+ymesh node=89 loc= 0.0800 ratio=1.0508
+# Simulation Box
+region n=1 mat=SiO2 type=out     boundp=(0.0,0.095,-0.0615,0.08)
+# Substrate
+region n=2 mat=Si   type=mc      boundp=(0.0,0.095,0.0,0.08)
+# Gate oxide
+region n=3 mat=SiO2 type=block   boundp=(0.0,0.095,-0.0015,0.0)
+# Source contact
+region n=4 mat=Si   type=contact boundp=(0.0,0.0072,0.0033,0.0135) \
+       name="source"
+# Drain contact
+region n=5 mat=Si   type=contact boundp=(0.0878,0.095,0.0033,0.0135) \
+       name="drain" usefermi=1
+# Poly gate
+region n=6 mat=Poly type=contact boundp=(0.0225,0.0725,-0.0615,-0.0015) \
+       name="gate"
+# Substrate contact
+region n=7 mat=Si type=contact   boundp=(0.0,0.095,0.0761,0.08) \
+       name="substrate"
+# calculate current in cregions
+cregion boundp=(0.0285,0.0665,0.0,0.08)
+cregion boundp=(0.0357,0.0506,0.0,0.08)
+cregion boundp=(0.0447,0.0596,0.0,0.08)
+# use quantum correction
+qregion mode=schroedinger dir=y tstep=4000 xstep=1 boundp=(0.0,0.095,-0.0008,0.0026)
+# Regions for quantum correction 
+schrregion n=1 mat=SiO2 boundp=(-0.0015,0.0000)
+schrregion n=2 mat=Si   boundp=( 0.0000,0.0300)
+#schroedinger mesh 
+schrmesh node=1  loc=-0.0015
+schrmesh node=11 loc= 0.0000 ratio=0.84
+schrmesh node=41 loc= 0.0050 ratio=1.069
+schrmesh node=71 loc= 0.0300 ratio=1.043
+#does nothing, set boundaries equal to device boundaries 
+ebregion boundp=(0.0,0.095,-0.0615,0.0178)
+#surface scattering region 
+#ssregion boundp=(0.0225,0.0725,-0.0008,0.0014)
+#Make rough = 0.0 for interface when using ssregion
+#matdef N=4 name="SiO2" eps=3.9 barrier=3.15 rough=0.0
+## background
+doping dopant=B conc=1e15 \
+  boundp=(0.0000,0.0950,0.0,0.0800)
+## source
+doping dopant=As conc=2e20 \
+  boundp=(0.0000,0.0293,0.0,      0.0001) \
+  char =(0.0040,0.0040,0.0001,0.0170)
+## source halo
+doping dopant=B conc=2.5e19 \
+  boundp=(0.0000,0.0293,0.0179,0.0181) \
+  char =(0.0182,0.0182,0.0160,0.0160)
+## drain
+doping dopant=As conc=2e20 \
+  boundp=(0.0657,0.0950,0.0,      0.0001) \
+  char =(0.0040,0.0040,0.0001,0.0170)
+## drain halo
+doping dopant=B conc=2.5e19 \
+  boundp=(0.0657,0.0950,0.0179,0.0181) \
+  char =(0.0182,0.0182,0.0160,0.0160)
+## gate
+doping dopant=As conc=2e20 \
+  boundp=(0.0225,0.0725,-0.0615,-0.0015)
+
+# Do a single solve for vgate=vdrain=1.0 V.
+solve vgate=1.0 vdrain=1.0
+tonyplot mcdeviceex03_current.log -set mcdeviceex03_current_log.set
+tonyplot mcdeviceex03_sol.str -set mcdeviceex03_sol_str.set
+
+# Do a 1-step voltage ramp from vdrain=1.0 V to vdrain=2.0 V.
+#solve vgate=1.0 vdrain=1.0 name="drain" vfinal=2.0 vstep=1.0
+
+# Do a second solve at Vgate=Vdrain=2.0 V.
+#output currentlogfile="mcdeviceex03_current2.log" \
+#       solstrfile    ="mcdeviceex03_sol2.str"
+#solve vgate=2.0 vdrain=2.0
+#tonyplot mcdeviceex03_current2.log -set mcdeviceex03_current_log.set
+#tonyplot mcdeviceex03_sol2.str -set mcdeviceex03_sol_str.set
+
+quit

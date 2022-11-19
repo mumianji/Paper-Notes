@@ -1,0 +1,130 @@
+<html>
+  <head>
+    <title>UMOS Device</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>UMOS Device</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Victory Process - Victory Device</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Victory Process 7.22.3.R, Victory Mesh 1.2.4.R, Victory Device 1.12.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="powerex22_plot0.png" width="640" alt="powerex22_plot0" />
+      <p/>
+      <img src="powerex22_plot1.png" width="640" alt="powerex22_plot1" />
+      <p/>
+      <img src="powerex22_plot2.png" width="640" alt="powerex22_plot2" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+By default Victory Process and Device run on just one processor.
+To ensure better perfomance on your computer the following simulation condition
+<b> simflags=&quot;-P all&quot;</b> could be specidied in the
+<b> go</b> line starting Victory Process or Device. This means that all processors available will be used.
+If you want to use a smaller number of processors you can substitute &quot;all&quot; with a desired number, e.g.
+<b> simflags=&quot;-P 4&quot;.</b> </p>
+<p>
+This example demonstrates
+<b> 2D </b> process simulation and basic device tests for a  U-shaped trench MOSFET or
+<b> UMOS</b> .
+</p>
+<p>
+UMOS device belongs to family of Vertical MOSFET devices which differ from standard (horizontal)
+MOSFETs by the fact that the gate is &quot;vertical&quot; and the drain is on the bottom
+of device. In UMOS, the vertical gate is formed by etching and oxidizing of a deep trench in silicon.
+The device uses two connections to the source which results in much larger area
+through which the current can flow. This reduces the ON resistance of the device which
+allow to handle higher powers than standard MOSFETs. The vertical nature of the UMOS
+structure allows to achieve good device characteristics with smaller &quot;layout footprint&quot;
+than conventional power MOSFETs.
+</p>
+<p>
+Since UMOS is a symmetrical device only half of the structure is simulated. The full structure is later generated using
+<b> Mirror</b> capability within
+<b> Victory Mesh</b> .
+</p>
+<p>
+Most of important geomentrical and process parameters of the UMOS structure are parametrized using
+<b> set </b> capability of
+<b> DeckBuild</b> which allows easy process and device optimization using
+<b> VWF.</b> </p>
+<p>
+The key process step, the trench formation, is simulated by combination of
+two etch models:
+<br/>
+</p>
+<ul>
+  <li>
+ geometrical 
+<b> angled dry </b> etch
+<br/>
+  </li>
+  <li>
+ geometrical
+<b> wet </b> etch with the curvature of the trench bottom specified by
+<b> RADIUS</b> <br/>
+  </li>
+</ul>
+<p>
+This deck takes advantage of Victory Process capability of adjusting volume
+mesh for specific implant/diffusion steps. It starts with a very coarse volume mesh
+which allow to speed up epitaxy and trench formation steps. Then additional volume mesh
+<b> lines</b> are placed in important areas around the trench as well as in implanted areas. Also, the fine
+grid initially required to capture a sharp peak of N+ Arsenic implant was later coarsened
+by using
+<b> Line remove</b> capability of Victory Process.
+</p>
+<p>
+In this example, in order to decrease simulation time the default analytical model is used
+for all implant steps. The Monte Carlo implant model is recommended for most real device simulation.
+</p>
+<p>
+Several parameters of the device structure are extracted along the way and can be used
+for process optimization.
+</p>
+<p>
+Finally, the full structure is &quot;prepared&quot; for device simulation using
+<b> Victory Mesh</b> .
+First, the final status of Victory process simulation is loaded, then the structure is mirrored, and remeshhed and refined using
+<b> Delaunay</b> mesh.  The finest refinement takes place along the gate to obtain reproducible Vt. The nesh is also refined at other interfaces and along the junction for accurate Breakdown Voltage simulation.
+</p>
+<p>
+In the end Victory Device is used to extract two basic device characteristics:
+</p>
+<ul>
+  <li>
+  Threshold voltage
+<b> Vt</b> <br/>
+  </li>
+  <li>
+ Breakdown voltage 
+<b> BV</b> .
+  </li>
+</ul>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

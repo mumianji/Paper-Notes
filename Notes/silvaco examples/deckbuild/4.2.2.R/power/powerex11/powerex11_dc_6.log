@@ -1,0 +1,30 @@
+v VICTORYDEVICE
+# This file was created by VICTORYDEVICE version 1.12.1.R on Fri Apr 20 18:33:56 2018.
+#SSF 2.0 generic
+##############################################################################
+#                    Copyright (c) 1984 - 2015                               #
+#                    Silvaco Inc. All rights reserved                        #
+#                                                                            #
+# This file format and the following Key are copyright Silvaco Inc.          #
+# You may not use, this format or key without reproducing this message in    #
+# full and obtaining express written permission from Silvaco Inc.            #
+#                                                                            #
+# To obtain such permission please contact: Silvaco Inc.                     #
+#                                           support@silvaco.com              #
+#                                                                            #
+# KEY=SVC86hn7562asdx                       PROD=345                         #
+##############################################################################
+Q 10000 1 "V[GG]" 5 1201 7 1
+Q 10001 1 "V[G]" 5 1201 7 2
+Q 10002 1 "V[D]" 5 1201 7 3
+Q 10003 1 "V[dd]" 5 1201 7 4
+X 1 iin
+X 2 Rg
+X 3 amos_gate
+X 4 amos_drain
+X 5 amos_source
+X 6 iout
+X 7 vdd
+p 12 10000 10001 10002 10003 82 1301 1302 1303 1304 1305 1306 1307
+d  0.0000000000e+00 0.0000000000e+00 5.3572178204e-01 0.0000000000e+00 3.0000000000e+02 0.0000000000e+00 0.0000000000e+00 0.0000000000e+00 2.9608388421e-10 -2.9609076964e-10 1.0000000000e-05 9.9997039161e-06
+d  0.0000000000e+00 0.0000000000e+00 5.5364089222e-01 0.0000000000e+00 3.0000000000e+02 0.0000000000e+00 0.0000000000e+00 0.0000000000e+00 3.0542357638e-10 -3.0542604071e-10 2.0000000000e-05 1.9999694588e-05

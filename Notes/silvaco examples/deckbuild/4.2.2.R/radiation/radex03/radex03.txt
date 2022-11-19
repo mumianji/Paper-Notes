@@ -1,0 +1,146 @@
+{subsection} radex03.in : Single Event Upset in a 3D MOSFET 
+
+Requires: DevEdit 3D/Device 3D
+{newline}
+Minimum Versions: Atlas 5.20.2.R
+
+This example demonstrates simulation of the effects of different angles
+of incidence of an SEU in a MOSFET structure. The MOSFET structure is
+constructed using DevEdit 3D. The structure is then passed to Atlas for
+electrical testing. The input file consists of the following parts:
+
+{bullet} Construction of the device in DevEdit 3D
+{newline}
+{bullet} SEU simulation in Atlas: particle with normal incidence
+{newline}
+{bullet} SEU simulation in Atlas: particle with oblique incidence
+
+Atlas contains many features to enable the simulation of Single Event Upset
+(SEU) phenomena. Models for charge generation exist both in 2D, 3D and quasi-3D
+cylindrical coordinates. It is also possible for the users to add their own
+position and time dependent charge generation using the C-Interpreter and
+incorporate these into Atlas simulations.
+
+The first stage of the input file constructs the MOSFET geometry,
+material regions, doping profiles, electrodes, and subsequently generates the mesh
+in 3D. This is perfromed in DevEdit 3D by drawing the device regions in
+interactive mode, and specifying 3D doping distributions. The mesh was
+generated automatically by specifying basic mesh parameters and
+constraints with subsequent refinement based on the doping
+distribution. 
+
+DevEdit 3D generates 2 types of files: DevEdit 3D input file and the
+structure file. The first can be run in the DeckBuild to produce the
+corresponding structure file and is included here as the first portion
+of the input file. The second can be read in directly by Atlas in the
+MESH statement. Note that the DevEdit 3D input file can be edited as any
+other input file.  It is straightforward to change type and value of
+the doping associated with each region or resize regions.  More
+importantly DevEdit 3D input files can also be read directly into the
+graphical user interface of DevEdit 3D to provide all the menu options
+used to construct the structure.
+
+The Atlas simulation begins by reading the structure from
+DevEdit 3D.  DeckBuild provides an autointerface between DevEdit 3D and Atlas so
+that the structure produced by DevEdit 3D is transferred to Atlas without
+having to indicate the 
+{bold} mesh 
+statement (commented out in this example).
+Without the automatic DevEdit 3D/Atlas interface under DeckBuild the MESH
+statement is needed to load the structure and the mesh.
+
+The first active statements in the Atlas portion of the input file are contact
+and model definitions. In the 
+{bold} contact 
+statement, the workfunction is specified
+for the gate contact to reflect the properties of polysilicon. The set of 
+physical models used in the simulation includes Shockley-Read-Hall and Auger
+recombination as well as the CVT mobility model accounting for doping, parallel and
+transverse electric field mobility dependencies. The 
+{bold} material 
+statement and its
+parameters are not defined in the input file implying that the default values 
+for silicon are used. A two-carrier solution of the problem is indicated through
+the parameter 
+{bold} carrier=2 
+in the 
+{bold} method 
+statement. However, this parameter is
+omitted here since it represents the default setting.
+
+In practical applications, while simulating the latched state of a
+transistor in a memory cell, a large lumped resistor must be
+attached to the drain since the latter is in the floating state. This
+should adequately represent the MOSFET in either a high or low state that
+may be used in the SRAM cell. However, this lies beyond the scope of the
+example considered here. The purpose of this example is to
+demonstrate general capabilities in simulating the SEU by analyzing the
+reaction of the device in the off state to the charge generation of the
+SEU.
+
+The simulation is first performed to obtain the condition of the
+structure prior to the particle hit. This condition is with the drain
+voltage of 5V, and all other electrodes grounded. This condition of the
+structure is saved in a solution file for the
+use in the second atlas run.
+ 
+The parameters of the charge track are specified in the 
+{bold}singleeventupset 
+ statement.
+The general description of the SEU physical model employed in Atlas 3D mode
+as well as the description of all of the parameters for specifying position
+and time dependent generation is given in the Appendix to this example's
+description.
+
+The first SEU simulation is performed for a normal particle incidence through
+the drain region (along Y direction) with a maximum carrier density generated
+of 1.e18 cm-3. The characteristic radius of the track was defined to be 0.05 
+micron, the characteristic time of the Gaussian time dependency - 2 ps, and
+the time instant of the peak of generation - 4 ps. 
+
+The transient simulation is performed to monitor the effects of SEU
+generation. The initial time steps in the solve statements are defined
+by the user (eg. 0.05 ps in the first solve statement), while the subsequent
+time steps are selected automatically. The simulation is performed up
+to 0.1 microsecond of physical time. To analyze the effect of carrier generation
+on internal physical distributions, an output structure file 
+is saved for the instant of the peak of generation (t=4 ps).
+
+The external terminals transient characteristics are saved in the .log
+file. The MOSFET transient response in the form of drain current
+transient characteristic is displayed using TonyPlot.
+
+The simulation then proceeds to the second Atlas input file for
+simulating oblique particle incidence. This input file contains the
+same CONTACT and MODELS definitions as the previous one. The SEU
+definition of the particle hitting the device along its longer diagonal
+through the drain region (far left top corner) down to the
+near right bottom corner of the structure is specified in the SINGLE
+statement. All other parameters of the SEU are the same as in the
+previous Atlas simulation. The condition of the structure of Vds=5 V is
+loaded and the transient response of the SEU is simulated for the second
+SEU conditions.
+
+The external terminals transient characteristics are saved in the .log file
+, and the structure information is saved in the solution file 
+at the peak of generation.
+
+Both drain transient current characteristics corresponding to the different SEU
+conditions are then displayed in TonyPlot. The peak of the current associated
+with the drift collection is achieved at approximately 6 - 7 ps. Note that 
+the peak of generation is taking place at 4 ps. The drift collection continues
+for about ~100 ps when the charge in the depletion region is practically 
+collected. The peak of the current for the diagonal incidence is calculated to
+be slightly higher than for the normal incidence. The decrease in current is
+however slower for the normal incidence making the total extracted charge 
+greater. 
+
+To load and run this example, select the
+{bold} Load example 
+button in DeckBuild. This will copy the input file and any support
+files to your current working directory. Select the
+{bold} run 
+button to execute the example.
+
+
+

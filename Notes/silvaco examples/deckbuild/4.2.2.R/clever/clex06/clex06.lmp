@@ -1,0 +1,53 @@
+
+Rename	 L#1	 NWELL
+Rename	 L#2	 ACTIVE
+Rename	 L#6	 POLY
+Rename	 L#7	 PDIF
+Rename	 L#8	 NDIF
+Rename	 L#12	 CONT
+Rename	 L#14	 METAL1
+Rename	 L#17	 VIA1
+Rename	 L#18	 METAL2
+
+Invert	 NWELL	 PWELL
+
+And	 NWELL	 NDIF	NCTMP
+And	 NCTMP	 ACTIVE	NCONT
+
+And	 PWELL	 PDIF	PCTMP
+And	 PCTMP	 ACTIVE	PCONT
+
+Not	 CONT	 POLY	SCONT
+Connect	 SCONT	 CONT
+
+Connect  POLY	 CONT
+Connect	 CONT	 METAL1
+Connect	 METAL1	 VIA1
+Connect	 VIA1	 METAL2
+
+And	 PWELL	 NDIF	NTMP
+And	 NTMP	 ACTIVE	NACTIVE
+
+And	 NACTIVE POLY	NMOS
+And	 NACTIVE !POLY	NSD
+
+Connect	 NMOS	 POLY
+Connect  NSD	 CONT
+Connect  PWELL	 PCONT
+Connect	 PCONT	 CONT
+
+Element  MOS[N]  NMOS	NSD	PWELL	SCONT
+
+And	 NWELL	 PDIF	PTMP
+And	 PTMP	 ACTIVE	PACTIVE
+
+And	 PACTIVE POLY	PMOS
+And	 PACTIVE !POLY	PSD
+
+Connect  PMOS	 POLY
+Connect	 PSD	 CONT
+Connect  NWELL	 NCONT
+Connect  NCONT	 CONT
+
+Element	 MOS[P]	 PMOS	PSD	NWELL	SCONT
+

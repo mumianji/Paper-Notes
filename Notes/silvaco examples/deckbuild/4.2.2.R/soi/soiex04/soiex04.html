@@ -1,0 +1,68 @@
+<html>
+  <head>
+    <title>The "Kink" Effect in Partially Depleted SOI MOSFETs</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>The "Kink" Effect in Partially Depleted SOI MOSFETs</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>S-Pisces</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="soiex04_plot0.png" width="640" alt="soiex04_plot0" />
+      <p/>
+      <img src="soiex04_plot1.png" width="640" alt="soiex04_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example simulates the Ids/Vds characteristics of a partially depleted SOI MOSFET, described in example soiex01.in, for three gate voltages.
+The effect of impact ionisation at the drain junction causes the silicon film to be raised in potential and causes a shift in the threshold voltage.
+This is seen as a &quot;kink&quot; in the Ids/Vgs curves. The file shows:
+</p>
+<ul>
+  <li>
+ Basic SOI structure definition using Atlas syntax
+<br/>
+  </li>
+  <li>
+ Setting transport models including impact ionization
+<br/>
+  </li>
+  <li>
+ Generating an Ids/Vds curve with Vgs=1V, 2V and 3V
+<br/>
+  </li>
+  <li>
+ Plotting output curves and structures.
+  </li>
+</ul>
+<p>
+The Atlas syntax and methodology is based upon that of soiex01.in and a description of it may be found there.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

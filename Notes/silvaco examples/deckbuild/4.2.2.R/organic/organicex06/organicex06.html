@@ -1,0 +1,88 @@
+<html>
+  <head>
+    <title>Hole transport in polyfluorene based sandwich devices</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Hole transport in polyfluorene based sandwich devices</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Blaze/Organic Display</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="organicex06_plot0.png" width="640" alt="organicex06_plot0" />
+      <p/>
+      <img src="organicex06_plot1.png" width="640" alt="organicex06_plot1" />
+      <p/>
+      <img src="organicex06_plot2.png" width="640" alt="organicex06_plot2" />
+      <p/>
+      <img src="organicex06_plot3.png" width="640" alt="organicex06_plot3" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+The IV curves of hole-only sandwich-type devices containing a blue-emitting
+polyﬂuorene-based copolymer are simulated for a wide range of temperatures and
+for several thicknesses of the active organic layer based on [1]. In [1] it is
+shown that IV curves cannot be accurately describe using a commonly used mobility
+model which only depend on the electric field but that a consistent and quantitatively
+precise description of all curves can only be obtained using an extended Gaussian
+disorder model EGDM [2]. In this model, the mobility depends on the electric field
+and on the carrier concentration.Please refer to organicex05 for a detailed description
+and simulation of the EGDM model implementation.
+</p>
+<p>
+The device under test is a single hole-only layer device. The input deck is parametrized
+so that the variation of temperature and active layer thickness can be simulated easily
+using the internal Design of Experiment feature of deckbuild. Model parameters
+are set in the input deck using Table 1 from [1] and Low carrier density and low
+electric field mobility model is defined as mu0(T) = mu0 * exp(-C * (sigma/kT)^2)
+(see equation 6 in [1]). The &quot;baseline&quot; input deck is named organixex06_aux.in and
+in organicex06.in, simulations are performed in order to reproduce Fig2, Fig3(b),
+Fig5(c) and Fig5(d) from [1]. Even if a direct comparison with measurement is not
+done a very good agreement is obtained for the full range of temperature and
+thicknesses.
+</p>
+<p>
+Linear search damping is activated with the
+<b> ls.damping</b> parameter in the
+<b> method</b> statement.
+<b> lsd.skip.iter </b> is the number of Newton iterations that occurs before linear search damping is
+used. This is an alternative to the default Newton iteration scheme and shouldn&apos;t
+be used in all cases, but helps convergence in this case.
+</p>
+<p>
+[1] S.L.M.van Mensfoort, S.I.E.Vulto, R.A.J.Janssen, and R.Coehoorn
+Hole transport in polyflourene-based sandwich-type devices:
+Quantitative analysis of the role of energetic disorder
+Physical Review B 78, 085208 (2008)
+</p>
+<p>
+[2] The Pasveer reference publication is as follows:
+W.F.Pasveer et al., Physics Review Letters, 94, 206601 (2005)
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

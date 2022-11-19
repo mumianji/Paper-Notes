@@ -1,0 +1,1040 @@
+{section} OPTOELECTRONICS :  Optoelectronics Application Examples
+
+{subsection} optoex01.in :  Photodetector : Overview and Structure Definition
+
+Requires: S-Pisces
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+The following set of examples demonstrates how to extract device
+characteristics for general photodetectors.  These characteristics are
+of interest to those involved in the design of PN and PIN photodiodes,
+avalanche photodiodes, photoconductors, phototransistors, optical FETs
+and MSMs.  These examples focus principally on optoelectronic
+characteristics as opposed to the purely electronic behavior of
+photodetectors (e.g. dark current, capacitance). 
+
+The following examples will address a PIN photodetector.  The extraction 
+techniques used on the PIN device will equally apply to other
+photodetector devices.  The device for these examples is described
+in the input file "optoex01.in".  This input file should be run before
+any of the other examples in this section as it provides the base
+device structure used in the other examples.
+
+The first section of the input file specifies the mesh.  In this 
+case, the mesh is 10 microns by 10 microns.  The spacings were chosen 
+to help resolve the P+ N and N N+ junctions.  The 
+{bold} space.mult 
+parameter is used to make the mesh coarse for fast simulation.  For more accuracy,
+the value should be set to unity.
+
+The second section of the input file specifies the structure of the 
+device.  The device is a square of silicon with an anode extending
+across the front surface (y=0.0) and a cathode across the bottom.
+It is uniformly doped N-type at 1.0e14, with heavily doped P+ and
+N+ regions at the front and back surfaces respectively.
+
+The third section of the input file specifies which material models
+will be used in the simulation.  Here SRH and Auger recombination
+mechanisms have been specified since they have important effects
+on the quantum efficiency of photodiodes.  Concentration and
+field dependent mobility models are also specified.
+
+The last section of the input file is used to obtain an initial
+solution.  The initial solution is written to a solution file that is
+used in all the subsequent photodetector analysis examples.  The output
+file   can be viewed using TonyPlot.  This shows the structure of the
+device and the device mesh.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} optoex02.in :  Photodetector : DC Characterization
+
+Requires: S-Pisces/Luminous
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+The first example involves characterization of steady state
+characteristics of the device, and demonstrates extraction of
+DC currents as a function of optical source power.  It 
+also demonstrates the use of multi-spectral sources.  The source
+spectrum is described in the file "optoex02.spec".
+
+The first section of the input file specifies that the mesh
+and device structure is taken from the previous example. The second section
+of the file sets the same material models that were specified
+in the previous example.
+
+The third section of the input file specifies the optic source.
+In this example the source originates 1 micron above the device
+and is directed normal to the front surface of the device.  The
+source spectrum is described in the file "optoex02.spec".  This
+spectrum is sampled at 5 discrete samples between the wavelengths
+of 0.5 and 0.8 microns.
+
+The fourth section of the file sets up the initial operating
+bias for the simulation.  In this case an operating bias of 2.0 volts
+is chosen.
+
+The last section of the input file specifies that the optical
+source intensity will be ramped from 0 to 1 W/cm^2.  During
+this ramp, steady state currents are extracted and saved in
+the log file. 
+
+The results are displayed by TonyPlot. The first figure shows several
+curves.  The first, source photo current, is the equivalent current
+what would be observed if all the light from the source were detected.
+The second curve, available photo current is the equivalent current
+that would be observed if all the light absorbed were converted to
+terminal current.  The difference between the source and available
+photo currents is due to part of the light passing all the way through
+the device.  The third curve is the cathode current.  By taking the
+ration of the cathode current with the source photo current, the quantum
+efficiency as a function of source intensity is plotted in the second
+figure.  Here the device quantum efficiency is about 91% and is
+relatively independent of source intensity.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+{subsection} optoex03.in :  Photodetector : Transient Response 
+
+Requires: S-Pisces/Luminous
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+
+This example deals with time domain response of the device
+to time dependent optical sources.  This example
+will extract the transient response of the device to an optical
+source being "turned off".  
+
+The first and second sections of the input file are the same as in the
+DC example described previously. The first section specifies that the device
+structure is read in from an external file. The second section specifies the material
+models used.  The third section of the file specifies a normally
+incident monochromatic source.  The wavelength of the source is 623 nm, 
+ equivalent to a HeNe laser wavelength.
+
+The fourth section of the input file sets the initial biasing
+conditions of the device.  Here again the device is biased 
+to 2.0 volts.
+
+The last section of the input file specifies the transient.  In this
+case the DC solution at a source intensity of 5 W/cm^2 is obtained.
+Then, the source intensity is ramped linearly to 0 over a time
+of 1 ns.  Terminal data is then collected over the next 9 ns.  The
+terminal data is saved to the log file.
+
+The results of the example are viewed in TonyPlot. They compare the
+available photo current with the cathode current as a function of
+time.  In this case the cathode current lags the source transient by a
+fraction of a nanosecond.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+{subsection} optoex04.in :  Photodetector : AC Response 
+
+Requires: S-Pisces/Luminous
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This input file analyzes the small signal response of the device
+to a small signal optical source.
+
+The first four sections of the input file are identical to the
+corresponding sections in the input file for the DC example
+described previously.  
+
+The fifth section of the file specifies that a DC solution at
+a source intensity of 5 W/cm^2 is obtained.  After the DC
+solution, the small signal response of the device to an small
+signal optical source of 1 mW/cm^2 is extracted for frequencies
+ranging from 100KHz to 100GHz.  The full AC terminal characteristics 
+are saved in the log file.
+
+When the results are viewed in TonyPlot, they show that the device has a
+cutoff frequency of about 1 GHz.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} optoex05.in :  Photodetector : Spectral Response 
+
+Requires: S-Pisces/Luminous
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+The final example in this set involves the extraction of spectral
+response data.  
+
+The first four sections of the input file are the same as those in the
+previous examples.  The exception is that a monochromatic wavelength of
+100nm is specified.  In the last section of the file, solutions are
+obtained for a 1 W/cm^2 intensity at discrete source wavelengths of 0.1
+to 0.8 microns. The
+{bold} lambda 
+parameter of the 
+{bold} solve 
+statement is used to set the wavelength for each solution. The terminal
+characteristics and wavelength results are saved to the log file.
+
+The results of the simulation shows that the device exhibits good
+quantum efficiency below a wavelength of about 700 nm.
+ 
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+{subsection} optoex06.in :  Luminous Efficiency of a III-V LED Device  
+
+Requires: Blaze/LED
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates how the radiative recombination models 
+in Atlas can be used to analyze the luminous efficiency
+and of LED devices. 
+
+The objective of this example is to forward bias the LED such that
+radiative recombination occurs in the active layer of the device.  Then
+by extracting the integrated radiative recombination rate and total
+integrated recombination rate, the luminous efficiency
+of the device can be measured.  Also, the integrated radiative recombination rate as a
+function of bias voltage can be extracted to estimate the luminous
+power versus bias voltage.
+
+{bold} Mesh Generation 
+
+In the first section of the input file, a mesh
+covering an area of 4 microns by 4 microns is defined.  The mesh uses the
+"diag.flip" option since it is symmetric about the center in "X".
+Mesh spacings are specified to try to resolve the heterojunctions
+in the "Y" direction and the doping profiles in the "X" direction.
+An eliminate statement is used to reduce the number of grid points
+used, in the direction of the substrate.  Also, the value of the
+"space.mult" parameter has been set to 2.0 to provide faster
+simulation.  For better accuracy (and longer simulation time)
+this value should be set to a smaller number.
+
+{bold} Region and Electrode Specification 
+
+The device is composed of five regions: a GaAs "p" contact
+region, an AlGaAs cladding layer, the GaAs active
+region, a second AlGaAs cladding layer and an
+n-type GaAs substrate.  In this example the "grad" parameters
+were used to grade the heterojunctions between the first and
+second layers and the fourth and fifth layers.  The heterojunctions
+at both sides of the active layer are modeled as abrupt.
+
+A "p" contact electrode is defined at the center of the top of the
+device.  The "p" contact is narrower than the device to confine the
+photo-luminescence to a narrow region in the active layer.  The
+substrate electrode extends across the device at the bottom.
+
+{bold} Doping Profile Specification
+
+The doping profiles in the device are specified in the third section
+of the input file.  Here the first three layers are lightly doped
+"P" type, while the last two layers are heavily doped "N" type.
+In addition a "P+" type profile is defined around the "p" contact.
+
+{bold} Material Models
+
+In the fourth section of the file,  a set of material
+and model parameters is specified.  For analyzing luminous efficiency,
+all principal recombination mechanisms are selected.  In addition,
+a radiative recombination constant for all the
+materials is set.  In the solution part of the file 
+the individual contributions of the various mechanisms to estimate
+luminous efficiency will be extracted.
+
+{bold} Output
+
+In the fifth section of the file, the various
+output parameters that will be written to the solution file during
+the solution process are chosen.  These parameters will allow the user to look
+at the conduction band edge energy, the valence band edge energy,
+the total recombination rate, the SRH recombination rate, the
+Auger recombination rate and the radiative recombination rate.
+
+{bold} Initial Solution
+
+In the sixth section of the file, an initial
+solution with no carriers is done.  This usually provides a good
+initial guess for the full, 2 carrier solutions to follow.
+
+{bold} Bias Ramp
+
+In the seventh section of the file the bias voltage
+across the LED is ramped from 0.0 V to 2.0 V in the forward bias direction.
+In this section a full two carriers solution  will be done so
+that recombination data can be observed.  In the first line
+of this section of the file, an output log file
+is specified. Current-voltage data will be written to this file. In the
+solve statement, a luminous wavelength 
+{bold} l.wave 
+is set so that luminous power can be extracted during the ramp.  In
+addition, the saving of an output file is set in the solve statement so
+that  snapshots of the device can be displayed at each step of the
+bias ramp.
+
+{bold} Extraction
+
+In the last section of the input file, the integrated
+total and radiative components of the recombination rate in the
+device are extracted.  The luminous efficiency can be estimated by the ratio
+of these values.
+
+{bold} Results
+
+From these  results,  the luminous efficiency can be calculated.
+The luminous efficiency is defined at the ratio of the radiative
+recombination rate to the total recombination rate.  The extracted
+values of these rates should be printed at the end of the run, giving
+a ratio a value of 70%.
+
+To view the results, first start up TonyPlot with the solution file .
+This file corresponds to the device structure after the completed
+voltage ramp. Once TonyPlot has started you should choose to display
+a contour plot of the radiative recombination rate.  In this plot
+we can see the relative luminescence in the active layer compared
+to other regions of the device.  In this case most of the radiative
+recombination should be confined to the active layer of the device.
+
+The log file contains all the terminal characteristics.  This file
+contains values of the calculated luminescent power as a function of
+device bias voltage.  Once the file is loaded into TonyPlot you should
+select to display "anode bias" along the x axis and "Luminescent power"
+along the y axis.  In this figure it is seen that the device "turns-on" at
+about 1.4 Volts.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+{subsection} optoex07.in :  User-defined Photo-Generation Rate
+
+Requires: S-Pisces/Luminous/C-Interpreter
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates how an interpreter function can be used to
+specify arbitrary generation rate profiles in the device. It shows:
+{newline}
+{bullet} Definition of a 2D diode structure using Atlas syntax
+{newline}
+{bullet} Setting of a user-defined generate rate in the 
+{bold} beam 
+statement
+
+In this example,
+the interpreter function is used to emulate the absorption of normally
+incident light.  Since this model is a built-in feature of Luminous,
+the results can be compared with the built-in model.  To do this
+run radiate.in and look at the output.  Edit radiate.in and comment
+out the parameter
+{bold} f.radiate=optoex07.lib 
+and run the file again.  In 
+either case the results should match.  The function in optoex07.lib
+can be varied to prove that the interpreted functions is being used
+in the first case.
+
+The user-defined function is in the text file 
+{bold} optoex07.lib 
+. This file can be edited manually to set any function or
+shape of photogeneration profile in the device. The value of the
+photogeneration rate from the subroutine is multiplied by the value of
+the
+{bold} b1 
+parameter of the 
+{bold} solve 
+statement. 
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+{subsection} optoex08.in : Observation of coherent effects.
+
+Requires: S-Pisces/Luminous
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates:
+{newline} 
+{bullet} Standing wave pattern created by interfering waves
+{newline}
+
+This example shows an added capability of Luminous to describe coherent
+effects in 2D. The 
+{bold} bpm 
+parameter used in the beam statement ensures
+that the beam propagation method be used by Luminous instead of ray
+tracing. This is equivalent to using the wave optics approach instead of
+geometrical optics. The effects of optical wave diffraction and
+interference are automaticly taken into account when the beam
+propagation method is used.
+
+Interference between forward propagating wave and back reflected wave
+creates a standing wave pattern shown in this particular example.
+
+Other parameters that can be specified in the beam statement for the
+beam propagation method are 
+{bold} longit.step 
+and 
+{bold} transv.step
+. These
+parameters are used to set respective step sizes for the internal bpm
+grid. When the step sizes are not defined explicitly, the default
+values are used. The default step size in both directions is equal to
+wavelength/16.0. It is 
+{bold} emphatically not recommended 
+to use step sizes
+larger than wavelength/2.0, especially if coherent effects are of
+interest. The user is also cautioned against use of extremely small step
+sizes as they can result in unnecessarily long computation times.
+Default values provide for adequate treatment in most cases.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} optoex09.in :  Use of Anti-Refective Coating 
+
+Requires: S-Pisces/Luminous
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example shows how anti-reflective coatings can be simulated in
+Atlas. This example demonstrates:
+{newline}
+{bullet} Construction of simple silicon region
+{newline}
+{bullet} Specification of normally incident light beam
+{newline}
+{bullet} Definition of anti-reflective layer using the INTERFACE statement
+{newline}
+{bullet} Simulation of spectral response
+
+The structure and beam definition sections of this example are similar
+to other simple examples in this section. The wavelength of the beam
+will be set on the
+{bold} solve
+lines, so it is not defined in the 
+{bold} beam
+statement.
+
+The 
+{bold} interface 
+statement is used to define optical properties of a coating associated 
+with that interface. A user can define an anti-reflective coating 
+(considered in this example), a dielectric mirror, or an ideally reflecting
+surface using the 
+{bold} interface 
+statement. Note that the coating is not physically present in 
+the structure defined for Atlas. This allows a user to specify certain
+optical properties while not affecting electrical properties of the structure. 
+The parameter 
+{bold} ar.thick 
+defines the thickness of the coating layer. 
+{bold} ar.index 
+defines the refractive index of the layer. Most commonly the thickness 
+of a single-layer anti-reflective coating is a quarter of a wavelength 
+(in the material of the coating). For a single-layer coating or for the 
+first layer of a multi-layer coatingi, a user needs to specify the coordinates 
+of the points defining the coated surface 
+{bold} p1.x
+, 
+{bold} p1.y
+, 
+{bold} p2.x
+, and 
+{bold} p2.y
+.
+If a coating has more than one layer, each subsequent layer must have 
+the number of the coating and the number of the layer specified by parameters 
+{bold} coating 
+and 
+{bold} layer
+. 
+Coatings should be specified in order. Layers of one coating should also 
+be specified in order from top to bottom.
+
+If a coating is made of an absorbing material, it is possible to take absorption
+into account by specifying 
+{bold} ar.absorb 
+parameter. Totally reflective coatings are also allowed. The coating will 
+behave as an ideal reflector if 
+{bold} ar.index 
+parameter is set to a value > 1000.
+
+The refractive indexes in the structure can be checked using the
+{bold} index.check 
+parameter. This produces output of the real and imaginary index in the silicon
+as a function of the specified wavelength.
+
+The final plot compares the spectral response of the cases with and
+without the ARC. Note the increase around 0.6um wavelength for the one-layer 
+ARC. A two-layer coating is capable of reducing the reflectivity over a wide 
+range of wavelengths. In this example the terminal current is not important 
+since we consider a one terminal device with no applied bias. 
+The 
+{italic} source photocurrent
+is the amount of current generated by the light source.
+{italic} available photocurrent
+is the amount of current absorbed by the semiconductor. Differences
+between these two are due to reflection, transmission or absorption in
+non-semiconductor materials. The ratio of available/source photocurrents
+is often known as 
+{italic} external quantum efficiency.
+This quantity can be plotted using the functions in TonyPlot.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} optoex10.in : Defining a 2D Gaussian Intensity Profile
+
+Requires: S-Pisces/Luminous
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates:
+{newline} 
+{bullet} How to define a 2D Gaussian intensity profile
+
+This example shows an added capability of Luminous where, instead of a uniform beam intensity applied to the surface of the silicon, a Gaussian profile for the beam intensity can be defined.
+
+The definition of the beam is now:
+
+beam num=1 x.origin=2.5 y.origin=-5.0 angle=90 wavelength=0.623 rays=101 gaussian mean=0 xsigma=0.25
+
+The additional parameters are 
+{bold} gaussian
+, 
+{bold} mean
+ and 
+{bold} xsigma
+. The GAUSSIAN parameter defines that the intensity distribution is a gaussian, 
+MEAN specifies the location of a mean value of the Gaussian source 
+in the X direction related to the beam coordinate system, and XSIGMA specifies 
+the standard deviation in the X direction of the beam coordinate system.
+
+We recommend that the RAYS parameter is set to a large number as the spacing 
+between rays is always a constant (width of the beam / RAYS ) so in order to 
+obtain a smooth gaussian profile a large number of rays may be necessary.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+{subsection} optoex11.in : Defining a 3D Elliptical Source
+
+Requires: Device 3D/Luminous 3D
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates:
+{newline} 
+{bullet} How to define a 3D elliptical source
+
+To define an optical source in Luminous 3D is a little more complex than one in Luminous2D. The following steps are needed to define an elliptical beam using the BEAM statement.
+
+The origin of the beam is defined as (X.ORIGIN, Y.ORIGIN, Z.ORIGIN), similiar to 2D, but an additional two parameters
+{bold} angle 
+and 
+{bold} theta
+ are also needed to define the orientation of the beam. The angle parameter specifies the angle of the beam relative to the device X axis 
+and the theta parameter specifies the rotated angle of propogation relative to the X-Z plane.
+
+The centre of the elliptical source can be offset from the centre of the beam coordinate centre using the parameters 
+{bold} xcenter  
+and 
+{bold} zcenter
+ but in this example we have chosen the centre of the elliptical source to coincide with the origin of the beam system.
+
+After defining the beam coordinate system and the location of the elliptical beam, it is necessary to define the elliptical radii of the beam using the parameters 
+{bold} xradius
+ and 
+{bold} zradius.
+
+The sampling frequency of the source beam must now be chosen. The samples are taken along each of the beam front principle axes, ie the x and z planes,
+ in constant steps. The number of sampling points in each axis is defined by the parameters 
+{bold} nx
+ and 
+{bold} nz
+.
+
+Finally the wavelength of the light is defined, the front side reflections are switched on with the parameter
+{bold} metal.reflect 
+so that all metal regions act as perfect optical reflectors and the parameter 
+{bold} raytrace
+ identifies a file within which the traced rays are saved so they can be plotted with TonyPlot 3D.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} optoex12.in : A 3D Elliptical Source with a Gaussian Optical Intensity
+
+Requires: Device 3D/Luminous 3D
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates:
+{newline} 
+{bullet} How to define a 3D elliptical source with a Gaussian optical intensity profile.
+
+This example combines the example optoex11.in with example optoex10.in to create a gaussian optical intensity profile for a 3D optical source. 
+A description of the syntax for defining these effects is decribed in those examples.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+{subsection} optoex13.in : A 3D Diode Simulation with Small Signal Optical AC Analysis
+
+Requires: Device 3D/Luminous 3D
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates:
+{newline} 
+{bullet} How to define an optical source that has a small signal ac optical component.
+
+This input file analyzes the small signal response of a 3D device
+to a small signal optical source.
+
+The first four sections of the input file are similiar to the
+corresponding sections in the input file for example optoex01.in
+described previously.  
+
+The fifth section of the file defines the optical source in a similiar manner to example optoex10.in described previously. 
+The applied bias to the cathode contact is then increased to 2 V with no applied light. 
+
+The sixth section defines an optical source intensity of 1 mW/cm^2 and a small signal response of the device to this optical source is extracted 
+for each decade in frequency between 0.1 MHz and  100GHz  inclusive. The
+full AC terminal characteristics  are saved in the log file.
+
+When the results are viewed in TonyPlot it shows that the device has a
+cutoff frequency of about 1 GHz.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+{subsection} optoex14.in : Defining a Gaussian Beam with Non-normal Incidence
+
+Requires: S-Pisces/Luminous
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates:
+{newline} 
+{bullet} How to define an optical source that has a gaussion optical intensity
+{newline} 
+{bullet} Application of the periodic boundary condition for light sources
+
+The first four sections of the input file are similiar to the
+corresponding sections in the input file for example optoex01.in
+described previously.  
+
+The fifth section describes the beam properties and follows in general the beam 
+properties of example optoex10.in described previously. 
+
+In Atlas, by default, an unspecified boundary condition for device simulation 
+is assumed mirror or periodic.  However, for ray tracing by default the edges 
+of the device are considered interfaces with a vacuum, and therefore reflections 
+are calculated along these boundaries. In some cases it is useful to be able to 
+specify the edges to be periodic in regards to ray tracing as well. This is 
+particularly true when the beam is not normal to the plane.
+
+This example runs two simulations; the first with the default boundary conditions 
+for ray tracing, and the second with periodic boundary conditions for the rays. 
+The periodic boundary conditions are chosen by the 
+{bold} periodic
+ parameter of the BEAM statement.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} optoex15.in : Defining a 3D Lenslet 
+
+Requires: Device 3D/Luminous 3D
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates:
+{newline} 
+{bullet} How to define a 3D lenslet
+{newline} 
+
+One of the common applications of Luminous in 2D has been the simulation of a lens on top of a device. 
+To facilitate a similiar function in 3D requires creating this 3D lens which can be difficult without using a 3D process simulator. 
+To enable this, additional commands have been implemented into Luminous 3D. 
+
+The lenslet is represented by a spherical section on top of the x-z plane. The BEAM statement parameters
+{bold} lens.x 
+{bold} lens.y 
+and 
+{bold} lens.z 
+are used to define the centre of a sphere. The radius of the sphere is specified with the parameter
+{bold} lens.radius 
+and the location of the planar part surrounding the lenslet relative to the y=0 plane is specified by the
+{bold} lens.plane 
+parameter. Finally the index of refraction of the volume between the lens plane and the device surface is specified with the 
+{bold} lens.index 
+parameter.
+
+The volume associated with the lenslet is neither meshed nor simulated and is only used in the ray tracing.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+{subsection} optoex16.in : Diffracting 2D Gaussian Beam.
+
+Requires: S-Pisces/Luminous
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates:
+{newline} 
+{bullet} Diffraction of a spatially confined beam
+{newline}
+
+This example shows an added capability of Luminous to describe
+diffraction in 2D. The input deck of this example is identical to that
+of optoex10.in except for the 
+{bold} bpm
+ parameter in the 
+{bold} BEAM 
+statement. This
+parameter specifies that the beam propagation method be used by
+Luminous instead of ray tracing. This is equivalent to using the wave
+optics approach instead of geometrical optics. The effects of optical
+wave diffraction and interference are automatically taken into
+account when the beam propagation method is used.
+
+Diffraction effects of a Gaussian beam propagating in silicon is shown
+in this particular example.
+
+Other parameters that can be specified in the beam statement for the
+beam propagation method are 
+{bold} longit.step 
+and 
+{bold} transv.step
+. These parameters are used to set respective step sizes for the internal bpm
+grid. When the step sizes are not defined explicitly, the default
+values are used. The default step size in both directions is equal to
+wavelength/16.0. It is 
+{bold} emphatically not recommended 
+to use step sizes
+larger than wavelength/2.0, especially if coherent effects are of
+interest. The user is also cautioned against use of extremely small step
+sizes as they can result in unnecessarily long computation times.
+Default values provide for adequate treatment in most cases.
+
+Some parameters specific for the ray tracing are ignored in the beam
+propagation method. For details, see BEAM statement in the Atlas
+manual.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} optoex17.in : Crosstalk in InSb Detector Arrays
+
+Requires: Device 3D/Luminous 3D
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates:
+{newline} 
+{bullet} Crosstalk as well as Quantum efficiency as a function of
+InSb detector design parameters.
+{newline}
+
+Crosstalk is one of the main parameters that critically affect the 
+resolution of detector arrays. Electrical crosstalk is attributed
+to carriers that are photogenerated under one detector, diffusing 
+and being collected by another detector in the array. As the photodiode
+size and the pitch (distance between photodiodes) of the detector 
+array get smaller, there is a greater probability of crosstalk influencing 
+system performance since the probability of a generated carrier being 
+collected by a neighboring junction increases. Atlas will be used to 
+study the crosstalk and also the quantum efficiency of a 5 x 5 InSb 
+detector arrays in the three dimensional domain.
+ 
+The structure consists of InSb photodiodes fabricated on top of the 
+InSb buffer layer. The p+ regions were doped with acceptor concentration 
+of 1 x 1019 cm-3 and the buffer layer was doped with donor concentration
+of 1 x 1015 cm-3. The contacts on these photodiodes are ohmic and they 
+are named as anode 1, anode 2, ... anode 25 in the simulation. The cathode
+is formed on top of the buffer layer surrounding the photodiodes. 
+
+In this simulation, a multi-spectral source will be used and the source 
+will be a black-body radiator operating at a temperature of 2000 Kelvin.
+The 
+{bold} power.file 
+parameter in the 
+{bold} BEAM 
+statement will be used for that purpose.
+
+A parametrized input deck 
+{bold} optoex17.in 
+was created with 4 parameters which are the
+{bold} size of the pixel 
+the 
+{bold} pitch between pixel 
+the 
+{bold} InSb epilayer thickness 
+and
+{bold} InSb buffer layer thikness 
+
+The variation of these parameters are made using the
+{bold} DBInternal 
+capability of DeckBuild. The file name is
+{bold} optoex17_doe.in 
+. See
+{bold} DOE: Design of Experimenst Example 
+section of DeckBuild for more information on how to use
+{bold} DBInternal
+.
+
+To load and run this example, select the
+{bold} Load  
+button in DeckBuild. This will copy the input file and any support
+files to your current working directory. 
+{bold} optoex17.in 
+will be loaded by default. You should load
+{bold} optoex17_doe.in 
+for design parameters variation using DBInternal. Once loaded into 
+DeckBuild, select the
+{bold} run 
+button to execute the example.
+
+
+
+{subsection} optoex18.in : Reach Through APD (RTAPD)
+
+Requires: Blaze/Luminous
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+
+This example demonstrates:
+{newline} 
+{bullet} An Avalanche PhotoDiode where Absorption and multiplication
+reions are separated.  It also demonstrates the use of the Geiger mode to study 
+its behavior as a sinlge photon counter at biases beyond breakdown.
+{newline}
+
+The APD should maximize photon absorption. However the multiplication
+region should be thin in order to miminize secondary ionizations. These two
+conflicting requirements are acheived in Separate Absorption Multiplication
+(SAM) reach Through APD.
+
+Advanced III-V heterostructures can be used to detect different wavelengths
+of light such as infra-red and ultraviolet.  These heterostructures are often
+combined with silicon layers which are used for carrier multiplication. A 
+typical example is shown here.
+
+Since the device was mainly 1D we used the
+{bold} mesh auto 
+feature of Atlas to create the structure. When using auto-meshing, you must 
+only specify the mesh in the X direction using X.MESH statements. The mesh
+spacing in the Y direction is specified in the REGION statements. The REGION 
+statement is used as well to specify the material types of individual "regions", 
+their composition, doping, strain and certain other characteristics 
+describing how the region is to be modeled.
+
+The photogeneration rate is calculated using the
+{bold} beam 
+statement. The beam was back illuminated for better gain in the linear region and a wavelength of 1um and a beam intensity of 0.1Watts/cm2 was used.
+
+IV characteristics (dark as well under illumination) are simulated by ramping
+the anode voltage up to around -22V where the diode starts to break down and then beyond to -30V where the Geiger mode comes into play.  
+
+For the Geiger mode simulation, a probe statement was added so that the electron avalanche probabilities at the designated point versus bias could be seen on the log file.
+
+The filename=optoex18_g option for the probe statement was used so that Geiger line integrals would be stored at bias points.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} optoex19.in : Cylindrical Avalanche Photodiode
+
+Requires: S-Pisces/Luminous
+{newline}
+
+Minimum Versions: Atlas 5.26.1.R
+
+
+This example demonstrates:
+{newline} 
+The Atlas Geiger mode capability for a 3D avalanche photodiode operated as a 
+single photon counter at biases beyond breakdown - the Geiger counter mode.
+{newline}
+This 3D APD was made from silicon and  simulated in 2 cylindrical coordinates (r,y).  
+The anode is a diffused p+ disc in 6 microns of epitaxial n- silicon on n+ silicon substrate.
+
+IV characteristics (dark as well under illumination) are simulated by ramping
+the cathode voltage up to around 36V where the diode starts to break down 
+and then beyond to 45V where the Geiger mode comes into play.  
+
+For the Geiger mode simulation, a probe statement was added so that the electron 
+avalanche probabilities at the designated point versus bias could be seen on the log file.  
+The cathode was ramped to 70V, a bias at which single electrons or holes at some points 
+in the device have a 100% chance of initiating an avalanche.  The probabilities can be seen 
+in the 2D plots at several biases as wellas in the log file at the probed coordinates.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} optoex20.in : Spotscan with a 2D Gaussian Beam Using DOE
+
+Requires: S-Pisces/Luminous or Victory Device 2D/Victory Device_2D_Luminous
+{newline}
+Minimum Versions: Atlas 5.26.1.R or Victory Device 1.12.1.R
+
+This example demonstrates:
+{newline} 
+{bullet} How to simulate a spotscan with a 2D Gaussian intensity profile beam
+
+This example shows how to use Batch DOE to perform a spotscan with a Gaussian beam.  The beam is defined with a set-variable as the location of the mean value of the Gaussian source in the beam coordinate system.  DOE requires a target deck in which variables are defined and used, and the results of interest are extracted.
+
+The target deck, optoex20_target.in, is based on optoex10, but with a wider Gaussian, so the definition of the beam is becomes:
+
+beam num=1 x.origin=2.5 y.origin=-5.0 angle=90 wavelength=0.623 rays=101 gaussian x.mean=$xm xsigma=5
+
+where the set-variable is defined earlier in the deck with
+
+set xm=-7.5
+
+Note that the value of {bold} xsigma is 5, so the full width of the beam is twice the width of the detector.
+
+After biasing the detector, a solution is found with the beam on and the result is extracted from the log file with the following syntax:
+
+extract name="photocurrent" max(curve(v."substrate",i."substrate"))
+
+The DOE file, optoex20.in, starts with the 
+{bold} go internal 
+command which transfers control from the current simulator (i.e. Atlas) to
+DBInternal. The DOE file consists of the following sections:
+
+{bullet}The    
+{bold} load 
+command specifies which target file should be used for multiple runs. 
+
+{bullet}The
+{bold} sweep 
+command specifies how the variable parameter xm in the target file should be changed.
+In this example the mean location of the Gaussian beam varies from -10 to 10. The number of simulations
+is set to 21. 
+
+{bullet}The 
+{bold} save 
+command tells DBInternal to collate the data 
+generated in the extract command into the file "optoex20.dat".
+
+After all simulations are complete, the resulting photocurrent vs x.mean is plotted in TonyPlot.
+
+To load and run this example, select the 
+{bold} Load
+button in Deckbuild -> Examples. This action will copy all associated files to your
+current working directory. Select the 
+{bold} run 
+button in Deckbuild to execute the example.
+
+The input deck provided with this example can be run by either Victory Device or Atlas, just by changing the simulator name 
+in the go command from
+{bold} go victorydevice 
+to
+{bold} go atlas
+

@@ -1,0 +1,120 @@
+# (c) Silvaco Inc., 2018
+go devedit
+
+#
+# ATLAS 3D Thermal simulation
+# Two power transistor simulation
+#
+
+DevEdit version="2.0" library="1.14"
+
+work.area left=0 top=0 right=200 bottom=200
+
+# SILVACO Library V1.14
+
+region reg=1 mat=Silicon color=0xffc000 pattern=0x4 Z1=0 Z2=100 \
+	points="0,0 200,0 200,200 0,200 0,0"
+#
+constr.mesh region=1 default
+
+region reg=2 mat=Silicon color=0xffc000 pattern=0x4 Z1=0 Z2=2 \
+	points="20,30 85,30 85,90 20,90 20,30"
+#
+constr.mesh region=2 default
+
+region reg=3 mat=Silicon color=0xffc000 pattern=0x4 Z1=0 Z2=2 \
+	points="130,30 165,30 165,140 140,140 140,55 130,55 130,30"
+#
+constr.mesh region=3 default
+
+region reg=4 mat=Aluminum elec.id=1 color=0xffc0c0 pattern=0x7 Z1=100 Z2=102 \
+	points="0,0 200,0 200,200 0,200 0,0"
+#
+constr.mesh region=4 default
+
+
+
+# Set Meshing Parameters
+#
+base.mesh height=1000000 width=1000000
+#
+bound.cond !apply max.slope=28 max.ratio=300 rnd.unit=0.001 line.straightening=1 align.points when=automatic
+#
+imp.refine min.spacing=0.02 z=0
+#
+constr.mesh max.angle=90 max.ratio=300 max.height=20 \
+	max.width=20 min.height=0.0001 min.width=0.0001
+#
+constr.mesh type=Semiconductor default
+#
+constr.mesh type=Insulator default
+#
+constr.mesh type=Metal default
+#
+constr.mesh type=Other default
+#
+constr.mesh region=1 default
+#
+constr.mesh region=2 default
+#
+constr.mesh region=3 default
+#
+constr.mesh region=4 default
+#
+# Perform mesh operations
+#
+Mesh Mode=MeshBuild
+refine mode=both x1=8.04953560371517 y1=22.9102167182663 x2=91.0216718266254 y2=96.594427244582
+refine mode=both x1=123.529411764706 y1=22.6006191950464 x2=174.922600619195 y2=145.510835913313
+refine mode=both x1=99.6904024767802 y1=21.671826625387 x2=113.931888544892 y2=107.430340557276
+
+imp.refine min.spacing=0.02 z=0
+
+constr.mesh max.angle=90 max.ratio=300 max.height=20 \
+	max.width=20 min.height=0.0001 min.width=0.0001
+#
+constr.mesh type=Semiconductor default
+#
+constr.mesh type=Insulator default
+#
+constr.mesh type=Metal default
+#
+constr.mesh type=Other default
+
+z.plane z=0 spacing=0.5
+#
+z.plane z=2 spacing=0.5
+#
+z.plane z=50 spacing=10
+#
+z.plane z=100 spacing=20
+#
+z.plane max.spacing=1000000 max.ratio=10
+
+base.mesh height=1000000 width=1000000
+
+bound.cond !apply max.slope=28 max.ratio=300 rnd.unit=0.001 line.straightening=1 align.Points when=automatic
+
+mesh meshbuild
+
+struct outfile=thermalex01.str
+
+##########################
+
+go atlas
+
+mesh infile=thermalex01.str
+
+material region=1 tc.const=1.2
+material region=2 tc.const=1. power=0.35
+material region=3 tc.const=1.1 power =0.4
+#
+models thermal
+method
+#
+solve t1=300 outf=thermalex01_0.str
+tonyplot3d thermalex01_0.str -set thermalex01_0.set
+#
+quit
+
+

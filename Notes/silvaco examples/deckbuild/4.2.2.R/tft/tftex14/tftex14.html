@@ -1,0 +1,106 @@
+<html>
+  <head>
+    <title>Amorphous IGZO TFT Pixel MixedMode Simulation</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Amorphous IGZO TFT Pixel MixedMode Simulation</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Athena/Blaze/TFT/MixedMode</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R / Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="tftex14_plot0.png" width="640" alt="tftex14_plot0" />
+      <p/>
+      <img src="tftex14_plot1.png" width="640" alt="tftex14_plot1" />
+      <p/>
+      <img src="tftex14_plot2.png" width="640" alt="tftex14_plot2" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<br/>
+<p>
+The purpose of example explains how to make an equivalent TFT pixel circuit in Atlas/Mixedmode simulation softwares.
+This aims at demonstrating how to set up TFT pixel equivalent circuit including passive element
+such as resistance and capacitance arising from pixel and liquid crystal.
+The actual pixel size is very large in scale and practically device simulation takes long time to simulate pixel behavior and charging/discharging characteristics of liquid crystal.
+MixedMode circuit simulation performs both device level simulation and circuit level simulation,
+in which IGZO TFT test active structure is for device level and TFT pixel(Cst), liquild crystal(Clc) is for circuit level. As a result, users could trace pixel electrode&apos;s voltage during TFT on/off periods and additionally estimates pixel voltage shift by active device characteristics such as a-IGZO
+traps, backlight, and other facts.
+</p>
+<br/>
+<p>
+This example performs
+<b>MixedMode pixel simulations of IGZO TFT device </b> with material properties corresponding to amorphous IGZO (indium galium zinc oxide) material.
+For pixel simulation, we refer to articles on SILVACO website(http://www.silvaco.com/content/kbase/tftlcd_sol.pdf or http://www.silvaco.com/tech_lib_TCAD/simulationstandard/2008/apr_may_jun/a2/a2.html).
+<br/>
+<b> MixedMode syntax description</b> Mixedmode circuit description starts with .BEGIN statement and ends with .END statement.
+Some passiive elements(Cst and Clc) are connected to Atlas TFT structure in ATFT element.
+Here, Cst is storage capacitance and  Clc is liquid crystal capacitance.
+Both are connected to active IGZO TFT device. Gate, Drain, and Vcom pulse are applied to circuit using &quot;Vname&quot; statement. For liquid crytal capacitance model, we used simple constant capacitance value.
+Regarding real LC capacitance model, we can use user-defined two terminal element which is defined in
+C-interpreter function(tftex14_0.c) and uncomment &quot;bLC&quot; statement.
+<br/>
+</p>
+<p>
+The example shows:
+</p>
+<ul>
+  <li>
+ Structure formation using Athena syntax
+<br/>
+  </li>
+  <li>
+ Structure loading into Atlas and regioin modification to have a region name &quot;GI&quot; and &quot;channel&quot;
+<br/>
+  </li>
+  <li>
+ MixedMode Active IGZO device and circuit element description
+<br/>
+  </li>
+  <li>
+  Pixel transient simulation
+<br/>
+  </li>
+  <li>
+ Plotting transient response of pixel
+<br/>
+  </li>
+</ul>
+<p>
+The key command in a-IGZO:TFT Mixedmode pixel simulation is the
+<b> active device element which is defined in &quot;Aname&quot; statement between .BEGIN and .END.</b> &quot;atft&quot; device&apos;s each electrodes name(gate,source,drain) is connected to passive element and
+time dependent voltage source via node number.
+For two termianl user-defined device( here, bLC), please refer to
+<b>tftex14_0.c c-function file and detail descriptions on www.silvaco.com link.</b> <br/>
+<b> .numeric </b> controls various mixedmode convergence and iteration during solution.
+<b> .options fulln</b> sets the numerical method in mixedmode. Default is full newton method
+<br/>
+<b>go atlas  </b> activates Mixedmode simulation.
+<br/>
+After completion of transient simulation, it plots charging and discharging behavior of LC in Tonyplot.
+<br/>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

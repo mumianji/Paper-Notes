@@ -1,0 +1,140 @@
+# (c) Silvaco Inc., 2018
+
+go victorydevice simflags="-80"
+
+#-----------------------------------------------------------------------
+# Structure Definition
+#-----------------------------------------------------------------------
+
+mesh three.d
+
+x.mesh location=-2    spacing=0.25
+x.mesh location=-1.5  spacing=0.25
+x.mesh location=-0.75 spacing=0.02
+x.mesh location=0     spacing=0.2
+x.mesh location=0.75  spacing=0.02
+x.mesh location=1.5   spacing=0.25
+x.mesh location=2     spacing=0.25
+
+y.mesh location=-0.05  spacing=0.02
+y.mesh location=-0.013 spacing=0.002
+y.mesh location=0      spacing=0.001
+y.mesh location=4      spacing=1
+
+z.mesh location=0    spacing=0.75
+z.mesh location=1.5  spacing=0.75
+
+region number=1 oxide   y.max=0
+region number=2 silicon y.min=0
+
+electrode name=source x.min=-2    x.max=-1.5 y.min=-0.05 y.max=0
+electrode name=gate   x.min=-0.75 x.max=0.75 y.min=-0.05 y.max=-0.013
+electrode name=drain  x.min=1.5   x.max=2    y.min=-0.05 y.max=0
+electrode name=substrate bottom
+
+#-----------------------------------------------------------------------
+# Materials and Models
+#-----------------------------------------------------------------------
+
+# Use thermionic interface model at oxide/silicon interface
+interface thermionic
+
+doping p.type conc=2e17 uniform
+doping n.type conc=2e19 gaussian peak=0 charact=0.3 ratio.lateral=1 \
+       x.left=-2 x.right=-1.2
+doping n.type conc=2e19 gaussian peak=0 charact=0.3 ratio.lateral=1 \
+       x.left=1.2 x.right=2
+
+# Semiconductor properties for oxide
+material material=oxide nc300=2e19 nv300=2e19 eg300=9 semiconductor
+material material=oxide mun=1 mup=1e-3 
+material material=oxide m.vthp=1 
+
+# Conditions for radiation-induced oxide charging
+intoxidecharging r1material=oxide r2material=silicon \
+    jmodel.p nt.p=3e12 sigmat.p=1.5e-13 sigman.p=1e-30 sigmaph.p=1.5e-13 \
+    jmodel.n nt.n=1e4  sigmat.n=1e-30   sigmap.n=1e-30 sigmaph.n=1e-30 \
+    mfp.phonon=0.013
+
+oxidecharging material=oxide \
+    jmodel.p nt.p=4e18 sigmat.p=1.5e-13 sigman.p=1e-30 sigmaph.p=1.5e-13 \
+    jmodel.n nt.n=1e10 sigmat.n=1e-30   sigmap.n=1e-30 sigmaph.n=1e-30 
+              
+# Radiation environment
+radiation doserate=1 XRay
+
+# Other models and material properties
+models material=silicon klasrh klassen fldmob shira bound.trap print
+contact name=gate n.poly
+
+#-----------------------------------------------------------------------
+# Solution 
+#-----------------------------------------------------------------------
+
+# Request structure-file output of band parameters and recombination rates
+output band.param con.band val.band charge u.trap \
+       e.mobility h.mobility traps traps.ft \
+       e.velocity ex.velocity ey.velocity   \
+       h.velocity hx.velocity hy.velocity
+
+# Probe conditions near the oxide/silicon interface
+probe material=oxide int.donor.traps x=0 y=-1e-6 z=0.75 name="trapped int holes"
+probe material=oxide j.hole   v.y    x=0 y=-0.001 z=0.75 name="hole current"
+probe material=oxide vel.hole v.y    x=0 y=-0.001 z=0.75 name="hole velocity"
+probe material=oxide geminate    x=0 y=-0.001 z=0.75 name="hole yield fraction"
+probe material=oxide p.conc          x=0 y=-0.001 z=0.75 name="holes"
+probe material=oxide field    v.y    x=0 y=-0.001 z=0.75 name="field"
+
+# Probe conditions halfway between gate and interface
+probe material=oxide donor.traps x=0 y=-0.0065 z=0.75 name="trapped bulk holes"
+probe material=oxide p.conc      x=0 y=-0.0065 z=0.75 name="midpoint holes"
+
+# Set Numerics
+method pam.gmres climit=1e-6 maxtraps=10 dt.max=0.0501
+
+# Initialize the solution
+solve init
+solve previous
+# save outfile=0V.str
+
+# Put a small bias on the drain
+solve vdrain=0.01 previous
+solve vdrain=0.05
+
+# Ramp up the gate bias
+log outfile=radex07_0.log
+solve radiation dt=0.01 tstop=1 vgate=5 ramptime=1 previous
+# save outfile=preRad.str
+log off
+
+# Irradiate up to 1 MRad
+method climit=1e-4 maxtraps=10 tol.time=1e6 dt.max=10000 tstep.incr=1.1
+log outfile=radex07_1.log
+solve radiation dt=10 tstop=1000000 previous
+save outfile=radex07.str
+log off
+tonyplot3d radex07.str -set radex07_0.set
+
+# Reverse the gate bias to zero the oxide field
+method climit=1e-4 maxtraps=10 tol.time=1e6 dt.max=0.0501 dt.min=0.00001
+log outfile=radex07_2.log
+solve radiation dt=0.01 tstop=1000001 vgate=-0.9 ramptime=1 previous
+# save outfile=low_field.str
+log off
+
+# Re-Irradiate at Near Zero Oxide Field (Vg=-0.9V) to Release Trapped Oxide Charge
+method climit=1e-4 maxtraps=10 tol.time=1e6 dt.max=10000 tstep.incr=1.1
+log outfile=radex07_3.log
+solve radiation dt=0.001 tstop=2000000 previous
+# save outfile=recover.str
+log off
+
+tonyplot radex07_1.log -overlay radex07_3.log -set radex07_1.set
+
+# Re-check Recovered Vt
+method climit=1e-4 maxtraps=10 tol.time=1e6 dt.max=0.0501 dt.min=0.00001
+log outfile=radex07_4.log
+solve radiation dt=0.01 tstop=2000001 vgate=5 ramptime=1 previous
+# save outfile=final.str
+
+tonyplot radex07_0.log -overlay radex07_2.log radex07_4.log -set radex07_2.set

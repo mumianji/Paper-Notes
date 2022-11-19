@@ -1,0 +1,105 @@
+<html>
+  <head>
+    <title>Imported 25-nm n-MOSFFET</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Imported 25-nm n-MOSFFET</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>MC Device</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="mcdeviceex05_plot0.png" width="640" alt="mcdeviceex05_plot0" />
+      <p/>
+      <img src="mcdeviceex05_plot1.png" width="640" alt="mcdeviceex05_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates 2D Monte Carlo device modeling of a silicon
+n-MOSFET by importing the mesh, regions, and doping from
+a Silvaco structure file.
+</p>
+<p>
+For all aspects of this example apart from the
+<b> IMPORT </b> statement, please see mcdeviceex02.
+</p>
+<p>
+In preparation for this example, we generated the same structure used
+in mcdeviceex02 using Atlas outside the MCDEVICE module and saved it
+in the mcdeviceex05_atlas.str file.
+This example uses the
+<b> IMPORT </b> statement to
+import structure information from this file into MCDEVICE.
+</p>
+<p>
+The
+<b> MESH, REGIONS</b> , and
+<b> DOP </b> parameters on the
+<b> IMPORT </b> statement are set to
+<b> TRUE</b> . This indicates that all three aspects will be imported
+from the structure file specified by the
+<b> STRFILE </b> parameter.
+The
+<b> TYPE </b> parameter is set to 8 to indicate that
+the file is a Silvaco structure file.
+</p>
+<p>
+The initial definitions of
+the source, drain, gate, and substrate regions
+are imported from the mcdeviceex05_atlas.str file.
+The
+<b> REGION </b> statements change the
+<b> TYPE </b> parameter for these regions from
+<b> MC </b> to
+<b> CONTACT</b> .
+</p>
+<p>
+Specify all contact definitions
+in your input file either by changing the
+<b> TYPE </b> parameter of imported regions (as shown here)
+or by adding new contact definitions.
+This is true since
+flat contacts are ignored by
+<b> IMPORT </b> statements
+and contact regions are imported as
+<b> TYPE=MC</b> .
+</p>
+<p>
+All aspects of the structure
+can be modified after import and prior to a
+<b> SOLVE </b> statement by using the
+<b> XMESH, YMESH, REGION</b> , and
+<b> DOPING </b> statements.
+In this case, just the
+<b> TYPE </b> parameters of the contact
+regions were changed
+and all other structure information
+from the import were retained.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

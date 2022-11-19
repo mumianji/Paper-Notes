@@ -1,0 +1,120 @@
+<html>
+  <head>
+    <title>Guard Ring Breakdown Analysis</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Guard Ring Breakdown Analysis</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>SSuprem 4/S-Pisces</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R, Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="powerex05_plot0.png" width="640" alt="powerex05_plot0" />
+      <p/>
+      <img src="powerex05_plot1.png" width="640" alt="powerex05_plot1" />
+      <p/>
+      <img src="powerex05_plot2.png" width="640" alt="powerex05_plot2" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates the fabrication and electrical
+analysis of a protection structure using guard rings.  It shows:
+</p>
+<ul>
+  <li>
+ Protection device with guard rings process simulation using Athena
+<br/>
+  </li>
+  <li>
+ Proper guard ring contact definition for breakdown analysis using Atlas
+<br/>
+   </li>
+  <li>
+ Transport model definition including impact ionization
+<br/>
+  </li>
+  <li>
+ Breakdown test definition
+  </li>
+</ul>
+<p>
+The breakdown structure considered here consists of a series of four guard rings sandwiched between cathode and
+anode electrodes.  The Athena simulation begins by defining a phosphorous doped silicon substrate and its
+associated mesh.  Silicon dioxide is then deposited and etched to expose silicon for guard ring and anode
+implantation.  Boron is implanted and diffused to define the guard ring and anode junction depth.  Boron
+doped polysilicon is then deposited and etched to form the guard ring plate electrodes.  Aluminum is deposited
+and etched to create the anode and cathode electrodes.  These electrodes are specified using the
+<b> electrode </b> statement.  This includes the name and position.  Notice that a substrate electrode is added by specifying the
+<b> backside </b> option.  The completed structure is saved and plotted using TonyPlot.
+</p>
+<p>
+The Atlas breakdown simulation is now described.  In this simulation, the structure created by Athena will be
+automatically
+loaded into Atlas when the command
+<b> go atlas </b> is reached.  For this breakdown simulation including guard rings, the guard ring contact must be allowed to float.  The
+<b> contact </b> statement specifies that a 1E20 ohm series resistor be added to each contact.  This allows each guard ring
+contact to float and ensures that there is no appreciable current flow.  The
+<b> bipolar </b> option to the
+<b> models </b> statement selects a default set of transport models for bipolar devices.  The default bipolar models are
+conmob: concentration dependent mobility, fldmob: lateral electric field dependent mobility, bgn: band gap
+narrowing effects, consrh: concentration dependent Shockley-Read-Hall recombination lifetimes, and
+auger: recombination accounting for high level injection effects.  Since breakdown in semiconductor devices can
+occur in the presence of impact ionization, this model should be enabled.  In this case, the
+<b> impact selb </b> statement enables the Selberherr impact ionization model.  Please refer to the Atlas user&apos;s manual for a
+detailed description of these and other models.
+</p>
+<p>
+When simulating devices with external components like the guard ring  plate resistors, the
+<b> newton </b> solution method is required.  When using large bias steps, or when operating a device near breakdown,  it is
+advised to specify the
+<b> trap </b> option to the
+<b> method </b> statement.  With this option enabled, Atlas automatically reduces the applied bias when convergence is not
+achieved.  The simulation then continues at this new bias point.  If convergence is achieved, Atlas tries the
+original bias point again.  If not, the applied bias is reduced again.  This will  continue until convergence
+is achieved or until a maximum number of reductions takes place.  Once convergence occurs, Atlas will
+automatically work its way back to the original bias point where the initial reduction occurred.
+</p>
+<p>
+The Atlas
+<b> solve </b> statement is now used to construct the breakdown test.  As in most cases, an initial zero bias solution is
+performed by selecting the
+<b> init </b> option of the
+<b> solve </b> statement.  This gives Atlas an initial guess for subsequent simulations.  An output log file is opened and will
+contain terminal characteristics for each bias point selected for test or until another output log file is opened.
+For this breakdown test, the anode voltage is stepped from -1V to -900V in three stages: -1V to -5V,
+-5V to -25V, and -25V to -900V.  This arrangement is designed to provide good convergence while minimizing total
+simulation time.
+</p>
+<p>
+The solution at the final bias point is saved as a structure file and TonyPlot is invoked to plot the results.
+Anode, cathode and substrate currents can be plotted to identify the voltage where breakdown occurs.  Various
+contour quantities such as electric field, potential, and impact generation rate can be displayed from the
+structure plot.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

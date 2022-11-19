@@ -1,0 +1,111 @@
+# 
+#
+# Example Athena input deck demonstrating oxide induced silicon stress
+# enhanced etching.
+#
+# Note: The process flow used in this example does not represent a
+#       realistic process flow.  It is used purely to demonstrate etch
+#       enhancement.
+#
+
+go athena 
+
+#
+# Define the mesh spacing:  the bird's beak occurs around
+# (0.0, 0.0) so the mesh is finer there:
+line y loc = 0.0 spac=0.05
+line y loc = 3.0 spac=0.25
+
+line x loc =-1.5 spac=0.20
+line x loc =-1.0 spac=0.10
+line x loc =-0.5 spac=0.06
+line x loc =-0.2 spac=0.06
+line x loc = 0.0 spac=0.05
+line x loc = 1.0 spac=0.10
+line x loc = 1.5 spac=0.20
+
+#
+# Initialize the structure
+initialize 
+
+#
+# Deposit a pad Oxide
+deposit oxide thick=0.02 div=2
+
+#
+# Deposit the Nitride mask
+deposition nitride thick=0.16 div=4
+
+#
+# Etch the Nitride to expose the oxide for field oxide growth
+etch nitride left p1.x= 0.0
+
+#
+# Perform the field oxidation
+#  Include stress dependent oxidation coefficients
+oxide stress.dep=true
+#  Use a viscous model for Nitride
+material nitride visc.0=1.8e15
+#  Use a viscous model for Oxide
+method viscous oxide.rel=1e-2 grid.ox=0.05 gridinit.ox=0.05
+
+# Perform the wet oxidation
+diffuse time=60 temperature=1000 wetO2 
+
+#
+# Perform an additional 0.01 minutes of oxidation with
+#  Silicon stress dependence turned on
+method viscous oxide.rel=1e-2 skip.sil=false
+diffuse time=0.01 temp=1000 weto2
+struct outf=anelex31_0.str
+tonyplot anelex31_0.str -set anelex31.set
+
+#
+# Strip the Nitride
+strip nitride
+
+# Deposit Nitride to mask for the trench etch
+deposition nitride thick=0.16 div=4
+
+#
+# etch window in the Nitride
+etch nitride start x=0.0 y=-10.0
+etch         cont  x=0.0 y= 10.0
+etch         cont  x=0.5 y= 10.0
+etch         done  x=0.5 y=-10.0
+
+#
+# etch window in the Oxide
+etch oxide start x=0.0 y=-10.0
+etch       cont  x=0.0 y= 10.0
+etch       cont  x=0.5 y= 10.0
+etch       done  x=0.5 y=-10.0
+
+#
+# Define the etcher machine
+rate.etch machine=rie.etcher \
+          Silicon \
+          RIE \
+          Isotropic=0.01 Directional=0.1 u.m
+
+#
+# Define the stress enhancement for the "rie.etcher" machine
+rate.dope machine=rie.etcher silicon Sxy \
+          Enh.Max = 0.75 \
+          Enh.Scale = 1.5 \
+          Enh.MinC = 6
+
+#
+# etch the substrate
+etch machine=rie.etcher time=10 minutes
+
+#
+# Save the structure
+structure Outfile=anelex31_1.str
+
+#
+# Plot of the resultant structure show regions of enhanced etching
+tonyplot anelex31_1.str
+
+#
+quit

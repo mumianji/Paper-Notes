@@ -1,0 +1,199 @@
+# (c) Silvaco Inc., 2018
+# This example is based on the reference:
+#
+# K.Shenai, C.Cavallaro, S.Musumeci, R. Pagano, A.Raciti
+# "Modeling Low-Voltage Power MOSFETs as Synchronous rectifiers in Buck Converter
+# Applications", Industry Applications Conference, 2003. 38th IAS Annual Meeting 
+# pp. 1794- 1801 vol.3.
+
+
+go athena
+
+line x location=0 
+line x location=0.65 spacing=0.01
+line x location=0.7  spacing=0.01
+line x location=0.75 spacing=0.01
+line x location=1    spacing=0.02
+line x location=1.7
+
+line y location=3.5 spacing=0.2
+line y location=6.5 spacing=1
+
+init silicon phosphor resistivity=0.001 orientation=100
+
+epitaxy time=240 temp=1000 thickness=1.75 divisions=8 dy=0.2 ydy=1.75 \
+        c.phosphor=2.7e16
+epitaxy time=240 temp=1000 thickness=1.75 divisions=15 dy=0.001 ydy=0 \
+        c.phosphor=2.7e16
+deposit oxide thick=0.0235 divisions=5 dy=0.001 ydy=0.0235
+deposit oxide thick=0.0235 divisions=5 dy=0.001 ydy=0
+deposit polysilicon thick=0.15 divisions=5 dy=0.001 ydy=0.15
+deposit polysilicon thick=0.15 divisions=8 dy=0.001 ydy=0
+deposit barrier thick=1 divisions=5 dy=0.001 ydy=0.15
+deposit barrier thick=1 divisions=8 dy=0.001 ydy=0
+etch barrier left p1.x=0.7
+etch polysilicon left p1.x=0.7
+implant boron dose=1.8e14 energy=120 s.oxide=0.047
+etch barrier all
+implant arsenic dose=1e15 energy=80 s.oxide=0.047
+deposit oxide thick=0.025 divisions=5 dy=0.001 ydy=0.025
+deposit oxide thick=0.025 divisions=5 dy=0.001 ydy=0
+diffus time=60 temp=1000 nitro
+etch oxide left p1.x=0.65
+deposit aluminum thick=0.25 divisions=5 dy=0.001 ydy=0.047
+deposit aluminum thick=0.25 divisions=5 dy=0.001 ydy=0
+etch aluminum right p1.x=0.75
+electrode name=source x=0.4
+electrode name=gate x=1
+electrode name=drain bottom
+struct outfile=powerex12_0.str
+
+tonyplot powerex12_0.str -set powerex12_0.set
+
+# remesh before Device simulation
+
+go devedit
+
+init inf=powerex12_0.str
+
+# Set Meshing Parameters
+
+base.mesh height=0.2 width=0.2
+bound.cond !apply max.slope=28 max.ratio=300 rnd.unit=0.001 line.straightening=1 align.points when=automatic
+
+imp.refine imp="Net Doping" scale=log
+imp.refine min.spacing=0.02
+
+constr.mesh max.angle=90 max.ratio=300 max.height=10000 \
+	max.width=10000 min.height=0.0001 min.width=0.0001
+
+constr.mesh type=Semiconductor default
+constr.mesh type=Insulator default
+constr.mesh type=Metal default
+constr.mesh type=Other default
+
+constr.mesh region=2 default max.height=0.01
+constr.mesh id=1 x1=0.8 y1=0 x2=1.1 y2=0.2 default max.height=0.02
+Mesh Mode=MeshBuild
+
+structure outf=powerex12_1.str
+
+# transfert Characteristics 
+
+go atlas
+
+mesh infile=powerex12_1.str width=2e6
+
+models consrh cvt fermi
+contact name=gate workf=4.37
+
+solve init
+solve previous
+solve vdrain=0.05
+solve vdrain=1
+solve  vstep=1 vfinal=25 name=drain
+log outfile=powerex12_0.log
+solve  vstep=0.2 vfinal=4 name=gate
+
+tonyplot powerex12_0.log -set powerex12_1.set
+
+
+# Breakdown Voltage
+
+go atlas 
+
+mesh infile=powerex12_1.str width=2e6
+
+electrode name=body x.min=0 x.max=0 y.min=0.3 y.max=0.6
+
+models srh consrh cvt fermi
+contact name=gate workf=4.37
+impact selb an2=7.03e05*1.25
+
+method climit=1e-04 maxtrap=10 
+
+solve init
+solve previous
+log outfile=powerex12_1.log
+solve vdrain=0.05
+solve vdrain=0.2
+solve vdrain=1
+solve vstep=1 vfinal=30 name=drain cname=drain compliance=1
+save outf=powerex12_2.str
+
+tonyplot powerex12_1.log -set powerex12_2.set
+tonyplot powerex12_2.str -set powerex12_3.set
+
+
+
+# Output Characteristics
+go atlas
+
+mesh infile=powerex12_1.str width=2e6
+
+models consrh cvt fermi
+contact name=gate workf=4.37
+
+solve init
+solve previous
+solve vgate=0.5 vstep=0.5 vfinal=3 name=gate
+log outfile=powerex12_2.log
+solve vdrain=0.05
+solve vdrain=0.2 vstep=0.2 vfinal=5 name=drain
+log off
+solve init
+solve previous
+solve vgate=0.5 vstep=0.5 vfinal=4 name=gate
+log outfile=powerex12_3.log
+solve vdrain=0.05
+solve vdrain=0.2 vstep=0.2 vfinal=5 name=drain
+log off
+solve init
+solve previous
+solve vgate=0.5 vstep=0.5 vfinal=5 name=gate
+log outfile=powerex12_4.log
+solve vdrain=0.05
+solve vdrain=0.2 vstep=0.2 vfinal=5 name=drain
+log off
+solve init
+solve previous
+solve vgate=0.5 vstep=0.5 vfinal=10 name=gate
+log outfile=powerex12_5.log
+solve vdrain=0.05
+solve vdrain=0.2 vstep=0.2 vfinal=5 name=drain
+
+tonyplot powerex12_2.log -overlay powerex12_3.log powerex12_4.log powerex12_5.log -set powerex12_4.set
+
+
+# Body Drain diode characteristic
+
+go atlas
+
+mesh infile=powerex12_1.str width=2e6
+electrode name=body x.min=0 x.max=0 y.min=0.3 y.max=0.6
+
+models consrh cvt fermi
+contact name=gate workf=4.37
+contact name=drain resist=5e03
+
+solve init
+log outfile=powerex12_6.log
+solve previous
+solve vstep=-0.1 vfinal=-1.4 name=drain
+
+tonyplot powerex12_6.log -set powerex12_5.set
+
+
+# Capacitances simulation
+go atlas
+mesh infile=powerex12_1.str width=2e6
+
+models consrh cvt fermi
+contact name=gate workf=4.37
+
+solve init
+log outfile=powerex12_7.log
+solve vstep=0.2 vfinal=4 name=drain ac freq=1e06
+solve vstep=1 vfinal=15 name=drain ac freq=1e06 
+
+tonyplot powerex12_7.log -set powerex12_6.set

@@ -1,0 +1,47 @@
+
+; Define regions
+
+And	!nwell	AA 	NACTIVE
+And	nwell	AA 	PACTIVE
+And	NACTIVE	poly 	NGATE
+And	PACTIVE	poly 	PGATE
+And	NACTIVE	!poly 	NSD1
+And	PACTIVE	!poly 	PSD1
+And	NSD1	nplus 	NSD
+And	PSD1	!nplus 	PSD
+
+Not 	!nwell 	NSD 	NSUB
+Not	nwell  	PSD 	PSUB
+Not 	cont	poly 	SICONT
+Not 	cont 	poly 	SCONT
+
+; Export new masks
+
+Export 	SICONT
+Export 	NSD 
+Export 	NSUB 
+Export 	PSD 
+Export 	PSUB 
+Export 	SCONT
+
+; Define connectivity
+
+Connect SICONT 	cont
+Connect poly 	cont
+Connect cont 	M1
+Connect M1 	via1
+Connect via1 	M2
+Connect M2 	via2
+Connect via2 	M3
+Connect NGATE 	poly
+Connect NSD 	cont
+Connect PGATE 	poly
+Connect PSD 	cont
+Connect NSUB 	SCONT
+Connect PSUB 	SCONT
+Connect cont 	SCONT
+
+; Define device name, gate, source/drain, substrate and connection
+
+ELEMENT MOS[myNMOS]  NGATE   NSD    NSUB   SICONT
+ELEMENT MOS[myPMOS]  PGATE   PSD    PSUB   SICONT

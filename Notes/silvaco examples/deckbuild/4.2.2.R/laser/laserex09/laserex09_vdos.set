@@ -1,0 +1,75 @@
+# TPCS version: 8
+# various properties
+log label 0
+key opaque 0
+mark frequency 0
+mark overlay 0
+graph width 0 2
+graph width 1 1
+graph width 2 1
+graph width 3 1
+graph width 4 2
+graph width 5 1
+sequence size 1
+sequence width 0
+log zero 0
+sequence mark 0 0
+sequence mark 1 1
+sequence mark 2 2
+sequence mark 3 3
+sequence mark 4 4
+sequence mark 5 5
+# Functions
+function 1 "" ""
+function 2 "" ""
+function 3 "" ""
+function 4 "" ""
+select 1
+# xygraph flags
+show points off
+show lines on
+# xygraph types
+xygraph type 0 convert 0
+xygraph yaxis scale linear
+# xygraph x-axis
+xygraph xaxis "Energy" linear
+# xygraph y-axes
+xygraph yaxis none
+xygraph yaxis "Hole 2D DOS #1" linear "left"
+# xygraph group
+xygraph group "(unknown electricals)"
+# key positions
+key contours 1 at 3
+key contours 2 at 1
+key contours 3 at 6
+key electrical at 6
+key vectors at 6
+key overlay at user 0.598101, 0.158358
+key regions at 4
+key apply 
+# annotation, titles
+title main "Bias Dependence of Density of Valence States"
+title sub auto
+# annotation, footers
+footer right none
+footer left none
+# annotation, show
+show xaxis on
+show yaxis on
+show grid off
+show label xaxis on
+show label yaxis on
+# annotation, axes
+range xaxis auto
+range yaxis auto
+label xaxis "Energy (eV)"
+label yaxis "Hole 2D DOS #1 (/cm~@eV)"
+# zoom
+zoom from 0.122363, 0.0806452 scale 13.7391, 1.19231
+# user labels
+# overlay level names
+label overlay 0 "quantum_laserex09_1_dos.log"
+label overlay 1 "quantum_laserex09_2_dos.log"
+label overlay 2 "quantum_laserex09_3_dos.log"
+label overlay 3 "quantum_laserex09_4_dos.log"
+label overlay 4 "quantum_laserex09_5_dos.log"

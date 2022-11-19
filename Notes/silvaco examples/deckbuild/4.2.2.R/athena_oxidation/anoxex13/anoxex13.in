@@ -1,0 +1,47 @@
+go athena 
+
+#TITLE: Stress Dependent Oxidation for Mesa Isolation Process
+
+
+# Define an initial grid in structure with buried oxide layer
+line x loc=-1 spac=0.2 tag=left
+line x loc=0 spac=0.05
+line x loc=1 spac=0.2 tag=right
+line y loc=0 spac=0.1 tag=top
+line y loc=5 spac=0.5 
+line y loc=10 spac=0.1 tag=topbox
+line y loc=11 spac=0.5 tag=botbox
+line y loc=12 spac=0.2 tag=bottom
+region xlo=left xhi=right ylo=top yhi=topbox silicon
+region xlo=left xhi=right ylo=topbox yhi=botbox oxide
+region xlo=left xhi=right ylo=botbox yhi=bottom silicon
+
+init orient=100
+#
+# Specify mask for half of the deep trench
+depo barrier thick=0.1
+etch barrier left p1.x=0.0
+etch silicon thick=10.5
+strip
+structure outf=anoxex13_0.str
+# First simulate oxidation without stress dependency
+oxide stress.dep=f
+#
+# Perform side wall oxidation
+method   viscous grid.ox=0.06 gridinit.ox=0.06
+diffuse tim=30 tem=1000 wet 
+#
+struct outf=anoxex13_1.str
+
+# Now simulate oxidation with stress dependency
+init infile=anoxex13_0.str
+oxide stress.dep=t
+#
+# Perform side wall oxidation
+method   viscous grid.ox=0.06 gridinit.ox=0.06
+diffuse tim=30 tem=1000 wet 
+#
+struct outf=anoxex13_2.str
+
+tonyplot -overlay anoxex13_1.str anoxex13_2.str -set anoxex13.set
+

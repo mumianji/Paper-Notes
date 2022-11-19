@@ -1,0 +1,38 @@
+go athena 
+#
+#                   OPTOLITH input file: anopex07.in
+#                   --------------------------------
+#
+#              Imaging using SHRINC illumination aperture
+#
+# Illumination system
+#
+illumination lambda=0.365
+#
+# Define the Shrinc illuminator using the arbitrary source technique
+#
+#
+illum.filter clear.fil circle sigma=0.22 radius=.47 angle=45 
+illum.filter circle sigma=0.22 radius=.47 angle=135 
+illum.filter circle sigma=0.22 radius=.47 angle=225 
+illum.filter circle sigma=0.22 radius=.47 angle=315
+#
+projection na=.54 
+#
+pupil.filter clear.fil circle
+#
+# Define the mask
+#
+layout x.lo=-0.875 z.lo=-1.50 x.hi=-0.525 z.hi=1.50
+layout x.lo=-0.1750 z.lo=-1.50 x.hi=0.175 z.hi=1.50
+layout x.lo=0.525 z.lo=-1.50 x.hi=0.875 z.hi=1.50
+#
+# Run the imaging module 
+#
+image win.x.lo=-1 win.z.lo=-0.1 win.x.hi=1 win.z.hi=0.1 dx=0.05  defocus=0.5
+#
+structure outfile=anopex07.str intensity mask
+tonyplot anopex07.str 
+#
+quit
+

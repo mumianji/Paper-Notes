@@ -1,0 +1,166 @@
+go victoryprocess 
+
+Init material=silicon layout="vsex03.lay" depth=1 gasheight=1
+
+Line z loc=-1
+Line z loc=-0.252
+Line z loc=-0.152
+Line z loc=-0.102
+Line z loc=-0.1
+Line z loc=-0.002       
+Line z loc=0            spac=0.0005
+Line z loc=0.005        spac=0.002
+Line z loc=0.35         spac=0.1
+Line z loc=1
+
+Cartesian mask="GATE" spac=0.075 all.point ondomain
+Cartesian mask="ACTR" spac=0.1 all.point ondomain
+Cartesian mask="CONT" spac=0.05 all.point ondomain
+
+#line x loc=5.425
+#line x loc=5.775
+#line x loc=6.875
+#line x loc=7.225
+#line x loc=8.325  spac=0.05 # centre, nitride edge
+#line x loc=8.5    
+#line x loc=8.675  spac=0.05 # centre, nitride edge
+#line x loc=9.775
+#line x loc=10.125
+#line x loc=11.225
+#line x loc=11.575
+
+#line x loc=6.925
+#line x loc=7.175
+#line x loc=8.375  # centre, NiSi edge
+#line x loc=8.625  # centre, NiSi edge
+#line x loc=9.825
+#line x loc=10.075
+
+Mask material=barrier mask="GATE" deltaCD=0.05
+
+Etch material=silicon MAX thickness=0.005
+
+Strip material=resist
+
+Deposit material=NiSi MAX thickness=0
+
+Mask material=barrier mask="ACTR"
+
+Etch material=NiSi MIN
+
+Etch material=silicon MAX thickness=0.35
+
+Strip material=resist
+
+Save   name=vsex03_0_vp
+Export structure=vsex03_0_vp_ex.str
+ 
+tonyplot3d vsex03_0_vp_ex.str -set vsex03_0.set
+
+Deposit material=PSG MAX thickness=0
+
+Deposit material=oxide MAX thickness=0.002
+
+Mask material=barrier mask="GATE" deltaCD=0.05
+
+Etch material=oxide MIN
+
+Strip material=resist
+
+Deposit material=poly CONFORMAL thickness=0.15
+
+# was in VC why ?
+#mask "GATE" deltaCD=-0.1
+Mask material=barrier mask="GATE" deltaCD=0.05
+
+Etch material=poly MIN
+
+Strip material=resist
+
+Save   name="vsex03_1_vp"
+Export structure=vsex03_1_vp_ex.str
+
+tonyplot3d vsex03_1_vp_ex.str -set vsex03_1.set
+
+
+Deposit material=nitride CONFORMAL thickness=0.1
+Deposit material=TEOS MAX thickness=0.4
+
+Mask material=barrier mask="CONT" reverse
+Etch material=TEOS MIN
+
+Etch material=nitride MIN
+Strip material=resist
+
+Deposit material=tungsten MAX thickness=0.0
+
+# to trigger volumetric mesh
+Doping silicon phosphorus=1e14
+
+Export atlas(conformal) structure="vsex03_2_vp_conformal_ex.str"
+
+tonyplot3d vsex03_2_vp_conformal_ex.str -set vsex03_2.set
+
+
+#####################
+## Stress Analysis ##
+#####################
+go victorystress
+
+#Note : The structure vsex03_2_vp_regular_ex.str contains artifacts
+#       Therefore it is better to use vsex03_2_vp_conformal.str
+init structure="vsex03_2_vp_conformal_ex.str"
+
+material nitride young.m=1e12
+material nitride poiss.r=0.001
+
+material silicon young.m=1.3e12
+material silicon poiss.r=0.28
+
+material polysilicon young.m=1.64e12
+material polysilicon poiss.r=0.22
+
+material material("NiSi") young.m=1e12
+material material("NiSi") poiss.r=0.25
+# This has to be added to the deck for compatibility with Victory Process
+material material("NiSi") thermal.expansion.constant.alpha=0
+
+material tungsten young.m=1e12
+material tungsten poiss.r=0.2
+
+material oxide young.m=2e11
+material oxide poiss.r=0.15
+
+material material("PSG") young.m=2e11
+material material("PSG") poiss.r=0.15
+
+material TEOS young.m=2e11
+material TEOS poiss.r=0.15
+# This has to be added to the deck for compatibility with Victory Process
+material TEOS thermal.expansion.constant.alpha=0
+
+# Set the stress conditions
+material nitride          intrin.sig=1e10
+material polysilicon      intrin.sig=1e9
+material material("NiSi") intrin.sig=1e10
+material tungsten         intrin.sig=5e9
+material oxide            intrin.sig=-1.5e9
+material material("PSG")  intrin.sig=-2.0e9
+material TEOS             intrin.sig=1e10
+
+# Choose the models 
+material silicon model.iso=1
+
+# Choose numerics
+method ams
+
+# Calculate the stress field
+stress  exposed strain rebalance
+
+# Calculate the mobility enhancement due to stress field
+mobility nhance phance
+
+save structure="vsex03_4_vp.str"
+tonyplot3d vsex03_4_vp.str -set vsex03_4.set
+ 
+quit

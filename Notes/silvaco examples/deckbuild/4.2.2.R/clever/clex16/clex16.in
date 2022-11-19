@@ -1,0 +1,128 @@
+go clever 
+
+Init Layout="clex16.lay" Depth=1.0 Silicon Map="clex16.lmp"
+
+Save Layout="clex16_1.lay" 
+
+Electrode Substrate
+
+
+## Process Description ##
+
+Mask "AA"
+
+Etch Silicon Thickness=0.5 Max
+
+Strip Resist
+
+Deposit Oxide Thickness=0.0 Max
+
+Deposit Material("Gateox") Thickness=0.01 Max
+
+Mask "*GATE" reverse
+
+Etch Material("Gateox")
+
+Strip Resist
+
+Deposit Oxide Thickness=0.0 Max
+
+Deposit Poly Thickness=0.2 Max
+
+Mask "poly"
+
+Etch Poly
+
+Strip Resist
+
+Electrodes "*GATE" Poly
+
+## Contact ##
+
+Deposit Oxide Thickness=0.4 Max
+
+Mask "cont" Reverse
+
+Etch Oxide
+
+Strip Resist
+
+## Stop Source/Drain/Substrate Contacts Shorting to Substrate ##
+
+Deposit Material("Gateox") Thickness=-0.60 Max
+
+## Named polygons will be converted into electrodes ##
+
+Electrodes "*CONT" Material("Gateox")
+
+## Metal 1 ##
+
+Deposit Aluminum Thickness=0.6 Max
+
+Mask "M1"
+
+Etch Aluminum
+
+Strip Resist
+
+Electrodes "M1" Aluminum
+
+## M1/M2 via ##
+
+Deposit Oxide Thickness=0.5 Max
+
+Mask "via1" Reverse
+
+Etch Oxide
+
+Strip Resist
+
+## M2 ##
+
+Deposit Aluminum Thickness=0.8 Max
+
+Mask "M2"
+
+Etch Aluminum
+
+Strip Resist
+
+Electrodes "M2" aluminum
+
+## M1/M2 via ##
+
+Deposit Oxide Thickness=0.6 Max
+
+Mask "via2" Reverse
+
+Etch Oxide
+
+Strip Resist
+
+## M3 ##
+
+Deposit Aluminum Thickness=1.0 Max  
+
+Mask "M3"
+
+Etch Aluminum
+
+Strip Resist
+
+Electrodes "M3" aluminum
+
+Deposit Oxide Thickness=1.0 Max
+
+Save Structure="clex16.str" 
+
+Material Silicon Conductivity=1
+
+Material Material("Gateox") Perm=0.01
+
+## Parasitic Extraction ##
+
+Interconnect Adapt=(0.05,0.02) capsolver=1
+
+Save Spice="clex16.net" 
+
+quit

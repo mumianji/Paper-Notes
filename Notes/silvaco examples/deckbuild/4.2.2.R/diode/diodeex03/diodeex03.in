@@ -1,0 +1,42 @@
+# (c) Silvaco Inc., 2018
+go atlas
+TITLE PN Diode Breakdown Simulation with curve tracing algorithm
+
+mesh    
+x.m  l=0.0 spac=1.0
+x.m  l=1.0 spac=1.0
+y.m  l=0   spac=1.0
+y.m  l=5.0  spac=0.005
+y.m  l=15  spac=2
+
+region num=1 silicon
+ 
+electrode top name=emitter
+electrode bottom name=base
+
+doping uniform conc=5e17 p.type 
+doping uniform n.type conc=1.e20  x.l=0. x.r=1 y.t=0.0 y.b=5.0
+ 
+save outf=diodeex03_0.str
+#tonyplot diodeex03_0.str -set diodeex03_0.set
+
+models srh conmob bgn auger fldmob   
+impact  crowell
+
+solve init 
+solve
+solve vemitter=0.1
+
+method  newton  climit=1.e-4 
+
+curvetrace end.val=1e-4 contr.name=emitter curr.cont mincur=1e-13 nextst.ratio=1.2
+ 
+
+log outf=diodeex03.log
+solve curvetrace
+tonyplot diodeex03.log -set diodeex03.set
+
+
+quit
+
+

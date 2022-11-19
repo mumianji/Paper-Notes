@@ -1,0 +1,41 @@
+v DBInternal
+# silvaco.file ASCII version=1.14.4 format=1 contents=SDB,Tables=1
+
+Copyright "###################################################################"
+Copyright "#               Copyright Silvaco International (c)               #"
+Copyright "#                            1992-2008                            #"
+Copyright "#                                                                 #"
+Copyright "# This file format and the following Key are copyright Silvaco    #"
+Copyright "# International. You may not use, this format or key without      #"
+Copyright "# reproducing this message in full and obtaining                  #"
+Copyright "# express written permission from Silvaco International.          #"
+Copyright "#                                                                 #"
+Copyright "# To obtain such permission please contact: Silvaco International #"
+Copyright "#                                           support@silvaco.com   #"
+Copyright "#                                                                 #"
+Copyright "# KEY=SVC86hn7562asdx                       PROD=345              #"
+Copyright "###################################################################"
+#libSDB 1.12.9 (Fri Feb 25 17:50:17 PST 2011)
+j 1 1
+k 0
+p 4 10000 10001 10002 10003
+d 1 0.32 0.04 0.238346
+d 2 0.37 0.04 0.293214
+d 3 0.42 0.04 0.326461
+d 4 0.47 0.04 0.334173
+d 5 0.52 0.04 0.323899
+d 6 0.32 0.079999999999999988 0.243238
+d 7 0.37 0.079999999999999988 0.340062
+d 8 0.42 0.079999999999999988 0.393604
+d 9 0.47 0.079999999999999988 0.396752
+d 10 0.52 0.079999999999999988 0.3682
+d 11 0.32 0.12 0.273994
+d 12 0.37 0.12 0.402973
+d 13 0.42 0.12 0.463968
+d 14 0.47 0.12 0.45223
+d 15 0.52 0.12 0.401422
+Q 10000 1 ex_id
+Q 10001 1 dist
+Q 10002 1 width
+Q 10003 1 peak
+EOF 1092616830

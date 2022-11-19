@@ -1,0 +1,71 @@
+go athena
+# Oxide Thickness Dependence of B Implant Profiles
+line x loc = 0.0  spac=0.1
+line x loc = 1.0  spac=0.1
+line y loc = 0    spac=0.01
+line y loc = 0.6   spac=0.01
+init 
+# Implant into "bare" silicon (native oxide = 0.001 micron)
+implant boron energy=35 dose=1.e13 tilt=0 rotation=0 print.mom
+#
+extract name="SIMS" curve(depth,impurity="Boron" material="Silicon" \
+        mat.occno=1 x.val=0.0) outfile="aniiex03_00.dat"
+
+
+line x loc = 0.0  spac=0.1
+line x loc = 1.0  spac=0.1
+line y loc = 0    spac=0.01
+line y loc = 0.6   spac=0.01
+init
+diffuse time=8 temp=900 dry
+#
+extract name="tox8" thickness material="SiO~2" mat.occno=1 x.val=0.0
+implant boron energy=35 dose=1.e13 tilt=0 rotation=0 \
+        s.oxide=1.0e-04*$tox8 print.mom
+extract name="SIMS" curve(depth,impurity="Boron" material="Silicon" \
+        mat.occno=1 x.val=0.0) outfile="aniiex03_01.dat"
+ 
+
+line x loc = 0.0  spac=0.1
+line x loc = 1.0  spac=0.1
+line y loc = 0    spac=0.01
+line y loc = 0.7   spac=0.01
+init
+diffuse time=20 temp=900 dry
+#
+extract name="tox20" thickness material="SiO~2" mat.occno=1 x.val=0.0
+implant boron energy=35 dose=1.e13 tilt=0 rotation=0 \ 
+              s.oxide=1.0e-04*$tox20 print.mom
+extract name="SIMS" curve(depth,impurity="Boron" material="Silicon" \
+        mat.occno=1 x.val=0.0) outfile="aniiex03_02.dat"
+ 
+
+line x loc = 0.0  spac=0.1
+line x loc = 1.0  spac=0.1
+line y loc = 0    spac=0.01
+line y loc = 0.6   spac=0.01
+init 
+diffuse time=60 temp=900 dry
+#
+extract name="tox60" thickness material="SiO~2" mat.occno=1 x.val=0.0
+implant boron energy=35 dose=1.e13 tilt=0 rotation=0 \
+              s.oxide=1.0e-04*$tox60 print.mom
+extract name="SIMS" curve(depth,impurity="Boron" material="Silicon" \
+        mat.occno=1 x.val=0.0) outfile="aniiex03_03.dat"
+ 
+
+line x loc = 0.0  spac=0.1
+line x loc = 1.0  spac=0.1
+line y loc = 0    spac=0.01
+line y loc = 0.6   spac=0.01
+init 
+diffuse time=160 temp=900 dry
+#
+extract name="tox160" thickness material="SiO~2" mat.occno=1 x.val=0.0
+implant boron energy=35 dose=1.e13 tilt=0 rotation=0 \
+              s.oxide=1.0e-04*$tox160 print.mom
+extract name="SIMS" curve(depth,impurity="Boron" material="Silicon" \
+        mat.occno=1 x.val=0.0) outfile="aniiex03_04.dat"
+
+tonyplot -overlay  aniiex03_*.dat  -set aniiex03.set
+

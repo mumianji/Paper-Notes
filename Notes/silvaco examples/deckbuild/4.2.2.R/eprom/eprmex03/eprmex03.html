@@ -1,0 +1,96 @@
+<html>
+  <head>
+    <title>Controlling the Capacitative Coupling</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Controlling the Capacitative Coupling</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>SSuprem 4/DevEdit/S-Pisces</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R, Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="eprmex03_plot0.png" width="640" alt="eprmex03_plot0" />
+      <p/>
+      <img src="eprmex03_plot1.png" width="640" alt="eprmex03_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example consists of :
+</p>
+<ul>
+  <li>
+ Dual gate EEPROM structure formation in Athena
+<br/>
+  </li>
+  <li>
+ Re-meshing in DevEdit
+<br/>
+  </li>
+  <li>
+ Threshold voltage simulation without a coupling capacitor
+<br/>
+  </li>
+  <li>
+ Definition of additional coupling capacitance
+<br/>
+  </li>
+  <li>
+ Threshold voltage simulation with a coupling capacitor
+<br/>
+  </li>
+  <li>
+ Plotting two threshold voltage curves for comparison
+  </li>
+</ul>
+<p>
+This example file is based upon that given in exprmex01.in but
+has an additional modification to account for capacitive coupling.
+A description of the standard syntax may be found in example eprmex01.in.
+</p>
+<p>
+In a real device, the coupling between the control gate and the floating
+gate is a three-dimensional problem that depends upon the layout.
+As a result any two-dimensional simulation will not be able to accurately
+simulate coupling capacitance. In most cases it will underestimate this value.
+To take account of this problem Atlas is capable of connecting
+electrodes together via some capacitor.
+This effectively increases the coupling capacitance and can normally allow
+accurate matching to experimental data without having to make unphysical
+modifications to the structure.
+</p>
+<p>
+This example consists of two Atlas input files. The first is a standard
+calculation of the threshold voltage from which the coupling ratio may be found.
+In the second, the syntax has been modified so that on the
+<b> contact </b> statement a capacitance is specified between the control and floating gates.
+After plotting the results it is apparent that the coupling ratio has been
+increased due to the additional coupling capacitance.
+This has effectively modified the threshold voltage.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

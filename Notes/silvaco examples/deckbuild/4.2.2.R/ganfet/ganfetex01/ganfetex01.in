@@ -1,0 +1,17 @@
+# (c) Silvaco Inc., 2018
+#
+# This small script allows us to loop on the device thickness to
+# extract the channel charge concentration versus device thickness
+# 
+go internal
+
+load inf=ganfetex01_aux.in
+
+sweep parameter=th type=list data="0.005, 0.01, 0.015, 0.02, 0.025"
+
+save type=sdb outf=ganfetex01.dat
+
+tonyplot ganfetex01.dat -set ganfetex01.set
+
+quit
+

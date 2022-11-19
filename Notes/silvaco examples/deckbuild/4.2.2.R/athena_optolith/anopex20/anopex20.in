@@ -1,0 +1,58 @@
+go athena 
+#
+# Define illumination system 
+#
+illumination h.line 
+#
+illum.filter clear.fil circle sigma=0.5
+#
+# Define projection system
+#
+projection na=.45
+#
+pupil.filter clear.fil circle
+#
+# Define mask 
+#
+layout lay.clear x.lo=-0.3 z.lo=-2.0 x.hi=0.3 z.hi=2.0
+#
+# Run the image module.
+#
+image win.x.lo=-1.0 win.x.hi=1.0 win.z.lo=0.0 win.z.hi=0.0 dx=0.05 clear one.d
+#
+# Define structure
+#
+line x loc=-0.5  spac=0.1
+line x loc=-0.2  spac=0.02
+line x loc=0    spac=0.05
+line x loc=0.2  spac=0.02
+line x loc=0.5  spac=0.1 
+#
+line y loc=0.0  spac=1.0 
+line y loc=1.0  spac=1.0    
+#
+init silicon space.m=1
+#
+deposit name.resist=AZ1350J thick=.5 div=20
+#
+expose dose=280 
+#
+bake time=40 sec temp=115
+#
+develop mack time=70 steps=5 substeps=24
+#
+structure outfile=anopex20_0.str
+#
+# Perform bake to smooth the resist
+# First define reflow parameters
+#
+material material=AZ1350J  gamma.reflo=2e2 reflow visc.0=1.862e-13 visc.E=1.85
+#
+bake time=5 min temp=125 reflow
+#
+struct outf=anopex20_1.str
+#
+tonyplot anopex20_*.str
+#
+quit
+

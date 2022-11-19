@@ -1,0 +1,70 @@
+<html>
+  <head>
+    <title>Textured Cell with FDTD</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Textured Cell with FDTD</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Blaze/Luminous</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="solarex06_plot0.png" width="640" alt="solarex06_plot0" />
+      <p/>
+      <img src="solarex06_plot1.png" width="640" alt="solarex06_plot1" />
+      <p/>
+      <img src="solarex06_plot2.png" width="640" alt="solarex06_plot2" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates the use of finite difference time domain
+<b> FDTD</b> , for analysis of solar cells.  In particular FDTD is useful in analysis
+of devices where coherence effects are critical (where device dimensions
+are on the order of the wavelength of light) and that are not one dimensional
+and therefore do not allow simple transfer matrix analysis.
+</p>
+<p>
+In this example we create a device with a randomly textured surface.  We
+then illuminate the device using both ray tracing and FDTD analysis.  Finally,
+we compare the resultant illuminated characteristics.
+</p>
+<p>
+It is most important to note the differences in the two
+<b> BEAM </b> statements.  You should also notice the introduction of the
+<b> PML </b> statements for defining FDTD boundary conditions.
+</p>
+<p>
+It is also important to notice that the FDTD analysis introduces an
+entire new analysis mesh that is usually much geometrically finer
+than the device analysis mesh.  This mesh can be examined in TonyPlot
+using the
+<b> TD.FILE </b> parameter of the
+<b> BEAM </b> statement.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

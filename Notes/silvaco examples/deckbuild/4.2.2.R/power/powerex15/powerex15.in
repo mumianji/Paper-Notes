@@ -1,0 +1,155 @@
+# (c) Silvaco Inc., 2018
+# Create the Power MOSFET using Process Simulation
+
+go athena
+
+line x location=0   spacing=0.02
+line x location=1.3 spacing=0.5
+line x location=2.5 spacing=0.1
+line x location=3.5 spacing=0.1
+line x location=4.5 spacing=0.5
+line x location=5.5 spacing=0.1
+line x location=6   spacing=0.1
+line x location=8   spacing=0.5
+
+line y location=7.5 spacing=0.2
+line y location=8.5 spacing=0.3
+
+init silicon c.phosphor=1.0e20 orientation=100 two.d
+
+method full.cpl
+
+epitaxy time=3 temp=1000 thickness=3 divisions=10 dy=0.20 ydy=3 \
+        c.phosphor=5.0e15
+epitaxy time=3 temp=1000 thickness=3 divisions=10 dy=0.20 ydy=0 \
+        c.phosphor=2.0e15
+epitaxy time=1.5 temp=1000 thickness=1.5 divisions=15 dy=0.01 ydy=0 \
+         c.phosphor=1.0e16
+
+# Gate Formation
+deposit oxide thick=0.05 divisions=5
+deposit polysilicon thick=0.6 divisions=6
+deposit photoresist thick=1 division=10
+etch photoresist right p1.x=3.5
+etch polysilicon dry thickness=0.8
+
+# P-Body Formation
+implant boron dose=1e13 energy=180 tilt=30 rotation=180 bca n.ion=200000
+implant boron dose=1e13 energy=300 tilt=0 rotation=0 bca n.ion=200000
+etch photoresist all
+
+# P-Plus Body Contact Formation
+deposit photoresist thick=1 division=10
+etch photoresist right p1.x=5.5
+implant boron dose=5e14 energy=30 tilt=45 rotation=0 bca n.ion=200000
+etch photoresist all
+
+method full.cpl cluster.dam
+
+# N-Plus Source Contact Formation
+deposit photoresist thick=1 division=10
+etch photoresist left p1.x=6
+implant arsenic dose=5e14 energy=120 tilt=7 rotation=27 bca n.ion=200000
+implant arsenic dose=5e14 energy=120 tilt=7 rotation=207 bca n.ion=200000
+etch photoresist all
+
+# Deposit Passivation and Anneal
+deposit nitride thickness=1 divisions=10
+diffus time=30 temp=1050 nitro
+etch nitride right p1.x=5.5
+etch oxide right p1.x=5.5
+
+# Make Source Contact
+deposit aluminum thick=0.5 divisions=5
+
+electrode name=source x=6
+electrode name=gate x=2.5 y=-0.4
+electrode name=drain backside
+
+struct outfile=powerex15_0.str
+tonyplot powerex15_0.str -set powerex15_0.set
+
+
+# Single Event Upset Simulation
+
+go atlas
+
+mesh infile=powerex15_0.str cylindrical
+
+set let=37.2
+set density=$let*0.011
+
+models consrh cvt auger
+contact name=gate n.poly
+
+singleeventupset entrypoint="0,0,0" exitpoint="0,8.5,0" radialgauss \
+      b.density=$density pcunits radius=0.07 t0=1e-14 tc=1e-15
+
+probe name=Strike_Field field dir=270 x=0.02 y=-0.02
+probe name=Source_Field field dir=270 x=3.4 y=-0.02
+
+method climit=1e-4
+
+# Set Up DC Bias Condition
+solve init
+solve previous
+solve vgate=-0.1
+solve vgate=-0.4 vstep=-0.5 vfinal=-13.9 name=gate
+solve vdrain=0.1
+solve vdrain=0.5 vstep=0.5 vfinal=30 name=drain
+
+# Start SEU Transient Simulation
+log outfile=powerex15_0.log
+solve tfinal=1e-14 dt=1e-16
+save outfile=powerex15_1.str
+solve tfinal=5e-12 dt=1e-16
+save outfile=powerex15_2.str
+solve tfinal=50e-12 dt=1e-15
+save outfile=powerex15_3.str
+solve tfinal=150e-12 dt=1e-14
+save outfile=powerex15_4.str
+tonyplot powerex15_0.log -set powerex15_1.set
+tonyplot powerex15_1.str powerex15_2.str powerex15_3.str powerex15_4.str -set powerex15_2.set
+solve tfinal=1e-9 dt=1e-12
+tonyplot powerex15_0.log
+log off
+
+
+# DC Breakdown Simulation
+
+go atlas
+
+mesh infile=powerex15_0.str cylindrical
+
+models consrh cvt
+impact selb
+contact name=gate n.poly
+method climit=1e-4 maxtraps=6
+
+solve init
+solve previous
+log outfile=powerex15_1.log
+solve vdrain=0.1
+solve vdrain=0.5 vstep=1 vfinal=200 name=drain
+tonyplot powerex15_1.log -set powerex15_3.set
+save outfile=powerex15_5.str
+log off
+
+
+# Unsaturated Threshold Voltage Simulation
+
+go atlas
+
+mesh infile=powerex15_0.str cylindrical
+
+models consrh cvt
+contact name=gate n.poly
+method climit=1e-4
+
+solve init
+solve previous
+solve vdrain=0.1
+log outfile=powerex15_2.log
+solve vgate=0.1 vstep=0.1 vfinal=10 name=gate
+tonyplot powerex15_2.log
+

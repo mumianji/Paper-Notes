@@ -1,0 +1,106 @@
+# (c) Silvaco Inc., 2018
+go atlas
+
+# Solar cell example number 7.
+# This example is based on the reference:
+#
+# Korster, L.J.A., Smits, E.C.P., Mihailetchi, V.D., and Blom, P.W.M.
+# "Device model for the operation of polymer/fullerene bulk heterojunction
+# solar cell", Physical Review B, Vol. 72, (2005) pp. 085205-1, 085205-9.
+#
+# Here we specify a mesh of one square meter ( 1um x 1e12 um).
+# Since the structure is essentially one dimensional we ignore
+# variations if x and z.
+#
+mesh width=1e12
+x.mesh l=0 s=1
+x.mesh l=1 s=1
+#
+# In the Y direction we define a finer mesh to resolve variations due
+# to the exponential variation of absorption and carrier distributions
+# due to diffusion in opposite directions.
+#
+y.mesh l=0.00  s=0.001
+y.mesh l=0.12  s=0.001
+#
+# For organic solar cells we define only a single organic region that
+# represents a bulk heterojunction (BHJ) material.
+#
+region number=1 material=Organic
+#
+# Here we define the top and bottom electrodes which we define workfunctions
+# in order to provice a build-in field for separation of electrons and holes.
+#
+electrode name=anode   top
+electrode name=cathode bottom
+contact num=1 workf=1.0
+contact num=2 workf=2.34
+#
+# We define the models.  In this case we specify that we will solve for
+# the singlet equation (singlet), accounting for Langevin recombination
+# (langevin) and singlet exciton dissociation (s.dissoc).
+#
+model langevin singlet s.dissoc
+#
+# The parameter qe.exciton specifies the number of excitons generated for
+# for each absorbed photon.
+#
+material qe.exciton=1.0
+#
+# This statement sets up some of the standard material parameters for the
+# organic material (permittivity, affinity, band gap (difference between
+# LUMO and HOMO) and densities of states.
+#
+material permi=3.4 affinity=1.0 eg300=1.34 nc300=2.5e19 nv300=2.5e19
+#
+# These statements set up parameters of the singlet exciton continuity
+# equation in accordance with the reference.
+#
+material knrs.exciton=1.82694e6 lds.exciton=0.0 taus.exciton=1.0e20 rst.exciton=1.0
+material a.singlet=1.32167 s.binding=0.28484
+mobility mun0=2.5e-3 mup0=3.0e-4
+#
+# Here we use a C - interpreter function to define constant photogeneration
+# rate throughout the device as suggested in the reference.
+#
+beam num=1 f.radiate=solarex07.lib
+#
+# This statement specifies that we want to examine the fundimental
+# band parameters, conduction and valence band edges and electron
+# and hole mobilities in the output structure files.
+#
+output band.par con.band val.band e.mob h.mob
+#
+# Parameters appearing on the method statement refer to numerical
+# adjustments that are usually not required except to improve
+# robustness or speed of solution.
+# In this case we are specifying climit which controls the minimum
+# resolvable carrier concentration and maxtrap which specifies the
+# maximum number of cutbacks during any solve.
+#
+method climit=1e-4 maxtrap=0
+#
+# Next we obtain an initial static unbiassed solution
+#
+solve init
+solve prev
+#
+# Here we turn on the optical source (sun).  In this case the
+# intensity has been calibrated to give the same results as were
+# given in the reference.
+#
+solve b1=0.59
+#
+# Now we open a log file to capture the IV data.
+# We then perform a voltage sweep to capture the IV characteristics
+# of the device.
+#
+log outf=solarex07.log
+solve vcathode=0 vstep=0.02   vfinal=.86 name=cathode
+#
+# Finally we plot the results.
+#
+tonyplot solarex07.log -set solarex07.set 
+#
+
+quit

@@ -1,0 +1,215 @@
+# (c) Silvaco Inc., 2018
+go athena
+#  Active Area Isolation Structure Punchthrough Extraction Test
+#
+line x loc=0 spac=0.075 tag=left
+line x loc=0.5 spac=0.04
+line x loc=0.7 spac=0.04
+line x loc=1.5 spac=0.077 tag=right
+#
+line y loc=0.00 spac=0.01 tag=top
+line y loc=0.2 spac=0.01
+line y loc=0.35 spac=0.04
+line y loc=0.5 spac=0.04
+line y loc=3 spac=0.3 tag=bottom
+#
+init orientation=100 c.phos=1e12 space.m=1 
+
+#pwell formation including masking off of the nwell
+#
+diffus time=30 temp=1000 dryo2 press=1.00 hcl=3
+#
+etch oxide thick=0.02
+#
+#P-well Implant
+# 
+implant boron dose=1e12 energy=100 pears
+#
+diffus temp=950 time=100 weto2 hcl=3
+#
+#N-well implant not shown -
+#
+# welldrive starts here
+diffus time=50 temp=1000 t.rate=4.000 dryo2 press=0.10 hcl=3
+#
+diffus time=220 temp=1200 nitro press=1
+#
+diffus time=90 temp=1200 t.rate=-4.444 nitro press=1
+#
+etch oxide all
+#
+#Create Active..
+deposit oxide thick=0.01 divi=1
+deposit nitride thick=0.3 divi=6
+
+deposit barrier thick=.1 divi=1
+#
+etch barrier left p1.x=0.5
+etch nitride thick=.35
+etch oxide thick=.02
+etch silicon dry thick=0.15
+#
+#Field Implant
+implant boron dose=1e12 energy=50 
+#
+strip
+relax y.min=1
+relax y.min=1.5
+#
+#Fieldox
+method grid.ox=0.05
+diffuse temp=950 time=180 weto2 hcl.pc=3
+
+etch nitride all
+#
+etch oxide thick=0.02 dry
+#
+#sacrificial "cleaning" oxide
+diffus time=20 temp=1000 dryo2 press=1 hcl=3
+#
+etch oxide dry thick=0.02
+#
+#gate oxide grown here:-
+diffus time=11 temp=925 dryo2 press=1.00 hcl=3
+#
+# Extract the gate oxide thickness...
+extract name="gate ox" thickness oxide mat.occno=1 
+
+# Implant the VT adjust....
+#vt adjust implant 
+implant boron dose=1e12 energy=25 pearson 
+#
+#LDD Spacer formation
+depo oxide thick=0.120 divisions=8
+#
+etch oxide dry thick=0.120
+#
+implant arsenic dose=5.0e15 energy=50 pearson
+#
+method fermi compress
+diffuse time=30 temp=900 nitro press=1.0
+#
+
+# Make the metal contacts to be used as electrodes in Atlas...
+etch oxide right p1.x=1
+deposit alumin thick=0.03 divi=2
+etch alumin left p1.x=0.7
+structure mirror left
+# Name the electrodes.... 
+electrode name=source x=-1.2
+electrode name=drain x=1.2
+electrode name=substrate backside
+
+
+# Remesh the structure for Device simulation.....
+# Use the Sensitivity & Minspacing parameters to adjust the mesh density....
+# .. the smaller the Sensitivity, the denser the mesh...
+
+go devedit
+
+base.mesh height=0.25 width=0.25
+bound.cond apply=false max.ratio=300
+constr.mesh max.angle=90 max.ratio=300 max.height=1 max.width=1 \
+        min.height=0.0001 min.width=0.0001
+constr.mesh type=Semiconductor default
+constr.mesh type=Insulator default max.angle=178
+constr.mesh type=Metal default max.angle=179
+
+# Define the minimum mesh spacing globally...
+imp.refine min.spacing=0.025
+
+# Select a list of solution (impurity) gradients to refine upon....
+imp.refine imp="Arsenic" sensitivity=0.5
+imp.refine imp="Boron" sensitivity=0.4
+imp.refine imp="Phosphorus" sensitivity=0.5
+
+# now mesh the structure....
+mesh
+#
+go atlas
+
+# state the models, load (autointerface) the last devedit structure and solve
+
+models cvt print srh  
+interface qf=1e11
+impact selb
+
+solve init
+
+save outfile=isolationex01_0.str 
+
+# plot structure
+tonyplot  isolationex01_0.str -set isolationex01_0.set
+
+method newton
+log outf=isolationex01a.log
+# Now ramp up to the punchthrough point....
+
+solve vdrain=0.025
+solve vdrain=0.05
+solve vdrain=0.25
+
+solve   vdrain=0.5 vstep=0.5 vfinal=30.0 name=drain comp=1.0e-09 cname=drain
+save outf=isolationex01_1a.str
+
+extract name="last_vd" max(v."drain")
+
+set start_vd_next = $last_vd
+
+
+go devedit
+load file.name=isolationex01_1a.str type=str
+base.mesh height=0.25 width=0.25
+#
+bound.cond !apply max.slope=28 max.ratio=300 rnd.unit=0.001 line.straightening=1 align.points when=automatic
+#
+imp.refine imp="Device Potential" scale=linear sensitivity=0.5
+imp.refine imp="N Carriers" scale=log
+imp.refine imp="Net Doping" scale=log
+imp.refine min.spacing=0.02
+#
+constr.mesh max.angle=90 max.ratio=300 max.height=10000 \
+        max.width=10000 min.height=0.0001 min.width=0.0001
+#
+constr.mesh type=Semiconductor default
+constr.mesh type=Insulator default max.angle=178
+constr.mesh type=Metal default max.angle=178
+constr.mesh type=Other default
+#
+Mesh Mode=MeshBuild
+#
+save type=master file.name=refined.str
+
+go atlas
+# restate the models then load the last devedit structure and solve again....
+
+mesh inf=refined.str master.in
+
+models cvt print srh  
+interface qf=1e11
+impact selb
+
+load inf=refined.str master
+
+log outf=isolationex01b.log
+solve vdrain=$last_vd
+set start_vd_next = $last_vd + 0.02
+solve vdrain=$"start_vd_next"
+set start_vd_next = $last_vd + 0.10
+solve vdrain=$start_vd_next
+set start_vd_next = $last_vd + 0.50
+solve vdrain=$start_vd_next vstep=0.5 vfinal=30.0 name=drain comp=1.5e-07 cname=drain
+ 
+# Save a final structure file with all solution quantities inside it...
+save outfile=isolationex01_1b.str               
+
+extract init infile="isolationex01b.log"
+# extract the punchthough voltage....
+extract name="n_isolation_vpt" x.val from curve(abs(v."drain"),abs(i."drain")) where y.val = 1.0e-7
+
+# plot the IV curve...
+tonyplot  isolationex01b.log -set isolationex01_log.set
+# plot the last structure for looking at the internals of the device....
+tonyplot  isolationex01_1b.str -set isolationex01_1.set
+#
+quit

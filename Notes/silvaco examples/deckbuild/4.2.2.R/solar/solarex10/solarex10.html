@@ -1,0 +1,70 @@
+<html>
+  <head>
+    <title>Grain Boundary CIGS Solar cell simulation</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Grain Boundary CIGS Solar cell simulation</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>S-Pisces/Luminous/tft</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R, Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="solarex10_plot0.png" width="640" alt="solarex10_plot0" />
+      <p/>
+      <img src="solarex10_plot1.png" width="640" alt="solarex10_plot1" />
+      <p/>
+      <img src="solarex10_plot2.png" width="640" alt="solarex10_plot2" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example shows the modelization of Grain Boundary in a CIGS
+solar cell.
+The solar cell consists of window, buffer and absopber layers and is
+implemented as 200nm ZnO, 50nm Cds and 3um CIGS layer respectively,
+which is typical of CIGS solar cell. Interface recombination at the
+Cds/CIGS interface is included. All layers have uniform band-gap
+energy versus depth. Gaussian-distributed defect states are also
+considered.
+</p>
+<p>
+Parameterized Grain Boundaries are introduced horizontally and
+vertically. Meshing and regions are created automatically. Grain
+Boundary are modeled by a thin layer located between two uniform
+regions of CIGS material and the Grain Boundary layer differs
+from the surrounding bulk material only by presence of additional
+defects.
+</p>
+<p>
+You can define the x direction grain spacing as well as the
+y direction grain spacing and the grain boundary thickness at the
+beginning of the input deck. This example allows the investigation
+of Grain Boundaries architecture on the performance of the solar
+cell.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

@@ -1,0 +1,65 @@
+## layout
+name "Bipolar Transistor"
+start 3.000000 6.000000
+stop 7.000000 6.000000
+## end
+## information
+## end
+## grid
+linex 0.000000
+linex 0.550000 0.100000
+linex 0.750000 0.050000
+linex 0.900000 0.100000
+linex 0.950000 0.100000
+linex 1.100000 0.050000
+linex 1.300000 0.100000
+linex 1.700000 0.100000
+linex 1.800000 0.100000
+linex 1.900000 0.050000
+linex 2.000000 0.050000
+linex 2.100000 0.100000
+linex 2.200000 0.100000
+linex 2.800000 0.100000
+linex 3.000000 0.050000
+linex 3.050000 0.100000
+linex 3.200000 0.100000
+linex 3.250000 0.050000
+linex 3.450000 0.100000
+linex 4.000000
+liney 0.000000 0.020000
+liney 0.100000 0.050000
+liney 0.500000 0.080000
+liney 1.000000 0.100000
+## end
+## electrodes
+"emitter" "POLY" 2.000000 3.000000
+"base" "FMD" 1.100000 1.900000
+## end
+## mask "AAD"
+barrier 0.100000 1 min.space=0.005000 min.dist=0.000000
+etchstart -0.100000
+etchdone  0.750000
+etchstart 3.250000
+etchdone  4.100000
+## end
+## mask "POLY"
+barrier 0.100000 1 min.space=0.005000 min.dist=0.000000
+etchstart -0.100000
+etchdone  2.000000
+etchstart 3.000000
+etchdone  4.100000
+## end
+## mask "MCC"
+barrier 0.100000 1 min.space=0.005000 min.dist=0.000000
+etchnone
+## end
+## mask "FMD"
+barrier 0.100000 1 min.space=0.005000 min.dist=0.000000
+etchstart -0.100000
+etchdone  1.100000
+etchstart 1.900000
+etchdone  4.100000
+## end
+## regions
+"emitter" 2.500 1 2.000 3.000
+## end

@@ -1,0 +1,193 @@
+# (c) Silvaco Inc., 2018
+go devedit
+
+region reg=1 mat=Silicon color=0xffc000 pattern=0x3 Z1=0 Z2=3 \
+	points="0,0 0.25,0 0.5,0 0.6,0 0.7,0.2 0.8,0.3 1,0.3 1,2 0,2 0,0"
+#
+impurity id=1 region.id=1 imp=Boron color=0x906000 \
+	x1=0 x2=0 y1=0 y2=0 \
+	peak.value=2e+16 ref.value=0 z1=0 z2=0 comb.func=Multiply \
+	rolloff.y=both conc.func.y=Constant \
+	rolloff.x=both conc.func.x=Constant \
+	rolloff.z=both conc.func.z=Constant
+
+
+region reg=2 mat="Silicon Oxide" color=0xff pattern=0x1 Z1=0 Z2=3 \
+	points="0,-0.01 0.25,-0.01 0.5,-0.01 0.55,-0.03 0.6,-0.05 0.7,-0.2 0.8,-0.3 1,-0.3 1,0.3 0.8,0.3 0.7,0.2 0.6,0 0.5,0 0.25,0 0,0 0,-0.01"
+
+
+region reg=3 mat="Silicon Nitride" color=0xffff pattern=0x2 Z1=0.5 Z2=2.5 \
+	points="0,-0.11 0.5,-0.11 0.6,-0.15 0.7,-0.3 0.8,-0.4 1,-0.4 1,-0.3 0.8,-0.3 0.7,-0.2 0.6,-0.05 0.55,-0.03 0.5,-0.01 0.25,-0.01 0,-0.01 0,-0.05 0,-0.08 0,-0.11"
+
+region reg=4 name=ContGate mat=PolySilicon elec.id=1 color=0xffff00 pattern=0x4 Z1=1 Z2=2 \
+	points="0,-0.21 0.5,-0.21 0.6,-0.25 0.7,-0.4 0.8,-0.5 1,-0.5 1,-0.4 0.8,-0.4 0.7,-0.3 0.6,-0.15 0.5,-0.11 0,-0.11 0,-0.21"
+
+region reg=5 name=Floating mat=PolySilicon elec.id=2 color=0xffff00 pattern=0x4 Z1=1 Z2=2 \
+	points="0,-0.08 0.5,-0.08 0.55,-0.06 0.55,-0.03 0.5,-0.01 0.25,-0.01 0,-0.01 0,-0.05 0,-0.08"
+
+region reg=6 name=Source mat=Aluminum elec.id=3 color=0xffc8c8 pattern=0x6 Z1=0 Z2=0.5 \
+	points="0,-0.05 0.25,-0.05 0.25,-0.01 0.25,0 0,0 0,-0.01 0,-0.05"
+
+region reg=7 name=Drain mat=Aluminum elec.id=4 color=0xffc8c8 pattern=0x6 Z1=2.5 Z2=3 \
+	points="0,-0.05 0.25,-0.05 0.25,-0.01 0.25,0 0,0 0,-0.01 0,-0.05"
+
+region reg=8 name=substrate mat=Aluminum elec.id=5 work.func=0 color=0xffc8c8 pattern=0x7 Z1=0 Z2=3 \
+	points="0,2 1,2 1,2.1 0,2.1 0,2"
+
+
+impurity id=1 imp=Boron color=0x906000 \
+	x1=0 x2=0.5 y1=0.05 y2=0.05 \
+	peak.value=1e+17 ref.value=0 z1=0 z2=3 comb.func=Multiply \
+	rolloff.y=both conc.func.y=Gaussian conc.param.y=0.05 \
+	rolloff.x=both conc.func.x="Error Function" conc.param.x=0.05 \
+	rolloff.z=both conc.func.z=Gaussian conc.param.z=1
+impurity id=2 imp=Boron color=0x906000 \
+	x1=0.5 x2=1 y1=0.4 y2=0.4 \
+	peak.value=1e+17 ref.value=0 z1=0 z2=3 comb.func=Multiply \
+	rolloff.y=both conc.func.y=Gaussian conc.param.y=0.05 \
+	rolloff.x=both conc.func.x="Error Function" conc.param.x=0.05 \
+	rolloff.z=both conc.func.z=Gaussian conc.param.z=1
+impurity id=3 imp=Arsenic color=0x906000 \
+	x1=0 x2=0.3 y1=0 y2=0 \
+	peak.value=1e+20 ref.value=0 z1=0 z2=1.2 comb.func=Multiply \
+	rolloff.y=both conc.func.y=Gaussian conc.param.y=0.08 \
+	rolloff.x=both conc.func.x="Error Function" conc.param.x=0.08 \
+	rolloff.z=both conc.func.z="Error Function" conc.param.z=0.08
+impurity id=4 imp=Arsenic color=0x906000 \
+	x1=0 x2=0.3 y1=0 y2=0 \
+	peak.value=1e+20 ref.value=0 z1=2 z2=3 comb.func=Multiply \
+	rolloff.y=both conc.func.y=Gaussian conc.param.y=0.03 \
+	rolloff.x=both conc.func.x="Error Function" conc.param.x=0.05 \
+	rolloff.z=both conc.func.z="Error Function" conc.param.z=0.05
+
+# Set Meshing Parameters
+#
+base.mesh height=0.5 width=0.5
+#
+bound.cond !apply max.slope=28 max.ratio=300 rnd.unit=0.001 line.straightening=1 align.points when=automatic
+#
+imp.refine imp="Arsenic" sensitivity=1
+imp.refine min.spacing=0.03 z=0
+#
+constr.mesh max.angle=90 max.ratio=300 max.height=1 \
+	max.width=1 min.height=0.0001 min.width=0.0001
+#
+# Perform mesh operations
+#
+Mesh Mode=MeshBuild
+Refine Mode=X P1=0.88,0.33 P2=0.89,0.64
+Refine Mode=Y P1=0.33,-0.46 P2=0.33,-0.46
+Refine Mode=X P1=0.07,-0.004 P2=0.30,0.49
+Refine Mode=X P1=0.07,0.004 P2=0.20,0.52
+Refine Mode=Both P1=0.27,-0.16 P2=0.27,-0.16
+Refine Mode=Y P1=0.013,-0.005 P2=0.44,0.012
+Refine Mode=Y P1=0.012,0.008 P2=0.46,0.01
+Refine Mode=Y P1=0.02,0.08 P2=0.33,0.09
+
+imp.refine imp="Arsenic" sensitivity=1
+imp.refine min.spacing=0.03 z=0
+
+constr.mesh max.angle=90 max.ratio=300 max.height=1 \
+	max.width=1 min.height=0.0001 min.width=0.0001
+
+
+z.plane z=0.5 spacing=0.25
+#
+z.plane z=1 spacing=0.125
+#
+z.plane z=2 spacing=0.1
+#
+z.plane z=2.5 spacing=0.25
+#
+z.plane max.spacing=1000000 max.ratio=1.5
+
+base.mesh height=0.5 width=0.5
+
+bound.cond !apply max.slope=28 max.ratio=300 rnd.unit=0.001 line.straightening=1 align.Points when=automatic
+
+structure outf=eprmex02_0.str
+
+go atlas
+
+# Electrode #1 Control gate
+# Electrode #2 Floating  gate
+# Electrode #3 Source
+# Electrode #4 Drain
+# Electrode #5 Substrate
+
+# Set workfunction for the poly gates, 
+ 
+contact num=2 n.polysilicon floating
+contact num=1 n.polysilicon
+
+#Define some Qss...
+interface qf=3e10
+
+models srh cvt hei 
+
+
+######### This is the Vt Test before programming #############
+##############################################################
+solve init  
+method gummel newton trap maxtraps=8 
+
+log outf=eprmex02_1.log
+solve v4=0.5
+solve vstep=0.5 vfinal=25 electr=1 comp=4.e-5 e.compliance=4
+
+# plot idvg
+
+tonyplot  eprmex02_1.log -set eprmex02_1.set 
+# extract vt
+extract name="initial vt" ((xintercept(maxslope(curve(v."ContGate",i."Drain"))))-abs(ave(v."Drain"))/2.0)
+
+
+######### This is the Programming/Writing Transient ###########
+###############################################################
+
+
+method newton trap maxtraps=8
+log off
+
+#ramp the control gate to 12 V. Have verified that the Fowler-Nordheim
+# tunneling current is negligible for this gate bias, so omit.
+
+solve init
+solve v1=3 nocurrent
+solve v1=6 nocurrent
+solve v1=9 nocurrent
+solve v1=12 nocurrent
+ 
+# ramp up drain voltage
+
+method  newton trap maxtraps=8                                         
+log   outf=eprmex02_2.log master
+
+# If drain bias is any higher, the hot electrons tend to return to the drain
+# instead of floating gate
+
+solve v4=5.0 ramptime=1e-9 tstep=1e-11 tfinal=1e-9 
+
+# keep voltages constant and perform transient programming
+solve tstep=1e-9 tfinal=1.e-6
+# plot programming curve
+tonyplot  eprmex02_2.log -set eprmex02_2.set
+
+######### This is the Vt Test After Programming ###########
+###########################################################
+
+method gummel newton trap maxtraps=8 
+
+log outf=eprmex02_3.log 
+solve init
+solve v4=0.5
+solve vstep=0.5 vfinal=25 electr=1 comp=4.e-5 e.compliance=4
+# plot new idvg overlaid on old one
+tonyplot -overlay eprmex02_1.log eprmex02_3.log -set eprmex02_3.set 
+# extract vt and vt shift
+extract name="final vt" ((xintercept(maxslope(curve(v."ContGate",i."Drain"))))-abs(ave(v."Drain"))/2.0)
+extract name="vt shift" ($"final vt" - $"initial vt")
+
+quit
+
+

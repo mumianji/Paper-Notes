@@ -1,0 +1,229 @@
+# (c) Silvaco Inc., 2018
+go athena
+#TITLE: EEPROM cell formation example
+#
+
+line x loc=0.0  spac=0.1 
+line x loc=0.6  spac=0.025
+line x loc=0.9  spac=0.05
+line x loc=1.5  spac=0.2
+#
+line y loc=0.00 spac=0.01 
+line y loc=0.3  spac=0.03
+line y loc=2.0  spac=0.25
+
+#
+init c.boron=3e16 orientation=100 space.mult=1
+
+#
+method compress fermi
+diffuse time=10 temp=950 dryo2
+#
+extract name="tunnelox" thickness oxide mat.occno=1 x.val=0
+#
+implant boron dose=1e12 energy=25 
+#
+deposit poly thick=.25 div=4
+#
+implant phos dose=6e14 energy=30 
+#
+diffuse time=5 temp=950 dryo2 
+#
+deposit nitride thick=0.02 div=1
+#
+deposit oxide thick=0.01 div=1
+#
+deposit poly thick=.25 div=4 c.phos=8e19
+# 
+etch poly    right p1.x=.6
+# 
+etch oxide   right p1.x=.6
+# 
+etch nitride right p1.x=.6
+#
+etch oxide   right p1.x=.6
+#
+etch poly    right p1.x=.6
+#
+etch oxide   right p1.x=.6
+#
+relax y.min=.3 dir.y=f
+#
+implant arsenic dose=1e15 energy=40 
+#
+diff time=50 temp=950
+deposit oxide thick=.03 div=2
+ 
+ 
+
+#
+structure mirror left
+#
+etch oxide left  p1.x=-0.8
+etch oxide right p1.x=0.8
+
+deposit alum thick=0.05 div=1
+#
+etch alum start x=0.9 y=-10.
+etch alum cont x=0.9 y=10.
+etch alum cont x=-.9 y=10.
+etch alum done x=-.9 y=-10.
+#
+# define electrode names
+electrode name=fgate x=0 y=-0.1
+electrode name=cgate x=0 y=-0.4
+electrode name=source x=-1.5 
+electrode name=drain x=1.5 
+electrode name=substrate backside
+# save the structure
+structure outfile=eprmex01_0.str
+
+
+# Switch to Devedit for remeshing...
+go devedit
+
+
+# Set Meshing Parameters
+#
+base.mesh height=0.4 width=0.4
+#
+# Make sure impurity gradiants have enough detail. (i.e. no triangle
+# spans more than 1 (sensitivity=1) power of 10)
+imp.refine imp="NetDoping" sensitivity=1
+imp.refine min.spacing=0.02
+#
+# Make sure channel has enough triangles.
+constr.mesh depth=0.25 under.material="PolySilicon" max.height=0.05 \
+	    max.width=0.05
+constr.mesh depth=0.05 under.material="PolySilicon" max.height=0.015
+#
+# Make sure contacts have enough connection points.
+constr.mesh depth=0.05 under.material="Aluminum" max.width=0.1
+
+# Create a mesh, using the parameters set above.
+mesh mode=meshbuild
+
+# save structure
+struct outfile=eprmex01_1.str
+tonyplot  eprmex01_1.str -set eprmex01_1.set
+
+
+# switch to Atlas for the Device Tests....
+
+go atlas
+
+# Set workfunction for the poly gates, 
+ 
+contact name=fgate n.polysilicon floating
+contact name=cgate n.polysilicon
+
+#Define some Qss...
+interface qf=3e10
+models srh cvt hei fnord print nearflg 
+impact selb
+
+######### This is the Vt Test before programming #############
+##############################################################
+solve init
+
+
+method newton trap maxtraps=8 autonr
+
+log outf=eprmex01_2.log
+solve vdrain=0.5
+solve vstep=0.5 vfinal=25 name=cgate comp=5.5e-5 cname=drain
+# plot idvg
+
+tonyplot  eprmex01_2.log -s eprmex01_2.set 
+# extract vt
+extract name="initial vt" ((xintercept(maxslope(curve(v."cgate",i."drain"))))-abs(ave(v."drain"))/2.0)
+
+######### This is the Programming/Writing Transient ###########
+###############################################################
+
+# use zero carriers to get vg=12v solution
+models srh cvt hei fnord print nearflg 
+method carriers=0
+log off
+solve init
+solve vcgate=3
+solve vcgate=6
+solve vcgate=12
+# now use 2 carriers 
+
+models srh cvt hei fnord print nearflg 
+impact selb
+
+method newton trap maxtraps=8  carriers=2
+solve prev 
+
+log   outf=eprmex01_3.log master
+# ramp up drain voltage
+solve vdrain=5.85 ramptime=1e-9 tstep=1e-10 tfinal=1e-9 proj
+# keep voltages constant and perform transient programming
+solve tstep=1e-9 tfinal=5.e-4
+# plot programming curve
+tonyplot  eprmex01_3.log -set eprmex01_3.set
+# save the structure
+save outf=eprmex01_2.str
+
+######### This is the Vt Test After Programming ###########
+###########################################################
+
+method newton trap maxtraps=8 autonr
+
+log outf=eprmex01_4.log master
+solve init
+solve vdrain=0.5
+solve vstep=0.5 vfinal=25 name=cgate comp=5.5e-5 cname=drain
+# plot new idvg overlaid on old one
+tonyplot -overlay  eprmex01_2.log eprmex01_4.log -set eprmex01_4.set 
+# extract vt and vt shift
+extract name="final vt" ((xintercept(maxslope(curve(v."cgate",i."drain"))))-abs(ave(v."drain"))/2.0)
+extract name="vt shift" ($"final vt" - $"initial vt")
+
+######## This is the Erasing Test ######################
+########################################################
+
+go atlas
+
+# select erasing models
+  
+models  cvt srh  fnord bbt.std print nearflg \
+         F.BE=1.4e8 F.BH=1.4e8
+impact selb
+
+
+contact name=fgate n.poly floating
+contact name=cgate n.poly
+interface qf=3e10
+
+method carr=2
+# get initial zero carrier solution
+solve init
+
+# ramp the floating gate charge
+
+method newton trap maxtraps=8
+
+solve prev  
+solve   q1=-1e-16 
+solve   q1=-5e-16
+solve   q1=-1e-15
+solve   q1=-2e-15
+solve   q1=-3.5e-15
+solve   q1=-5e-15
+
+# put a resistor on drain
+
+contact name=drain resistance=1.e20
+
+# do Erasing transient
+method newton trap maxtraps=8 autonr c.tol=1.e-4 p.tol=1.e-4
+
+log   outf=eprmex01_5.log master
+
+solve vsource=12.5 tstep=1.e-14 tfinal=4.e-1
+
+tonyplot eprmex01_5.log -set eprmex01_5.set
+quit

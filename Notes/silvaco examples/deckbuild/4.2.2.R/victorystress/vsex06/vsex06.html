@@ -1,0 +1,98 @@
+<html>
+  <head>
+    <title>Stress Simulation in n-FinFET device</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Stress Simulation in n-FinFET device</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Victory Process and Victory Stress</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Victory Process 7.22.0.R , Victory Stress 2.14.0.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="vsex06_2_vp_conformal.png" width="640" alt="vsex06_2_vp_conformal" />
+      <p/>
+      <img src="vsex06_3_vp_conformal.png" width="640" alt="vsex06_3_vp_conformal" />
+      <p/>
+      <img src="vsex06_4_vp_conformal.png" width="640" alt="vsex06_4_vp_conformal" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+The most common method of introducing desirable stresses into transistor channel region
+is the deposition of high tensile or high compressive films of nitride type materials.
+</p>
+<p>
+A tensile film (when intrinsic stress value is positive) improves drive current in n-devices due
+to enhancement of electron mobility whereas a compressive film (when intrinsic stress value is
+negative) enhance the hole mobility for n-device.
+</p>
+<p>
+This example is the first of two examples devoted to simulation of stresses and mobilities in a
+3D invertor cell. This example shows stress simulation in a single n-FinFET device while the
+next example vsex07 deals with the cell consisted from several FinFETs. Detailed results of
+these two examples are presented in the paper in Simulation Standard:
+</p>
+<p>
+www.silvaco.com/tech_lib_TCAD/simulationstandard/2012/jan_feb_mar/a1/a1.html
+</p>
+<p>
+The input deck consists of five Sections:
+</p>
+<ul>
+  <li>
+ Definition of geometrical domain and region limits for subsequent consistent mesh formation
+<br/>
+  </li>
+  <li>
+ Victory Process process steps
+<br/>
+  </li>
+  <li>
+ Cartesian mesh formation and saving the structure for stress calculation
+<br/>
+  </li>
+  <li>
+ Stress calculation
+<br/>
+  </li>
+  <li>
+ Visualization and analysis of simulation results, extraction of average stresses and mobility enhancement factors
+<br/>
+  </li>
+</ul>
+<p>
+All details of device structure, simulation mesh, material parameters, process flow,
+as well as visualization and  extraction procedures are described in comments within the input deck.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+<b> Note: </b> <p>
+To run this example you have to enable
+<b> System commands </b> in the
+<b> Options </b> menu from
+<b> DeckBuild: Main Control</b> .
+</p>
+  </div></body>
+</html>

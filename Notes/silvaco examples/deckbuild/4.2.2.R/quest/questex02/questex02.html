@@ -1,0 +1,81 @@
+<html>
+  <head>
+    <title>Create a "W element" spice model for coupled transmission lines</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Create a "W element" spice model for coupled transmission lines</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>QUEST</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>QUEST 2.0.2.R</i></td>
+      </tr>
+    </table>
+    <div id="text" >
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+<p>
+It is based on 3 parallel lines:
+<br/>
+**********************************************************
+<br/>
+* three lines (100um) with the same conductivity. *
+<br/>
+<br/>
+*  1st line: in1 -------- out1 width=1um *
+<br/>
+*                space=1um                *
+<br/>
+*  2nd line: in2 -------- out2 width=2um *
+<br/>
+*               space=0.5um              *
+<br/>
+*  3th line: in3 ------- out3 width=2um *
+<br/>
+<br/>
+**********************************************************
+</p>
+<p>
+This mode is dedicated to simulating uniform transmission lines. As an output we
+directly obtain files that can be simulated in a SPICE simulator.
+We can use the W-elements or S-parameters produced by QUEST depending on which
+simulation we want to run.
+</p>
+<p>
+* W-elements: Used to model a coupled lossy uniform transmission line. It is
+based on RLGC Matrix versus frequency. W-elements can be used for any SPICE
+simulation (transient, AC...) and is a standard for major spice simulators including
+SmartSpice. The File &quot;questex02_RLGC_Transient.in&quot; is an example of stimuli to study
+the crosstalk between the 3 lines in a transient analysis. It directly loads the
+&quot;questex02_welement.sp&quot; file produced by quest. These files must be in the same directory.
+</p>
+<p>
+* S-parameter:  Matrix of S-parameters (and Y and Z) versus frequency. It can be
+directly analyzed or used as input for other simulators (SPICE, RF simulator) for
+AC analysis. QUEST produces all the intermediary files to include them directly into
+SmartSpice. The File &quot;questex02_S_devices.in&quot; is an example of stimuli for
+SmartSpice to study the crosstalk between the 3 lines with an AC simulation.
+It shows that this phenomena is more important on high frequencies. It directly
+loads the &quot;questex02_s_param.mod&quot; and &quot;questex02_s_param.par&quot;
+produced by quest. These files must be in the same directory.
+</p>
+  </div></body>
+</html>

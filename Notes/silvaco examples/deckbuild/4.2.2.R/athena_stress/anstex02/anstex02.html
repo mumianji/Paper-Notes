@@ -1,0 +1,73 @@
+<html>
+  <head>
+    <title>Stresses in a Buried-SiGe Strained-Silicon MOSFET. Part 1.</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Stresses in a Buried-SiGe Strained-Silicon MOSFET. Part 1.</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>SSuprem 4</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R</i></td>
+      </tr>
+    </table>
+    <div id="text" >
+<p>
+This example demonstrates the simulation of stresses in a test MOSFET structure with
+embedded anSiGe layer. The simulated process includes epitaxial growth of thin
+compressed SiGe and relaxed silicon layers. The standard gate stack is then emulated by
+gate oxide and poly deposition and oxide spacer formation.  All important geometrical
+characterisics of the test structure, including thicknesses of different layers, spacer width, gate length, etc.,
+are parametrized. This allows us to investigate the effects of parameter
+variations on important device characteristics using either DBInternal capability of Deckbuild or Virtual Wafer Fab (VWF).
+The set values of all parameters approximately correspond to those used
+to simulate Figs. 2. and 3 in
+<b> [1]</b> .
+</p>
+<p>
+The most important step of this test process is etching of the source/drain areas because
+it creates free surfaces on the sides of the buried SiGe layer. This step results in
+elastic expansion of the buried layer, reducing the compressive stress inside the
+layer and generating tensile stress in silicon above, i.e. under the gate. This
+enhanced tensile stress affects carrier transport and effectively improves device
+characteristics. The stresses in the whole structure are  calculated before and after the S/D etch.
+</p>
+<p>
+The results of the calculation are plotted using
+<b> TonyPlot </b> to display 2D contours of the XX component of stress in the final structure. The second plot compares stress profiles (obtained by
+<b> Extract ... curve</b> statements and measured in MPa) through the center of the gate before and after the S/D etch step.
+</p>
+<p>
+The series of
+<b> Extract</b> statements calculate the average stresses under the gate. The first 2 extract statements estimate
+average stress at specified depth under the gate. Next 2 extract statements estimate
+average stress inside a box under the gate.
+</p>
+<p>
+The last extract statement calculates the important figure of merit of this
+process, i.e. the stress transfer efficiency (STE) specified as absolute value of
+the ratio between the average stresses under the gate and initial stress in the SiGe
+buried layer.
+</p>
+<b> [1] J.G. Fiorenza, et.al. &quot;Detailed Simulation Study of a Reverse Embedded-SiGe Strained-Silicon MOSFET&quot;, IEEE Trans. on Electron Devices, v.55, No.2, p. 640, (2008).</b> <p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

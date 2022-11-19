@@ -1,0 +1,49 @@
+<html>
+  <head>
+    <title>Resistance of Metal Fork</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Resistance of Metal Fork</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>CLEVER</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="clex05.str.png" width="640" alt="clex05.str" />
+      <p/>
+    </div>
+    <div id="text" >
+<p>
+CLEVER is used in this example to simulate a more complex interconnect metal path.
+Such a complex shape adds additional problems to the extraction of the parasitics, especially the resistance along the metal lines.
+</p>
+<p>
+The metal regions defined in this example have a number of electrodes, specified within their boundaries.
+As such it is clear that when the simulator extracts the resistance between electrodes certain regions along the metal path could be taken into account more than once.
+</p>
+<p>
+To overcome this problem Clever will automatically subdivide the metal line into individual electrodes so that no region is included more than once in the parasitic resistances.
+These additional nodes are then back annotated onto the layout which is then re-saved at the end of the simulation.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

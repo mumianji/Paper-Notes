@@ -1,0 +1,155 @@
+# (c) Silvaco Inc., 2018
+go devedit simflags="-3d"
+
+DevEdit version=2.6.0.R # file written Fri Feb 13 2004 15:49:03 GMT+1 (MET)
+
+work.area x1=-0.01 y1=-0.01 x2=0.02 y2=0.045
+# devedit 2.6.0.R (Thu Dec 12 12:40:19 PST 2002)
+# libSvcFile 1.8.3 (Sat Dec  7 17:56:58 PST 2002)
+# libsflm 4.14.3 (Sat Dec  7 18:02:49 PST 2002)
+# libSDB 1.4.3 (Tue Dec 10 19:51:05 PST 2002)
+# libDW_Version 2.0.0.R (Thu Nov 28 05:44:29 PST 2002)
+region reg=1 mat=Silicon color=0xffcc00 pattern=0x4 z1=0.01 z2=0.09 \
+	polygon="0,0 0.01,0 0.01,0.015 0,0.015"
+#
+constr.mesh region=1 default max.height=0.01 max.width=0.02
+
+region reg=2 mat="Silicon Oxide" color=0xff pattern=0x2 z1=0.01 z2=0.09 \
+	polygon="0.013,0.015 0.01,0.015 0.01,0 0,0 0,0.015 -0.003,0.015 -0.003,-0.003 0.013,-0.003"
+#
+constr.mesh region=2 default max.height=0.001 max.width=0.001
+
+region reg=3 name=gate mat=PolySilicon elec.id=1 work.func=0 color=0xffff00 pattern=0x5 z1=0.035 z2=0.065 \
+	polygon="0.013,-0.003 -0.003,-0.003 -0.003,0.015 -0.01,0.015 -0.01,-0.01 0.02,-0.01 0.02,0.015 0.013,0.015"
+#
+constr.mesh region=3 default max.height=0.01 max.width=0.02
+
+region reg=4 mat="Silicon Oxide" color=0xff pattern=0x2 z1=0 z2=0.1 \
+	polygon="-0.01,0.015 -0.003,0.015 0,0.015 0.01,0.015 0.013,0.015 0.02,0.015 0.02,0.045 -0.01,0.045"
+#
+constr.mesh region=4 default max.height=0.01 max.width=0.02
+
+region reg=5 name=drain mat=Aluminum elec.id=2 work.func=0 color=0xffc8c8 pattern=0x7 z1=0 z2=0.01 \
+	polygon="0,0 0.01,0 0.01,0.015 0,0.015"
+#
+constr.mesh region=5 default max.height=0.01 max.width=0.02
+
+region reg=6 name=source mat=Aluminum elec.id=3 work.func=0 color=0xffc8c8 pattern=0x7 z1=0.09 z2=0.1 \
+	polygon="0,0 0.01,0 0.01,0.015 0,0.015"
+#
+constr.mesh region=6 default max.height=0.01 max.width=0.02
+
+
+# Set Meshing Parameters
+#
+base.mesh height=0.01 width=0.005
+#
+bound.cond !apply max.slope=28 max.ratio=300 rnd.unit=0.0001 line.straightening=1 align.points when=automatic
+#
+imp.refine min.spacing=0.02 z=0
+#
+constr.mesh max.angle=90 max.ratio=300 max.height=10000 \
+	max.width=10000 min.height=0.0001 min.width=0.0001
+#
+constr.mesh type=Semiconductor default
+#
+constr.mesh type=Insulator default
+#
+constr.mesh type=Metal default
+#
+constr.mesh type=Other default
+#
+constr.mesh region=1 default max.height=0.01 max.width=0.02
+#
+constr.mesh region=2 default max.height=0.001 max.width=0.001
+#
+constr.mesh region=3 default max.height=0.01 max.width=0.02
+#
+constr.mesh region=4 default max.height=0.01 max.width=0.02
+#
+constr.mesh region=5 default max.height=0.01 max.width=0.02
+#
+constr.mesh region=6 default max.height=0.01 max.width=0.02
+constr.mesh id=1 x1=0 y1=0 x2=0.01 y2=0.015 default max.height=0.002 max.width=0.002
+constr.mesh id=2 x1=0 y1=0 x2=0.001 y2=0.015 default max.height=0.0005 max.width=0.0005
+constr.mesh id=3 x1=0.009 y1=0 x2=0.01 y2=0.015 default max.height=0.0005 max.width=0.0005
+constr.mesh id=4 x1=0.001 y1=0 x2=0.009 y2=0.001 default max.height=0.0005 max.width=0.0005
+constr.mesh id=5 x1=0 y1=0.0145 x2=0.01 y2=0.016 default max.height=0.0008 max.width=0.0008
+Mesh Mode=MeshBuild
+
+
+z.plane z=0		spacing=0.1
+z.plane z=0.005		spacing=0.1
+z.plane z=0.01		spacing=0.1
+z.plane z=0.012		spacing=0.1
+z.plane z=0.0167 	spacing=0.1
+z.plane z=0.0233 	spacing=0.1
+z.plane z=0.0267 	spacing=0.1
+z.plane z=0.030		spacing=0.1
+z.plane z=0.0315	spacing=0.1
+z.plane z=0.033		spacing=0.1
+z.plane z=0.035		spacing=0.1
+z.plane z=0.041		spacing=0.1
+z.plane z=0.047		spacing=0.1
+z.plane z=0.053		spacing=0.1
+z.plane z=0.059		spacing=0.1
+z.plane z=0.065		spacing=0.1
+z.plane z=0.067		spacing=0.1
+z.plane z=0.0685	spacing=0.1
+z.plane z=0.070		spacing=0.1
+z.plane z=0.0733	spacing=0.1
+z.plane z=0.0767	spacing=0.1
+z.plane z=0.0833	spacing=0.1
+z.plane z=0.088		spacing=0.1
+z.plane z=0.090		spacing=0.1
+z.plane z=0.095		spacing=0.1
+z.plane z=0.100		spacing=0.1
+
+z.plane max.spacing=1000000 max.ratio=1.5
+
+structure outf=quantumex08_0.str
+#############################
+############## MOSFET Calculation   ####################
+### BQP.N
+go atlas
+
+set gamma=1.4
+set alpha=0.3
+
+electrode name=bulk bottom
+
+doping num=1 p.type uniform conc=1e18
+doping num=1 gaussian n.type conc=1e21 y.min=0.0 y.max=0.015 \
+	z.min=0.010 z.max=0.0233 zlat.char=0.004 char=0.001
+doping num=1 gaussian n.type conc=1e21 y.min=0.0 y.max=0.015 \
+	z.min=0.0767 z.max=0.091 zlat.char=0.004 char=0.001
+material material=Silicon eg300=1.1245 affinity=4.05 permitti=11.9 \
+	ml=0.7 mt1=0.7 mt2=0.7 nc300=2.8e19
+material material=Oxide eg300=8.05 affinity=1.00 permittivity=3.9 \
+	ml=0.30 mt1=0.30 mt2=0.30 nc300=2.8e19 nv300=1.04e19 
+material material=Poly eg300=1.1245 affinity=4.05 permitti=11.9 
+
+contact name=gate work=4.85
+
+model fermi bqp.n srh ni.fermi hcte.el bqp.ngamma=$gamma bqp.nalpha=$alpha evsatmod=0 fldmob print
+
+method maxtrap=6 autonr nblockit=45 bicgst dvlimit=1.0
+ 
+solve init
+
+solve vgate=0.4 nocurrent
+
+solve vdrain=0.001 name=drain vstep=0.0005 vfinal=0.01
+
+log outf=quantumex08.log
+solve vgate=0.4 name=gate vstep=0.05 vfinal=1.0
+log off
+
+output p.quantum band.temp con.band val.band band.par 
+save outf=quantumex08_1.str master
+
+tonyplot quantumex08.log -set quantumex08.set
+tonyplot3d quantumex08_1.str -set quantumex08_0.set
+tonyplot3d quantumex08_1.str -set quantumex08_1.set
+
+quit

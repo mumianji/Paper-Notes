@@ -1,0 +1,96 @@
+<html>
+  <head>
+    <title>Total Dose X-Ray Effects in an n-MOS Gate Oxide</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Total Dose X-Ray Effects in an n-MOS Gate Oxide</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Victory Device/SEE</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Victory Device 1.12.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="radex07_plot0.png" width="640" alt="radex07_plot0" />
+      <p/>
+      <img src="radex07_plot1.png" width="640" alt="radex07_plot1" />
+      <p/>
+      <img src="radex07_plot2.png" width="640" alt="radex07_plot2" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This examples demonstrates positive charge build up and
+<b> radiation induced charge de-trapping</b> in an n-MOS gate oxide as a result of
+<b> 10keV X-Ray irradiation.</b> </p>
+<p>
+A physical effect missing in previous total dose models is radiation induced
+de-trapping of previously trapped oxide charge, as a result of the
+<b> trapped charge being released after absorbing energy quanta from the</b> <b> geminate recombination process.</b> Geminate recombination occurs when an electron-hole pair created from
+absorbtion of radiation, recombine again before an electric field can
+accelerate the pair in opposite directions.  Clearly the probability of
+geminate recombination increases with reducing electric field.  Thus
+<b> the rate of hole de-trapping in the oxide also increases with a </b> <b> reduction in electric field,</b> as discussed in the reference for this model from Kimpton et al.,
+<b> &quot;A Simple Trap-Detrap Model for Accurate Prediction of Radiation Induced</b> <b> Threshold Voltage Shifts in Radiation Tolerant Oxides, for All Static or</b> <b> Time Variant Oxide Fields&quot; </b> Solid-State Electronics, Vol. 37, No. 1, pp.153-158, 1994
+</p>
+<p>
+To demonstrate both the radiation induced hole trapping and de-trapping
+phenomenon, a positive bias is applied to the gate of an n-MOSFET and is
+irradiated with 10keV X-Rays. Positive oxide charge builds up during irradiaton
+as is monitored using the
+<b> probe material=oxide p.conc</b> statement and by comparing the
+<b> pre and post irradiation threshold voltage.</b> After irradiation to 1MRad, the gate bias is changed to -0.9 volts to minimise
+the gate oxide field.  The device is then re-irradiated with another 1MRad dose
+and the trapped hole concentration in the gate oxide is monitored.
+</p>
+<p>
+The greatly reduced oxide field resulting from the change in gate bias
+increases the geminate recombination process which also greatly increases the
+rate of hole de-trapping in the oxide, such that it now becomes even greater
+than the hole trapping rate.  It can be seen from this example that rather than
+increasing the trapped hole concentration with radiation dose, now all the
+additional energy released from the increased rate of gemnate recombination,
+now decreases the trapped hole concentration with radiation dose.  It should be
+emphasized here that the
+<b> hole de-trapping is NOT a result of hole recombination with electrons,</b> <b> but is a direct result of trapped holes absorbing energy quanta from the</b> <b> geminate recombination process.</b> </p>
+<p>
+Finaly, after the second irradiation with low electric field on the gate, the
+threshold voltage is simulated again, and shows a recovery from the shift
+observed after the first irtradiation with a high gate oxide field.
+</p>
+<p>
+To simulate total dose effects in insulators, the oxides are converted to large
+bandgap semiconductors with the
+<b> material material=oxide semiconductor</b> statement.  Then the concentrations and characteristics of the bulk oxide and
+interface traps are defined in accordance with the referenced paper above,
+using the
+<b> oxidecharging</b> and
+<b> intoxidecharging</b> statements respectively.  Finally the characteristics of the radiation are
+defined using the
+<b> radiation doserate=1 XRay</b> statement.  Then on any transient solve statement the parameter &quot;radiation&quot; is
+specified to invoke the time dependent irradiation process.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

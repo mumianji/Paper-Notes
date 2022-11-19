@@ -1,0 +1,100 @@
+<html>
+  <head>
+    <title>Reach Through APD (RTAPD)</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Reach Through APD (RTAPD)</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Blaze/Luminous</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="optoex18_plot0.png" width="640" alt="optoex18_plot0" />
+      <p/>
+      <img src="optoex18_plot1.png" width="640" alt="optoex18_plot1" />
+      <p/>
+      <img src="optoex18_plot2.png" width="640" alt="optoex18_plot2" />
+      <p/>
+      <img src="optoex18_plot3.png" width="640" alt="optoex18_plot3" />
+      <p/>
+      <img src="optoex18_plot4.png" width="640" alt="optoex18_plot4" />
+      <p/>
+      <img src="optoex18_plot5.png" width="640" alt="optoex18_plot5" />
+      <p/>
+      <img src="optoex18_plot6.png" width="640" alt="optoex18_plot6" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates:
+<br/>
+ </p>
+<ul>
+  <li>
+ An Avalanche PhotoDiode where Absorption and multiplication
+reions are separated.  It also demonstrates the use of the Geiger mode to study
+its behavior as a sinlge photon counter at biases beyond breakdown.
+<br/>
+  </li>
+</ul>
+<p>
+The APD should maximize photon absorption. However the multiplication
+region should be thin in order to miminize secondary ionizations. These two
+conflicting requirements are acheived in Separate Absorption Multiplication
+(SAM) reach Through APD.
+</p>
+<p>
+Advanced III-V heterostructures can be used to detect different wavelengths
+of light such as infra-red and ultraviolet.  These heterostructures are often
+combined with silicon layers which are used for carrier multiplication. A
+typical example is shown here.
+</p>
+<p>
+Since the device was mainly 1D we used the
+<b> mesh auto </b> feature of Atlas to create the structure. When using auto-meshing, you must
+only specify the mesh in the X direction using X.MESH statements. The mesh
+spacing in the Y direction is specified in the REGION statements. The REGION
+statement is used as well to specify the material types of individual &quot;regions&quot;,
+their composition, doping, strain and certain other characteristics
+describing how the region is to be modeled.
+</p>
+<p>
+The photogeneration rate is calculated using the
+<b> beam </b> statement. The beam was back illuminated for better gain in the linear region and a wavelength of 1um and a beam intensity of 0.1Watts/cm2 was used.
+</p>
+<p>
+IV characteristics (dark as well under illumination) are simulated by ramping
+the anode voltage up to around -22V where the diode starts to break down and then beyond to -30V where the Geiger mode comes into play.
+</p>
+<p>
+For the Geiger mode simulation, a probe statement was added so that the electron avalanche probabilities at the designated point versus bias could be seen on the log file.
+</p>
+<p>
+The filename=optoex18_g option for the probe statement was used so that Geiger line integrals would be stored at bias points.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

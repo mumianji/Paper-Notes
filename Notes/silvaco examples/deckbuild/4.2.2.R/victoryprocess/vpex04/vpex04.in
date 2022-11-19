@@ -1,0 +1,88 @@
+
+# VICTORY Process example 4 - 3D process simulation of generic deposition
+# illustrating structure initialisation, mask polygon definition
+# geometrical and physical deposition using three different models
+# Silvaco 2014
+# 
+
+go victoryprocess 
+
+#  Define the initial material together with the simulation domain 
+#  and start the simulation in 3D mode
+
+Init material="silicon" depth=1.0 gasHeight=0.5 from="0, 0" to="0.5, 0.2"  \
+ flow.dim=3d resolution="0.05,0.05,0.05"  
+
+
+# Define simple mask polygon
+
+SpecifyMaskPoly maskID=1 istransparent=false p1="-1, -1" p2="-1, 1" p3="0.25, 1" p4="0.25, -1"
+
+
+# Deposit 250nm of oxide
+
+Deposit conformal thickness=0.25 material="oxide" maskID=1 angle=120 autoref
+
+
+# Conformal deposition 
+
+Deposit model="conformal" material="polymer" depositionrate=0.1 time=10 sec autoref
+
+Export structure=vpex04_1.str 
+
+tonyplot3d vpex04_1.str -set vpex04.set 
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Init material="silicon" depth=1.0 gasHeight=0.5 from="0, 0" to="0.5, 0.2"  \
+ flow.dim=3d resolution="0.05,0.05,0.05"  
+
+
+# Define simple mask polygon
+
+SpecifyMaskPoly maskID=1 istransparent=false p1="-1, -1" p2="-1, 1" p3="0.25, 1" p4="0.25, -1"
+
+
+# Deposit 250nm of oxide
+
+Deposit conformal thickness=0.25 material="oxide" maskID=1 angle=120 autoref
+
+
+# Non-conformal deposition defined by conformity ratio. ratio=1 => conformal.
+
+Deposit model="nonconformal" material="polymer" depositionrate=0.1 ratio=0.5 time=10 sec autoref
+
+
+Export structure="vpex04_2"
+
+tonyplot3d vpex04_2.str -set vpex04.set 
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Init material="silicon" depth=1.0 gasHeight=0.5 from="0, 0" to="0.5, 0.2"  \
+ flow.dim=3d resolution="0.05,0.05,0.05"  
+
+
+# Define simple mask polygon
+
+SpecifyMaskPoly maskID=1 istransparent=false p1="-1, -1" p2="-1, 1" p3="0.25, 1" p4="0.25, -1"
+
+
+# Deposit 250nm of oxide
+
+Deposit conformal thickness=0.25 material="oxide" maskID=1 angle=120 autoref
+
+
+# Primary depo model uses Primary-Ballistic-Mode for the flux transport
+# Isotropic flux with visibility calculations
+
+Deposit model="primary" material="polymer" depositionrate=0.1 time=10 sec autoref
+
+Export structure="vpex04_3"
+
+tonyplot3d vpex04_3.str -set vpex04.set 
+
+
+
+quit
+

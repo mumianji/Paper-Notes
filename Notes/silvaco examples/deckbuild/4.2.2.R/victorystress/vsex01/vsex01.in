@@ -1,0 +1,84 @@
+############################
+### Create the structure ###
+############################
+
+go victoryprocess 
+
+Init material=oxide layout="vsex01.lay" depth=0.4 gasheight=2.6
+
+# Generate finer grid
+Line y loc=0.1 spac=0.05
+Line y loc=0.475 spac=0.005
+Line y loc=0.5 spac=0.005
+Line y loc=0.525 spac=0.005
+Line y loc=0.9 spac=0.05
+
+Line x loc=0.1 spac=0.05
+Line x loc=0.475 spac=0.01
+Line x loc=0.5 spac=0.01
+Line x loc=0.525 spac=0.01
+Line x loc=0.9 spac=0.05
+
+Line z loc=-2.6 spac=0.1
+Line z loc=-0.6
+Line z loc=-0.5
+Line z loc=-0.35
+Line z loc=-0.3
+Line z loc=-0.25
+Line z loc=-0.2
+Line z loc=-0.15 spac=0.04
+Line z loc=-0.1 
+Line z loc=-0.05 spac=0.005
+Line z loc=-0.025 spac=0.005
+Line z loc=0 spac=0.005
+Line z loc=0.4 spac=0.05
+
+Deposit material=silicon MAX thickness=0.05
+
+Doping material=silicon phosphorus=1e14
+
+Etch material=silicon DRY thickness=0.05 mask="FIN"
+
+Deposit material=poly CONFORMAL thickness=0.15
+
+Etch material=poly MAX thickness=0.2 mask="GATE"
+
+Deposit material=nitride CONFORMAL thickness=0.1
+
+Etch material=nitride MAX thickness=0.3  mask="GPF" deltaCD=0.1 
+
+Save name=vsex01_fine
+Export atlas(conformal) structure="vsex01_fine_atlas_conformal_ex.str"
+
+tonyplot3d vsex01_fine_atlas_conformal_ex.str -set vsex01.set
+
+
+############################
+### Calculate the stress ###
+############################
+
+# calculate stresses in fin by applying
+# compressive stress in the capping layer
+go victorystress
+
+init structure="vsex01_fine_atlas_conformal_ex.str"
+
+material nitride intrin.sig=1e10
+material nitride young.m=0.35e12
+material oxide young.m=4.5e11
+material nitride poiss.r=0.1
+
+# invoke an iterative solver
+method ams
+
+# perform stress analysis
+stress exposed rebalance
+
+save structure="vsex01_stress_fine_atlas_conformal.str"
+
+tonyplot3d vsex01_stress_fine_atlas_conformal.str -set vsex01.set
+tonyplot3d vsex01_stress_fine_atlas_conformal.str -set vsex01_fincut.set -cut vsex01_fine_atlas_conformal_fincut.str
+tonyplot vsex01_fine_atlas_conformal_fincut.str -set vsex01_fin2d.set
+
+quit
+

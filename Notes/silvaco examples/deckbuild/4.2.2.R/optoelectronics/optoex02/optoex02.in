@@ -1,0 +1,72 @@
+# (c) Silvaco Inc., 2018
+go atlas
+Title PIN diode DC solutions
+#
+# PIN DC solution
+
+# PIN device description and initial solution
+#
+# SECTION 1: Mesh Specification
+#
+mesh space.mult=4.0 
+#
+x.mesh loc=0.0  spacing=0.25
+x.mesh loc=10.0 spacing=0.25
+#
+y.mesh loc=0.0   spacing=0.05
+y.mesh loc=5.0   spacing=0.2
+y.mesh loc=10.0  spacing=0.05
+#
+# SECTION 2: Structure Specification
+#
+region num=1 material=Silicon
+#
+elec num=1 name=anode x.min=0.0 x.max=10.0 y.max=0.0
+elec num=2 name=cathode bottom
+#
+doping uniform conc=1e14 n.type
+doping gaus peak=0.0 char=0.1 conc=1e18 p.type dir=y
+doping gaus peak=10.0 char=0.1 conc=1e18 n.type dir=y
+#
+# SECTION 3: Material Model Specification
+#
+material taup0=2.e-6 taun0=2.e-6 
+models srh auger conmob fldmob  
+#
+# SECTION 4: Initial Solution
+#
+
+	
+solve    init outf=optoex02_0.str master
+
+tonyplot optoex02_0.str -set optoex02_0.set
+
+#
+# SECTION 5: Optical source definition
+
+# define a multi-spectral beam normal to top (y=0.0) surface
+# this beam is as follows:
+# beam #1, originating at (2.5,-1.0), propogating at an angle
+# of 90 degrees, with a multi-spectral spectrum described in
+# the file "optoex02.spec", sampled from 0.5 microns to 0.88 microns
+# at 5 sample wavelengths.
+#
+beam     num=1 x.origin=5.0 y.origin=-1.0 angle=90.0 power.file=optoex02.spec wavel.start=0.5 wavel.end=0.8 wavel.num=5
+
+#
+method   newton trap 
+solve	 init
+solve    vcathode=0.1
+solve    vcathode=0.5
+solve    vcathode=1.0
+solve    vcathode=2.0
+#
+# SECTION 6: Current vs. intensity
+# step light by steps of 1 for 10 steps
+#
+log	     outf=optoex02.log master
+solve	 b1=0.1 lit.step=0.1 nstep=9 outf=optoex02_1.str master
+
+tonyplot optoex02.log -set optoex02_1.set
+
+quit

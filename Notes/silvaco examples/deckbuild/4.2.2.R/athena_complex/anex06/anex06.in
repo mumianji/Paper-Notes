@@ -1,0 +1,74 @@
+go athena
+
+line x loc=0.00 spac=0.1 
+line x loc=0.80 spac=0.02
+line x loc=1.20 spac=0.02
+line x loc=2.00 spac=0.1 
+#
+line y loc=0.00 spac=0.02 
+line y loc=3.0	spac=0.5 
+
+init silicon  c.boron=1.5e15 orientation=100 no.imp
+ 
+
+method fermi compress
+diffus time=20 temp=1050 dryo2 press=1.00 hcl.pc=0
+
+deposit nitride thick=0.07 divisions=3 
+deposit oxide thick=0.19 divisions=5
+
+deposit photo thick=.5 div=1 
+etch photo right p1.x=1
+
+etch oxide thick=0.2
+etch nitri thick=0.2
+etch oxide thick=0.2
+
+strip photo
+
+deposit nitride thick=0.18 divisions=12
+
+rate.etch machine=test1 nitride a.m  rie isotropic=50.00 dir=500
+etch machine=test1 time=4.0 minutes dx.mult=.5
+
+structure outfile=anex06_0.str
+
+method fermi compress
+diffus time=55 temp=900 weto2 press=1.00 hcl.pc=0
+
+structure outfile=anex06_1.str
+
+rate.etch machine=test2 nitride a.m  rie isotropic=50.00 dir=500
+rate.etch machine=test2 oxide   a.m  rie isotropic=50.00 dir=50
+rate.etch machine=test2 silicon   a.m  rie isotropic=1.00 dir=5
+etch machine=test2 time=6.0 minutes dx.mult=.5
+
+structure outfile=anex06_2.str
+
+rate.etch machine=trench silicon a.m  rie isotropic=50 direct=250
+rate.etch machine=trench oxide   a.m  rie isotropic=5 direct=10
+etch machine=trench time=50 minutes dx.mult=.5
+
+diff time=10 temp=900 dry
+
+structure outfile=anex06_3.str
+
+rate.depo machine=test3 cvd step.cov=1 oxide dep.rate=1 u.m
+deposit machine=test3 time=.3 minute div=10
+
+rate.depo machine=test4 cvd step.cov=1 photo dep.rate=1 u.m smooth.win=5
+deposit machine=test4 time=1 minute div=10
+
+structure outfile=anex06_4.str
+
+rate.etch machine=planar silicon u.m  rie isotropic=0 direct=1.5
+rate.etch machine=planar photo   u.m  rie isotropic=0 direct=1.5
+rate.etch machine=planar oxide   u.m  rie isotropic=0 direct=1.5
+rate.etch machine=planar nitride u.m  rie isotropic=0 direct=1.5
+etch machine=planar time=1 minutes
+
+structure outfile=anex06_5.str
+
+tonyplot anex06_*.str
+
+quit

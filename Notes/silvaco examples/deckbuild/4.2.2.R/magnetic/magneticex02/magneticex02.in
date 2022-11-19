@@ -1,0 +1,32 @@
+# (c) Silvaco Inc., 2018
+go atlas
+mesh infile=magneticex02_mesh.str
+
+contact name=base2      common=base
+contact name=collector2 common=collector
+
+models bipolar
+
+solve init
+
+solve prev
+
+log outf=magneticex02_Bz0.log
+solve name=collector vstep=0.1 vfinal=0.5
+log off
+
+models bipolar bz=1.0
+
+solve init
+
+solve prev
+
+log outf=magneticex02_Bz1.log
+solve name=collector vcollector=0 vstep=0.1 vfinal=0.5
+log off
+
+tonyplot -overlay magneticex02_Bz0.log  magneticex02_Bz1.log -set magneticex02.set
+
+save outf=magneticex02_out.str
+
+quit

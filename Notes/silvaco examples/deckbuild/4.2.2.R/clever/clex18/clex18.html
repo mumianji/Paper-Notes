@@ -1,0 +1,65 @@
+<html>
+  <head>
+    <title>GDS2, netlist reduction and contact statement</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>GDS2, netlist reduction and contact statement</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>CLEVER</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="clex18.str.png" width="640" alt="clex18.str" />
+      <p/>
+    </div>
+    <div id="text" >
+<p>
+We show in this example that CLEVER can be used with a gds2 layout format
+as input. The commands used are
+<b> GDS2=&quot;layout.gds&quot;</b> and
+<b> cell=&quot;cell_number1&quot; </b> which allow the user to load a gds2file  and select a specific cell in the layout.
+</p>
+<p>
+Netlist reduction for capacitance and resistance extraction are also available
+in CLEVER. Since we perform the capacitance and resistance extraction with one
+Interconnect command, we need to define two different minvalues. Therefore
+the keywords
+<b> minRES</b> and
+<b> minCAP </b> have to be set in the
+<b> Interconnect </b> command like:
+</p>
+<p>
+Interconnect minRES = 0.001 minCAP=1.0e-18.
+</p>
+<p>
+Finally we show in this example that the Interconnect statement was extended
+by the option
+<b> Contact = &lt;string&gt;.</b> This allows the user to specify one particular conductor for which
+CLEVER extracts the capacitance values with respect to all other
+conductors. If more than one interconnect statements are invoked during
+the course of the simulation, the last results of capacitance calculation
+will replace the previously calculated values that already exist in the
+netlist.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

@@ -1,0 +1,68 @@
+<html>
+  <head>
+    <title>Gate Length Scaling</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Gate Length Scaling</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>SSuprem 4/S-Pisces</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R, Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="mos1ex15_plot0.png" width="640" alt="mos1ex15_plot0" />
+      <p/>
+      <img src="mos1ex15_plot1.png" width="640" alt="mos1ex15_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This is an Athena/Atlas interface example similar to the first example in this
+section. It demonstrates the setting of gate length through parameter
+substitution.
+</p>
+<p>
+In this example an NMOS transistors length is defined with a
+<b> set </b> statement around the poly etch stage in the simulation. The
+<b> set </b> statement defines a variable used in a subsequent
+<b> stretch </b> statement to define the half length of the transistor.
+</p>
+<p>
+Importantly, the variable $cd is also used to place the name of the
+drain electrode in the subsequent
+<b> electrode </b> statement. This simplifies the position definition of the drain electrode.
+</p>
+<p>
+Note the use of the
+<b> right </b> statement in the
+<b> stretch </b> command. This
+makes sure that the coordinate system of the stretched device remains
+unchanged from the original making sure that the left hand side of the
+structure is in the same place as before. Both
+<b> right|left </b> flags are available.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

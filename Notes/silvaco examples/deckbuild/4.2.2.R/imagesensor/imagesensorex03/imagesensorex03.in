@@ -1,0 +1,161 @@
+# (c) Silvaco Inc., 2018
+go atlas
+#
+# Crosstalk
+# In this example we will integrated photogeneration rate in the
+# red and green wells as a function of angle to examine crosstalk
+#
+mesh periodic
+#
+# Structure definition
+#
+x.m l=0    s=0.25
+x.m l=20   s=0.25
+#
+y.m l=0    s=0.25
+y.m l=1.5  s=0.1
+y.m l=2.5  s=0.1
+y.m l=5.0  s=0.05
+y.m l=5.5  s=0.05
+y.m l=6.5  s=0.05
+y.m l=9.5  s=0.1
+y.m l=10.5 s=0.1
+#
+region num=1 silicon y.min=6.5
+region num=2 oxide y.max=6.5
+region num=3 material=aluminum x.min=0.0  x.max=2.5   y.min=5 y.max=5.5
+region num=4 material=aluminum x.min=7.5  x.max=12.5  y.min=5 y.max=5.5
+region num=5 material=aluminum x.min=17.5 x.max=20.0  y.min=5 y.max=5.5
+#
+# color filters
+#
+region num=6 oxide y.min=1.5 y.max=2.5 x.min=1.0  x.max=9.0
+region num=7 oxide y.min=1.5 y.max=2.5 x.min=11.0 x.max=19.0
+#
+elec num=1 substrate
+elec num=2 material=aluminum x.min=0.0  x.max=2.5   y.min=5 y.max=5.5
+elec num=3 material=aluminum x.min=7.5  x.max=12.5  y.min=5 y.max=5.5
+elec num=4 material=aluminum x.min=17.5 x.max=20.0  y.min=5 y.max=5.5
+#
+# Background doping
+#
+doping region=1 unif p.type conc=2e15
+#
+# Isolation
+#
+doping region=1 gaus p.type conc=1e18 peak=6.5 char=0.25 x.min=0.0  x.max=2.5
+doping region=1 gaus p.type conc=1e18 peak=6.5 char=0.25 x.min=7.5  x.max=12.5
+doping region=1 gaus p.type conc=1e18 peak=6.5 char=0.25 x.min=17.5 x.max=20.0
+#
+# Nwell
+#
+doping region=1 gaus n.type conc=1e16 peak=6.6 char=0.05
+#
+# Here we set some models.  For this analysis these are not too important
+# as we are only looking at photogeneration.
+#
+model srh conmob fldmob print
+#
+# We choose a high index to reflect light in FDFD.
+#
+material material=Aluminum real.index=1 imag.index=10
+#
+# Here we set up the red filter to disallow 99% of the green source
+#
+material region=7 imag.index=0.1951
+#
+# We choose to output optical intensity 
+#
+output opt.int
+#
+# Here we define the optical source.  It is incident normal to the device
+# from above.  It has a wavelength of 0.5325 microns.  We select spacings
+# in time and space.  The space step should be a small fraction of the
+# wavelength (about 1/20th).  We specify to propogate 111 wavelengths.
+# At the end of the simulation we output a structure file of the FDTD
+# representation.
+#
+beam num=1 fdtd x.origin=10.0 y.origin=-4.0 angle=90.0 wavelength=0.5325 \
+   td.srate=7 fd.auto prop.leng=10 big.index td.err=0.01 \
+	td.end td.file="imagesensorex03_1" periodic dt=1.4618e-17
+#
+# Here we specify the spherical lenslets by index, location and radius.
+#
+lens plane=0.0 index=1.586 x.loc=5.0  y.loc=1.1667 radius=4.1667 spheric
+lens plane=0.0 index=1.586 x.loc=15.0 y.loc=1.1667 radius=4.1667 spheric
+#
+# We specify perfectly matched layers (PMLs) at the top and the bottom
+# to absorb exiting radiation.
+#
+pml top     degree=1 width=1 r90=0.0001
+pml bottom  degree=1 width=1 r90=0.0001 material=silicon
+#
+# We get an initial solution.
+#
+solve init
+#
+# Specify 2 carrier solutions
+#
+method carriers=2
+#
+# We probe the integrated electron charge in bounding boxes around
+# the N wells.
+#
+probe name="Gg" photogen fdtd integrate x.min=2.5  x.max=7.5  y.min=6.5 y.max=7.5
+probe name="Gr" photogen fdtd integrate x.min=12.5 x.max=17.5 y.min=6.5 y.max=7.5
+#
+# Initial solution empty the wells
+#
+method carriers=0
+solve
+solve n.bias=20.0
+#
+# We will capture the output in a log file.
+#
+log outf=imagesensorex03_1.log
+#
+method carriers=2
+#
+# Capture generation rate versus angle
+#
+# Angles must be selected as:
+# 
+# arcsin(n*wavelength/width)
+#
+# where n is an integer.  This condition
+# insures periodicity at the edges of the
+# source.
+#
+solve b1=0.001 angle=0.0
+solve b1=0.001 angle=1.52568
+solve b1=0.001 angle=3.05224
+solve b1=0.001 angle=4.58138
+solve b1=0.001 angle=6.11359
+solve b1=0.001 angle=7.65021
+solve b1=0.001 angle=9.19239
+solve b1=0.001 angle=10.7413
+solve b1=0.001 angle=12.2982
+solve b1=0.001 angle=13.8644
+solve b1=0.001 angle=15.4412
+solve b1=0.001 angle=17.0301
+solve b1=0.001 angle=18.6327
+solve b1=0.001 angle=20.2505
+solve b1=0.001 angle=21.8853
+solve b1=0.001 angle=23.5391
+solve b1=0.001 angle=25.1340
+solve b1=0.001 angle=26.9122
+solve b1=0.001 angle=28.6364
+solve b1=0.001 angle=30.3895
+#
+# save the final result
+#
+save outf=imagesensorex03_2.str
+#
+# Plot the results
+#
+tonyplot imagesensorex03_1.str -set imagesensorex03_1.set
+tonyplot imagesensorex03_1.log -set imagesensorex03_2.set
+tonyplot imagesensorex03_2.str -set imagesensorex03_3.set
+#
+quit
+

@@ -1,0 +1,224 @@
+# (c) Silvaco Inc., 2018
+go devedit
+
+region reg=1 mat=InGaAs \
+	points="0,0 0.5,0 0.5,0.15 0,0.15 0,0"
+#
+impurity id=1 region.id=1 imp="Composition Fraction X" \
+	x1=0 x2=0 y1=0 y2=0 \
+	peak.value=0.47 comb.func=Multiply \
+	rolloff.y=both conc.func.y=Constant \
+	rolloff.x=both conc.func.x=Constant
+#
+impurity id=2 region.id=1 imp=Donors \
+	x1=0 x2=0 y1=0 y2=0 \
+	peak.value=1e+19 ref.value=1000000000000 comb.func=Multiply \
+	rolloff.y=both conc.func.y=Constant \
+	rolloff.x=both conc.func.x=Constant
+
+region reg=2 mat=InP \
+	points="0,0.15 0.5,0.15 0.5,0.25 0,0.25 0,0.15"
+#
+impurity id=1 region.id=2 imp=Donors \
+	x1=0 x2=0 y1=0 y2=0 \
+	peak.value=2e+18 ref.value=1000000000000 comb.func=Multiply \
+	rolloff.y=both conc.func.y=Constant \
+	rolloff.x=both conc.func.x=Constant
+
+region reg=3 mat=InP \
+	points="0,0.25 0.5,0.25 0.5,0.35 0,0.35 0,0.25"
+#
+impurity id=1 region.id=3 imp=Donors \
+	x1=0 x2=0 y1=0 y2=0 \
+	peak.value=4e+17 ref.value=1000000000000 comb.func=Multiply \
+	rolloff.y=both conc.func.y=Constant \
+	rolloff.x=both conc.func.x=Constant
+
+region reg=4 mat=InGaAs \
+	points="0,0.35 0.5,0.35 1,0.35 2,0.35 2,0.42 0,0.42 0,0.35"
+#
+impurity id=1 region.id=4 imp=Acceptors \
+	x1=0 x2=0 y1=0 y2=0 \
+	peak.value=2e+19 ref.value=1000000000000 comb.func=Multiply \
+	rolloff.y=both conc.func.y=Constant \
+	rolloff.x=both conc.func.x=Constant
+#
+impurity id=2 region.id=4 imp="Composition Fraction X" \
+	x1=0 x2=0 y1=0 y2=0 \
+	peak.value=0.47 comb.func=Multiply \
+	rolloff.y=both conc.func.y=Constant \
+	rolloff.x=both conc.func.x=Constant
+
+region reg=5 mat=InGaAs \
+	points="0,0.42 2,0.42 2,1 0,1 0,0.42"
+#
+impurity id=1 region.id=5 imp="Composition Fraction X" \
+	x1=0 x2=0 y1=0 y2=0 \
+	peak.value=0.47 comb.func=Multiply \
+	rolloff.y=both conc.func.y=Constant \
+	rolloff.x=both conc.func.x=Constant
+#
+impurity id=2 region.id=5 imp=Donors \
+	x1=0 x2=0 y1=0 y2=0 \
+	peak.value=1e+16 ref.value=1000000000000 comb.func=Multiply \
+	rolloff.y=both conc.func.y=Constant \
+	rolloff.x=both conc.func.x=Constant
+
+region reg=6 mat=InGaAs \
+	points="0,1 2,1 2.35,1 3,1 3,1.3 0,1.3 0,1"
+#
+impurity id=1 region.id=6 imp="Composition Fraction X" \
+	x1=0 x2=0 y1=0 y2=0 \
+	peak.value=0.47 comb.func=Multiply \
+	rolloff.y=both conc.func.y=Constant \
+	rolloff.x=both conc.func.x=Constant
+#
+impurity id=2 region.id=6 imp=Donors \
+	x1=0 x2=0 y1=0 y2=0 \
+	peak.value=6e+18 ref.value=1000000000000 comb.func=Multiply \
+	rolloff.y=both conc.func.y=Constant \
+	rolloff.x=both conc.func.x=Constant
+
+region reg=7 mat=InP \
+	points="0,1.3 3,1.3 3,1.5 0,1.5 0,1.3"
+#
+impurity id=1 region.id=7 imp=Donors \
+	x1=0 x2=0 y1=0 y2=0 \
+	peak.value=10000000000000 ref.value=1000000000000 comb.func=Multiply \
+	rolloff.y=both conc.func.y=Constant \
+	rolloff.x=both conc.func.x=Constant
+
+region reg=8 name=emitter mat=Contact elec.id=1 work.func=0 \
+	points="0,0 0,-0.05 0.5,-0.05 0.5,0 0,0"
+
+region reg=9 name=base mat=Contact elec.id=2 work.func=0 \
+	points="1,0.35 1,0.3 2,0.3 2,0.35 1,0.35"
+
+region reg=10 name=collector mat=Contact elec.id=3 work.func=0 \
+	points="2.35,1 2.35,0.95 3,0.95 3,1 2.35,1"
+
+
+
+# Set Meshing Parameters
+#
+base.mesh height=0.1 width=0.125
+#
+bound.cond max.slope=28 max.ratio=300 rnd.unit=0.001 line.straightening=1 \
+ 	   align.points when=automatic
+#
+constr.mesh max.angle=90 max.ratio=200 max.height=1 \
+	    max.width=1 min.height=0.0001 min.width=0.0001
+#
+constr.mesh  x1=0 x2=0.5  y1=-0.05 y2=0.325 max.height=0.04
+constr.mesh  x1=0 x2=0.5  y1=0.325 y2=0.35  max.height=0.02
+constr.mesh  x1=0 x2=2.0  y1=0.35  y2=0.5   max.height=0.02
+constr.mesh  x1=0 x2=2.0  y1=0.5   y2=0.7   max.height=0.04
+constr.mesh  x1=0 x2=2.0  y1=0.95  y2=1.0   max.height=0.04
+constr.mesh  x1=0 x2=3.0  y1=1.0   y2=1.05  max.height=0.04
+#
+# Perform mesh operations
+#
+mesh
+#
+structure outf=hbtex06_0.str
+tonyplot  hbtex06_0.str -set hbtex06_0.set
+
+go atlas
+#
+title  InGaAs/InP HBT simulation
+#
+# Material and model specification 
+#
+material material=InGaAs align=0.36 
+material material=InP    align=0.36
+#
+# Cap1         InGaAs region
+material region=1 taun0=5.0e-10 taup0=1.0e-9 vsatn=2.5e7 mun0=4000 mup0=200
+#
+# Cap2         InP    region
+material region=2 taun0=5.0e-9  taup0=5.0e-9 vsatn=2.0e7 mun0=2000 mup0=100 
+#
+# Emitter      InP    region
+material region=3 taun0=1.0e-8  taup0=2.0e-8 vsatn=2.0e7 mun0=3000 mup0=160
+#
+# Base         InGaAs region p-type
+material region=4 taun0=3.0e-10 taup0=3.0e-10 vsatn=2.5e7 mun0=5000 mup0=240
+#
+# Collector    InGaAs region
+material region=5 taun0=1.0e-7  taup0=1.0e-7 vsatn=2.5e7  mun0=10000 mup0=400
+#
+# Subcollector InGaAs region
+material region=6 taun0=1.0e-9 taup0=1.0e-9 vsatn=2.5e7   mun0=4000  mup0=200
+#
+model material=InP    srh optr fldmob evsatmod=1 ecritn=6.e3 fermidirac print
+model material=InGaAs srh optr fldmob evsatmod=1 ecritn=3.e3 fermidirac print
+#
+# Initial solution
+output con.band val.band 
+solve init
+#
+# Calculate Gummel plot and AC parameters versus Vbe (Vce) at 1 MHz
+solve prev 
+
+#
+# 1 - emitter  2 - base  3 - collector
+log outf=hbtex06_1.log 
+
+solve v2=0.01  v3=0.01  ac freq=10 direct
+solve v2=0.025 v3=0.025 vstep=0.025 electr=23 nstep=2 ac freq=1e6 direct
+solve v2=0.1   v3=0.1   vstep=0.1   electr=23 nstep=5 ac freq=1e6 direct
+solve v2=0.65  v3=0.65  vstep=0.05  electr=23 nstep=6 ac freq=1e6 direct
+
+save  outf=hbtex06_2.str
+
+solve v2=0.975 v3=0.975 vstep=0.025 electr=23 nstep=3 ac freq=1e6
+#
+# Frequency domain AC analysis up to 100 GHz
+# 
+
+log outf=hbtex06_3.log s.param gains inport=base outport=collector width=50
+
+
+load inf=hbtex06_2.str master.in
+
+solve previous ac freq=1 direct
+solve  ac freq=10 fstep=10 mult.f nfstep=8 direct
+solve  ac freq=2e9 direct
+solve  ac freq=5e9 direct
+solve  ac freq=1e10 direct
+solve  ac freq=2e10 fstep=2e10 nfstep=5 direct
+#
+#  Extraction of parameters
+#
+
+extract init inf="hbtex06_1.log"
+#
+# Maximum cutoff frequency
+extract name="Ft_max" max(g."collector""base"/(6.28*c."base""base"))
+#
+# Base bias at maximum cutoff frequency
+extract name="Vbe_Ft_max" x.val from curve (v."base", g."collector""base"/(6.28*c."base""base" )) where y.val=$"Ft_max"
+#
+# Input (base) capacitance at maximum cutoff frequency
+extract name="Cbb_Ft_max" y.val from curve (v."base", abs(c."base""base" )) where x.val=$"Vbe_Ft_max"
+#
+# Transconductance at maximum cutoff frequency
+extract name="Gm_Ft_max" y.val from curve (v."base", abs(g."collector""base" )) where x.val=$"Vbe_Ft_max"
+#
+#
+# Gummel plot
+
+tonyplot  hbtex06_1.log -set hbtex06_1_log.set
+
+#
+# AC current gain versus frequency
+tonyplot  hbtex06_3.log -set hbtex06_4_log.set
+#
+# S12 & S21 polar coordinates
+tonyplot hbtex06_3.log -set hbtex06_4_s12.set
+#
+# S11& S22 Smith chart
+tonyplot hbtex06_3.log -set hbtex06_4_s11.set
+#
+quit
+  

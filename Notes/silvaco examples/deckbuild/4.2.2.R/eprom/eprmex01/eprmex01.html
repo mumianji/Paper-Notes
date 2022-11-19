@@ -1,0 +1,209 @@
+<html>
+  <head>
+    <title>Flash EEPROM Programming and Erasing</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Flash EEPROM Programming and Erasing</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>SSuprem 4/DevEdit/S-Pisces</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R, Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="eprmex01_plot0.png" width="640" alt="eprmex01_plot0" />
+      <p/>
+      <img src="eprmex01_plot1.png" width="640" alt="eprmex01_plot1" />
+      <p/>
+      <img src="eprmex01_plot2.png" width="640" alt="eprmex01_plot2" />
+      <p/>
+      <img src="eprmex01_plot3.png" width="640" alt="eprmex01_plot3" />
+      <p/>
+      <img src="eprmex01_plot4.png" width="640" alt="eprmex01_plot4" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example simulates the structure
+definition and electrical test of a FLASH EEPROM cell. The example consists of:
+</p>
+<ul>
+  <li>
+ Dual gate EEPROM structure formation in Athena
+<br/>
+  </li>
+  <li>
+ Re-meshing in DevEdit
+<br/>
+  </li>
+  <li>
+ Threshold voltage simulation before programming
+<br/>
+  </li>
+  <li>
+ Transient programming simulation
+<br/>
+  </li>
+  <li>
+ Threshold voltage simulation after programming
+<br/>
+  </li>
+  <li>
+ Transient erasure simulation  
+  </li>
+</ul>
+<p>
+For accurate simulation of programming and erasure it is vital to have
+a very accurate representation of the device structure. The gate and
+tunneling currents are very sensitive to geometry and doping profiles.
+It will be possible for you to alter
+process parameters and observe their effect on device performance
+directly with this input file.
+</p>
+<p>
+The interface between Athena and Atlas is automatic. The electrode
+statements in Athena are used to define the electrode positions for
+Atlas. Any metal or polysilicon layer can optionally be set as an
+electrode region. The electrode names given in Athena are transferred
+into Atlas.
+</p>
+<p>
+As with many of the examples provided, the grid structure for the
+example EEPROM device is rather coarse. This allows a realistic
+execution times for the example. When comparing simulated and real
+EEPROM devices, a finer grid is recommended. This can be done quickly by
+decreasing the
+<b> space.mult </b> parameter of the initialize statement.
+</p>
+<p>
+To obtain a finer grid, DevEdit is used. This can effectively refine the
+grid for the electrical simulation. A finer mesh for resolving the
+dopant distribution is still recommended though.
+</p>
+<p>
+The  Atlas programming simulation consists of 3 basic parts. Firstly a
+threshold voltage simulation is done to obtain the EEPROM cell threshold in
+it&apos;s unprogrammed state. Then the device is biased into the initial
+condition of the transient with the high programming control gate
+voltage. Here 12V is used.
+</p>
+<p>
+Next the programming transient is performed. Since the times involved in
+programming are much greater than the relaxation time of the device, the
+syntax
+<b> method quasi can be used to specify the quasistatic </b> method. This results in a large improvement in the speed of the
+calculation.
+</p>
+<p>
+The programming consists of two solve
+statements. The first ramps the drain to 5.0V in 1ns. A solution file
+is saved at this point. This can be used to examine the
+potentials before charge is applied to the floating gate. The second
+line gives no change in the applied voltages, it simply leaves the
+device biased the condition VCG=12.0V and Vds=5.0V. During this time
+the hot electron injection model will predict values of gate current.
+This current coupled with the transient time step size is used to add
+charge self-consistently to the floating gate. A solution file is saved
+at the end of the transient.
+</p>
+<p>
+Comparisons of device internal distributions, such as potentials can be
+done by comparing the two solution files from before
+programming and  after the programming.
+</p>
+<p>
+The final part of this run consists of a copy of the first part.
+A threshold voltage test is run on the EEPROM cell. In this case
+however the device is programmed and a large threshold voltage shift is
+seen.
+</p>
+<p>
+The graphics output of this section shows plots of threshold voltage
+before and after programming. A plot of floating gate charge vs. time
+can be obtained from the result of the transient simulation. Also, the
+actual programming gate current can be seen falling off with time. This
+is because the increasing charge on the floating gate increases the
+threshold voltage of the device. This in turn reduces the drain
+current which will cause a drop in hot carrier density and hence a
+reduction in programming current.
+</p>
+<p>
+It is possible to plot the showed the floating gate charge charge vs. time curve. This can be quickly
+converted to threshold voltage shift using the following formula:
+</p>
+<p>
+Threshold Shift =   Q Tox / L Eox
+</p>
+<p>
+Where Q = floating gate charge per unit width,
+Tox  = inter-poly oxide thickness,
+L = length of floating gate,
+Eox = absolute permittivity of oxide.
+</p>
+<p>
+In this case Tox is converted into an effective Tox based on the thickness
+of each layer of the inter-poly ONO di-electric. This is done by:
+</p>
+<p>
+Effective Tox = E oxide *  (Tox1/Eox1 + Tnitride/Enitride + Tox2/Eox2   )
+</p>
+<p>
+where Tx is thickness of x and Ex is relative permittivity of x.
+</p>
+<p>
+The final run of this example is a transient erasure simulation. Atlas is restarted using the command
+<b> go atlas</b> . The correct set of erasing models for EEPROMs is chosen . The key models are
+<b> fnord </b> and
+<b> bbt.std</b> . fnord specifies the solution for Fowler Nordheim tunneling the main
+erasure mechanism for EEPROMs. bbt.std specifies the band to band
+tunneling model. This is required due to the high electric fields at
+the source/channel junction. Tunneling due to these fields leads to
+high substrate current during erasing.
+</p>
+<p>
+After the models and other material parameters are set, the charge on
+the floating gate is ramped using the parameter q1. This &apos;q&apos; works in
+an analogous manner to ramping voltages using &apos;v&apos;: q1 and qstep are the
+equivalent in charge to v1 and vstep.  In EEPROM erasure the drain is
+disconnected to avoid large power consumption from source to drain
+breakdown currents. One way to disable a contact is to use current
+boundary conditions and force zero current. An alternative used here is
+to attach a very large resistor to the contact.
+</p>
+<p>
+The transient erasure is performed in a single solve statement. The
+source electrode is ramped to 12.5V. The mechanism to remove charge
+from the floating gate is exactly analogous to programming. The only
+differences is the  Fowler-Nordheim tunneling rather then hot electron
+injection as gate current. Obviously this will change the direction of
+the current through the gate oxide.
+</p>
+<p>
+The resultant graphics show the transient erasing characteristic. To
+plot the threshold voltage shift, the same calculation given in the
+programming section can be used.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

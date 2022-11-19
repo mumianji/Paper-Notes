@@ -1,0 +1,153 @@
+<html>
+  <head>
+    <title>PBTS(Positive Bias Temperature Stress) & Hydrogen Passivation.</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>PBTS(Positive Bias Temperature Stress) & Hydrogen Passivation.</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Victoryprocess/Vicitorydevice</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Victory Process: 7.22.3.R, Victory Mesh 1.2.4.R, Victory Device 1.12.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="tftex17_plot0.png" width="640" alt="tftex17_plot0" />
+      <p/>
+      <img src="tftex17_plot1.png" width="640" alt="tftex17_plot1" />
+      <p/>
+      <img src="tftex17_plot2.png" width="640" alt="tftex17_plot2" />
+      <p/>
+      <img src="tftex17_plot3.png" width="640" alt="tftex17_plot3" />
+      <p/>
+      <img src="tftex17_plot4.png" width="640" alt="tftex17_plot4" />
+      <p/>
+      <img src="tftex17_plot5.png" width="640" alt="tftex17_plot5" />
+      <p/>
+      <img src="tftex17_plot6.png" width="640" alt="tftex17_plot6" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<br/>
+<p>
+In this example, we demonstrate the Positive Bias Temperature Stress simulation due to electron trapping by oxygen related trap, and the role of hydrogen passivation in InGaZnO TFT device. In Victoryprocess part, we simulate the hydrogen diffusion in etch stopper
+process. The partial pressure during etch stopper process show the different hydrogen concentration.
+In Victorydevice, we simulate the electrochemical reaction formula for explaining the positive threshold voltage shift by electron trapping as well as hydrogen passivation forming OH-(Hydroxyl) bond.
+<br/>
+</p>
+<p>
+The hydrogen atom is a donor in a-IGZO material when it forms to make a OH-(Hydroxyl) bond
+as well as it passivate the neutral precursor state(electron trap site: O(neutral)).
+This neutral precursor trap can be an electron trapping state or passivated by hydrogen atom.
+We simulated the hydrogen passivation reaction and electron trapping reaction using chemical ion reaction/transport model in Victorydevice.
+<br/>
+</p>
+<b> Victoryprcess process simulation and hydrogen diffusion</b> <ul>
+  <li>
+ Bottom gate SiOx etch stopper a-IGZO structure formation using Victoryprocess:
+<br/>
+  </li>
+</ul>
+<p>
+-To simulate hydrogen diffusion process, we used material/interface statement to modify a default hydrogen
+diffusion coefficient in Victoryprocess.
+<br/>
+-The hydrogen concentration depending on partial pressure is adjusted in etch stopper deposition,
+and it diffuse in subsequent diffusion process.
+<br/>
+</p>
+<b> Victorydevice Ion Reaction and Transport Simulation</b> <br/>
+<p>
+After hydrogen diffusion process and structure formation,
+initial hydrogen concentration is imported from Victoryprocess using
+</p>
+<b> doping f.doping=tftex17_0.c species.name=&quot;H&quot;</b> <br/>
+<p>
+This C-interpreter function reads hydrogen profile from process structure.
+<br/>
+</p>
+<p>
+After reading hydrogen concentration, we define each ion&apos;s charge state.
+<br/>
+In this example, IGZO is the neutral precursor state which is an electron trap.
+It will decompose to negatively charged state(IGZO-) by electron trapping and neutral
+passivated state(IGZOH) by hydrogen passivation. The overall hydrogen passivation rate is affected by hydrogen concentration ,
+reaction rate of passivation, and hydrogen diffusion.
+<br/>
+<b> species formula=&quot;H&quot;    charge=0  name=&quot;H&quot;</b> <br/>
+<b> species formula=&quot;In:Ga:Zn:O2&quot;   charge=0  name=&quot;IGZO&quot;</b> <br/>
+<b> species formula=&quot;In:Ga:Zn:O2&quot; charge=-1 name=&quot;IGZO-&quot;</b> <br/>
+<b> species formula=&quot;In:Ga:Zn:O2:H&quot; charge=0  name=&quot;IGZOH&quot;</b> <br/>
+</p>
+<p>
+In this example, we only consider interface trap concentration using interface command.
+User can add bulk dopig using doping statement as we demonstrate in tftex16 example.
+<br/>
+<b> interface s.i  x.min=-12.0 x.max=12.0 y.min=-0.21 y.max=-0.19 \</b> species.name=&quot;IGZO&quot;   concentration=8e11
+<br/>
+<b> interface s.i x.min=-12.0 x.max=12.0 y.min=-0.21 y.max=-0.19 \</b> species.name=&quot;IGZO-&quot; concentration=1e10
+<br/>
+<b> interface s.i x.min=-12.0 x.max=12.0 y.min=-0.21 y.max=-0.19 \</b> species.name=&quot;IGZOH&quot;  concentration=1e10
+<br/>
+Total amount of neutral precursor trap concentration at th front interface is 8e11/sqcm.
+This trap will decompose to passivated state(IGZOH) and electron trapping state(IGZO-) depending on the hydrogen
+concentration.
+</p>
+<p>
+For drift-diffusion simulation of hydrogen atom during applied bias and temperature,
+we need to define the diffusion coefficient. Other ion species is immobile. In this example, we assumed the same
+diffusivity over all regions.
+<br/>
+<b> material species.name=&quot;H&quot; species.ea=0.35 species.af=1e3 species.hop=1e-6</b> <br/>
+</p>
+<p>
+Next, we define the chemical reaction formula using &quot;reaction&quot; command.
+<br/>
+<b> (1) reaction formula=&quot;IGZO  + H  &lt;=&gt; IGZOH&quot;  forward.rate=2e-17 forward.ea=0 reverse.rate=1e-15 reverse.ea=1.5</b> <br/>
+<b> (2) reaction formula=&quot;IGZO + e- &lt;=&gt; IGZO-&quot; forward.rate=1e-10  forward.ea=0.83 reverse.rate=1e-15 reverse.ea=1.5</b> <br/>
+</p>
+<p>
+The probe statement measure the occupation probability of each ion speceis and concentration at the front interface during stress time.
+<br/>
+<b> probe x=0.0 y=-0.2 material=IGZO ft.species=&quot;IGZO&quot;</b> <br/>
+<b> probe x=0.0 y=-0.2 material=IGZO ft.species=&quot;IGZO-&quot;</b> <br/>
+ <b> probe x=0.0 y=-0.2 material=IGZO ft.species=&quot;IGZOH&quot;</b> <br/>
+<b> probe x=0.0 y=-0.2 material=IGZO species.name=&quot;IGZO&quot;</b> <br/>
+  <b> probe x=0.0 y=-0.2 material=IGZO species.name=&quot;IGZO-&quot;</b> <br/>
+<b> probe x=0.0 y=-0.2 material=IGZO species.name=&quot;IGZOH&quot; </b> <br/>
+</p>
+<p>
+The simulation starts to get the intial threshold voltage.
+Then, PBTS simulaton proceeds with stress voltage of &quot;Vgs=+20V + intial threhold voltage&quot;
+to maintain the constant stress voltage.
+<br/>
+After obtaining stress solution, it is saved to different structure file to get the threshold voltage shift at each time.
+<br/>
+</p>
+<p>
+tftex17.doe is a simple doe file which select different hydrogen concentration(low/med/high),
+and it load tftex17.in file which simulate the hydrogen concentration effect on PBTS at each hydrogen concentration from tftex17.doe file.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

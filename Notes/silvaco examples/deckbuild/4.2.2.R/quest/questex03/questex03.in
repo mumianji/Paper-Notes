@@ -1,0 +1,65 @@
+go quest
+
+# Techno FILE
+
+layermapping layer.name = "sub" gds.Number = 0 gds.Datatype = 0
+layermapping layer.name = "m2" gds.Number = 1 gds.Datatype = 0
+layermapping layer.name = "via" gds.Number = 2 gds.Datatype = 0
+layermapping layer.name = "m3" gds.Number = 3 gds.Datatype = 0
+layermapping layer.name = "electrode" gds.Number = 4 gds.Datatype = 0
+layermapping layer.name = "electrode_txt" gds.Number = 4 gds.Datatype = 0 isText
+
+
+attach electrode.layer = "electrode" metal.layer = "m3"
+
+connection layer = "electrode" con.layer1 = "electrode_txt"
+connection layer = "via" con.layer1 = "m2" con.layer2 = "m3"
+
+
+# PROCESS
+
+material name = "aluminum" cond = 3.76676e+07 permittivity = 1 permeability = 1 losstangent = 0
+material name = "oxide" cond =  0 permittivity = 3.9 permeability = 1 losstangent = 0
+material name = "silicon" cond = 7 permittivity = 11.8 permeability = 1 losstangent = 0
+material name = "copper" cond = 5.88235e+07 permittivity = 1 permeability = 1 losstangent = 0
+material name = "air" cond =  0 permittivity = 1 permeability = 1 losstangent = 0
+
+deposit type = "substrate" layer.name = "SUBS" thick = 400 matName = "silicon"
+deposit type = "dielectric" layer.name = "OXIDE" thick = 1.9 matName = "oxide"
+deposit type = "metal" layer.name = "m2" thick = 1 matName = "aluminum" anglex = 0 angley = 0
+deposit type = "dielectric" layer.name = "ILD" thick = 2 matName = "oxide"
+deposit type = "via" layer.name = "via" matName = "aluminum" from_layer ="m2" to_layer="m3" anglex = 0 angley = 0
+deposit type = "metal" layer.name = "m3" thick = 2 matName = "aluminum" anglex = 0 angley = 0
+deposit type = "dielectric" layer.name = "PASSIV" thick = 5 matName = "oxide"
+deposit type = "dielectric" layer.name = "AIR" thick = 100 matName = "air"
+
+
+# SOLVER
+
+Init simulation.type = "PORT" \
+	 impedance.residual = 0.01 impedance.iteration = 50	\
+	 capacitance.residual = 0.01 capacitance.iteration = 50 \
+	 domainbase = "Grounded"	Z0 = 50	add.resistance = 0	\
+	 dx = 5 dy = 5 dz = 1	\
+	 computation.domain = "Automatic"
+
+electrodes ports = "IN", "subs_ground", "OUT", "subs_ground" grounded.nodes="Ground0", "Ground1"
+Frequency type = "Range" range = 100, 10000 nsteps = 20 range.variation = "Exp"
+
+# OUTPUT
+
+save	database.path = "questex03_db" \
+		 spice.file. = "questex03" tony.file= "questex03" \
+		 sparameter.file = "questex03" \
+                 3D.file = "questex03"   
+
+# RUN
+
+layout gdsfile = "questex03.gds" cell = "CELL"
+
+solve
+
+tonyplot questex03_db/questex03@@CELL/questex03_q.dat
+tonyplot questex03_db/questex03@@CELL/questex03_rlgc.dat -set questex03_rlgc.set 
+
+quit

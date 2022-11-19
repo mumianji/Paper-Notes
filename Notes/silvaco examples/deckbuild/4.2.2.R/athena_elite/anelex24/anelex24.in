@@ -1,0 +1,69 @@
+go athena
+
+# Custom Deposit machine example
+# 
+line x loc=-1.5 spac=0.025 
+line x loc=0.0   spac=0.025
+#
+line y loc=1.1  spac=0.5 
+line y loc=1.5  spac=0.5 
+#
+initialize 
+#
+deposit oxide        thick=2.1 divis=40
+
+# Use etch sequence to create a globe test structure
+etch oxide start x=-10. y=1.1
+etch cont x=-.1 y=1.1
+etch cont x=-.1 y=1.0
+etch cont x=-.17 y=.98
+etch cont x=-.34 y=.94
+etch cont x=-.5 y=.86
+etch cont x=-.64 y=.76
+etch cont x=-.76 y=.64
+etch cont x=-.86 y=.5
+etch cont x=-.94 y=.34
+etch cont x=-.98 y=.17
+etch cont x=-1. y=0
+etch cont x=-.98 y=-.17
+etch cont x=-.94 y=-.34
+etch cont x=-.86 y=-.5
+etch cont x=-.76 y=-.64
+etch cont x=-.64 y=-.76
+etch cont x=-.5 y=-.86
+etch cont x=-.34 y=-.94
+etch cont x=-.17 y=-.98
+etch cont x=0.0  y=-1.0
+etch done x=-10 y=-1.0
+
+structure mirror right
+
+# save the structure
+structure outfile=anelex24_0.str
+#
+rate.depo aluminum custom1 machine=spike_at45 infile=anelex24_1.dat a.m
+
+deposit machine=spike_at45 time=10.0 minutes
+
+structure outfile=anelex24_1.str
+
+init infile=anelex24_0.str
+#
+rate.depo aluminum custom1 machine=cosine infile=anelex24_2.dat a.m
+
+deposit machine=cosine time=10.0 minutes
+
+structure outfile=anelex24_2.str
+
+init infile=anelex24_0.str
+#
+rate.depo aluminum unidirect machine=test angle1=0.0 dep.rate=100 a.m
+
+deposit machine=test time=10.0 minutes
+
+structure outfile=anelex24_3.str
+
+tonyplot anelex24_*.str
+
+quit
+

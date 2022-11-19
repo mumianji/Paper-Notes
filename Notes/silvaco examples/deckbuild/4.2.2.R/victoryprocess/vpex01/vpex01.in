@@ -1,0 +1,123 @@
+go victoryprocess simflags="-P all"
+
+# Tutorial example: 28 nm MOS test structure with shallow trench isolation
+
+# Define simulation domain, wafer material and properties, and simulation mesh resolution
+#  1. line : Phsyical properties of the wafer - silicon with phosphorus doping
+#  2. line : Simulation domain  is specified as 2D with intial substrate thickness of 1 micron 
+#  3. line : Numerical parameters : process mode resolution 
+#
+# Use symmetry of MOS device - simulation domain corresponds 
+# to the right half of the MOS structure
+#
+# Simulation mode (FLOW.DIM parameter) is not specified, so simulation starts 
+# automatically in 1D mode 
+Init material="silicon" sub.rot=45 c.phos=1e14 \
+     from=0 to=0.7  depth=1 gasheight=0.5 \
+     resolution="0.01,0.01" 
+     
+# set the Volume Data Mesh
+
+# X-planes
+Line X loc=0.0    spac=0.015
+Line X loc=0.14   spac=0.005
+Line X loc=0.35    spac=0.03
+Line X loc=0.55    spac=0.01
+Line X loc=0.7   spac=0.04
+
+# Z-planes
+# Athena compatibility NOTE:
+# Unlike Athena the depth coordinate is Z
+Line Z loc=-0.3   spac=0.04
+Line Z loc= 0     spac=0.003     
+Line Z loc=0.3    spac=0.02
+Line Z loc=1      spac=0.1
+
+# Deposit initial oxide layer
+Deposit MAX material=oxide thickness=0.01 
+
+# N-Well implant and drive
+Implant boron dose=1e13 energy=100
+Diffuse time=30 temp=900 t.final=1100
+Diffuse time=60 temp=1100
+Diffuse time=30 temp=1100 t.final=900
+
+# Up to this point simulation has been in 1D mode
+Export structure=vpex01_well.str 
+# Tonyplot shows 1D well profile
+tonyplot vpex01_well.str 
+
+# slightly slopped (85 degrees wall) trench is etched etch and oxidized
+Etch DRY right.to=0.55 thick=0.31 angle=85
+Deposit CONFORMAL material=nitride thick=0.1 left.to=0.55
+Diffuse dryo2 temperature=900 time=50  
+Strip material=nitride
+
+# Fill in trench / CMP
+# Athena compatibility NOTE:  
+# Parameter "max" allows to fill the trench up to its rim
+Deposit material=oxide max thick=0.0
+Export structure=vpex01_cmp.str
+tonyplot vpex01_cmp.str -set vpex01_cmp.set
+
+# sacrificial/scattering oxide
+Deposit CONFORMAL material=oxide thickness=0.01
+
+# VT implant 
+Implant   energy = 15.0  boron dose = 6e+12 tilt = 7.0 monte n.ion=300000 
+
+# Remove initial and sacrificial oxide layers  
+Etch WET material=oxide thick=0.022
+# gate oxide
+Diffuse wet temperature=750  time = 12
+
+# Extract a gate oxide thickness 
+Export structure=vpex01_gateox.str 
+extract init infile="vpex01_gateox.str"
+extract name="gateox" thickness oxide mat.occno=1 x.val=0.05
+
+# Polygate definiton
+Deposit CONFORMAL material=polysilicon left.to=0.14 thick=0.1 c.phos=1e20 
+
+# Poly reoxidation
+Diffuse dryO2 temperature = 800 time=20 
+
+#Halo implant using Monte Carlo
+Implant  energy = 15.0  boron dose = 5.0e+12 tilt = 25  \
+         monte n.ion=500000 rotation=0 rotation=180 
+
+#extension implant
+Implant  energy = 5.0  arsenic dose = 1.0e+15 tilt = 0 rotation = 0 \ 
+         plus.one dam.fac=0.01 monte n.ion=1000000         
+# Spacer formation
+Deposit CONFORMAL material=nitride thickness=0.05
+Etch DRY material=nitride thickness=0.051
+Export structure=vpex01_spacer.str
+tonyplot vpex01_spacer.str -set vpex01_spacer.set
+
+# N-S/D implantation
+Implant energy = 20.0  arsenic dose = 3e+15 tilt = 0 rotation=0   \
+        plus.one dam.fac=0.01 bca n.ion=2000000 
+# S/D RTA anneal 
+Method material=silicon model=single_pair
+Diffuse temp=1000 time=20 sec 
+Save     name=vpex01_sdanneal
+Export   structure=vpex01_single_pair.str
+
+# extract several structure and device parameters
+extract init infile="vpex01_single_pair.str"
+extract name="nxj" xj silicon mat.occno=1 x.val=0.45 junc.occno=1
+extract name="n1dvt" 1dvt ntype vb=0.0 qss=1e10 x.val=0.01
+
+# Electrode contacts
+Etch DRY material=oxide thick=0.05 between="0.24,0.52"
+Deposit CONFORMAL material=aluminum thick=0.03 between="0.23,0.53"
+
+# Final process simulation result
+Export structure=vpex01_half.str
+
+# Mirror structure to left to obtain full device
+Export structure=vpex01_final.str mirror.device="-x"
+tonyplot vpex01_final.str -set vpex01_final.set
+
+quit

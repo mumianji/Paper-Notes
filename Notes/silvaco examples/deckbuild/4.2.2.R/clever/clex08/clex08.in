@@ -1,0 +1,72 @@
+go clever
+
+## Process Description ##
+
+Init Layout="clex08.lay" Depth=1 Map="clex08.lmp" 
+
+Save Spice="clex08.before.net" Layout="clex08_1.lay"
+
+Deposit Oxide Thickness=0.25 Max
+
+Deposit Poly Thickness=0.3 Max
+
+Mask "POLY"
+
+Etch Poly Thickness=0.3 Max
+
+Strip Resist
+
+Electrodes "POLY" poly
+
+Electrodes "*GATE" poly
+
+Deposit Oxide Thickness=0.25 Max
+
+Mask "VIA2" Reverse
+
+Etch Oxide Thickness=0.9 Max
+
+Strip Resist
+
+Electrodes "*CONT" Silicon
+
+Deposit Aluminum Thickness=0.25 Max
+
+Mask "MET1" 
+
+Etch Aluminum Thickness=0.25 Max
+
+Strip Resist
+
+Electrodes "MET1" Aluminum
+
+Deposit Oxide Thickness=0.25 Max
+
+Mask "VIA3" Reverse
+
+Etch Oxide Thickness=0.3 Max
+
+Strip Resist
+
+Deposit Aluminum Thickness=0.5 Max
+
+Mask "MET2" 
+
+Etch Aluminum Thickness=0.6 Max
+
+Strip Resist
+
+Electrodes "MET2" Aluminum
+
+Deposit Oxide Thickness=0.25 Max
+
+Save Structure="clex08.str"
+
+## After creating the 3D structure   ##
+## Perform the Interconnect Analysis ##
+
+Interconnect Adapt=(0.04,0.02)
+
+Save Spice="clex08.net"
+
+quit

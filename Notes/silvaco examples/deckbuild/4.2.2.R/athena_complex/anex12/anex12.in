@@ -1,0 +1,71 @@
+# Note:  This example works only on UNIX/LINUX computers.
+go athena cutline=anex12.sec
+
+# 
+init c.arsenic=2.0e16 orientation=100  space.mul=1
+
+implant   boron  energy=18 dose=2.5e13
+
+diffuse time=60 temp=920
+
+# deposit polysilicon
+deposit poly thick=0.3 divisions=6 min.space=0.05 
+
+# Implant to dope polysilicon
+implant arsenic dose=7.5e15 energy=50
+
+# Pattern the poly and name the electrode...
+mask name="POLY"
+etch poly dry thick=0.4
+strip
+autoelectrode
+
+method compress fermi
+diffuse time=25   temp=920 dryo2 
+diffuse time=50   temp=900 nitrogen
+
+implant boron dose=2.5e13 energy=18
+
+# deposit spacer
+deposit oxide thick=0.4 divisions=10  min.space=0.1
+
+# etch the spacer back
+etch oxide dry thick=0.5 
+
+implant boron dose=1e15 energy=30
+
+diffuse time=60 temp=900   nitrogen
+
+# put down Al and etch to form contacts
+deposit alum thick=0.05 div=2 
+
+mask name="FMD"
+etch alumin dry thick=0.2
+strip
+# Autoname any bare electrodes...and the backside contact....
+autoelectrode
+electrode backside name="collector"
+
+#  Save the final structure
+struct outfile=anex12_0.str
+
+
+# Completely remesh the structure without obtuse triangles in the semiconductor
+# Use the Sensitivity & Minspacing parameters to adjust the mesh density....
+# ... the smaller the Sensitivity, the denser the mesh...
+go devedit
+BaseMesh Height=0.15 Width=0.15
+BoundaryConditioning NoApply MaxRatio=200
+ImpRefine MinSpacing=0.025
+ImpRefine Type="net doping" Sensitivity=0.1
+ConstrainMesh type=insulator maxangle=175
+ConstrainMesh type=metal maxangle=180
+mesh
+
+structure outf=anex12_1.str
+
+
+tonyplot anex12_1.str
+
+
+quit

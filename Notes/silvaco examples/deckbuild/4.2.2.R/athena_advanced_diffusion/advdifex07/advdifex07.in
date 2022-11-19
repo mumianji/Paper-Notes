@@ -1,0 +1,45 @@
+
+go athena
+
+line  x loc=0         spacing=0.2
+line  x loc=0.4       spacing=0.2
+line  y loc=0.0   spacing=0.0004
+line  y loc=0.05   spacing=0.0012
+line  y loc=1.0   spacing=0.3
+
+init silicon c.arsenic=1.0e12 orientation=100
+
+method pls ic ddc ss
+ 
+moment silicon i.arsenic dose=0.3e15 energy=2 range=0.0015 std.dev=0.0006 gamma=0.01 kurtosis=3.45 dratio=0.99
+
+implant arsenic dose=0.3e15 energy=2 rotation=0 crystal unit.damage dam.factor=2.1 print.mom 
+
+moment silicon i.arsenic dose=1.75e15 energy=2 range=0.0019 std.dev=0.003 gamma=0.027 kurtosis=3.9 dratio=0.99
+
+implant arsenic dose=1.75e15 energy=2 rotation=0 crystal unit.damage dam.factor=2.1 print.mom 
+
+moment silicon i.arsenic dose=1e13 energy=2 range=0.009 std.dev=0.002 gamma=0.05 kurtosis=3.1 dratio=0.99
+
+implant arsenic dose=1e13 energy=2 rotation=0 crystal unit.damage dam.factor=2.1 print.mom 
+
+
+moment silicon i.arsenic dose=2e12 energy=2 range=0.014 std.dev=0.002 gamma=0.2 kurtosis=3.9 dratio=0.99
+
+implant arsenic dose=2e12 energy=2 rotation=0 crystal unit.damage dam.factor=2.1 print.mom 
+
+moment silicon i.arsenic dose=8e11 energy=2 range=0.019 std.dev=0.0035 gamma=0.1 kurtosis=3.5 dratio=0.99
+
+implant arsenic dose=8e11 energy=2 rotation=0 crystal unit.damage dam.factor=2.1 print.mom 
+
+struct outfile=advdifex07_ini.str
+
+diffuse time=1 sec temp=850 t.stop=950
+
+diffuse time=1 sec temp=950 t.stop=850
+
+struct outfile=advdifex07_end.str
+
+tonyplot -overlay advdifex07_ini_exp.str advdifex07_ini.str advdifex07_end_exp.str advdifex07_end.str -set advdifex07.set
+
+quit

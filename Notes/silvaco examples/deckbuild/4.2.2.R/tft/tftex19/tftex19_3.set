@@ -1,0 +1,88 @@
+# TPCS version: 8
+# various properties
+log label 0
+key opaque 0
+mark frequency 0
+mark overlay 0
+graph width 0 2
+graph width 1 1
+graph width 2 1
+graph width 3 1
+graph width 4 1
+graph width 5 1
+sequence size 1
+sequence width 0
+log zero 0
+sequence mark 0 0
+sequence mark 1 1
+sequence mark 2 2
+sequence mark 3 3
+sequence mark 4 4
+sequence mark 5 5
+# Functions
+function 1 "" ""
+function 2 "" ""
+function 3 "" ""
+function 4 "" ""
+select 1
+# xygraph flags
+show points on
+show lines on
+# xygraph types
+xygraph type 0 convert 0
+xygraph yaxis scale log
+# xygraph x-axis
+xygraph xaxis "gate bias" linear
+# xygraph y-axes
+xygraph yaxis none
+xygraph yaxis "drain current" log
+# xygraph group
+xygraph group "(unknown electricals)"
+# xygraph cie
+xygraph cie off
+# coordinate shift info
+# key positions
+key contours 1 at 3
+key contours 2 at 1
+key contours 3 at 6
+key electrical at 6
+key vectors at 6
+key overlay at user 0.639752, 0.502024
+key regions at 4
+key apply 
+# annotation, titles
+title main "tftex19: PBTS with hydrogen"
+title sub "IdVg@Vds=0.1V (low hydrogen)"
+# annotation, footers
+footer right none
+footer left none
+# annotation, show
+show xaxis on
+show yaxis on
+show grid off
+show label xaxis on
+show label yaxis on
+# annotation, axes
+range xaxis auto
+range yaxis -15, -4 increment 2,4,0
+label xaxis "gate bias ()"
+label yaxis "drain current ()"
+# zoom
+zoom from 0, 0 scale 1, 1
+# user labels
+label "t=0s" from 1.15247, -9.60469 color 0 scale 0 to 2.97459, -9.08931
+label 0 at 5 5
+label "t=10000s" from 8.384, -9.52416 color 0 scale 0 to 6.87506, -9.12152
+label 1 at 2 2
+# overlay level names
+label overlay 0 "tftex19_100s_low.dat"
+label overlay 1 "tftex19_500s_low.dat"
+label overlay 2 "tftex19_1000s_low.dat"
+label overlay 3 "tftex19_2000s_low.dat"
+label overlay 4 "tftex19_3000s_low.dat"
+label overlay 5 "tftex19_4000s_low.dat"
+label overlay 6 "tftex19_5000s_low.dat"
+label overlay 7 "tftex19_6000s_low.dat"
+label overlay 8 "tftex19_7000s_low.dat"
+label overlay 9 "tftex19_8000s_low.dat"
+label overlay 10 "tftex19_9000s_low.dat"

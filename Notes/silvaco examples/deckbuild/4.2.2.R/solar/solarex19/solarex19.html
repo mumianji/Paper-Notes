@@ -1,0 +1,79 @@
+<html>
+  <head>
+    <title>Characterization and Generalization</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Characterization and Generalization</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Blaze/Luminous</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="solarex19_plot0.png" width="640" alt="solarex19_plot0" />
+      <p/>
+      <img src="solarex19_plot1.png" width="640" alt="solarex19_plot1" />
+      <p/>
+      <img src="solarex19_plot2.png" width="640" alt="solarex19_plot2" />
+      <p/>
+      <img src="solarex19_plot3.png" width="640" alt="solarex19_plot3" />
+      <p/>
+      <img src="solarex19_plot4.png" width="640" alt="solarex19_plot4" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates the characterization of the photogeneration
+rate due to a surface texturing in detail on small scale.  Subsequently
+that characterization is generalized to a large area structure
+using the
+<b> DATASET</b> statement.
+</p>
+<p>
+In the first part of the deck we simulate 11x11 light rays intersecting
+a random pyramidal surface textured small scale device.  Using the
+<b> CHARACTERIZE </b> statement we can extract the predicted photogeneration rate versus
+depth for any depth.
+</p>
+<p>
+In this case we characterize the device down to 400 microns.
+</p>
+<p>
+In the second part of this example we generalize the characterized
+data to a large area 2D device.  This is done with two beams one
+to represent the forward pass of light the second the reflection
+off the back of the device at 200 microns.
+</p>
+<p>
+In the last part of the deck we do the same thing in 3D.
+</p>
+<p>
+Using this approach we can look at large scale issues such as
+metalization while keeping the important effects of the textured
+surface without excessive compute resources.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

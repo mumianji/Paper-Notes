@@ -1,0 +1,106 @@
+# (c) Silvaco Inc., 2018
+go atlas
+
+set Xwidth=1
+set PDoping=7e15
+set CellThickness=1
+set CellSpace=$CellThickness/10
+set thick=23.5
+set OxTh=$thick/1e04
+
+
+mesh width=1e8 
+
+x.m  loc=-$Xwidth spa=$Xwidth
+x.m  loc=$Xwidth spa=$Xwidth
+
+y.m loc=-$OxTh spa=0.0001 
+y.m loc=0 spa=0.0001
+y.m loc=0.001 spa=0.0001
+y.m loc=0.02 spa=0.0002
+y.m loc=1.00 spa=0.005
+
+region num=1 oxide y.min=-$OxTh y.max=0 thick=$OxTh
+region num=2 Silicon thick=$CellThickness y.min=0 y.max=$CellThickness
+
+electrode name=cathode material=aluminum top
+electrode name=anode material=aluminum bottom
+
+doping region=2 uniform p.type conc=$PDoping
+
+material material=aluminum imag.index=0 real.index=1
+
+material silicon  taun0=1e-6 taup0=1e-6 mh.tunnel=0.16
+material oxide mc=0.42 mv=0.16
+
+models print conmob fldmob consrh qtnlsc.ho qtnlsc.el qtnl.derivs
+
+contact name=cathode workfun=4.1 
+output con.band val.band qtunn.el qtunn.ho band.param qfp qfn opt.intens
+
+method newton clim.dd=1e8
+
+
+solve 
+save outfile=solarex15_0.str
+
+log outfile=solarex15_rev.log j.hole j.electron j.tun no.trap
+solve vanode=-1e-6
+solve vanode=-1e-5
+solve vanode=-1e-4
+
+solve vstep=-0.001 vfinal=-0.01 name=anode
+solve vstep=-0.01 vfinal=-0.4 name=anode
+solve vstep=-0.05 vfinal=-1 name=anode
+log off
+
+solve init 
+
+log outfile=solarex15_fwd.log j.hole j.electron j.tun no.trap
+solve vstep=0.01 vfinal=1.4 name=anode 
+
+log off
+
+beam num=1 am1.5 x.o=0 y.o=-1.5 angle=90 \
+	wavel.start=0.200 wavel.end=2.5 wavel.num=200 verbose
+
+solve init
+solve previous
+solve b1=2e-6
+solve b1=1e-5
+solve b1=1e-4
+solve b1=1e-3
+solve b1=1e-2
+solve b1=0.1
+solve b1=1.0
+
+
+log outfile=solarex15_rev_light.log j.hole j.electron j.tun no.trap
+solve vanode=-1e-6
+solve vanode=-1e-5
+solve vanode=-1e-4
+
+solve vstep=-0.001 vfinal=-0.01 name=anode
+solve vstep=-0.01 vfinal=-0.4 name=anode
+solve vstep=-0.05 vfinal=-1 name=anode
+log off
+
+
+solve init 
+solve b1=2e-6
+solve b1=1e-5
+solve b1=1e-4
+solve b1=1e-3
+solve b1=1e-2
+solve b1=0.1
+
+
+log outfile=solarex15_fwd_light.log j.hole j.electron j.tun no.trap
+solve b1=1.0
+solve vstep=0.01 vfinal=1 name=anode 
+solve vstep=0.005 vfinal=1.4 name=anode
+log off
+
+
+tonyplot -overlay solarex15_rev.log solarex15_fwd.log solarex15_rev_light.log solarex15_fwd_light.log -set solarex15_0.set
+tonyplot -overlay solarex15_fwd.log solarex15_fwd_light.log -set solarex15_1.set

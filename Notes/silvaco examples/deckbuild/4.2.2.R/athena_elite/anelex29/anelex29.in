@@ -1,0 +1,113 @@
+go athena
+
+# $Id: anelex29.in,v 1.2 2014/11/24 08:15:22 thomasb Exp $
+#
+# Example demonstrating the plasma etching module of Athena.
+# This example plasma etches a simple trench structure which
+# is then implanted with boron followed by a short anneal.
+
+
+# 
+# Define the simulation domain with mesh spacing
+# First in the x direction (along the surface)
+Line X Location=0.0 Spacing=0.20 
+Line X Location=0.5 Spacing=0.05
+Line X Location=1.0 Spacing=0.05
+Line X Location=1.5 Spacing=0.05
+Line X Location=2.0 Spacing=0.05
+Line X Location=2.5 Spacing=0.05
+Line X Location=3.0 Spacing=0.20 
+#
+# And now the y direction (depth)
+Line Y Location=0.0 Spacing=0.02
+Line Y Location=2.5 Spacing=0.1 
+
+#
+# Initialize the substrate
+Initialize C.Boron=1e16
+
+#
+# Deposit a layer of photo-resist
+Deposition Material=SPR500 Thickness=0.5 Divisions=12
+
+#
+# Mimic resist exposure and develop via geometrical etching
+Etch Material=SPR500 Start X=1.1 Y=-10
+Etch                 Cont  X=1.1 Y= 10
+Etch                 Cont  X=1.9 Y= 10
+Etch                 Done  X=1.9 Y=-10
+
+#
+# Define the parameter of the plasma etcher
+# See the Athena manual for parameter details
+Rate.Etch Machine=PEMach \
+     Plasma \
+     Pressure = 300 \
+     Tgas = 300.0 \
+     Tion = 3000.0 \
+     Vpdc = 32.5 \
+     Vpac = 32.5 \
+     Lshdc = 0.005 \
+     Lshac = 0.0 \
+     Freq = 13.56 \
+     Nparticles = 4000 \
+     Mgas = 40.0 \
+     Mion = 40.0 \
+     Constant \
+     Energy.Div = 50 \
+     Qio = 1.7e-19 \
+     Qcht = 2.1e-19
+
+#
+# Define the plasma etch parameters for silicon
+Rate.Etch Machine=PEMach \
+     Plasma \
+     Material=Silicon \
+     k.i = 1.1
+
+#
+# Define the plasma etch parameters for the photo-resist
+Rate.Etch MAchine=PEMach \
+     Plasma \
+     Material=SPR500 \
+     k.i = 0.1
+
+#
+# Etch the trench using the plasma etcher PEMach
+Etch Machine=PEMach Time=3.0 minutes Dx.Mult=0.5
+
+#
+# Save the trench structure
+Structure Outfile=anelex29_0.str
+
+#
+# And plot it
+tonyplot anelex29_0.str
+
+# 
+# Implant Boron into the trench
+Implant Boron Dose=1.0e14 Energy=55 Tilt=45
+
+#
+# Save the implanted trench structure
+Structure Outfile=anelex29_1.str
+
+#
+# Remove the remaining photo-resist
+Etch Material=SPR500 All
+
+#
+# Grow a thin oxide
+Diffuse Temperature=900 Time=10 WetO2
+
+#
+# Save the oxidize structure
+Structure Outfile=anelex29_2.str
+
+#
+# Plot the plasma etched structure
+tonyplot  anelex29_2.str
+
+#
+# Finished, exit Athena
+Quit

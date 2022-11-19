@@ -1,0 +1,29 @@
+go athena
+
+# Retrograde Well Formation Using High Energy Phosphorus Implants
+
+#the x dimension definition
+line x loc = 0.0   spacing=0.25
+line x loc = 0.25  spacing=0.25
+
+#the vertical definition
+line y loc = 0     spacing = 0.02 
+line y loc = 5  spacing = 0.05
+
+
+#initialize the mesh
+init silicon c.boron=1e15
+deposit oxide thick=0.01 div=1
+
+#perform hogh energy phosphorus implants
+
+implant phos dose=5e13 energy=2000 print.mom
+implant phos dose=5e12 energy=750 print.mom
+
+# subsequent anneal
+diffuse time=60 temp=1100
+
+struct outf=aniiex06_0.str
+
+tonyplot aniiex06_0.str -set aniiex06.set
+quit

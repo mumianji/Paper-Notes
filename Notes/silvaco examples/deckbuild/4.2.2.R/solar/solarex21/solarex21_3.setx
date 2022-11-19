@@ -1,0 +1,67 @@
+<!DOCTYPE SetFile-3D>
+<setfile version="1" >
+ <model_matrix m00="1" m01="0" m02="0" m03="-0.616657" m10="0" m11="1" m12="0" m13="-0.616657" m20="0" m21="0" m22="1" m23="2.27288" m30="0" m31="0" m32="0" m33="1" />
+ <view_matrix m00="-0.572113" m01="-0.779768" m02="0.254271" m03="-0.768775" m10="-0.20998" m11="0.438941" m12="0.873639" m13="-0.722612" m20="-0.792845" m21="0.446425" m22="-0.414858" m23="-21.673" m30="0" m31="0" m32="0" m33="1" />
+ <projection type="perspective" fovy="25" zoom_factor="0.6561" />
+ <lights>
+  <light index="0" on="true" color="#ffffff" intensity="0.53" latitude="30" longitude="0" />
+  <light index="1" on="true" color="#ffffff" intensity="0.53" latitude="0" longitude="270" />
+ </lights>
+ <axes>
+  <x_axis hidden="false" color="#ff0000" label_color="#000000" label_hidden="false" division_labels_hidden="false" minimum="-0.651601" maximum="1.6516" division="0.4" number_of_ticks="4" />
+  <y_axis hidden="false" color="#00ff00" label_color="#000000" label_hidden="false" division_labels_hidden="false" minimum="-0.651601" maximum="1.6516" division="0.4" number_of_ticks="4" />
+  <z_axis hidden="false" color="#0000ff" label_color="#000000" label_hidden="false" division_labels_hidden="false" minimum="-0.515621" maximum="5.1516" division="1" number_of_ticks="4" />
+ </axes>
+ <region_legend hidden="false" foreground_color="#000000" background_color="#ffffff" constraint="constrained" legend_position="bottom_right" horizontal_offset="10" vertical_offset="10" />
+ <contour_legend hidden="false" foreground_color="#000000" background_color="#ffffff" constraint="constrained" legend_position="bottom_left" horizontal_offset="10" vertical_offset="10" />
+ <vector_legend hidden="false" foreground_color="#000000" background_color="#ffffff" constraint="constrained" legend_position="top_right" horizontal_offset="10" vertical_offset="10" />
+ <title hidden="false" color="#000000" constraint="constrained" horizontal_alignment="center" vertical_alignment="top" horizontal_offset="10" vertical_offset="10" />
+ <display region_color_type="material" default_draw_mode="solid" >
+  <flags regions="true" contours="false" rays="true" isosurfaces="false" vectors="false" cutplanes="false" />
+ </display>
+ <contours quantity="Abs Net Doping" >
+  <limits choose_from="all_materials" >
+   <minimum value="0" use_default="true" />
+   <maximum value="0" use_default="true" />
+  </limits>
+  <legend type="continuous" palette="rainbow" number_of_colors="30" mapping="auto" />
+ </contours>
+ <structure draw_mode="solid" >
+  <contacts>
+   <contact name="Aluminum" draw_mode="default" contoured="true" >
+    <electrodes>
+     <electrode name="anode" hidden="false" transparent="false" draw_mode="default" >
+      <label text="anode" color="#000000" hidden="false" />
+     </electrode>
+     <electrode name="cathode" hidden="false" transparent="false" draw_mode="default" >
+      <label text="cathode" color="#000000" hidden="false" />
+     </electrode>
+    </electrodes>
+   </contact>
+  </contacts>
+  <materials>
+   <material name="SiO2" draw_mode="default" contoured="true" >
+    <regions>
+     <region name="Region #2" hidden="false" transparent="false" draw_mode="default" >
+      <label text="Region #2" color="#000000" hidden="true" />
+     </region>
+    </regions>
+   </material>
+   <material name="Silicon" draw_mode="edges" contoured="true" >
+    <regions>
+     <region name="Region #3" hidden="false" transparent="false" draw_mode="edges" >
+      <label text="Region #3" color="#000000" hidden="true" />
+     </region>
+    </regions>
+   </material>
+  </materials>
+  <cutplanes>
+   <cutplane reverse_x="false" reverse_y="false" swap_xy="false" project_vector_quantities="true" x_axis_hidden="false" y_axis_hidden="false" hidden="true" >
+    <xz_plane position="0.5" />
+   </cutplane>
+  </cutplanes>
+  <rays>
+   <ray name="Ray Trace #1" hidden="false" color="#610061" ray_draw_mode="line" line_width="1" />
+  </rays>
+ </structure>
+</setfile>

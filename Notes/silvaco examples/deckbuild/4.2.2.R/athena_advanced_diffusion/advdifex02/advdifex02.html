@@ -1,0 +1,80 @@
+<html>
+  <head>
+    <title>Cowern's Experiment Simulation Using PLS Model</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Cowern's Experiment Simulation Using PLS Model</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>SSuprem 4 with DIFSIM Module</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="advdifex02_plot0.png" width="640" alt="advdifex02_plot0" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example shows the ability of the advanced diffusion model to handle
+<b> Interstitial Cluster (IC) </b> kinetics.
+</p>
+<p>
+In order to validate the IC model, we simulate the experimental data obtained by
+<b> Cowern et al</b> .
+This experiment consists of observing the diffusivity of two boron marker layers after a silicon implantation at 40 keV to a dose of
+2E13 atoms/cm^2. From these observations, Cowern has estimated the diffusion enhancement
+and the evolution of Interstitial supersaturation with time.
+From the experimental  point of view, this quantity can be related to the
+<b> boron diffusion enhancement </b> with respect to its thermal equilibrium diffusion.
+</p>
+<p>
+The surpersaturation evolution curve exhibits three parts:
+</p>
+<b> 1. </b> <p>
+The first step characterized by a high supersaturation value (first run of the simulation) corresponds
+to a large acceleration of the dopant diffusion and can be explained by the presence of
+<b> small clusters</b> .
+</p>
+<b> 2. </b> <p>
+The second step, exhibits a plateau slightly decreasing with time. It is explained by the competitive growth between {311}
+defects, known as the
+<b> Ostwald ripening </b> phenomena. Diffusion acceleration remains constant during this plateau.
+</p>
+<b> 3. </b> <p>
+The third step, characterized by the supersaturation collapse, is explained by the
+<b> entire dissolution </b> of the Interstitial Cluster population due to the recombination at the surface.
+</p>
+<p>
+In order to represent two boron markers obtained by epitaxy in Cowern&apos;s experiment, two implants with calibrated moments are used in the example. The initial interstitial profile generated
+by the silicon implant in the experiment is implemented into simulation by the PROFILE statement with the advdifex02.dat file.
+</p>
+<p>
+To activate the new advanced diffusion model, specify
+<b> PLS IC </b> in the
+<b> METHOD </b> statement before the diffusion step, to take into account both Classical Dopant Diffusion (CDD) and IC models.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

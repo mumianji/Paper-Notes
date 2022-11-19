@@ -1,0 +1,306 @@
+go victoryprocess  
+
+##### *
+# Buffered Superjunction LDMOS
+##### *
+
+##### *
+# Initialize the simulation structure
+##### *
+
+# -- Start with a silicon substrate (MATERIAL="silicon") with a boron doping of 1e15 /cm^3 (DOPANT=BORON DOPINGVALUE=1e15). 
+# -- The horizontal simulation domain is determined from the mask file "vpex03.lay" that is loaded into the internal mask set of VP with the LAYOUT parameter. 
+# -- The silicon substrate is 10um thick (DEPTH=10) and the height of the gas region within the simulation domain above the wafer is set to 5um (GASHEIGHT=5).
+# -- To start the simulation in cell mode, do not specify mesh resolution, i.e., the RESOLUTION parameter.
+
+init material="silicon" dopant=boron dopingvalue=1e15 layout="vpex03.lay" depth=10 gasheight=5 
+
+
+##### *
+# Specify volume data mesh manually.
+##### *
+
+
+# -- Define positions and spacings of mesh lines in x direction.
+
+line x loc=0     spac=0.5
+line x loc=1     spac=0.5
+line x loc=2     spac=0.5
+line x loc=3     spac=0.2
+line x loc=3.4   spac=0.2
+line x loc=4.4   spac=0.5
+line x loc=5.4   spac=0.5
+line x loc=6     spac=0.2
+line x loc=6.4   spac=0.2
+line x loc=7.4   spac=0.5
+line x loc=8.4   spac=0.5
+line x loc=9.4   spac=0.2
+line x loc=9.8   spac=0.2
+line x loc=14.8  spac=0.5
+line x loc=15.8  spac=0.5
+line x loc=16.8  spac=0.5
+line x loc=17.8  spac=0.5
+
+
+# -- Define positions and spacings of mesh lines in y direction.
+
+line y loc=0     spac=0.25
+line y loc=0.5   spac=0.25
+line y loc=1.5   spac=0.25
+line y loc=2.5   spac=0.25
+line y loc=3.5   spac=0.25
+line y loc=4     spac=0.25
+
+
+# -- Define positions and spacings of mesh lines in z direction.
+
+line z loc=-0.22 spac=0.05
+line z loc=-0.02 spac=0.01
+line z loc=0     spac=0.01
+line z loc=10    spac=1
+
+##### *
+# Form a p-base region
+##### *
+
+# -- Deposit oxide of 0.02um in thickness with reference to the highest point (MAX) of the current structure.
+
+deposit oxide thick=0.02 max
+
+
+# -- Fill the current structure with photoresist up to the highest point, deposit an additional layer of photoresist with a default thickness of 0.3um on top of it, and pattern the photoresist to match the 'inverted' (REVERSE) mask layer named "PBASE".
+ 
+mask "PBASE" reverse
+
+
+# -- Implant boron with a dose of 7e12 /cm^2 at an energy of 80 keV, a tilt angle of 7 degrees and a rotation angle of 27 degrees. 
+
+implant boron energy=80 dose=7e12 tilt=7 rotation=27
+
+
+# -- Remove the photoresist.
+
+strip resist
+
+
+##### *
+# Form an n-buffer region
+##### *
+
+# -- Fill the current structure with photoresist up to the highest point, deposit an additional layer of photoresist with a default thickness of 0.3um on top of it, and pattern the photoresist to match the 'inverted' (REVERSE) mask layer named "NBUFF".
+ 
+mask "NBUFF" reverse
+
+
+# -- Implant phosphorus with a dose of 7e12 /cm^2 at an energy of 80 keV, a tilt angle of 7 degrees and a rotation angle of 27 degrees.
+
+implant phosphorus energy=80 dose=7e12 tilt=7 rotation=27
+
+
+# -- Remove the photoresist.
+
+strip resist
+
+##### *
+# Diffuse all impurities at 1100 degree celsius for 300 minutes.
+##### *
+
+diffuse temp=1100 time=300
+
+##### *
+# Form an n-pillar region
+##### *
+
+# -- Fill the current structure with photoresist up to the highest point, deposit an additional layer of photoresist with a default thickness of 0.3um on top of it, and pattern the photoresist to match the 'inverted' (REVERSE) mask layer named "NILLAR".
+ 
+mask "NILLAR" reverse
+
+
+# -- Implant phosphorus with a dose of 7e12 /cm^2 at an energy of 40 keV, a tilt angle of 7 degrees and a rotation angle of 27 degrees.
+
+implant phosphorus energy=40 dose=7e12 tilt=7 rotation=27
+
+
+# -- Remove the photoresist.
+
+strip resist
+
+##### *
+# Form a poly gate
+##### *
+
+# -- Deposit polysilicon of 0.4um in thickness with reference to the highest point (MAX) of the current structure.
+
+deposit polysilicon thick=0.4 max
+
+
+# -- Etch polysilicon to a depth of 0.4um with respect to the highest point (MAX) of the exposed polysilicon region that lies within the area defined by the mask layer named "POLY".
+
+etch polysilicon thick=0.4 mask="POLY" max
+
+
+##### *
+# Form a p-pillar region
+##### *
+
+# -- Fill the current structure with photoresist up to the highest point, deposit an additional layer of photoresist with a default thickness of 0.3um on top of it, and pattern the photoresist to match the 'inverted' (REVERSE) mask layer named "PILLAR".
+
+mask "PILLAR" reverse
+
+
+# -- Implant boron with a dose of 1.4e13 /cm^2 at an energy of 20 keV, a tilt angle of 7 degrees and a rotation angle of 27 degrees.
+
+implant boron energy=20 dose=1.4e13 tilt=7 rotation=27
+
+
+# -- Remove the photoresist.
+
+strip resist
+
+
+##### *
+# Diffuse all impurities at 1100 degree celsius for 120 minutes.
+##### *
+
+diffuse temp=1100 time=120
+
+##### *
+# Perform S/D implantation
+##### *
+
+# -- Fill the current structure with photoresist up to the highest point, deposit an additional layer of photoresist with a default thickness of 0.3um on top of it, and pattern the photoresist to match the 'inverted' (REVERSE) mask layer named "NSD".
+
+mask "NSD" reverse
+
+
+# -- Implant phosphorus with a dose of 5e15 /cm^2 at an energy of 40 keV, a tilt angle of 7 degrees and a rotation angle of 27 degrees.
+
+implant phosphorus energy=40 dose=5e15 tilt=7 rotation=27
+
+
+# -- Remove the photoresist.
+
+strip resist
+
+##### *
+# Form a p+ region
+##### *
+
+# -- Fill the current structure with photoresist up to the highest point, deposit an additional layer of photoresist with a default thickness of 0.3um on top of it, and pattern the photoresist to match the 'inverted' (REVERSE) mask layer named "PPLUS".
+
+mask "PPLUS" reverse
+
+
+# -- Implant boron with a dose of 2e15 /cm^2 at an energy of 40 keV, a tilt angle of 7 degrees and a rotation angle of 27 degrees.
+
+implant boron energy=40 dose=2e15 tilt=7 rotation=27
+
+
+# -- Remove the photoresist.
+
+strip resist
+
+##### *
+# Diffuse all impurities at 1100 degree celsius for 3 minutes
+##### *
+
+diffuse temp=1100 time=3
+
+##### *
+# Form contact regions
+##### *
+
+# -- Etch oxide to a depth of 0.02um with respect to the highest point (MAX) of the exposed oxide region that lies outside the area defined by the mask layer named "CONT".
+
+etch oxide thick=0.02 mask="CONT" reverse max
+
+
+# -- Fill the current structure with photoresist up to the highest point, deposit an additional layer of photoresist with a default thickness of 0.3um on top of it, and pattern the photoresist to match the 'inverted' (REVERSE) mask layer named "CONT".
+
+mask "CONT" reverse
+
+
+# -- Fill the current structure with aluminum up to the highest point (MAX).
+
+deposit  aluminum thick=0.0 max
+
+
+# -- Remove the photoresist.
+
+strip resist
+
+
+##### *
+# Spefify electrodes
+##### *
+
+# -- Attach electrodes defined in the mask layer named "CONT" to the exposed polysilicon.
+ 
+electrodes "CONT" polysilicon
+
+
+# -- Attach electrodes defined in the mask layer named "CONT" to the exposed aluminum.
+
+electrodes "CONT" aluminum
+
+
+##### *
+# Export a prismatic mesh
+##### *
+
+export Atlas3d(regular) structure="vpex03_0.str"
+ 
+tonyplot3d vpex03_0.str -set vpex03_0.set
+
+
+#####*
+# Mirror the structure in negative x-direction and in positive y-direction
+#####*
+
+export atlas3d(regular) structure="vpex03_1.str" mirror="-x+y"
+
+tonyplot3d vpex03_1.str -set vpex03_1.set
+
+
+##### *
+# Export an unstructured tetrahedral mesh
+ ##### *
+ 
+# -- Set the maximum size of any mesh element to 1um (MAX.SIZE=1), the size of elements at the polysilicon layer to 0.1um (MAX.INTERFACE.SIZE=0.1) and the distance from the polysilicon layer at which the size of the elements linearly increases to the maximum size of 1um, as specified by the max.size parameter, to 2um (MAX.INTERFACE.DISTANCE=2).
+# --  Similarly, set the size of elements at the junction to 0.1um (MAX.JUNCTION.SIZE=0.1) and the distance from the junction at which the size of the elements linearly increases to the maximum size of 1um, as specified by the max.size parameter, to 1um (MAX.JUNCTION.DISTANCE=1).
+# -- Activate the doping variation refinement on acceptor (IMP="ACCEPTOR") when the maximal ratio of local change of its doping is 4 (DOPING.FACTOR=4) and set the smallest element size that can be generated by the doping refinement to 0.2 (MIN.DOPING.SIZE=0.25).
+
+export victory(delaunay) structure="vpex03_2.str" max.size=1 \
+       max.interface.size=0.1 max.interface.distance=2 \
+       max.junction.size=0.1 max.junction.distance=1 \
+       imp="acceptor" doping.factor=4 min.doping.size=0.25
+
+tonyplot3d vpex03_2.str -set vpex03_2.set
+
+
+
+#####*
+# Crop the structure with a specified mask layer named CRP
+#####*
+
+SpecifyMaskPoly maskname="CRP" p="0, 0" p="3, 0" p="3,2" p="0, 2"
+
+export victory(delaunay) structure="vpex03_3.str" max.size=1 \
+       max.interface.size=0.1 max.interface.distance=2 \
+       imp="acceptor" doping.factor=4 min.doping.size=0.25 \
+	crop.mask="CRP"
+
+tonyplot3d vpex03_3.str -set vpex03_0.set
+
+
+#####*
+# Export 2D cross sectional structure 
+#####*
+
+export 2D structure="vpex03_2d.str" y=2
+
+tonyplot vpex03_2d.str -set vpex03_3.set
+
+quit
+
+

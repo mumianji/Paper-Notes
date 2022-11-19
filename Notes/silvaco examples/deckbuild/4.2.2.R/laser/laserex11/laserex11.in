@@ -1,0 +1,118 @@
+# (c) Silvaco Inc., 2018
+go atlas 
+
+# Blue single-quantum well laser
+
+
+#-------------------------------------------------------------------
+# SECTION 1 : MESH GENERATION
+#-------------------------------------------------------------------
+#
+
+mesh width=300
+#
+x.mesh  loc=0.0 spac=0.5
+x.mesh  loc=1.0 spac=0.5
+#
+y.mesh  loc=0.0 spac=0.1
+y.mesh  loc=0.5 spac=0.001
+y.mesh loc=0.55 spac=0.005
+y.mesh  loc=0.600 spac=0.0002
+y.mesh  loc=0.640 spac=0.0002
+y.mesh  loc=0.645 spac=0.0002
+y.mesh  loc=0.800 spac=0.002
+y.mesh  loc=2.00   spac=0.1
+#
+#-------------------------------------------------------------
+# SECTION 2: REGIONS AND ELECTRODES
+#-------------------------------------------------------------
+region num=1 material=GaN y.max=0.5 
+region num=2 material=AlGaN y.min=0.5 y.max=0.640 x.comp=0.2 
+
+region num=4 material=InGaN y.min=0.640 y.max=0.645 x.comp=0.20   name=well qwell led   \
+       calc.strain polarization polar.scale=1.0 
+
+region num=5 material=AlGaN y.min=0.645 y.max=0.800 x.comp=0.05 
+region num=6 material=GaN y.min=0.800 substrate
+#
+electrode name=anode   top
+electrode name=cathode bottom
+#
+#-------------------------------------------------------------
+# SECTION 3: DOPING PROFILES
+#-------------------------------------------------------------
+# p type is Mg
+# n type is Si
+doping region=1 uniform p.type conc=1e18
+doping region=2 uniform p.type conc=1e18
+doping region=6 uniform n.type conc=1e18
+#
+#---------------------------------------------------------------
+# SECTION 4: MATERIAL MODELS
+#---------------------------------------------------------------
+#
+material material=GaN taun0=1e-9 taup0=1e-9 copt=1.1e-8 \
+         augn=1.0e-34 augp=1.0e-34
+material material=AlGaN taun0=1e-9 taup0=1e-9 copt=1.1e-8 \
+         augn=1.0e-34 augp=1.0e-34
+material material=InGaN taun0=1e-9 taup0=1e-9 copt=1.1e-8 \
+         augn=1.0e-34 augp=1.0e-34 
+#
+# Lorentz Broaden factor
+material well.gamma0=30e-3
+
+#Capture escape time
+material well.taup=1e-12 well.taun=1e-12
+#
+material edb=0.080 eab=0.101
+#
+
+material material=GaN  real.index=2.3 imag.index=0
+material material=AlGaN  real.index=2.7 imag.index=0
+material material=InGaN  real.index=2.8 imag.index=0
+
+
+models fermi incomplete srh auger optr 
+models k.p wz.three  
+models name=well  well.cnbs=1 well.vnbs=1  spontaneous 
+
+#
+mobility mun0=100 mup0=10 
+#
+#----------------------------------------------------------------
+# SECTION 5: OUTPUT FLAGS and METHOD
+#----------------------------------------------------------------
+#
+output con.band val.band band.param charge polar.charge e.mobility \
+       h.mobility u.srh u.radiative u.auger las.loss
+#
+method climit=1e-4 maxtrap=10   itlimit=30 
+#
+#----------------------------------------------------------------
+# SECTION 6: INITIAL SOLUTION
+#----------------------------------------------------------------
+#
+laser  s.helm  helm.geom=1dy ^helm.tm nmodes=5   prt.eval   \
+photon.energy=2.64 index.model=1 gainmod=5 itmax=10  rf=90 rr=100 fcarrier absorption 
+ 
+
+solve init 
+ 
+log outf=laserex11_IV.log
+
+solve prev
+solve vstep=0.1 vfinal=2 name=anode
+save outf=laserex11_v2.str spectrum=laserex11_v2.log
+
+solve vstep=0.05 vfinal=3 name=anode
+save outf=laserex11_v3.str spectrum=laserex11_v3.log
+
+tonyplot laserex11_v3.log -set laserex11_v3.set
+
+solve vstep=0.05 vfinal=6 name=anode
+save outf=laserex11_v6.str spectrum=laserex11_v6.log
+
+tonyplot laserex11_v6.str -set laserex11_v6.set
+tonyplot laserex11_IV.log -set laserex11_IV.set
+
+log off

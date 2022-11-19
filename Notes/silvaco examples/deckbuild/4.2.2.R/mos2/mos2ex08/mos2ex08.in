@@ -1,0 +1,125 @@
+# (c) Silvaco Inc., 2018
+go athena
+
+line x loc=0    spac=0.1
+line x loc=0.15 spac=0.05
+line x loc=0.2  spac=0.05
+line x loc=0.35 spac=0.01
+line x loc=0.5  spac=0.02 
+
+line y loc=0 spac=0.01
+line y loc=0.22 spac=0.01 
+line y loc=0.8 spac=0.1
+
+init orientation=100 c.phos=1e14
+
+moments STD_TABLES
+#
+#pwell formation including masking off of the nwell
+#
+diffus time=30 temp=1000 dryo2 press=1.00 hcl=3
+#
+etch oxide thick=0.02
+#
+#P-well Implant
+# 
+implant boron dose=8e12 energy=100 pears amorphous
+
+diffus temp=950 time=100 weto2 hcl=3
+#
+#N-well implant not shown -
+#
+# welldrive starts here
+diffus time=50 temp=1000 t.rate=4.000 dryo2 press=0.10 hcl=3
+#
+diffus time=220 temp=1200 nitro press=1
+#
+diffus time=90 temp=1200 t.rate=-4.444 nitro press=1
+#
+etch oxide all
+#
+#sacrificial "cleaning" oxide
+diffus time=20 temp=1000 dryo2 press=1 hcl=3
+#
+etch oxide all
+#
+#gate oxide grown here:-
+diffus time=11 temp=925 dryo2 press=1.00 hcl=3
+
+extract thickness name="gateox" oxide mat.occno=1
+
+#vt adjust implant 
+implant boron dose=9.5e11 energy=10 pearson amorphous
+#
+depo poly thick=0.2 divi=10 
+#
+#from now on the situation is 2-D
+#
+etch poly left p1.x=0.35
+#
+method fermi compress
+diffuse time=3 temp=900 weto2 press=1.0
+#
+implant phosphor dose=3.0e13 energy=20 pearson amorphous
+#
+depo oxide thick=0.120 divisions=8
+#
+etch oxide dry thick=0.120
+#
+implant arsenic dose=5.0e15 energy=50 pearson amorphous
+#
+method fermi compress
+diffuse time=1 temp=900 nitro press=1.0
+
+etch oxide left p1.x=0.2
+deposit alumin thick=0.03 divi=2
+etch alumin right p1.x=0.15
+structure mirror right
+
+electrode name=gate x=0.5 y=0.1
+electrode name=source x=0.1
+electrode name=drain x=0.9
+electrode name=substrate backside
+
+structure outfile=mos2ex08_0.str 
+
+tonyplot mos2ex08_0.str -set mos2ex08_0.set
+
+
+go atlas
+
+mesh infile=mos2ex08_0.str
+
+# Set workfunction for poly gate and interface charge
+contact name=gate n.polysilicon 
+interf  qf=3E10
+material  taurel.el=0.2e-12 taumob.el=0.4e-12
+material material=aluminum tcon.poly \
+         tc.a=0.03 tc.b=0.00156 tc.c=1.65e-06 \
+         hc.a=1.97 hc.b=0.00036 hc.d=-3.7e+4 
+# Set models
+models  print cvt srh  bgn  lat.temp hcte.el
+impact selb length.rel lrel.el=0.02
+
+thermcontact num=1 x.min=0 x.max=1 y.min=0.799 y.max=0.802 alpha=3000
+
+solve init
+
+method  climit=1e-4
+curvetrace end.val=1.3e-3 contr.name=drain curr.cont \
+           mincur=1e-13 nextst.ratio=1.2 step.init=6.e-2 mindl=0.04
+
+solve vgate=0.025
+solve vgate=0.1
+solve vgate=0.5 vstep=0.25 vfinal=1 name=gate
+
+# open log file
+
+log outf=mos2ex08.log master
+
+solve curvetrace
+save outf=mos2ex08_1.str
+
+tonyplot mos2ex08.log -set  mos2ex08_log.set
+
+quit

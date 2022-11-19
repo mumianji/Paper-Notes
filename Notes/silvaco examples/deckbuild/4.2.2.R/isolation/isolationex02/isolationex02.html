@@ -1,0 +1,94 @@
+<html>
+  <head>
+    <title>Trench Isolation Punchthrough</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Trench Isolation Punchthrough</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>SSuprem 4/Elite/S-Pisces</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R, Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="isolationex02_plot0.png" width="640" alt="isolationex02_plot0" />
+      <p/>
+      <img src="isolationex02_plot1.png" width="640" alt="isolationex02_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This examples demonstrates punchthrough between unrelated n+ regions
+separated by trench isolation. It shows:
+</p>
+<ul>
+  <li>
+ Trench formation by ELITE physical etch models
+<br/>
+  </li>
+  <li>
+ Trench doping using SSUPREM4 implant models
+<br/>
+  </li>
+  <li>
+ Trench fill by ELITE physical deposition models
+<br/>
+  </li>
+  <li>
+ Punchthrough test across the trench using Atlas
+  </li>
+</ul>
+<p>
+The example file consists of two parts. The first uses Athena to
+construct the geometry and doping of two n+ areas separated by trench
+isolation. The second uses Atlas to simulate punchthrough between these
+two regions.
+</p>
+<p>
+Details of ELITE and SSUPREM4 syntax for trench formation and refill
+can be found in the appropriate Athena example sections.
+</p>
+<p>
+The trench is formed by Reactive Ion Etching (RIE), with different
+isotropic and anisotropic etch rates for each material present.  A
+field implant is performed directly into the trench.
+</p>
+<p>
+The device is interfaced automatically into Atlas. The two carrier mode is
+selected along with impact ionisation. The contact named drain is
+ramped to 20 volts under the control of a current compliance limit of 3e-12 A/um.
+</p>
+<p>
+The final drain current contours are plotted at the end of the
+simulation, where the current density can be seen to avoid the field
+implant doping peak.
+</p>
+<p>
+A design parameter is measured at the end of the Atlas simulation using the
+<b> extract </b> statement. The parameter is defined as the voltage required on the
+drain to get 2e-12 A/um of drain current.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

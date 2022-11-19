@@ -1,0 +1,64 @@
+<html>
+  <head>
+    <title>Effect of Poly Doping on Threshold Voltage</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Effect of Poly Doping on Threshold Voltage</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>S-Pisces</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="mos2ex16_plot0.png" width="640" alt="mos2ex16_plot0" />
+      <p/>
+      <img src="mos2ex16_plot1.png" width="640" alt="mos2ex16_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example shows the dramatic effect of depletion in the poly gate when the
+doping in the poly is reduced below its maximum level.  The I-V curves show
+that even a doping density of 1e20/cm3 in the poly is not sufficient to
+prevent depletion, loss of current drive and a shift in the threshold voltage
+of the n-MOSFET.
+</p>
+<p>
+The first indication of poly depletion is non ideal C-V curves as shown in the
+previous &quot;Poly Depletion&quot; example.  Reduced doping in the poly gate can be a
+combination of insufficient implant dose, counter doping of P+ poly and dopant
+evapouration during uncapped anneals.
+</p>
+<p>
+The program runs three identical simulations the only difference being the
+doping in the poly gate.  Three doping levels are simulated, 1e19, 1e20 and
+1e21/cm3.  At the end of the three simulations, the I-V curves of the n-MOSFET
+in the region of the threshold voltage are plotted.  The effect of poly doping
+is demonstrated by the increased threshold voltage and reduced current drive
+with reduced poly doping.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

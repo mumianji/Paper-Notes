@@ -1,0 +1,80 @@
+<html>
+  <head>
+    <title>Fast  product-space 2D Schrodinger solver</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Fast  product-space 2D Schrodinger solver</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>S-Pisces/Quantum</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="quantumex15_plot0.png" width="640" alt="quantumex15_plot0" />
+      <p/>
+      <img src="quantumex15_plot1.png" width="640" alt="quantumex15_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates:
+</p>
+<ul>
+  <li>
+ Using SP.FAST parameter to invoke a fast product-space 2D Schrodinger solver
+<br/>
+  </li>
+  <li>
+ Quantum confinement  
+<br/>
+  </li>
+  <li>
+ Electron density in a FinFET channel
+<br/>
+  </li>
+</ul>
+<p>
+This example demonstrates a fast  product-space 2D Schrodinger solver.
+The product-space solution is a linear combination of products of 1D solutions in X and Y directions.
+This approach is excellent for rectangular geometries, but can also tolerate moderate deviations
+from rectangle. In this example a 10 by 10 nm channel of a FinFET, n-type doped to the density of
+1e20, is considered.
+</p>
+<p>
+The solver is invoked by the
+SP.FAST parameter on the MODELS statement. Also, a user has to specify a geometry and dimensionality
+of Schrodinger solution by writing  SP.GEOM=2DXY. OX.SCHRO and OX.MARGIN parameters which control the
+penetration of electrons into oxide. FIXED.FERMI parameter always sets Fermi level to zero. NUM.DIRECT=3
+specifies that all three pairs of conduction band valleys will be taken into account. In the structure file,
+these values are denoted as &quot;Longitudinal&quot;, &quot;Transverse1&quot;, and &quot;Transverse2&quot;, which corresponds to a
+value of effective mass in Y direction equal to ml=0.98, mt1=0.19 or mt2=0.19 respectively.
+</p>
+<p>
+A comparison can be done to a full 2D solution by switching off
+the SP.FAST parameter.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

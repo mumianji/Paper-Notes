@@ -1,0 +1,129 @@
+<html>
+  <head>
+    <title>DIBL Extraction</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>DIBL Extraction</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>SSuprem 4/S-Pisces</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R, Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="mos1ex11_plot0.png" width="640" alt="mos1ex11_plot0" />
+      <p/>
+      <img src="mos1ex11_plot1.png" width="640" alt="mos1ex11_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This is a basic MOS Athena to Atlas interface example simulating two Id/Vgs
+curves at different drain biases and extracting the drain-induced
+barrier lowering (DIBL) parameter. This example demonstrates:
+</p>
+<ul>
+  <li>
+ Process simulation of a MOS transistor in Athena
+<br/>
+  </li>
+  <li>
+ Process parameter extraction (eg. oxide thicknesses)
+<br/>
+  </li>
+  <li>
+ Autointerface between Athena and Atlas
+<br/>
+  </li>
+  <li>
+ Simple Id/Vgs curve generation with Vds=-0.1V
+<br/>
+  </li>
+  <li>
+ Ramp of drain voltage
+<br/>
+  </li>
+  <li>
+ Simple Id/Vgs curve generation with Vds=-3.0V
+<br/>
+  </li>
+  <li>
+ Parameter extraction for the DIBL parameter
+  </li>
+</ul>
+<p>
+The process simulation, process parameter extraction and electrode
+definition for this example are exactly as described in the first
+example in this section.
+</p>
+<p>
+In Atlas, the models, interface and contact statements are also the same
+as in the first example. The extraction of the first Id/Vgs curve is very
+similar to the previous threshold voltage extraction example.
+</p>
+<p>
+One difference is the use of the syntax
+<b> compl=1.1e-7 cname=drain</b> . This sets a compliance limit on the drain current.  Although the SOLVE
+statement calls for a ramp in gate voltage from zero to -1.5V, once the
+trigger current specified by
+<b> compl </b> is exceeded on the electrode specified by
+<b> cname </b> then the gate voltage ramp will step and Atlas will execute the next
+line of syntax. Note that the compliance value does not need to be
+signed. A current more negative than -1.1e-7 will also trigger the
+compliance limit. Compliances are more commonly used in breakdown
+simulations but can be used in this way to stop voltage ramps once the
+area of interest is passed.
+</p>
+<p>
+All results from the first Id/Vgs curve are saved to the file specified
+by the first log statement.
+In Atlas the only way to stop the IV points
+being saved is either to specify another LOG statement or to use
+<b> log off </b> or exit the simulator.
+Here,
+<b> log off </b> is used to stop the output from the drain voltage ramp being
+saved to the Id/Vgs logfile specified previously.
+</p>
+<p>
+The second &apos;solve init&apos; statement resets all applied voltages to zero.
+Then the drain is ramped to -3.0V and the gate ramp with compliance is
+repeated.
+</p>
+<p>
+After each gate ramp, the threshold voltage was extracted using a
+different syntax than the PMOS threshold voltage example described
+earlier in this section. In this example the threshold is determined by
+looking for the voltage where the drain current reaches a user-defined
+value. The syntax
+<b> x.val from curve (x,y) where y.val=&lt;number&gt; </b> is used. At large drain biases this method is preferred for threshold
+extraction over the steepest slope approach. The search value of
+0.1uA/um of current is typical for channel lengths around 1um.
+These thresholds are
+stored as values pvt1 and pvt2 in DeckBuild. The final extract
+statement is used to obtain the DIBL parameter. It is the difference in
+threshold voltage divided by the difference in the drain bias.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

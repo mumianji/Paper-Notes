@@ -1,0 +1,252 @@
+# (c) Silvaco Inc., 2018
+# Nakajima, A. et. al. "GaN-Based Super Heterojunction Field Effect 
+# Transistors Using the Polarization Junction Concept," IEEE Electron 
+# Device Letters, vol.32, no.4, pp. 542-544 (2011).
+
+go atlas simflags="-80" 
+
+mesh width=1000 
+
+x.mesh location=-4	spacing=0.5 
+x.mesh location=-3	spacing=0.5 
+x.mesh location=0	spacing=0.1 
+x.mesh location=1.5	spacing=0.4 
+x.mesh location=3	spacing=0.1 
+x.mesh location=5	spacing=0.4 
+x.mesh location=7	spacing=0.1 
+x.mesh location=8.5	spacing=0.4 
+x.mesh location=10	spacing=0.1 
+x.mesh location=11.5	spacing=0.3 
+x.mesh location=13	spacing=0.1 
+x.mesh location=14	spacing=0.5 
+
+y.mesh location=-0.3 	spacing=0.1 
+y.mesh location=-0.08	spacing=0.01 
+y.mesh location=-0.04	spacing=0.01 
+y.mesh location=-0.01	spacing=0.003 
+y.mesh location=0    	spacing=0.001 
+y.mesh location=0.024	spacing=0.004 
+y.mesh location=0.04 	spacing=0.002 
+y.mesh location=0.047	spacing=0.0002 
+y.mesh location=0.062	spacing=0.005 
+y.mesh location=1.05 	spacing=0.2 
+
+region number=1 material=GaN y.min=0.047 y.max=1.05 substrate 
+region number=2 material=AlGaN x.comp=0.23 y.min=0 y.max=0.047 
+region number=3 material=oxide y.max=0 
+region number=4 material=GaN x.min=3 x.max=10 y.min=-0.01 y.max=0 
+region number=5 material=GaN x.min=3 x.max=10 y.min=-0.04 y.max=-0.01 
+
+electrode name=source x.min=-4 x.max=-3 y.min=-0.04 y.max=0.0 
+electrode name=gate x.min=0 x.max=3 y.min=-0.08 y.max=0.0 
+electrode name=drain x.min=13 x.max=14 y.min=-0.04 y.max=0.0 
+electrode name=base x.min=3.1 x.max=7 y.min=-0.08 y.max=-0.04 
+
+doping region=5 concentration=3e19 p.type uniform 
+
+doping trap e.level=3.0  donor conc=2.5e16 uniform region=1 sign=1e-15 sigp=1e-15 degen=2 
+doping trap e.level=0.4 acceptor conc=1e17 uniform region=1 sign=1e-15 sigp=1e-15 degen=2 
+ 
+inttrap acceptor e.level=3.0 density=1e13 degen.fac=2 sign=1e-12 sigp=1e-12 \
+        region=1 s.x y.min=1.05 
+
+inttrap donor e.level=3.23 density=3e13 degen.fac=2 sign=1e-12 sigp=1e-12 \
+        intmaterial="oxide/AlGaN" 
+
+material mat=GaN edb=0.03 eab=0.17 
+
+models consrh auger fermi print incomplete temp=300 
+models polarization calc.strain polar.scale=0.66 
+models region=2 pch.ins 
+models lat.temp ni.fermi 
+mobility GaNsat.n 
+mobility albrct.n an.albrct=3e-5 bn.albrct=3e-5 
+mobility albrct.p ap.albrct=1e-2 bp.albrct=1e-2 
+
+contact name=gate   workfunc=6 
+contact name=source workfunc=4.04 
+contact name=drain  workfunc=4.04 
+contact name=base common=gate short 
+ 
+thermcontact num=1 y.min=1.05 alpha=1000 
+
+method block newton climit=1e-4 maxtraps=6 itlimit=30 
+
+output band.param con.band val.band charge polar.charge qss 
+
+solve init 
+solve previous 
+save outfile=ganfetex16_0.str 
+
+solve vgate=0.1 previous 
+solve vgate=0.5 vstep=0.25 vfinal=1 name=gate
+save outfile=ganfetex16_1.str
+solve vstep=0.25 vfinal=2 name=gate
+save outfile=ganfetex16_2.str
+
+solve vdrain=0.1 previous 
+solve vdrain=0.5 vstep=0.5 vfinal=10 name=drain 
+
+log outfile=ganfetex16_0.log
+
+solve previous 
+solve vstep=-0.2 vfinal=-7 name=gate 
+log off 
+
+solve init 
+solve previous 
+
+solve vgate=-0.1 previous 
+solve vgate=-0.5 vstep=-0.5 vfinal=-1 name=gate 
+save outfile=ganfetex16_3.str
+solve vstep=-0.5 vfinal=-2 name=gate
+save outfile=ganfetex16_4.str
+solve vstep=-0.5 vfinal=-3 name=gate
+save outfile=ganfetex16_5.str
+
+# vgate=2V
+load inf=ganfetex16_2.str master
+log outf=ganfetex16_1.log 
+solve previous 
+solve vdrain=0.1 previous 
+solve vdrain=0.5 vstep=0.5 vfinal=15 name=drain 
+log off 
+
+# vgate=1V
+load inf=ganfetex16_1.str master 
+log outf=ganfetex16_2.log 
+solve previous 
+solve vdrain=0.1 previous 
+solve vdrain=0.5 vstep=0.5 vfinal=15 name=drain 
+log off 
+
+# vgate=0V
+load inf=ganfetex16_0.str master 
+log outf=ganfetex16_3.log 
+solve previous 
+solve vdrain=0.1 previous 
+solve vdrain=0.5 vstep=0.5 vfinal=15 name=drain 
+log off 
+
+# vgate=-1V
+load inf=ganfetex16_3.str master 
+log outf=ganfetex16_4.log 
+solve previous 
+solve vdrain=0.1 previous 
+solve vdrain=0.5 vstep=0.5 vfinal=15 name=drain 
+log off 
+
+# vgate=-2V
+load inf=ganfetex16_4.str master 
+log outf=ganfetex16_5.log 
+solve previous 
+solve vdrain=0.1 previous 
+solve vdrain=0.5 vstep=0.5 vfinal=15 name=drain 
+log off 
+
+# vgate=-3V
+load inf=ganfetex16_5.str master 
+log outf=ganfetex16_6.log 
+solve previous 
+solve vdrain=0.1 previous 
+solve vdrain=0.5 vstep=0.5 vfinal=15 name=drain 
+log off 
+
+tonyplot ganfetex16_0.str -set ganfetex16_0.set 
+tonyplot ganfetex16_0.str -set ganfetex16_1.set 
+tonyplot ganfetex16_0.log -set ganfetex16_2.set 
+tonyplot -overlay ganfetex16_1.log ganfetex16_2.log ganfetex16_3.log ganfetex16_4.log ganfetex16_5.log ganfetex16_6.log -set ganfetex16_3.set 
+
+#
+# breakdown simulation (Vg=-15V)
+#
+
+go atlas simflags="-80" 
+
+mesh width=1000 
+
+x.mesh location=-4	spacing=0.5 
+x.mesh location=-3	spacing=0.5 
+x.mesh location=0	spacing=0.1 
+x.mesh location=1.5	spacing=0.4 
+x.mesh location=3	spacing=0.1 
+x.mesh location=5	spacing=0.4 
+x.mesh location=7	spacing=0.1 
+x.mesh location=8.5 	spacing=0.4 
+x.mesh location=10  	spacing=0.1 
+x.mesh location=13  	spacing=0.1 
+x.mesh location=14  	spacing=0.5 
+
+y.mesh location=-0.3 	spacing=0.1 
+y.mesh location=-0.08	spacing=0.01 
+y.mesh location=-0.04	spacing=0.01 
+y.mesh location=-0.01	spacing=0.005 
+y.mesh location=0    	spacing=0.001 
+y.mesh location=0.023	spacing=0.004 
+y.mesh location=0.047	spacing=0.001 
+y.mesh location=1.05 	spacing=0.25 
+
+region number=1 material=GaN y.min=0.047 y.max=1.05 substrate 
+region number=2 material=AlGaN x.comp=0.23 y.min=0 y.max=0.047 
+region number=3 material=oxide y.max=0 
+region number=4 material=GaN x.min=3 x.max=10 y.min=-0.01 y.max=0 
+region number=5 material=GaN x.min=3 x.max=10 y.min=-0.04 y.max=-0.01 
+
+electrode name=source x.min=-4 x.max=-3 y.min=-0.04 y.max=0.0 
+electrode name=gate x.min=0 x.max=3 y.min=-0.08 y.max=0.0 
+electrode name=drain x.min=13 x.max=14 y.min=-0.04 y.max=0.0 
+electrode name=base x.min=3.1 x.max=7 y.min=-0.08 y.max=-0.04 
+
+doping region=5 concentration=3e19 p.type uniform 
+
+doping trap e.level=3.0  donor conc=2.5e16 uniform region=1 sign=1e-15 sigp=1e-15 degen=2 
+doping trap e.level=0.4 acceptor conc=1e17 uniform region=1 sign=1e-15 sigp=1e-15 degen=2 
+
+inttrap acceptor e.level=3.0 density=1e13 degen.fac=2 sign=1e-12 sigp=1e-12 \
+        region=1 s.x y.min=1.05 
+
+inttrap donor e.level=3.23 density=3e13 degen.fac=2 sign=1e-12 sigp=1e-12 \
+        intmaterial="oxide/AlGaN" 
+
+material mat=GaN edb=0.03 eab=0.17 
+
+models consrh auger fermi print incomplete temp=300 
+models polarization calc.strain polar.scale=0.66 
+models region=2 pch.ins 
+# models lat.temp 
+# mobility GaNsat.n 
+mobility albrct.n an.albrct=3e-5 bn.albrct=3e-5 
+mobility albrct.p ap.albrct=1e-2 bp.albrct=1e-2 
+
+impact selb region=1 bn1=3.41e7*0.88 bn2=3.41e7*0.88 
+
+contact name=gate   workfunc=6 
+contact name=source workfunc=4.04 
+contact name=drain  workfunc=4.04 resist=1e10 
+contact name=base common=gate short 
+
+# thermcontact num=1 y.min=1.05 alpha=1000
+
+method newton climit=1e-4 maxtraps=4 itlimit=30 ix.tol=1e-35 ir.tol=1e-35 quasi 
+
+output band.param con.band val.band charge polar.charge qss 
+
+solve init 
+solve previous 
+solve vgate=-0.01 
+solve vgate=-0.1 
+solve vstep=-0.1 vfinal=-0.5 name=gate 
+solve vstep=-0.5 vfinal=-15 name=gate 
+
+method newton climit=1e-4 maxtraps=4 itlimit=30 tstep.incr=1.2 \
+       ix.tol=1e-35 ir.tol=1e-35 quasi 
+
+log outfile=ganfetex16_7.log 
+solve vdrain=100e06 ramptime=100e6 tfinal=100e6 dt=1 compliance=2e-3 cname=drain previous 
+log off 
+
+save outf=ganfetex16_6.str 
+
+tonyplot ganfetex16_7.log ganfetex16_6.str -set ganfetex16_4.set 
+
+quit

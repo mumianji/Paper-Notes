@@ -1,0 +1,115 @@
+# (c) Silvaco Inc., 2018
+go devedit
+
+DevEdit version="2.1" library="1.15"
+
+work.area left=0 top=0 right=50 bottom=50
+
+#  DevEdit V2.1 L1.15
+
+region reg=1 mat=GaAs color=0xffcb pattern=0x9 Z1=0 Z2=75 \
+	points="0,50 0,0 50,0 50,50 0,50"
+#
+constr.mesh region=1 default
+
+region reg=2 mat=GaAs color=0xffcb pattern=0x9 Z1=0 Z2=0.3 \
+	points="10,15 15,15 15,30 10,30 10,15"
+#
+constr.mesh region=2 default
+
+region reg=3 mat=GaAs color=0xffcb pattern=0x9 Z1=0 Z2=0.3 \
+	points="22.5,15 27.5,15 27.5,30 22.5,30 22.5,15"
+#
+constr.mesh region=3 default
+
+region reg=4 name=GaAs mat=GaAs color=0xffcb pattern=0x9 Z1=0 Z2=0.3 \
+	points="40,15 40,30 35,30 35,15 40,15"
+#
+constr.mesh region=4 default
+
+region reg=5 name=substrate mat=Silver elec.id=1 work.func=0 color=0x7fff pattern=0xc Z1=75 Z2=76 \
+	points="0,0 50,0 50,50 0,50 0,0"
+#
+constr.mesh region=5 default
+
+
+
+# Set Meshing Parameters
+#
+base.mesh height=1000000 width=1000000
+#
+bound.cond !apply max.slope=28 max.ratio=300 rnd.unit=0.001 line.straightening=1 align.points when=automatic
+#
+imp.refine min.spacing=0.02 z=0
+#
+constr.mesh max.angle=90 max.ratio=300 max.height=6 \
+	max.width=6 min.height=0.0001 min.width=0.0001
+#
+constr.mesh type=Semiconductor default
+#
+constr.mesh type=Insulator default
+#
+constr.mesh type=Metal default
+#
+constr.mesh type=Other default
+#
+constr.mesh region=1 default
+#
+constr.mesh region=2 default
+#
+constr.mesh region=3 default
+#
+constr.mesh region=4 default
+#
+constr.mesh region=5 default
+#
+# Perform mesh operations
+#
+Mesh Mode=TensorProduct
+refine mode=both x1=6.3 y1=12.66 x2=43.13 y2=32.93
+
+imp.refine min.spacing=0.02 z=0
+
+constr.mesh max.angle=90 max.ratio=300 max.height=6 \
+	max.width=6 min.height=0.0001 min.width=0.0001
+#
+constr.mesh type=Semiconductor default
+#
+constr.mesh type=Insulator default
+#
+constr.mesh type=Metal default
+#
+constr.mesh type=Other default
+
+z.plane z=0.3 spacing=0.15
+#
+z.plane z=15 spacing=5
+#
+z.plane z=75 spacing=10
+#
+z.plane max.spacing=1000000 max.ratio=100
+
+base.mesh height=1000000 width=1000000
+
+bound.cond !apply max.slope=28 max.ratio=300 rnd.unit=0.001 line.straightening=1 align.Points when=automatic
+
+mesh meshbuild
+
+struct outfile=thermalex04.str
+
+go atlas
+
+mesh infile=thermalex04.str
+
+models thermal
+
+material reg=1 tcon.power
+material reg=2 power=0.02
+material reg=3 power=0.03
+
+method newton
+
+solve t1=300 outf=thermalex04_0.str
+tonyplot3d thermalex04_0.str -set thermalex04_0.set
+
+quit

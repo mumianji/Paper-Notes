@@ -1,0 +1,107 @@
+<html>
+  <head>
+    <title>Partially vs Fully Depleted SOI - Leakage Current Analysis</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Partially vs Fully Depleted SOI - Leakage Current Analysis</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>S-Pisces</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="soiex03_plot0.png" width="640" alt="soiex03_plot0" />
+      <p/>
+      <img src="soiex03_plot1.png" width="640" alt="soiex03_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example simulates leakage current at high drain bias and shows how this value can be extracted as a design parameter.
+The analysis is repeated for both fully depleted and partially depleted SOI MOSFETs.  It demonstrates:
+</p>
+<ul>
+  <li>
+ Basic SOI structure definition using Atlas syntax
+<br/>
+  </li>
+  <li>
+ Deckbuild syntax for defining general structure dimensions
+<br/>
+  </li>
+  <li>
+ Setting transport models including impact ionization
+<br/>
+  </li>
+  <li>
+ Generating an Id/Vds curve with Vgs=0.0V
+<br/>
+  </li>
+  <li>
+ Extracting the leakage current design parameter
+<br/>
+  </li>
+  <li>
+ Plotting output curves and structures
+  </li>
+</ul>
+<p>
+The leakage current in SOI MOSFETs has in the past been seen as a barrier to its development.
+The source of this current has, in some cases, been due to the existence of interface charge at the bottom oxide-silicon interface.
+This example simulates the leakage current analysis for both partially and fully depleted SOI MOSFETs.
+</p>
+<p>
+In this example, rather than use two Atlas input files for thick and thin SOI films, a more general purpose input file has been created. By using deckbuild
+<b> set </b> commands it is possible to create variables inside the input file. These variables may then be used to define the location of mesh lines or region boundaries.
+</p>
+<p>
+In this example, there have been three modifications made to the input file. The
+<b> y.mesh </b> definition has been modified to use the created variables to define the location of y mesh lines and, in a similar manner, the
+<b> region </b> statement has also been changed to use these variables to define the region boundaries. Interface charges, on both the top and bottom interfaces, are defined on the
+<b> interface</b> statement. In SOI MOSFETs, these two interfaces can have very different values of interface charge as is shown in this example. Once again the predefined variables have been used to define the regions where the charge exists.
+</p>
+<p>
+Submicron devices should be simulated using the Energy Balance Model due to
+velocity overshoot, and nonlocal impact ionization effects, which could
+substantially influence device characteristics. The
+<b> models hcte </b> statement is used to set the solution for electron and hole energy balance. Next, the
+<b> impact </b> statement is used to specify that the Selberherr impact ionization
+model is to be used. Impact ionization is an important phenomenon in SOI
+devices even at relatively low voltages. The impact model is required
+here for this SOI Id/Vds analysis.
+</p>
+<p>
+The remaining Atlas syntax and methodology is based upon that of soiex01.in and a description of it may be found there.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+This example has initially been set up to simulate a thick film partially depleted transistor.
+To simulate the thin film fully depleted transistor case the set statements need to be changed to
+</p>
+<b>set simid=0.05</b> <br/>
+<b>set sibot=0.1</b> <br/>
+<b>set oxbot=0.5</b> <p>
+and the example is executed once again.
+</p>
+  </div></body>
+</html>

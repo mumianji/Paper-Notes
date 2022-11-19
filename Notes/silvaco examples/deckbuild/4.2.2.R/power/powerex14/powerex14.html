@@ -1,0 +1,77 @@
+<html>
+  <head>
+    <title>CoolMOS</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>CoolMOS</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>SSuprem 4/S-Pisces</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R, Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="powerex14_plot0.png" width="640" alt="powerex14_plot0" />
+      <p/>
+      <img src="powerex14_plot1.png" width="640" alt="powerex14_plot1" />
+      <p/>
+      <img src="powerex14_plot2.png" width="640" alt="powerex14_plot2" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates modeling of a CoolMOS power device based on the paper:
+</p>
+<p>
+P. N. Kondekar et al. &quot;Study of the Degradation of the Breakdown Voltage of a Super-Junction Power MOSFET due to Charge Imbalance&quot;,
+J. Korean Phys. Soc., Vol.48, (2006) pp.624.
+</p>
+<p>
+It shows:
+</p>
+<ul>
+  <li>
+ Structure definition using Athena 
+<br/>
+  </li>
+  <li>
+ Reverse Voltage Characteristics using Atlas
+<br/>
+   </li>
+</ul>
+<p>
+The CoolMOS is a novel power Device. In the CoolMOS device, the drift region of a conventional power
+MOSFET is replaced by a superjunction (i.e. a combination on N- and P- strips in parallel). When the
+device is on, the N- strip conducts the drain current. When the device is off and a drain voltage
+is applied, it appears as a reverse bias between the N- and P- strips. A depletion region forms and
+a relatively small value of Vd fully depletes the drift region. Subsequently the drift region behavior
+is similar to that of an intrinsic region allowing higher breakdown voltage.
+</p>
+<p>
+Once constructed, the device reverse characteristics are then simulated in Atlas (SPISCES), and the
+final results are plotted showing a breakdown voltage higher than 600V.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

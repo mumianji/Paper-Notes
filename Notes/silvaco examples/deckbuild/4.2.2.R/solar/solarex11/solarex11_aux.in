@@ -1,0 +1,87 @@
+go atlas
+
+set tunnel_doping=6e20
+
+mesh 
+
+x.m l=0 s=5
+x.m l=37.5 s=2.5
+x.m l=38.8 s=0.5
+x.m l=39.5 s=1
+x.m l=42.5 s=2.5
+x.m l=500 s=50
+ 
+y.m l=0 s=0.05
+y.m l=0.3 s=0.04
+y.m l=1.3 s=0.25
+y.m l=100 s=25
+y.m l=198.53 s=0.2
+y.m l=199.98 s=0.002
+y.m l=200 s=0.001
+y.m l=200.025 s=0.001
+y.m l=200.2 s=0.05
+  
+region num=1 silicon
+region num=2 nitride x.min=37.5 y.min=200
+
+elec num=1 name=cathode top
+elec num=2 name=anode x.min=0 x.max=37.5 y.min=200 y.max=200.2 mat=Aluminum
+
+doping uniform p.type resisti=2 region=1
+doping gauss n.type peak=0 junction=0.3 conc=1e+20
+doping uniform p.type conc=$tunnel_doping y.min=199.98 y.max=200 x.min=0 x.max=37.5
+doping uniform p.type conc=1e+19 x.min=0 x.max=38.8 y.min=198.53 y.max=200
+
+# Front Surface Recombination Velocity
+interface p1.x=0 p2.x=500 p1.y=0 p2.y=0 s.n=10000 s.p=10000 s.x
+
+# Back dielectric Surface Recombination Velocity
+interface p1.x=37.5 p2.x=500 p1.y=200 p2.y=200 s.n=1000 s.p=15 s.i
+
+#ARC: SiN front surface
+interface optical ar.index=2.0 ar.thick=0.075 p1.x=0 p2.x=500 p1.y=0 p2.y=0 region=0
+
+contact name=anode workf=4.2 surf.rec
+material material=Aluminum sopra=Al.nk
+
+# bulk life time
+material taun0=1000e-6 taup0=1000e-6 copt=2e-15 augn=2.8e-31 augp=1e-31
+
+# UST is used to model back ohmic back by tunneling 
+models consrh auger conmob analytic ust temp=300 print
+
+output band.param con.band val.band flowlines
+
+solve init
+
+save outfile=solarex11_$'tunnel_doping'.str
+
+method newton autonr maxtrap=10 itlimit=50
+
+beam num=1 x.orig=250 y.orig=-1 angle=90 power.file=solarex11.spec \
+	reflect=1 wavel.start=0.3 wavel.end=1.2 normalize 
+
+solve b1=1e-05
+solve b1=1e-04
+solve b1=1e-03
+solve b1=1e-02
+solve b1=0.1
+
+save outfile=solarex11_$'tunnel_doping'.str
+
+log outfile=solarex11_$'tunnel_doping'.log 
+solve vanode=0 vstep=0.02 vfinal=0.7 name=anode 
+
+tonyplot solarex11_$'tunnel_doping'.log -set solarex11_0.set 
+ 
+extract name="Jsc" y.val from curve(v."anode", i."anode") where x.val=0.0
+extract name="JscmAcm2" $Jsc*1e08*1e03/500
+extract name="Voc" x.val from curve(v."anode", i."anode") where y.val=0.0 
+extract name="Pm" min(curve(v."anode", (v."anode" * i."anode"))) 
+extract name="Vm" x.val from curve(v."anode", (v."anode"*i."anode") ) \
+	where y.val=$"Pm"
+extract name="Im" $"Pm"/$"Vm"
+extract name="FF" ($"Pm"/($"Jsc"*$"Voc"))*100
+extract name="Eff" (-1e8*$Pm/(0.1*500))*100
+
+

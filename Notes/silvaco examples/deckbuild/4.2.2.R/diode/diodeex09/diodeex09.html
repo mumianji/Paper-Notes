@@ -1,0 +1,73 @@
+<html>
+  <head>
+    <title>Temperature Ramping - Effect on Leakage</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Temperature Ramping - Effect on Leakage</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>S-Pisces</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="diodeex09_plot0.png" width="640" alt="diodeex09_plot0" />
+      <p/>
+      <img src="diodeex09_plot1.png" width="640" alt="diodeex09_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates the correct method for global temperature ramping in
+<b> Atlas </b> for any device.  A diode structure was chosen here for simplicity.
+In Atlas the
+<b> global temperature </b> of the device is set using the
+<b> models </b> statement.  However, the global temperature can only be set ONCE in the input
+deck if ALL the temperature dependent parameters are to be set.  If the
+temperature is reset during a single input deck with a second &quot;models
+statement&quot; an incorrect result is obtained, since not all of the temperature
+dependent parameters are set in subsequent models statements.
+</p>
+<p>
+The solution is to use the combination of a &quot;go atlas&quot; statement, together with
+a &quot;mesh infile=&quot; statement.  After the mesh statement, reset the global
+temperature with a new &quot;models&quot; statement.
+</p>
+<p>
+The device bias conditions can then either be ramped up from zero, as in this
+example, or loaded in from the previous solution with a
+<b> &quot;load infile=&quot; </b> statement.  In order to end up with one continuous
+<b> log outfile </b> the keyword
+<b> append </b> must be added to the log outfile name after the second and subsequent &quot;log
+outfile=&quot; statements in order to prevent the original log file from being
+overwritten.
+</p>
+<p>
+This example also plots the electron and hole
+<b> mobility versus temperature</b> . Substituting different mobility models allows the temperature effects of each
+to be compared.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

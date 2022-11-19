@@ -1,0 +1,64 @@
+go quest
+
+Init simulation.type = "PORT" solvertype = "3D_Solver" \
+	 impedance.residual = 0.01 impedance.iteration = 50	\
+	 capacitance.residual = 0.01 capacitance.iteration = 50 \
+	 domainbase = "Grounded"	Z0 = 50	add.resistance = 0	\
+	 dx = 2 dy = 2 dz = 0.2	\
+	 computation.domain = "Automatic"
+
+electrodes ports = "IN1", "subs_ground", "OUT1", "subs_ground" 
+
+Frequency type = "Range" range = 40, 30000 nsteps = 20 range.variation = "Lin"
+
+save	database.path = "questex08_db" \
+		 spice.file. = "questex08" tony.file= "questex08" \
+		 sparameter.file = "questex08" \
+                 3D.file = "questex08"   
+
+layout gdsfile = "questex08.gds" cell = "VIA"
+
+layermapping layer.name = "M3" gds.Number = 54 gds.Datatype = 0
+layermapping layer.name = "IN1_OUT1" gds.Number = 31 gds.Datatype = 0
+layermapping layer.name = "M2" gds.Number = 36 gds.Datatype = 0
+layermapping layer.name = "via1" gds.Number = 34 gds.Datatype = 0
+layermapping layer.name = "M1" gds.Number = 35 gds.Datatype = 0
+layermapping layer.name = "via2" gds.Number = 37 gds.Datatype = 0
+layermapping layer.name = "IN1_OUT1_t" gds.Number = 131 gds.Datatype = 0 isText
+layermapping layer.name = "via2_1" isDerived operation = "OR via2 via2"
+layermapping layer.name = "via2_2" isDerived operation = "OR via2 via2"
+
+attach electrode.layer = "IN1_OUT1" metal.layer = "M2"
+attach electrode.layer = "IN1_OUT1" metal.layer = "M3"
+
+connection layer = "IN1_OUT1" 	con.layer1 = "IN1_OUT1_t"
+connection layer = "via1" 	con.layer1 = "M1" 	con.layer2 = "M2"
+connection layer = "via2" 	con.layer1 = "M1" 	con.layer2 = "via2_1"
+connection layer = "via2_2" 	con.layer1 = "via2_1" 	con.layer2 = "M3"
+
+material name = "aluminum" cond = 3.76676e+07 permittivity = 1 permeability = 1 losstangent = 0
+material name = "oxide" cond =  0 permittivity = 3.9 permeability = 1 losstangent = 0
+material name = "silicon" cond = 100 permittivity = 11.8 permeability = 1 losstangent = 0
+material name = "copper" cond = 5.88235e+07 permittivity = 1 permeability = 1 losstangent = 0
+material name = "air" cond =  0 permittivity = 1 permeability = 1 losstangent = 0
+material name = "polysilicon" cond =  4.0e+06 permittivity = 1 permeability = 1 losstangent = 0
+
+deposit type = "substrate" layername = "Si" thick = 10 matName = "silicon"
+deposit type = "dielectric" layername = "SiO2" thick = 1 matName = "oxide"
+deposit type = "metal" layername = "M1" thick = 0.2 matName = "polysilicon" anglex = 0 angley = 0
+deposit type = "dielectric" layername = "Diel1" thick = 0.2 matName = "oxide"
+deposit type = "metal" layername = "via1" thick = 0.3 matName = "copper" anglex = 0 angley = 0
+deposit type = "metal" layername = "via2" thick = 0.3 matName = "aluminum" anglex = 0 angley = 0
+deposit type = "dielectric" layername = "via_ox" thick = 0.3 matName = "oxide"
+deposit type = "metal" layername = "M2" thick = 0.5 matName = "aluminum" anglex = 0 angley = 0
+deposit type = "metal" layername = "via2_1" thick = 0.5 matName = "polysilicon" anglex = 0 angley = 0
+deposit type = "dielectric" layername = "via2_1ox" thick = 0.5 matName = "oxide"
+deposit type = "metal" layername = "via2_2" thick = 0.4 matName = "aluminum" anglex = 0 angley = 0
+deposit type = "dielectric" layername = "via2_2ox" thick = 0.4 matName = "oxide"
+deposit type = "metal" layername = "M3" thick = 0.86 matName = "polysilicon" anglex = 0 angley = 0
+deposit type = "dielectric" layername = "M3_ox" thick = 0.86 matName = "oxide"
+deposit type = "dielectric" layername = "passiv" thick = 0.4 matName = "oxide"
+deposit type = "dielectric" layername = "Air" thick = 10 matName = "air"
+
+solve
+

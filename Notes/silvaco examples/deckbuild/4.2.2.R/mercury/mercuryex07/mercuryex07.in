@@ -1,0 +1,36 @@
+# (c) Silvaco Inc., 2018
+go internal
+
+#######################################################################
+### ATLAS example mercuryex07
+#######################################################################
+### Effect of doping in a MESFET
+#######################################################################
+### This example uses dbinternal to run a series of mercury
+### simulations to investigate the effect of changing the doping in
+### a MESFET.
+#######################################################################
+
+###--------------------------------------------------------------------
+### This loads in a mercury deck which is used as the template for
+### this series of simulations.  The template deck must have at least
+### one "set" command (dbinternal can only control the values that
+### are assigned via a "set" command).
+###
+### This deck has the line "set doping=1e17" therefore dbinternal
+### can set the doping in the simulation
+load infile=mercuryex07_template.in
+
+###--------------------------------------------------------------------
+### This command defines the values that appear on the "set doping"
+### command in the template deck.  The doping is set to change between
+### 4e16 and 1e17 at 13 points (corresponding to dopings of 4e16,
+### 4.5e16, 5e16, ..., 9.5e16, and 1e17).
+sweep parameter=doping type=linear range=4e16,1e17,13
+
+###--------------------------------------------------------------------
+### generate a plot which overlays the DC-IV curve from all the
+### simulations.
+tonyplot mercuryex07_4e+16.log -overlay mercuryex07_4.5e+16.log -overlay mercuryex07_5e+16.log -overlay mercuryex07_5.5e+16.log -overlay mercuryex07_6e+16.log -overlay mercuryex07_6.5e+16.log -overlay mercuryex07_7e+16.log -overlay mercuryex07_7.5e+16.log -overlay mercuryex07_8e+16.log -overlay mercuryex07_8.5e+16.log -overlay mercuryex07_9e+16.log -overlay mercuryex07_9.5e+16.log -overlay mercuryex07_1e+17.log -set mercuryex07_1.set
+
+quit

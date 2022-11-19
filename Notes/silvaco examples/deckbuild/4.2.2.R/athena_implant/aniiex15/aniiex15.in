@@ -1,0 +1,56 @@
+go athena
+
+#the x dimension definition
+line x loc = 0.0  spacing=0.1
+line x loc = 1  spacing=0.1
+
+#the vertical definition
+line y loc = 0     spacing = 0.005 
+line y loc = 2   spacing = 0.02 
+
+#initialize the mesh
+
+init silicon 
+deposit oxide thick=0.005 div=2
+# First implant arsenic without preamorphization
+implant sampling arsen dose=1e13 energy=100 tilt=0 rotation=0  bca divergence=0 n.ion=4000 
+struct outf=aniiex15_1.str remove.gas
+
+
+#the x dimension definition
+line x loc = 0.0  spacing=0.1
+line x loc = 1  spacing=0.1
+
+#the vertical definition
+line y loc = 0     spacing = 0.005 
+line y loc = 2   spacing = 0.02 
+
+#initialize the mesh
+
+init silicon 
+deposit oxide thick=0.005 div=2
+# Now the same but with partial preamorphization (1e14, 70 keV Si)
+implant sampling silicon dose=1e14 energy=70 bca tilt=7 n.ion=4000
+implant sampling arsen dose=1e13 energy=100 tilt=0 rotation=0  bca divergence=0 n.ion=4000 
+struct outf=aniiex15_2.str remove.gas
+
+#the x dimension definition
+line x loc = 0.0  spacing=0.1
+line x loc = 1  spacing=0.1
+
+#the vertical definition
+line y loc = 0     spacing = 0.005 
+line y loc = 2   spacing = 0.02 
+
+#initialize the mesh
+
+init silicon 
+deposit oxide thick=0.005 div=2
+# Now the same but with complete preamorphization (1e15, 70 keV Si)
+implant sampling silicon dose=1e15 energy=70 bca tilt=7 n.ion=4000
+implant sampling arsen dose=1e13 energy=100 tilt=0 rotation=0  bca divergence=0 n.ion=4000 
+struct outf=aniiex15_3.str remove.gas
+
+tonyplot -overlay aniiex15*.str -set aniiex15.set
+
+

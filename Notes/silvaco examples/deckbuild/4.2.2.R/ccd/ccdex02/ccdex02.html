@@ -1,0 +1,125 @@
+<html>
+  <head>
+    <title>Emptying The Storage Well Using Quasi Fermi Levels</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Emptying The Storage Well Using Quasi Fermi Levels</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>SSuprem 4/S-Pisces/Luminous</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R, Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="ccdex02_plot0.png" width="640" alt="ccdex02_plot0" />
+      <p/>
+      <img src="ccdex02_plot1.png" width="640" alt="ccdex02_plot1" />
+      <p/>
+      <img src="ccdex02_plot2.png" width="640" alt="ccdex02_plot2" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+In this example a CCD structure is constructed using the Athena process
+simulator. This structure is passed to Atlas for electrical testing.
+The input file tests consist of three portions:
+</p>
+<ul>
+  <li>
+ Construction of a CCD device
+<br/>
+  </li>
+  <li>
+ Emptying the storage well of carriers by directly setting the quasi-fermi levels
+<br/>
+  </li>
+  <li>
+ Illuminating the CCD with a light source and measuring the generated carriers
+  </li>
+</ul>
+<p>
+This example differs from the previous one in that
+<b> no drain contact is used</b> . The emptying of the well is performed by setting the quasi-fermi level
+of the n- active region directly.
+</p>
+<p>
+The structure of this CCD is two polysilicon gates on top of silicon
+separated by a nitride/oxide insulator layer. The right hand gate will
+be used to collect the charge and the left hand gate will confine this
+charge under the right-hand gate.
+</p>
+<p>
+At the start of the input file is the Athena process to produce the
+structure as described for the previous example. Electrodes are defined
+in  Athena and the
+<b> extract </b> statement is used to measure the junction depth of the n- active
+layer.
+</p>
+<p>
+In the Atlas simulation the material and models definition is similar
+to the previous example. The CVT surface transport model is not needed
+as this simulation does not include charge transfer.
+</p>
+<p>
+The key technique demonstrated by this example is the use of setting
+the quasi fermi levels directly in Atlas. To set the quasi fermi levels
+for electrons the parameter
+<b> n.bias </b> is used. For this to work,
+it is necessary to use a zero carrier solution. The
+setting of
+<b> method carriers=0 </b> specifies a zero carrier solution, and only Poisson&apos;s
+equation for potential is solved.
+</p>
+<p>
+Using &apos;n.bias&apos; the electron quasi fermi level is set to +20V. This is a
+non equilibrium condition so the only way to use the solution of the
+continuity equations is to observe the electron concentration is in
+transient mode. Atlas is switched to solve for electron and holes using
+<b> method carriers=2</b> . A short transient simulation then is performed and a
+structure file is saved. Plotting electron concentration in this structure
+file shows the CCD storage well to be depleted of electrons. An
+<b> extract </b> statement is used to quantify this.
+</p>
+<p>
+In this CCD biasing scheme the storage node to the left is biased to
++12V and the containment node to the left is biased at -8V. This
+ensures that charges generated under the storage gate are collected
+there.
+</p>
+<p>
+In the final stage of the input file the CCD storage node is
+illuminated.  The light beam is defined in the BEAM statement to be
+normally incident from the top, with an origin of (6.85,-1), width 4um
+and wavelength 800nm. All reflections, refraction and absorption in the
+layers of the structure are simulated by Atlas.
+</p>
+<p>
+A transient illumination is defined lasting 1us. At the end of this
+time the amount of electrons trapped in the CCD can be measured using
+the
+<b> extract </b> statement.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

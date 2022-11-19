@@ -1,0 +1,52 @@
+
+go clever
+
+
+##### First do Low k Calculation   ######
+
+Init Layout="clex14.lay" Depth=1.0 Padding=3.0
+
+Cut Line=(0, 6.75, 11, 6.75)
+
+Deposit Oxide Thickness=0.5 Max
+
+Deposit Aluminum Thickness=0.8 Max
+
+Mask "MET1"
+
+Etch Aluminum
+
+Strip Resist
+
+Electrodes "MET1" Aluminum
+
+Deposit Oxide Rate=1.00 time=0.05
+
+Deposit Material("LoK") Thickness=0.05 Max
+
+Deposit Oxide Thickness=0.5 Max
+
+Save Structure="clex14.str"
+
+tonyplot clex14.str
+
+Material Material("LoK") Permittivity=2.0
+
+Interconnect Capacitance AdaptC=0.01
+
+Save Spice="clex14_LoK.net"
+
+
+#####   Now do Standard k calculation   #####
+
+go clever
+
+Init Structure="clex14.str"
+
+Material Material("LoK") Permittivity=4.0
+
+Interconnect Capacitance AdaptC=0.01
+
+Save Spice="clex14_HiK.net"
+
+quit

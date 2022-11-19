@@ -1,0 +1,80 @@
+go athena
+
+#TITLE: Trench isolation example
+
+# place the finest grid around the trench
+line  x    location=0.0   spacing=0.25
+line  x    location=1.50  spacing=0.25
+line  x    location=2.00  spacing=0.004
+line  x    location=2.75  spacing=0.25
+
+line  y    location=0.0   spacing=0.01
+line  y    location=0.1   spacing=0.02
+line  y    location=1.0   spacing=0.25
+line  y    location=5.0   spacing=0.25
+line  y    location=6.0   spacing=0.2
+line  y    location=7.05  spacing=0.25
+
+initial c.boron=1.0e15 no.imp space.m=2
+
+deposit nitride th=.1 div=4
+etch       nitride right    p1.x=2.0   
+
+# form the complete trench structure
+structure  reflect
+
+# DRYTECH QUAD RIE machine
+rate.etch machine=DRYTEK silicon u.m  rie isotropic=0.0 directional=0.6
+
+etch machine=DRYTEK time=10 minutes
+structure outfile=anex02_0.str
+
+etch nitride all
+
+# horizontal profiles
+deposit    oxide  thick=0.02 divisions=1
+
+rate.depo machine=polydep cvd polysil u.m dep.rate=.8 step.cov=1
+deposit machine=polydep time=1 minute divis=6
+structure outfile=anex02_1.str
+
+rate.depo machine=d3 hemis photoresist a.m \
+ angle1=90. angle2=-90. dep.rate=1000. sigma.dep=0.2 \
+ smooth.win=2.0 smooth.step=5
+#
+deposit mach=d3 time=15.0 minutes divis=6
+structure outfile=anex02_2.str
+
+rate.etch machine=test polysilicon a.m  wet.etch iso=1000.0
+rate.etch machine=test silicon     a.m  wet.etch iso=1000.0
+rate.etch machine=test nitride     a.m  wet.etch iso=1000.0
+rate.etch machine=test oxide       a.m  wet.etch iso=1000.0
+rate.etch machine=test photores    a.m  wet.etch iso=1000.0
+
+# planarize
+etch machine=test time=24 minutes dt.max=1
+structure outfile=anex02_3.str
+
+# deposit masking nitride
+deposit    nitride   thick=0.03 div=1
+
+etch nitride right p1.x=2.85
+
+# turn off poly lifting as it is not needed
+method grid.ox=0.05 lift.poly=f fermi
+
+# Adjust these parameters to match observed 
+# oxide thickness on poly and silicon
+oxide silicon wet par.h.0 =2.0
+oxide wet par.h.0 =10
+diffuse    temp=1000 time=10 dryo2
+
+structure outfile=anex02_4.str
+
+diffuse   temp=1000 time=100.0 weto2
+
+structure outfile=anex02_5.str
+tonyplot anex02_5.str -ttitle anex02.in:Final
+
+quit
+

@@ -1,0 +1,72 @@
+# (c) Silvaco Inc., 2018
+go internal
+
+load infile=diodeex10_aux.in
+
+################# CONTENT OF diodeex10_aux.in file ########################
+#
+# go atlas 
+#
+# set tempera=300
+#
+# mesh width=1e6
+#
+# x.mesh loc=0.0   spac=0.5
+# x.mesh loc=1.0   spac=0.5
+#
+# y.mesh loc=0.0 spac=0.0025
+# y.mesh loc=1.0 spac=0.1
+
+# region num=1 material=GaN	
+#
+# electrode num=1 name=anode top material=alu 
+# electrode num=2 name=cathode bottom 
+#
+# doping region=1 uniform n.type conc=5e16
+#
+# material material=GaN align=0.68 eab=0.16 \
+#	taun0=1e-9 taup0=2e-8 nsrhn=4e18 nsrhp=4e18 \
+#	d.tunnel=4e-6 me.sbt=0.20 mh.sbt=0.20 \
+#	augn=1e-31 augp=1e-31 arichn=26 \
+#	pip.nt=1.5e13 pip.et=0.8 pip.acc=2.0 pip.omega=0.07
+#
+# mobility material=GaN gansat.n
+#
+# models srh auger albrct fermi temp=$temp ust print
+#
+# contact name=anode workfun=5.18 pipinys surf.rec me.tunnel=0.222
+#
+# output band.temp band.param e.mobility e.velocity
+# probe max name=maxfieldY mag.field dir=90
+#
+# method newton carriers=1 maxtrap=10
+#
+# solve init
+# log outfile=diodeex10_temp_$"temp".log
+# solve
+# solve vanode=0.1
+# solve vanode=0.2
+# solve name=anode vstep=-0.1  vfinal=-4.0
+# extract name="maxEx_VR04" 1e2*max(probe."maxfieldY")
+# extract name="I_VR04" max(i."cathode")
+# solve vanode=-4.5
+# solve vanode=-5.0 name=anode vstep=-1.0  vfinal=-10
+# extract name="maxEx_VR10" 1e2*max(probe."maxfieldY")
+# extract name="I_VR10" max(i."cathode")
+# solve vanode=-12.0 name=anode vstep=-2.0  vfinal=-20
+# extract name="maxEx_VR20" 1e2*max(probe."maxfieldY")
+# extract name="I_VR20" max(i."cathode")
+# save outf=diodeex10_0.str
+##########################################################################
+
+
+sweep parameter=tempera type=list data="125, 150, 200, 250, 300, 350, 400"
+
+save type=sdb outf=diodeex10_0.dat
+
+tonyplot diodeex10_0.str diodeex10_temp_300.log -set diodeex10_0.set
+
+tonyplot -overlay diodeex10_temp_125.log diodeex10_temp_150.log diodeex10_temp_200.log diodeex10_temp_250.log diodeex10_temp_300.log diodeex10_temp_350.log diodeex10_temp_400.log -set diodeex10_1.set
+
+tonyplot diodeex10_0.dat -set diodeex10_2.set
+

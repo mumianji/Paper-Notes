@@ -1,0 +1,93 @@
+<html>
+  <head>
+    <title>Crosstalk in InSb Detector Arrays</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Crosstalk in InSb Detector Arrays</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Device 3D/Luminous 3D</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates:
+<br/>
+ </p>
+<ul>
+  <li>
+ Crosstalk as well as Quantum efficiency as a function of
+InSb detector design parameters.
+<br/>
+  </li>
+</ul>
+<p>
+Crosstalk is one of the main parameters that critically affect the
+resolution of detector arrays. Electrical crosstalk is attributed
+to carriers that are photogenerated under one detector, diffusing
+and being collected by another detector in the array. As the photodiode
+size and the pitch (distance between photodiodes) of the detector
+array get smaller, there is a greater probability of crosstalk influencing
+system performance since the probability of a generated carrier being
+collected by a neighboring junction increases. Atlas will be used to
+study the crosstalk and also the quantum efficiency of a 5 x 5 InSb
+detector arrays in the three dimensional domain.
+</p>
+<p>
+The structure consists of InSb photodiodes fabricated on top of the
+InSb buffer layer. The p+ regions were doped with acceptor concentration
+of 1 x 1019 cm-3 and the buffer layer was doped with donor concentration
+of 1 x 1015 cm-3. The contacts on these photodiodes are ohmic and they
+are named as anode 1, anode 2, ... anode 25 in the simulation. The cathode
+is formed on top of the buffer layer surrounding the photodiodes.
+</p>
+<p>
+In this simulation, a multi-spectral source will be used and the source
+will be a black-body radiator operating at a temperature of 2000 Kelvin.
+The
+<b> power.file </b> parameter in the
+<b> BEAM </b> statement will be used for that purpose.
+</p>
+<p>
+A parametrized input deck
+<b> optoex17.in </b> was created with 4 parameters which are the
+<b> size of the pixel </b> the
+<b> pitch between pixel </b> the
+<b> InSb epilayer thickness </b> and
+<b> InSb buffer layer thikness </b> </p>
+<p>
+The variation of these parameters are made using the
+<b> DBInternal </b> capability of DeckBuild. The file name is
+<b> optoex17_doe.in </b> . See
+<b> DOE: Design of Experimenst Example </b> section of DeckBuild for more information on how to use
+<b> DBInternal</b> .
+</p>
+<p>
+To load and run this example, select the
+<b> Load  </b> button in DeckBuild. This will copy the input file and any support
+files to your current working directory.
+<b> optoex17.in </b> will be loaded by default. You should load
+<b> optoex17_doe.in </b> for design parameters variation using DBInternal. Once loaded into
+DeckBuild, select the
+<b> run </b> button to execute the example.
+</p>
+  </div></body>
+</html>

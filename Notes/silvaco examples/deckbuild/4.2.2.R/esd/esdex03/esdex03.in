@@ -1,0 +1,130 @@
+# (c) Silvaco Inc., 2018
+go athena
+#
+line x loc=0 spac=0.1 
+line x loc=0.5 spac=0.02
+line x loc=0.75 spac=0.05 
+#
+line y loc=0.00 spac=0.05
+line y loc=0.2 spac=0.02 
+line y loc=0.4 spac=0.02 
+line y loc=0.8 spac=0.1
+line y loc=1.5 spac=0.25 
+#
+init orientation=100 c.phos=1e14 space.mult=1
+# 
+#pwell formation including masking off of the nwell
+#
+diffus time=30 temp=1000 dryo2 press=1.00 hcl%=3
+#
+etch oxide thick=0.02
+#
+#P-well Implant
+# 
+implant boron dose=5.0e12 energy=100 pears
+#
+diffus temp=950 time=100 weto2 hcl%=3
+#
+#N-well implant not shown -
+#
+# welldrive 
+diffus time=220 temp=1200 nitro press=1
+#
+etch oxide all
+#
+#sacrificial "cleaning" oxide
+diffus time=20 temp=1000 dryo2 press=1 hcl%=3
+#
+etch oxide all
+#
+#gate oxide grown here:-
+diffus time=8 temp=950 dryo2 press=1.00 hcl%=3
+extract name="gate tox" thickness oxide mat.occno=1 x.val=1
+#
+#vt adjust implant 
+implant bf2 dose=1.5e12 energy=35 pearson
+#
+depo poly thick=0.20 div=3 
+#
+etch poly left p1.x=0.5
+#
+relax y.min=0.8
+method fermi compress
+diffuse time=5 temp=850 weto2 press=0.8
+extract name="sidewall tox" thickness oxide mat.occno=1 y.val=0.1
+#
+implant phosphor dose=3.0e13 energy=50 pearson
+#
+depo oxide thick=0.10 divisions=5
+#
+etch oxide dry thick=0.10
+#
+implant arsenic dose=5.0e15 energy=50 pearson
+#
+#
+method fermi compress
+diffuse time=5 temp=950 nitro press=1.0
+#
+structure outf=half.str
+
+# extract final S/D Xj
+extract name="s/d xj" xj silicon mat.occno=1 x.val=0.05 junc.occno=1
+extract name="s/d rho" sheet.res silicon mat.occno=1 x.val=0.05 region.occno=1
+extract name="1d vt" 1dvt vb=0.0 x.val=0.7
+
+#
+etch oxide left p1.x=0.3
+deposit alumin thick=0.03 div=2
+etch alumin right p1.x=0.25
+structure mirror right
+
+electrode name=gate x=0.75 y=0.1 
+electrode name=source x=0
+electrode name=drain x=1.4 y=0.2
+electrode name=substrate backside
+
+
+structure outfile=esdex03_0.str
+
+tonyplot  esdex03_0.str -set esdex03_0.set
+
+
+go atlas 
+# ESD ELECTROTHERMAL TRANSIENT SIMULATION 
+# HBM TEST TRANSIENT characteristics 
+
+material taup0=1e-7 taun0=1e-7
+contact  name=gate n.poly
+#
+models   cvt srh auger bgn lat.temp 
+impact   selb 
+thermcontact num=1  y.min=1.49  y.max=1.51  ext.temp=300 alpha=1000
+
+# Current boundary conditions
+contact   name=drain current
+
+method    newton  
+output    j.tot e.field
+
+#setup quantities to monitor during simulation
+#results go into the log file
+
+# vertical field across gate oxide
+probe x=0.98 y=0.21 field dir=90 name=OxideField
+# temperature at drain metal contact
+probe x=1.25 y=0.22 lat.temp name=MetalTemp
+
+solve
+
+log      outf=esdex03.log master
+
+
+solve    idrain=1.0e-3  ramptime=10.e-9 tstep=2.0e-11 tstop=10.e-9
+save  outf=esdex03.str 
+solve    idrain=0 decay=150e-9 tstop=15e-6  
+
+
+tonyplot esdex03.log -set esdex03_log.set
+tonyplot esdex03.str -set esdex03_1.set
+
+quit

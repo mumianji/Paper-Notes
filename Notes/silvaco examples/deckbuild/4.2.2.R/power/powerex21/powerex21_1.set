@@ -1,0 +1,254 @@
+silvaco.file ASCII version=1.14.19 format=1
+""
+#non-visible objects
+number-of-non-visible-objects 0
+
+#non-enable-contour objects
+number-of-non-enable-contour-objects 0
+
+#Cut Plane Settings
+point_1 0 0 0
+point_2 1 0 0
+point_3 0 1 0
+three_points 0
+PAN 0
+PITCH 90
+ELEV 1
+
+#Cut Plane Axes Settings
+X_REVERSE 0
+Y_REVERSE 0
+XY_SWAP 0
+
+#Electrode Properties
+electrode emitter 0 0 0
+electrode gate0v 0 0 0
+electrode gate 0 0 0
+electrode gate0v 0 0 0
+electrode gate0v 0 0 0
+electrode gate 0 0 0
+electrode gate0v 0 0 0
+electrode gate0v 0 0 0
+electrode gate 0 0 0
+electrode gate0v 0 0 0
+electrode gate0v 0 0 0
+electrode gate 0 0 0
+electrode gate0v 0 0 0
+electrode gate0v 0 0 0
+electrode gate 0 0 0
+electrode gate0v 0 0 0
+electrode gate0v 0 0 0
+electrode gate 0 0 0
+electrode gate0v 0 0 0
+electrode gate0v 0 0 0
+electrode gate 0 0 0
+electrode gate0v 0 0 0
+electrode gate0v 0 0 0
+electrode gate 0 0 0
+electrode gate0v 0 0 0
+electrode gate0v 0 0 0
+electrode gate 0 0 0
+electrode gate0v 0 0 0
+electrode collector 0 0 4
+
+#Electrode Labels
+electrode_label emitter emitter 1 0 0 0
+electrode_label gate0v gate0v 1 0 0 0
+electrode_label gate gate 1 0 0 0
+electrode_label gate0v gate0v 1 0 0 0
+electrode_label gate0v gate0v 1 0 0 0
+electrode_label gate gate 1 0 0 0
+electrode_label gate0v gate0v 1 0 0 0
+electrode_label gate0v gate0v 1 0 0 0
+electrode_label gate gate 1 0 0 0
+electrode_label gate0v gate0v 1 0 0 0
+electrode_label gate0v gate0v 1 0 0 0
+electrode_label gate gate 1 0 0 0
+electrode_label gate0v gate0v 1 0 0 0
+electrode_label gate0v gate0v 1 0 0 0
+electrode_label gate gate 1 0 0 0
+electrode_label gate0v gate0v 1 0 0 0
+electrode_label gate0v gate0v 1 0 0 0
+electrode_label gate gate 1 0 0 0
+electrode_label gate0v gate0v 1 0 0 0
+electrode_label gate0v gate0v 1 0 0 0
+electrode_label gate gate 1 0 0 0
+electrode_label gate0v gate0v 1 0 0 0
+electrode_label gate0v gate0v 1 0 0 0
+electrode_label gate gate 1 0 0 0
+electrode_label gate0v gate0v 1 0 0 0
+electrode_label gate0v gate0v 1 0 0 0
+electrode_label gate gate 1 0 0 0
+electrode_label gate0v gate0v 1 0 0 0
+electrode_label collector collector 0 0 0 0
+
+#Region Properties
+region "Region #29" 0 0 4
+region "Region #30" 0 0 4
+region "Region #31" 0 0 4
+region "Region #32" 0 0 4
+region "Region #33" 0 0 4
+region "Region #34" 0 0 4
+region "Region #35" 0 0 4
+region "Region #36" 0 0 4
+region "Region #37" 0 0 4
+region "Region #38" 0 0 4
+region "Region #39" 0 0 4
+region "Region #40" 0 0 4
+region "Region #41" 0 0 4
+region "Region #42" 0 0 4
+region "Region #43" 0 0 4
+region "Region #44" 0 0 4
+region "Region #45" 0 0 4
+region "Region #46" 0 0 4
+region "Region #47" 0 0 4
+region "Region #48" 0 0 4
+
+#Region Labels
+region_label "Region #29" "Region #29" 1 0 0 0
+region_label "Region #30" "Region #30" 1 0 0 0
+region_label "Region #31" "Region #31" 1 0 0 0
+region_label "Region #32" "Region #32" 1 0 0 0
+region_label "Region #33" "Region #33" 1 0 0 0
+region_label "Region #34" "Region #34" 1 0 0 0
+region_label "Region #35" "Region #35" 1 0 0 0
+region_label "Region #36" "Region #36" 1 0 0 0
+region_label "Region #37" "Region #37" 1 0 0 0
+region_label "Region #38" "Region #38" 1 0 0 0
+region_label "Region #39" "Region #39" 1 0 0 0
+region_label "Region #40" "Region #40" 1 0 0 0
+region_label "Region #41" "Region #41" 1 0 0 0
+region_label "Region #42" "Region #42" 1 0 0 0
+region_label "Region #43" "Region #43" 1 0 0 0
+region_label "Region #44" "Region #44" 1 0 0 0
+region_label "Region #45" "Region #45" 1 0 0 0
+region_label "Region #46" "Region #46" 1 0 0 0
+region_label "Region #47" "Region #47" 1 0 0 0
+region_label "Region #48" "Region #48" 1 0 0 0
+
+#Overlay Properties
+overlay_mode_active 0
+
+#Define the scene matrix
+sm_00 0.85932167888713895
+sm_01 -0.47374918983967357
+sm_02 -0.19268616276433143
+sm_03 -60.053675468797238
+
+sm_10 0.33145743232734748
+sm_11 0.22895929005495685
+sm_12 0.915266963269457
+sm_13 38.583363026351677
+
+sm_20 -0.38948969530598659
+sm_21 -0.85037600426151605
+sm_22 0.35377737155825262
+sm_23 253.40369565555861
+
+sm_30 0
+sm_31 0
+sm_32 0
+sm_33 1
+
+#Define the camera matrix
+cm_00 1
+cm_01 0
+cm_02 0
+cm_03 0
+
+cm_10 0
+cm_11 1
+cm_12 0
+cm_13 0
+
+cm_20 0
+cm_21 0
+cm_22 1
+cm_23 -625.61951363144408
+
+cm_30 0
+cm_31 0
+cm_32 0
+cm_33 1
+
+#Define the scene scaling factors
+ss_xyz 1 1 1
+
+#Define 3D projection
+proj_3d_aspect 1.097799511002445
+proj_3d_z_near 336.89700451383004
+proj_3d_z_far 532.47241200122323
+proj_3d_height 239.62833892545245
+proj_3d_fovy 25
+proj_3d_type 0
+proj_3d_depth_cue 2
+
+coord_selection 0
+coord_type 0
+
+modelview_x_scale 1
+modelview_y_scale 1
+modelview_z_scale 1
+
+#Global BBox Settings
+global_bbox_min -19.158449650459403 -9.1584496504594011 -10.658449650459401
+global_bbox_max 187.17209309461123 18.172093094611377 157.17209309461137
+
+#Define x-y-z Axis Visibility
+x_axis_visibility 1
+y_axis_visibility 0
+z_axis_visibility 1
+
+#Define Legend Visibility
+contour_legend 1
+region_legend 1
+
+#Define the DisplayMode
+display_mode_id 3
+
+#Define Show Cut Plane
+show_cut_plane 0
+
+#Define Show Cut Plane X Y Axes
+show_cut_plane_x_axis 1
+show_cut_plane_y_axis 1
+
+#Define the DrawMode
+draw_mode_id 0
+
+#Define the Region_Color_Type
+region_color_type 0
+
+mat_info "Electrodes 2 1"
+mat_info "Polysilicon 40 1"
+mat_info "Si3N4 28 1"
+mat_info "Silicon 8 1"
+
+#Define light0 and light1 information
+light0_enabled 1
+light0_color 255 255 255
+light0_intensity 0.52999997138977051
+light0_latitude 30
+light0_longitude 0
+
+light1_enabled 1
+light1_color 255 255 255
+light1_intensity 0.52999997138977051
+light1_latitude 0
+light1_longitude 270
+
+#Define contours information
+imp_menu_index 59
+name-of-doping "e- Current Density"
+limit_select_type 0
+auto_max_limit 0
+auto_min_limit 1
+contour_max_imp_value 30000
+contour_min_imp_value 0
+legend_type 0
+legend_auto_mapping 0
+legend_mapping 1
+legend_palette 0
+legend_nbr_of_colors 5
+
+EOF 478289675

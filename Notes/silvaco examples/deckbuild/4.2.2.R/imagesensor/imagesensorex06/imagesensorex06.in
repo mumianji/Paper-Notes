@@ -1,0 +1,258 @@
+# (c) Silvaco Inc., 2018
+# First Create High Energy P-Well Implant Profiles in Athena to save Sim Time
+
+go athena
+
+line x location=-0.05 spacing=0.005
+line x location=0.05  spacing=0.005
+
+line y location=0
+line y location=0.002
+line y location=1.9
+line y location=2
+line y location=3
+
+init silicon
+
+struct outfile=pwell.str
+
+implant boron energy=580 dose=3.1e14 tilt=0 rotation=0 bca n.ion=400000 \
+        print.mom
+
+extract name="B_580_keV" curve(depth, impurity="Boron" material="Silicon" \
+        mat.occno=1 x.val=0) outfile="B_580_keV.dat"
+
+init infile=pwell.str
+
+implant boron energy=145 dose=2.4e14 tilt=0 rotation=0 bca n.ion=400000 \
+        print.mom
+
+extract name="B_145_keV" curve(depth, impurity="Boron" material="Silicon" \
+        mat.occno=1 x.val=0) outfile="B_145_keV.dat"
+
+init infile=pwell.str
+
+implant boron energy=15  dose=1.8e14 tilt=0 rotation=0 bca n.ion=400000 \
+        print.mom
+
+extract name="B_15_keV" curve(depth, impurity="Boron" material="Silicon" \
+        mat.occno=1 x.val=0) outfile="B_15_keV.dat"
+
+
+go victoryprocess 
+
+init silicon layout="imagesensorex06.lay" gasheight=1 depth=3 
+
+# option doping.off
+
+cartesian mask="PWELL"    spac=0.1 all.point 
+
+set space.mult=1
+
+line x location=0     spacing=0.25*$space.mult
+line x location=0.5   spacing=0.125*$space.mult
+line x location=0.75  spacing=0.125*$space.mult
+line x location=1     spacing=0.125*$space.mult
+line x location=1.25  spacing=0.175*$space.mult
+line x location=1.5   spacing=0.125*$space.mult
+line x location=2     spacing=0.125*$space.mult
+line x location=2.5   spacing=0.25*$space.mult
+line x location=4.25  spacing=0.875*$space.mult
+line x location=6     spacing=0.25*$space.mult
+line x location=6.5   spacing=0.25*$space.mult
+
+line y location=0     spacing=0.15*$space.mult
+line y location=0.25  spacing=0.125*$space.mult
+line y location=0.5   spacing=0.15*$space.mult
+line y location=1     spacing=0.25*$space.mult
+line y location=2     spacing=0.25*$space.mult
+line y location=2.5   spacing=0.25*$space.mult
+line y location=3     spacing=0.125*$space.mult
+line y location=3.5   spacing=0.175*$space.mult
+line y location=4     spacing=0.125*$space.mult
+line y location=4.5   spacing=0.175*$space.mult
+line y location=5     spacing=0.125*$space.mult
+line y location=5.5   spacing=0.175*$space.mult
+line y location=6     spacing=0.15*$space.mult
+line y location=6.25  spacing=0.125*$space.mult
+line y location=6.5   spacing=0.15*$space.mult
+
+line z location=0 spac=0.002
+line z location=0.9 spac=0.3
+line z location=1.8 spac=0.1
+line z location=3 spac=0.5
+
+etch silicon thick=2 max
+doping silicon boron=1e19 
+deposit silicon thick=2 phosphorus=1.5e15 max
+
+mask "PWELL" reverse
+
+Profile infile="B_580_keV.dat" boron lstddev=0.01
+Profile infile="B_145_keV.dat" boron lstddev=0.01
+Profile infile="B_15_keV.dat"  boron lstddev=0.01
+
+strip resist
+
+deposit oxide thick=0.006 max
+deposit polysilicon thick=0.2 max
+
+etch polysilicon thick=0.2 max mask="POLY"
+electrodes mask=POLY material=polysilicon
+deposit oxide thick=0.01 conformal
+
+
+mask "NPLUS" reverse
+implant phosphor energy=20 dose=2.5e14 tilt=7 rotation=27
+implant phosphor energy=20 dose=2.5e14 tilt=7 rotation=117 
+implant phosphor energy=20 dose=2.5e14 tilt=7 rotation=207 
+implant phosphor energy=20 dose=2.5e14 tilt=7 rotation=297 
+strip resist
+
+mask "BF2" reverse
+implant bf2 energy=30 dose=5e13 tilt=7 rotation=27 
+implant bf2 energy=30 dose=5e13 tilt=7 rotation=117
+implant bf2 energy=30 dose=5e13 tilt=7 rotation=207
+implant bf2 energy=30 dose=5e13 tilt=7 rotation=297
+strip resist
+
+diffus time=2 temperature=1050 
+
+etch oxide thick=0.02 max mask="CONT" reverse
+
+mask "CONT" reverse
+deposit aluminum thick=0.206 min
+strip resist
+electrodes mask=CONT material=aluminum
+
+save name=imagesensorex06_vp_0
+
+
+go victorymesh
+
+load in=imagesensorex06_vp_0
+
+remesh conformal
+
+save out=imagesensorex06_0.str
+
+tonyplot3d imagesensorex06_0.str -set imagesensorex06_0.set
+
+
+# Vt Simulation of the Pass Transistors
+
+go victorydevice
+
+mesh infile=imagesensorex06_0.str verbose=3 
+
+models consrh cvt
+
+contact name=cgate n.poly
+contact name=ngate n.poly
+contact name=ngate common=cgate
+
+method pas norm.scaling.local
+
+output band.param con.band val.band
+
+probe n.conc x=1 y=3.25 z=0.002 name=cg_conc
+probe n.conc x=1 y=5.5  z=0.002 name=ng_conc
+
+solve init
+solve previous
+log outfile=imagesensorex06_0.log
+solve vcgate=0.01
+solve vcgate=0.1 vstep=0.1 vfinal=3.3 name=cgate
+save outfile=Vg3p3.str
+tonyplot imagesensorex06_0.log -set imagesensorex06_1.set
+
+
+# First Simulate Dark Curent Image Sensor Characteristics
+
+go victorydevice
+
+mesh infile=imagesensorex06_0.str verbose=3
+
+models consrh cvt fermi
+contact name=cgate n.poly
+contact name=ngate n.poly
+
+method pas tol.time=100 norm.scaling.local
+
+output band.param con.band val.band
+
+probe n.conc    x=4.25 y=3.25 z=1     name=cis_conc
+probe potential x=1    y=4.5  z=0.002 name=fd_potential
+probe potential x=4.25 y=3.25 z=1     name=cis_potential
+
+solve init
+solve previous
+save outf=0V.str
+
+# Deplete the Image Sensor of Electrons
+log outfile=imagesensorex06_1.log
+solve Vcgate=3.3 ramptime=1e-6 dt=1e-8 tstop=1e-6
+solve tstop=2e-6 dt=1e-8
+save outfile=depleted_dark.str
+
+# Dark Recovery Time
+solve tstop=0.1 dt=1e-7
+method constant.timestep
+solve tstop=1   dt=0.05
+
+tonyplot imagesensorex06_1.log -set imagesensorex06_2.set
+save outfile=filled_dark.str
+
+
+# SAME SIMULATION BUT AT SOLAR AM-1.5 ILLUMINATION at 0.01 Watts/cm2
+
+# At this illumination intensity, an integration time of 0.0008 seconds
+#    yields a change in output voltage approximately half the maximum
+
+
+go victorydevice
+
+mesh infile=imagesensorex06_0.str verbose=3
+
+set expose_time=0.0008
+set intensity=0.001
+
+models consrh cvt fermi
+contact name=cgate n.poly
+contact name=ngate n.poly 
+
+method pas tol.time=100 lte.timestep
+
+output band.param con.band val.band
+
+beam num=1 am1.5 z.origin=-2 nx=104 nz=104 metal.reflect \
+     wavel.num=10 wavel.start=0.281 wavel.end=1.281 raytrace=raytrace.str
+
+probe n.conc    x=4.25 y=3.25 z=1     name=cis_conc
+probe potential x=1    y=4.5  z=0.002 name=fd_potential
+probe potential x=4.25 y=3.25 z=1     name=cis_potential
+
+solve init
+solve previous
+
+# Deplete the Image Sensor of Electrons
+log outfile=imagesensorex06_2.log
+solve Vcgate=3.3 ramptime=1e-6 dt=1e-8 tstop=1e-6 b1=$intensity
+solve tstop=2e-6 dt=1e-8 b1=$intensity
+save outfile=depleted_light.str
+
+# Light Integration Time
+solve tstop=$expose_time dt=1e-7 b1=$intensity
+
+save outfile=read.str
+
+extract name="Potential at $'intensity' W/cm2" y.val from \
+        curve(time, probe."fd_potential") where x.val=$expose_time
+
+solve tstop=1 dt=1e-7 b1=$intensity
+
+tonyplot imagesensorex06_1.log -overlay imagesensorex06_2.log -set imagesensorex06_3.set
+tonyplot imagesensorex06_2.log -set imagesensorex06_4.set
+
+
+

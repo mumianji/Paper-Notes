@@ -1,0 +1,881 @@
+
+{section} SOI : SOI Application Examples
+
+
+{subsection} soiex01.in : Partially Depleted SOI - Vt and Subthreshold Slope
+
+Requires: S-Pisces
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example simulates the Ids/Vgs characteristics of a thick film SOI MOSFET and from these results extracts the threshold voltage and subthreshold slope. These are two key parameters involved in the design of any SOI MOSFET.  It demonstrates:
+
+{bullet} Basic SOI structure definition using Atlas syntax
+{newline}
+{bullet} Setting transport models including impact ionization
+{newline}
+{bullet} Generating an Ids/Vgs curve with Vds=0.1V
+{newline}
+{bullet} Extracting threshold voltage and subthreshold slope from the results
+{newline}
+{bullet} Plotting output curves and structures.
+
+The SOI device is a partially depleted device composed of a 0.2 micron
+layer of silicon on a 0.4 micron silicon dioxide substrate.  The
+device has a 17 nm thick gate oxide and a gate length of 1.0 microns.
+For simplicity there is no silicon below the back oxide. Other examples
+in this section do include a silicon substrate.
+
+The device mesh, region specification and electrode definition are performed using the 
+{bold} mesh, region 
+and 
+{bold} electrode 
+statements at the start of the input file. The doping is added as
+simple analytical functions. The channel doping in this simple example
+is presumed a constant. Gaussian source and drain profiles are used. No
+LDD or spacer is considered in this case.
+
+
+After the structure description, the
+{bold} interface 
+statement is used to define fixed oxide charges on both silicon - silicon
+dioxide interfaces.  Next the
+{bold} contact 
+statement is used to specify the workfunction on the poly-silicon gate.
+
+The
+{bold} model 
+statement is used to specify a reasonable set of physical models for
+SOI simulation.  In this case, concentration dependent mobility,
+SRH recombination, Auger recombination, band-gap narrowing, and 
+parallel electric field dependent mobility are specified.
+
+After the initial solution, a negative gate voltage is applied followed by solutions at drain biases
+of 0.05 and 0.1 volts are obtained. Next, the
+{bold} log 
+statement is used to specify a file for collection of the Id/Vgs
+characteristics of the SOI device. These characteristics are captured
+with the following 
+{bold} solve 
+statement where the gate bias is ramped in 0.1 volt increments from
+-0.2 volts up to 1.5 volt.
+
+After the voltages have been solved 
+{bold} extract 
+statements are used to find the threshold voltage and the subthreshold slope of the SOI MOSFET.
+
+Finally, the resultant Id/Vgs curve is plotted using TonyPlot.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+{subsection} soiex02.in : Fully Depleted SOI - Vt and Subthreshold Slope
+
+Requires: S-Pisces
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example repeats soiex01.in but for a device that has been designed to operate with a fully depleted SOI film.  It demonstrates:
+
+{bullet} Basic SOI structure definition using Atlas syntax
+{newline}
+{bullet} Setting transport models including impact ionization
+{newline}
+{bullet} Generating an Id/Vgs curve with Vds=0.1V
+{newline}
+{bullet} Extracting threshold voltage and subthreshold slope from the results
+{newline}
+{bullet} Plotting output curves and structures
+
+
+Thin film fully depleted SOI MOSFETs have been shown to achieve low threshold voltages and near ideal inverse subthreshold slopes. This makes them ideal for low power operation. 
+This example demonstrates that Atlas is capable of reproducing the differences between a partially depleted transistor in soiex01.in and the fully depleted transistor in this example.
+
+The syntax and methodology used within this example are identical to that of soiex01.in with only two three modifications.
+
+The 
+{bold} mesh 
+ has been modified to support the thinner SOI film thickness of 0.1um and the definition of the SOI layers on the 
+{bold} region 
+statement has similarly been adapted. Also, the channel doping has been reduced on the 
+{bold} doping 
+statement to ensure the film is fully depleted.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} soiex03.in : Partially vs Fully Depleted SOI - Leakage Current Analysis
+
+Requires: S-Pisces
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example simulates leakage current at high drain bias and shows how this value can be extracted as a design parameter. 
+The analysis is repeated for both fully depleted and partially depleted SOI MOSFETs.  It demonstrates:
+
+{bullet} Basic SOI structure definition using Atlas syntax
+{newline}
+{bullet} Deckbuild syntax for defining general structure dimensions
+{newline}
+{bullet} Setting transport models including impact ionization
+{newline}
+{bullet} Generating an Id/Vds curve with Vgs=0.0V
+{newline}
+{bullet} Extracting the leakage current design parameter
+{newline}
+{bullet} Plotting output curves and structures
+
+
+The leakage current in SOI MOSFETs has in the past been seen as a barrier to its development. 
+The source of this current has, in some cases, been due to the existence of interface charge at the bottom oxide-silicon interface. 
+This example simulates the leakage current analysis for both partially and fully depleted SOI MOSFETs.
+
+In this example, rather than use two Atlas input files for thick and thin SOI films, a more general purpose input file has been created. By using deckbuild 
+{bold} set 
+commands it is possible to create variables inside the input file. These variables may then be used to define the location of mesh lines or region boundaries.
+
+In this example, there have been three modifications made to the input file. The 
+{bold} y.mesh 
+ definition has been modified to use the created variables to define the location of y mesh lines and, in a similar manner, the  
+{bold} region 
+statement has also been changed to use these variables to define the region boundaries. Interface charges, on both the top and bottom interfaces, are defined on the 
+{bold} interface
+ statement. In SOI MOSFETs, these two interfaces can have very different values of interface charge as is shown in this example. Once again the predefined variables have been used to define the regions where the charge exists.
+
+Submicron devices should be simulated using the Energy Balance Model due to
+velocity overshoot, and nonlocal impact ionization effects, which could
+substantially influence device characteristics. The
+{bold} models hcte 
+statement is used to set the solution for electron and hole energy balance. Next, the
+{bold} impact 
+statement is used to specify that the Selberherr impact ionization
+model is to be used. Impact ionization is an important phenomenon in SOI
+devices even at relatively low voltages. The impact model is required
+here for this SOI Id/Vds analysis.
+
+The remaining Atlas syntax and methodology is based upon that of soiex01.in and a description of it may be found there.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+ This example has initially been set up to simulate a thick film partially depleted transistor. 
+To simulate the thin film fully depleted transistor case the set statements need to be changed to 
+
+{bold}set simid=0.05
+{newline}
+{bold}set sibot=0.1
+{newline}
+{bold}set oxbot=0.5
+
+and the example is executed once again.
+
+
+{subsection} soiex04.in :  The "Kink" Effect in Partially Depleted SOI MOSFETs
+
+Requires: S-Pisces
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+
+This example simulates the Ids/Vds characteristics of a partially depleted SOI MOSFET, described in example soiex01.in, for three gate voltages. 
+The effect of impact ionisation at the drain junction causes the silicon film to be raised in potential and causes a shift in the threshold voltage. 
+This is seen as a "kink" in the Ids/Vgs curves. The file shows:
+
+{bullet} Basic SOI structure definition using Atlas syntax
+{newline}
+{bullet} Setting transport models including impact ionization
+{newline}
+{bullet} Generating an Ids/Vds curve with Vgs=1V, 2V and 3V
+{newline}
+{bullet} Plotting output curves and structures.
+
+The Atlas syntax and methodology is based upon that of soiex01.in and a description of it may be found there.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} soiex05.in :  Negative Transconductance - Effect of Lattice Heating
+
+Requires: S-Pisces/Giga
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example compares the results of Ids/Vds curves for an SOI
+transistor using isothermal and non-isothermal approaches. The heating
+of the silicon film causes a negative saturation slope. The file shows:
+
+{bullet} SOI structure formation using Atlas syntax
+{newline}
+{bullet} Selection of the lattice heating model
+{newline}
+{bullet} Selection of thermal boundary conditions
+{newline}
+{bullet} Id/Vds simulation for Vgs=10V
+{newline}
+{bullet} Repetition of the Ids/Vds curve excluding lattice heating for comparison
+
+
+There are two Atlas runs in this example file. The first uses lattice
+heating and the second uses isothermal models.
+
+The initial phase of the input file constructs an SOI device using the Atlas syntax.
+{bold} mesh, region 
+and
+{bold} electrode 
+statements are used to define the geometry and mesh of the structure. The 
+{bold} doping 
+statement is used to define analytical doping profiles. A uniformly
+p-doped silicon film is used with heavy gaussian n+ source and drain
+regions.
+
+The heat flow equation is selected using
+{bold} models lat.temp
+. Other models such as 
+{bold} arora 
+are used to define a temperature dependent mobility model. Local
+lattice temperature is used in the documented mobility model
+equations. The thermal boundary conditions are crucial in simulations with 
+lattice heating. The
+{bold} thermcontact 
+statement defines the heat sink. The heat sink is on the bottom of the silicon substrate region. All other boundaries are presumed to be in thermal isolation.
+
+The choice of numerical method in SOI device simulation is also
+important. The standard newton method has some convergence problems in
+floating body devices. As impact ionization occurs the initial guess to
+the potential of the floating channel region becomes more difficult.
+The newton method, which relies on a good initial guess, can encounter
+convergence difficulties. These difficulties are generally not fatal to
+the simulation, but require small voltage steps to be used. This adds
+to the CPU time considerably. A more robust method available in Atlas
+is by choosing the combined gummel/newton algorithm. 
+
+In addition, the solution of the heat flow equation must also be
+included. The most robust method, once the temperature rises above the
+heat sink level, is newton. However in the early stages of the solution
+the decoupled
+{bold} block 
+method is better. Atlas can switch between these methods so all are included in the 
+{bold} method gummel block newton 
+statement.
+
+
+The electrical solutions for Ids/Vds is defined in a similar manner to
+the regular NMOS example described in the MOS examples section.
+
+
+The simulation with lattice heat is exactly analogous to the subsequent
+one using isothermal models. The run differs only in having no lat.temp
+or thermcontact definition.
+
+
+Id/Vds curves form the two runs can be overlaid in TonyPlot showing
+the effect of lattice heating on the device performance. The increased
+temperature causes the mobility to decrease as the drain bias rises
+leading to a negative saturation slope. Comparison of the physical
+variables at the same bias is also possible from the saved solution
+files. Plotting impact ionization in each case shows how the elevated
+lattice temperature reduces the impact ionization rate.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} soiex06.in :  Breakdown in SOI MOSFETs - Effect of Lattice Heating
+
+Requires: S-Pisces/Giga
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example compares Ids/Vds  analyses of a short channel
+ultra-thin SOI transistor with Energy Balance (EB) and Nonisothermal Energy
+Balance Models (NEB). It shows:
+
+
+{bullet} SOI structure formation using Atlas syntax
+{newline}
+{bullet} Selection of energy balance and lattice heating models
+{newline}
+{bullet} Selection of numerical methods for coupled solution technique
+{newline}
+{bullet} Id/Vds simulation for Vgs=4.0V
+
+The example file consists of two runs. The first simulates the device
+using energy balance models, the second using energy balance and
+lattice heating models combined.
+
+Submicron devices should be simulated using the Energy Balance Model due to
+velocity overshoot, and nonlocal impact ionization effects, which could
+substantially influence device characteristics.  For high current
+levels (high gate voltages) the thermal self-heating effects could also
+play an important role decreasing mobility and impact ionization rate.
+These effects are very pronounced in SOI transistors due to low heat
+conductivity of the oxide. This leads to the negative output
+conductance. This example demonstrates comparison of Ids/Vds curves
+obtained with Energy Balance and Nonisothermal Energy Balance Models.
+
+The first Atlas run uses the Energy Balance Model: Poisson's equation,
+carrier continuity equations, and the energy balance equation for electrons
+are solved self-consistently.
+
+The device is described in the first part of the input file. The SOI
+device is composed of a 0.05 micron layer of silicon on a 0.45 micron
+silicon dioxide substrate.  The device has a 12 nm thick gate oxide and
+a gate length of 0.8 microns. Effective channel length is 0.5
+microns.
+
+After the device description, the
+{bold} material 
+statement is used to assign an energy relaxation time for electrons.
+The
+{bold} models hcte.el 
+statement is used to set the solution for electron energy balance.
+Other parameters on the model statement select a set of physical models
+for this simulation.  In this case, these models are CONSRH and AUGER
+recombination, the conmob and fldmob mobility model and Band Gap Narrowing.
+The 
+{bold} impact length.rel lrel.el=0.02
+statement is used to assign the energy relaxation length for Selberherr model.
+The 
+{bold} contact 
+statement is used to assign the work function on the polysilicon gate.
+
+
+The gate voltage is ramped to 4V. At this stage the combined algorithm is used:
+{bold} method gummel newton carr=2
+. Thus if convergence is not reached in decoupled mode (gummel)
+the simulator will automatically switch to coupled mode (newton).  Then
+the drain voltage is ramped. Again the combined algorithm is used for low
+drain biases and full newton scheme for higher drain biases.
+The method statement also defines that a two carrier solution is performed using
+{bold} carr=2 
+whereby Atlas will solve Poisson's equation for potential and the electron and hole continuity equations.
+
+The second Atlas run uses Nonisothermal Energy Balance Model: Poisson's
+equation, carrier continuity equations, energy balance equation for
+electrons, and a lattice energy balance equation are solved
+self-consistently.
+
+The same set of models is used, except that the solution of the  lattice energy
+balance equation is activated using lat.temp parameter in the
+{bold} models 
+statement.
+
+In addition, thermal boundary conditions should be defined in this case.
+Thermal boundary conditions are defined in the 
+{bold} thermcontact 
+statement.  A 300K temperature is specified at the thermcontact located along the bottom
+of the device. Thermal isolation conditions are assumed on all other surfaces.
+
+Id/Vds curves from the two simulations can be compared in TonyPlot.
+Internal variables at the same bias point can also be compared using
+the saved solution files. Plots of impact ionization rate and electron
+temperature show the effect of the elevated temperature in the silicon
+film of these quantities.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+{subsection} soiex07.in : 3D Device Simulation - Effect of a Body Contact 
+
+Requires: Device 3D
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates Ids/Vgs and Id/Vds  3D analysis of a short
+channel ultra-thin SOI transistor with body contact. Such 
+simulations cannot be performed using a 2D simulator because the body
+electrode is located in the out of the plane of the drain, gate and
+source. The example shows:
+
+{bullet} Formation of 3D structure using Atlas syntax
+{newline}
+{bullet} Id/Vgs solution with Vds=0.1V
+{newline}
+{bullet} Id/Vds solution with Vgs=1.5V
+
+The formation of this 3D structure is performed using the Atlas syntax.
+The syntax used is very similar to that in the previous 2D example. The
+definition of dimensions in the third direction is defined by the
+{bold} z 
+indicator. Thus z.min and z.max define extents in the z direction, just
+as x.min and x.max do in the x direction. 
+
+The SOI device is composed of a 0.05 micron layer of silicon on a 0.45
+micron silicon dioxide substrate.  The device has a 12 nm thick gate
+oxide and a gate length of 0.8 microns (effective channel length is 0.5
+microns).  The gate width is 2.5um. The body contact location is
+defined by the following statement
+
+{bold} elec  num=4  x.min=2.8 x.max=3.6 y.min=-0.012 y.max=0.00 z.min=3.5 z.max=4
+
+After the device description, the
+{bold} model 
+statement is used to select a set of physical models for this simulation.  In this case,
+these models are 'consrh' and 'auger' recombination, the conmob and fldmob mobility models, 
+Band Gap Narrowing.
+The 
+{bold} impact 
+statement is used to specify the Selberherr model.
+The 
+{bold} contact 
+statement is used to assign the work function on the polysilicon gate.
+
+The numerical methods used are also similar to the previous example:
+{bold} METHOD gummel newton carr=2
+. This means that if convergence is not reached in decoupled mode (gummel) 
+the simulator will automatically switch to coupled mode (newton). In 
+addition, a two carrier solution is performed by solving Poisson's 
+equation for potential and the electron and hole continuity equations.
+
+
+The drain voltage is set to 0.1V, and then the gate voltage is swept 
+to 1.5V to measure the Ids/Vgs curve. 
+
+
+Then the gate voltage is set to 1.5V, and then the drain voltage is
+swept to 3V.  At this point, faster solutions are obtained using the
+coupled newton algorithm so the simulation switches to this
+method.  The drain voltage is then ramped to 4V.
+
+The IV results are displayed using TonyPlot.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+{subsection} soiex08.in :  Modelling for Deep Submicron  - Process to Device
+
+Requires: SSuprem 4/S-Pisces/Giga
+{newline}
+Minimum Versions: Athena 5.22.3.R, Atlas 5.26.1.R
+
+This example uses process simulation to construct a 
+{bold} SOI MOSFET
+ that has full dielectric isolation. Device simulations are then 
+performed that use Non-isothermal Energy Balance (NEB) calculations 
+to obtain Ids/Vds characteristics.
+It shows:
+
+{bullet} SOI structure formation using SSuprem 4 process simulation
+{newline}
+{bullet} Partially depleted SOI design
+{newline}
+{bullet} Selection of energy balance and lattice heating models in Atlas
+{newline}
+{bullet} Selection of numerical methods for coupled solution technique
+{newline}
+{bullet} Id/Vds simulation for Vgs=1.0, 3.0 and 5.0 V
+
+
+A silicon-oxide-silicon structure was formed in SSuprem 4 by use of the 
+{bold} region
+ statement of Athena. This structure was then subjected to a standard bulk 
+MOSFET processing sequence, which has been described in mos1ex01.in. 
+The structure in this example has been designed so that the SOI thickness 
+is greater than the depth of the source and drain junctions. 
+This ensures that the device will operate in a partially depleted mode of 
+operation during later device simulations.
+
+One major modification made to the original processing sequence was to 
+introduce a LOCOS isolation step. The result of this step was the creation 
+of a fully oxide isolated island of silicon. The 
+{bold} COMPRESS 
+model for oxidation has been used in this example but more complex and 
+accurate models may be used to study birds beak effects in SOI MOSFETs, 
+as described in the Athena/SSuprem 4 section.
+
+The process simulation structure will be passed into Atlas automatically 
+using DeckBuild's auto-interface. This auto-interface therefore
+allows global optimization from process simulation to device simulation
+to SPICE model parameter extraction.
+
+The 
+{bold} contact 
+statement is used in Atlas to define the workfunction of the gate electrode. The 
+{bold} interface  
+command is used to define the the fixed charge at the oxide/silicon interfaces. The 
+{bold} models 
+statement defines a set of physical models for the simulation. CVT and SRH are 
+standard models for MOSFET simulation. The energy balance equation for electrons 
+is specified by 
+{bold} hcte.el 
+parameter and the lattice heat flow equation is solved with Giga by setting the parameter 
+{bold} lat.temp
+. A thermal contact must also be defined when solving the heat flow equation with 
+Giga and is defined using the 
+{bold} thermcontact 
+statement. In this example this thermal electrode is defined to be the same as 
+contact number #4 which is the substrate electrode.
+
+The numerical algorithm chosen for this system of equations is the newton approach 
+defined on the 
+{bold} method 
+statement. This statement is also used to define the semiconductor equations.
+{bold} carr=2 
+will solve for potential and the hole and electron continuity equations. The 
+{bold} trap 
+parameter allows the bias step to be reduced in cases of non-convergence for a total of 
+{bold} maxtrap
+ times.
+
+The solution begins by applying zero volts to all contacts and only solving for potential.
+A small voltage is then applied to the drain contact. This is normally advised in the 
+case of SOI simulations due to the presence of a floating region of potential. 
+As described in previous SOI examples, this floating region of potential can cause 
+great numerical difficulties. However by solving for 5 equations, which couples 
+the equations very tightly, and applying only small voltage steps the convergence 
+in this example is excellent.  
+
+The gate voltage is ramped to 1, 2 and 3 V and a solution saved at each of these 
+bias conditions.  Each solution is then used as the initial starting point for 
+simulating the Ids/Vds characteristics by using the 
+{bold} load
+command. A logfile is then opened to store the terminal characteristics and a 
+{bold} solve 
+statement applies the drain bias sweep. This procedure is then repeated for each gate voltage.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} soiex09.in : 3D Device Simulation - Effect of Lattice Heating
+
+Requires: Device 3D/Giga 3D
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+This example demonstrates an Id/Vds 3D analysis of a short channel
+ultra-thin SOI transistor with a body contact. Two simulations are
+performed with and without lattice heating turned on.
+
+Such simulations cannot be performed accurately using a 2D simulator
+because the body electrode is located in a different z-plane compared with the drain, gate and source. The example shows:
+
+{bullet} Formation of 3D structure using Atlas syntax
+{newline}
+{bullet} Id/Vds solution with Vgs=3.0V
+
+The formation of this 3D structure is performed using the Atlas syntax.
+The syntax used is very similar to that of a 2D example. The
+definition of dimensions in the third direction is defined by the
+{bold} z 
+indicator. Thus z.min and z.max define extents in the z direction, just
+as x.min and x.max do in the x direction. 
+
+The SOI device is composed of a 0.2 micron layer of silicon on a 0.4
+micron silicon dioxide substrate.  The device has a 17 nm thick gate
+oxide and a gate length of 1.0 microns (effective channel length is 0.8
+microns).  The gate width is 2.5um. The body contact location is
+defined by the following statement
+
+{bold} electrode     name=body   x.min=1 x.max=2 y.min=0.0 y.max=0.0 z.min=3.5 z.max=4
+
+The
+{bold} model 
+statement is used after the device description to select a set of physical 
+models for this simulation. In this case the example uses conmob: the 
+doping dependent low field mobility model, fldmob: the lateral electric 
+field-dependent mobility model, srh: Shockley-Read-Hall recombination, 
+auger: recombination 
+accounting for high level injection effects, and bgn: band gap narrowing. 
+
+Also, in the lattice heating simulation input deck, an additional parameter
+{bold} lat.temp
+ is placed on the
+{bold} model
+ statement. This switches on lattice heating inside the simulation. With 
+this option it is also necessary to include a thermal boundary condition. 
+This is included using the following statement:
+
+{bold} thermcontact num=1 ext.temp=300 x.min=0 x.max=3 y.min=0.35 z.min=0 z.max=4  
+
+and forces the temperature on the bottom of the device to be fixed at 300K.
+ 
+The 
+{bold} impact 
+statement is used to specify Selberherr model.
+The 
+{bold} contact 
+statement is used to assign the work function on the polysilicon gate.
+
+The numerical methods used are different to previous 2D examples and are 
+chosen by the statement
+{bold} method       bicgst.
+This chooses a bi-conjugate gradient solution scheme which has been found 
+to give robust and fast simulations of three dimensional devices.
+
+The drain voltage is set to 0.1V, and then the gate voltage is swept to 
+3.0V to obtain the operating gate voltage.
+
+Then the gate voltage is set to 3.0V, and then the drain voltage is
+swept to its final value.  
+
+The IV results are displayed using TonyPlot showing the ID-VG characteristics 
+both with and without lattice heating.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} soiex10.in : SOI : Use of Body Contact to Suppress Kink Effect
+
+Requires: Victory Process , Victory Device 
+{newline}
+Minimum Versions: Victory Process 7.22.3.R, Victory Device 1.12.1.R
+
+This example shows how a body contact on
+an SOI NMOSFET can suppress a kink in the IdVd curve that is due to the
+effects of impact ionization. The effect of lattice heating is also shown.
+
+This example demonstrates:
+
+{bullet} Definition of 3D SOI MOSFET structures using Victory Process
+{newline}
+{bullet} The use and effect of a body contact in a 3D MOSFET geometry
+{newline}
+{bullet} Calculation of lattice-heating effects
+{newline}
+{bullet} Simulation of impact ionization effects
+
+The first Victory Process section in this example defines a basic SOI NMOSFET.
+Although the geometry of this device is essentially two-dimensional,
+it is here defined and simulated in 3D so that the results can be
+directly compared with those from a 3D MOSFET with a body contact.
+Using a tetrahedral mesh, the first MOSFET structure is saved to
+the file vdex02_0_0.str, from which it is imported into Victory Device.
+
+In Victory Device, the statement
+{bold} ELECTRODE SUBSTRATE 
+ensures that the substrate of this device is recognized as an electrode,
+which will be held at ground potential. The succeeding 
+{bold} CONTACT 
+statement assigns to the gate the workfunction of n-type polysilicon.
+The 
+{bold} MODELS 
+statement is used to specify the particular models to be used during 
+the simulation. In this example, they include:
+{newline}
+{bullet} CVT: 
+A general purpose mobility model including concentration, 
+temperature, parallel field and transverse field dependence.
+{newline} 
+{bullet} SRH: 
+Shockley-Read-Hall recombination.
+{newline}
+{bullet} AUGER: 
+Auger recombination.
+{newline}
+{bullet} BGN: 
+Bandgap narrowing in the presence of heavy doping.
+
+In addition to these models, the
+{bold} IMPACT SELB 
+statement specifies that the Selberherr model for impact ionization
+will be used.
+
+Now some special steps must be taken, because the MOSFET used in this
+example is not especially stable.  That makes it difficult to obtain a
+consistently steady numerical solution. To facilitate this, we adjust
+some solver parameters by means of 
+{bold} METHOD 
+statements.
+
+Once the contacts, models, and methods have been specified, the simulation
+begins with a 
+{bold} SOLVE INIT 
+to initialize the solution at zero bias. Next a small initial bias is put
+upon the drain, and then the gate is brought up to its operating bias of 3 V.
+The bias on the drain is then ramped from 0.2 V up to 4 V, and the IdVd
+curve saved to the logfile vdex02_0_2.log.
+
+After this, the entire simulation is repeated for this structure, but this
+time considering lattice heating effects. The 
+{bold} CONTACT 
+and
+{bold} MATERIAL 
+statements assign to the gate contact the workfunction, heat capacity,
+and thermal conductivity of n-type polysilicon. The
+{bold} THERMCONTACT 
+statement here defines a thermal contact at the substrate, and specifies
+that it will be maintained at 300 K.
+
+Once the gate has been biased, lattice temperature
+simulation is activated by the statement
+{bold} MODELS LAT.TEMP
+. The drain is then biased as before, and the IdVd curve is
+saved to the logfile vdex02_0_4.log.
+
+The second Victory Process section defines a MOSFET with an additional body contact,
+beside the gate. The difference between this structure and the first one can
+be seen by comparing vdex02_1_0.str and vdex02_0_0.str in 
+{bold} TonyPlot3D
+. 
+
+As with the first structure, simulations are run with and without lattice 
+heating effects. With the addition of the body contact (at 0 V), however,
+the device is much more stable. The IdVd curves are written to the log files
+vdex02_1_2.log and vdex02_1_4.log, and all four IdVd curves generated in
+this example are compared in 
+{bold} TonyPlot
+. This comparison clearly shows that the addition of the body contact suppresses
+the kink in the curves, which is due to the effects of impact ionization.
+
+In
+{bold} TonyPlot3D
+, you can examine the structure files vdex02_0_1.str and vdex02_1_1.str to
+compare the impact ionization patterns for the two devices, and the
+structure files vdex02_0_2.str and vdex02_1_2.str to compare the heat fluxes 
+as well as other lattice heating effects.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+{subsection} soiex11.in : 20nm Undoped Channel, Ultra-Thin Body and Buried Oxide Fully Depleted SOI NMOSFET in 3D
+
+Requires: Victory Process / Victory Mesh / Victory Device
+{newline}
+Minimum Versions: Victory Process 7.22.3.R / Victory Mesh 1.2.4.R / Victory Device 1.12.1.R
+
+Fully depleted SOI (FDSOI) employing a very thin silicon body on an ultra-thin buried oxide has been considered a potential candidate for aggressive CMOS scaling. Accurate modeling of this kind of FDSOI device necessitates a careful selection of physical models. In this example, 3D device modeling and simulation with Victory Device is demonstrated of a 20nm undoped channel, ultra-thin body and buried oxide FDSOI NMOSFET that is created and meshed using a conformal mesh in Victory Mesh.
+
+Featuring a gate length in the sub-100 nm regime, the FDSOI design is subject to non-local effects such as velocity overshoot. In this respect, the energy balance transport model is favored over the conventional drift-diffusion model. The energy balance model is applicable to electrons by specifying the
+{bold} HCTE.EL
+parameter in the
+{bold} MODELS
+statement. For energy balance simulations, it is practical to use the carrier temperature in place of the electric field as the driving force for the field dependent mobility model (
+{bold} FLDMOB
+). The parameter 
+{bold} EVSATMOD=0 
+in the 
+{bold} MODELS 
+statement sets the driving force for the high-field saturation model to be electron temperature. 
+
+In the ultra-thin channel of the 20nm FDSOI NMOSFET, the significance of quantum confinement of electrons becomes conspicuous. The Bohm quantum potential model allows the quantum confinement effects on electron transport to be included in the simulation by means of the
+{bold} BQP.N
+parameter of the 
+{bold} MODELS 
+statement. The principal quantization direction for Bohm quantum potential can be set to x, y, or z using the
+{bold} BQP.QDIR 
+parameter in the
+{bold} MODELS
+statement. For the 20nm FDSOI NMOSFET, the direction of quantization is in the Z direction, i.e.,
+{bold} BQP.QDIR=Z 
+.
+
+Self-heating effects are common in FDSOI structures due to the low thermal conductivity of the buried oxide. Lattice heating is incorporated in Victory Device through self-consistent solutions of the lattice heat flow equation. The 
+{bold} LAT.TEMP 
+flag must be set in the
+{bold} MODELS 
+statement to activate these effects.
+
+The non-local, quantum confinement, and self-heating effects are illustrated by comparing the I-V characteristics of the 20nm FDSOI NMOSFET simulated using the drift-diffusion model with those simulated using the energy balance transport model alone and in combination with the quantum transport and lattice heating models, respectively.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} soiex12.in : 20nm Undoped Channel, Ultra-Thin Body and Buried Oxide Fully Depleted SOI NMOSFET in 2D
+
+Requires: Victory Process/Victory Mesh/Victory Device 
+{newline}
+Minimum Versions: Victory Process 7.22.3.R / Victory Mesh 1.2.4.R / Victory Device 1.12.1.R
+
+This example is similar to the previous
+{bold} soiex11.in
+example, except that it aims at pointing a simple way to generate a 2D 20nm FDSOI NMOSFET from the existing 3D process flow in the previous
+{bold} soiex11.in
+example.
+
+When a mask layout file is used for process simulation, a 2D simulation deck in Victory Process differs from a 3D simulation deck only in that a 2D simulation domain (2D cut) must be defined within the mask using the 
+{bold} FROM 
+and 
+{bold} TO 
+parameters as well as the 
+{bold} AT 
+parameter of the
+{bold} INIT
+statement. In this example, a 2D cut is made at the position Y = 0.02 
+{bold} (AT=0.02)
+within the
+{bold} soiex12.lay
+mask, which is idential to the 
+{bold} soiex11.lay
+mask used in the previous
+{bold} soiex11.in
+example, to create a 2D FDSOI NMOS structure. The cut line is parallel to the X-axis starting from the point X = 0
+{bold} (FROM=0)
+, which coincides with the left side of the mask area, to the point X = 0.12
+{bold} (TO=0.12)
+, which coincides with the right side of the mask area. As this X cut-line at the Y = 0.02 position within the mask results in a 2D simulation in XZ plane, the
+{bold} FLOW.DIM=2D_XZ
+parameter is also specified in the
+{bold} INIT
+statement to enforce the 2D symmetry mode right from the beginning of the simulation flow.
+
+The resulting 2D FDSOI NMOSFET is meshed using Victory Process.  In addition, the maximum level of obtuseness 
+of a triangle in the device mesh is set to
+{bold} MAX.OBTUSENESS=1.
+The lower the value of
+{bold} MAX.OBTUSENESS,
+the more triangles of the resulting conformal device mesh are less obtuse. 
+
+Like the previous 
+{bold} soiex11.in
+example, the Id-Vd characteristics of the 2D 20nm FD-SOI MOSFET are simulated with various carrier transport models using Victory Device.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+

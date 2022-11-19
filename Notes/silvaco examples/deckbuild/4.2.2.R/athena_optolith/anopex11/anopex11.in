@@ -1,0 +1,77 @@
+go athena 
+#
+#                   OPTOLITH input file: anopex11.in
+#                   --------------------------------
+#
+#             	    Swing curve without AquaTAR.
+#
+# Illumination wavelength
+#
+illumination lambda= 0.365
+# 
+illum.filter clear.fil circle sigma=0.5 
+#
+# Projection numerical aperture
+#
+projection na=.52 
+#
+# Projection aperture
+#
+pupil.filter clear.fil circle
+#
+# The mask layout
+#
+layout lay.clear x.lo=-.2 z.lo=-3 x.hi=.2 z.hi=3
+#
+# Run the imaging module
+#
+image clear win.x.lo=-0.5 win.z.lo=0.0 win.x.hi=0.5 win.z.hi=0.0 \
+      dx=0.05 one.d
+#
+structure outfile=anopex11_int.str intensity mask
+#
+tonyplot anopex11_int.str
+#
+# Define the structure
+#
+line x loc=-0.5 spac=0.05
+line x loc=-0.3 spac=0.01 
+line x loc=0 spac=0.05
+line x loc=0.3 spac=0.01
+line x loc=0.5 spac=0.05
+#
+line y loc=1 spac=1.0 
+line y loc=2 spac=1.0    
+#
+init silicon orientation=100 
+#
+deposit oxide thick=0.08 div=1 min.space=0.01
+deposit aluminum thick=1.04 div=3 min.space=0.01
+struct outf=anopex11.str
+
+go internal
+
+load infile=anopex11_tmpl.in
+
+######################### CONTENT of anopex11_tmpl.in ############################
+# go athena                                                                      #
+# init inf=anopex11.str                                                          #
+# deposit name.resist=OiR897i thick=0.9 div=50*$thick min.space=0.01             #
+# rate.dev name.resist=OiR897i i.line c.dill=0.018                               # 
+#                                                                                #
+# init inf=anopex11_int.str intensity                                            #
+# expose dose=250 num.refl=10                                                    #
+# bake time=60 seconds temp=125                                                  #
+# develop kim time=60 steps=6 substeps=24                                        #
+# extract name="cd_in_A" thickness material="OiR897i" mat.occno=1 y.val=-0.45    #
+#                                                                                #
+# extract name="CD" 1.0e-4*$"cd_in_A"                                            #
+##################################################################################
+
+sweep parameter=thick type=linear range="0.9, 1.2, 31"
+
+save type=sdb outfile=anopex11.dat
+tonyplot anopex11.dat -set anopex11.set
+
+quit
+

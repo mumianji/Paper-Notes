@@ -1,0 +1,182 @@
+<html>
+  <head>
+    <title>Recessed Gate Pseudomorphic HEMT DC Characterization</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Recessed Gate Pseudomorphic HEMT DC Characterization</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>DevEdit/Blaze</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="hemtex05_plot0.png" width="640" alt="hemtex05_plot0" />
+      <p/>
+      <img src="hemtex05_plot1.png" width="640" alt="hemtex05_plot1" />
+      <p/>
+      <img src="hemtex05_plot2.png" width="640" alt="hemtex05_plot2" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+In this example a pseudomorphic HEMT structure based on the
+GaAs-AlGaAs-InGaAs-InP material system is constructed using DEVEDIT.
+The structure is then passed to Atlas for electrical testing. The input
+file consists of the following main portions:
+</p>
+<ul>
+  <li>
+ Construction of the device in DEVEDIT
+<br/>
+  </li>
+  <li>
+ Electrical simulation of a family of Id/Vds curves
+<br/>
+  </li>
+  <li>
+ Simulation of Id/Vgs characteristics
+<br/>
+  </li>
+  <li>
+ Basic parameter extraction
+  </li>
+</ul>
+<p>
+The first part of the input file constructs the HEMT geometry, material regions,
+doping profiles, and electrodes in DEVEDIT. The structure considered is non-
+planar with a non-rectangular recessed gate. This demonstrates the important
+capability of DEVEDIT to generate arbitrarily shaped geometries. The device is
+created in DEVEDIT by drawing the device regions in interactive mode and
+specifying 2D doping distributions. The device is based on a GaAs substrate.
+It employs a double channel HEMT concept where the InGaAs
+channel is sandwiched between two AlGaAs regions. The structure also employs
+2 delta- (or pulse-) dopings above and below the channel in both AlGaAs regions.
+These are modeled by narrow, 10 angstrom thick layers. The delta-doping
+usually expressed in terms of planar concentration (cm-2)  must be
+recalculated into bulk doping (cm-3) given the thickness of the layers.
+</p>
+<p>
+The delta-doped regions play an important role and are typical for
+modern HEMT technologies. They are used as additional carrier
+suppliers to the channel and for better control of the threshold
+voltage and other device parameters. The source and drain cap regions
+are made of GaAs. In practical applications the source and drain
+contact alloys often penetrate deep into the structure well below the
+channel. This is modeled by heavily doped areas under the source and
+drain in which the vertical doping distribution is assumed to be
+Gaussian, and the horizontal one is approximated by the complimentary
+error function. The means and the set of functions for specifying
+arbitrary 2D doping distributions are provided by the DEVEDIT. The
+composition fractions of AlGaAs (0.22 for Al) and InGaAs (0.78 for Ga)
+are specified in DEVEDIT as respective region attributes. The
+mesh was generated automatically by specifying basic mesh constraints
+and refining it along the x- and/or y-directions in the
+important areas of the device.
+</p>
+<p>
+DEVEDIT then generates two types of files: a DEVEDIT input file and the
+structure file. The first can be run in DeckBuild to produce the
+corresponding structure file and is included here as the first part of
+the input file. The second can be read in directly by Atlas in the MESH
+statement. Note that the DEVEDIT input file can be edited as any other
+input file. It is straightforward to change the type and value of the
+doping associated with each region or resize regions.  More importantly,
+DEVEDIT input files can also be read directly into the graphical user
+interface of DEVEDIT to provide all the menu options used to construct
+the structure.
+</p>
+<p>
+The Atlas simulation begins from reading in the structure from
+DEVEDIT.  DeckBuild provides autointerface between DEVEDIT and Atlas so
+that the structure produced by DEVEDIT is transferred to Atlas without
+having to indicate the MESH statement (commented out in this example).
+Without the automatic DEVEDIT/Atlas interface under DeckBuild, the MESH
+statement is needed to load the structure and the mesh.
+</p>
+<p>
+The first active statements in the Atlas portion of the input file are
+the contact, material and model  definitions. The gate workfunction is set up
+in the
+<b> contact </b> statement. The material parameters and physical models are
+specified in the
+<b> material </b> and
+<b> models </b> statements respectively on material-by-
+material basis. Shockley-Read-Hall recombination and electric field
+dependent mobility models are applied to all the material/regions. For
+GaAs and AlGaAs regions doping dependent mobilities and recombination
+parameters (lifetimes) are also applied. Conversely for InGaAs regions
+low field mobilities and carrier lifetimes are explicitly specified in
+the material statement. The band alignment
+is defined here using the
+<b> align </b> parameter, which defines the portion of the energy
+band gap difference applied to the conduction band. This parameter is given in the
+<b> material </b> statements.
+</p>
+<p>
+The simulation is first performed to obtain the condition of the structure
+for 3 different gate biases, Vgs=0, -0.2, and -0.4 V, with the source and drain
+grounded. The respective states of the structure are saved in three
+separate solution files. Then the family of three Id-Vds
+characteristics is calculated in three separate drain voltage sweeps
+from 0 up to 2 V. Each series of the drain biasing is performed after loading
+the solutions with the respective gate bias.  The Id-Vds characteristics
+are saved in three separate log files. The final conditions of the
+structure with 2 V on the drain are also saved in separate solution files.
+The zero bias condition is loaded again and the Id-Vgs characteristic is calculated.
+</p>
+<p>
+At the end of simulation, parameter extraction statements are used to extract the
+following parameters using the
+<b> extract </b> feature of DeckBuild:
+</p>
+<ul>
+  <li>
+ Threshold voltage
+<br/>
+  </li>
+  <li>
+ Maximum saturation current (Idss)
+<br/>
+  </li>
+  <li>
+ Gate voltage at Id=0.3*Idss 
+  </li>
+</ul>
+<p>
+The results are also displayed using TonyPlot:
+</p>
+<ul>
+  <li>
+ Id/Vds characteristics
+<br/>
+  </li>
+  <li>
+ Id/Vgs characteristic 
+<br/>
+  </li>
+</ul>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

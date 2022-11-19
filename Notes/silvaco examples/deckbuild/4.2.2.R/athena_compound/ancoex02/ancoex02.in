@@ -1,0 +1,24 @@
+go athena
+
+#TITLE: Dose dependence for Si implantation in GaAs
+
+line x loc = 0.0   spacing=0.25
+line x loc = 0.25  spacing=0.25
+line y loc = 0     spacing = 0.002
+line y loc = 0.2  spacing = 0.005
+init gaas
+
+structure outfile=ancoex02.str
+
+implant silicon energy=10 dose=1e14 bca tilt=0 n.ion=30000  sampling
+structure outfile=ancoex02_0.str remove.gas
+init inf=ancoex02.str
+implant silicon energy=10 dose=5e14 bca tilt=0  n.ion=30000 sampling
+structure outfile=ancoex02_1.str remove.gas
+init inf=ancoex02.str
+implant silicon energy=10 dose=2.5e15 bca tilt=0  n.ion=30000 sampling
+structure outfile=ancoex02_2.str remove.gas
+
+tonyplot -overlay ancoex02_*.str -set ancoex02.set
+
+

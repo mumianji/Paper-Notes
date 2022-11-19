@@ -1,0 +1,51 @@
+# (c) Silvaco Inc., 2018
+go atlas
+Title Radiation interpreter function example
+#
+# Radiation interpreter function example
+#
+# SECTION 1: Mesh Specification
+#
+mesh space.mult=4.0
+#
+x.mesh loc=0.0  spacing=0.25
+x.mesh loc=10.0 spacing=0.25
+#
+y.mesh loc=0.0   spacing=0.05
+y.mesh loc=5.0   spacing=0.2
+y.mesh loc=10.0  spacing=0.05
+#
+# SECTION 2: Structure Specification
+#
+region num=1 material=Silicon
+#
+elec num=1 name=anode x.min=0.0 x.max=10.0 y.max=0.0
+elec num=2 name=cathode bottom
+#
+doping uniform conc=1e14 n.type
+doping gaus peak=0.0 char=0.1 conc=1e18 p.type dir=y
+doping gaus peak=10.0 char=0.1 conc=1e18 n.type dir=y
+#
+# SECTION 3: Material Model Specification
+#
+material taup0=2.e-6 taun0=2.e-6
+models srh auger conmob fldmob  
+#
+# To run the built in model comment out the line with f.radiate in it.
+# The results should match.
+#
+beam     num=1 x.origin=5.0 y.origin=-1.0 angle=90.0 \
+         wavelength=0.6019  f.radiate=optoex07.lib
+#
+# SECTION 4: Initial Solution
+#
+
+	 
+solve	 init
+#
+# SECTION 5: Current vs. intensity
+#
+method newton
+solve	 b1=0.000001 outf=optoex07.str master
+tonyplot optoex07.str -set optoex07.set
+quit

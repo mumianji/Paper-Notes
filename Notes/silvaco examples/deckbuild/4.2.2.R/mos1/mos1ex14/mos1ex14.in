@@ -1,0 +1,196 @@
+# (c) Silvaco Inc., 2018
+go athena
+# This is a simple input deck representing a Process flow and a device
+# test. All lines begining with a '#' sign may be treated as directive
+# comments.....
+
+# Start the Athena Process simulator running...
+#
+# Set up a mesh suitable for a single MOSFET device....
+line x loc=0 spac=0.01 
+line x loc=0.25 spac=0.01
+line x loc=0.5 spac=0.1
+#
+line y loc=0.00 spac=0.005 
+line y loc=0.3 spac=0.015
+line y loc=0.5 spac=0.02
+line y loc=2 spac=0.2 
+line y loc=5 spac=1 
+#
+# Start off by defining silicon with 1e14 phos doping...
+# Decrease the folowing space.mult parameter for a denser
+# mesh and more accuracy...
+init orientation=100 c.phos=1e14 space.mult=2
+# 
+#pwell formation including masking off of the nwell
+#
+diffus time=30 temp=1000 dryo2 press=1.00 hcl=3
+#
+etch oxide thick=0.02
+#
+#N-well Implant
+implant amorphous phos dose=2.9e13 energy=100 pears
+#
+diffus temp=950 time=95 weto2 hcl=3
+#
+#N-well implant amorphous not shown -
+#
+# welldrive 
+diffus time=220 temp=1200 nitro press=1
+#
+etch oxide all
+#
+#sacrificial "cleaning" oxide
+diffus time=20 temp=1000 dryo2 press=1 hcl=3
+#
+etch oxide all
+#
+#gate oxide grown here:-
+set partial_press=1.0
+diffus time=10 temp=800 nitrogen hcl=3
+diffus time=2 temp=900 dryo2 press=$partial_press
+diffus time=13 temp=900 dryo2 press=$partial_press hcl=3
+diffus time=10 temp=900 nitrogen hcl=3
+diffus time=10 temp=800 t.final=800 nit hcl=3
+#
+#vt adjust implant amorphous 
+implant amorphous bf2 dose=2.30e12 energy=25 pearson
+#
+depo poly thick=0.250 div=3 
+#
+etch poly left p1.x=0.25
+#
+# Relax the mesh below the 0.5um plane, for speed....
+relax y.min=0.5
+#
+method fermi compress
+diffuse time=5 temp=900 weto2 press=0.8
+#
+# PLDD implant amorphous
+implant amorphous bf2 dose=2.0e14 energy=50 pearson
+#
+# This is a good way of defining the spacer.....define a variable
+# first with the 'set' command....
+set spacer=0.15
+depo oxide thick=$"spacer" divisions=5
+etch oxide dry thick=$"spacer"+0.005
+#
+# P++ Implant
+implant amorphous bf2 dose=1.50e15 energy=60 pearson
+#
+#
+# Final anneal. 
+method fermi compress
+diffuse time=5 temp=900 nitro press=1.0
+#
+
+
+
+
+# Extract other design parameters...
+# extract final S/D Xj...
+extract name="pxj" xj silicon mat.occno=1 x.val=0.1 junc.occno=1
+# extract the long chan Vt...
+extract name="p1dvt" 1dvt ptype vb=0.0 qss=1e10 x.val=0.49
+# extract a curve of conductance versus bias....
+extract start material="Polysilicon" mat.occno=1 bias=0.0 bias.step=0.2 bias.stop=2 x.val=0.45
+extract done name="sheet cond v bias" curve(bias,1dn.conduct material="Silicon" mat.occno=1  region.occno=1) outfile="extract.dat"
+# extract the P++ regions sheet resistance...
+extract name="p++ sheet rho" sheet.res material="Silicon" mat.occno=1 x.val=0.05 region.occno=1
+# extract the sheet rho under the spacer, of the LDD region...
+extract name="pldd sheet rho" sheet.res material="Silicon" mat.occno=1 x.val=0.3 region.occno=1
+# extract the surface conc under the channel....
+extract name="pchan surf conc" surf.conc impurity="Net Doping" material="Silicon" mat.occno=1 x.val=0.45
+# Etch contact cuts and place the aluminium where electrodes are required.....
+etch oxide left p1.x=0.15
+deposit alumin thick=0.03 div=2
+etch alumin right p1.x=0.16
+
+
+# mirror the structure.....
+structure mirror right
+
+
+
+# Name the electrodes...
+electrode name=gate x=0.5 
+electrode name=source x=0
+electrode name=drain x=0.9
+electrode name=substrate backside
+
+
+
+go devedit
+
+
+
+# Set Meshing Parameters
+#
+base.mesh height=1000000 width=1000000
+#
+bound.cond !apply max.slope=28 max.ratio=300 rnd.unit=0.001 line.straightening=1 align.points when=automatic
+#
+imp.refine imp="NetDoping" sensitivity=1
+imp.refine min.spacing=0.02
+#
+constr.mesh max.angle=90 max.ratio=300 max.height=1 \
+	max.width=1 min.height=0.0001 min.width=0.0001
+#
+# Perform mesh operations
+#
+Mesh Mode=MeshBuild
+refine mode=both x1=0.32 y1=0.22 x2=0.67 y2=0.28
+refine mode=both x1=0.4 y1=0.22 x2=0.60 y2=0.25
+refine mode=both x1=0.74 y1=0.32 x2=1.0 y2=0.48
+
+
+
+
+
+# output the structure
+structure outfile=mos1ex14_0.str 
+
+# plot it
+tonyplot  mos1ex14_0.str -set mos1ex14_0.set
+
+
+
+
+
+################### P-channel Vbd Extraction test #######################
+
+
+go atlas
+
+# add workfunction and interface charge
+contact name=gate n.polysilicon 
+interf  qf=1E10
+
+# select MOS models
+models  cvt consrh  print   
+impact  selb   
+
+solve init
+
+method newton trap ir.tol=1.e-25 ix.tol=1.e-25 climit=1e-4
+solve   
+solve   vdrain=-0.05 
+solve   vdrain=-0.1
+
+# Open  log file to store the IV points in....
+log     outf=mos1ex14.log 
+
+solve vdrain=-0.25
+solve vdrain=-0.5
+
+solve   vdrain=-1 vstep=-1 vfinal=-8 name=drain 
+solve   vdrain=-8.025 vstep=-0.025 vfinal=-15 name=drain compl=1e-11 cname=drain
+save outf=mos1ex14_1.str
+
+# Extract the design parameter, Vbd
+extract init inf="mos1ex14.log"
+extract name="PVbd" x.val from curve(abs(v."drain"),abs(i."drain")) where y.val=1e-11
+
+tonyplot  mos1ex14.log -set mos1ex14_log.set
+
+quit

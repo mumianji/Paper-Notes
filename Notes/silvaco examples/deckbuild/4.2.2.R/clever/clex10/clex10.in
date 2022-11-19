@@ -1,0 +1,86 @@
+go clever
+
+Init Layout="clex10.lay" Depth=1 Map="clex10.lmp" 
+
+Save Spice="clex10.before.net" Layout="clex10_1.lay"
+
+
+## Process Description ##
+
+go victoryprocess
+
+Init Layout=clex10_1.lay Depth=1 material=silicon
+
+set accuracy=0.005
+
+# Create Gate Mask Photoresist shape
+lithography mask=POLY maskcriticalintensity=0.5 maskaperture=0.5 \
+            maskdefocus=0 wavelength=0.193
+
+# Gate Stack Process Steps
+Deposit material=Oxide Thickness=0.25 Max
+Deposit material=Polysilicon Thickness=0.3 Max
+Etch material=Polysilicon thickness=0.36 angle=87 Mask=POLY_LITHO max \
+     tolerance=$accuracy
+Electrodes mask=POLY material=polysilicon
+Electrodes mask=*GATE material=poly
+
+# Create Via 2 Mask Photoresist Shape
+lithography mask=VIA2 maskcriticalintensity=0.21 maskaperture=0.5 \
+            maskdefocus=0 wavelength=0.193 resultimage=via2.str
+
+# Via 2 Process Steps
+Deposit material=Oxide Thickness=0.25 Max
+Etch material=Oxide Thickness=0.8 Angle=87 Mask=VIA2_LITHO Reverse max \
+     tolerance=$accuracy
+Electrodes mask=*CONT material=Silicon
+
+# Create Metal 1 Photoresist Shape
+lithography mask=MET1 maskcriticalintensity=0.5 maskaperture=0.5 \
+            maskdefocus=0 wavelength=0.193
+
+# Metal 1 Process Steps
+Deposit material=Aluminum Thickness=0.25 Max
+Etch material=Aluminum Thickness=0.3 angle=87 Mask=MET1_LITHO max \
+     tolerance=$accuracy
+Electrodes mask=MET1 material=Aluminum
+
+# Create Via 3 Photoresist Shape
+lithography mask=VIA3 maskcriticalintensity=0.5 maskaperture=0.5 \
+            maskdefocus=0 wavelength=0.193 resultimage=via3.str
+
+# Via 3 Process Steps
+Deposit material=Oxide Thickness=0.25 Max
+Etch material=Oxide Thickness=0.3 angle=87 Mask=VIA3_LITHO Reverse max \
+     tolerance=$accuracy
+
+# Create Metal 2 Photoresist Shape
+lithography mask=MET2 maskcriticalintensity=0.5 maskaperture=0.5 \
+            maskdefocus=0 wavelength=0.193
+
+# Metal 2 Process Steps
+Deposit material=Aluminum Thickness=0.5 Max
+Etch material=Aluminum Thickness=0.6 angle=87 Mask=MET2_LITHO max \
+     tolerance=$accuracy
+Electrodes mask=MET2 material=Aluminum
+
+# Passivation
+Deposit material=Oxide Thickness=0.25 Max
+
+Export clever(unstructured) Structure=clex10.str
+
+
+## After creating the 3D structure   ##
+## Perform the Interconnect Analysis ##
+
+go clever
+
+Init Layout="clex10.lay" Map="clex10.lmp" structure="clex10.str" 
+
+Save Spice="clex10.before.net" Layout="clex10_1.lay"
+
+Interconnect  Adapt =(0.04,0.02)
+
+Save Spice="clex10.net"
+
+quit

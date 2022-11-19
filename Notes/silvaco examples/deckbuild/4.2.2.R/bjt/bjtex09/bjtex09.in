@@ -1,0 +1,115 @@
+# (c) Silvaco Inc., 2018
+go atlas
+#
+
+mesh  space.mult=1.0
+# 
+x.mesh loc=0.00 spac=0.10
+x.mesh loc=3.00 spac=0.10
+#
+y.mesh loc=0.00 spac=0.025
+y.mesh loc=0.35 spac=0.025
+y.mesh loc=1.500 spac=0.15
+
+#
+region     num=1 silicon
+#
+#   Electrodes #1 -emitter; #2 -base; #3 -collector
+#
+elec       num=1 left  length=1.0 name=emitter
+elec       num=2 right length=1.0 name=base
+elec       num=3 substrate        name=collector
+#
+#   Impurity profile
+#
+doping     uniform conc=3.0e16 n.type 
+doping     gauss conc=5.0e18 p.type junc=0.35
+doping     gauss conc=5.0e20 n.type junc=0.15 x.r=1.0 ratio=0.75
+doping     gauss conc=2.e19  n.type char=0.2 peak=1.4
+
+save outf=bjtex09_0.str
+tonyplot bjtex09_0.str -set bjtex09_0.set
+#
+
+go atlas
+.begin
+#
+#   ECL inverter - DC point simulation
+#
+vin 1 0 -1.8
+ai     1=base 4=collector 2=emitter infile=bjtex09_0.str width=1.
+an     3=base 5=collector 2=emitter infile=bjtex09_0.str width=1.
+rci    4 0  2k
+rcn    5 0  2k
+vref   3 0  -1.4
+iee    2 7  0.4mA
+ree    2 7  100k
+vcc    7 0  -5.2
+rei    8 7  500
+ren    6 7  500
+cei    8 0  5f
+cen    6 0  5f
+qi     0 4 8 7 modbjt
+qn     0 5 6 7 modbjt
+#
+.model modbjt npn is=1.e-17 bf=100 cje=1f tf=5ps cjc=0.3f rb=100 \
+  rbm=20
+#
+.nodeset v(1)=-1.8 v(2)=-1.8 v(3)=-1.4 v(4)=-1. v(5)=-1. v(6)=-1. v(7)=-5.2 v(8)=-1.8
+.numeric vchange=0.25 imaxdc=50
+.options m2ln print 
+#
+.save outfile=ecldc
+#
+.end
+#
+#    ATLAS models
+#
+models  device=ai reg=1 bipolar 
+models  device=an reg=1 bipolar 
+
+go atlas
+.begin
+#
+#   ECL inverter - transient simulation
+#
+vin 1 0   -1.8 pulse -1.8 -0.9 0. 20ps 20ps 200ps 2000
+ai     1=base 4=collector 2=emitter infile=bjtex09_0.str width=1.
+an     3=base 5=collector 2=emitter infile=bjtex09_0.str width=1.
+rci    4 0  2k
+rcn    5 0  2k
+vref   3 0  -1.4
+iee    2 7   0.4mA
+ree    2 7  100k
+vcc    7 0  -5
+rei    8 7  500
+ren    6 7  500
+cei    8 0  5f
+cen    6 0  5f
+qi     0 4 8 7 modbjt
+qn     0 5 6 7 modbjt
+#
+.model modbjt npn is=1.e-17 bf=100 cje=1f tf=5ps cjc=0.3f rb=100 \
+  rbm=20
+#
+.options print
+#
+.log outfile=bjtex09
+.load infile=ecldc
+#
+.tran 1ps 1ns
+#
+.end
+#
+#    ATLAS device input deck
+#
+models  device=ai reg=1 bipolar 
+models  device=an reg=1 bipolar 
+
+go atlas
+tonyplot  bjtex09_tr.log -set bjtex09_tr_log.set
+
+quit
+
+
+

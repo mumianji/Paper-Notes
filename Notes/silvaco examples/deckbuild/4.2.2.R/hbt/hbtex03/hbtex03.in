@@ -1,0 +1,82 @@
+# (c) Silvaco Inc., 2018
+go atlas
+title AlGaAs HBT breakdown simulation 
+#
+# SECTION 1: Mesh spectification
+#
+mesh  space.mult=1.0
+# 
+x.mesh loc=0.00 spac=0.25
+x.mesh loc=2.00 spac=0.25
+x.mesh loc=3.00 spac=0.2
+x.mesh loc=4.00 spac=0.2
+#
+y.mesh loc=0.00 spac=0.03
+y.mesh loc=0.20 spac=0.005
+y.mesh loc=0.30 spac=0.03
+y.mesh loc=0.40 spac=0.01
+y.mesh loc=0.55 spac=0.03
+y.mesh loc=0.70 spac=0.02
+y.mesh loc=1.2 spac=0.1
+
+
+#
+# SECTION 2: Structure definition
+#
+region num=1 material=GaAs y.min=0.7
+region num=2 material=GaAs y.min=0.4 y.max=0.7
+region num=3 material=AlGaAs y.max=0.2 x.comp=0.3 
+region num=4 material=GaAs y.min=0.2 y.max=0.4
+region num=5 material=SiO2 y.max=0.2 x.max=3.0
+#
+elec num=1  name=emitter x.min=3.0 x.max=4.0 y.min=0.0 y.max=0.0
+elec num=2  name=base    x.min=0.0 x.max=2.0 y.min=0.2 y.max=0.2
+elec num=3  name=collector bot 
+#
+doping uniform region=1 n.type conc=1.e18
+doping uniform region=2 n.type conc=2.e17
+doping uniform region=3 n.type conc=1.e18
+doping uniform region=4 p.type conc=1.e19
+
+save outf=hbtex03_0.str
+tonyplot hbtex03_0.str -set hbtex03_0.set
+#
+material taun0=1.e-9 taup0=1.e-9
+material material=AlGaAs mun=2000 mup=350 
+#
+model srh fldmob print  conmob  
+#
+model material=GaAs evsatmod=1
+
+contact num=3 resistance=1.e12
+
+impact selb
+
+
+solve init
+
+
+method  newton trap  itlim=25 vsatmod.inc=0.01 \
+   ir.tol=1.e-20 ix.tol=1.e-20
+
+solve local vemitter=-0.25 
+solve vemitter=-0.5 vstep=-0.2 vfinal=-1.1 name=emitter
+
+output con.band val.band
+ 
+log outf=hbtex03.log master
+
+solve vcollector=0.0005
+solve vcollector=0.005
+solve vcollector=0.05
+solve vcollector=0.1
+solve vcollector=0.5 vstep=0.5 name=collector vfinal=12.5 
+solve vcollector=12.75 vstep=1.2 imult name=collector \
+ vfinal=1.e7 
+solve vcollector=1.2e7 vstep=1.2 imult name=collector \
+ vfinal=1.e9 
+
+tonyplot  hbtex03.log -set hbtex03.set
+
+quit
+

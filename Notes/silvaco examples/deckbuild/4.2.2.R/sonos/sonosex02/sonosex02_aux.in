@@ -1,0 +1,336 @@
+# Charge SANOS structure and obtain Threshold Voltage
+set vgate=12
+go atlas
+
+mesh auto width=0.25
+
+x.m  loc=0.0  spac=0.025
+x.m  loc=0.1  spac=0.005
+x.m  loc=0.2  spac=0.005
+x.m  loc=0.3  spac=0.025
+
+
+y.m  loc=-0.03   spac=0.01
+y.m  loc=-0.019  spac=0.001
+y.m  loc=-0.009  spac=0.00025
+y.m  loc=-0.004  spac=0.00025
+y.m  loc=0.0     spac=0.001
+y.m  loc=0.1     spac=0.01
+y.m  loc=1.0     spac=0.2
+
+region num=1 silicon y.min=0.0
+region num=2 oxide y.max=0.0
+region num=3 nitride y.min=-0.009 y.max=-0.004 x.min=0.1 x.max=0.2
+region num=4 material=Sapphire y.min=-0.019 y.max=-0.009 x.min=0.1 x.max=0.2
+
+electrode name=gate y.min=-0.03 y.max=-0.019 x.min=0.1 x.max=0.2
+electrode name=source y.min=0.0 y.max=0.0 x.max=0.05
+electrode name=drain  y.min=0.0 y.max=0.0 x.min=0.25
+electrode name=substrate bottom
+
+doping uniform conc=1e18 p.type region=1
+doping gauss   conc=1e20 n.type junc=0.05 x.right=0.1 ratio.lat=0.1 region=1
+doping gauss   conc=1e20 n.type junc=0.05 x.left=0.2  ratio.lat=0.1 region=1 
+
+interface n.i iitherm
+
+# Reducing the effective mass in the barrier increases the tunnelling rate
+material material=oxide semiconductor taun0=1.0 taup0=1.0 mc=0.4 mv=0.4
+
+# Change the mobilities to get different transport inside the film
+material material=nitride semiconductor nc300=1e19 nv300=1e19 mun=1.0e-1 mup=1.0e-1 mc=0.5 mv=1.0 taun0=1.0e-2 taup0=1.0e-2
+
+material material=Sapphire semiconductor nc300=1e19 nv300=1e19 taun0=1.0 taup0=1.0 mc=0.5 mv=0.3 permitti=9.3 affinity=1.8
+
+contact name=gate p.poly 
+
+# set the SONOS model parameters, we choose only electron traps (NT.N > 0)
+# and additionally specify PF.BARRIER.
+
+nitridecharge  nt.p=0.0 nt.n=5.0e19 tau.n=1.0e-5 tau.p=1.0e-5 elec.depth=1.5 hole.depth=1.5 sigmat.n=1.0e-10 sigmat.p=1.0e-10 sigman.p=0.0 sigmap.n=0.0 pf.barrier=1.4
+
+models srh pf.nitride
+
+method carriers=2 
+
+# Obtain Vt of unprogrammed device
+
+solve init 
+
+solve prev 
+
+save outf=sonosex02_0.str master
+
+output sonos.rates val.band con.band band.temp
+
+solve vgate=${vgate} ramptime=1e-9 tstep=1e-12 tfinal=1e-9  proj 
+
+method dt.min=1.0e-9
+solve tstop=1.0e-7 proj
+
+method dt.min=1.0e-8
+solve tstop=1e-6 proj
+save outf=sonosex02_m6.str
+
+method dt.min=1.0e-7
+solve tstop=1e-5 proj
+save outf=sonosex02_m5.str
+
+method dt.min=1.0e-6
+solve tstop=1e-4 proj
+save outf=sonosex02_m4.str
+
+solve tstop=1e-3 proj
+save outf=sonosex02_m3.str
+
+solve tstop=1e-2 proj
+save outf=sonosex02_m2.str
+
+solve tstop=1.0e-1 proj
+save outf=sonosex02_m1.str
+
+solve tstop=1.0 proj
+save outf=sonosex02_m0.str
+
+go atlas
+
+mesh inf=sonosex02_0.str width=1
+
+interface n.i 
+
+load infile=sonosex02_0.str master
+
+material material=Sapphire  permitti=9.3 affinity=1.8
+
+contact name=gate p.poly 
+
+models srh pf.nitride
+
+method carriers=2 
+
+solve init
+
+solve prev 
+
+solve name=drain vstep=0.05 vfinal=0.5
+
+log outf=sonosex02_0.log
+
+solve name=gate vstep=0.1 vfinal=5.0
+
+extract name="Charged for 0s" (xintercept(maxslope(curve(abs(v."gate"),abs(i."drain")))) \
+        - abs(ave(v."drain"))/2.0)
+
+log off
+
+go atlas
+
+mesh inf=sonosex02_0.str width=1
+
+interface n.i
+
+load infile=sonosex02_m6.str master
+
+material material=Sapphire  permitti=9.3 affinity=1.8
+
+contact name=gate p.poly 
+
+models srh pf.nitride
+
+method carriers=2 
+
+solve init
+
+solve prev 
+
+solve name=drain vstep=0.05 vfinal=0.5
+
+log outf=sonosex02_m6.log
+
+solve name=gate vstep=0.1 vfinal=10.0
+
+extract name="Charged for 1.0E-6 s" (xintercept(maxslope(curve(abs(v."gate"),abs(i."drain")))) - abs(ave(v."drain"))/2.0)
+
+log off
+
+go atlas
+
+mesh inf=sonosex02_0.str width=1
+
+interface n.i
+
+load infile=sonosex02_m5.str master
+
+material material=Sapphire  permitti=9.3 affinity=1.8
+
+contact name=gate p.poly
+
+models srh pf.nitride
+
+method carriers=2 
+
+solve init
+
+solve prev 
+
+solve name=drain vstep=0.05 vfinal=0.5
+
+log outf=sonosex02_m5.log
+
+solve name=gate vstep=0.1 vfinal=10.0
+
+extract name="Charged for 1.0E-5 s" (xintercept(maxslope(curve(abs(v."gate"),abs(i."drain")))) - abs(ave(v."drain"))/2.0)
+
+log off
+
+go atlas
+
+mesh inf=sonosex02_0.str width=1
+
+interface n.i
+
+load infile=sonosex02_m4.str master
+
+material material=Sapphire permitti=9.3 affinity=1.8
+
+contact name=gate p.poly
+
+models srh pf.nitride
+
+method carriers=2 
+
+solve init
+
+solve prev 
+
+solve name=drain vstep=0.05 vfinal=0.5
+
+log outf=sonosex02_m4.log
+
+solve name=gate vstep=0.1 vfinal=10.0
+
+extract name="Charged for 1.0E-4 s" (xintercept(maxslope(curve(abs(v."gate"),abs(i."drain")))) - abs(ave(v."drain"))/2.0)
+
+log off
+
+go atlas
+
+mesh inf=sonosex02_0.str width=1
+
+interface n.i
+
+load infile=sonosex02_m3.str master
+
+material material=Sapphire permitti=9.3 affinity=1.8
+
+contact name=gate p.poly 
+
+models srh pf.nitride
+
+method carriers=2 
+
+solve init 
+
+solve prev 
+
+solve name=drain vstep=0.05 vfinal=0.5
+
+log outf=sonosex02_m3.log
+
+solve name=gate vstep=0.1 vfinal=10.0
+
+extract name="Charged for 0.001 s" (xintercept(maxslope(curve(abs(v."gate"),abs(i."drain")))) - abs(ave(v."drain"))/2.0)
+
+log off
+
+go atlas
+
+mesh inf=sonosex02_0.str width=1
+
+interface n.i
+
+load infile=sonosex02_m2.str master
+
+material material=Sapphire permitti=9.3 affinity=1.8
+
+contact name=gate p.poly 
+
+models srh pf.nitride
+
+method carriers=2 
+
+solve init
+
+solve prev 
+
+solve name=drain vstep=0.05 vfinal=0.5
+
+log outf=sonosex02_m2.log
+
+solve name=gate vstep=0.1 vfinal=10.0
+
+extract name="Charged for 0.01 s" (xintercept(maxslope(curve(abs(v."gate"),abs(i."drain")))) - abs(ave(v."drain"))/2.0)
+
+log off
+
+go atlas
+
+mesh inf=sonosex02_0.str width=1
+
+interface n.i
+
+load infile=sonosex02_m1.str master
+
+material material=Sapphire permitti=9.3 affinity=1.8
+
+contact name=gate p.poly 
+
+models srh pf.nitride
+
+method carriers=2 
+
+solve init 
+
+solve prev 
+
+solve name=drain vstep=0.05 vfinal=0.5
+
+log outf=sonosex02_m1.log
+
+solve name=gate vstep=0.1 vfinal=10.0
+
+extract name="Charged for 0.1 s" (xintercept(maxslope(curve(abs(v."gate"),abs(i."drain")))) - abs(ave(v."drain"))/2.0)
+
+log off
+
+go atlas
+
+mesh inf=sonosex02_0.str width=1
+
+interface n.i
+
+load infile=sonosex02_m0.str master
+
+material material=Sapphire permitti=9.3 affinity=1.8
+
+contact name=gate p.poly 
+
+models srh pf.nitride
+
+method carriers=2 
+
+solve init
+
+solve prev 
+
+solve name=drain vstep=0.05 vfinal=0.5
+
+log outf=sonosex02_m0.log
+
+solve name=gate vstep=0.1 vfinal=10.0
+
+extract name="Charged for 1.0 s" (xintercept(maxslope(curve(abs(v."gate"),abs(i."drain")))) - abs(ave(v."drain"))/2.0)
+
+log off
+
+exit

@@ -1,0 +1,65 @@
+v ATLAS
+# This file was created by ATLAS version 5.26.1.R on Tue Apr 17 21:53:11 2018.
+#SSF 2.0 generic
+##############################################################################
+#                    Copyright (c) 1984 - 2018                               #
+#                    Silvaco Inc. All rights reserved                        #
+#                                                                            #
+# This file format and the following Key are copyright Silvaco Inc.          #
+# You may not use, this format or key without reproducing this message in    #
+# full and obtaining express written permission from Silvaco Inc.            #
+#                                                                            #
+# To obtain such permission please contact: Silvaco Inc.                     #
+#                                           support@silvaco.com              #
+#                                                                            #
+# KEY=SVC86hn7562asdx                       PROD=345                         #
+##############################################################################
+Q 5700 16 "Host Acceptor State Density" 17 "/cm^3/eV" 15 1
+Q 5701 16 "Host Acceptor State Ionized Density" 17 "/cm^3/eV" 15 1
+Q 5702 16 "Host Acceptor State f_T" 15 0
+Q 5703 16 "Host Donor State Density" 17 "/cm^3/eV" 15 1
+Q 5704 16 "Host Donor State Ionized Density" 17 "/cm^3/eV" 15 1
+Q 5705 16 "Host Donor State f_T" 15 0
+Q 5706 16 "Dopant Acceptor State Density" 17 "/cm^3/eV" 15 1
+Q 5707 16 "Dopant Acceptor State Ionized Density" 17 "/cm^3/eV" 15 1
+Q 5708 16 "Dopant Acceptor State f_T" 15 0
+Q 5709 16 "Dopant Donor State Density" 17 "/cm^3/eV" 15 1
+Q 5710 16 "Dopant Donor State Ionized Density" 17 "/cm^3/eV" 15 1
+Q 5711 16 "Dopant Donor State f_T" 15 0
+Q 5712 16 "Host Acceptor Int. State Density" 17 "/cm^2/eV" 15 1
+Q 5713 16 "Host Acceptor Int. State Ionized Density" 17 "/cm^2/eV" 15 1
+Q 5714 16 "Host Acceptor Int. State f_T" 15 0
+Q 5715 16 "Host Donor Int. State Density" 17 "/cm^2/eV" 15 1
+Q 5716 16 "Host Donor Int. State Ionized Density" 17 "/cm^2/eV" 15 1
+Q 5717 16 "Host Donor Int. State f_T" 15 0
+Q 5718 16 "Dopant Acceptor Int. State Density" 17 "/cm^2/eV" 15 1
+Q 5719 16 "Dopant Acceptor Int. State Ionized Density" 17 "/cm^2/eV" 15 1
+Q 5720 16 "Dopant Acceptor Int. State f_T" 15 0
+Q 5721 16 "Dopant Donor Int. State Density" 17 "/cm^2/eV" 15 1
+Q 5722 16 "Dopant Donor Int. State Ionized Density" 17 "/cm^2/eV" 15 1
+Q 5723 16 "Dopant Donor Int. State f_T" 15 0
+p 2 74 302
+d   2.960000e+00  9.064750e+03
+d   2.831304e+00  1.491264e+04
+d   2.702609e+00  2.453316e+04
+d   2.573913e+00  4.036010e+04
+d   2.445217e+00  6.639738e+04
+d   2.316522e+00  1.092320e+05
+d   2.187826e+00  1.797002e+05
+d   2.059130e+00  2.956292e+05
+d   1.930435e+00  4.863468e+05
+d   1.801739e+00  8.001011e+05
+d   1.673043e+00  1.316266e+06
+d   1.544348e+00  2.165421e+06
+d   1.415652e+00  3.562388e+06
+d   1.286957e+00  5.860571e+06
+d   1.158261e+00  9.641370e+06
+d   1.029565e+00  1.586125e+07
+d   9.008696e-01  2.609374e+07
+d   7.721739e-01  4.292745e+07
+d   6.434783e-01  7.062100e+07
+d   5.147826e-01  1.161803e+08
+d   3.860870e-01  1.911311e+08
+d   2.573913e-01  3.144345e+08
+d   1.286957e-01  5.172839e+08
+d   0.000000e+00  8.509964e+08

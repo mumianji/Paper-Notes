@@ -1,0 +1,124 @@
+
+  
+DEFINE COMMAND/replace "inductance";
+DEFINE ACTION
+PARAMETER wire_width
+PARAMETER space
+PARAMETER nb_coils
+PARAMETER radius
+	DO BEGIN
+  ! UPDATE THE GDS BUMBER OF THESE LAYERS TO FIT WITH YOUR TECHNO. 
+  ! DO NOT CHANGE THE NAME
+  new layer "METAL_COIL" /datatype=0 /gdsnumber=1 /red=0 /green=0 /blue=255;
+  new layer "METAL_PATH_OUT" /datatype=0 /gdsnumber=2 /red=0 /green=255 /blue=0; 
+  new layer "VIA" /datatype=0 /gdsnumber=3 /red=255 /green=0 /blue=0;
+  new layer "ELEC_COIL" /gdsnumber=100 /red=0 /green=125 /blue=255;
+  new layer "ELEC_PATH" /gdsnumber=101 /red=0 /green=255 /blue=125; 
+  ! END OF EDITION
+   units /um;
+
+! Notes:   Spiral Centre Located at X=0 Y=0
+
+DISPLAY(nb_coils * 16);
+
+R = radius;
+N = FLOOR (nb_coils * 16 + 0.5);
+W = wire_width;
+S = space; !Spacing Between Turns
+ 
+A = R * ( SQRT(2) - 1 );
+B = R / SQRT(2);
+
+vertices = seq_create_predicted(2 * N);
+
+seq_add_last(vertices,  R); !0
+seq_add_last(vertices,  0);
+
+! Electrode IN
+
+Length = (W + S) * (nb_coils + 2) ;
+box (R - W/4) (-W/4) (W/2) (W/2) /layer=("VIA");
+box (R + Length - 1.25*W) (-W/4) (W/2) (W/2) /layer=("ELEC_PATH");
+text (R + Length - W) 0 "OUT" /height=(W) /width=(W/2) /layer=("ELEC_PATH");
+box (R - W/2) (-W/2) (Length) (W) /layer=("METAL_PATH_OUT");
+
+i = 0;
+LOOP BEGIN
+  endX = R; endY = A;
+  seq_add_last(vertices,  R); !1
+  seq_add_last(vertices,  A); i = i + 1; IF (i GEQ N) then (leave loop);
+  endX = B; endY = B;
+  seq_add_last(vertices,  B); !2
+  seq_add_last(vertices,  B); i = i + 1; IF (i GEQ N) then (leave loop);
+  endX = A; endY = R;
+  seq_add_last(vertices,  A); !3
+  seq_add_last(vertices,  R); i = i + 1; IF (i GEQ N) then (leave loop);
+  endX = 0; endY = R;
+  seq_add_last(vertices,  0); !4
+  seq_add_last(vertices,  R); i = i + 1; IF (i GEQ N) then (leave loop);
+  endX = -A; endY = R;
+  seq_add_last(vertices, -A); !5
+  seq_add_last(vertices,  R); i = i + 1; IF (i GEQ N) then (leave loop);
+  endX = -B; endY = B;
+  seq_add_last(vertices, -B); !6
+  seq_add_last(vertices,  B); i = i + 1; IF (i GEQ N) then (leave loop);
+  endX = -R; endY = A;
+  seq_add_last(vertices, -R); !7
+  seq_add_last(vertices,  A); i = i + 1; IF (i GEQ N) then (leave loop);
+  endX = -R; endY = 0;
+  seq_add_last(vertices, -R); !8
+  seq_add_last(vertices,  0); i = i + 1; IF (i GEQ N) then (leave loop);
+  endX = -R; endY = -A;
+  seq_add_last(vertices, -R); !9
+  seq_add_last(vertices, -A); i = i + 1; IF (i GEQ N) then (leave loop);
+  endX = -B; endY = -B;
+  seq_add_last(vertices, -B); !10
+  seq_add_last(vertices, -B); i = i + 1; IF (i GEQ N) then (leave loop);
+  endX = -A; endY = -R;
+  seq_add_last(vertices, -A); !11
+  seq_add_last(vertices, -R); i = i + 1; IF (i GEQ N) then (leave loop);
+  endX = 0; endY = -R;
+  seq_add_last(vertices,  0); !12
+  seq_add_last(vertices, -R); i = i + 1; IF (i GEQ N) then (leave loop);
+  endX = A; endY = -R;
+  seq_add_last(vertices,  A); !13
+  seq_add_last(vertices, -R); i = i + 1; IF (i GEQ N) then (leave loop);
+  endX = B; endY = -B;
+  seq_add_last(vertices,  B); !14
+  seq_add_last(vertices, -B); i = i + 1; IF (i GEQ N) then (leave loop);
+
+  R = (R + S + W);
+
+  endX = R; endY = (-A + S + W);
+  seq_add_last(vertices,  R); !15
+  seq_add_last(vertices,  (-A + S + W));  i = i + 1; IF (i GEQ N) then (leave loop);
+  endX = R; endY = 0;
+  seq_add_last(vertices,  R); !16
+  seq_add_last(vertices,  0); i = i + 1; IF (i GEQ N) then (leave loop);
+
+  A = R * ( SQRT(2) - 1 );
+  B = R / SQRT(2);
+END;
+
+! Electrode OUT
+box (endX - W/4) (endY - W/4) (W/2) (W/2) /layer=("ELEC_COIL");
+text (endX) (endY) "IN" /height=(W) /width=(W/2) /layer=("ELEC_COIL");
+
+wire (vertices) /width = (wire_width)/layer="METAL_COIL"; 
+vertices = {};
+END;
+
+DEFINE ARGUMENT wire_width /COERCE=(FLOAT)/NAMED/IS_DEFAULT/VALUE_REQUIRED;
+DEFINE ARGUMENT space /COERCE=(FLOAT)/NAMED/IS_DEFAULT/VALUE_REQUIRED;
+DEFINE ARGUMENT nb_coils /COERCE=(FLOAT)/NAMED/IS_DEFAULT/VALUE_REQUIRED;
+DEFINE ARGUMENT radius /COERCE=(FLOAT)/NAMED/IS_DEFAULT/VALUE_REQUIRED;
+
+COMPLETE COMMAND;
+
+
+project new "/main/alpha/examples/quest/project_new.eld";
+cell new ("CELL");
+cell open ("CELL");
+inductance /wire_width=10 /space=8 /nb_coils=4 /radius=40;
+cell_export_name = "/main/alpha/examples/quest/questex19_width=10space=8nb=4radius40.gds";
+CELL EXPORT "CELL" (cell_export_name);

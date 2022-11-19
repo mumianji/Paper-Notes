@@ -1,0 +1,141 @@
+<html>
+  <head>
+    <title>Effects of the Self-Heating on 3D Cylindrical LED Structure</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Effects of the Self-Heating on 3D Cylindrical LED Structure</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Device 3D/Giga 3D</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="ledex06_plot0.png" width="640" alt="ledex06_plot0" />
+      <p/>
+      <img src="ledex06_plot1.png" width="640" alt="ledex06_plot1" />
+      <p/>
+      <img src="ledex06_plot2.png" width="640" alt="ledex06_plot2" />
+      <p/>
+      <img src="ledex06_plot3.png" width="640" alt="ledex06_plot3" />
+      <p/>
+      <img src="ledex06_plot4.png" width="640" alt="ledex06_plot4" />
+      <p/>
+      <img src="ledex06_plot5.png" width="640" alt="ledex06_plot5" />
+      <p/>
+    </div>
+    <div id="text" >
+<p>
+This example shows the effect of the self heating on 3D structure with
+cylindrical three dimensional mesh.
+</p>
+<p>
+The objective of this example is to obtain the lattice temperature
+distribution in the three dimensional structure at operating bias.
+</p>
+<p>
+This example has 3 parts.
+</p>
+<p>
+The first part demonstrates the cylindrical mesh generation method.  In
+this case only half the device is simulated to save simulation time.
+</p>
+<p>
+The
+<b> R.MESH </b> statement is used to specify radial locations and spacings.
+Similarly, the
+<b> A.MESH </b> statement is used to specify angular locations and spacings in degrees.
+Finally, the
+<b> Z.MESH </b> statement is used to specify the locations and spacings in the Z direction.
+</p>
+<p>
+For 3D cylindrical devices, the
+<b> REGION </b> statements define regions in cylindrical coordinates using the
+parameters
+<b> A.MIN</b> ,
+<b> A.MAX </b> ,
+<b> R.MIN</b> ,
+<b> R.MAX and</b> ,
+<b> Z.MIN </b> and
+<b> Z.MAX.</b> </p>
+<p>
+Similarly, the
+<b> ELECTRODE</b> statements can define an anode electrode as a ring on the top surface
+and the cathode electrode as a plate on the bottom of the device.
+</p>
+<p>
+Next,
+<b> DOPING </b> statements are used to define uniform dopant concentrations in each region.
+</p>
+<p>
+Next, the
+<b> MODEL </b> statement is used to specify the models to be used in the example.  The
+recombination models are selected for Shockley-Read-Hall
+<b> (SRH), </b> Auger
+<b> (AUGER)</b> , and radiative
+<b> (OPTR) </b> recombination.
+</p>
+<p>
+Also, Fermi-Dirac statistics,
+<b> FERMI</b> , and concentration dependent mobility,
+<b> CONMOB</b> , are selected.
+</p>
+<p>
+Lattice temperature simulation,
+<b> LAT.TEMP</b> , with Joule heat,
+<b> JOULE.HEAT</b> , and generation recombination heat,
+<b> GR.HEAT </b> sources are selected.
+</p>
+<p>
+The
+<b> MATERIAL </b> statement is used to specify the alignment of the conduction band offsets
+using the
+<b> ALIGN </b> parameter.
+</p>
+<p>
+A thermal contact is specified using the
+<b> THERMCONTACT </b> statement.  Here a heat sink boundary is simulated using the sink temperature,
+<b> EXT.TEMP</b> , and the thermal conductance,
+<b> ALPHA</b> , in W/(cm2*K).
+</p>
+<p>
+The
+<b> METHOD </b> statement is used to specify some specific numerical methods to be used
+to help obtain solutions for self-heating simulations.
+</p>
+<p>
+Next, after obtaining an initial zero bias solution.  The
+<b> PROBE, </b> <b> LOG </b> and
+<b> OUTPUT </b> statements are used to specify output characteristics to be collected
+that are of particular interest to this simulation.
+</p>
+<p>
+Next, a bias ramp is performed to place the LED at the operating bias.
+</p>
+<p>
+Finally, TonyPlot and the
+<b> EXTRACT </b> statement are used to present the simulation results.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

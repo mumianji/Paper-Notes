@@ -1,0 +1,213 @@
+go atlas
+Title Simulation of OLED device using a Quantum Model for Emission Spectrum
+#
+# In this example we simulate a 3-layer device with Alq3/Alq3:DCJTB/NPB
+# similar to that described in [1]
+#
+# Photon emission model:
+#
+# We use the Holstein model for the Alq3 and DCJTB spectra in both the electron
+# transport and the emissive layers. The model is parameterized by the exciton-phonon
+# coupling and the exciton hopping energies. The former is set to 1.61 for Alq3.
+# This value was taken from  [2].
+#
+# For DCJTB this number is not available from experiments. We used a slightly
+# higher number than Alq3 since we expect excitons to be localized on DCJTB.
+#
+# The homogeneous and inhomogeneous broadenings were derived by fitting to 
+# experimental data in [2] for Alq3 and then similar broadenings were used for DCJTB.
+#
+# The additional Stokes shift due to reorganization energy was also used as an
+# additional parameter to properly align the emission and absorption spectra with
+# experiment [2].
+#
+# Photon Propagation model:
+#
+# We use the transfer matrix method to propagate the light from emissive layers
+# to the outside. Emission is modeled as Hertzian dipoles placed uniformly across
+# the thickness of the layer, and added incoherently. We observe a strong modification 
+# of spontaneous emission lifetime of the dipole due to the presence of interfaces
+# and metal electrode. This is plotted as the average Purcell factor, which is produced
+# by weighing the Purcell factors of each dipole according to the amount of light it
+# emits in free space. 
+#
+# The strong modification of spontaneous emission lifetime must also be fed back into
+# the drift diffusion model. At present, ATLAS is not capable of doing this.  
+#
+# Modification of spontaneous emission lifetime is higher in ETL layer than in EML layer 
+# due to the vicinity of ETL to metal electrode.
+#
+# [1] C.C. Lee et. al. "Electrical and Optical Simulation of Organic Light-emitting
+# devices with fluorescent dopant in the emitting layer" Journal of Applied Physics
+# vol 101, 114501 (2007)
+# [2] Martin Brinkmann, Gregory Gadret, Michele Muccini, Carlo Taliani
+# Correlation between Molecular Packing and Optical Properties in Different Crystalline 
+# Polymorphs and Amorphous Thin Films of mer -Tris ( 8-hydroxyquinoline ) 
+# aluminum ( III ) Journal of American Chemical Society	122 p. 5147-5157 (2000)
+#
+# SECTION 1: Mesh
+# 
+mesh width=1e8
+
+x.m l=0 s=0.5
+x.m l=1 s=0.5
+
+y.m l=-0.01 s=0.001
+y.m l= 0.00 s=0.002
+y.m l= 0.03 s=0.0001
+y.m l= 0.06 s=0.0005
+y.m l= 0.10 s=0.001
+y.m l= 0.11 s=0.001
+#
+# SECTION 2: Device Structure
+# 
+region num=1 name=ETL user.mat=ETL y.min=0.00 y.max=0.03
+region num=2 name=EML user.mat=EML y.min=0.03 y.max=0.06
+region num=3 name=HTL user.mat=HTL y.min=0.06 y.max=0.10
+
+elec num=1 name=cathode material=silver y.min = -0.010 y.max= 0.000
+elec num=2 name=anode   material=ITO    y.min =  0.100 y.max= 0.110
+
+contact name=anode workf=5.01  surf.rec barrier
+contact name=cathode workf=3.08 surf.rec barrier  
+#
+# SECTION 3: Defect model for organic layers
+# 
+odefects region=1 cont ha=2e16 hd=2e16 tca=2700 tcd=2700 \
+afile=organicex08_acceptor1.dat dfile=organicex08_donor1.dat numa=30 numd=30
+#
+# In region 2, we introduce dopants with 1% doping level
+# and the HOMO/LUMO inside the band gap
+#
+odefects region=2 cont dopant hopping doping.percent=1 \
+na=2e16 nd=2e16 nia=2e16 nid=2e16  numa=90 numd=90 \
+sigmaa=0.027 sigmad=0.027 sigmaia=0.027 sigmaid=0.027 \
+ea=0.19 ed=0.13 tfile=organicex08_total.dat 
+#
+odefects region=3 cont ha=2e16 hd=2e16 tca=2700 tcd=2700 \
+afile=organicex08_acceptor2.dat dfile=organicex08_donor2.dat numa=30 numd=30
+#
+# SECTION 4: Materials Specification
+# 
+material region=1  user.default=organic user.group=semiconductor \
+eg300=2.7 affinity=3.00 permi=3.0 nv300=2e19 nc300=2e19 imag.index=0.0
+
+material region=2  user.default=organic user.group=semiconductor \
+eg300=2.7 affinity=3.00 permi=3.1 nv300=2e19 nc300=2e19 imag.index=0.0
+
+material region=3  user.default=organic user.group=semiconductor \
+eg300=3.00 affinity=2.31 permi=3.5 nv300=2e19 nc300=2e19 imag.index=0.0
+
+material region=1 rst.exciton=0.25 lds.exciton=0.01 taus.exciton=5e-8 
+material region=2 rst.exciton=0.25 lds.exciton=0.01 taus.exciton=5e-8 \
+aradius.exciton=3.7 drst.exciton=0.25 dknrs.exciton=1e8 dkss.exciton=3e-8 
+material region=3 rst.exciton=0.25 lds.exciton=0.01 taus.exciton=1e-8 
+#
+# Material Parameters for the Holstein Model for the spectrum
+#
+# Alq3 in ETL
+#
+material region=1 addpolaron singlet mix.name=Alq3 \
+exciton.gap=2.90 exciton.dipole0=1 \
+stokes=-0.30 \
+ex.hopping=0.1  ex.coupling=2.0    \
+ex.maxphonons=20 ex.maxcloud=0 ex.ephonon=0.065   \
+gs.maxphonons=20 gs.maxcloud=0  \
+ex.homobroadening=0.01 ex.inhomobroadening=0.15 \
+gs.homobroadening=0.01 gs.inhomobroadening=0.15 
+#
+# Alq3 in EML
+#
+material region=2 addpolaron singlet mix.name=alq3 \
+exciton.gap=2.90 exciton.dipole0=1 \
+stokes=-0.30 \
+ex.hopping=0.1  ex.coupling=2.0    \
+ex.maxphonons=20 ex.maxcloud=0 ex.ephonon=0.065   \
+gs.maxphonons=20 gs.maxcloud=0  \
+ex.homobroadening=0.01 ex.inhomobroadening=0.05 \
+gs.homobroadening=0.01 gs.inhomobroadening=0.05 
+#
+# DCJTB in HTL
+#
+material region=2 addpolaron mix.name=DCJTB dopant singlet \
+exciton.gap=2.25 ex.hopping=0.1 ex.coupling=1.8 exciton.dipole0=1 \  
+ex.maxphonons=6 ex.maxcloud=0 ex.ephonon=0.065   stokes=0 \
+ex.homobroadening=0.01 ex.inhomobroadening=0.05 \
+gs.maxphonons=12 gs.maxcloud=0 gs.homobroadening=0.01 \
+gs.inhomobroadening=0.15 
+#
+# SECTION 5: Poole-Frenkel mobility model for each region. We have 
+# increased the reference field compared to Ref. [1] to avoid
+# convergence problems
+#
+mobility region=1 mun0=1.5e-07 mup0=9.16e-10 e0n.pfmob=1.0e4 e0p.pfmob=2.0e4
+mobility region=2 mun0=1.5e-07 mup0=9.16e-10 e0n.pfmob=1.0e4 e0p.pfmob=2.0e4
+mobility region=3 mun0=6.9e-06 mup0=2.60e-04 e0n.pfmob=4.4e5 e0p.pfmob=12.8e4
+#
+# SECTION 6: Models
+# 
+models pfmob langevin singlet print
+# 
+# Here HOLSTEIN flag specifies that the holstein model should be used
+# for each region where the ADDPOLARON flag appears on the material statement.
+# QSPEC.RES = 0.01 is the resolution for the energy axis for spectrum
+# QSPEC.EMIN = lower limit of the spectral energy axis 
+# QSPEC.EMAX = upper limit of the spectral energy axis
+# ^CALC.PARTITION prevents calculation of the full partition function. This
+# calculation is not necessary for the current materials.
+# QVERBOS is a verbosity level for printing results to screen
+#
+models holstein qspec.res=0.01 qdostol=0.01 \
+qspec.emin=0.5 qspec.emax=4 ^calc.partitionfunc qverbos=2
+#
+# SECTION 7: Ouput and Probe statements
+# 
+output u.langevin band.param con.band val.band \
+charge e.field e.mobility h.mobility
+#
+# We probe exciton densities in ETL and EML as well as the
+# radiative, langevin and Forster rates.
+#
+probe name="Alq3 exciton ETL" region=1 exciton average
+probe name="Alq3 exciton EML" region=2 exciton average
+probe name="DCJTB exciton EML" region=2 dopant.exciton average
+
+probe name="rad Alq3 EML" region=2 rad.exciton average
+probe name="rad DCJTB EML" region=2 doprad.exciton average
+probe name="Forster EML" region=2      forster.exciton average
+
+probe name="langevin ETL" region=1     langevin average
+probe name="langevin EML" region=2     langevin average
+probe name="langevin HTL" region=3     langevin average
+#
+# SECTION 1: Mesh
+# 
+solve init
+
+log outf=organicex08.log
+solve vstep=0.2 vfinal=7.0 name=anode l.wave=0.54
+save outf=organicex08_1.str 
+
+save angpower=organicex08_2.log out.spec=organicex08_3.log \
+x=0.5 ymin=0.00 ymax=0.03 ynum=5 tmm.gf top.hs ^emit.top \
+lmin=0.4 lmax=1.4 nsamp=101
+
+save angpower=organicex08_4.log out.spec=organicex08_5.log \
+x=0.5 ymin=0.00 ymax=0.06 ynum=5 tmm.gf top.hs ^emit.top \
+lmin=0.4 lmax=1.4 nsamp=101
+
+#
+# Visualization
+# 
+
+tonyplot organicex08_1.str
+tonyplot organicex08.log -set organicex08_iv.set
+tonyplot organicex08.log -set organicex08_exciton_densities.set
+tonyplot organicex08_1_quantum_region_2_species.log -set organicex08_spectra_abs_ems.set
+tonyplot organicex08_5.log -set organicex08_output_psd.set
+tonyplot organicex08_5.log -set organicex08_output_average_purcell_factor.set
+
+
+
+
+

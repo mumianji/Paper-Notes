@@ -1,0 +1,87 @@
+# TPCS version: 8
+# various properties
+log label 0
+key opaque 0
+mark frequency 0
+mark overlay 0
+graph width 0 2
+graph width 1 1
+graph width 2 1
+graph width 3 1
+graph width 4 3
+graph width 5 1
+sequence size 2
+sequence width 2
+log zero 0
+sequence mark 0 0
+sequence mark 1 1
+sequence mark 2 2
+sequence mark 3 3
+sequence mark 4 4
+sequence mark 5 5
+# Functions
+function 1 "" ""
+function 2 "" ""
+function 3 "" ""
+function 4 "" ""
+select 1
+# xygraph flags
+show points on
+show lines on
+# xygraph types
+xygraph type 0 convert 0
+xygraph yaxis scale linear
+# xygraph x-axis
+xygraph xaxis "Drain Voltage" linear
+# xygraph y-axes
+xygraph yaxis none
+xygraph yaxis "Drain Current" linear "left"
+# xygraph group
+xygraph group "(unknown electricals)"
+# key positions
+key contours 1 at 3
+key contours 2 at 1
+key contours 3 at 6
+key electrical at 0
+key vectors at 6
+key overlay at 0
+key regions at 4
+key apply 
+# annotation, titles
+title main "Super HFET (Wg=1mm)"
+title sub "IDVD"
+# annotation, footers
+footer right none
+footer left none
+# annotation, show
+show xaxis on
+show yaxis on
+show grid on
+show label xaxis on
+show label yaxis on
+# annotation, axes
+range xaxis 0, 16 increment 2,4
+range yaxis 0, 0.35001 increment 0.05,5
+label xaxis "Drain Voltage (V)"
+label yaxis "Drain Current (A)"
+# zoom
+zoom from 0, 0 scale 1, 1
+# user labels
+label "Vg=+1V" from 14.9, 0.217 color 0 scale 2
+label 0 at 7 7
+label "Vg=+2V" from 14.9, 0.277 color 0 scale 2
+label 1 at 7 7
+label "Vg=-1V" from 14.9, 0.106 color 0 scale 2
+label 2 at 7 7
+label "Vg=-2V" from 14.9, 0.059 color 0 scale 2
+label 3 at 7 7
+label "Vg=-3V" from 14.9, 0.025 color 0 scale 2
+label 4 at 7 7
+label "Vg=0V" from 14.9, 0.16 color 0 scale 2
+label 5 at 7 7
+# overlay level names
+label overlay 0 "Super_IdVd2V.log"
+label overlay 1 "Super_IdVd1V.log"
+label overlay 2 "Super_IdVd0V.log"
+label overlay 3 "Super_IdVd-1V.log"
+label overlay 4 "Super_IdVd-2V.log"

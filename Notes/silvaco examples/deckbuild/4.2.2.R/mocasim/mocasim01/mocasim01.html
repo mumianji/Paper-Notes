@@ -1,0 +1,133 @@
+<html>
+  <head>
+    <title>Default GaAs material simulation</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Default GaAs material simulation</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Mocasim, TonyPlot</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Mocasim 5.16.0.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="mocasim01_plot0.png" width="640" alt="mocasim01_plot0" />
+      <p/>
+      <img src="mocasim01_plot1.png" width="640" alt="mocasim01_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<p>
+This example demonstrates the simulation of the bulk parameters for a
+default material (GaAs).  There are seven Mocasim sub-sections plus
+two calls to TonyPlot:
+<br/>
+</p>
+<ul>
+  <li>
+ Define the material.
+<br/>
+  </li>
+  <li>
+ Define the scattering mechanisms.
+<br/>
+  </li>
+  <li>
+ Define the range to simulate over.
+<br/>
+  </li>
+  <li>
+ Specify a backup file.
+<br/>
+  </li>
+  <li>
+ Do the Monte Carlo simulation.
+<br/>
+  </li>
+  <li>
+ Save the results.
+<br/>
+  </li>
+  <li>
+ Fit a standard model to the results.
+<br/>
+  </li>
+  <li>
+ Output the results.
+<br/>
+  </li>
+</ul>
+<p>
+The first section uses the
+<b> initialize</b> statement to select the material to simulate.
+</p>
+<p>
+The second section uses the
+<b> deformation_potential_acoustic_phonon,</b> <b> polar_optical_phonon,</b> <b> ionised_impurity</b> and
+<b> intervalley_phonon</b> commands to activate the scattering mechanisms
+associated with the material, and to assign appropriate
+parameters to model this scattering.
+</p>
+<p>
+The third section uses the
+<b> field,</b> <b> temperature, </b> and
+<b> doping</b> commands to define the range over which to perform the Monte Carlo
+simulation.  In this example, we are calculating the parameters
+as a function of electric field at a fixed temperature and a
+fixed doping.
+</p>
+<p>
+The fourth section uses the
+<b> log</b> command to define a backup file.  A Monte Carlo simulation usually
+takes a long time, so it is sensible to save the results once they
+have been calculated (so that if a running simulation is interrupted
+the points that have already been calculated don&apos;t have to be
+simulated again).
+</p>
+<p>
+The fifth section uses the
+<b> solve</b> command to carry out the Monte Carlo simulation.
+</p>
+<p>
+The sixth section uses the
+<b> save</b> command to save the transport results in a form that can
+be viewed in TonyPlot.
+</p>
+<p>
+The seventh section uses the
+<b> fit</b> command to fit a standard model to the Monte Carlo data.  In this
+example we are fitting the ATLAS negative-differential mobility
+model to the GaAs mobility.  The resultant coefficients can be
+used in ATLAS.  The
+<b> compare</b> parameter is used to specify a file that can be used to output a
+comparison between the Monte Carlo data and the fitted model.
+</p>
+<p>
+The final section uses the
+<b> tonyplot</b> command to display the results of the simulation.  The first
+plot displays the raw Monte Carlo data.  The second plot displays
+the Monte Carlo data and the fitted model.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

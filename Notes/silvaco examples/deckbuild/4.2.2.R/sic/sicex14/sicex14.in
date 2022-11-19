@@ -1,0 +1,171 @@
+# SILVACO 2017
+#
+# This deck contains simulations of two different devices:
+# - the first half of the deck is a 4H-SiC Schottky Barrier Diode (SBD)
+# - the second half of the deck is a 4H-SiC Junction Barrier Schottky (JBS) diode 
+#
+# Reference (with Experimental Data):
+# [1]  L. Di Benedetto, G.D. Licciardo, T. Erlbacher, A. Bauer, and S. Bellone,
+#      "Analytical Model and Design of 4H-SiC Planar and Trenched JBS Diodes",  
+#      IEEE Transactions on Electron Devices, Vol. 63, No. 6, pp. 2474-2481, 
+#      June 2016.
+#
+
+############### 4H-SiC  Schottky barrier Diode (SBD)  ######################
+
+go victorydevice simflags="-80"
+#go atlas simflags="-80"
+
+mesh  width = 9.5e+6
+# the width above correpsonds to the Experimental device published in [1]
+
+x.mesh location=0     spacing=0.5
+x.mesh location=3     spacing=0.5
+x.mesh location=5.25  spacing=0.5
+
+y.mesh location=-0.05 spacing=0.05
+y.mesh location=0.0  spacing=0.005
+y.mesh location=6.1  spacing=1
+y.mesh location=12.2 spacing=0.25
+y.mesh location=17   spacing=0.5
+
+region num=1 material=4H-SiC y.min=0
+region num=50 material=air y.max=0 
+ 
+electrode num=1 name=anode material=Titanium y.min=-0.05 y.max=0 
+electrode num=2 name=cathode bottom 
+
+doping uniform n.type conc=9.1e15
+doping uniform n.type conc=1e18 y.min=12.2
+
+material material=4H-SiC affinity=3.13 \
+         TCON.POWER TC.CONST=3.70 TC.NPOW=1.25 \
+         HC.STD HC.A=1.79 HC.B=0.00097 HC.C=0.0 HC.D=0.0 \
+         taun0=5.0e-10 taup0=1.0e-10 ARichN=146 \
+         me.tunnel=0.3 mh.tunnel=0.3 d.tunnel=1.0e-6
+
+material material=Titanium TCON.CONST TC.CONST=0.27 \
+         HC.STD HC.A=2.22 
+
+mobility material=4H-SiC MU2P.CAUG=124  NCRITP.CAUG=1.76e19  \ 
+         ALPHAP.CAUG=0  DELTAP.CAUG=0.34  GAMMAP.CAUG=0 
+
+# Schottky contact:
+contact name=anode workfunction=4.7 surf.rec barrier  \
+	me.tunnel=0.3 mh.tunnel=0.3
+
+models Temp=300 BGN Analytic SRH fldmob Auger UST  print \
+       BBT.STD  bb.a=8e7 bb.b=9e6 bb.gamma=2.6 \
+       incomplete inc.ion
+
+impact aniso e.side be0001=2.18e7  bh0001=2.03e7 ae0001=3.82e8 ah0001=3.10e8 
+
+method climit=1e-4
+
+solve init
+solve previous
+
+output band.param
+
+save outfile = sicex14_SBD_0V.str
+
+log outfile = sicex14_SBD_IV.log
+solve vcathode=0.1 
+solve vcathode=1 
+solve vstep=1 vfinal=10 name=cathode
+solve vstep=5 vfinal=50 name=cathode
+solve vstep=10 vfinal=200 name=cathode
+solve vstep=20 vfinal=400 name=cathode
+solve vstep=50 vfinal=1000 name=cathode
+solve vstep=20 vfinal=1600 name=cathode
+log off
+
+save outfile= sicex14_SBD_VBR.str
+
+
+#############################################################################
+##
+############### 4H-SiC Junction Barrier Schottky (JBS)  #####################
+
+go victorydevice simflags="-80"
+#go atlas simflags="-80"
+
+mesh  width = 9.5e+6
+# the width above correpsonds to the Experimental device published in [1]
+
+x.mesh location=0     spacing=0.5
+x.mesh location=3     spacing=0.1
+x.mesh location=5.25  spacing=0.5
+
+y.mesh location=-0.05 spacing=0.05
+y.mesh location=0.0   spacing=0.005
+y.mesh location=6.1   spacing=1
+y.mesh location=12.2  spacing=0.25
+y.mesh location=17    spacing=0.5
+
+region num=1 material=4H-SiC y.min=0
+region num=50 material=air y.max=0 
+ 
+electrode num=1 name=anode1 material=Titanium x.min=3.5 y.min=-0.05 y.max=0 
+electrode num=3 name=anode2 material=Titanium x.max=3.0 y.min=-0.05 y.max=0 
+electrode num=2 name=cathode bottom 
+
+doping uniform n.type conc=9.1e15
+doping uniform n.type conc=1e18 y.min=12.2
+# P+ doping for JBS:
+doping gaussian x.char=.1 y.char=.2 p.type conc=1e19 \
+       x.min=0 x.max=3 y.min=0 y.max=.4 
+
+material material=4H-SiC affinity=3.13 \
+         TCON.POWER TC.CONST=3.70 TC.NPOW=1.25 \
+         HC.STD HC.A=1.79 HC.B=0.00097 HC.C=0.0 HC.D=0.0 \
+         taun0=5.0e-10 taup0=1.0e-10 ARichN=146 \
+         me.tunnel=0.3 mh.tunnel=0.3 d.tunnel=1.0e-6
+
+material material=Titanium TCON.CONST TC.CONST=0.27 \
+         HC.STD HC.A=2.22 
+
+mobility material=4H-SiC MU2P.CAUG=124  NCRITP.CAUG=1.76e19  \ 
+         ALPHAP.CAUG=0  DELTAP.CAUG=0.34  GAMMAP.CAUG=0 
+
+# Schottky contact:
+contact name=anode1 workfunction=4.7 surf.rec barrier \
+	me.tunnel=0.3 mh.tunnel=0.3 
+# P+ ohmic contact:
+contact name=anode2 common=anode1 
+
+models Temp=300 BGN Analytic SRH fldmob Auger UST  print \
+       BBT.STD  bbt.a=6e7 bbt.b=10e6 bbt.gamma=2.5 \
+       incomplete inc.ion
+
+impact aniso e.side be0001=2.92e7  bh0001=2.2e7 ae0001=2.5e8 ah0001=3.30e8 
+
+method climit=1e-4
+
+solve init
+solve previous
+
+output band.param
+
+save outfile = sicex14_JBS_0V.str
+
+log outfile = sicex14_JBS_IV.log
+solve vcathode=0.1 
+solve vcathode=1 
+solve vstep=1 vfinal=50 name=cathode
+solve vstep=5 vfinal=200 name=cathode
+solve vstep=20 vfinal=400 name=cathode
+solve vstep=50 vfinal=1000 name=cathode
+solve vstep=20 vfinal=1600 name=cathode
+log off
+
+save outfile= sicex14_JBS_VBR.str
+tonyplot sicex14_JBS_VBR.str  -set sicex14_2Ddop.set
+
+# Overlay both simulation plots with experimental data from [1]
+tonyplot -overlay sicex14_SBD_IV.log \
+		  sicex14_JBS_IV.log \
+		  sicex14_Measured_SBD.dat \
+		  sicex14_Measured_JBS.dat \
+	         -set sicex14_iv.set
+quit

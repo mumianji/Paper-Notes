@@ -1,0 +1,133 @@
+<html>
+  <head>
+    <title>Forward/Reverse Gate Voltage Characteristic</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Forward/Reverse Gate Voltage Characteristic</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>SSuprem 4/S-Pisces/TFT</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R, Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="tftex05_plot0.png" width="640" alt="tftex05_plot0" />
+      <p/>
+      <img src="tftex05_plot1.png" width="640" alt="tftex05_plot1" />
+      <p/>
+      <img src="tftex05_plot2.png" width="640" alt="tftex05_plot2" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates how integrated process and device TFT simulations
+can be performed in Athena and Atlas. The input files consists of :
+</p>
+<ul>
+  <li>
+ Construction of TFT device in Athena
+<br/>
+  </li>
+  <li>
+ Forward (positive) Vgs sweep in Atlas
+<br/>
+  </li>
+  <li>
+ Reverse (negative) Vgs sweep in Atlas
+  </li>
+</ul>
+<p>
+The first part of the file uses Athena to construct the geometry and
+doping of a TFT device. The starting substrate is defined as silicon
+dioxide to emulate the flat panel display glass. The transistor is
+simulated with a metal gate on the bottom and a gate insulator made
+from Oxide and Nitride. A lightly doped Silicon layer is deposited to
+act as the channel region. A heavily doped layer is placed on top to
+become the source/drain regions. Single crystal Silicon or Polysilicon
+could be used equally well at this stage. However the important
+electrical properties of the material are set in Atlas, so at this stage
+it is not important which material is used.  Metal for the source/drain
+contacts is then applied. An etchback through the metal and
+heavily doped silicon is then carried out. Some of the lightly doped silicon layer
+is also removed. This final etch separates the source and drain. The
+final stage in Athena is to define the electrodes for use in Atlas.
+</p>
+<p>
+The Atlas part of this file is used to simulate the gate voltage bias
+from -20V to +20V with the drain at +10V. Before the biasing is applied
+it is first necessary to set all the relevant material parameters.
+</p>
+<p>
+In simulating TFTs, the most important requirement is setting of the
+<b> defect </b> statement specifying the density of states in the semiconductor
+bandgap. The defect states are specified as donor-like and
+acceptor-like and as tail and mid-gap gaussian states. This  gives a
+total of four distributions each with their own trapping cross sections
+for electrons and holes for a total of eight cross section values. The
+values included in this example are typical of amorphous silicon used
+in TFT transistors, but each user has a different process. The defect
+densities are sensitive to the hydrogen annealing of the device and so
+must be tuned by the user.
+</p>
+<p>
+The
+<b> material </b> statement is used to set the material constants of the
+semiconductor to those of amorphous silicon. The interface step defines
+an interface charge on each semiconductor/insulator interface. It is
+possible to vary this charge by position using the bounding box
+parameters on the interface statement.
+</p>
+<p>
+The models needed for TFT simulation are simple. A constant mobility as
+defined by the material statement is used and SRH recombination is
+included. In order to simulate reverse leakage the band-band tunneling
+model is included by:
+<b> models bbt.std</b> . The exponential parameter of the band-band tunneling model is
+adjusted for amorphous silicon.
+</p>
+<p>
+The first step in the solve sequence is to ramp the drain voltage up to
++10V. At this point a file is stored. The reverse gate voltage
+ramp is then applied. The gate voltage is ramped up to -20V. The drain
+current will increase during this ramp due to tunneling current in the
+TFT. The magnitude of this is controlled by the parameters of the
+band-band tunneling model. at the end of the ramp the final drain
+current is extracted.
+</p>
+<p>
+At the highest reverse gate bias a structure file is saved. By plotting
+the recombination in the device at this bias it is possible to see the
+band-band generation current as a negative recombination term.
+</p>
+<p>
+The final step is the forward gate voltage sweep. This is performed by first
+loading the solution saved with zero gate voltage. Then the gate is
+ramped to +20V. From this data the
+<b> extract </b> syntax is used to get the
+sub-threshold leakage slope. This slope, which is typically 0.5-1.5
+V/decade is sensitive to the defect distribution in the semiconductor.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

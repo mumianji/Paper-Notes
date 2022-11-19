@@ -1,0 +1,131 @@
+#silvaco.file ASCII version=1.14.10 format=1
+""
+
+#non-visible objects 
+number-of-non-visible-objects 0
+
+#non-enable-contour objects 
+number-of-non-enable-contour-objects 0
+
+#Cut Plane Settings   
+point_1 0 0 0
+point_2 2000 0 0
+point_3 0 0 -50
+three_points 0
+PAN 0
+PITCH 90
+ELEV 1
+#Cut Plane Axes Settings   
+X_REVERSE 0
+Y_REVERSE 0
+XY_SWAP 0
+
+#Define the scene matrix
+sm_00 0.79407241277616814
+sm_01 0.60589596706000914
+sm_02 -0.048364040032372456
+sm_03 -1742.2449846910961
+
+sm_10 0.12460528832454169
+sm_11 -0.24015003762146855
+sm_12 -0.96270529319826992
+sm_13 -241.44796466438234
+
+sm_20 -0.59491388064945527
+sm_21 0.75843129980956425
+sm_22 -0.26619436147255593
+sm_23 985.76558251855954
+
+sm_30 0
+sm_31 0
+sm_32 0
+sm_33 1
+
+#Define the camera matrix
+cm_00 1
+cm_01 0
+cm_02 0
+cm_03 0
+
+cm_10 0
+cm_11 1
+cm_12 0
+cm_13 0
+
+cm_20 0
+cm_21 0
+cm_22 1
+cm_23 -6217.3014246875118
+
+cm_30 0
+cm_31 0
+cm_32 0
+cm_33 1
+
+#Define the scene scaling factors
+ss_xyz 1 1 1
+
+#Define 3D projection 
+proj_3d_aspect 2.1358574610244987
+proj_3d_z_near 3724.0659486674308
+proj_3d_z_far 8707.0012907235232
+proj_3d_height 2380.0104011698227
+proj_3d_fovy 25
+proj_3d_type 0
+proj_3d_depth_cue 2
+coord_selection 0
+coord_type 0
+modelview_x_scale 1
+modelview_y_scale 1
+modelview_z_scale 1
+
+#Global BBox Settings   
+global_bbox_min -199.04724354147666 -161.30916879086573 -2253.3472435414769
+global_bbox_max 4265.9788422363508 741.96375318629862 2211.6788422363506
+#Define x-y-z Axis Visibility
+x_axis_visibility 1
+y_axis_visibility 1
+z_axis_visibility 1
+#Define Legend Visibility
+contour_legend 1
+region_legend 1
+#Define the DisplayMode
+display_mode_id 3
+#Define Show Cut Plane
+show_cut_plane 1
+#Define Show Cut Plane X Y Axes
+show_cut_plane_x_axis 1
+show_cut_plane_y_axis 1
+#Define the DrawMode
+draw_mode_id 0
+#Define the Region_Color_Type
+region_color_type 0
+
+#Define light0 and light1 information
+light0_enabled 1
+light0_color 255 255 255
+light0_intensity 0.53
+light0_latitude 30
+light0_longitude 0
+
+light1_enabled 1
+light1_color 255 255 255
+light1_intensity 0.53
+light1_latitude 0
+light1_longitude 270
+#Define contours information
+imp_menu_index 4
+name-of-doping "Net Doping"
+limit_select_type 0
+auto_max_limit 1
+auto_min_limit 1
+contour_max_imp_value 1.0000000999999996e+19
+contour_min_imp_value -3.99999e+17
+legend_type 0
+legend_auto_mapping 1
+legend_mapping 0
+legend_palette 0
+legend_nbr_of_colors 5
+
+
+EOF 1580170678

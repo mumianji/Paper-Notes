@@ -1,0 +1,82 @@
+# TPCS version: 8
+# various properties
+log label 0
+key opaque 0
+mark frequency 0
+mark overlay 0
+graph width 0 4
+graph width 1 1
+graph width 2 1
+graph width 3 1
+graph width 4 4
+graph width 5 1
+sequence size 3
+sequence width 2
+log zero 0
+sequence mark 0 0
+sequence mark 1 1
+sequence mark 2 2
+sequence mark 3 3
+sequence mark 4 4
+sequence mark 5 5
+# Functions
+function 1 "" ""
+function 2 "" ""
+function 3 "" ""
+function 4 "" ""
+select 1
+# xygraph flags
+show points off
+show lines on
+# xygraph types
+xygraph type 0 convert 0
+xygraph yaxis scale linear
+# xygraph x-axis
+xygraph xaxis "Depth" linear
+# xygraph y-axes
+xygraph yaxis none
+xygraph yaxis "Stress XX" linear
+# xygraph group
+xygraph group "(unknown electricals)"
+# key positions
+key contours 1 at 3
+key contours 2 at 1
+key contours 3 at 6
+key electrical at 0
+key vectors at 6
+key overlay at 4
+key regions at 0
+key apply 
+# annotation, titles
+title main " "
+title sub " "
+# annotation, footers
+footer right none
+footer left none
+# annotation, show
+show xaxis on
+show yaxis on
+show grid on
+show label xaxis on
+show label yaxis on
+# annotation, axes
+range xaxis 0, 0.12 increment 0.02,4
+range yaxis -2500, 1000 increment 500,4
+label xaxis "Depth along center of chanel in microns"
+label yaxis "Lateral Stress, Sxx in MPa"
+# zoom
+zoom from 0, 0 scale 1, 1
+# user labels
+label "Poly" from 0.00748466, 565.725 color 0 scale 1
+label 0 at 7 7
+label "Epi-Si" from 0.0255215, 217.445 color 0 scale 0
+label 1 at 7 7
+label "SiGe" from 0.0361963, 157.248 color 0 scale 0
+label 2 at 7 7
+label "SiO2" from 0.0209816, 858.108 color 0 scale 0 to 0.0209816, 247.543
+label 3 at 6 6
+label "Silicon" from 0.0692025, 333.538 color 0 scale 0
+label 4 at 7 7
+# overlay level names
+label overlay 0 "Before Etch"
+label overlay 1 "After Etch"

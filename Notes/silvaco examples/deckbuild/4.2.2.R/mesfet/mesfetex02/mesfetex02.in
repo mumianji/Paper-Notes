@@ -1,0 +1,62 @@
+# (c) Silvaco Inc., 2018
+go atlas 
+
+Title  MBE Epitaxial GaAs MESFET - S parameters calculation
+
+# Define the mesh
+
+mesh  space.mult=1.0
+# 
+x.mesh loc=0.00 spac=0.3
+x.mesh loc=2.3 spac=0.02
+x.mesh loc=2.7 spac=0.02
+x.mesh loc=5 spac=0.3
+#
+y.mesh loc=0.00 spac=0.01
+y.mesh loc=0.04 spac=0.03
+y.mesh loc=0.12 spac=0.02
+y.mesh loc=6 spac=1.0
+
+# Region specification: Defined as two regions for different properties
+
+region     num=1 GaAs x.min=0 x.max=5 y.min=0 y.max=0.12
+region     num=2 GaAs x.min=0 x.max=5 y.min=0.12 y.max=6.12
+
+# Electrode specification
+
+elec       num=1  name=source  x.min=0.0 y.min=0.0 x.max=1.0 y.max=0.0
+elec       num=2  name=drain   x.min=4.0 y.min=0.0 x.max=5.0 y.max=0.0 
+elec       num=3  name=gate    x.min=2.35 length=0.3
+
+# Doping specification
+
+doping region=1 uniform conc=1.0e17 n.type 
+doping region=2 uniform conc=1.0e15 p.type
+
+# Set models, material and contact parameters
+
+contact num=3 work=4.77
+models region=1 print conmob fldmob srh optr
+models region=2 srh optr
+material region=2 
+
+# Solution - use gummel newton for initial then switch to full newton 
+
+method gummel newton 
+solve  vgate=0
+save outfile=mesfetex02_1.str
+tonyplot  mesfetex02_1.str -set mesfetex02_0.set
+solve vdrain=0.025 vstep=0.025 vfinal=0.1 name=drain
+ 
+method  newton 
+solve vdrain=0.2 vstep=0.1 vfinal=0.6 name=drain
+solve vdrain=0.8 vstep=0.2 vfinal=3 name=drain 
+
+# Small signal ac analysis with s-parameter calculation
+log outf=mesfetex02_ac.log s.param inport=gate outport=drain width=100
+solve ac.analysis direct frequency=1.e9 fstep=2.e9 nfsteps=20 
+
+tonyplot  mesfetex02_ac.log -set mesfetex02_1.set
+tonyplot  mesfetex02_ac.log -set mesfetex02_2.set
+
+quit

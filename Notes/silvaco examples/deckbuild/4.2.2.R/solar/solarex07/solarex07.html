@@ -1,0 +1,86 @@
+<html>
+  <head>
+    <title>Organic Solar Cell</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Organic Solar Cell</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Blaze/Organic Display/Organic Solar/Luminous</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="solarex07_plot0.png" width="640" alt="solarex07_plot0" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates the use of singlet exciton dissociation in
+the modeling of organic/polymer solar cell devices.  This model may
+also be used to model organic/polymer imaging sensors.
+</p>
+<p>
+The modeling of organic solar cells through exciton dissociation
+is based on the bulk heterojunction (BHJ) concept.  In this model
+we do not consider the details of the location of the heterointerface
+as it is considered as a random interpenetrating mixture of materials.
+</p>
+<p>
+Instead we assume the material is electrically uniform and that the
+mean distance from anywhere to the heterointerface is characterized
+in the dissociation model by the
+<b> A.SINGLET </b> parameter of the
+<b> MATERIAL </b> statement.
+</p>
+<p>
+There are three keys for simulation of exciton dissociation.  They
+are the inclusion of the singlet exciton continuity equation, the
+inclusion of Langevin recombination and the inclusion of the singlet
+dissociation model.  These three models are enabled on the
+<b> MODEL </b> statement by the parameters
+<b> SINGLET</b> ,
+<b> LANGEVIN </b> and
+<b> S.DISSOC</b> .
+</p>
+<p>
+Another consideration unique to organic photodetection is characterized
+by the
+<b> QE.EXCITON </b> parameter of the
+<b> MATERIAL </b> statement.  This
+parameter characterizes the number of singlet excitons generated for each
+photon that is absorbed.  Absorbed photons not generating singlets
+generate electron-hole pairs.
+</p>
+<p>
+Finally, you should notice that the photogeneration rate is specified
+in the C-interpreter function
+<b> solarex07.lib</b> .  This was done as
+a simple means to introduce a uniform photogeneration rate in the material.
+This is sometimes necessary if for example we do not know the details
+of the extinction coefficient versus wavelength for the materials involved.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

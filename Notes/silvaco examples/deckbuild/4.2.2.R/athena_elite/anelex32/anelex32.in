@@ -1,0 +1,30 @@
+go athena
+# 
+line x loc=0.00 spac=0.10
+line x loc=2 spac=0.10
+#
+line y loc=0.00 spac=0.02
+line y loc=0.1 spac=0.05
+
+# 
+init silicon orientation=100
+# 
+deposit oxide thick=0.50 divisions=5
+
+etch oxide start x=0.8 y=-5
+etch oxide cont x=0.8 y=5
+etch oxide cont x=1.2 y=5
+etch oxide done x=1.2 y=-5
+# 
+rate.depo machine=xxx alumin a.m  sigma.dep=0.20 hemisphe dep.rate=1000 \
+        angle1=90.00 angle2=-90.00
+# 
+deposit machine=xxx time=6 minutes divisions=5 void
+
+deposit oxide thickness=0.5 div=5
+
+structure outf=anelex32.str
+
+tonyplot  anelex32.str
+
+quit

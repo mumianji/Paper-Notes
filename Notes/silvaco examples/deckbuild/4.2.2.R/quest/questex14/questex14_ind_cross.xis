@@ -1,0 +1,213 @@
+DEFINE COMMAND/replace "inductance";
+DEFINE ACTION
+PARAMETER wire_width
+PARAMETER space
+PARAMETER nb_coils
+PARAMETER radius
+DO BEGIN
+ units /um;
+     ! UPDATE THE GDS BUMBER OF THESE LAYERS TO FIT WITH YOUR TECHNO. DO NOT CHANGE THE NAME
+  new layer "METAL_VIA" /gdsnumber=1 /red=0 /green=50 /blue=255; 
+  new layer "METAL_COIL" /gdsnumber=2 /red=50 /green=0 /blue=200; 
+  new layer "VIA" /gdsnumber=3  /red=255 /green=40 /blue=40; 
+  new layer "ELECTRODE" /gdsnumber=101 /red=40 /green=0 /blue=150;
+     !temporary layers: 
+  new layer "tmp_pont" /datatype=1 /gdsnumber=201 /red=0 /green=0 /blue=255;
+  new layer "tmp_via" /datatype=1 /gdsnumber=202 /red=0 /green=255 /blue=0;
+  new layer "CONTACT_TMP" /gdsnumber=130 /red=0 /green=100 /blue=125; 
+  couche_poly="Poly";
+  couche_contact="CONTACT";
+  couche_contact_tmp="CONTACT_TMP";
+  couche_me1="M1";
+  couche_me2="M2";
+  couche_via1="VIA1";
+	!Initialisation of variables
+  wire_coords1_haut={};
+  wire_coords1_bas={};
+  wire_coords_n_haut={};
+  wire_coords_n_bas={};
+  wire_coords_last_bas={};
+  epsilon = 0.0;
+  epsilon2 = 0.5;
+  nb_tours=1;
+  e=space+wire_width;
+  x0=0;
+  y0=0;
+  xa=0;
+  ya=0;
+
+      ! First Coil    
+  x1a = -(radius+e*(nb_coils-1));
+  y1a = (radius+e*(nb_coils-1))*tan(22.5);
+  x2a = -y1a;
+  y2a = -x1a;
+  x3a = -x2a;
+  y3a = y2a;
+  x4a = -x1a;
+  y4a = y1a;
+  x5a = x4a;
+  y5a = (space+wire_width)/2;  
+  delta = wire_width*(sqrt(2)-1)/(2*sqrt(2))+space/4;
+  x6a = x5a - delta;
+  y6a = y5a - delta;
+  x0a = x1a;
+  y0a = 20+wire_width/2;
+  xdeba = x1a - radius/2;
+  ydeba = y0a;
+  xmax=-(x0a+xdeba)/2;
+  xmax_hor=-(xdeba);
+  	!electrodes
+  box (xdeba+epsilon2) (ydeba-(wire_width)/2+epsilon2)(wire_width-2*epsilon2) (wire_width-2*epsilon2) /layer=("ELECTRODE");
+  text (xdeba+wire_width/2) (ydeba) "IN" /height=3 /width=2 /layer="ELECTRODE";
+  box (xdeba+epsilon2) (-(ydeba+(wire_width)/2)+epsilon2) (wire_width-2*epsilon2) (wire_width-2*epsilon2) /layer=("ELECTRODE");
+  text (xdeba+wire_width/2) (-ydeba) "OUT" /height=3 /width=2 /layer="ELECTRODE";
+  	! First Coil : Top and Bot 
+  wire_coords1_haut ={xdeba,ydeba,x0a,y0a,x1a,y1a,x2a,y2a,x3a,y3a,x4a,y4a,x5a,y5a,x6a,y6a};
+  wire_coords1_bas ={xdeba,-ydeba,x0a,-y0a,x1a,-y1a,x2a,-y2a,x3a,-y3a,x4a,-y4a,x5a,-y5a,x6a,-y6a};
+  wire (wire_coords1_haut) /layer=("METAL_COIL") /width=(wire_width) /flushend;
+  wire (wire_coords1_bas) /layer=("METAL_COIL") /width=(wire_width) /flushend;
+	!initialisation of coordonate for the cross
+  x_deb_pont = x6a;
+  y_deb_pont = -y6a;
+  x_deb_pont_sup = x5a;
+  y_deb_pont_sup = y5a;
+
+      ! Next Coil        
+  nb_tours=nb_coils;
+  flag=0;
+  num_boucle=0;
+  LOOP
+  BEGIN
+    if (nb_tours EQL 2)  THEN (LEAVE LOOP);
+    nb_tours=nb_tours-1;
+    x1a = -(radius+e*(nb_tours-1));
+    y1a = (radius+e*(nb_tours-1))*tan(22.5);
+    x2a = -y1a;
+    y2a = -x1a;
+    x3a = -x2a;
+    y3a = y2a;
+    x4a = -x1a;
+    y4a = y1a;
+    x5a = x4a;
+    y5a = (space+wire_width)/2;
+    x0a = x1a;
+    y0a = (space+wire_width)/2;
+    	!Direction of the cross part
+    parts = modf((nb_coils-nb_tours)/2);
+    if ((parts[1]) EQL 0) THEN (flag=0)
+    ELSE (flag=1);
+    display("nb_tours="&nb_tours);
+    display("flag="&flag);
+    x6a = x5a - pow(-1,flag)*delta;
+    y6a = y5a - delta;
+    xa = x0a - pow(-1,flag)*delta;
+    ya = y0a - delta;
+    wire_coords_n_haut ={xa,ya,x0a,y0a,x1a,y1a,x2a,y2a,x3a,y3a,x4a,y4a,x5a,y5a,x6a,y6a};
+    wire (wire_coords_n_haut) /layer=("METAL_COIL") /width=(wire_width) /flushend;
+    wire_coords_n_bas ={xa,-ya,x0a,-y0a,x1a,-y1a,x2a,-y2a,x3a,-y3a,x4a,-y4a,x5a,-y5a,x6a,-y6a};
+    wire (wire_coords_n_bas) /layer=("METAL_COIL") /width=(wire_width) /flushend;
+    if (flag EQL 1) THEN
+    begin
+      wire_coords_pont = {x_deb_pont+epsilon,y_deb_pont-epsilon,x6a-epsilon,y6a+epsilon};
+      wire (wire_coords_pont) /layer=("tmp_pont") /width=(wire_width) /flushend;
+      wire_coords_pont_sup = {x5a,-y5a,x_deb_pont_sup,y_deb_pont_sup};
+      wire(wire_coords_pont_sup) /layer=("METAL_VIA") /width=(wire_width) /flushend;
+    end;
+    if (flag EQL 0) THEN
+    begin
+      wire_coords_pont ={x_deb_pont-epsilon,y_deb_pont-epsilon,xa+epsilon,ya+epsilon};
+      wire (wire_coords_pont) /layer=("tmp_pont") /width=(wire_width) /flushend;
+      wire_coords_pont_sup = {x0a,-y0a,x_deb_pont_sup,-y_deb_pont_sup};
+      wire(wire_coords_pont_sup) /layer=("METAL_VIA") /width=(wire_width) /flushend;
+    end;
+    seq_reset(wire_coords_n_haut);
+    seq_reset(wire_coords_n_bas);
+    seq_reset(wire_coords_pont);
+    seq_reset(wire_coords_pont_sup);
+	    !Value for the next coil
+    if (flag EQL 0) THEN
+    begin
+      x_deb_pont = x6a;
+      y_deb_pont = -y6a;
+      x_deb_pont_sup = x5a;
+      y_deb_pont_sup = y5a;
+    end;
+    if (flag EQL 1) THEN
+    begin
+      x_deb_pont = xa;
+      y_deb_pont = -ya;
+      x_deb_pont_sup = x0a;
+      y_deb_pont_sup = -y0a;
+    end;
+  END; 	
+
+  ! Last Coil      
+  x1a = -(radius+e*(nb_tours-2));
+  y1a = (radius+e*(nb_tours-2))*tan(22.5);
+  x2a = -y1a;
+  y2a = -x1a;
+  x3a = -x2a;
+  y3a = y2a;
+  x4a = -x1a;
+  y4a = y1a;
+  x5a = x4a;
+  y5a = (space+wire_width)/2;
+  x0a = x1a;
+  y0a = (space+wire_width)/2;
+  parite_nb_tours=modf(nb_coils/2);
+  if ((parite_nb_tours[1]) NEQ 0) THEN
+  begin
+    display("impaire");
+    xa = x0a - delta;
+    ya = y0a - delta;
+    x6a = radius;
+    y6a = 0;
+    wire_coords_pont = {x_deb_pont-epsilon,y_deb_pont-epsilon,xa+epsilon,ya+epsilon};
+    wire (wire_coords_pont) /layer=("tmp_pont") /width=(wire_width) /flushend;
+    wire_coords_pont_sup = {x0a,-y0a,x_deb_pont_sup,-y_deb_pont_sup};
+    wire(wire_coords_pont_sup) /layer=("METAL_VIA") /width=(wire_width) /flushend;
+  end;
+  IF ((parite_nb_tours[1]) EQL 0) THEN
+  begin
+    display("paire");
+    xa = -radius;
+    ya = 0;
+    x6a = x5a + delta;
+    y6a = y5a - delta;
+    wire_coords_pont = {x_deb_pont+epsilon,y_deb_pont-epsilon,x6a-epsilon,y6a+epsilon};
+    wire (wire_coords_pont) /layer=("tmp_pont") /width=(wire_width) /flushend;
+    wire_coords_pont_sup = {x5a,-y5a,x_deb_pont_sup,y_deb_pont_sup};
+    wire(wire_coords_pont_sup) /layer=("METAL_VIA") /width=(wire_width) /flushend;
+  end;
+	  ! Generation of last coil : Top and Bot
+display(parite_nb_tours[1]);
+wire_coords_last_haut={}; 
+ wire_coords_last_haut = {xa,ya,x0a,y0a,x1a,y1a,x2a,y2a,x3a,y3a,x4a,y4a,x5a,y5a,x6a,y6a};
+  
+wire_coords_last_bas = {xa,-ya,x0a,-y0a,x1a,-y1a,x2a,-y2a,x3a,-y3a,x4a,-y4a,x5a,-y5a,x6a,-y6a};
+  wire (wire_coords_last_haut) /layer=("METAL_COIL") /width=(wire_width) /flushend;
+  wire (wire_coords_last_bas) /layer=("METAL_COIL") /width=(wire_width) /flushend;
+	  !creation of vias
+  str_comm1a = "AND:Layer1=METAL_VIA,Layer2=METAL_COIL,LayerR=tmp_via;";
+  drc command(str_comm1a);
+  str_comm1b = "UnderSize: Value=0.5um, Layer=tmp_via, LayerR=via;Copy:Layer=via, LayerR=VIA;";
+  drc command(str_comm1b);
+  	!merge of  tmp_pont and METAL_COIL into METAL_COIL
+  str_comm2a = "Or: Layer1=tmp_pont, Layer2=METAL_COIL, LayerR=tmp_METAL_COIL;Copy:Layer=tmp_METAL_COIL, LayerR=METAL_COIL;";
+  drc command(str_comm2a);
+  delete layer "tmp_pont";
+  delete layer "tmp_via";
+  delete layer "via";
+  delete layer "tmp_METAL_COIL";
+  delete layer "CONTACT_TMP";
+
+  quiet mode /off;
+
+END;
+
+DEFINE ARGUMENT wire_width /COERCE=(FLOAT)/NAMED/IS_DEFAULT/VALUE_REQUIRED;
+DEFINE ARGUMENT space /COERCE=(FLOAT)/NAMED/IS_DEFAULT/VALUE_REQUIRED;
+DEFINE ARGUMENT nb_coils /COERCE=(FLOAT)/NAMED/IS_DEFAULT/VALUE_REQUIRED;
+DEFINE ARGUMENT radius /COERCE=(FLOAT)/NAMED/IS_DEFAULT/VALUE_REQUIRED;
+
+COMPLETE COMMAND;

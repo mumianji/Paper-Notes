@@ -1,0 +1,25 @@
+go internal
+
+# load tftex17.infile
+load infile=tftex19.in
+
+# simulate the three different case of hydrogen concentrations.
+# low hydrogen concentration
+sweep parameter=low type=list range="1" \
+	parameter=med type=list range="0" \
+	parameter=high type=list range="0"
+
+# medium hydrogen case
+sweep parameter=low type=list range="0" \
+	parameter=med type=list range="1" \
+	parameter=high type=list range="0"
+
+# high hydrogen case
+sweep parameter=low type=list range="0" \
+	parameter=med type=list range="0" \
+	parameter=high type=list range="1"
+
+# plot Vth shift: Experiment v.s Simulation ( low & medium)
+tonyplot -overlay dvth_0.91Pa_simulation.dat dvth_0.91Pa_power_law_fit_exp.dat dvth_1.28Pa_simulation.dat dvth_1.28Pa_power_law_fit_exp.dat -set tftex19_7.set
+
+quit

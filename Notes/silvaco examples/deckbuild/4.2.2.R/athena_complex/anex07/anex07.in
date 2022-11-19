@@ -1,0 +1,49 @@
+go athena
+
+#TITLE: Trench etch and subsequent oxidation example
+#
+line x loc=0.00 spac=0.05
+line x loc=0.4  spac=0.03
+line x loc=1.0  spac=0.03
+line x loc=1.4  spac=0.05
+#
+line y loc=0.00 spac=0.04
+line y loc=1.00 spac=0.1
+# 
+init orientation=100 space.m=1
+#
+deposit oxide thick=0.10 div=8
+#
+etch oxide start x=0.4 y=-10
+etch       cont  x=0.4 y=10
+etch       cont  x=1.0 y=10
+etch       done  x=1.0 y=-10
+#
+structure outfile=anex07_0.str
+
+rate.etch machine=test1 rie silicon a.m isotropic=200. directional=100. 
+#
+rate.etch machine=test1 rie oxide a.m isotropic=10.0 directional=0.
+#
+etch mach=test1 time=5.0 minutes dx.mult=.25
+#
+strip oxide 
+
+diff time=30 temp=900 dry
+
+structure outfile=anex07_1.str
+
+init infile=anex07_0.str
+# 
+rate.etch machine=test2 silicon u.m rie isotropic=.05 dir=.1
+
+etch mach=test2 time=5.0 minutes dx.mult=.25
+strip oxide 
+ 
+diff time=30 temp=900 dry
+
+structure outfile=anex07_2.str
+
+tonyplot anex07_1.str anex07_2.str
+
+quit

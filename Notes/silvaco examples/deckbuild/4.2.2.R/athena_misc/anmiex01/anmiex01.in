@@ -1,0 +1,39 @@
+go athena
+
+#TITLE: BPSG example
+
+line x loc = 0.0 spacing=.05
+line x loc = 2.0 spacing=.05
+
+line y loc=0     spacing = 0.01
+line y loc=1.0   spacing = 0.1
+
+init    c.boron=1e15
+
+# define the parameters for BPSG
+impurity i.antimony   donor    material=BPSG Dix.0=1.31e16 Dix.E=8.75
+impurity i.antimony   donor    material=BPSG Dim.0=0.0 Dim.E=0.0
+impurity i.arsenic    donor    material=BPSG Dix.0=1.75 Dix.E=4.89
+impurity i.arsenic    donor    material=BPSG Dim.0=0.0 Dim.E=0.0
+impurity i.boron      acceptor material=BPSG Dix.0=3.16e-4 Dix.E=3.53
+impurity i.boron      acceptor material=BPSG /oxide Seg.0=1126.0 Seg.E=0.91 Trn.0=1.66e-7 Trn.E=0.0
+impurity i.boron      acceptor material=BPSG Dip.0=0.0 Dip.E=0.0
+impurity i.phosphor   donor    material=BPSG /oxide Seg.0=30.0 Seg.E=0.0 Trn.0=1.66e-7 Trn.E=0.0
+impurity i.phosphor   donor    material=BPSG Dix.0=7.6e-3 Dix.E=3.5 Dvx.0=0.0 Dvx.E=0.0
+impurity i.phosphor   donor    material=BPSG Dim.0=0.0 Dim.E=0.0 Dvm.0=0.0 Dvm.E=0.0
+impurity i.phosphor   donor    material=BPSG Dimm.0=0.0 Dimm.E=0.0 Dvmm.0=0.0 Dvmm.E=0.0
+
+deposit oxide thick=0.1 c.phos=1e12 c.bor=1e12 div=20
+deposit  material=BPSG thick=0.5 div=20 c.phos=2e21 c.boron=5e21
+
+#perform diffusion
+method fermi compress
+diffuse time=150 temp=1050
+
+#plot the resulting structure
+ 
+structure outfile=anmiex01.str
+
+tonyplot anmiex01.str
+
+quit

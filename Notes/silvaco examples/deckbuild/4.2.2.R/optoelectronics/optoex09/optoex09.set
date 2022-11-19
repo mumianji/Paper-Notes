@@ -1,0 +1,82 @@
+# TPCS version: 7
+# various properties
+log label 0
+key opaque 0
+mark frequency 0
+mark overlay 0
+graph width 0 2
+graph width 1 1
+graph width 2 1
+graph width 3 1
+graph width 4 1
+graph width 5 1
+sequence size 1
+sequence width 0
+log zero 0
+sequence mark 0 0
+sequence mark 1 1
+sequence mark 2 2
+sequence mark 3 3
+sequence mark 4 4
+sequence mark 5 5
+# Functions
+function 1 "" ""
+function 2 "" ""
+function 3 "" ""
+function 4 "" ""
+select 1
+# xygraph flags
+show points on
+show lines on
+# xygraph types
+xygraph type 0 convert 0
+xygraph yaxis scale linear
+# xygraph x-axis
+xygraph xaxis "Optical wavelength" linear
+# xygraph y-axes
+xygraph yaxis none
+xygraph yaxis "Available photo current" linear
+xygraph yaxis "Source photo current" linear
+# xygraph group
+xygraph group "(unknown electricals)"
+# key positions
+key contours 1 at 3
+key contours 2 at 1
+key contours 3 at 6
+key electrical at 1
+key vectors at 6
+key overlay at 0
+key regions at 4
+key apply 
+# annotation, titles
+title main auto
+title sub auto
+# annotation, footers
+footer right none
+footer left none
+# annotation, show
+show xaxis on
+show yaxis on
+show grid off
+show label xaxis on
+show label yaxis on
+# annotation, axes
+range xaxis auto
+range yaxis auto
+label xaxis "Optical wavelength (~mm)"
+label yaxis "Current (A)"
+# zoom
+zoom from 0, 0 scale 1, 1
+# user labels
+label "2-layer ARC" from 0.347292, 8.98435e-09 color 0 scale 1 to 0.380841, 8.47714e-09
+label 0 at 3 3
+label "ARC=0.07um" from 0.508327, 1.45995e-08 color 0 scale 1 to 0.48037, 1.44961e-08
+label 1 at 0 0
+label "Source" from 0.34841, 1.34929e-08 color 0 scale 1 to 0.392024, 1.27603e-08
+label 2 at 3 3
+label "no ARC" from 0.691728, 1.26869e-08 color 0 scale 1 to 0.67719, 1.43928e-08
+label 3 at 0 0
+# overlay level names
+label overlay 0 "optoex09.log"
+label overlay 1 "optoex09_noarc.log"
+label overlay 2 "optoex09_2arc.log"

@@ -1,0 +1,73 @@
+<html>
+  <head>
+    <title>Defining a 2D Gaussian Intensity Profile</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Defining a 2D Gaussian Intensity Profile</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>S-Pisces/Luminous</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="optoex10_plot0.png" width="640" alt="optoex10_plot0" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates:
+<br/>
+ </p>
+<ul>
+  <li>
+ How to define a 2D Gaussian intensity profile
+  </li>
+</ul>
+<p>
+This example shows an added capability of Luminous where, instead of a uniform beam intensity applied to the surface of the silicon, a Gaussian profile for the beam intensity can be defined.
+</p>
+<p>
+The definition of the beam is now:
+</p>
+<p>
+beam num=1 x.origin=2.5 y.origin=-5.0 angle=90 wavelength=0.623 rays=101 gaussian mean=0 xsigma=0.25
+</p>
+<p>
+The additional parameters are
+<b> gaussian</b> ,
+<b> mean</b> and
+<b> xsigma</b> . The GAUSSIAN parameter defines that the intensity distribution is a gaussian,
+MEAN specifies the location of a mean value of the Gaussian source
+in the X direction related to the beam coordinate system, and XSIGMA specifies
+the standard deviation in the X direction of the beam coordinate system.
+</p>
+<p>
+We recommend that the RAYS parameter is set to a large number as the spacing
+between rays is always a constant (width of the beam / RAYS ) so in order to
+obtain a smooth gaussian profile a large number of rays may be necessary.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

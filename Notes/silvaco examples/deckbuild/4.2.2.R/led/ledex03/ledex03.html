@@ -1,0 +1,111 @@
+<html>
+  <head>
+    <title>Blue Single Quantum Well GaN LED</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Blue Single Quantum Well GaN LED</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Blaze/Quantum/LED/DevEdit</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="ledex03_plot0.png" width="640" alt="ledex03_plot0" />
+      <p/>
+      <img src="ledex03_plot1.png" width="640" alt="ledex03_plot1" />
+      <p/>
+      <img src="ledex03_plot2.png" width="640" alt="ledex03_plot2" />
+      <p/>
+      <img src="ledex03_plot3.png" width="640" alt="ledex03_plot3" />
+      <p/>
+      <img src="ledex03_plot4.png" width="640" alt="ledex03_plot4" />
+      <p/>
+      <img src="ledex03_plot5.png" width="640" alt="ledex03_plot5" />
+      <p/>
+    </div>
+    <div id="text" >
+<p>
+This example demonstrates how the Atlas radiative recombination models
+can be used to analyze the Electro-Luminous spectrum for a BLUE LED.
+</p>
+<p>
+The objective of this example is to get the basic LED characteristics
+such as the I-V-L curve and EL spectrum. DEVEDIT was used to create
+the structure. In DEVEDIT, x-direction was scaled down to 1/100, and
+in Atlas the structure was scaled up to original structure size to 100
+times in x-direction.
+</p>
+<b> Structure Generation</b> <p>
+DEVEDIT is used to define the LED structure. Atlas then scales the x
+dimension by 100. The device size is 350*350 um^2, so 477 [um] is used
+to set the exact Anode Area by specifying
+<b> WIDTH=477.</b> </p>
+<b> Region Specification</b> <p>
+To model the effects of strain and the piezo effect, the
+<b> CALC.STRAIN</b> ,
+<b> POLARIZATION  </b> and
+<b> POLAR.SCALE </b> parameters of the
+<b> REGION </b> statement can be used.
+<b> POLAR.SCALE </b> is set to 1.0 for the InGaN materials. This parameter combination
+will be result in an interface charge of ~1e13 cm-2, depending on the
+mole fraction of the well/barrier Layer.
+</p>
+<p>
+To get the EL spectrum, the parameter
+<b> QWELL </b> and
+<b> LED </b> should be specified on the quantum active layer region.
+</p>
+<p>
+The ANODE and CATHODE contacts are defined on the top and bottom of the device.
+</p>
+<b> Material and Models</b> <p>
+There are three parts to this section. The first specifies the
+<b> MATERIAL </b> statement parameters for the recombination and linewidth broadening factor,
+as well as enabling incomplete ionization. The second part specifies the
+<b> MODELS </b> statement for the GaN system. The other
+<b> MODELS </b> statement defines the Gain and EL spectrum models for the SQW region. The
+<b> CHUANG </b> and
+<b> SPONTANEOUS </b> are specified along with
+<b> LORENTZ </b> for linewidth broadening. The third part defines the mobility. Finally,
+the refractive index was difined with ADACHI model and the Nickel metal
+given the refractive index of air so that it will be ignored in the reverse
+raytrace.
+</p>
+<b> Bias Ramp and Save Spectrum</b> <p>
+To obtain the EL spectrum, the
+<b> SPECTRUM </b> parameter and wavelength range
+<b> LMIN</b> ,
+<b> LMAX </b> and
+<b> NSAMP </b> are specified on the
+<b> SAVE </b> statement.
+</p>
+<b> Plotting Curves</b> <p>
+To store the I-V-L and EL spectrum and the angluar power distribution,
+the
+<b> SAVE </b> statement was used. The
+<b> MIR.BOTTOM </b> parameter was used to define of the bottom mirror.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

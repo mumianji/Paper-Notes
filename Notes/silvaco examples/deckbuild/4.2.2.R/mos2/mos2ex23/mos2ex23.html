@@ -1,0 +1,166 @@
+<html>
+  <head>
+    <title>Device Degradation due to Hole Trapping in a Silicon pMOSFET</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Device Degradation due to Hole Trapping in a Silicon pMOSFET</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>S-Pisces</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="mos2ex23_plot1.png" width="640" alt="mos2ex23_plot1" />
+      <p/>
+      <img src="mos2ex23_plot2.png" width="640" alt="mos2ex23_plot2" />
+      <p/>
+      <img src="mos2ex23_plot3.png" width="640" alt="mos2ex23_plot3" />
+      <p/>
+      <img src="mos2ex23_plot4.png" width="640" alt="mos2ex23_plot4" />
+      <p/>
+      <img src="mos2ex23_plot5.png" width="640" alt="mos2ex23_plot5" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example shows the effects of device degradation caused by stressing a
+transistor at a negative gate bias and an elevated temperature.  The used
+model is based on hole trapping into the gate oxide but also accounts for
+the permanent component by an interface reaction.  The example shows how to:
+<br/>
+</p>
+<ul>
+  <li>
+ Create a PMOS structure using the Atlas syntax and refine 
+the simulation grid in the gate oxide.
+<br/>
+  </li>
+  <li>
+ Set up a deck with the four-state NMP model enabled.
+<br/>
+  </li>
+  <li>
+ Simulate the temporal response of oxide and interface traps 
+during a stress and a relaxation phase.
+<br/>
+  </li>
+  <li>
+ Visualize the local degradation using the hole occupancy of 
+the oxide traps.
+  </li>
+</ul>
+<br/>
+<p>
+The input file consists of three separate runs, where each of them starts
+with
+<b> go atlas.</b> In the first section, the geometry, the mesh, the electrodes, and the doping
+of the simulated device are specified using the statements
+<b> mesh,</b> <b> region,</b> <b> electrodes, </b> and
+<b> doping,</b> respectively.  Since the four-state NMP model requires a fine mesh in the
+gate oxide region between the substrate and the gate, the mesh is refined
+based on the potential using the statement
+<b> regrid.</b> The resulting structure is saved in an output file called mos2ex23_0.str.
+</p>
+<br/>
+<p>
+In the next section, ATLAS is restarted and the refined structure is read
+in again.  Then the four-state NMP model is enabled by the parameter
+<b> nmp4.sto</b> after the
+<b> trap </b> statement.  The oxide traps are placed into the material
+<b> sio2</b> and confined to the region defined by coordinates
+<b> x.min, </b> <b> x.max, </b> <b> y.min,</b> and
+<b> y.max.</b> Their oxide and interface state density are set to 1e20/cm3 and 1e11/cm2,
+respectively.  The parameter
+<b> nmp4.sample </b> specifies the number of simulated traps at each gate oxide point.  In this
+example, a small number of traps have been chosen in order to reduce the
+computation time.  However, this number should be increased for more
+realistic simulations, especially if one is interested in the degradation
+of large-area devices.  The traps have distributed parameters, given by
+their mean values and their variance.  The meaning of each of those
+parameters is described in the ATLAS user manual.  Furthermore, the traps
+are enabled to capture/emit charge carriers from/to the silicon substrate
+by setting the parameter
+<b> subcontact </b> to the material
+<b> silicon.</b> </p>
+<br/>
+<p>
+Next, the device is simulated for steady-state conditions using the
+statements
+<b> solve init</b> and
+<b> solve prev.</b> The obtained oxide and interface trap charges correspond to their
+respective pre-stress levels and are saved in the structure file
+mos2ex23_1.str that will be used for the extraction of the threshold
+voltages in the last section.  Note that the
+<b> output</b> statement requires the flag
+<b> devdeg </b> for saving the trap charges in the output file mos2ex23_1.str.  The
+stored charges are visualized using TONYPLOT.  The figure clearly shows
+that the trapped charges are inhomogeneously distributed in the gate
+oxide due to the assumed defect-to-defect variations in the amorphous SiO2
+gate oxide.
+</p>
+<br/>
+<p>
+In the next step, the device is stressed by applying a gate bias of
+-1.55 V for 1 s, including an initial ramptime of 1e-6 s.  The
+temperature of this stress phase is set 100 C by
+<b> model temp=373.</b> The bias temperature stress leads to a device degradation, saved in the
+output file mos2ex23_2.str. The gate oxide is found to have an increased
+concentration of trapped holes compared to the pre-stress level.  The
+stress period is followed by a relaxation phase of 1e3 s at 0 V, where
+the degradation at the end of this phase is saved in the structure file
+mos2ex23_3.str.  The TONYPLOT figure demonstrates that a substantial
+fraction of the trapped charges has been removed during device recovery.
+</p>
+<br/>
+<p>
+For studying critical spots in the gate oxide, the local degradation may
+be of interest.  Therefore, the corresponding
+<b> output </b> statements are followed by the flags
+<b> u.trantrap </b> and
+<b> traps </b> in order to write out the trap occupation probabilities at a specified
+position within the gate oxide.  This position together with the requested
+states
+<b> msc.state </b> must be set after the
+<b> probe </b> statement.  In this input deck, the stress and relaxation data are written
+out into the log file mos2ex23_1.log and mos2ex23_2.log, respectively.  In
+both phases, the plotted degradation curves show a behavior that is almost
+logarithmic and therefore reminiscent of negative bias temperature
+instability.
+</p>
+<br/>
+<p>
+In the following section, ATLAS is restarted.  In a loop, the trapped oxide
+and interface charges of the unstressed, the stressed, and the relaxed
+device are loaded and a gate bias sweep is performed.  The calculated output
+characteristics are recorded in the log files mos2ex23_3.log, mos2ex23_4.log,
+and mos2ex23_5.log, respectively.  The comparison of the Id(Vg) curves
+demonstrates a pronounced shift of the threshold voltage due to hole
+trapping at the end of the stress phase.  The following relaxation period
+of 1e3 s leads to an incomplete recovery of the device degradation.
+</p>
+<br/>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

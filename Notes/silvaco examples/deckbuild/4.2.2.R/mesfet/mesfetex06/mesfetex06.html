@@ -1,0 +1,62 @@
+<html>
+  <head>
+    <title>Deep Level Bulk Traps (EL2) - AC Analysis</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Deep Level Bulk Traps (EL2) - AC Analysis</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>SSuprem 4/Blaze</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="mesfetex06_plot0.png" width="640" alt="mesfetex06_plot0" />
+      <p/>
+      <img src="mesfetex06_plot1.png" width="640" alt="mesfetex06_plot1" />
+      <p/>
+      <img src="mesfetex06_plot2.png" width="640" alt="mesfetex06_plot2" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example is based on the structure created in example 4 within the
+MESFET section - the trap simulation is now performed in ac mode.
+</p>
+<p>
+The AC simulation uses the same initial point as the previous two
+cases. The gate is grounded and the drain is at 0.5V. An AC signal is
+applied at this point to each contact in turn. The frequency of this AC
+signal is then ramped from 1MHz to over 10GHz. The fstep parameter sets
+the step size of the frequency change. However the parameter
+<b> mult.f </b> means fstep is applied as a multiplier to the frequency rather than as
+a sum.
+</p>
+<p>
+As described in example 2 in this section, the s.param command on the
+log statement is used to specify the output of s-parameters.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

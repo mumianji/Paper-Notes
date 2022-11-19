@@ -1,0 +1,49 @@
+go athena 
+
+line x loc=0.00 spac=0.10
+line x loc=0.1 spac=0.10
+#
+line y loc=0.00 spac=0.01
+line y loc = 0.50  spacing = 0.02
+line y loc = 1.0   spacing = 0.25
+line y loc=20 spac=5
+# 
+init silicon c.boron=1.0e14 orientation=100
+
+# set RTA models
+method full.cpl cluster.dam i.loop.sink high.conc pdinit.time=1e-5 
+
+# set max doping level at which clusters form
+# at higher doping levels substrate is amorphised so no defects.
+cluster  min.cluster=1e15 max.cluster=1e19 clust.fac=1 i.phos
+interstitial damalpha=1 silicon
+
+# using moments statement to fit the implantation to the as-implanted curve.
+# fit parameters were range, std.dev and dratio.
+moments silicon i.phosphor dose=5.0e13 energy=100 range=0.165 std.dev=0.0998 \
+	gamma=3.561 kurtosis=49.2516 srange=0.1339 sstd.dev=0.0506 \
+	sgamma=0.115 skurtosis=3.04804 dratio=0.393 
+
+implant phosphor dose=5.0e13 energy=100 tilt=7    print.mom
+
+struct outfile=andfex04_0.str
+
+
+# 
+diffus time=15/60 temp=800 nitro press=1.00
+struct outfile=andfex04_1.str
+
+diffus time=45/60 temp=800  nitro press=1.00
+struct outfile=andfex04_2.str
+
+diffus time=4 temp=800 nitro press=1.00
+struct outfile=andfex04_3.str
+
+diffus time=55 temp=800 nitro press=1.00
+struct outfile=andfex04_4.str
+#
+
+tonyplot -overlay andfex04_*str -set andfex04_0.set
+tonyplot -overlay andfex04_*str -set andfex04_1.set
+
+quit

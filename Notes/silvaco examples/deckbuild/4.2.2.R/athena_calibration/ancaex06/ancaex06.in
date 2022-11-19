@@ -1,0 +1,41 @@
+go athena
+
+#TITLE: Directional and isotropic etch tuning for spacer formation
+# 
+line x loc=0.00 spac=0.10 
+line x loc=1.5  spac=0.025 
+line x loc=2.5  spac=0.025
+line x loc=4.0  spac=0.10 
+#
+line y loc=0.00 spac=0.05 
+line y loc=2    spac=0.3
+init space.m=1
+#
+depo oxi thi=0.02 div=1
+depo poly thi=0.35 div=10
+etch poly left  p1.x=1.5 
+etch poly right p1.x=2.5 
+#
+deposit oxide thick=.35 div=8
+#
+structure outfile=ancaex06.str
+
+rate.etch mach=dr2 rie photo dir=0.0 iso=0.0 u.m
+rate.etch mach=dr2 rie polysilicon  dir=0.0 iso=0.0 u.m
+rate.etch mach=dr2 rie oxide dir=0.55 iso=0.00 u.m
+#
+etch mach=dr2 time=45 second dt.max=.2
+structure outfile=ancaex06_0.str
+
+init infile=ancaex06.str
+
+rate.etch mach=dr2 rie photo dir=0.0 iso=0.0 u.m
+rate.etch mach=dr2 rie polysilicon  dir=0.0 iso=0.0 u.m
+rate.etch mach=dr2 rie oxide dir=0.35 iso=0.20 u.m
+#
+etch mach=dr2 time=45 second dt.max=.2
+structure outfile=ancaex06_1.str
+#
+tonyplot -overlay ancaex06_*.str -set ancaex06.set
+
+quit

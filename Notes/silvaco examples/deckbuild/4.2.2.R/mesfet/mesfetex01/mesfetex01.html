@@ -1,0 +1,102 @@
+<html>
+  <head>
+    <title>Ion Implanted GaAs MESFET Fabrication and Vt Test</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Ion Implanted GaAs MESFET Fabrication and Vt Test</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>SSuprem 4/DevEdit/Blaze</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="mesfetex01_plot0.png" width="640" alt="mesfetex01_plot0" />
+      <p/>
+      <img src="mesfetex01_plot1.png" width="640" alt="mesfetex01_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates fabrication and electrical analysis of a
+MESFET structure using the FLASH module of Athena and the Blaze
+capability of Atlas.  The example uses DEVEDIT at various points
+in the process to optimize the grid. The example shows:
+</p>
+<ul>
+  <li>
+ MESFET fabrication using FLASH 
+<br/>
+  </li>
+  <li>
+ Re-meshing of structure in DEVEDIT
+<br/>
+  </li>
+  <li>
+ Setting of device parameters for electrical simulation
+<br/>
+  </li>
+  <li>
+ Electrical simulation of an Id/Vgs curve
+  </li>
+</ul>
+<p>
+This example starts by interfacing Athena and DEVEDIT to provide a
+GaAs MESFET structure using silicon and beryllium implants. Details of
+using FLASH can be found in the ATHENA_FLASH examples section.
+</p>
+<p>
+It is necessary to set contact workfunctions for every Schottky contact
+in each Atlas input file. The command
+<b> contact name=gate work=4.87 </b> is used to set the gate workfunction. Source and drain contacts are
+assumed to be ohmic. Users should note that this contact statement is
+necessary even though the material Titanium was used in the Athena
+simulation. Atlas does not recognize different metals, and the properties of
+different metal regions are not transferred from Athena to Atlas.  Atlas
+calculates the barrier height of a Schottky barrier in the following
+mannor:
+</p>
+<b> barrier height = (metal work function - semiconductor electron</b> <b> affinity).  </b> <p>
+Care should be taken to ensure the appropriate barrier height is chosen.
+</p>
+<p>
+Low lifetimes typical of GaAs are set in the
+<b> material </b> statement.  The
+<b> models </b> statement is used to specify appropriate models within the simulation. The
+<b> fldmob </b> parameter turns on the electric field dependent mobility.
+<b> conmob</b> specifies the concentration dependent mobility. These values are taken
+from a look-up table and exist only for room temperature.
+</p>
+<p>
+The solution sequence for MESFET threshold voltage is first to obtain the initial solution at zero bias on all contacts. Then the drain is set to 0.1V. A log file is opened by the
+<b> log </b> statement to store all terminal characteristics. The  final
+<b> solve                    </b> statement ramps the gate from zero to -3V. Note that Atlas requires the
+zero bias solution to be solved first in all cases. Thus the gate
+voltage should be swept from zero to the value required. If a range of
+both negative and positive gate voltages is required two sweeps can be
+done by saving and loading the zero bias solution.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

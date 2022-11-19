@@ -1,0 +1,112 @@
+# (c) Silvaco Inc., 2018
+go atlas
+
+mesh
+
+x.mesh loc=-0.01 spac=0.01
+x.mesh loc=0.01  spac=0.01
+
+y.mesh loc=-0.04 spac=0.001
+y.mesh loc=0.02  spac=0.001
+
+region number=1 x.min=-0.01 x.max=0.01 y.min=-0.04 y.max=-0.03  \
+       material=aluminum
+region number=2 x.min=-0.01 x.max=0.01 y.min=-0.03 y.max=-0.005 \
+       material=poly
+region number=3 x.min=-0.01 x.max=0.01 y.min=-0.005 y.max=0.0   \
+       material=oxide
+region number=4 x.min=-0.01 x.max=0.01 y.min=0.0 y.max=0.02     \
+       material=silicon
+
+electrode x.min=-0.01 x.max=0.01 y.min=-0.04 y.max=-0.03 name=gate
+electrode bottom name=substrate
+
+doping region=2 p.type concentration=1e19 uniform
+doping region=4 p.type concentration=1e17 uniform
+
+solve init
+solve vgate=-1.5
+solve vgate=-3
+
+save outfile=mos2ex15-3V19.str
+# tonyplot mos2ex15-3V19.str -set mos2ex15_BD.set
+
+log outfile=mos2ex15_CV19.log
+solve vgate=-2.8 vstep=0.2 vfinal=3.0 name=gate ac freq=1e6 previous
+tonyplot mos2ex15_CV19.log -set mos2ex15_CV.set
+
+
+go atlas
+
+mesh
+
+x.mesh loc=-0.01 spac=0.01
+x.mesh loc=0.01  spac=0.01
+
+y.mesh loc=-0.04 spac=0.001
+y.mesh loc=0.02  spac=0.001
+
+region number=1 x.min=-0.01 x.max=0.01 y.min=-0.04 y.max=-0.03  \
+       material=aluminum
+region number=2 x.min=-0.01 x.max=0.01 y.min=-0.03 y.max=-0.005 \
+       material=poly
+region number=3 x.min=-0.01 x.max=0.01 y.min=-0.005 y.max=0.0   \
+       material=oxide
+region number=4 x.min=-0.01 x.max=0.01 y.min=0.0 y.max=0.02     \
+       material=silicon
+
+electrode x.min=-0.01 x.max=0.01 y.min=-0.04 y.max=-0.03 name=gate
+electrode bottom name=substrate
+
+doping region=2 p.type concentration=1e20 uniform
+doping region=4 p.type concentration=1e17 uniform
+
+solve init
+solve vgate=-1.5
+solve vgate=-3
+
+save outfile=mos2ex15-3V20.str
+# tonyplot mos2ex15-3V20.str -set mos2ex15_BD.set
+
+log outfile=mos2ex15_CV20.log
+solve vgate=-2.8 vstep=0.2 vfinal=3.0 name=gate ac freq=1e6 previous
+
+
+go atlas
+
+mesh
+
+x.mesh loc=-0.01 spac=0.01
+x.mesh loc=0.01  spac=0.01
+
+y.mesh loc=-0.04 spac=0.001
+y.mesh loc=0.02  spac=0.001
+
+region number=1 x.min=-0.01 x.max=0.01 y.min=-0.04 y.max=-0.03  \
+       material=aluminum
+region number=2 x.min=-0.01 x.max=0.01 y.min=-0.03 y.max=-0.005 \
+       material=poly
+region number=3 x.min=-0.01 x.max=0.01 y.min=-0.005 y.max=0.0   \
+       material=oxide
+region number=4 x.min=-0.01 x.max=0.01 y.min=0.0 y.max=0.02     \
+       material=silicon
+
+electrode x.min=-0.01 x.max=0.01 y.min=-0.04 y.max=-0.03 name=gate
+electrode bottom name=substrate
+
+doping region=2 p.type concentration=1e21 uniform
+doping region=4 p.type concentration=1e17 uniform
+
+solve init
+solve vgate=-1.5
+solve vgate=-3
+
+save outfile=mos2ex15-3V21.str
+# tonyplot mos2ex15-3V21.str -set mos2ex15_BD.set
+
+log outfile=mos2ex15_CV21.log
+solve vgate=-2.8 vstep=0.2 vfinal=3.0 name=gate ac freq=1e6 previous
+
+tonyplot -overlay mos2ex15_CV21.log mos2ex15_CV20.log mos2ex15_CV19.log -set mos2ex15_CV.set
+
+quit

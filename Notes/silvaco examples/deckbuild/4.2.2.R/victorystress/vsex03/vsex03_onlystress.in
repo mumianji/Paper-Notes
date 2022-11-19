@@ -1,0 +1,53 @@
+go victorystress
+
+#Note : The structure vsex03_2_vp_regular_ex.str contains artifacts
+#       Therefore it is better to use vsex03_2_vp_conformal.str
+init structure="vsex03_2_vp_conformal_ex.str"
+
+material nitride young.m=1e12
+material nitride poiss.r=0.001
+
+material silicon young.m=1.3e12
+material silicon poiss.r=0.28
+
+material polysilicon young.m=1.64e12
+material polysilicon poiss.r=0.22
+
+material material("NiSi") young.m=1e12
+material material("NiSi") poiss.r=0.25
+# This has to be added to the deck for compatibility with Victory Process
+material material("NiSi") thermal.expansion.constant.alpha=0
+
+material tungsten young.m=1e12
+material tungsten poiss.r=0.2
+
+material oxide young.m=2e11
+material oxide poiss.r=0.15
+
+material material("PSG") young.m=2e11
+material material("PSG") poiss.r=0.15
+
+material TEOS young.m=2e11
+material TEOS poiss.r=0.15
+# This has to be added to the deck for compatibility with Victory Process
+material TEOS thermal.expansion.constant.alpha=0
+
+material nitride intrin.sig=1e10
+material polysilicon intrin.sig=1e9
+material material("NiSi") intrin.sig=1e10
+material tungsten intrin.sig=5e9
+material oxide intrin.sig=-1.5e9
+material material("PSG") intrin.sig=-2.0e9
+material TEOS intrin.sig=1e10
+
+material silicon model.iso=1
+
+method ams
+stress  exposed strain rebalance
+
+mobility nhance phance
+save structure="vsex03_4_vp.str"
+tonyplot3d vsex03_4_vp.str -set vsex03_4.set
+
+ 
+quit

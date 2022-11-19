@@ -1,0 +1,53 @@
+# (c) Silvaco Inc., 2018
+go atlas
+TITLE PN Diode Breakdown with Energy Balance and Nonisothermal Energy Balance Models
+
+# EB simulation
+
+mesh    
+x.m  l=0.0 spac=1.0
+x.m  l=1.0 spac=1.0
+y.m  l=0   spac=1.0
+y.m  l=5.0  spac=0.005
+y.m  l=15  spac=2
+
+
+region num=1 silicon
+ 
+electrode  top name=emitter
+electrode  bottom name=base
+
+doping uniform conc=1e17 p.type 
+doping uniform n.type conc=1.e19  x.l=0. x.r=1 y.t=0.0 y.b=5.0 
+
+#contact name=emitter resis=1.e10
+
+models srh conmob bgn auger fldmob  hcte 
+
+impact  selb  length.rel lrel.ho=0.025  lrel.el=0.025
+
+material  taurel.el=0.25e-12 taumob.el=0.25e-12 taurel.ho=0.25e-12 taumob.ho=0.25e-12
+
+
+method  block newton climit=1.e-5  
+   
+solve vemitter=0.0 
+
+log outf=diodeex02_eb.log
+
+solve  vemitter=0.5 vstep=0.5 vfinal=25 name=emitter cname=emitter compl=1e-12
+save outf=diodeex02_eb.str
+
+contact name=emitter current
+method newton climit=1e-5
+solve imult istep=2  ifinal=1e-3 name=emitter
+solve      init
+
+method newton
+
+log   outfile=diodeex01.log
+solve      vbase=0.05  vstep=0.05  vfinal=1  name=base
+tonyplot diodeex01.log -set diodeex01_log.set
+quit
+
+go atlas

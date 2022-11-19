@@ -1,0 +1,19 @@
+go athena
+
+line x loc=-0.02 spac=0.01
+line x loc=0.02  spac=0.01
+line y loc=0     spac=0.001
+line y loc=0.2   spac=0.01
+init silicon orientation=100
+
+set energy=5
+set dose=1e13
+set example=doeex01
+set trial_id=0
+
+deposit oxide thick=0.004 divisions=2
+implant arsenic dose=$dose energy=$energy tilt=0 rotation=0 bca sampling
+
+struct outfile=$"example"_trial$"trial_id".str remove.gas
+quit
+

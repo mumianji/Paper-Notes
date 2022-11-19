@@ -1,0 +1,62 @@
+<html>
+  <head>
+    <title>Local Oxidation (LOCOS)</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Local Oxidation (LOCOS)</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>CLEVER</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="clex15.str.png" width="640" alt="clex15.str" />
+      <p/>
+      <img src="clex15_3D.str.png" width="640" alt="clex15_3D.str" />
+      <p/>
+      <img src="clex15_plot0.png" width="640" alt="clex15_plot0" />
+      <p/>
+    </div>
+    <div id="text" >
+<p>
+This example demonstrates the analytical local oxidation model (LOCOS) included
+in CLEVER.  Oxidation can be included in the process flow to more accurately
+model the geometry around the active device areas.
+</p>
+<p>
+The user can choose the resolution of the &quot;birds beak&quot; formed during the LOCOS
+process by stipulating the
+<b> Resolution</b> parameter.  The resolution can be set to
+<b> Resolution=low</b> ,
+<b> Resolution=medium</b> or
+<b> Resolution=high</b> .
+</p>
+<p>
+Once the process simulation is complete the three-dimensional structure is
+saved with the
+<b> Save</b> statement and can be plotted using
+<b> TonyPlot3d.</b> A two dimensional cross section of the structure is also plotted automatically,
+further demonstrating the
+<b> Cut Line</b> facility.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

@@ -1,0 +1,72 @@
+<html>
+  <head>
+    <title>20nm Undoped Channel, Ultra-Thin Body and Buried Oxide Fully Depleted SOI NMOSFET in 3D</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>20nm Undoped Channel, Ultra-Thin Body and Buried Oxide Fully Depleted SOI NMOSFET in 3D</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Victory Process / Victory Mesh / Victory Device</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Victory Process 7.22.3.R / Victory Mesh 1.2.4.R / Victory Device 1.12.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="soiex11_plot0.png" width="640" alt="soiex11_plot0" />
+      <p/>
+      <img src="soiex11_plot1.png" width="640" alt="soiex11_plot1" />
+      <p/>
+      <img src="soiex11_plot2.png" width="640" alt="soiex11_plot2" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+Fully depleted SOI (FDSOI) employing a very thin silicon body on an ultra-thin buried oxide has been considered a potential candidate for aggressive CMOS scaling. Accurate modeling of this kind of FDSOI device necessitates a careful selection of physical models. In this example, 3D device modeling and simulation with Victory Device is demonstrated of a 20nm undoped channel, ultra-thin body and buried oxide FDSOI NMOSFET that is created and meshed using a conformal mesh in Victory Mesh.
+</p>
+<p>
+Featuring a gate length in the sub-100 nm regime, the FDSOI design is subject to non-local effects such as velocity overshoot. In this respect, the energy balance transport model is favored over the conventional drift-diffusion model. The energy balance model is applicable to electrons by specifying the
+<b> HCTE.EL</b> parameter in the
+<b> MODELS</b> statement. For energy balance simulations, it is practical to use the carrier temperature in place of the electric field as the driving force for the field dependent mobility model (
+<b> FLDMOB</b> ). The parameter
+<b> EVSATMOD=0 </b> in the
+<b> MODELS </b> statement sets the driving force for the high-field saturation model to be electron temperature.
+</p>
+<p>
+In the ultra-thin channel of the 20nm FDSOI NMOSFET, the significance of quantum confinement of electrons becomes conspicuous. The Bohm quantum potential model allows the quantum confinement effects on electron transport to be included in the simulation by means of the
+<b> BQP.N</b> parameter of the
+<b> MODELS </b> statement. The principal quantization direction for Bohm quantum potential can be set to x, y, or z using the
+<b> BQP.QDIR </b> parameter in the
+<b> MODELS</b> statement. For the 20nm FDSOI NMOSFET, the direction of quantization is in the Z direction, i.e.,
+<b> BQP.QDIR=Z </b> .
+</p>
+<p>
+Self-heating effects are common in FDSOI structures due to the low thermal conductivity of the buried oxide. Lattice heating is incorporated in Victory Device through self-consistent solutions of the lattice heat flow equation. The
+<b> LAT.TEMP </b> flag must be set in the
+<b> MODELS </b> statement to activate these effects.
+</p>
+<p>
+The non-local, quantum confinement, and self-heating effects are illustrated by comparing the I-V characteristics of the 20nm FDSOI NMOSFET simulated using the drift-diffusion model with those simulated using the energy balance transport model alone and in combination with the quantum transport and lattice heating models, respectively.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

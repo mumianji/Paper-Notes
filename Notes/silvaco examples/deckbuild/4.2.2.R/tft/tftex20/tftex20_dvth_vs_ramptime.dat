@@ -1,0 +1,9 @@
+Hysteresis Simulation: Vth Shift vs. Ramp Time
+5 2 2
+Ramp Time
+Vth Shift
+0.01 0.419972
+0.05 1.07705
+0.1 1.38535
+0.15 1.53876
+0.2 1.62508

@@ -1,0 +1,295 @@
+# (c) Silvaco Inc., 2018
+
+go victoryprocess noauto
+
+init oxide layout="tftex11.lay" depth=5 gasheight=10 from="0, -20" to="20, 20" 
+
+line x loc=0 spac=0.75
+line x loc=2.5 spac=0.25
+line x loc=3 spac=0.25
+line x loc=7 spac=1
+line x loc=11 spac=0.25
+line x loc=11.5 spac=0.25 
+
+line y loc=-8.7 spac=0.25
+line y loc=-6.7 spac=0.75
+line y loc=-4.7 spac=0.25
+line y loc=-2.7 spac=0.75
+line y loc=-0.7 spac=0.25 
+line y loc=1.9 spac=0.5
+line y loc=3 spac=0.25
+
+line z loc=-1.45 spac=0.1
+line z loc=-1.3 spac=0.5
+line z loc=-1 spac=0.02
+line z loc=-0.9 spac=0.025 
+line z loc=-0.7 spac=0.05
+line z loc=-0.35 spac=0.25
+line z loc=0 spac=1
+line z loc=5 spac=1
+
+# gate 
+deposit aluminum thickness=0.35 max
+etch aluminum mask="GATE" angle=45 max
+electrodes mask=GATE material=aluminum
+
+# Gate Oxide 
+deposit nitride thickness=0.35 max
+
+# Amorphous Silicon
+deposit silicon thickness=0.25 phosphor=2e16 max
+deposit silicon thick=0.05 phosphor=5e20 max
+etch silicon thick=0.3 mask="ACTIVE" angle=45 max
+
+# Source and Drain
+deposit aluminum thickness=0.3 max
+etch aluminum thick=0.6 mask="SD" angle=45 max
+etch thick=0.08 silicon mask="SD" angle=45 max
+
+#export victory(conformal) structure="tftex11_0_noSD.str"
+
+save name=tftex11_vp_0_noSD
+
+electrodes mask=SD material=aluminum
+
+# Passivation
+deposit nitride thickness=0.15 max
+
+save name=tftex11_vp_0
+
+
+go victorymesh
+
+load in=tftex11_vp_0_noSD
+
+remesh conformal
+
+save out=tftex11_0_noSD.str
+
+load in=tftex11_vp_0
+
+remesh conformal
+
+save out=tftex11_0.str
+
+
+
+go victorydevice simflags="-80"
+
+mesh inf="tftex11_0.str" hybridx prism delaunay verbose=2
+
+interface s.i qf=3e10
+
+contact name=gate workf=4.3
+
+material material=nitride permit=6.0
+material material=silicon eg300=1.75 nc300=1e21 nv300=1e21 permit=11.8 \
+	taun0=2e-8 taup0=2e-8 
+material material=silicon mun=0.5 mup=0.01
+mobility vsatn=2e6 vsatp=2e6 
+
+defect  cont nta=5e19 wta=0.06 nga=2.75e16 ega=0.85 wga=0.5 \
+	sigtae=1e-17 sigtah=1e-15 siggae=1e-17 siggah=1e-15 numa=12 numd=0
+
+defect  cont ntd=1e20  wtd=0.11 ngd=1e17 egd=0.85 wgd=0.5 \
+	sigtde=1e-15 sigtdh=1e-19 siggde=1e-15 siggdh=1e-19 numd=12 numa=0 
+
+intdefect s.i cont nta=0 ntd=1e0 wtd=0.065 ngd=7e11*0.17 egd=1.25  wgd=0.2 \
+	  sigtde=1e-16 sigtdh=1e-16  siggde=1e-15 siggdh=1e-15 numa=0 numd=24
+
+models bbt.kl e.field.derivs
+
+method maxtrap=4 pam.gmres norm.scaling.local
+
+output u.bbt
+
+solve init
+solve previous
+
+solve vdrain=0.1 
+save outfile=tftex11_1.str
+solve vdrain=1 
+solve vstep=1 vfinal=5 name=drain previous
+save outfile=tftex11_2.str
+solve vstep=1 vfinal=10 name=drain previous
+save outfile=tftex11_3.str
+solve vstep=1 vfinal=15 name=drain previous
+save outfile=tftex11_4.str
+solve vstep=1 vfinal=20 name=drain previous
+save outfile=tftex11_5.str
+
+load infile=tftex11_1.str master
+log outfile=tftex11_1_rev.log
+solve vgate=0 vstep=-1 vfinal=-30 name=gate 
+log off
+
+load infile=tftex11_2.str master
+log outfile=tftex11_2_rev.log 
+solve vgate=0 vstep=-1 vfinal=-30 name=gate  
+log off
+
+load infile=tftex11_3.str master
+log outfile=tftex11_3_rev.log 
+solve vgate=0 vstep=-1 vfinal=-30 name=gate 
+log off
+
+load infile=tftex11_4.str master
+log outfile=tftex11_4_rev.log 
+solve vgate=0 vstep=-1 vfinal=-30 name=gate 
+log off
+
+load infile=tftex11_5.str master
+log outfile=tftex11_5_rev.log 
+solve vgate=0 vstep=-1 vfinal=-30 name=gate 
+log off
+
+load infile=tftex11_1.str master
+log outfile=tftex11_1_fwd.log
+solve vgate=0 vstep=1 vfinal=30 name=gate 
+log off
+
+load infile=tftex11_2.str master
+log outfile=tftex11_2_fwd.log 
+solve vgate=0 vstep=1 vfinal=30 name=gate  
+log off
+
+load infile=tftex11_3.str master
+log outfile=tftex11_3_fwd.log 
+solve vgate=0 vstep=1 vfinal=30 name=gate 
+log off
+
+load infile=tftex11_4.str master
+log outfile=tftex11_4_fwd.log 
+solve vgate=0 vstep=1 vfinal=30 name=gate 
+log off
+
+load infile=tftex11_5.str master
+log outfile=tftex11_5_fwd.log 
+solve vgate=0 vstep=1 vfinal=30 name=gate 
+log off
+
+# IDVD
+
+solve init
+solve vgate=0 
+save outfile=tftex11_6.str
+solve vgate=5
+save outfile=tftex11_7.str
+solve vgate=10
+save outfile=tftex11_8.str
+solve vgate=15
+save outfile=tftex11_9.str
+solve vgate=20
+save outfile=tftex11_10.str
+solve vgate=25
+save outfile=tftex11_11.str
+solve vgate=30 
+save outfile=tftex11_12.str
+
+load infile=tftex11_6.str master
+log outfile=tftex11_6.log
+solve vdrain=0 vstep=0.5 vfinal=25 name=drain
+log off
+
+load infile=tftex11_7.str master
+log outfile=tftex11_7.log
+solve vdrain=0 vstep=0.5 vfinal=25 name=drain
+log off
+
+load infile=tftex11_8.str master
+log outfile=tftex11_8.log
+solve vdrain=0 vstep=0.5 vfinal=25 name=drain
+log off
+
+load infile=tftex11_9.str master
+log outfile=tftex11_9.log
+solve vdrain=0 vstep=0.5 vfinal=25 name=drain
+log off
+
+load infile=tftex11_10.str master
+log outfile=tftex11_10.log
+solve vdrain=0 vstep=0.5 vfinal=25 name=drain
+log off
+
+load infile=tftex11_11.str master
+log outfile=tftex11_11.log
+solve vdrain=0 vstep=0.5 vfinal=25 name=drain
+log off
+
+load infile=tftex11_12.str master
+log outfile=tftex11_12.log
+solve vdrain=0 vstep=0.5 vfinal=25 name=drain
+log off
+
+
+# Reverse Source and Drain
+
+go victorydevice simflags="-80"
+
+mesh infile="tftex11_0_noSD.str" hybridx prism delaunay verbose=2
+
+electrode name=source region=1
+electrode name=drain region=2
+
+interface s.i qf=3e10
+
+contact name=gate workf=4.3
+
+material material=nitride permit=6.0
+material material=silicon eg300=1.75 nc300=1e21 nv300=1e21 permit=11.8 \
+	taun0=2e-8 taup0=2e-8 
+material material=silicon mun=0.5 mup=0.01
+mobility vsatn=2e6 vsatp=2e6 
+
+defect  cont nta=5e19 wta=0.06 nga=2.75e16 ega=0.85 wga=0.5 \
+	sigtae=1e-17 sigtah=1e-15 siggae=1e-17 siggah=1e-15 numa=12 numd=0
+
+defect  cont ntd=1e20  wtd=0.11 ngd=1e17 egd=0.85 wgd=0.5 \
+	sigtde=1e-15 sigtdh=1e-19 siggde=1e-15 siggdh=1e-19 numd=12 numa=0 
+
+intdefect s.i cont nta=0 ntd=1e0 wtd=0.065 ngd=7e11*0.17 egd=1.25  wgd=0.2 \
+	  sigtde=1e-16 sigtdh=1e-16  siggde=1e-15 siggdh=1e-15 numa=0 numd=24
+
+models bbt.kl e.field.derivs
+
+method maxtrap=4 pam.gmres norm.scaling.local
+
+output u.bbt
+
+solve init
+solve vgate=0 
+save outfile=tftex11_13.str
+solve vgate=10
+save outfile=tftex11_14.str
+solve vgate=20
+save outfile=tftex11_15.str
+solve vgate=30 
+save outfile=tftex11_16.str
+
+load infile=tftex11_13.str master
+log outfile=tftex11_13.log
+solve vdrain=0 vstep=0.5 vfinal=25 name=drain
+log off
+
+load infile=tftex11_14.str master
+log outfile=tftex11_14.log
+solve vdrain=0 vstep=0.5 vfinal=25 name=drain
+log off
+
+load infile=tftex11_15.str master
+log outfile=tftex11_15.log
+solve vdrain=0 vstep=0.5 vfinal=25 name=drain
+log off
+
+load infile=tftex11_16.str master
+log outfile=tftex11_16.log
+solve vdrain=0 vstep=0.5 vfinal=25 name=drain
+log off
+
+tonyplot -overlay tftex11_1_fwd.log tftex11_2_fwd.log tftex11_3_fwd.log tftex11_4_fwd.log tftex11_5_fwd.log tftex11_1_rev.log tftex11_2_rev.log tftex11_3_rev.log tftex11_4_rev.log tftex11_5_rev.log -set tftex11_0.set
+                  
+tonyplot -overlay tftex11_6.log tftex11_7.log tftex11_8.log tftex11_9.log tftex11_10.log tftex11_11.log tftex11_12.log -set tftex11_1.set
+
+tonyplot -overlay tftex11_13.log tftex11_6.log tftex11_14.log tftex11_8.log tftex11_15.log tftex11_10.log tftex11_16.log tftex11_12.log -set tftex11_2.set
+
+tonyplot3d tftex11_0.str -set tftex11_3.set

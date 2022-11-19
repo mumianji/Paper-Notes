@@ -1,0 +1,40 @@
+go athena
+
+# Aluminum implant in 4H-SiC in [0001] crystallographic direction
+ 
+line x loc=-1 spac=1
+line x loc=1 spac=1
+
+line y loc=0.00 spac=0.01
+line y loc=2.50 spac=0.01
+
+init sic_4h one.d rot.sub=0
+deposit oxide thick=0.001 div=2
+structure outfile=sicex05_init.str
+
+init infile=sicex05_init.str
+implant aluminum diverg=0.1 n.ion=40000 dose=0.63e13 tilt=0 rot=0 energy=60 bca
+struct outfile=sicex05_0.str remove.gas
+extract name="d0.63e13" curve(depth,impurity="Aluminum" material="All" x.val=0.0) \
+        outfile="sicex05_0.dat"
+
+init infile=sicex05_init.str
+implant aluminum diverg=0.1 n.ion=40000 dose=1.3e13 tilt=0 rot=0 energy=60 bca
+struct outfile=sicex05_1.str remove.gas
+extract name="d1.3e13" curve(depth,impurity="Aluminum" material="All" x.val=0.0) \
+        outfile="sicex05_1.dat"
+
+init infile=sicex05_init.str
+implant aluminum diverg=0.1 n.ion=40000 dose=3.4e13 tilt=0 rot=0 energy=60 bca
+struct outfile=sicex05_2.str remove.gas
+extract name="d3.4e13" curve(depth,impurity="Aluminum" material="All" x.val=0.0) \
+        outfile="sicex05_2.dat"
+
+init infile=sicex05_init.str
+implant aluminum diverg=0.1 n.ion=40000 dose=4.9e13 tilt=0 rot=0 energy=60 bca
+struct outfile=sicex05_3.str remove.gas
+extract name="d4.9e13" curve(depth,impurity="Aluminum" material="All" x.val=0.0) \
+        outfile="sicex05_3.dat"
+tonyplot -overlay sicex05_0.dat sicex05_0.exp sicex05_1.dat sicex05_1.exp sicex05_2.dat  sicex05_2.exp  sicex05_3.dat sicex05_3.exp  -set sicex05.set
+
+quit

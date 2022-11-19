@@ -1,0 +1,183 @@
+<html>
+  <head>
+    <title>Local Oxidation Isolation Punchthrough</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Local Oxidation Isolation Punchthrough</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>SSuprem 4/DevEdit/S-Pisces</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R, Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="isolationex01_plot0.png" width="640" alt="isolationex01_plot0" />
+      <p/>
+      <img src="isolationex01_plot1.png" width="640" alt="isolationex01_plot1" />
+      <p/>
+      <img src="isolationex01_plot2.png" width="640" alt="isolationex01_plot2" />
+      <p/>
+    </div>
+    <div id="text" >
+</p>
+<br/>
+<p>
+This example simulates punchthrough between two n+ areas separated by
+an oxide isolation structure. The isolation structure is a local
+oxidation using Sealed Interface Local Oxidation (SILO) combined with
+a p-type field stop implant.
+</p>
+<p>
+This example demonstrates the following features:
+</p>
+<ul>
+  <li>
+ Processing of a local oxidation structure
+<br/>
+  </li>
+  <li>
+ Remeshing at the process to device simulation interface
+<br/>
+  </li>
+  <li>
+ Remeshing within device simulation
+<br/>
+  </li>
+  <li>
+ Ramping iv curves to a compliance limit
+  </li>
+</ul>
+<p>
+This example starts with process simulation using Athena, remeshes
+using DEVEDIT, and interfaces to Atlas. Atlas ramps the voltage up to a predefined
+drain current value,
+a further remesh in DEVEDIT is performed, and Atlas ramps to the
+punchthrough target current.
+</p>
+<p>
+For details on local oxidation (bird&apos;s beak) process simulations, see the
+ATHENA_SSUPREM4 examples section.
+</p>
+<p>
+The electrodes are placed at the end of the process flow and then
+subsequently named with
+<b> electrode </b> statements. Only the
+<b> x </b> coordinate needs to be specified in this case as the electrodes are on the surface of the structure. Should they be buried, both
+<b> x </b> and
+<b> y </b> coordinates need to be specified. Both polysilicon and metal regions are treated as
+possible electrodes.
+</p>
+<p>
+The
+<b> electrode name=substrate backside </b> statement will automatically place an electrode on the bottom of
+the structure. This is the best and most efficient way of approximating a well contact.
+</p>
+<p>
+After the process simulation, the structure is remeshed with DEVEDIT
+with the command:
+<b> go devedit </b> </p>
+<p>
+At this point the solution only contains solution quantities from the
+process simulator, so that only impurity values are available as
+remeshing criteria. These are selected with the commands:
+</p>
+<br/>
+<b> imp.refine imp=&quot;Arsenic&quot; sensitivity=0.5 </b> <br/>
+<b> imp.refine imp=&quot;Boron&quot; sensitivity=0.4 </b> <br/>
+<b> imp.refine imp=&quot;Phosphorus&quot; sensitivity=0.5 </b> <p>
+Boron is weighted so that the mesh will be more sensitive to boron
+concentration gradients. In other words, the smaller the value for
+<b> sensitivity, </b> the more sensitive the mesh will be to concentration gradients and the
+denser the mesh will be.
+</p>
+<p>
+In this example,
+<b> constr.mesh </b> commands control the maximum allowable angle within a
+triangle, specific to a material type. For example:
+<br/>
+<b> constr.mesh type=Insulator default max.angle=178 </b> <br/>
+states that very obtuse triangles are allowed in all insulator (oxide)
+regions.
+</p>
+<p>
+This is acceptable, as obtuse triangles are essentially only a problem
+in semiconductor regions when solving carrier transport equations.
+The reason for doing this is because by lowering the criteria for
+maintaining zero obtuse triangles, the more relaxed the mesh can be
+and  the simulation will run faster.
+</p>
+<p>
+Next the structure is passed into the device simulator Atlas for
+biasing and design parameter extraction. This is accomplished with
+the command
+<b> go atlas. </b> </p>
+<p>
+As the device is simply punching though, the current is governed almost
+completely by the potential barrier and drain induced barrier lowering
+effects. Thus a special mobility model is not selected to speed up the calculation.
+</p>
+<p>
+An interface charge of 1e11 is selected arbitrarily, and may be adjusted
+as a primary calibration parameter to match experimental results.
+</p>
+<p>
+A sequence of
+<b> solve </b> commands ramps the drain contact up to 30V using a current
+compliance of 0.001uA. The simulation stops when either of these is
+exceeded. In the present example, this will be at
+about 14V drain voltage. It is assumed that the breakdown will not
+occur during this ramp.
+For the last bias point, a single structure file,
+containing both the mesh and the solution, is saved.
+</p>
+<p>
+After the previous biasing of about 14 volts, the structure is remeshed
+again using
+DEVEDIT
+this time as a function of potential gradient, doping
+gradient and electron concentration gradient resulting in a more accurate
+mesh. The current compliance value has been chosen such that the
+resulting drain voltage has a value that will always be lower than
+the punchthrough voltage, but is high enough to offer a closer solution
+to the final IV area of interest.
+</p>
+<p>
+Another log file is opened for the final punchthrough IV curve to be held.
+The solution is reloaded with the new mesh created by DEVEDIT
+and the drain bias is increased up to 30 volts or 0.1um/W/L, whichever is reached
+sooner.
+</p>
+<p>
+Finally, a design parameter relating to the punchthrough voltage is extracted.
+</p>
+<p>
+The command
+<br/>
+<b>extract name=&quot;n_isolation_vpt&quot; x.val from curve(abs(v.&quot;drain&quot;),abs(i.&quot;drain&quot;)) where y.val = 1.0e-7</b> <br/>
+should be allowed to run over two lines. Do not use a line continuation character
+in any
+<b> extract </b> statement.  It defines the measure of punchthrough as that drain voltage at which the drain current is 0.1uA/um.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

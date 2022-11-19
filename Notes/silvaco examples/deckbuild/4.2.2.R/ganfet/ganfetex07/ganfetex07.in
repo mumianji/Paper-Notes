@@ -1,0 +1,203 @@
+# (c) Silvaco Inc., 2018
+# O. Hilt, A. Knauer, F. Brunner, E. Bahat-Treidel and J. Wuerfl
+# Ferdinand-Braun-Institut, Leibniz Institut fuer Hoechstfrequenztechnik
+# Gustav-Kirchhoff-Strasse 4, 12489 Berlin, Germany.
+# Proceedings of The 22nd International Symposium on Power Semiconductor 
+# Devices & ICs, Hiroshima
+
+go atlas 
+
+mesh width=1000
+
+x.mesh location=-2   spacing=0.5
+x.mesh location=-1   spacing=0.5
+x.mesh location=0    spacing=0.1
+x.mesh location=0.7  spacing=0.2
+x.mesh location=1.4  spacing=0.1
+x.mesh location=4  spacing=0.5
+x.mesh location=7.4  spacing=0.1
+x.mesh location=8.4  spacing=0.1
+
+y.mesh location=-0.31  spacing=0.05
+y.mesh location=-0.21  spacing=0.05
+y.mesh location=-0.11  spacing=0.05
+y.mesh location=0      spacing=0.001
+y.mesh location=0.0075 spacing=0.002
+y.mesh location=0.015  spacing=0.0001
+y.mesh location=0.0325 spacing=0.005 
+y.mesh location=0.05   spacing=0.001
+y.mesh location=2.05   spacing=1
+
+region number=1 material=AlGaN x.comp=0.05 y.min=0.05  
+region number=2 material=GaN y.min=0.015 y.max=0.05 substrate
+region number=3 material=AlGaN x.comp=0.23 y.min=0 y.max=0.015 
+region number=4 material=nitride y.max=0
+region number=5 material=GaN x.min=0 x.max=1.4 y.min=-0.11 y.max=0 
+
+electrode name=source x.min=-2 x.max=-1 y.min=-0.11 y.max=0.0
+electrode name=gate x.min=0 x.max=1.4 y.min=-0.21 y.max=-0.11
+electrode name=drain x.min=7.4 x.max=8.4 y.min=-0.11 y.max=0.0
+electrode name=substrate bottom
+
+doping region=5 concentration=3e17 p.type uniform
+
+models consrh auger fermi print temp=300
+mobility GaNsat.n 
+models lat.temp ni.fermi
+mobility albrct.n bn.albrct=3e-05 an.albrct=3e-05
+mobility region=5 albrct.p bp.albrct=1e04 ap.albrct=1e04 
+model POLARIZATION psp.scale=0.67 piezo.scale=0.67 calc.strain 
+model region=5 pch.ins
+
+contact name=source workfunc=4.04
+contact name=drain  workfunc=4.04
+
+trap region=2 donor e.level=3.2 density=1.27e18 sign=1e-15 sigp=1e-15 degen=2
+trap region=2 acceptor e.level=0.36 density=7e17 sign=1e-15 sigp=1e-15 degen=4
+
+
+thermcontact num=1 name=substrate alpha=2500
+
+method newton climit=1e-4 maxtraps=10 itlimit=30  
+
+output band.param con.band val.band charge polar.charge qss
+
+solve init
+solve previous
+save outfile=ganfetex07_0.str
+
+solve vdrain=0.1
+solve vdrain=0.5 vstep=0.5 vfinal=15 name=drain
+solve vgate=-0.1
+solve vgate=-0.5 vstep=-0.5 vfinal=-2 name=gate
+log outfile=ganfetex07_0.log
+solve previous
+solve vstep=0.1 vfinal=7 name=gate
+
+extract init inf="ganfetex07_0.log"
+extract name="Vt" x.val from curve(abs(v."gate"),abs(i."drain")) where y.val=1e-03
+extract name="IdVg0V" y.val from curve(abs(v."gate"),abs(i."drain")) where x.val=0.01
+extract name="IgVg5V" y.val from curve(abs(v."gate"),abs(i."gate")) where x.val=5
+
+
+log off
+
+solve init
+solve previous
+
+solve vgate=0.5 
+solve vgate=1 outf=ganfetex07_vg1v
+solve vgate=2 
+solve vgate=3 outf=ganfetex07_vg3v
+solve vgate=4 
+solve vgate=5 outf=ganfetex07_vg5v
+
+solve init
+load inf=ganfetex07_vg1v
+log outf=ganfetex07_1.log
+solve vdrain=0.1
+solve vdrain=0.5
+solve vstep=0.5 vfinal=20 name=drain
+
+solve init
+load inf=ganfetex07_vg3v
+log outf=ganfetex07_2.log
+solve vdrain=0.5
+solve vstep=0.5 vfinal=20 name=drain
+
+solve init
+load inf=ganfetex07_vg5v
+log outf=ganfetex07_3.log
+solve vdrain=0.001
+solve vdrain=0.5
+solve vstep=0.5 vfinal=20 name=drain
+
+extract name="idsmax" max(abs(i."drain"))
+
+
+go atlas simflags="-80"
+
+mesh width=1000 ^diag.flip
+
+x.mesh location=-2   spacing=0.5
+x.mesh location=-1   spacing=0.5
+x.mesh location=0    spacing=0.1
+x.mesh location=0.7  spacing=0.2
+x.mesh location=1.4  spacing=0.1
+x.mesh location=10   spacing=0.5
+x.mesh location=19.4  spacing=0.1
+x.mesh location=20.4  spacing=0.1
+
+y.mesh location=-0.31  spacing=0.05
+y.mesh location=-0.21  spacing=0.05
+y.mesh location=-0.11  spacing=0.05
+y.mesh location=0      spacing=0.001
+y.mesh location=0.0075 spacing=0.002
+y.mesh location=0.015  spacing=0.0001
+y.mesh location=0.0325 spacing=0.005 
+y.mesh location=0.05   spacing=0.001
+y.mesh location=2.05   spacing=1
+
+region number=1 material=AlGaN x.comp=0.05 y.min=0.05  
+region number=2 material=GaN y.min=0.015 y.max=0.05 substrate
+region number=3 material=AlGaN x.comp=0.23 y.min=0 y.max=0.015 
+region number=4 material=nitride y.max=0
+region number=5 material=GaN x.min=0 x.max=1.4 y.min=-0.11 y.max=0 
+
+electrode name=source x.min=-2 x.max=-1 y.min=-0.11 y.max=0.0
+electrode name=gate x.min=0 x.max=1.4 y.min=-0.21 y.max=-0.11
+electrode name=drain x.min=19.4 x.max=20.4 y.min=-0.11 y.max=0.0
+electrode name=substrate bottom
+
+doping region=5 concentration=3e17 p.type uniform
+
+models consrh auger fermi print temp=300
+mobility GaNsat.n 
+models lat.temp ni.fermi
+mobility albrct.n bn.albrct=3e-05 an.albrct=3e-05
+mobility region=5 albrct.p bp.albrct=1e04 ap.albrct=1e04 
+model POLARIZATION psp.scale=0.67 piezo.scale=0.67 calc.strain 
+model region=5 pch.ins
+
+contact name=source workfunc=4.04
+contact name=drain  workfunc=4.04
+
+trap region=2 donor e.level=3.2 density=1.15e18 sign=1e-15 sigp=1e-15 degen=2
+trap region=2 acceptor e.level=0.36 density=7e17 sign=1e-15 sigp=1e-15 degen=4
+
+thermcontact num=1 name=substrate alpha=2500
+
+method block newton climit=1e-4 maxtraps=5 itlimit=30 
+output band.param con.band val.band charge polar.charge
+
+output band.param con.band val.band charge polar.charge
+
+impact selb material=GaN an1=2.98e8 an2=2.98e8 bn1=3.44e7 bn2=3.44e7 \
+            ap1=2.23e7 ap2=2.23e7 bp1=2.7e8 bp2=2.7e8
+
+log outfile=ganfetex07_4.log
+
+solve init
+solve previous
+solve vdrain=0.01 previous 
+solve vdrain=0.1  previous
+solve vdrain=0.5 previous
+solve vdrain=1 previous
+solve vstep=1 vfinal=10 name=drain previous
+solve vstep=5 vfinal=100 name=drain previous
+solve vstep=20 vfinal=900 name=drain previous
+contact name=drain current
+solve previous
+solve istep=1.02 imult ifinal=1e-02 name=drain
+save outf=ganfetex07_1.str
+
+extract init inf="ganfetex07_4.log"
+extract name="bvdss" x.val from curve(abs(vint."drain"),abs(i."drain")) where y.val=1e-04
+
+tonyplot ganfetex07_0.str -set ganfetex07_0.set
+tonyplot ganfetex07_0.log -set ganfetex07_1.set
+tonyplot -overlay ganfetex07_1.log ganfetex07_2.log ganfetex07_3.log -set ganfetex07_2.set
+tonyplot ganfetex07_4.log -set ganfetex07_3.set
+tonyplot ganfetex07_1.str -set ganfetex07_4.set
+
+quit

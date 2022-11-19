@@ -1,0 +1,121 @@
+<html>
+  <head>
+    <title>Hot Electron Reliability</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Hot Electron Reliability</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>S-Pisces/C-Interpreter</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="mos2ex02_plot0.png" width="640" alt="mos2ex02_plot0" />
+      <p/>
+      <img src="mos2ex02_plot1.png" width="640" alt="mos2ex02_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This is a demonstration of the hot carrier reliability feature of Atlas. A PMOS transistor is stressed at high voltages and a threshold voltage shift observed.
+The simulation shows:
+</p>
+<ul>
+  <li>
+ Formation of PMOS transistor using Atlas syntax
+<br/>
+  </li>
+  <li>
+ Id/Vgs test 
+<br/>
+  </li>
+  <li>
+ High voltage stress for 1000 seconds
+<br/>
+  </li>
+  <li>
+ Id/Vgs tests of devices at various stress times.
+  </li>
+</ul>
+<p>
+The example file consists of five separate Atlas runs each starting
+with the statement
+<b> go atlas</b> . The first run uses the Atlas syntax to construct the geometry, mesh
+and doping of a PMOS transistor. The doping is specified using gaussian
+functions. The mesh file saved by this run is loaded into the next run.
+</p>
+<p>
+The second Atlas run sets commands to perform an Id/Vgs simulation to
+observe the threshold voltage and gain. A more complete description of
+extracting PMOS threshold can be found in the MOS examples section.
+</p>
+<p>
+The device degradation modeling is performed in the third run. First, the
+structure is loaded and the correct workfunction and interface fixed
+charge are set. On the models statement, the standard mobility and
+recombination models are specified. The parameters
+<b> hei devdeg.e </b> are also set. hei turns on the hot electron injection model for gate
+current. The devdeg.e parameter sets that the gate current is used to
+calculate device degradation. The
+<b> degradation </b> parameter is used to specify the interface state density and the
+electron trapping cross section, sigmae. The density of interface
+states as a function of position is defined here using a C-INTERPRETER
+routine. The external file
+<b> mos2ex02_devdeg.nta </b> is used in this example. This file will be copied to your current
+working directory if you press &apos;Load&apos;. This file contains a C
+language description of the density of acceptor-like traps at the
+oxide/silicon interface. Use of the C-INTERPRETER allows complete
+flexibility in specifying the position of the traps.
+</p>
+<p>
+The stressing conditions are Vds=-6.0V and Vgs=-1.5V. The device is
+biased to these voltages in DC mode. Atlas is then switched to a
+transient solution. Since the time of this transient is very long
+compared with the transit time of carriers a faster transient solution
+method can be selected using
+<b> method quasistatic</b> .
+</p>
+<p>
+The transient simulation is set to run for 1000s. At various intervals, data is
+saved to solution files whose prefix is set to &apos;mosex02.str&apos;. The
+statement
+<b> output devdeg </b> is required to save the interface trap occupancy to these solution
+files. These files will be the initial starting points of the
+subsequent Id/Vgs runs.
+</p>
+<p>
+The fourth and fifth runs are just repetitions of the second one. They
+perform the Id/Vgs test to observe threshold voltage and gain. However
+the important difference is the the file loaded in the
+<b> mesh </b> statement is the output files saved during the transient stress.
+</p>
+<p>
+The Id/Vgs curves from the second, fourth and fifth runs can be
+overlaid in TonyPlot to show the threshold voltage shift caused by the
+hot carriers trapped at the interface.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

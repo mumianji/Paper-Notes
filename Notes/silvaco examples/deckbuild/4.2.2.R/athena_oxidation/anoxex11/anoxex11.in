@@ -1,0 +1,42 @@
+go athena
+
+#TITLE: SWAMI Example
+
+line y loc=0    spac=0.06
+line y loc=0.3    spac=0.06
+line y loc=0.6  spac=0.25
+line y loc=1       
+
+line x loc=-1   spac=0.2
+line x loc=-0.5 spac=0.06
+line x loc=-0.2 spac=0.06
+line x loc=0    spac=0.05
+line x loc=1    spac=0.2
+init orient=100
+
+# Anisotropic silicon etch
+deposit oxide thick=0.04 div=1
+etch oxide p1.x=0.1 left
+etch    silicon left p1.x=-0.2 p1.y=0.3 p2.x=0 p2.y=0
+
+diffuse time=4 temp=1000 wet 
+
+# Pad oxide and nitride mask
+deposit nitride thick=0.16 div=4
+# deposit nitride thick=0.15 div=3
+
+etch    nitride left p1.x=0
+deposit nitride thick=0.04 div=1
+etch    nitride   left p1.x=-0.5
+etch    oxide     left p1.x=-0.5
+
+# Field oxidation
+oxide stress.dep=t
+method viscous oxide.rel=1e-2
+diffuse tim=500 tem=1000 weto2
+
+structure   outfile=anoxex11.str 
+
+tonyplot  anoxex11.str -set anoxex11.set
+
+quit

@@ -1,0 +1,148 @@
+go atlas simflags="-P 4"
+
+#### tftex20 : IGZO Hysteresis Simulation by electron trap 
+### For electron trap, we can simulate the hysteresis curve by different trapping and de-trapping time scale.
+#### In this example, we only used small value of SIGN(capture cross section) for deep tail trap. 
+### Also SIGN in tail distribution in #### defect statement causes to move reverse IdVg curve(detrapping) to ### positive direction. With fixed SIGN value, long ramping time in transient forward/reverse gate bias
+### sweep speed make large hysteresis effect which is the threshold voltage at forward and reverse direction.
+
+#device length(um)
+set l=20
+
+# material thickness(um)
+set sin_gi=0.1
+set sio_gi=0.15
+set igzo_thick=0.02
+set pass=0.3/2
+set sd_thick=0.15
+
+# Ramping time
+set dt=10e-3
+
+# capture cross section: control trapping and detrapping
+set SIGN=1e-25
+
+# Device Width(um)
+# Simulated current Unit: A
+mesh width=20
+
+x.m l=-$l/2-3 s=0.5
+x.m l=-$l/2 s=0.5
+x.m l=0  s=1
+x.m l=$l/2  s=0.5
+x.m l=$l/2+3 s=0.5
+
+y.m l=-$sin_gi-$sio_gi-$igzo_thick-$sd_thick-$pass s=0.05
+y.m l=-$sin_gi-$sio_gi-$igzo_thick-$sd_thick s=0.05
+y.m l=-$sin_gi-$sio_gi-$igzo_thick s=$igzo_thick/10
+y.m l=-$sin_gi-$sio_gi s=$igzo_thick/10
+y.m l=-$sin_gi s=0.05
+y.m l=-$sin_gi/2 s=0.05
+y.m l=0 s=0.03
+y.m l=0.06 s=0.03
+y.m l=0.5 s=0.1
+
+region num=1 oxide name=pass
+region num=2 nitride name=gi1 y.min=-$sin_gi y.max=0
+region num=3 oxide name=gi2 y.min=-$sin_gi-$sio_gi y.max=-$sin_gi
+region num=4 material=igzo name=channel y.min=-$sin_gi-$sio_gi-$igzo_thick y.max=-$sin_gi-$sio_gi
+#region num=5 oxide name=pass y.min=-$sin_gi-$sio_gi-$igzo_thick-$sd_thick y.max=-$sin_gi-$sio_gi-$igzo_thick
+
+elec num=1 name=gate y.min=0 y.max=0.06 mat=aluminum
+
+elec num=2 name=source x.min=-$l/2-3 x.max=-$l/2 \
+	y.min=-$sin_gi-$sio_gi-$igzo_thick-$sd_thick y.max=-$sin_gi-$sio_gi-$igzo_thick mat=aluminum
+
+elec num=3 name=drain x.min=$l/2 x.max=$l/2+3 \
+	y.min=-$sin_gi-$sio_gi-$igzo_thick-$sd_thick y.max=-$sin_gi-$sio_gi-$igzo_thick mat=aluminum
+
+#metal workfunction
+contact name=gate workf=4.3
+contact name=source workf=4.16
+contact name=drain workf=4.16
+
+# GI and passivation insulator epsilon
+material material=Si3N4 permit=7
+material material=nitride permit=7
+material material=oxide permit=3.9
+
+#IGZO mobility
+mobility material=IGZO mun0=14.0 mup0=0.1
+
+
+# a-IGZO bandgap, density of states, and affinity
+material material=IGZO nc300=5.2e18 nv300=5e20 eg300=3.0 affinity=4.16 taun0=1e-9 taup0=1e-9 
+
+#model
+models bound.trap print
+
+#IGZO native trap for tail
+defects cont nta=5.2e18*2 ntd=5e20 wta=0.04 wtd=0.1 \
+	nga=0.0 ngd=2e16 egd=2.8 wgd=0.1 \
+	sigtae=1e-14 sigtah=2e-14 sigtde=1e-14 sigtdh=2e-14 \
+	siggae=1e-14 siggah=2e-14 siggde=1e-14 siggdh=2e-14 \
+	numa=24 numd=24
+  
+#IGZO native trap for deep tail
+defect cont numa=24 numd=24 nta=2e16*6*1.5 wta=0.65 ntd=0 \
+nga=0 ngd=0 sigtae=$SIGN sigtah=2e-14 sigtde=1e-14 sigtdh=2e-14 siggae=1e-14 \
+siggah=2e-14 siggde=1e-14 siggdh=2e-14 
+
+#
+output con.band val.band u.trap traps traps.ft
+
+solve init 
+
+#Numerical method
+method  maxtrap=10 electron carr=1 dt.max=10e-3
+
+set v0=-10
+set dv=0.25
+
+set n=(10-($v0))/$dv
+set vg=$v0
+#set dt=5e-3
+set t=$dt
+
+solve init
+solve vdrain=0.1
+
+#pre 
+log outfile=tftex20_0.log
+solve vgate=$v0 ramptime=1e-6 dt=1e-9 tstop=1e-4
+log off
+
+### forward
+log outfile=tftex20_1_$'dt'.log no.trap
+loop steps=$n
+solve vgate=$vg ramptime=$dt dt=5e-3 tstop=$t 
+#save trap.file=fwd_trap_$t x=0 y=-0.252
+set t=$t+$dt
+set vg=$vg+$dv
+l.end
+log off
+
+extract init infile="tftex20_1_$'dt'.log"
+extract name="vth1" x.val from curve(v."gate", i."drain") where y.val=1e-9
+
+
+#### reverse
+log outfile=tftex20_2_$'dt'.log no.trap
+loop steps=$n
+solve prev vgate=$vg-0.5 ramptime=$dt dt=5e-3 tstop=$t
+#save trap.file=rev_trap_$t x=0 y=-0.252
+set t=$t+$dt
+set vg=$vg-$dv
+l.end
+#solve prev vgate=20 vstep=-0.5 vfinal=0 name=gate timespan=1
+log off
+
+#
+extract init infile="tftex20_2_$'dt'.log"
+extract name="vth2" x.val from curve(v."gate", i."drain") where y.val=1e-9
+extract name="$dt" abs($"vth1" - $"vth2") datafile="dvth_vs_ramptime.dat"
+
+#tonyplot -overlay tftex20_1_$'dt'.log tftex20_2_$'dt'.log -set tftex20.set
+
+quit
+

@@ -1,0 +1,42 @@
+
+go atlas
+
+mesh three.d
+
+x.mesh location=0   spacing=20
+x.mesh location=200 spacing=20
+
+y.mesh location=0   spacing=0.1
+y.mesh location=200 spacing=20
+
+z.mesh location=0   spacing=20
+z.mesh location=200 spacing=20
+
+region number=1 silicon
+
+thermcontact number=1 BLACKBODY ext.temp=300 alpha=0 \
+             x.min=0 x.max=200 y.min=0 y.max=0 z.min=0 z.max=200
+
+thermcontact number=2 BLACKBODY ext.temp=300 alpha=0 \
+             x.min=0 x.max=200 y.min=200 y.max=200 z.min=0 z.max=200
+
+models thermal
+
+probe thermal lat.temp x=100 y=20 z=100 name=front_temp
+probe thermal lat.temp x=100 y=180 z=100 name=back_temp
+output opt.intens
+
+beam number=1 power.file=thermalex08.lum thermal angle=90 \
+     x.origin=100 y.origin=-1 z.origin=100 nx=10 nz=10
+
+method direct
+solve b1=0 t1=300
+
+log outfile=thermalex08.log
+solve b1=100 ramp.lit ramptime=0.1 tstep=1e-3 tstop=5 \
+      outfile=thermalex08.str onefileonly
+solve b1=0 ramp.lit ramptime=0.1 tstep=1e-3 tstop=60
+
+tonyplot thermalex08.log -set thermalex08.set
+
+quit

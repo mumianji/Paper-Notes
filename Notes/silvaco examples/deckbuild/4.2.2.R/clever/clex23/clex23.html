@@ -1,0 +1,89 @@
+<html>
+  <head>
+    <title>Optical Simulation of Liquid Crystal in the In-plane Switching (IPS) Mode</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Optical Simulation of Liquid Crystal in the In-plane Switching (IPS) Mode</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Victory Process / Clever</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Victory Process 7.22.0.R  / Clever 3.11.6.C or Later</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="clex23_plot0.png" width="640" alt="clex23_plot0" />
+      <p/>
+      <img src="clex23_plot1.png" width="640" alt="clex23_plot1" />
+      <p/>
+      <img src="clex23_plot2.png" width="640" alt="clex23_plot2" />
+      <p/>
+      <img src="clex23_plot3.png" width="640" alt="clex23_plot3" />
+      <p/>
+      <img src="clex23_plot4.png" width="640" alt="clex23_plot4" />
+      <p/>
+      <img src="clex23_plot5.png" width="640" alt="clex23_plot5" />
+      <p/>
+      <img src="clex23_plot6.png" width="640" alt="clex23_plot6" />
+      <p/>
+      <img src="clex23_plot7.png" width="640" alt="clex23_plot7" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates the electrical and optical simulation of a liquid crystal (LC) cell in the in-plane switching (IPS) mode. On one hand, the LC director reorientation in the presence of external electric field is calculated by a finite element method. On the other hand, the optical transmission of a light beam traveling through the LC cell is calculated by the extended Jones matrix method.
+</p>
+<p>
+This example is related to the 2017 Silvaco Simulation Standard article:
+&quot;Optical Simulation of Liquid Crystals in the In-plane Switching Mode&quot;.
+</p>
+<p>
+Everything about the optical part is specified in the
+<b> optics </b> statement. An existing structure file which is the output from an electrical simulation is necessary and can be imported via
+<b> structure. </b> The corresponding bias voltage is defined in
+<b> pixelvolt. </b> A tabular file with the dispersion relation of the complex refractive index of the LC is assigned to
+<b> indexfile. </b> The propagation direction of the light source is defined in
+<b> lightorient. </b> Appropriate optical grids need to be specified by
+<b> dx, dy,</b> and
+<b> dzmax. </b> </p>
+<p>
+There are two types of polarizers in the optical simulation. One type is the ideal polarizer whose physical thickness is zero. The optic axis in the beam-incident plane is defined in
+<b> polanglestart </b> and that in the beam-outgoing plane is defined in
+<b> polangleend. </b> The corresponding real part of the polarizer?s refractive index is specified in
+<b> polindexstart </b> and
+<b> polindexend. </b> Another type of polarizers is the non-ideal polarizer which is a birefringent optical layer. The ideal polarizer must be first disabled by setting its polarization angle out of the range between -90 and 90 degrees. The properties of the non-ideal polarizer is specified in
+<b> StartEndLayers(). </b> The first six variables of this function are the layer thickness, optic axis, no, ne, ko, and ke for the polarizer at the incident plane, while the last six are related parameters for the one at the emitting plane.
+</p>
+<p>
+The fixed beam wavelength is defined in
+<b> wavelength </b> and the fixed incident angle is defined in
+<b> angle. </b> The transmission pattern is saved to the file assigned to
+<b> topview. </b> The wavelength sweep simulation is trigged by specifying a wavelength range in
+<b> wlsweep(). </b> The output spectral file is specified in
+<b> outspec. </b> The angular sweep is done by specifying the scan range of the polar and the azimuthal angle in
+<b> anglesweep() </b> and
+<b> thetasweep()</b> , respectively. The angular distribution of the transmission is saved to the file assigned to
+<b> angleview.</b> </p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any supporting files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

@@ -1,0 +1,87 @@
+<html>
+  <head>
+    <title>Color sensor with vertically stacked organic photodetectors</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Color sensor with vertically stacked organic photodetectors</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Blaze/Organic Solar</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="organicex07_plot0.png" width="640" alt="organicex07_plot0" />
+      <p/>
+      <img src="organicex07_plot1.png" width="640" alt="organicex07_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates the spectral simulation of an organic color sensor
+The device consists of three vertically stacked organic photodetectors which
+are individually sensitive to blue, green and red light from top to bottom [1].
+</p>
+<p>
+In the first part of the example, we create successively the blue, green and
+red-sensitive detectors which are separated by thick glass substrates. ITO
+electrodes of each detector are then created and assigned the same workfunction.
+</p>
+<p>
+Organic materials are defined in the second part of the input deck. The dispersive
+refractive index is given in an index file where the absorption coefficients of
+primary absorptive materials are taken from Ref.[1]. Other material parameters
+are taken from other literatures or estimated from typical values.
+</p>
+<p>
+Similar to organic solar cells, singlet exciton rate equation and exciton
+dissociation model are enabled by setting the
+<b> SINGLET</b> and
+<b>  S.DISSOC</b> parameters of the
+<b>  MODEL</b> statement, respectively. Poole Frenkel
+mobility model and Langevin recombination model are used in this example as well.
+</p>
+<p>
+Transfer matrix method is activated in the
+<b>  BEAM</b> statement by setting
+<b>  TR.MAT </b> to correctly simulate coherent effects of light.
+</p>
+<p>
+After setting DC biases of each detector, wavelength ramping is performed from
+0.4 to 0.75 um under 50 uW/cm2 illumination power density for each monochromatic
+light beam.
+</p>
+<p>
+External quantum efficiency and the sensitiviy of each detector are
+extracted from the spectral file. It should be noted that there exist dense ripples upon
+the envelope of the spectral response because of the optical interference effect.
+</p>
+<p>
+[1] H. Seo, S. Aihara, T. Watabe, H. Ohtake, M. Kubota, and N. Egami
+&quot;Color sensors with three vertically stacked organic photodetectors&quot;
+Jpn. J. Appl. Phys., Vol. 46, pp. L1240-L1242, 2007
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

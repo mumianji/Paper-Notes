@@ -1,0 +1,241 @@
+# (c) Silvaco Inc., 2018
+
+go victoryprocess
+
+init material="silicon" depth=1.14 gasHeight=1 from="-0.72,0" to="0.42,0.15" \
+	c.boron=1.32e15 ORIENTATION=100 resolution="0.01,0.01,0.01" \
+	meshdepth=2 flow.dim=3D
+
+line x location=-0.72  spacing=0.02 
+line x location=-0.64  spacing=0.02
+line x location=-0.6   spacing=0.01
+line x location=-0.525 spacing=0.02
+line x location=-0.45  spacing=0.01
+line x location=-0.41  spacing=0.02
+line x location=-0.3   spacing=0.001
+line x location=-0.297 spacing=0.001
+line x location=-0.247 spacing=0.025
+line x location=-0.197 spacing=0.025
+line x location=-0.157 spacing=0.008
+line x location=-0.15  spacing=0.007
+line x location=-0.143 spacing=0.008
+line x location=-0.103 spacing=0.025
+line x location=-0.053 spacing=0.025
+line x location=-0.003 spacing=0.001
+line x location=0.0    spacing=0.001
+line x location=0.11   spacing=0.02
+line x location=0.15   spacing=0.01
+line x location=0.225  spacing=0.02
+line x location=0.3    spacing=0.01
+line x location=0.34   spacing=0.02
+line x location=0.42   spacing=0.02
+
+line y location=0     spacing=0.05
+line y location=0.15   spacing=0.05
+
+line z location=0     spacing=0.001
+line z location=0.2   spacing=0.1
+line z location=0.397 spacing=0.02
+line z location=0.447 spacing=0.02
+line z location=0.497 spacing=0.001
+line z location=0.5   spacing=0.001
+line z location=1.14  spacing=0.2
+
+etch silicon between.x="-0.3,0" thickness=0.5 MAX
+
+deposit oxide thick=0.003 conformal
+
+implant boron dose=2.2e13 energy=30 tilt=7 rotation=27 bca n.ion=2000000
+implant boron dose=2.2e13 energy=30 tilt=7 rotation=207 bca n.ion=2000000
+
+# Trench Fill
+deposit oxide thick=0.05 conformal
+etch oxide above=-0.003
+
+deposit polysilicon thick=0.05 MAX
+
+etch polysilicon thickness=1 left.to=-0.6 MAX
+etch polysilicon thickness=0.05 between="-0.45, 0.15" MAX
+etch polysilicon thickness=1 right.to=0.3 MAX
+
+etch polysilicon thickness=0.397 between="-0.197, -0.103" MIN
+
+deposit nitride thick=0.04 conformal
+
+etch nitride dry thick=0.0401
+
+implant arsenic dose=1.0e15 energy=4 tilt=7 rotation=27  bca n.ion=2000000
+implant arsenic dose=1.0e15 energy=4 tilt=7 rotation=207 bca n.ion=2000000
+
+diffus time=0.7 temp=1050 
+
+save name=b4_electrodes
+
+electrodes name=gate material=polysilicon x=-0.52 y=0.075 z=-0.03
+electrodes name=ngate material=polysilicon x=0.23 y=0.075 z=-0.03
+electrodes name=anode material=polysilicon x=-0.15 y=0.075 z=0.42 
+
+save name=radex10_vp_0
+
+go victorymesh
+
+load in=radex10_vp_0
+
+remesh conformal
+
+save out=radex10_0.str
+
+
+# =======================================================================
+# Radiation damage of nMOS-nMOS pair
+# =======================================================================
+
+go victorydevice simflags="-80"
+
+# -----------------------------------------------------------------------
+# Structure Definition
+# -----------------------------------------------------------------------
+
+mesh infile=radex10_0.str  
+
+electrode name=substrate z.min=1.14 z.max=1.14
+electrode name=ground x.min=-0.391 x.max=-0.332 y.min=0 y.max=0.15 z.min=-0.003 z.max=0
+electrode name=vdd    x.min=0.0325 x.max=0.091 y.min=0 y.max=0.15  z.min=-0.003 z.max=0
+electrode name=drain  x.min=-0.72  x.max=-0.65  y.min=0 y.max=0.15 z.min=-0.003 z.max=0
+electrode name=source x.min=0.359  x.max=0.42 y.min=0 y.max=0.15  z.min=-0.003 z.max=0
+
+
+# -----------------------------------------------------------------------
+# Materials and Models
+# -----------------------------------------------------------------------
+
+# Use thermionic interface model at semiconductor/semiconductor interfaces
+interface thermionic
+
+# Semiconductor properties for oxide
+material material=oxide semiconductor
+material material=oxide nc300=2e19 nv300=2e19 eg300=9 affinity=0.9 \
+         mun=1 mup=1e-3 m.vthp=1
+
+doping material=oxide replace uniform net concentration=-1
+
+intoxidecharging r1material=oxide r2material=silicon \
+    jmodel.p nt.p=1e14 sigmat.p=1.5e-13 sigman.p=1e-30 sigmaph.p=1.5e-13 \
+    jmodel.n nt.n=1e4  sigmat.n=1e-30   sigmap.n=1e-30 sigmaph.n=1e-30   \
+    mfp.phonon=0.013
+
+oxidecharging material=oxide \
+    vmodel.p nt.p=2e18 sigmat.p=1.5e-17 sigman.p=1e-34 sigmaph.p=1.5e-13 \
+    vmodel.n nt.n=1e10 sigmat.n=2e-32   sigmap.n=2e-32 sigmaph.n=1e-30 
+          
+# Radiation environment
+radiation doserate=1 XRay
+
+# Other models and material properties
+models bound.trap
+models material=silicon consrh cvt bound.trap print
+contact name=gate  n.poly
+contact name=ngate n.poly
+contact name=anode n.poly
+
+# -----------------------------------------------------------------------
+# Solution 
+# -----------------------------------------------------------------------
+
+# Request structure output of band parameters and carrier velocities
+output band.param con.band val.band band.temp \
+       e.mobility h.mobility e.velocity h.velocity
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~
+# N-Channel 1 Vt Check
+
+method pam.gmres itlimit=120
+
+solve init
+solve previous
+
+method pam.gmres itlimit=25
+
+save outfile=radex10_1.str
+solve vdrain=0.001
+solve vdrain=0.01
+solve vdrain=0.05
+log outfile=radex10_0.log
+solve vgate=0.01 
+solve vgate=0.05 vstep=0.05 vfinal=1 name=gate previous
+save outfile=Vg1V_3d.str
+tonyplot radex10_0.log -set radex10_0.set
+log off
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~
+# N-Channel 2 Vt Check
+
+method pam.gmres itlimit=120
+
+solve init
+solve previous
+
+method pam.gmres itlimit=25
+
+solve vvdd=0.001
+solve vvdd=0.01
+solve vvdd=0.05
+log outfile=radex10_1.log
+solve vngate=0.01
+solve vngate=0.05 vstep=0.05 vfinal=1 name=ngate previous
+tonyplot radex10_1.log -set radex10_1.set
+log off
+
+
+# Inter Transistor Leakage
+
+method pam.gmres maxtraps=100 itlimit=200 tol.time=1e6 tstep.incr=1.1 trf=1.1 \
+       climit=1e-8 c.max.mul=400 c.max.div=25 cx.tol=1e-7 cr.tol=1e-14 \
+       norm.scaling.local dvmax=4.5 dt.max=50000 
+
+# Initialize the solution
+
+method pam.gmres itlimit=120
+
+solve init
+solve previous
+
+method pam.gmres itlimit=50
+
+# Test Pre-Rad Inter Device Leakage
+log outfile=radex10_2.log
+solve radiation dt=0.005 tstop=1 vvdd=1 ramptime=1 previous
+save outfile=radex10_2.str
+log off
+tonyplot radex10_2.log -set radex10_2.set
+
+# Re-Set Vdd Back to 50mV
+solve radiation dt=0.01 tstop=2 vvdd=0.05 ramptime=1 previous
+
+# Bias Trench Poly
+solve radiation dt=0.01 tstop=3 vanode=1 ramptime=1 previous
+save outfile=radex10_3.str
+
+# Irradiate the Device to 3MRad
+log outfile=radex10_3.log
+solve radiation dt=0.01 tstop=3000000 previous
+save outfile=radex10_4.str
+log off
+
+method pam.gmres maxtraps=100 itlimit=200 tol.time=1e6 tstep.incr=1.1 trf=1.1 \
+       climit=1e-8 c.max.mul=400 c.max.div=25 cx.tol=1e-7 cr.tol=1e-14 \
+       norm.scaling.local dvmax=4.5 dt.max=0.05
+
+# Re-Set Trench Poly Bias
+solve radiation dt=0.01 tstop=3000001 vanode=0 ramptime=1 previous
+
+# Re-Test Inter-Device Leakage
+log outfile=radex10_4.log
+solve radiation dt=0.01 tstop=3000002 vvdd=1 ramptime=1 previous
+log off
+
+tonyplot radex10_2.log -overlay radex10_4.log -set radex10_3.set
+
+# =======================================================================
+# End of Radiation damage of nMOS-nMOS pair
+# =======================================================================

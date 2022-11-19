@@ -1,0 +1,893 @@
+{section} QUEST : 3D High Frequency Inductance Extractor 
+
+
+{subsection} tutorial.in : Simulation of a simple square sided inductor
+
+Requires: QUEST 
+Minimum Versions: QUEST 2.0.2.R
+
+This example is a square inductor. The input files for all examples 
+are already in the software installation, and can be accessed using 
+the DeckBuild GUI. Start
+{bold} Deckbuild  
+ with the command deckbuild then from the
+{bold} Main Control  
+ menu select
+{bold} Examples. 
+ Scroll down to the
+{bold} QUEST 
+ section, double-click to expand, then double-click 
+on the required example. The description of the example is displayed.  
+To load and run this example, select the  
+{bold} Load  
+ button in DeckBuild. This will copy the input file, GDS II file and
+results to your current working directory. Select the 
+{bold} Run  
+ button to execute the example.
+
+The GDSII file can be viewed in MaskViews, Expert or any other layout editing tool that 
+can read GDSII format. The process is a generic process using six metal levels and 
+standard values for the conductivity and permittivity.  
+
+Since the inductor in this example has a diameter of approximately 400um, the depth 
+of the substrate in the simulation was chosen to be 400um.  
+
+A two port simulation is defined by using the reserved electrode name called 
+"subs_ground". This grounds out the reference electrode for both the "IN" port and 
+the "OUT" port of the two port network.  
+
+All the results will be placed in a directory structure under the name "tutorial_db" 
+which was defined with SAVE command.  
+
+Three dimensional structure files can be viewed with TonyPlot3d.  All other RLCG and 
+Q versus frequency data can be viewed with TonyPlot.  
+
+
+{subsection} questex01.in : Create Electrodes 
+
+Requires: QUEST 
+Minimum Versions: QUEST 2.0.2.R
+
+This example demonstrate how to created electrodes in QUEST. An electrode is the 
+association of a label and a pad. To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+The GDSII file can be viewed in MaskViews, Expert or any other layout editing tool that can read GDSII format. 
+
+The GDS file is an octogonal inductor where only the "IN" label is present.  The objective
+ is to create the "OUT" label and pads for both "IN" and "OUT". 
+To create labels the 
+{italic} addlabel 
+ command is used. Label name and coordinates are specified. 
+To create pads addpad command is used. This command used the existing labels in the 
+GDS and automatically create corresponding pads with the size and datatype provided 
+by the user.
+
+
+{subsection} questex02.in : Create a "W element" spice model for coupled transmission lines
+
+Requires: QUEST 
+Minimum Versions: QUEST 2.0.2.R
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+It is based on 3 parallel lines: 
+{newline}
+**********************************************************
+{newline}
+* three lines (100um) with the same conductivity. *
+{newline}
+{newline}
+*  1st line: in1 -------- out1 width=1um *
+{newline}
+*                space=1um                *
+{newline}
+*  2nd line: in2 -------- out2 width=2um *
+{newline}
+*               space=0.5um              *
+{newline}
+*  3th line: in3 ------- out3 width=2um *
+{newline}
+{newline}
+**********************************************************
+
+This mode is dedicated to simulating uniform transmission lines. As an output we 
+directly obtain files that can be simulated in a SPICE simulator. 
+We can use the W-elements or S-parameters produced by QUEST depending on which  
+simulation we want to run.
+
+* W-elements: Used to model a coupled lossy uniform transmission line. It is
+ based on RLGC Matrix versus frequency. W-elements can be used for any SPICE 
+simulation (transient, AC...) and is a standard for major spice simulators including
+SmartSpice. The File "questex02_RLGC_Transient.in" is an example of stimuli to study
+the crosstalk between the 3 lines in a transient analysis. It directly loads the 
+"questex02_welement.sp" file produced by quest. These files must be in the same directory.
+
+* S-parameter:  Matrix of S-parameters (and Y and Z) versus frequency. It can be 
+directly analyzed or used as input for other simulators (SPICE, RF simulator) for 
+AC analysis. QUEST produces all the intermediary files to include them directly into 
+SmartSpice. The File "questex02_S_devices.in" is an example of stimuli for
+ SmartSpice to study the crosstalk between the 3 lines with an AC simulation.
+ It shows that this phenomena is more important on high frequencies. It directly 
+loads the "questex02_s_param.mod" and "questex02_s_param.par" 
+produced by quest. These files must be in the same directory.
+
+
+{subsection} questex03.in : Comparison of simulated and measured results for a square sided inductor
+
+Requires: QUEST 
+Minimum Versions: QUEST 2.0.2.R
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+This example is based on an IBM paper by Rob Groves et al. "Temperature Dependence of 
+Q in Spiral Inductors Fabricated in a Silicon Germanium BiCMOS Technology" IEEE BCTM 
+9.3 pp. 153-156 1996.  It shows the modeling of a 10nH spiral inductor that can be 
+compared to measured results from the reference.
+
+The GDSII file can be viewed in Maskviews, Expert or any other Layout editing tool that 
+can read GDSII format. The input file was created using information from the paper.
+
+The example demonstrates how to write the technology part of the input file. The
+ attachment of electrode names in the GDSII layout file to bond/probe pads in the 
+circuit is achieved by declaring the layer containing the text for the electrode names
+ twice, once with text declared and once without text declared. These two layers (one 
+with text declared and one without) are then electrically connected with the CONNECTION 
+command to give the structure its electrode names.
+
+Of note in the process part is the depth of the substrate and the height of the air 
+above the device which is included into the modelled structure volume.  
+It is vital for accurate inductance calculations, that the full volume of inductive 
+flux lines are included.  As a general rule, a safe substrate depth and air height 
+would be the diameter of the inductor being simulated.  Since the inductor in this 
+example has a diameter of approximately 400um, the depth of the substrate in the 
+simulation was chosen to be 400um.
+
+It is also important to define both the conductivity and permittivity of the 
+substrate for accurate modeling of the quality factor, Q, versus frequency.
+
+A two port simulation is defined by using the reserved electrode name called 
+"subs_ground". This grounds out the reference electrode for both the "IN" port 
+and the "OUT" port of the two port network.
+
+All the results will be placed in a directory structure under the name 
+"questex03_db" which was defined with SAVE command.
+
+Three dimensional structure files can be viewed with TonyPlot3d.  All other RLCG and 
+Q versus frequency data can be viewed with TonyPlot.
+
+
+{subsection} questex04.in : Simulation of an octagonal inductor
+
+Requires: QUEST 
+Minimum Versions: QUEST 2.0.2.R
+
+This example is an octagonal inductor. To load and run this example, select the  
+{bold} Load 
+ button in DeckBuild. This will copy the input file, GDSII file and results to your current working directory. Select the 
+{bold} Run 
+ button to execute the example.
+
+The GDSII file can be viewed in Maskviews, Expert or any other Layout editing tool that 
+can read GDSII format. The process is a generic process using six metal levels and 
+standard values for conductivity and permittivity.
+
+Since the inductor in this example has a diameter of approximately 300um, the depth 
+of the substrate in the simulation was chosen to be 400um.
+
+A two port simulation is defined by using the reserved electrode name called 
+"subs_ground". This grounds out the reference electrode for both the "IN" port and 
+the "OUT" port of the two port network.
+
+All the results will be placed in a directory structure under the name "questex04_db" 
+which was defined with SAVE command.
+
+Three dimensional structure files can be viewed with TonyPlot3d.  All other RLCG and 
+Q versus frequency data can be viewed with TonyPlot.
+
+This example can be compared with the examples 'questex05', 'questex06' and 
+'questex07' because this is the same inductor, but in the other examples a plate or a 
+grid is below the inductor or a pattern is around the inductor.
+
+
+{subsection} questex05.in : Octagonal inductor with un-patterned earth shield
+
+Requires: QUEST
+Minimum Versions: QUEST 2.0.2.R
+
+This example is an octagonal inductor.  To load and run this example, select the  
+{bold} Load 
+ button in DeckBuild. This will copy the input file, GDSII file and results to your current working directory. Select the 
+{bold} Run 
+ button to execute the example.
+
+The GDSII file can be viewed in MaskViews, Expert or any other Layout editing tool that
+ can read GDSII format. The process is a generic process using six metal levels and 
+standard values for conductivity and permittivity.
+
+Since the inductor in this example has a diameter of approximately 300um, the depth 
+of the substrate in the simulation was chosen to be 400um. A plate is below the 
+inductor.
+
+A two port simulation is defined. The first port is between the electrodes "in" and 
+"gnd1". The second port is between the electrodes "out" and "gnd2". The reference 
+electrodes "gnd1" and "gnd2" are on the plate below the inductor.
+
+All the results will be placed in a directory structure under the name "questex05_db" 
+which was defined with SAVE command.
+
+Three dimensional structure files can be viewed with TonyPlot3d.  All other RLCG and 
+Q versus frequency data can be viewed with TonyPlot.
+
+This example can be compared with the examples 'questex04', 'questex06' and 
+'questex07' because this is the same inductori, but in the other examples the 
+inductor is alone or a grid is below the inductor or a pattern is around the inductor.
+
+For example in this case (inductor with a plate), the Q factor is very small because
+the inductance value is small and the resistance value is large due to the path of 
+the current return by the plate.  The capacitance is large because the ground plane 
+is below all the surface of the inductor.
+
+
+{subsection} questex06.in : Octagonal inductor with patterned earth shield
+
+Requires: QUEST
+Minimum Versions: QUEST 2.0.2.R
+
+This example is an octagonal inductor.  To load and run this example, select the  
+{bold} Load 
+ button in DeckBuild. This will copy the input file, GDSII file and results to your current working directory. Select the 
+{bold} Run 
+ button to execute the example.
+
+The GDSII file can be viewed in MaskViews, Expert or any other Layout editing tool that can
+ read the GDSII format. The process is a generic process using six metal levels and 
+standard values for conductivity and permittivity.
+
+Since the inductor in this example has a diameter of approximately 300um, the depth 
+of the substrate in the simulation was chosen to be 400um. A grid is below the 
+inductor.
+
+A two port simulation is defined. The first port is between the electrodes "in" and 
+"gnd1". The second port is between the electrodes "out" and "gnd2". The reference 
+electrodes "gnd1" and "gnd2" are on the grid below the inductor.
+
+All the results will be placed in a directory structure under the name "questex06_db" 
+which was defined with the SAVE command.
+
+Three dimensional structure files can be viewed with TonyPlot3d.  All other RLCG and 
+Q versus frequency data can be viewed with TonyPlot.
+
+This example can be compared with the examples 'questex04', 'questex05' and 'questex07'
+ because this is the same inductor, but in the other examples the inductor is alone or
+ a plate is below the inductor or a pattern is around the inductor.  
+
+In this example (inductor with a grid) the Qfactor is high and the
+resistance is constant
+since the current return path is always through the grid.
+
+
+{subsection} questex07.in : Octagonal inductor with surround earth shield
+
+Requires: QUEST
+Minimum Versions: QUEST 2.0.2.R
+
+This example is an octagonal inductor.  To load and run this example, select the  
+{bold} Load  
+ button in DeckBuild. This will copy the input file, GDSII file and results to your current working directory. Select the 
+{bold} Run 
+ button to execute the example.
+
+The GDSII file can be viewed in MaskViews, Expert or other any layout editing tool that can
+ read GDSII format. The process is a generic process using six metal levels and 
+standard values for the conductivity and permittivity.
+
+Since the inductor in this example has a diameter of approximately 300um, the depth 
+of the substrate in the simulation was chosen to be 400um. A pattern is around the 
+inductor.
+
+A two port simulation is defined. The first port is between the electrodes "in" and 
+"gnd1". The second port is between the electrodes "out" and "gnd2". The reference 
+electrodes "gnd1" and "gnd2" are on the pattern around the inductor.
+
+All the results will be placed in a directory structure under the name "questex07_db" 
+which was defined with SAVE command.
+
+Three dimensional structure files can be viewed with TonyPlot3d.  All other RLCG and 
+Q versus frequency data can be viewed with TonyPlot.
+
+This example can be compared with the examples 'questex04', 'questex05' and 'questex06'
+ because this is the same inductor but in the other examples the inductor is alone or
+ a plate or a grid are below the inductor.  
+
+For example in this case (inductor with surround shield), the Q factor is large but 
+the resistance decreases with the frequency because the current return goes via the 
+substrate (no plate or grid is below the inductor).
+
+
+{subsection} questex08.in : Different metals on the same level
+
+Requires: QUEST
+Minimum Versions: QUEST 2.0.2.R
+
+This example is 3D Interconnect with different metals on the same level.  To load and run this example, select the  
+{bold} Load 
+ button in DeckBuild. This will copy the input file, GDSII file and results to your current working directory. Select the 
+{bold} Run 
+ button to execute the example.
+
+The GDSII file can be viewed in MaskViews, Expert or any other layout editing tool that 
+can read GDSII format. 
+
+The process is defined with multiple metals on the same level. The VIA "type" in the 
+deposit command is not used. METAL "type" is used instead using layers in the gds. 
+Use two consecutives conductor layers (to have two different conductor on the same 
+level) as shown below:
+
+deposit type = "metal" layername = "via1" thick = 0.3 matName = "copper" 
+{newline}
+deposit type = "metal" layername = "via2" thick = 0.3 matName = "aluminum" 
+
+In this example derived layers of "via2" were created and used to connect M1to M3 
+(via2_1 and via2_2 in the example). 
+
+A two port simulation is defined by using the reserved electrode name called 
+"subs_ground". This grounds out the reference electrode for both the "IN" port and 
+the "OUT" port of the two port network.
+
+All the results will be placed in a directory structure under the name "questex08_db" 
+which was defined with SAVE command.
+
+Three dimensional structure files can be viewed with TonyPlot3d.  All other RLCG and 
+Q versus frequency data can be viewed with TonyPlot.
+
+
+{subsection} questex09.in : A true curved spiral inductor design including ground shield pattern
+
+Requires: QUEST
+Minimum Versions: QUEST 2.0.2.R
+
+This example is a true curved spiral inductor. To load and run this example, select the  
+{bold} Load 
+ button in DeckBuild. This will copy the input file, GDSII file and results to your current working directory. Select the 
+{bold} Run 
+ button to execute the example.
+
+The GDSII file can be viewed in MaskViews, Expert or any other layout editing tool that 
+can read GDSII format. The process is a generic process using six metal levels and 
+standard values for the conductivity and permittivity.
+
+Since the inductor in this example has a diameter of approximately 300um, the depth 
+of the substrate in the simulation was chosen to be 400um. A grid is above the 
+inductor.
+
+A two port simulation is defined. The first port is between the electrodes "in" and 
+"gnd". The second port is between the electrodes "out" and "gnd". The reference 
+electrode "gnd" is on the grid above the inductor.
+
+All the results will be placed in a directory structure under the name "questex09_db" 
+which was defined with the SAVE command.
+
+Three dimensional structure files can be viewed with TonyPlot3d. All other RLCG and Q 
+versus frequency data can be viewed with TonyPlot.
+
+
+{subsection} questex10.in : Substrate loss tangent effects for a square inductor on GaAs
+
+Requires: QUEST
+Minimum Versions: QUEST 2.0.2.R
+
+This example is based on a National University of Singapore paper by Wen-Yan Yin and 
+al. "Model Description and Parameter Extraction of On-Chip Spiral Inductors for MMICs"
+ International Journal on RF and Microwave CAE 14 pp.111-121 2004. It presents a 
+statistical description of the global performance of on-chip spiral inductors based 
+on extensive measurement.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+The GDSII file can be viewed in MaskViews, Expert or any other layout editing tool that 
+can read GDSII format. The process file was also created using information from the 
+paper.
+
+You can  compare the results of the inductor parameters (RLGC / Q factor) 
+according to the substrate properties.
+
+A two port simulation is defined by using the reserved electrode name called 
+"subs_ground". This grounds out the reference electrode for both the "in" port and 
+the "out" port of the two port network.
+
+All the results will be placed in a directory structure under the name "questex10_db" 
+which was defined with the SAVE command.
+
+Three dimensional structure files can be viewed with TonyPlot3d. All other RLCG and Q 
+versus frequency data can be viewed with TonyPlot.
+
+
+{subsection} questex11.in : Comparing one turn and straight line inductors
+
+Requires: QUEST
+Minimum Versions: QUEST 2.0.2.R
+
+This example demonstrates the advantages of straight line inductors.
+
+Introduction:
+
+It is often perceived that the highest inductance and Q factor are obtained using 
+spiral inductors. This, however, is only true if the inductor has more than 
+approximately 1.5 turns. Designers will often design 1 turn or 1.25 turn inductors 
+out of habit, not realizing that a significantly better performing inductor can be 
+designed with a straight line inductor.
+
+The reason a straight inductor outperforms a one turn inductor in terms of 
+inductance per length and Q factor is two fold:
+
+1) If an inductor only has one turn, there is no added inductance from the mutual 
+inductance of the other coils as occurs in a multi-turn inductor.
+
+2) In a one turn inductor, inductance is lost due to the current travelling in 
+opposite directions in the opposite conductor which is not mitigated by mutual 
+inductance from other windings.
+
+In a straight line inductor, there is also no mutual inductance benefit, BUT there 
+is also no inductance lost due to opposite conductors having current flowing in
+ opposite directions, because there are no opposite conductors in a straight line.
+
+Experiment Description:
+
+In this Quest experiment, two inductor layouts are compared:
+
+(i) The first layout is a straight line inductor 480um long and 10um wide.
+
+(ii) The second inductor has an identical length and width but is as a one turn 
+design.
+
+Results:
+
+The results show that not only does the straight line inductor exhibit a greater 
+inductance than its one turn counter part, but the maximum Q factor is also 
+significantly higher.
+
+Running the Example
+
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+questex11_command.in is the quest input file common to the line and one turn inductor gds. 
+Two simulations will thus be run one after the other.  
+
+
+{subsection} questex12.in : 3D MIM capacitance
+
+Requires: QUEST
+Minimum Versions: QUEST 2.0.2.R
+
+This example demonstrates the use of QUEST for 3D MIM capacitance simulation.
+
+Introduction:
+
+The Metal-Insulator-Metal (MIM) capacitor is a key passive component in RF and
+ analog integrated circuits. MIM capacitors have attracted great attention because 
+of their high capacitance density that supplies a small area, increases circuit density 
+and further reduces fabrication cost.  
+
+Running the Example
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+Results analysis
+
+
+The objective of the analysis is to extract the R,L and C parameter of the simple RLC 
+MIM device equivalent model. 
+
+For that purpose we use the B element of the ABCD matrix (questex12_abcd.dat). From the 
+imaginary part of the B element we extract C and L according to the following 
+equation B_I=Lw -1/CW using the build-in optimizer by the JavaScript capability. The real 
+part of B gives directly the Resistance R. 
+
+To run the script use the RUNJAVASCRIPT command or type the following command:
+
+quest -v -b javascript_name.js
+
+This example also shows the 
+{bold} DBinternal 
+ capability to investigate the MIM Thickness effect on the capacitance value. Please 
+refer to DeckBuild example DOE: Design of Experiment Examples for detailed explanation
+ of the 
+{bold} DBinternal
+ syntax.
+
+
+{subsection} questex13.in : Complex number calculation
+
+Requires: QUEST
+Minimum Versions: QUEST 2.0.2.R
+
+This example demonstrates the use of JavaScript analysis of QUEST to perform 
+calculations using complex numbers.
+
+Introduction:
+
+
+It is sometimes interesting to compare simulation and experimental results on 
+quantities that are not extracted by default with QUEST. It could be a quantity 
+like Qdiff defined as a function of S-param:
+
+Sd_dut=0.5*(S11+S22-S12-S21)
+{newline}
+Zd_in=100*(1+Sd_dut)/(1-Sd_dut)
+{newline}
+Ldiff = Im(Zd_in)*1/w
+{newline}
+Qdiff = I(Zd_in)/R(Zd_in)
+
+It could also be interesting to transform the measured S-param to the measured Y-param also 
+for comparison purpose in QUEST.
+
+In all cases calculation with complex numbers are needed.
+
+Running the Example
+
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+Results analysis
+
+
+This example illustrates the complex number calculation syntax used in the JavaScript 
+analysis of QUEST:
+
+1. Creation of scalar S-param table (CSV) from simulation (questex13_S_simu.js). 
+Note that this file format (CSV) can also be used with measurement data.
+
+2. From the previous S-param table, calculation of Y11-param (questex13_Y11.js).
+
+3. General transformation of S to Y-param can be done by using the Macro function 
+convert_S_to_Y (quest13_Y.js).
+
+2 and 3 can typically be used to convert measured S-Param to Y-param. Y11 real and 
+imaginary are of course identical if we compare them from the 3 different calculations 
+described above. 
+
+4. Calculation of L and Q from Y-param calculated from 2 above. (questex13_L_Q.js)
+
+Note that:
+
+A. Q can be directly compared to Q calculted in QUEST.
+
+B. This is not the case for L since here L is calculated from Y11 and not 
+from Y21 as it is done by default in QUEST. It thus shows that quantities that are 
+not calculated by default in QUEST can easily be created using QUEST JavaScript 
+analysis.
+
+TO RUN all the scripts, use the RUNJAVASCRIPT command or just run
+
+quest -v -b javascript_name.js
+
+
+{subsection} questex14.in : Parameterized Inductor layout
+
+Requires: QUEST
+Minimum Versions: QUEST 2.0.2.R
+
+This example demonstrates the use of an Expert LISA script used by QUEST to generate
+a parameterized gds layout.
+
+Introduction:
+
+In order to build an inductance model or make a variation of layout parameters it 
+is especially interesting to have parametrized gds. This is possible in QUEST  
+using Expert's LISA scripting language. 
+
+Running the Example
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+In this example, four layout variables are defined (number of coils, radius,wire_width 
+and space) and the layout is created accordingly using the creategds command in 
+QUEST associated with the EXPERT script file.
+
+Results analysis
+
+
+Inductor performance is monitored using the extract capability of DeckBuild.
+
+This example shows how to use the 
+{bold} DBinternal 
+ capability to investigate the geometrical layout variation on the inductor 
+performance. Please refer to the DeckBuild example DOE: Design of Experiment Examples 
+for detailed explanation of the 
+{bold} DBinternal 
+ syntax and the DeckBuild manual.
+
+When loaded in SPAYN (start SPAYN and load inductor.db) a quadratic model of L as a 
+function of 3 layout variables can be done. For that in SPAYN go to tool 
+regression and select L as target and NB_COILS, WIRE_WIDTH and RADIUS as predictors. 
+Perform a quadratic model with interaction and click on TonyPlot. You thus have a 
+Response Surface Model (RSM) that you can use for synthesis for example.
+ 
+{subsection} questex15.in : User inductor spice model
+
+Requires: QUEST 
+Minimum Versions: QUEST 2.0.2.R
+
+This example demonstrates how to create and extract user-defined
+inductor SPICE model parameters. Please refer to previous examples to learn 
+how to create a QUEST input deck.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+In this example the parameter
+{bold} ut4.batchfile 
+ is used in the save statement to save QUEST results (s-parameter)
+in UTMOST4 format (questex15_ind_model.uds)
+
+UTMOST4 will indeed be used to perform SPICE model parameter extraction. 
+A project in UTMOST4 has to be created using the UTMOST4 GUI including both 
+the user defined SPICE model as well as the extraction strategy 
+(questex15.prj).  
+
+A SPICE model extraction can be performed either using the UTMOST4 GUI
+or UTMOST under DeckBuild. 
+
+To use the UTMOST GUI, open an existing database 
+or create a new one (see UTMOST4 manual for details) and click on 'import 
+dataset' (select questex15_ind_model.uds) and 'import project' (select 
+questex15.prj). Double click on questex15 and the project will open. 
+Click on 'run'. 
+
+To run UTMOSTIV under DeckBuild, just run UTMOSTIV
+at the end of the QUEST simulation. 
+ 
+ 
+{subsection} questex16.in : Parameterized MIM Capacitor layout
+
+Requires: QUEST
+Minimum Versions: QUEST 2.0.2.R
+
+This example demonstrates the use of an Expert LISA script used by QUEST to generate
+a parametrized MIM Capacitor gds layout.
+
+Introduction:
+
+
+In order to build an MIM capacitor model or simply make variation of layout parameters it 
+is especially interesting to have parametrized gds. This is possible in QUEST by 
+using the Expert layout editor's LISA scripting language. 
+
+Running the Example
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+In this example, two layout variables are defined (Width, Length) and the layout is 
+created accordingly using the creategds command of QUEST associated with the Expert 
+script file.
+
+Results analysis
+
+Inductor performance is monitored using the extract capability in DeckBuild.
+
+
+{subsection} questex17.in : Frequency dependent loss tangent and permittivity
+
+Requires: QUEST
+
+This example is based on Questex04.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+The GDSII file can be viewed in MaskViews, Expert or any other layout editing tool that 
+can read GDSII format. 
+
+You can compare the results of the inductor parameter (Q factor) according to 
+the substrate properties and permittivities. The files questex17_losstangent.txt and 
+questex17_permittivity.txt, where losstangent and permittivity are defined versus 
+frequency, are loaded using the parameters
+{bold} permit.file 
+ and
+{bold} loss.file 
+ in the material statement. The frequency range used during QUEST simulation 
+should match the frequency used to define questex17_losstangent.txt and 
+questex17_permittivity.txt files. For that, use the
+{bold} list 
+ parameter on the frequency statement.
+  
+
+A two port simulation is defined by using the reserved electrode name called 
+"subs_ground". This grounds out the reference electrode for both the "in" port and 
+the "out" port of the two port network.
+
+All the results will be placed in a directory structure under the name "questex17_db" 
+which was defined with SAVE command.
+
+Three dimensional structure files can be viewed with TonyPlot3d. All other RLCG and Q 
+versus frequency data can be viewed with TonyPlot.
+
+
+{subsection} questex18.in : multiple layouts simulation
+
+Requires: QUEST
+Minimum Versions: QUEST 2.0.2.R
+
+This example demonstrates how to load and run multiple layouts.
+
+Introduction:
+
+
+This example is based on questex14. 
+
+Running the Example
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+In this example, two layouts are loaded using two consecutive layout gdsfile statements.
+ These are 
+{bold} layout gdsfile = "questex18_nb=4_oct.gds" cell = "CELL"  
+ and
+{bold} layout gdsfile = "questex18_nb=5_oct.gds" cell = "CELL" 
+
+Results analysis
+
+These two layouts differ from each other by the number of turns. Inductor performance 
+are monitored using the TonyPlot  overlay feature as well as the extract capability 
+in DeckBuild.
+
+{subsection} questex19.in : optimization procedure
+
+Requires: QUEST, OPTIMIZER
+Minimum Versions: QUEST 2.0.2.R
+
+This example can  be used as a tutorial for setting up an optimization 
+procedure with a so-called curved target. This example is based on 
+questex14.in 
+
+Running the Example
+
+
+An experimental profile is provided with the example in a simple XY format 
+which can be read into the OPTIMIZER
+{bold} questex19.opt.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+The goal of the example is to find 
+{bold} Metal1 Thickness and conductivity
+ that will give a Q factor versus frequency close to the experimental one. 
+To achieve this, select
+{bold} Optimizer... 
+ from the
+{bold} Main Control 
+ menu. The
+{bold} DeckBuild: Optimizer 
+ screen will appear in a moment. 
+
+First, select
+{bold} Parameters 
+ from the
+{bold} Mode  
+ menu; this will display the Parameter worksheet. To define the parameters, 
+select (highlight) the
+MATERIAL name = "m1" statement from the input deck and choose
+{bold} Add 
+ from the 
+{bold} Edit 
+ pulldown menu. The
+{bold} Parameter define 
+ popup will appear. Check cond, then press
+{bold} Apply. 
+ Redo the same thing with the DEPOSIT deposit type = "metal" layername = "M1"
+statement and select thick. By default all min/max values for parameters are
++-50%. To edit any of these numeric values position the pointer over the 
+corresponding cell of the worksheet, click the left-hand mouse button, edit 
+the value, and do not forget to press return after finishing the 
+editing. You should change the default +-50% in this case. Set Minimum value 
+of the conductivity to 1e+06 and maximum to 1e+08 and Minimum value for thickness
+to 0.25 and Maximum to 1.
+
+The next step is setting the curved target. Select
+{bold} Targets 
+ from the 
+{bold} Mode 
+ menu. Highlight the 
+{bold} extract name="simu" 
+ line. This line extracts the Q factor verus frequency. Choose
+{bold} Add 
+ from the
+{bold} Edit 
+ pulldown menu. A new row will be inserted into the Target worksheet.
+The target name will correspond to the name in the extract statement.
+To insert a curved target select the only row in the worksheet 
+by double-clicking the left-hand button while the pointer is positioned 
+anywhere in the row, then choose
+{bold} From File 
+ from the
+{bold} Insert 
+ submenu from the 
+{bold} X/Y Data 
+ menu under the 
+{bold} Edit 
+ pulldown menu. As the result the 
+{bold} Optimizer X/Y Target Data 
+ popup will appear. Select
+{bold} questex19.opt 
+ file and then press 
+{bold} Load.
+
+Once the parameters, targets, and setup information have been
+defined, the Optimization process can be started by pressing the
+{bold} Optimize  
+ button. During the optimization run, the 
+{bold} Graphics 
+ mode shows real-time updates of parameter, target, and error values.
+
+
+Results analysis
+
+
+After optimization is completed you may execute the 
+{bold} tonyplot 
+ command which will plot the comparison between optimized and measured profiles. 
+
+
+
+
+
+
+
+
+
+
+
+

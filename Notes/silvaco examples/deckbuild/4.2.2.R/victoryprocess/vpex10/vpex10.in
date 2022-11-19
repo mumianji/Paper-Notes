@@ -1,0 +1,38 @@
+# VICTORY Process example 10 - illustrating photolithography
+# Silvaco 2014
+# 
+
+
+go victoryprocess 
+
+# Define simulation domain, wafer material and simulation mesh resolution,
+# load mask file in ".lay" format and start the simulation in 3D mode
+
+Init material="silicon" layout="vpex10.lay" depth=0.3 gasHeight=0.8 \
+     from="0.,0." to="1.,1." resolution=0.015 flow.dim=3d 
+
+
+# Perform lithography simulation - aereal image
+
+Lithography mask="Pilars" reverse \
+            MaskAperture=0.8 StandardWl=HLINE MaskType="opaque" \
+            ResultImage="vpex10.dat" 
+
+tonyplot vpex10.dat -set vpex10_aimg.set
+
+
+# Geometrical vertical deposition of the thick oxide layer using mask
+#  obtained after lithography. Note, that mask with name "Pilars_LITHO"
+#  was created by Lithography statement.
+
+Deposit conformal material="oxide" thickness=0.6 mask="Pilars_LITHO"
+
+
+# Export data in tonyplot3d format
+
+Export structure=vpex10_1.str
+
+tonyplot3d vpex10_1.str -set vpex10_3D.set
+
+
+quit

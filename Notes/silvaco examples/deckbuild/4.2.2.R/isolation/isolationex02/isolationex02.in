@@ -1,0 +1,126 @@
+# (c) Silvaco Inc., 2018
+go athena   
+#TITLE: Trench isolation
+# 
+set trench_bottom=0.5
+line x loc=0.00 spac=0.2 
+line x loc=0.2 spac=0.2
+line x loc=0.35 spac=0.075
+line x loc=1.2 spac=0.02
+line x loc=1.8 spac=0.02
+line x loc=2.65 spac=0.075
+line x loc=2.8 spac=0.2
+line x loc=3.0 spac=0.2 
+#
+line y loc=0.00 spac=0.02
+line y loc=$trench_bottom spac=0.02
+line y loc=2.5 spac=0.4
+ 
+init silicon c.boron=1.0e15 orientation=100 space.mult=2 
+#
+diffuse temp=900 time=25 dryo2 %hcl=3
+#
+deposit nitride thick=0.4 div=1
+
+deposit photo thick=1. div=10
+#
+etch   photo 	  start x=1.2 y=-10
+etch   photo      cont  x=1.2 y=10
+etch   photo      cont  x=1.8 y=10
+etch   photo      done  x=1.8 y=-10
+
+
+relax y.min=0.4 dir.y=f
+relax y.min=1.0 dir.y=f
+
+etch nitride thick=0.5
+
+strip photo
+
+etch oxide thick=0.1 
+
+
+# Setup a silicon trench etching machine.....
+rate.etch machine=trench_etch rie silicon iso=0.1 dir=0.9 u.m
+rate.etch machine=trench_etch rie oxide iso=0.1 dir=0.9 u.m
+
+
+etch machine=trench_etch time=0.5 minute dx.mult=0.5
+
+
+# Oxidize the trench....
+diffuse temp=925 time=10 weto2
+
+# Implant the trench
+implant boron energy=35 dose=1.2e12
+
+
+# Strip off all the nitride
+strip nitride
+
+# Dip off the oxide
+etch oxide all
+
+# deposit a new oxide layer to fill the trench
+
+deposit oxide thick=0.8 div=10
+
+etch oxide left p1.x=0.6
+etch oxide right p1.x=2.4
+
+# S/D Implant....
+implant arsenic energy=85 dose=2e15
+
+# Final anneal...
+diffuse temp=925 time=25 nitrogen
+
+
+# now make electrode contacts and move it into device simulation.....
+deposit alumin thick=0.1 div=1
+etch alumin start x=0.35 y=-10
+etch alumin cont  x=0.35 y=10
+etch alumin cont  x=2.65 y=10
+etch alumin done  x=2.65 y=-10
+
+electrode name=source x=0.1
+electrode name=drain x=2.9
+
+
+structure outf=isolationex02.str
+
+tonyplot isolationex02.str -set isolationex02_0.set
+
+
+
+# now switch to Device Simulation.....
+go atlas
+model cvt srh  
+impact selb
+
+output flowlines
+
+solve init
+
+
+method  newton
+solve prev
+
+
+solve vdrain=0.1
+solve vdrain=0.2 vstep=0.2 vfinal=4 name=drain
+
+log outf=isolationex02.log master
+ 
+solve vdrain=4.5 vstep=0.5 vfinal=20 name=drain compl=3e-12 cname=drain
+
+save outf=isolationex02_2.str
+
+# Extract the design parameters.....
+extract init inf="isolationex02.log"
+extract name="isolation_vpt" x.val from curve(abs(v."drain"),abs(i."drain")) where y.val=2e-12
+
+tonyplot isolationex02.log -set isolationex02_log.set
+
+
+quit
+

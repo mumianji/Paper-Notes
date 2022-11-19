@@ -1,0 +1,90 @@
+<html>
+  <head>
+    <title>Buffered Super Junction LDMOS</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Buffered Super Junction LDMOS</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Victory Process - Victory Device</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Victory Process 7.22.3.R, Victory Mesh 1.2.4.R, Victory Device 1.12.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="powerex18_plot0.png" width="640" alt="powerex18_plot0" />
+      <p/>
+      <img src="powerex18_plot1.png" width="640" alt="powerex18_plot1" />
+      <p/>
+      <img src="powerex18_plot2.png" width="640" alt="powerex18_plot2" />
+      <p/>
+      <img src="powerex18_plot3.png" width="640" alt="powerex18_plot3" />
+      <p/>
+      <img src="powerex18_plot4.png" width="640" alt="powerex18_plot4" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+By default Victory Process and Device run on just one processor.
+To ensure better perfomance on your computer the following simulation condition
+<b> simflags=&quot;-P all&quot;</b> could be specidied in the
+<b> go</b> line starting Victory Process or Device. This means that all processors available will be used.
+If you want to use a smaller number of processors you can substitute &quot;all&quot; with a desired number, e.g.
+<b> simflags=&quot;-P 4&quot;.</b> </p>
+<p>
+This example demonstrates the creation of a
+<b> buffered super junction LDMOS.</b> </p>
+<b> Super junctions </b> <p>
+are used in LDMOS structures to
+<b> greatly increase the breakdown voltage </b> of small geometry devices
+by allowing the drain depletion region to spread in two dimensions
+instead of one at higher drain voltages
+(the additional direction being laterally across the super junction).
+The nett result is that the drain voltage can now be spread across
+a much greater total distance than would otherwise be the case,
+which greatly lowers the field at the drain
+and therefore increases the breakdown voltage.
+</p>
+<p>
+Another advantage of super junction technology is that the n doped stripes
+in the super junction can be doped to higher concentrations
+because the important depletion distance is now the lateral distance
+between the super junction stripes (determined largely by the technology node)
+rather than the full depletion width of the drain.
+Higher doping yields lower on resistance, increasing current drive
+over a standard construction design with a similar breakdown voltage.
+</p>
+<p>
+The
+<b> buffered </b> super junction device takes this technology one step further
+by including an additional n-doped buffer layer under the super junction,
+which increases the breakdown voltage to even higher values
+by expanding the depletion region in the remaining third dimension
+which is down into the depth of the substrate.
+This example demonstrates the effectiveness of this approach
+as it has an electrical gate length of only 2.5um
+but its breakdown voltage is 95 volts.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

@@ -1,0 +1,101 @@
+<html>
+  <head>
+    <title>AlGaAs/GaAs HEMT Id-Vgs and Id-Vds Characterization</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>AlGaAs/GaAs HEMT Id-Vgs and Id-Vds Characterization</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Blaze</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="hemtex03_plot0.png" width="640" alt="hemtex03_plot0" />
+      <p/>
+      <img src="hemtex03_plot1.png" width="640" alt="hemtex03_plot1" />
+      <p/>
+      <img src="hemtex03_plot2.png" width="640" alt="hemtex03_plot2" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates Id-Vds and Id-Vgs calculations in a single quantum-well
+AlGaAs/GaAs HEMT. It shows:
+</p>
+<ul>
+  <li>
+ Construction of the heterojunction structure using Atlas syntax
+<br/>
+  </li>
+  <li>
+ Material and models parameter specification 
+<br/>
+  </li>
+  <li>
+ Simulation of Id/Vds and Id/Vgs characteristics 
+<br/>
+  </li>
+  <li>
+ Display of the results in TonyPlot
+  </li>
+</ul>
+<p>
+The device under consideration is the same as in the previous example
+in this section. The device geometry, mesh, regions, electrodes and
+doping distribution
+are described with the same sequence of statements as in the example above.
+The same material parameters and physical models are applied except for the
+impact ionization-generation model. Since the breakdown analysis is not the
+goal of this example and the range of voltages applied are far away from
+the breakdown region where the impact ionization effects become essential, the
+<b> impact </b> statement is excluded and no impact ionization-generation considered.
+The contact and interface statements are a repeat of those from the previous example.
+</p>
+<p>
+After the initial solution is obtained, the gate voltage is set to 0,
+the structure under zero bias is displayed using TonyPlot, and the
+Id-Vds characteristic is calculated. As in the previous example the
+drain voltage is first ramped up to 0.3V. The solutions are obtained
+using the combined Gummel-Newton algorithm specified in the
+<b> method gummel newton </b> statement. The algorithm implies that if the solution does not converge
+in the course of Gummel iterations, the program will automatically
+switch over to the Newton algorithm.
+</p>
+<p>
+Next the drain voltage is ramped up to 3V. This part of simulation is performed
+using the Newton method:
+<b> method newton </b> The results of simulation are saved in the log file and displayed using TonyPlot.
+</p>
+<p>
+Simulation of the Id-Vgs characteristic is performed next. At the first stage the
+solution for Vgs=-0.9V and Vds=0.5V is obtained. Next, the gate voltage
+is ramped up to 0.6V with the step of 0.1V.
+</p>
+<p>
+The results of simulation are again saved in a separate log file and displayed using TonyPlot.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

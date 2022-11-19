@@ -1,0 +1,53 @@
+go athena
+
+#TITLE: Orientation dependent Oxidation Example 
+
+line y loc=0  spac=0.1
+line y loc=4  spac=0.1
+
+line x loc=-1 spac=0.1
+line x loc=1  spac=0.1
+#
+#initialize with orientation of sidewalls along 100 direction
+init orient=100 rot.sub=0
+
+method gridinit.ox=0.02 grid.ox=0.02
+
+# Anisotropic silicon etch
+etch silicon right p1.x=0.0 p1.y=2.0 p2.x=0.0 p2.y=0.0
+
+# Field oxidation
+diffuse time=20 tem=1000 wet 
+#
+#
+extract name="toxx" thickness oxide mat.occno=1 x.val=0.50
+extract name="toxy" thickness oxide mat.occno=1 y.val=1.05
+
+# Save the structure
+structure outfile=anoxex09_1.str
+
+
+line y loc=0  spac=0.1
+line y loc=4  spac=0.1
+
+line x loc=-1 spac=0.1
+line x loc=1  spac=0.1
+#
+#initialize with orientation of sidewalls along 110 direction
+init orient=100 rot.sub=45 
+
+# Anisotropic silicon etch
+etch silicon right p1.x=0.0 p1.y=2.0 p2.x=0.0 p2.y=0.0
+
+# Field oxidation
+diffuse time=20 tem=1000 wet 
+
+
+extract name="toxx" thickness oxide mat.occno=1 x.val=0.50
+extract name="toxy" thickness oxide mat.occno=1 y.val=1.05
+
+# Save the structure
+structure outfile=anoxex09_2.str
+#
+#plot each of the saved structures
+tonyplot -overlay anoxex09_1.str anoxex09_2.str -set anoxex09.set

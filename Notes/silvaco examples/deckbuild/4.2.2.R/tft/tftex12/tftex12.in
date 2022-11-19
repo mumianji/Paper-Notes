@@ -1,0 +1,88 @@
+# (c) Silvaco Inc., 2018
+
+go athena
+
+line x loc=0  spac=1
+line x loc=6  spac=0.8
+line x loc=7  spac=0.05
+line x loc=12 spac=0.05
+line x loc=13 spac=0.8
+line x loc=19 spac=1
+
+line y loc=0   spac=0.5
+line y loc=0.1 spac=0.5
+
+init oxide
+
+deposit aluminum thick=0.05 div=1
+etch aluminum start x=6  y=-0.1
+etch           cont x=7  y=0
+etch 	       cont x=12 y=0
+etch           done x=13 y=-0.1
+
+electrode name=source x=1
+electrode name=drain  x=18
+
+deposit material=IGZO thick=0.02 div=15 dy=0.002
+etch    material=IGZO left  p1.x=2
+etch    material=IGZO right p1.x=17
+
+deposit oxide thick=0.1 div=10
+
+deposit titanium thick=0.1 divisions=1
+etch titanium left  p1.x=6
+etch titanium right p1.x=12.5
+etch above p1.y=-0.15
+electrode name=gate x=9.5
+structure outfile=tftex12_0.str
+tonyplot tftex12_0.str -set tftex12_0.set
+
+
+go atlas
+
+mesh inf=tftex12_0.str width=140
+
+set measurementtime=0.0001
+
+doping material=IGZO donor concentration=5e17 uniform
+
+material material=IGZO nc300=5e18 nv300=5e18 eg300=3.1 mun0=15 mup0=0.1 \
+         affinity=4.16 permittivity=10 me.tunnel=0.01
+material material=oxide permittivity=3.9
+
+models srh fldmob print trap.tunnel ^trap.coulombic mass.tunnel=0.1 bbt.std
+
+contact name=gate   n.poly
+contact name=source workfunc=4.16+0.17
+contact name=drain  workfunc=4.16+0.17
+
+defects material=IGZO tfile=tftex12.dat sigtde=1e-12 sigtdh=1e-12 sigtae=1e-12 \
+        sigtah=1e-12 wtd=0.12 ntd=1.55e20 nta=2e18 wta=0.085 wgd=0.4 egd=2.9 \
+        ngd=6.5e16 nga=4e15 ega=1 wga=0.5 siggde=1e-12 siggdh=1e-12 \
+        siggae=1e-12 siggah=1e-10 
+
+inttrap e.level=0.4 acceptor density=1.0e12 s.x degen=4 sign=1.0e-13 \
+        sigp=1.0e-14 heiman depth=0.004 hpoints=10
+
+method climit=1e-4
+output con.band val.band
+
+solve init
+solve previous
+
+log outf=tftex12_0.log
+solve vdrain=0 vstep=0.1 vfinal=1 name=drain
+solve  vstep=0.5 vfinal=5 name=drain
+
+log outf=tftex12_1.log
+solve vfinal=15  vstep=0.2 name=gate timespan=$measurementtime
+save outf=tftex12_1.str
+extract name="Vth" x.val from curve(v."gate", i."drain") where y.val=1e-5
+extract name="Ion" y.val from curve(abs(v."gate"),abs(i."drain")) where x.val=14
+log off
+
+log outf=tftex12_2.log
+solve vfinal=0 vstep=-0.2 name=gate timespan=$measurementtime
+log off
+
+tonyplot tftex12_1.log -overlay tftex12_2.log -set tftex12_1.set

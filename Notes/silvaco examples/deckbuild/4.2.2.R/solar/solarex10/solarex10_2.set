@@ -1,0 +1,78 @@
+# TPCS version: 8
+# various properties
+log label 1
+key opaque 0
+mark frequency 0
+mark overlay 0
+graph width 0 3
+graph width 1 1
+graph width 2 1
+graph width 3 1
+graph width 4 3
+graph width 5 1
+sequence size 2
+sequence width 2
+log zero 0
+sequence mark 0 0
+sequence mark 1 1
+sequence mark 2 2
+sequence mark 3 3
+sequence mark 4 4
+sequence mark 5 5
+# Functions
+function 1 "" ""
+function 2 "" ""
+function 3 "" ""
+function 4 "" ""
+select 1
+# xygraph flags
+show points on
+show lines on
+# xygraph types
+xygraph type 0 convert 0
+xygraph yaxis scale linear
+# xygraph x-axis
+xygraph xaxis "Anode Voltage" linear
+# xygraph y-axes
+xygraph yaxis none
+xygraph yaxis "Cathode Current" linear
+# xygraph group
+xygraph group "(unknown electricals)"
+# xygraph cie
+xygraph cie off
+# key positions
+key contours 1 at 3
+key contours 2 at 1
+key contours 3 at 6
+key electrical at 1
+key vectors at 6
+key overlay at 2
+key regions at 4
+key apply 
+# annotation, titles
+title main "CIGS Solar Cell under Illumination"
+title sub "With and Without Grain Boundaries"
+# annotation, footers
+footer right none
+footer left none
+# annotation, show
+show xaxis on
+show yaxis on
+show grid off
+show label xaxis on
+show label yaxis on
+# annotation, axes
+range xaxis auto
+range yaxis auto
+label xaxis "Anode Voltage (V)"
+label yaxis "Cathode Current (A)"
+# zoom
+zoom from 0.00512607, 0.908997 scale 1.59795, 8762.73
+# user labels
+label "With GB" from 0.362497, 5.04483e-10 color 0 scale 2 to 0.47698, 5.40638e-10
+label 0 at 5 5
+label "Without GB" from 0.423009, 4.32175e-10 color 0 scale 2 to 0.594733, 4.8329e-10
+label 1 at 5 5
+# overlay level names
+label overlay 0 "solarex10_0.log"
+label overlay 1 "solarex10_1.log"

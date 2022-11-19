@@ -1,0 +1,30 @@
+***W element (RLGC matrix from Quest)***
+*******************************************************************************
+* three lines (100um) with the same conductivity.                             *
+*                                                                             *
+*   1st line: in1 ---------------------------------- out1 width=1um	      *
+*                              space=1um                                      *
+*   2nd line: in2 ---------------------------------- out2 width=2um	      *
+*                              space=0.5um                                    *
+*   3th line: in3 ---------------------------------- out3 width=2um	      * 
+*                                                                             *
+*******************************************************************************
+
+W1 in1 in2 in3 0 out1 out2 out3 0 RLGCfile=questex02_welement.sp l=0.0001 RLGCcheck=0
+* W element: (Coupled Lossy Transmission Line)
+* questex02_welement.sp: RLGC matix file from QUEST
+
+vin in 0 pulse 0 1 0 10p 10p 2n 2n  
+
+r1 0 in1 5
+r2 in in2 10
+r3 0 in3 5
+
+cout1 out1 0 7e-15
+cout2 out2 0 7e-15
+cout3 out3 0 7e-15
+
+.tran 0.1n 8n 
+.save all
+
+.end

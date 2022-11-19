@@ -1,0 +1,89 @@
+<html>
+  <head>
+    <title>Capture-escape model in 5 quantum well GaN LED</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Capture-escape model in 5 quantum well GaN LED</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Blaze/Quantum/LED</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="ledex09_plot0.png" width="640" alt="ledex09_plot0" />
+      <p/>
+      <img src="ledex09_plot1.png" width="640" alt="ledex09_plot1" />
+      <p/>
+      <img src="ledex09_plot2.png" width="640" alt="ledex09_plot2" />
+      <p/>
+      <img src="ledex09_plot3.png" width="640" alt="ledex09_plot3" />
+      <p/>
+    </div>
+    <div id="text" >
+<p>
+This example demonstrates how to capture-escape model for quantum well LED. Capture-escape model allows to track dynamics
+of bound carriers in quantum wells. It also allows to account for the effect of quantum charge by including it
+self-consistently into Poisson equation.
+</p>
+<p>
+There are several model parameters that specify quantum well and capture-escape model.
+Quantum well regions are declared with
+<b> QWELL </b> parameter  in order to solve Schrodinger equation and
+<b> LED </b> parameter
+in order to output luminous power for each well into the IV log file.
+Wurtzite 3-band k.p-based  band structure is specified by
+<b>  WZ.THREE </b> parameter.
+<b>  K.P </b> parameter forces drift-diffusion equation
+to use k.p based band edges.
+Parameter
+<b> WELL.CAPT </b> launches capture-escape model and parameter
+<b>  WELL.INPLANE </b> allows 2D carriers to move along
+the quantum well.
+<b> SPONTANEOUS </b> parameter in quantum well regions will launch calculation of spontaneous emission;
+a simpler model for optical recombination is used in barriers, launched by
+<b> OPTR </b> parameter.  Everywhere in the device
+Shockley-Read-Hall (
+<b> SRH</b> ) and Auger (
+<b> AUGER</b> ) recombination is calculated.  Finally, parameter
+<b>  WELL.SELFCON </b> forces
+two effects: 1) band edge for
+bulk carriers is modified in quantum well regions to remove wells. This effectively reduces bulk carrier density in these regions,
+by allowing only bulk carrier with energies above the barrier; 2) quantum charge is added to the total carrier charge and
+included into Poisson equation.  In order to include all quantum charge, the maximum allowed number of subbands  is increased
+by setting parameter
+<b> WELL.CNBS </b> and
+<b> WELL.VNBS</b> .
+To improve convergence, predictor-corrector scheme
+is used.
+<b>  WELL.NPRED </b> parameter specifies that there are seven
+predictor iterations per one corrector iteration.
+</p>
+<p>
+To obtain the EL spectrum, the
+<b> SPECTRUM  </b> parameter on the
+<b> SAVE  </b> statement. The range of the spectrum is determined automatically.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

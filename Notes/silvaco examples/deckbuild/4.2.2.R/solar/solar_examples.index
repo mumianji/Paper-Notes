@@ -1,0 +1,1073 @@
+{section} SOLAR : Solar Cell Application Examples
+
+{subsection} solarex01.in :  Solar Cell : Solar Cell Simulation 
+
+Requires: SSuprem 4/S-Pisces/Luminous
+{newline}
+Minimum Versions: Athena 5.22.3.R, Atlas 5.26.1.R
+
+This example shows how a solar cell structure can be simulated in
+Athena and Atlas. The structure used and the results obtained are
+similar to those in the book "VLSI Technology" by Sze. The example file
+consists of:
+{newline}
+{bullet} Construction of solar cell doping and geometry in Athena
+{newline}
+{bullet} Simulation of short circuit current
+{newline}
+{bullet} Simulation of open circuit voltage
+{newline}
+{bullet} Simulation of spectral response
+{newline}
+{bullet} Simulation of illuminated and unilluminated IV characteristics
+
+The initial part of the example file uses Athena to create a typical
+solar cell structure. The device used is a diode of n+ over a p
+substrate. The junction depth is approx 0.25um. A single contact is
+placed in the center of the structure. Typical solar cells will have
+this structure repeated many times across a large area. Here 
+advantage is taken of the reflecting boundary conditions at the edges of the
+structure to simulate just one cathode contact.
+
+The process consists of an implant and diffusion followed by electrode
+formation. The electrode statement is then used to define the
+electrodes for Atlas.
+
+The first Atlas run in the file simulates the response of the device to
+illumination by the solar spectrum. The material parameters for the 
+structure are set at the start of the file . The imaginary refractive
+index (which is directly related to the absorption coefficient) of the
+metal is defined to a high value to ensure it is opaque to the
+incident radiation.
+
+The illumination by solar spectrum is defined by the 
+{bold} beam 
+statement.
+The origin and angle of incidence need to be defined. An angle of 90
+degrees means normal incidence from the top. The parameter 
+{bold} power.file
+points to an external file that contains a list of wavelengths vs.
+intensity.  The file 'solarex01.spec' contains data for the Air Mass Zero
+Solar Spectrum. The intensity in the file can be considered just as
+relative intensity between the wavelengths.
+
+It is possible to store the optical intensity of the illumination by
+specifying 
+{bold} output opt.int 
+at any time before saving a structure file.
+The photogeneration rate will appear in the solution structure file 
+by default.
+
+The short circuit current is the current when the anode and cathode are
+shorted. This is simulated by illuminating the device with zero voltage
+on all contacts. The B<n> parameter of the 
+{bold} solve 
+statement sets the
+power of the light. An 
+{bold} extract 
+statement is used to
+measure the short circuit current. An extracted target like this can be
+used for optimization or as targets in VWF.
+
+The system is reset using the command 'solve init' for the second test.
+To simulate open circuit voltage, the current through the device is
+forced to be zero. The device is illuminated and the voltage sustained
+across the device is measured. 
+
+To set the current to zero it is first necessary to set one electrode
+to have current boundary conditions. This is performed on the cathode using
+the 
+{bold} current 
+parameter of the 
+{bold} contact 
+statement. Simulating with the
+device illuminated and 
+{bold} icathode=0 
+gives the open circuit voltage. This
+voltage is measured using the 
+{bold} extract 
+statement. Note the use of the
+syntax 
+{bold} vint."cathode" 
+as opposed to 
+{bold} v."cathode"
+. This is necessary
+when you want to extract the voltage directly on the semiconductor
+contact as opposed to the applied bias.
+
+The structure stored at this point can be plotted to show contours of
+photogeneration, carrier concentration or potential. The
+photogeneration contours show the effect of the opaque cathode contact.
+It is also possible to show ray tracing of light beams in this file.
+However in our example normal illumination was used so there are no
+refractive effects to see. A similar run using non-normal incidence and
+a narrower illumination spot would show the ray tracing inside the
+device.
+
+
+The second Atlas run in this file is used to simulate the spectral
+response of the solar cell. At the start the definition of material
+parameters and opaque metal contact is repeated. For this test  
+a different light beam is required. A beam origin and
+angle of incidence are set as before. The wavelength or spectrum file is not
+defined since  the wavelength is to be varied in this test.
+
+The short circuit case is considered, so zero biases are set on both
+electrodes. The parameter 
+{bold} lambda 
+of the 
+{bold} solve 
+statement is used to set
+the wavelength of the incident light. The range of wavelength used was
+300nm to 1000nm. 
+
+Plotting the resulting 
+{bold} log 
+file it is possible to see how the cathode 
+current varies with wavelength. Setting a plot vs wavelength of source
+photocurrent (current available in the light beam), available
+photocurrent (current available for collection), and actual cathode
+current can show how the device behaves. The losses between source and
+available photocurrent are caused by reflections and transmission. This
+dominates the losses at all except the shortest wavelengths. The losses
+from available photocurrent to the actual simulated cathode current are
+due to recombination. These are very low except at the extremes.
+
+This simulation has produced all the data needed to create a plot of
+efficiency vs light frequency as used in the reference.  All that is
+needed is to transform the data in TonyPlot. 
+
+On the y-axis the quantum efficiency is needed. This is defined as 
+(current in/current out). In TonyPlot the following function is needed:
+
+{bold}Source Photocurrent/cathode current
+. 
+
+This plot shows the same functional form as the reference material.
+The peak efficiency falls off quickly at low
+energies and more slowly at higher energies.
+
+The third simulation is a plot of illuminated and un-illuminated
+I-V characteristics, allowing the designer to choose a suitable load
+line for the device under normal operating conditions.
+A number of useful parameters are also extracted from this curve
+using the extract statement.  Finally the extracted plot of external power 
+versus cathode voltage is displayed.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} solarex02.in :  Solar Cell : Amorphous Silicon with Defects
+
+Requires: S-Pisces/Luminous
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+In this example we compare the potential performance of a simple
+amorphous silicon solar cell with and without the inclusion of
+mid-bandgap defect states.  The states are modeled donor and
+acceptor states with Gaussian bump distributions and exponential
+tail distributions.  The defect distributions are specified on the
+{bold} DEFECT 
+statement.
+
+In this example, we use transfer matrix methods to model the 
+optical problem.  In this case we also sample the entire public domain
+AM1.5 spectrum.  This demonstrates the efficiency of the transfer
+matrix approach.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} solarex03.in :  Solar Cell : III-V Tandem Cell
+
+Requires: Blaze/Luminous
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates the use of non-local band-to-band
+tunneling to model the tunnel diode in a tandem cell.  Without 
+special attention to this junction the device will behave as a 
+thyristor with very non-physical parasitic transistor behavior.
+
+This example will show the specification of an auxiliary quantum
+tunneling mesh.  Such a mesh is required to model quantum tunneling.
+
+The example also shows you how to specify the usage and sampling
+of a multispectral source such as AM1.5 or AM0.
+
+The model will also show how to enable non-local band-to-band
+tunneling, 
+{bold} NLBBT
+.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} solarex04.in :  Solar Cell : Germanium Cell
+
+Requires: Blaze/Luminous
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example is a simple demonstration of the application of
+the transfer matrix method to a simple germanium solar cell.
+
+The cell is a simple P-N germanium photo-diode capped with a 
+InGaP window layer.  The simulation enables transfer matrix
+analysis using the 
+{bold} TR.MAT 
+parameter on the 
+{bold} BEAM 
+statement.
+
+The example uses the DeckBuild
+{bold} LOOP 
+syntax to loop over wavelengths from 0.6 to 0.7 microns.
+
+This example is illustrative of some of the problems with interpretation
+of results when using the transfer matrix method on optically thick
+devices.
+
+If you look at the plot of the spectral response of the device plotted
+at the end of the simulation, you will see several peaks and valleys
+in the response.  This is a real effect of interference over the whole
+thickness of the device.  The thicker the device the more of these 
+you will see.  If you also look at the structure cross-section you
+will see the intensity also includes numerous peaks and valleys.  Here
+however they appear as random noise.  In fact this is an effect of 
+undersampling.  The actual result is continuous but the sampling
+is aliasing against the peaks and valleys to give the apparent noise.
+In other words the spatial domain is under-sampled.  Such noisy results
+in either the spectral response or the spatial cut plane in very thick
+devices are usually due to undersampling.
+
+To get rid of this problem you can add the 
+{bold} SUBSTRATE 
+parameter to the
+{bold} BEAM 
+statement.  This will make the bottom layer "appear" as infinite
+to the transfer matrix algorithm.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} solarex05.in :  Solar Cell : CIGS Cell 
+
+Requires: S-Pisces/Luminous
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates the use of the transfer matrix method, 
+{bold} TMM
+, with diffusive interfaces to model a textured CIGS solar cell.
+This approach is equally applicable to other types of textured
+thin film cells such as amorphous silicon cells.
+
+The keys to this simulation are the use of the transfer matrix 
+method to account for the coherent interference in the thin films
+and the use of diffusive interfaces to account for the effects of
+light trapping in the textured surfaces.
+
+This example also shows the importance and methodology of including 
+conducting layers in the simulation using the transfer matrix method.
+These models are enabled by the 
+{bold} TR.MAT 
+and
+{bold} DIFFUSE 
+parameters of the
+{bold} BEAM 
+statement.
+
+Finally, this is a good example of the specification of diffusive
+interfaces using haze function parameters and angular distribution
+functions 
+{bold} ADFs
+on the 
+{bold} INTERFACE
+statements.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} solarex06.in :  Solar Cell : Textured Cell with FDTD 
+
+Requires: Blaze/Luminous
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates the use of finite difference time domain 
+{bold} FDTD
+, for analysis of solar cells.  In particular FDTD is useful in analysis
+of devices where coherence effects are critical (where device dimensions
+are on the order of the wavelength of light) and that are not one dimensional
+and therefore do not allow simple transfer matrix analysis.
+
+In this example we create a device with a randomly textured surface.  We
+then illuminate the device using both ray tracing and FDTD analysis.  Finally,
+we compare the resultant illuminated characteristics.
+
+It is most important to note the differences in the two 
+{bold} BEAM 
+statements.  You should also notice the introduction of the 
+{bold} PML 
+statements for defining FDTD boundary conditions.
+
+It is also important to notice that the FDTD analysis introduces an
+entire new analysis mesh that is usually much geometrically finer
+than the device analysis mesh.  This mesh can be examined in TonyPlot
+using the 
+{bold} TD.FILE 
+parameter of the 
+{bold} BEAM 
+statement.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} solarex07.in :  Solar Cell : Organic Solar Cell
+
+Requires: Blaze/Organic Display/Organic Solar/Luminous
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates the use of singlet exciton dissociation in
+the modeling of organic/polymer solar cell devices.  This model may
+also be used to model organic/polymer imaging sensors.
+
+The modeling of organic solar cells through exciton dissociation
+is based on the bulk heterojunction (BHJ) concept.  In this model
+we do not consider the details of the location of the heterointerface
+as it is considered as a random interpenetrating mixture of materials.
+
+Instead we assume the material is electrically uniform and that the
+mean distance from anywhere to the heterointerface is characterized
+in the dissociation model by the 
+{bold} A.SINGLET 
+parameter of the 
+{bold} MATERIAL 
+statement.
+
+There are three keys for simulation of exciton dissociation.  They
+are the inclusion of the singlet exciton continuity equation, the
+inclusion of Langevin recombination and the inclusion of the singlet
+dissociation model.  These three models are enabled on the 
+{bold} MODEL 
+statement by the parameters 
+{bold} SINGLET
+, 
+{bold} LANGEVIN 
+and 
+{bold} S.DISSOC
+.
+
+Another consideration unique to organic photodetection is characterized
+by the 
+{bold} QE.EXCITON 
+parameter of the 
+{bold} MATERIAL 
+statement.  This
+parameter characterizes the number of singlet excitons generated for each
+photon that is absorbed.  Absorbed photons not generating singlets 
+generate electron-hole pairs.
+
+Finally, you should notice that the photogeneration rate is specified
+in the C-interpreter function 
+{bold} solarex07.lib
+.  This was done as
+a simple means to introduce a uniform photogeneration rate in the material.
+This is sometimes necessary if for example we do not know the details
+of the extinction coefficient versus wavelength for the materials involved.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} solarex08.in :  Solar Cell : EQE of Amorphous Silicon Solar Cell
+
+Requires: S-Pisces/Luminous
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates the use of the transfer matrix method, 
+{bold} TMM
+, with diffusive interfaces to model a textured a-Si solar cell.
+This approach is equally applicable to other types of textured
+thin film cells such as CIGS cells.
+
+The keys to this simulation are the use of the transfer matrix 
+method to account for the coherent interference in the thin films
+and the use of diffusive interfaces to account for the effects of
+light trapping in the textured surfaces.
+
+This example also shows the importance and methodology of including 
+conducting layers in the simulation using the transfer matrix method.
+These models are enabled by the 
+{bold} TR.MAT 
+and
+{bold} DIFFUSE 
+parameters of the
+{bold} BEAM 
+statement.
+
+Finally, this is a good example of the specification of diffusive
+interfaces using haze function parameters and angular distribution
+functions 
+{bold} ADFs 
+on the 
+{bold} INTERFACE 
+statements.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} solarex09.in :  Solar Cell : Solar cell circuit simulation 
+
+Requires: S-Pisces/Luminous/MixedMode
+{newline}
+Minimum Versions: Athena 5.22.3.R, Atlas 5.26.1.R
+
+This example shows how a TCAD solar cell can be included in a more realistic 
+circuit with series and shunt resistance by using MixedMode.  The solar cell is 
+the same as in solarex01, but with the addition of four MixedMode simulations 
+which are variations of the same circuit.  Also, the width is set so that the 
+cell has an area of 1 cm^2.  All four circuits have the same topology for 
+easily overlaying the output log files.  The fill factor and efficiency are 
+calculated for each case.
+
+Circuit 0 is the solar cell by itself - the shunt resistance Rsh is set to 1e6 
+ohms and the series resistance Rs is set to 1e-6 ohms.
+
+Circuit 1 uses a shunt resistance of 100 ohms - Rs is still set to 1e-6.
+
+Circuit 2 uses a series resistance of 5 ohms - Rsh is set to 1e6.
+
+Circuit 3 uses Rs=5 and Rsh=100.
+
+The resulting log files are overlaid and the result is very much like Figure 12 
+on page 806 of Sze's "Physics of Semiconductor Devices" 2nd edition.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} solarex10.in :  Solar Cell : Grain Boundary CIGS Solar cell simulation 
+
+Requires: S-Pisces/Luminous/tft
+{newline}
+Minimum Versions: Athena 5.22.3.R, Atlas 5.26.1.R
+
+This example shows the modelization of Grain Boundary in a CIGS
+solar cell.
+The solar cell consists of window, buffer and absopber layers and is 
+implemented as 200nm ZnO, 50nm Cds and 3um CIGS layer respectively, 
+which is typical of CIGS solar cell. Interface recombination at the 
+Cds/CIGS interface is included. All layers have uniform band-gap 
+energy versus depth. Gaussian-distributed defect states are also 
+considered.
+
+Parameterized Grain Boundaries are introduced horizontally and 
+vertically. Meshing and regions are created automatically. Grain 
+Boundary are modeled by a thin layer located between two uniform 
+regions of CIGS material and the Grain Boundary layer differs 
+from the surrounding bulk material only by presence of additional
+defects.
+
+You can define the x direction grain spacing as well as the
+y direction grain spacing and the grain boundary thickness at the
+beginning of the input deck. This example allows the investigation
+of Grain Boundaries architecture on the performance of the solar
+cell. 
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} solarex11.in :  Solar Cell : Dielectric Back Passivated P-type C-Si 
+
+Requires: S-Pisces/Luminous
+{newline}
+Minimum Versions: Athena 5.22.3.R, Atlas 5.26.1.R
+
+This example shows the modelization of Dielectric Back Passivated 
+P-type C-Si solar cell. The solar cell was designed using a local 
+back contact. This specific geometry requires 2D simulation. The
+simulation domain represent the smallest unit cell but can be
+extended periodically to represent the full structure. 
+
+A thin heavely B-doped P+ Si layer was introduced underneath the 
+local contact to create an ohmic back contact via tunneling. The 
+{bold} UST 
+model was used to model tunneling.
+
+Variation of the B-doped P+ Si layer underneath the local contact 
+was performed using 
+{bold} DBinternal 
+and impact of the solar cell Efficiency is simulated. 
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} solarex12.in :  Solar Cell : Thin film tandem solar cell
+
+Requires: SSuprem 4/BLAZE/TFT/Luminous
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates both IV and EQE simulations of a tandem
+a-Si:H/uc-Si:H solar cell based on the following reference:
+
+M.Zeman and J.Krc, "Optical and electrical modeling of thin-film 
+silicon solar cells" J. mater. res., Vol 23, No. 4, April 2008
+
+A microphah solar cell with the following structure was used in the
+simulation: ZnO:Al(500nm)/p-a-Si:H(10nm)/i-a-Si:H(200nm)/n-a-Si:H
+(15nm)/p-uc-Si:H(10nm)/i-uc-Si:H(2.2um)/p-uc-Si:H(15nm)/ZnO(100nm)/Ag.
+
+The Tauc-Lorentz dielectric function with Urbach Tail model for complex
+index of refraction was used for a-Si:H material. The model parameters
+were calibrated to fit the EQE of the top cell. For the bottom cell
+silicon index of refraction was used except that the imaginary part
+of the index of refraction was shifted in energy to take into account
+the band gap difference between silicon and uc-Si:H material. No specific
+calibration was performed here.
+
+In order to model the interlayer between the two solar cells an 
+original and simple method was used. Note that a more physical 
+approach can be used as well using the NLBBT model as illustrated 
+in solarex03.in. The method used here consists of adding an 
+electrode which exactly overlay the interlayer and attaching a 
+lumped resistance to it using the 
+{bold} contact name=com resist=1e16 
+statement. In doing this, we force the current to flow from Anode 
+to Cathode and prevent any current to flow in the added electrode.
+Physically it can be justified by the fact the interlayer is acting 
+like a resistor letting current flows without significant limitation.
+The value of the resistance can be used to adjust the amount of
+current allowing to flow through the added electrode thus controling
+the interlayer resistance.  
+
+In hydrogenated amorphous silicon (a-Si:H), the effect of dangling-bond
+states on recombination can be significant. The dangling-bond states are 
+amphoteric and located around the middle of the bandgap. In this example
+the
+{bold} amphoteric
+parameter on the
+{bold} defect
+statement was used to specify amphoteric defects.
+
+While in mechanically stacked Multi Junction cells, the subcells usually 
+have separate contacts, monolithic Multi Junction cells are epitaxilly 
+grown on one substrate, and the subcells are interconnected in series by
+tunnel diodes, leading to a standard two terminal contact. Thus the subcells
+are not accessible separately and the spectral response of a certain
+subcell has to be measured by using the effect of current limitation.
+In this example we shown how to accurately extract the spectral response
+in order to compare simulation and measurement in a reliable way.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} solarex13.in :  Solar Cell : CIGS Module simulation and optimization 
+
+Requires: SSuprem 4/S-Pisces/Luminous
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+
+The Thin-film solar cell module based on CIGS is a technology with
+great potential. Two reasons for this are low material consumption
+and relatively high efficiency. This example demonstrates CIGS solar 
+cell module simulation and optimization. 
+
+In a solar cell module several cells are connected in series. The cells 
+are the active area of the module whereas the interconnections between 
+cells are the dead area. The efficiency of the module is thus dependent 
+on the number of cells in the module. Indeed there is a tradeoff between
+maximizing absorption and minimizing resistance of the interconnection.  
+
+Solarex13.in is a complete parameterized input deck in order to be able 
+to make variation of both process and geometry to optimize the design.
+the
+{bold} loop
+statement was used to do so. In this input deck, 4 cells were used to
+create the module. Key figures of merit of the CIGS module (Voc, Jsc, 
+Efficiency ...) were extracted at the end of the simulation.
+
+Solarex13.in uses dbinternal to obtain the solar cell key figures
+of merit versus the number of cells. The advantage of using dbinternal 
+is that simulations are automatically run one after the other and the 
+data file containing the solar cell figures of merit can be plotted 
+directly in TonyPlot.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+{subsection} solarex14.in :  Solar Cell : 3D Coaxial Solar cell 
+
+Requires: Device 3D/Luminous
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+The solar cell is a coaxial silicon nanowire, approximately 380 nanometers 
+thick. The nanowire consists of three layers of silicon: a positively 
+charged core; a thin intrinsic, or neutrally charged, inner shell; and 
+a negatively charged outer shell. When a photon hits the nanowire, it 
+generates a pair of charges: an electron and a hole. The charges then 
+radially move electrons outward from the center to a contact in the shell, 
+holes move inward to a contact in the core. The advantage of the circular 
+cross section is that the electrons and holes must move across a much 
+shorter distance than they would in a flat cell to reach the contacts 
+that collect them and send electricity flowing out of the device. 
+
+In Atlas3D, the 
+{bold} CYLINDRICAL
+parameter enables you to create a general cylindrical structure. The MESH 
+statement must appear as:
+{bold} MESH THREE.D CYLINDRICAL
+where the 
+{bold} THREE.D
+parameter informs the simulator to create a fully 3D mesh.
+When specifying 
+the
+{bold} CYLINDRICAL
+parameter, you must now specify the structure in terms of radius, angle, 
+and cartesian Z coordinates.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+{subsection} solarex15.in :  Solar Cell : MIS Solar cell 
+
+Requires: S-Pisces/Luminous
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+For a Metal Insulator Semiconductor (MIS) diode, the IV characteristic
+critically depends on the insulator thickness. If the insulator thickness
+is thick enough (> 50A) carrier transport through the insulator is negligible
+and the MIS diode represents a conventional MIS capacitor. In this example
+a diode with an insulator thickness of 23.5A and a metal to insulator barrier 
+height of 3.2ev is simulated. To obtain current through the insulating oxide, 
+we used the self-consistent direct quantum tunneling models for electrons and 
+holes. To activate this model in Atlas,  
+{bold} qtnlsc.ho qtnlsc.el
+are set in the 
+{bold} model 
+statement
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+{subsection} solarex16.in :  Solar Cell : High Efficiency Silicon Solar Cell 
+
+Requires: SSuprem 4/S-Pisces/Luminous
+{newline}
+Minimum Versions: Athena 5.22.3.R, Atlas 5.26.1.R
+
+This example demonstrates solar cell performance increase by introducing 
+pyramids at the top of the cell. Whether or not pyramids are used as well 
+as their height and width were parameterized in this example. 
+
+The solar cell was designed using a local back contact. This specific 
+geometry requires 2D simulation. Athena and Devedit are used to define 
+and mesh the solar cell. 
+
+A bell shape is obtained and for this specific case a pyramid length of 
+around 10um gives the higher efficiency.
+
+Simulation results show improvement of performance when pyramids are used.
+As an example simulations are made without and with pyramids with a length
+of 10um and a height of 5um. 
+Results are shown below:
+
+{bold} with pyramids
+
+JscmAcm2=40mA/cm2 
+{newline}
+Voc=0.70V 
+{newline}
+FF=84% 
+{newline}
+Eff=24% 
+{newline}
+
+{bold} without pyramids
+
+JscmAcm2=34mA/cm2
+{newline}
+Voc=0.67V
+{newline}
+FF=84%
+{newline}
+Eff=19.35%
+{newline}
+
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+{subsection} solarex17.in :  Solar Cell : EQE of III-V Tandem Cell
+
+Requires: Blaze/Luminous
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates the methodology to simulate EQE of
+a tandem cell. This example, based on solarex03, will also show
+that EQE can be simulated using a non-local band-to-band tunneling 
+model to model the tunnel diode in the tandem cell. An alternative 
+approach is also shown and consist to replace the tunnel junction 
+by an electrode with a very high resistance so that the current can
+flow from the top cell to the bottom cell without limitation. The 
+results of both approaches are very similar. 
+
+In order to get EQE of the tandem cell special technique should be 
+used. Indeed two cells are in series, thus the current is limited 
+by the one that has the lowest current. The idea is to illuminate 
+the one we do not want to characterize by applying a monochromatic 
+beam with an intensity 10 times higher compared to cell under test.
+2 beams were used in this input deck, one with a fixed monochromatic 
+wavelenght and one with a variable wavelenght to characterize the cell
+under test in the tandem cell. The current resulting from the illumination
+using the monochromatic beam is then substracted to the total current, 
+to get the current of the cell under test. EQE is obtained by 
+dividing the current of the cell under test by the source photo
+current.				
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+{subsection} solarex18.in :  Solar Cell : IBC-SHJ Optimization
+
+Requires: Blaze/Luminous
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+References:
+
+D.Munos et al. INES-CEA, "Key features of highly efficient a-Si:Hc-Si
+heterojunction solar cells" 7th Workshop on the future Direcftion of
+Photovoltaics )by JSPS 175th committee), march, 2011
+
+D. Diouf, J.-P. Kleider, and C. Longeaud, Two-Dimensional Simulations
+of interdigitated ack Contact Silicon Heterojunctions Solar Cells, 
+Chapter 15 of the book Physics and Technology of Amorphous-Crystalline 
+Silicon Heterostructure Solar Cells, Springer 2011. 
+
+M.Lu et al "Optimizationn of interdigital back contact silicon solar cells 
+by two-dimensional numerical simulation" IEEE 2009 
+
+This example demonstrates 2D simulation and optimization of a n-type
+Interdigitated Back Contact Silicon Heterojunction (IBC-SHJ) solar cell.
+Combination of amorphous silicon/crystalline silicon heterojunction and 
+interdigitated back contact are very promising for high efficiency one 
+junction solar cell. 
+
+The solar cell structure consists from top to bottom of a n-type c-Si 
+substrate, an intrinsic a-Si buffer layer and interdigitated strips of 
+p and n-type a-Si. 
+
+For a-Si layers, critical parameters like band gap, doping and defect
+distribution are defined in the input deck. 
+
+For c-Si/a-Si interfaces at the back surface a thermionic emission
+model was used. For even more realistic modeling of this interface
+we have introduced defect states at the hetero-interface by putting
+a very thin defective layer of c-Si.
+
+Fermi model, Recombination models (i.e srh, auger and surface recombination)
+Drift Diffusion model with quantum correction were used to simulate IV
+characteristic of the solar cell under front surface illumination. 
+
+A complete parametrized input deck, including geometry and mesh, was created 
+not only to optimize simulation time and accuracy but also for solar cell 
+optimization purpose. 
+
+In this example 4 different parameters were varied to optimize the 
+solar cell efficiency. These parameters are intrinsic a-Si thickness,
+n-stripe and p-strip width and gap width. 
+
+It was observed experimentally observed that an intrinsic a-Si layer increases
+Voc and Jsc but also decreases FF and leads to a "S" shape IV curve. Simulation 
+results confirm the reduction of FF and "S" shape IV curve, as well as the 
+increase of Voc when the thickness of the intrinsic a-Si layer increases,
+leading to an optimum efficiency of around 10nm for the intrinsic a-Si layer. 
+
+n-stripe, p-stripe and gap width were also optimized. Simulation results
+show that Jsc decreases when n-stripe width and gap width increases. As
+a consequence n-stripe and gap width have to be choosen as narrow as possible. 
+It is interesting to notice that Jsc increases and FF decreases when 
+p-stripe increases. The different evolution of Jsc anf FF leads to an
+optimum for the efficiency of around 1mm for p-stripe width.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+{subsection} solarex19.in :  Characterization and Generalization
+
+Requires: Blaze/Luminous
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates the characterization of the photogeneration
+rate due to a surface texturing in detail on small scale.  Subsequently
+that characterization is generalized to a large area structure
+using the
+{bold} DATASET
+statement. 
+
+In the first part of the deck we simulate 11x11 light rays intersecting
+a random pyramidal surface textured small scale device.  Using the
+{bold} CHARACTERIZE 
+statement we can extract the predicted photogeneration rate versus
+depth for any depth.
+
+In this case we characterize the device down to 400 microns.
+
+In the second part of this example we generalize the characterized
+data to a large area 2D device.  This is done with two beams one
+to represent the forward pass of light the second the reflection
+off the back of the device at 200 microns.
+
+In the last part of the deck we do the same thing in 3D.
+
+Using this approach we can look at large scale issues such as
+metalization while keeping the important effects of the textured 
+surface without excessive compute resources.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+{subsection} solarex20.in : 3D Solar Cell simulation 
+
+Requires: Victory Process, Victory Mesh, Victory Device
+{newline}
+Minimum Versions: Victory Process 7.22.3.R, Victory Mesh 1.2.4.R, Victory Device 1.12.1.R
+
+By default Victory Process and Device run on just one processor.
+To ensure better perfomance on your computer the following simulation condition
+{bold} simflags="-P all" 
+could be specidied in the 
+{bold} go 
+line starting Victory Process or Device. This means that all processors available will be used.
+If you want to use a smaller number of processors you can substitute "all" with a desired number, e.g.
+{bold} simflags="-P 4".
+
+This example compares simulation results of a 3D solar cell with and without lenses. 
+
+This example demonstrates:
+
+{bullet} 3D process simulation of the solar cell using Victory Cell.
+{newline}
+{bullet} 3D delaunay mesh generation of the 3D Solar cell structure. 
+{newline}
+{bullet} 3D device simulation of IV characteristics using Victory Device.
+{newline}
+{bullet} Display of the results in TonyPlot and TonyPlot 3D
+
+
+The 3D process simulation starts from a mask and consist of a deposition and angled
+etch of an oxide layer on top of silicon in order to define oxide lenses. The shape
+of the lenses can be adjusted as a function of mask size and angle used during the etch. 
+At the end of the process simulation a 3D structure is saved and meshed using a full 3D
+delaunay mesh. 3D Refinement of the mesh is done as a function of Net Doping. 
+
+The 3D structure is then pass to Victory Device where optical and electro-optical 
+simulations are performed. 
+
+3D Ray-tracing is used during the simulation. This is a method by which beams of 
+light are traced through a structure, taking into account reflection, refraction 
+and attenuation. The calculated light intensities and absorptions are then used 
+to calculate the photogeneration rates. Whenever a ray encounteres a region interface,
+or the incident ray encounters a device boundary, the ray is split into a reflected and 
+a transmitted beam. For complex structures (especially in 3D) this can result in a large 
+number of rays. Fortunately, ray-tracing is fast, can fully take advantage of parallel 
+processing, and only needs to be done once. The number of rays produced by this algorithm 
+is automatic and is the minimal number of rays required to fully resolve a given structure.
+
+The 
+{bold} ANGLE (or PHI) 
+parameter specifies the direction of propagation of the beam relative to the x-axis. 
+In 3D, you may also specify the angle
+{bold} THETA
+, which is the rotation about the y-axis. By default the beam will automatically be 
+oriented and sized to illuminate the entire device from the top
+(i.e. stright down).  It is extremely important to make sure that the
+origin window of the beam is outside of the structure. Otherwise, you
+get incorrect results.
+
+It is not always easy to make sure the beam is defined correctly. In the runtime output 
+of deckbuild (lower window of deckbuild), during the first 
+{bold} solve B1= 
+some information about the beam direction is given to the user: 
+
+{bold} Ray Tracing Beam 1: Origin(0.5,0.5,-1), Direction(0,0,1) 
+
+In this case it means that we have a vertical illumination from the top. 
+
+The optical and electrical simulations are done using an iterative multi-threading
+domain decomposition based solver called
+{bold} PAM.MPI
+. 
+Combined with a multi-threading ray tracing algorithm, the electro-optical simulation
+is very fast. This example takes only few minutes to run on a multi-cpu machine. 
+
+Optical simulation reveals that reflectivity (absoption) is higher (lower) without 
+lenses as expected. It explains why when doing an electro-optical simulation Jsc
+is higher with lenses. It can also be confirmed by examining the rays and photogeneration 
+rate in 
+{bold} TonyPlot3D
+.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} solarex21.in : 3D Textured Surface Solar Cell simulation
+
+Requires: Victory Mesh, Victory Process and Victory Device
+{newline}
+Minimum Versions: Victory Mesh 1.2.1.R Victory Process 7.22.0.R Victory Device 1.12.1.R
+
+This example is a simple tutorial on creating a textured surface solar cell using Victory Mesh and Victory Process.
+
+This example demonstrates:
+
+    {bullet} Victory Mesh syntax to create 3D silicon cuboid and pyramid
+    {bullet} Usage of Victory Process (Cell Mode) to diffuse dopants
+    {bullet} 3D Delaunay adapted mesh generation of the 3D Solar cell structure
+    {bullet} 3D device simulation of IV characteristics using Victory Device
+    {bullet} Display the results in TonyPlot
+
+The principle aim of this example is to demonstrate the Victory Mesh syntax to create 3D shapes quickly. This solar cell structure shows a pyramid with facets at an angle of 54.7 degrees to the surface of silicon to simulate a KOH etch in <100> silicon.
+
+The main feature of this solar cells is that the incoming light is captured in the textured surface through a series of refractions and internal reflections. This improve the overall cell absorption.
+
+Significant number of generated carriers reside inside the pyramid structures. This is not accounted for through the usage of lensing alone.
+
+The input deck has the following structure:
+
+    {number} The deck begins with the creation of a silicon cuboid
+    {number} This is followed by the creation of a quarter pyramid
+    {number} The pyramid is inverted to align the apex with the cuboid negative z axis direction
+    {number} The pyramid boundary planes are sliced into the cuboid structure, separating regions
+    {number} Tag command is used to convert the space above the pyramid to gas (ready to import the structure into Victory Process)
+    {number} After moving to Victory Process (Cell Mode) perform dopant (Boron) diffusion
+    {number} Back to Victory Mesh to copy the structure and translate it by 10nm and erase the gas region (exposes the silicon interface planes as boundary planes)
+    {number} Tag the top area (gas) of the original pyramid to convert to oxide
+    {number} Slice the new translated structure interface planes into the original structure (oxide region), separating regions
+    {number} Tag the top of the final structure and convert remaining oxide back to gas
+    {number} Mirror the structure in x and y to obtain a full pyramid
+    {number} Create an aluminium contact region
+    {number} Perform a Delaunay remesh
+    {number} Mirror again in x and y to obtain a cell with four pyramids
+
+The 3D structure is then passed to Victory Device where coupled optoelectronic simulations are performed.
+
+3D Ray-tracing is used during the simulation. This is a method by which beams of light are traced through a structure, taking into account reflection, refraction and attenuation. The calculated light intensities and absorptions are then used to calculate the photogeneration rates. Whenever a ray encounters a region interface, or the incident ray encounters a device boundary, the ray is split into a reflected and a transmitted beam. For complex structures (especially in 3D) this can result in a large number of rays. Fortunately, ray-tracing is fast, can fully take advantage of parallel processing, and only needs to be done once. The number of rays produced by this algorithm is automatic and is the minimal number of rays required to fully resolve a given structure.
+
+By default the beam will automatically be oriented and sized to illuminate the entire device from the top (i.e. straight down). It is extremely important to make sure that the origin window of the beam is outside of the structure. Otherwise, you get incorrect results.
+
+In order to obtain a realistic sample a larger area, the parameter periodic on the beam statement has been used. This generates a periodic optical ray tracing patterns.  
+
+At the beginning of the raytracing calculation the runtime output of DeckBuild produces the following:
+
+Ray Tracing Beam 1: Origin(0.5,0.5,-1), Direction(0,0,1)
+
+which indicates a vertical illumination from above the solar cell.
+
+The optical and electrical simulations are done using an iterative multi-threading domain decomposition based solver called PAM.MPI . Combined with a multi-threading ray tracing algorithm.
+
+Two optical analysis are performed. The first is the spectral response of the structure between 0.3 and 1 micron wavelengths in 0.02 micron steps. The second part performs the IV response of the cell for a monochromatic light at 0.55 micron. This helps expedite the calculations. Full solar spectra AM1.5 and AM0 are supported and can be used here. However, these will increase the computational overhead.
+
+To load and run this example, select the examples option from the File drop down menu of DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the green arrow (Run/continue) button in DeckBuild to execute the example.
+

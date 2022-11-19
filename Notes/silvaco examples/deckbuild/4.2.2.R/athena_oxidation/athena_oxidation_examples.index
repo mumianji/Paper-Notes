@@ -1,0 +1,414 @@
+{section} Athena_OXIDATION : Oxidation Process Simulation
+
+
+{subsection} anoxex01.in : Evolution of a Bird's Beak in Recessed SILO 
+
+Requires: SSuprem 4
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This example demonstrates the bird's beak profile evolution for a
+Recessed SILO process. A nitride mask is deposited and patterned. A
+recess into the silicon is then performed using a sequence of etch
+statements.
+
+SSuprem 4's ability to dump a structure after a specified number of
+time steps and 
+{bold} TonyPlot's 
+movie function are used to show the formation of the
+growing birds beak.  This is accomplished by specifying
+{bold} DUMP 
+and 
+{bold} DUMP.PREFIX 
+parameters in the 
+{bold} DIFFUSE 
+statement.
+
+To watch the movie, first select "Select all plots" from the "View"
+popup, and then select "Movie.." from the "Tools" popup. Evolution of the
+vertical oxidation velocities is also shown in the movie. This was achieved
+by saving a set file with the Y velocity contours. This file is called anoxex02.set.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+{subsection} anoxex02.in : Mixed Ambient Oxidation 
+
+Requires: SSuprem 4
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This example demonstrates 
+SSuprem 4's ability to perform oxidation in
+mixed gas ambients.  The gas flows can be specified in relative units
+for each flow of oxygen, water, hydrogen, and nitrogen by the parameters
+{bold} F.O2, F.H2O, F.H2, 
+and 
+{bold} F.N2 
+on the 
+{bold} DIFFUSE 
+statement.
+
+For this example, the oxidation step is performed several times using
+SSuprem 4's 
+internal looping capability to specify  a different gas mixture
+each time the loop is executed.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+{subsection} anoxex03.in : Doping Dependent Oxidation Rate
+
+Requires: SSuprem 4
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This example shows the effect of dopant in silicon on oxidation rate.
+High levels of phosphorus (>1e20) accelerate the oxidation rate on the substrate. 
+
+No special model commands are required to activate dopant dependent
+oxidation. The parameter
+{bold} grid.ox 
+controls the gridding in the grown oxide. 
+
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+{subsection} anoxex04.in : Polysilicon Oxidation 
+
+Requires: SSuprem 4
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This example demonstrates the simultaneous oxidation of polysilicon and
+silicon.  This example also shows the lifting of polysilicon as a small
+bird's beak is formed.
+
+The example begins by forming a structure that is a sandwich of
+polysilicon, oxide, and silicon with a recessed area in the exposed
+silicon. Prior to oxidization, the coefficients for polysilicon
+oxidation are modified using the 
+{bold} oxide 
+statement.
+
+The structure is then oxidized to show the polysilicon oxidation
+model. The dump parameter of the diffuse statement causes 
+{bold} SSuprem 4 
+to save a structure file after each time step. The dump.pre parameter 
+specifies that the name of these structure files will be of the
+form anoxex09mxxx.xxx.str where xxx.xxx is the current total time
+of the diffusion step. This allows the making of a movie using the MOVIE
+capability of
+{bold} TonyPlot
+.    
+
+The second 
+{bold} TonyPlot 
+statement loads intermediate files for a movie.
+To watch the movie, first select "Select all plots" from the "View"
+popup and then select "Movie.." from the "Tools" popup.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} anoxex05.in : Poly Buffered LOCOS (PBL) 
+
+Requires: SSuprem 4
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This example demonstrates the use of 
+SSuprem 4 in modeling a Poly Buffer
+Locos (PBL) isolation structure.
+
+The structure is formed by depositing layers to create a sandwich of
+silicon, oxide, polysilicon, and nitride.  The nitride is patterned to
+expose the area that will be oxidized.  At this point, 
+{bold} TonyPlot 
+is invoked to display the material structure prior to oxidation.
+
+Next, the structure is oxidized in wet O2 for a time of 120 minutes at a
+temperature of 1000 degrees Celsius.
+
+The oxidation completely consumes the polysilicon in the exposed
+portion of the simulation and lifts the remaining polysilicon and
+nitride.
+
+The final structure is plotted in 
+{bold} TonyPlot
+.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} anoxex06.in : Stress Dependent Oxidation 
+
+Requires: SSuprem 4
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This example demonstrates the use of 
+SSuprem 4 stress dependent
+Visco-Elastic Oxidation model. Visco-Elastic, Stress Dependent Models
+take longer to run than the default  (
+{bold}COMPRESS
+) oxidation model
+and therefore should only be used when specifically looking at oxides
+grown at a temperature of greater than 965C (viscous flow temperature), and
+when the oxide profile is critical. Oxidations in this example are
+performed with and without the stress dependence. The results of
+oxidation using the two models are plotted together using 
+{bold} Tonyplot 
+to compare
+the structures predicted by the two models.
+
+To enable the stress dependent viscous model the syntax required is:
+{newline}
+{bold} method viscous
+{newline}
+{bold} oxide stress.dep=t
+{newline}
+
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+{subsection} anoxex07.in : Effect of Young's Modulus on Bird's Beak 
+
+Requires: SSuprem 4
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This example illustrates a method for tuning the shape of bird's beak
+by varying elastic characteristics. This example also demonstrates
+how user defined materials can be created and used in Athena.
+
+The example creates a comparison between the default coefficients for
+nitride and a user defined material that is similar to nitride but with
+modified elastic constants.
+
+The simulation begins with the initial mesh definition in silicon.
+
+Following the 
+{bold} INITIALIZE 
+statement, a 
+{bold} MATERIAL 
+statement redefines elastic constants for the new material
+{bold} nitride1
+. The elastic constant 
+{bold} s11.elast
+is a reverse value of Young's modulus for non-crystalline materials. This means that the aritficial material 
+{bold} nitride1 
+is much stiffer than default nitride. 
+
+The new material can now be deposited and patterned just like any other
+default material in
+{bold} Athena
+.
+A deposition and an etch of 
+{bold} nitride1 
+is performed.
+
+Following the patterning of the new material, nitride is deposited and
+patterned, so that the structure has the right side with a nitride
+barrier to oxidation and the left side with a barrier made of the user
+defined stiff material 
+{bold} nitride1 
+.
+
+The structure is then oxidized and the final structure is plotted.  The
+final structure shows that
+{bold} nitride1 
+is flexed much less than default nitride which results in a different shaped bird's beak on each side.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+{subsection} anoxex08.in : Effect of Nitride Viscosity on Bird's Beak
+
+Requires: SSuprem 4
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This example is a comparison of the effect on oxide growth when varying
+the nitride thickness. This effect requires the use of 
+{bold} method viscous 
+
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} anoxex09.in : Trench Sidewall Oxidation with Orientation Dependence 
+
+Requires: SSuprem 4
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This example shows that the orientation of the wafer will affect the growth
+rate of an oxide on trench sidewalls. The orientation od the substrate
+is specified by
+{bold} init orientation=xyz
+. xyz willbe 100, 110 or 111. The rotation of the substrate is
+specified by the
+parameter
+{bold} rot.sub
+
+
+The method statement parameters
+{bold} GRID.OX 
+and 
+{bold} GRIDINIT.OX 
+are used to improve the grid within the grown oxide layer. The thicknesses of
+sidewall oxide are extracted for all cases. 
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} anoxex10.in : Void Formation During Trench Oxidation 
+
+Requires: SSuprem 4
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This example demonstrates SSuprem 4's ability to oxidize when colliding
+oxide fronts cause a void. A narrow trench is oxidized until the
+opposing oxidation fronts touch.  During the oxidation SSuprem 4 saves
+the structure after each time step. These saved structures as well as the
+final structure are used to monitor the moving boundary progress.
+
+To watch the movie, first select "Select all plots" from the "View"
+popup and then select "Movie.." from the "Tools" popup.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+
+
+
+{subsection} anoxex11.in : SWAMI Isolation Using Stress Dependent Oxidation 
+
+Requires: SSuprem 4
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This example demonstrates the use of the stress dependent oxidation
+model in 
+SSuprem 4 
+to simulate an isolation oxidation using a SWAMI
+process.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+
+
+{subsection} anoxex12.in : Controlling Encroachment using Oxidation Threshold
+
+Requires: SSuprem 4
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This example specifies that oxidation only occurs when oxidant concentration 
+is above a certain value.
+
+Two oxidation threshold values are used in this example along with a
+run using the default model. The threshold model is enabled by:
+{bold} method ox.thresh
+
+Parameters for the model are set by material and separately for wet and
+dry oxidations using the statement
+{bold} oxide  min.oxidant=<value> 
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} anoxex13.in : Stress Dependent Oxidation for Mesa Isolation Process
+
+Requires: SSuprem 4
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+
+This example demonstrates effect of the stress dependent
+Visco-Elastic Oxidation model (see also example anoxex06.in) on oxidation in a deep trench etched in the SOI (buried oxide) subsrate.  Oxidations in this example are performed with and without the stress dependence. The results of
+oxidation using the two models are plotted together using 
+{bold} TonyPlot 
+to compare
+the structures predicted by the two models.
+
+To enable the stress dependent viscous model the syntax required is:
+{newline}
+{bold} method viscous
+{newline}
+{bold} oxide stress.dep=t
+{newline}
+
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+

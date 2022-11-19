@@ -1,0 +1,92 @@
+<html>
+  <head>
+    <title>Calibration of Thin WetO2 Oxidation</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Calibration of Thin WetO2 Oxidation</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>SSuprem 4, OPTIMIZER</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R</i></td>
+      </tr>
+    </table>
+    <div id="text" >
+<br/>
+<p>
+This example performs calibration of thin oxide model parameters using
+OPTIMIZER. These parameters are quite accurately characterized for dryo2
+ambient, but virtually no information exists for wetO2 ambient. Historically,
+wet oxidation has been predominantly used for thick oxide growth. However,
+low temperature, low pressure, short time wet oxidation is becoming more
+popular. Unfortunately, to the best of our knowledge extensive experimental
+results do not exist for such oxidations. Therefore, calibration based just
+on few experimental points may need to be performed for wet thin oxidations.
+</p>
+<p>
+The default value for thin oxidation term for wetO2 is zero. This
+usually underestimates thin oxide thickness. The default values result
+in 71 A and 173 A oxide thicknesses for 30 and 90 minutes wetO2
+oxidation at 820 C and pressure of 0.2 atmospheres. Typical
+experimental values could be 100 A and 230 A.  These values
+are selected as targets for calibration procedure.  Only using
+OPTIMIZER could the parameters of thin oxidation models be found.
+</p>
+<p>
+To load and execute this example, select the
+<b> Load example </b> button. Once loaded, select
+<b> Optimizer... </b> from the
+<b> Main Control </b> menu. The
+<b> Deckbuild: Optimizer </b> screen will appear. Select
+<b> Load File ... </b> from the
+<b> File </b> menu and then load the special optimizer file
+<b> ancaex03.opt </b> from the scrolling
+<b> Optimizer Load </b> menu.
+</p>
+<p>
+Preset parameters and targets are included in this file. When you
+select
+<b> Parameters </b> from the
+<b> Mode </b> menu you will find that thinox.0 and thinox.l are chosen as parameters for optimization. The default values for dryo2 oxidation are selected as an initial
+guess.
+</p>
+<p>
+Oxide thicknesses
+<b> tox1 </b> and
+<b> tox2 </b> after 30 and 90 minutes of oxidation respectively are selected as a targets.
+</p>
+<p>
+You can modify any of these targets and/or parameters. Please refer to
+Chapter
+<b> Optimizer </b> in the VWF Interactive Tools Manual.
+</p>
+<p>
+If you want to run the preset optimization
+task, it is better to slightly improve the default stop criteria as follows:
+</p>
+<p>
+Select
+<b> Setup </b> from the
+<b> Mode </b> menu. Then decrease the maximum error down to 2, and increase the number of Iterations to 10.
+</p>
+<p>
+After this just select the
+<b> Optimize </b> button, on the OPTIMIZER menu.
+</p>
+  </div></body>
+</html>

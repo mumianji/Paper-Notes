@@ -1,0 +1,120 @@
+<html>
+  <head>
+    <title>Zener Diode Breakdown</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Zener Diode Breakdown</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>SSuprem 4/S-Pisces</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R, Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="diodeex05_plot0.png" width="640" alt="diodeex05_plot0" />
+      <p/>
+      <img src="diodeex05_plot1.png" width="640" alt="diodeex05_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates  electrical
+simulation of a Zener diode breakdown. It shows:
+</p>
+<ul>
+  <li>
+ The formation of a 2D Zener diode structure in Athena
+<br/>
+  </li>
+  <li>
+ The transfer of the structure to Atlas
+<br/>
+  </li>
+  <li>
+ Specification of models for Zener breakdown simulation
+<br/>
+  </li>
+  <li>
+ Reverse bias simulation to the breakdown voltage
+  </li>
+</ul>
+<p>
+The structure formation is performed by implanting a heavy boron dose into a
+heavily doped n-type substrate. The 2D extent of the p+ region is controlled
+by the etch coordinate of an oxide mask. A short diffusion is performed
+in Athena to drive in the p+ dopant.
+</p>
+<p>
+After the diffusion,
+<b> extract </b> statements are used to measure the
+junction depth and sheet resistance of the p+ region. After this, metal
+is added and patterned. The electrode positions are then defined using
+the
+<b> electrode </b> statements in Athena.
+</p>
+<p>
+The statement
+<b> go atlas </b> enables the automatic interface from Athena to Atlas.
+DeckBuild will switch simulators to Atlas and load in the final Athena structure
+as the initial Atlas mesh.
+</p>
+<p>
+In Atlas, the first lines of syntax define the models to be used in the
+simulation. The statement
+<b> models bip </b> defines the standard bipolar model set
+that is also recommended for diode simulation. This consists of
+concentration, temperature and electric field dependent mobilities,
+concentration dependent SRH and Auger recombination, and band gap
+narrowing. The parameter
+<b> bbt.std </b> enables the Lombardi band-to-band
+tunneling model. In heavily doped diodes this mechanism is the
+principal leakage current mechanism at voltages less than the avalanche
+breakdown.  The
+<b> impact </b> statement enables the impact ionization model of
+Selberherr.
+</p>
+<p>
+Newton&apos;s method is chosen on the method statement. The parameter
+<b> climit=1e-4 </b> is highly recommended for all reverse bias simulations
+in Atlas. It enables higher accuracy in the calculation of carrier
+concentration in the depletion regions.
+</p>
+<p>
+The anode voltage is then ramped up to -10V in 0.25V steps. The
+breakdown voltage of this device is around -5.5V. Atlas will converge
+up to this voltage and then stop as no solutions beyond this voltage
+are possible. By plotting the output log file in TonyPlot, the breakdown
+can clearly be seen. The pre-breakdown current is dominated by
+band-to-band tunneling. An equivalent simulation excluding the &apos;bbt.std&apos;
+parameter might be run to demonstrate this.
+</p>
+<p>
+The final statements use the
+<b> extract </b> feature of DeckBuild to measure
+the maximum anode voltage at which convergence was obtained and the
+anode voltage for a particular value of anode current.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

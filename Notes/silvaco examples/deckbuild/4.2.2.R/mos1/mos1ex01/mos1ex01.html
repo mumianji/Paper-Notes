@@ -1,0 +1,176 @@
+<html>
+  <head>
+    <title>Id/Vgs and Threshold Voltage Extraction</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Id/Vgs and Threshold Voltage Extraction</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>SSuprem 4/S-Pisces</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R, Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="mos1ex01_plot0.png" width="640" alt="mos1ex01_plot0" />
+      <p/>
+      <img src="mos1ex01_plot1.png" width="640" alt="mos1ex01_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+Basic MOS Athena to Atlas interface example simulating an Id/Vgs curve
+and extracting threshold voltage and other SPICE parameters.  No
+advanced features are used in this example so as to demonstrate simple
+functionality. This example demonstrates:
+</p>
+<ul>
+  <li>
+ Process simulation of a MOS transistor in Athena
+<br/>
+  </li>
+  <li>
+ Process parameter extraction (eg. oxide thicknesses)
+<br/>
+  </li>
+  <li>
+ Autointerface between Athena and Atlas
+<br/>
+  </li>
+  <li>
+ Aimple Id/Vgs curve generation with Vds=0.1V
+<br/>
+  </li>
+  <li>
+ Parameter extraction for Vt, linear gain (beta) and mobility
+rolloff (theta)
+  </li>
+</ul>
+<p>
+The process simulation in SSuprem 4 follows a standard LDD MOS process.
+The process steps are simplified and default models are used to give a
+fast runtime. The polysilicon gate is formed by a simple geometrical
+etch. Before this point the simulation is essentially one dimensional
+and hence is run in Athena&apos;s 1D mode. After the poly etch, the structure
+converts to 2D.
+</p>
+<p>
+The grid used in this example is defined quite tightly. However the statement
+<b> init ...  spac.mult=3 </b> relaxes the mesh in X and Y directions by a factor of three. A more
+typical mesh for MOS simulation can be obtained by setting
+<b> spac.mult=1</b> .
+</p>
+<p>
+Using DeckBuild&apos;s auto-interface, the process simulation structure will
+be passed into Atlas automatically. This auto-interface therefore
+allows global optimization from process simulation to device simulation
+to SPICE model parameter extraction.
+</p>
+<p>
+The
+<b> extract </b> statement at the end of the file is used
+to calculate the oxide thickness at that point. The value returned here
+may be used as an optimization target for calibration. Refer to the
+<b> Interactive Tools of the Virtual Wafer Fab </b> manual for instruction in the use of the
+<b> Optimizer</b> . This value will be appended to a file in the current working directory called
+<b> results.final. </b> When using the VWF automation tools,
+<b> extract </b> values are logged to the worksheet for RSM modeling.  Significant use of
+<b> extract </b> statements is strongly recommended, especially at points where in-line
+Fab measurements are taken.
+</p>
+<p>
+Electrodes are defined at the end of the process simulation. Metal is
+deposited and patterned. Then
+<b> electrode </b> statements are used to define the metal regions plus the polysilicon as
+electrodes for use in Atlas.
+</p>
+<p>
+In Atlas the first task is to define the models and material parameters
+for the simulation. The
+<b> contact </b> statement is used to define the
+workfunction of the gate electrodes, while the
+<b> interface </b> statement defines the fixed charge at the silicon/oxide interface.
+For simple MOS simulation the parameters CVT and SRH define the
+recommended models.
+<b> CVT </b> sets a
+general purpose mobility model including concentration, temperature,
+parallel field and transverse field dependence. For more complete MOS
+simulations of short channel lengths, energy balance simulation might
+be used.
+</p>
+<p>
+The statement
+<b> solve init </b> is used to solve the thermal equilibrium case. After this the voltages
+can be ramped. It is recommended to use small steps at first when
+ramping voltages. Once two non-zero biases have been obtained, the
+program uses a projection as initial guesses to further bias points.
+The projection method allows larger voltage steps to be taken. The syntax
+<b> method trap </b> enables Atlas to cut
+user-defined voltage steps in half if convergence is not obtained.
+This is a highly recommended option and is turned on by default.
+</p>
+<p>
+The unique feature of this example is the IV data simulated and the
+extraction syntax used. The model, interface and  contact
+statements in
+Atlas are also as in the previous example.
+</p>
+<p>
+The sequence of
+<b> solve  </b> statements is set to ramp the gate bias with the
+drain voltage at 0.1V. Solutions are obtained at 0.25V intervals up to
+3.0V. All terminal characteristics are saved to the file mos1ex02_1.log
+as specified in the
+<b> log </b> statement.
+</p>
+<p>
+The
+<b> extract </b> statements at the end of the file are used to measure the threshold
+voltage and other SPICE parameters. The results from the extract
+statements are printed in the run-time output, saved to a file called
+results.final and optionally used in the optimizer or VWF automation
+tools. The syntax used in these statements is freely composed of
+operators such as maximum value (max) and simulation results such as
+drain current (i.&quot;drain&quot;). The
+<b> name </b> parameter specifies only a user-defined label. The routines are not
+hard-coded to these names. Thus the first extraction statement reads:
+extract the value called nvt found by taking the x intercept of the
+maximum slope to the curve of drain voltage vs. drain current and
+subtracting half the drain voltage. This is just one possible definition of
+threshold voltage. Current search methods are also possible and are
+described under the DIBL example later in this section. The VWF
+interactive tools manual has details of the extract syntax.
+</p>
+<p>
+The second extract statement measures the gain (or Beta). This is
+defined as the value of the steepest slope to the Id/Vgs curve divided
+by the drain voltage. The final extraction is for the SPICE level 3
+mobility roll-off parameter (or Theta). This syntax shows the use of
+the syntax:
+<b> $&quot;nvt&quot; </b> and
+<b> $&quot;nbeta&quot;</b> . This tells DeckBuild to substitute the previously extracted values of
+threshold and beta into this places in the equation.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

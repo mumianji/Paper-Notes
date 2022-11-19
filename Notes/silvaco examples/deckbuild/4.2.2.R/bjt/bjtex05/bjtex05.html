@@ -1,0 +1,95 @@
+<html>
+  <head>
+    <title>NPN - BVCEO Breakdown Voltage</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>NPN - BVCEO Breakdown Voltage</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>S-Pisces</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="bjtex05_plot0.png" width="640" alt="bjtex05_plot0" />
+      <p/>
+      <img src="bjtex05_plot1.png" width="640" alt="bjtex05_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example calculates the BVCEO breakdown voltage in an NPN
+transistor. It shows:
+</p>
+<ul>
+  <li>
+ Formation of an NPN BJT using Atlas syntax
+<br/>
+  </li>
+  <li>
+ Selection of the correct models and methods for breakdown simulation
+<br/>
+  </li>
+  <li>
+ Setting of current boundary conditions to force an open base contact 
+<br/>
+  </li>
+  <li>
+ Ic extraction versus Vce with an open base contact 
+  </li>
+</ul>
+<p>
+In the first part of the input file the device is described, including
+mesh, electrodes location, and doping distribution. The device geometry
+and doping are as used in the previous example.
+</p>
+<b>The  impact statement is used to specify the Selberherr impact</b> <p>
+ionization model required for breakdown analysis.
+</p>
+<p>
+For increased stability which is typically needed for such kind of simulation
+with zero base current, the solution with small value of base current
+Ib=3.e-15 A/um is obtained at the first stage of simulation. Then the
+collector voltage is ramped until the collector current reaches the
+value 5.e-11 A/um.
+</p>
+<p>
+To set the open base contact, it is necessary to define zero current
+passing through the base electrode. This is done by setting current
+boundary conditions on the base using
+<b> contact name=base current</b> . Then throughout the breakdown simulation Ib is held at zero. This is
+the most effective approach for BVCEO simulation.
+</p>
+<p>
+The ramp of collector voltage is set on the final
+<b> solve </b> statement. The ramp continues up to 10V. However a compliance limit on the collector current is set using the parameters
+<b> compl=&lt;num&gt; cname=collector</b> . The &lt;num&gt; specifies the value of the compliance limit in A/um, whilst
+the cname indicates which contact the complaince current should be
+measured on. Once the simulated collector current exceeds the
+complaince value the simulation steps on to the next line of syntax.
+Here that line is to plot the results in TonyPlot.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

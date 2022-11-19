@@ -1,0 +1,56 @@
+# TPCS version: 6
+# key positions
+key contours 1 at 3
+key contours 2 at 1
+key contours 3 at 6
+key electrical at 0
+key vectors at 6
+key overlay at user 0.514599, 0.810384
+key regions at 4
+# various properties
+log label 0
+select 1
+# xygraph flags
+show points on
+show lines on
+# xygraph types
+xygraph type 0 convert 0
+xygraph yaxis scale linear
+# xygraph x-axis
+xygraph xaxis "drain bias" linear
+# xygraph y-axes
+xygraph yaxis none
+xygraph yaxis "drain current" linear
+# xygraph group
+xygraph group "None"
+# annotation, titles
+title main "ATLAS Simulation of DMOS Device"
+title sub " "
+# annotation, footers
+footer right none
+footer left none
+# annotation, show
+show xaxis on
+show yaxis on
+show grid off
+show label xaxis on
+show label yaxis on
+# annotation, axes
+range xaxis auto
+range yaxis auto
+label xaxis "Drain Voltage (V)"
+label yaxis "Drain Current (A/um)"
+# zoom
+zoom from 0, 0 scale 1, 1
+# user labels
+label "anisotropic mobility" from 37.1318, 0.000119724 color 0 scale 1 to 33.6595, 0.000144039
+label 0 at 2 2
+label "isotropic mobility <1000>" from 37.0032, 6.50153e-05 color 0 scale 1 to 31.859, 4.39734e-05
+label 1 at 0 0
+label "isotropic mobility <1100>" from 20.6704, 0.000200618 color 0 scale 1 to 22.9853, 0.000187993
+label 2 at 3 3
+# overlay level names
+label overlay 0 "powerex10_1.log"
+label overlay 1 "powerex10_2.log"
+label overlay 2 "powerex10_3.log"
+draw all

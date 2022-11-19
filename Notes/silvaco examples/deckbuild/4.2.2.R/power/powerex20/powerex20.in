@@ -1,0 +1,92 @@
+# (c) Silvaco Inc., 2018
+
+go victoryprocess
+
+Init material=silicon depth=3 gasHeight=10 orientation=100 sub.rot=45 \
+     resolution="0.075 0.075 0.075" meshDepth=2 from="-0.8,-0.8" to="1.35,1.35" c.phosphorus=1e+19
+
+LINE x Loc=-0.8 SPACING=0.05
+LINE x Loc=1.35 SPACING=0.05
+
+LINE y Loc=-0.8 SPACING=0.05
+LINE y Loc=1.35 SPACING=0.05
+
+line z loc=-10 spac=0.1
+line z loc=-8.8 spac=0.1
+line z loc=-8 spac=0.025  
+line z loc=-6.8 spac=0.1  
+line z loc=0 spac=0.1  
+line z loc=3 spac=0.50  
+
+#n-type Drift layer
+Deposit material=silicon Thickness=8 c.phosphorus=8e+15 conformal
+
+#p-type Base layer
+Deposit material=silicon Thickness=0.8 c.BORON=1e17 conformal
+
+SPECIFYMASKPOLY MASK=Rec_1 P1="-10, 0.55" P2="0, 0.55" P3="0, 0" P4="0.55,0" P5="0.55, -10" P6="-10, -10"
+SPECIFYMASKPOLY MASK=Circ_1 CIRCLE NPOINTS=100 CENTER="0,0" RADIUS=0.55 FROMANGLE=0 TOANGLE=90
+SPECIFYMASKPOLY newmask=J1 mask1=Rec_1 OR mask2=Circ_1
+
+etch Material=silicon thickness=1.8 mask=J1 reverse max
+etch material=silicon thick=5.5 mask=J1 reverse max deltacd=-0.06
+
+Deposit material=Oxide Thickness=0.02 mask=J1 reverse deltacd=-0.06 conformal
+Deposit material=nitride Thickness=0.04 mask=J1 reverse deltacd=-0.06 conformal
+
+Diffuse Temperature=1050 wet time=33.5 
+
+strip material=nitride
+etch material=oxide above=-8.8
+
+deposit material=poly thick=0.1 max
+electrodes   name=source z=-8 x=0 y=0
+
+save name=powerex20_vp_0
+
+
+go victorymesh
+
+load in=powerex20_vp_0
+
+remesh delaunay
+
+refine max.size=0.25
+refine max.interface.size=0.05 grading="quadratic"
+refine max.junction.size=0.04 grading="quadratic"
+
+save out=powerex20_0.str
+
+
+go victorydevice 
+  
+mesh inf=powerex20_0.str verbose=3 
+  
+elec   name=substrate z.min=3 z.max=3  
+  
+models conmob fldmob auger fermi bgn consrh print   
+  
+impact selber   
+  
+method pas trap maxtraps=4 climit=1e-4 
+   
+SOLVE INIT  
+  
+log outf=powerex20_0.log
+  
+solve name=substrate vsubstrate=0 vfinal=0.1 vstep=0.01   
+solve name=substrate  vfinal=1 vstep=0.1   
+solve name=substrate  vfinal=10 vstep=1    
+solve name=substrate  vfinal=94 vstep=2
+solve name=substrate  vfinal=105 vstep=0.5 compliance=7e-12 cname=substrate  
+  
+save outf=powerex20_1.str
+ 
+extract init inf="powerex20_0.log" 
+extract name="bv" max(v."substrate") 
+
+tonyplot powerex20_0.log -set powerex20_0.set
+tonyplot3d powerex20_1.str -set powerex20_1.set
+
+quit
+

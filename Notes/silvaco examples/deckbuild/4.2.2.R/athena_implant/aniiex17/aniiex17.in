@@ -1,0 +1,70 @@
+go athena 
+
+# first case - zero tilt
+
+line x loc=0.0   spacing=0.005  
+line x loc=0.05  spacing=0.001
+line x loc=0.125 spacing=0.010
+line x loc=0.20  spacing=0.001
+line x loc=0.25  spacing=0.005
+
+line y loc=0    spacing=0.001
+line y loc=0.1  spacing=0.01
+line y loc=0.15 spacing=0.02
+
+init silicon orientation=100 c.phos=1e13
+
+deposit oxide thick=0.001 divisions=3
+deposit poly  thick=0.04  divisions=10 
+
+etch poly start x=0.0 y=-0.05
+etch cont x=0.05 y=-0.05
+etch cont x=0.05 y=-0.001
+etch done x=0.00 y=-0.001
+
+etch poly start x=0.20 y=-0.05
+etch cont x=0.25 y=-0.05
+etch cont x=0.25 y=-0.001
+etch done x=0.20 y=-0.001
+
+# BCA Monte Carlo Ion Implant
+implant sampling boron energy=2 dose=5e14 tilt=0 rot=0 bca n.ion=10000 divergence=0.1
+
+struct outfile=aniiex17_1.str remove.gas
+
+
+# second case - thirty degreee tilt
+
+line x loc=0.0   spacing=0.005  
+line x loc=0.05  spacing=0.001
+line x loc=0.125 spacing=0.010
+line x loc=0.20  spacing=0.001
+line x loc=0.25  spacing=0.005
+
+line y loc=0    spacing=0.001
+line y loc=0.1  spacing=0.01
+line y loc=0.15 spacing=0.02
+
+init silicon orientation=100 c.phos=1e13
+
+deposit oxide thick=0.001 divisions=3
+deposit poly  thick=0.04  divisions=10 
+
+etch poly start x=0.0 y=-0.05
+etch cont x=0.05 y=-0.05
+etch cont x=0.05 y=-0.001
+etch done x=0.00 y=-0.001
+
+etch poly start x=0.20 y=-0.05
+etch cont x=0.25 y=-0.05
+etch cont x=0.25 y=-0.001
+etch done x=0.20 y=-0.001
+
+# BCA Monte Carlo Ion Implant with tilt
+implant sampling boron energy=2 dose=5e14 tilt=30 rot=0 bca n.ion=10000 divergence=0.1
+
+struct outfile=aniiex17_2.str remove.gas
+
+tonyplot  aniiex17_1.str -add aniiex17_2.str  -set aniiex17.set
+
+quit

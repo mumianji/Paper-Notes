@@ -1,0 +1,24 @@
+void get_damage_values
+	(
+         /* input parameters */
+         int imp,    /* impurity index: As - 2; P - 3; Sb - 4; B - 5; etc */
+	 int mater,  /* material index: Si - 3 */ 
+	 double x,   /* x-coordinate in microns */
+	 double y,   /* y-coordinate in microns */
+	 double implanted_conc,  /* just implanted concentration 1/cm**3 */
+         double implanted_dam,  /*accumulated damage eV/cm**3), do not use without BCA */
+         /* output parameters */
+	 double *I_val,     /* Interstitial concentration */     
+	 double *V_val,     /* vacancy concentration */
+	 double *CL_val,    /* cluster concentration */
+	 double *DL_val     /* dislocation loops concentration */
+	)
+{
+  if ( mater == 3 ) 
+     {	
+ 	  if ( implanted_conc > 3.0e16)
+	      *I_val = 0.1*implanted_conc;
+  	  if (y > 0.15 && implanted_conc > 1e16 && implanted_conc < 3e18)  
+   	    *CL_val = 2.0 * implanted_conc;
+     }
+}

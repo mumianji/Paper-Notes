@@ -1,0 +1,87 @@
+<html>
+  <head>
+    <title>Front Mirror with Tuning Air Gap and DBR Rear Mirror</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Front Mirror with Tuning Air Gap and DBR Rear Mirror</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Blaze/Laser</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="laserex13_plot0.png" width="640" alt="laserex13_plot0" />
+      <p/>
+      <img src="laserex13_plot1.png" width="640" alt="laserex13_plot1" />
+      <p/>
+      <img src="laserex13_plot2.png" width="640" alt="laserex13_plot2" />
+      <p/>
+      <img src="laserex13_plot3.png" width="640" alt="laserex13_plot3" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates a more general solution to an edge emitting LASER,
+where optical intensity has variance along the direction of propagation,
+resulting from a
+<b> DBR mirror </b> at one end of the LASER and a
+<b> tuning air gap and external mirror </b> at the other end.
+</p>
+<p>
+In order to leverage syntax that already existed for vertical cavity surface
+emitting LASERs (VCSELs), this edge emitting LASER simulation is turned on it&apos;s
+side, so that the distributed Bragg reflector (DBR) is oriented in the same
+plane as for all VCSEL simulation examples.  This allows us to use the same
+simplified syntax previously described in the VCSEL examples to create the
+many layers of the DBR mirror, using just two lines in the input file.  The
+&quot;front&quot; and &quot;rear&quot; mirrors of the laser are therefore now at the &quot;bottom&quot; and
+&quot;top&quot; of the structure respectively.
+</p>
+<p>
+In order to inform the simulator that this type of LASER simulation is
+required, specify the logical parameter
+<b> HYBRID </b> on the LASER statement.
+</p>
+<p>
+The position of the mirror in the air gap that extends below what is the
+bottom of the structure in this simulation (in the Y direction), is defined by
+the parameter
+<b> FRONTMIRROR.LOC=&lt;n&gt; </b> where &lt;n&gt; is a Y location anywhere below the structure.  Defining a
+FRONTMIRROR.LOC value located inside the structure, results in this
+parameter being ignored and the simulation presumes an air gap of zero.  In
+this example the airgap FRONTMIRROE.LOC parameter is set using a variable
+called &quot;front_mirror&quot; which sets the FRONTMIRROE.LOC parameter to 100.6um,
+<b> creating an air gap of 0.6um </b> (since the bottom of the structure is located at Y=100).
+</p>
+<p>
+Diffraction losses in the air gap can also be taken account of by specifying
+the new logical parameter,
+<b> LOSS.DIFFRACTION </b> in the LASER statement, whilst another new parameter
+<b> HYBRID.SPECRES </b> specifies the energy resolution in units of eV, to search for lasing modes of
+the whole active structure.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

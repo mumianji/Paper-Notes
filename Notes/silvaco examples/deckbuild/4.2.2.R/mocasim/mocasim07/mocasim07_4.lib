@@ -1,0 +1,51 @@
+#include <math.h>
+#include <stdio.h>
+
+int
+tofimun(double Eperp, double Na, double Nd, 
+        double nconc, double Eparl, double TL, 
+        double xcomp, double ycomp, 
+        double *mun, double *dmundep, double *dmundepar, 
+        double *dmundl, double *dmundn)
+{
+  /* magnitude and sign of the electric field */
+  double EF, EF_SI;
+  /* doping */
+  double D;
+  /* temperature */
+  double T;
+  /* Resultant mobility and differentials */
+  double MU=0.0, MU_DE=0.0, MU_DT=0.0;
+
+  /* Low-field model parameters */
+  const double LOF_MU = 1.186232590025e+03;
+  const double LOF_TMU = 1.596556138313e+00;
+
+  EF = (Eparl/1.000000000000e+00);
+  EF_SI = (EF >= 0.0) ? +1.0 : -1.0;
+  if (EF_SI < 0.0) EF = -EF;
+  if (EF < 1.000000000000e-03) EF = 1.000000000000e-03;
+  D = ((fabs(Na)+fabs(Nd))/1.000000000000e+00);
+  if (D < 1.000000000000e+04) D = 1.000000000000e+04;
+  T = (TL/1.000000000000e+00);
+  if (T < 1.000000000000e-02) T = 1.000000000000e-02;
+
+  {
+    /* temporary variables */
+    double TE1, TE2, TE3;
+    TE1 = pow(T, -LOF_TMU-1.0);
+    TE2 = pow(300.0, -LOF_TMU);
+    TE3 = LOF_MU / TE2;
+    MU = TE3*TE1*T;
+    MU_DT = -LOF_TMU*TE3*TE1;
+  }
+
+  *mun = MU;
+  *dmundep = 0.0;
+  *dmundepar = MU_DE;
+  *dmundl = MU_DT;
+  *dmundn = 0.0;
+
+  return 0;
+}
+

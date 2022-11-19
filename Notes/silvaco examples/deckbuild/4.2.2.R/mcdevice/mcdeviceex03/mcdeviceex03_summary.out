@@ -1,0 +1,569 @@
+================================================================================
+
+This software includes code developed by the Department of Electrical and
+Computer Engineering at the University of Illinois at Urbana-Champaign.
+(c) Copyright 2004-2007 The Board of Trustees of the University of Illinois.
+
+================================================================================
+[ 0]---- Algorithm parameters --------------------------------------------------
+       Mode (0=bulk, 1=1D, 2=2D)           2
+   Carrier type (0=elec, 1=hole)           0
+                       Time step  1.0000000000000001e-16
+               No. of iterations        2500
+          Transient (iterations)           0
+         Restart from saved data           0
+              Random-number seed     4212345
+Initialize restart particles to maxwellian           0
+[ 1]---- Number of particles ---------------------------------------------------
+  Maximum number of MC particles       60000
+Normalize the number of particles           0
+             Total concentration                       0
+Device width for manual normalization                      -1
+[ 2]---- Material parameters ---------------------------------------------------
+         Lattice temperature (K)                     300
+             Crystal orientation                       1                       0                       0
+[ 3]---- X-X f-type phonon scattering ------------------------------------------
+          Phonon temperature (K)                     220                     550                     685
+   Deformation potential (eV/cm)                30000000               200000000               200000000
+[ 4]---- X-X g-type phonon scattering ------------------------------------------
+          Phonon temperature (K)                     140                     215                     720
+   Deformation potential (eV/cm)                50000000                80000000              1100000000
+[ 5]---- X-L phonon scattering -------------------------------------------------
+          Phonon temperature (K)                     672                     634                     480                     197
+   Deformation potential (eV/cm)               200000000               200000000               200000000               200000000
+[ 6]---- Acoustic phonon scattering --------------------------------------------
+      Deformation potential (eV)                       9
+[ 7]---- Impact ionization -----------------------------------------------------
+0=Keldysh,1=Bude,2=Kane,3=Cartier           3
+                     P parameter             62500000000           3000000000000         680000000000000
+           Threshold energy (eV)                     1.2                     1.8      3.4500000000000002
+   Weighting (0=off, 1=doubling)           0
+    Final energy (0=zero, 1=1/3)           1
+            Generate secondaries           0
+Generate complementary secondaries           0
+II only occurs after this time step        1000
+   Randomly position secondaries           0
+Minimum distance to offset from primary                       0                       0
+[ 8]---- File output -----------------------------------------------------------
+        Time step for estimators        1000
+   Size of space bins (dx,dy,dz)           1           1           1
+       Size of energy bins (meV)          50
+      Time step for restart file          -1
+                    Summary file                        mcdeviceex03_summary.out
+       Table of scattering rates                                        scat.out
+                   diff log file                                        diff.log
+              diff ramp log file                                   diff_ramp.log
+                current log file                        mcdeviceex03_current.log
+           current ramp log file                   mcdeviceex03_current_ramp.log
+         solution structure file                            mcdeviceex03_sol.str
+Time step to write voltage snapshot  1000000000
+            Output initial state           1
+            Output initial state           0
+        Output energy histograms           1
+                        qeta.out           0
+    Enable writing of .out files           0
+[ 9]---- Debugging -------------------------------------------------------------
+                Tracked particle           0
+[10]---- Band structure --------------------------------------------------------
+                 Number of bands           2
+               Points on Gamma-X          40
+Interp. scheme (0=cub,1=lin_la, 2=lin_ma)           0
+             Band structure file                                     eder40_2.in
+[11]---- Quantum band structure info -------------------------------------------
+                 Number of bands           1
+               Points on Gamma-X         100
+Interp. scheme (0=cub,1=lin_la, 2=lin_ma)           0
+             Band structure file                                       qbandtest
+[12]---- High-energy phonon scattering -----------------------------------------
+           Threshold energy (eV)     0.42000000000000004
+                  Model (0=Tang)           0
+          Density of states file                                        dos_c.in
+[13]---- Final-state selection -------------------------------------------------
+               Points on Gamma-X         100
+     File format (0=ASCII,1=bin)           0
+          Number of final states      178152
+               Final states file                                    eord100_2.in
+Cutoff for Lorentzian broadening                       0
+[14]---- Statistical enhancement -----------------------------------------------
+          Enhancement mode (0-3)           0
+      Steps between enhancements          -1
+   Energy-bin width (1-mV steps)         100
+        Space-bin width (meshes)           0           0           0
+                  Damping factor                       0
+         Low splitting threshold  1.0000000000000001e-20
+        High gathering threshold                   1e+20
+         Rel gathering threshold    0.050000000000000003
+                 Gathering ratio                       2
+              Gathering-set size          10
+Fraction of total particles to maintain     0.94999999999999996
+[16]---- Current-estimation region ---------------------------------------------
+ Current region boundary (nodes)           0           0           0           0
+ Current region boundary (nodes)    0.028500000000000004    0.066500000000000004                       0    0.080000000000000002
+[16]---- Current-estimation region ---------------------------------------------
+ Current region boundary (nodes)           0           0           0           0
+ Current region boundary (nodes)    0.035700000000000003    0.050599999999999999                       0    0.080000000000000002
+[16]---- Current-estimation region ---------------------------------------------
+ Current region boundary (nodes)           0           0           0           0
+ Current region boundary (nodes)    0.044700000000000004                  0.0596                       0    0.080000000000000002
+[18]---- Photon excitation -----------------------------------------------------
+     Incident photon energy (eV)                       0
+   Line shape (0=Lorentz, 1=DoS)           0
+             Spectral width (eV)                       0
+           Absorption rate (1/s)                       0
+ Threshold energy for sweep (eV)                       0
+3D absorption coefficient (1/cm)                       0                       0                       0
+[19]---- Bulk simulation parameters --------------------------------------------
+           Electric field (V/cm)                       0                       0
+                  Doping (cm^-3)                       0
+ Screening concentration (cm^-3)                       0
+            Keep particle memory           0
+    Fraction for non-Si material                       0
+[20]---- 1-D Simulation parameters ---------------------------------------------
+          Mode (0=SC,1=FF,2=OPT)           1
+  Boundary concentration (cm^-3)                       0                       0
+        Reflection at boundaries           0           0
+                Device size (cm)                       0                       0                       0
+           Number of mesh points         100           0           0
+                Applied bias (V)                       0
+[21]---- Material definition ---------------------------------------------------
+                    Material no.           1
+                            Name                                             Air
+    Relative dielectric constant                       1
+           Barrier wrt n-Si (eV)                       0
+             Roughness parameter                       0
+                   Band gap (eV)      1.1245000000000001
+          Electron Affinity (eV)      4.1699999999999999
+[21]---- Material definition ---------------------------------------------------
+                    Material no.           2
+                            Name                                              Si
+    Relative dielectric constant      11.699999999999999
+           Barrier wrt n-Si (eV)                       0
+             Roughness parameter                       0
+                   Band gap (eV)      1.1245000000000001
+          Electron Affinity (eV)      4.1699999999999999
+[21]---- Material definition ---------------------------------------------------
+                    Material no.           3
+                            Name                                            Poly
+    Relative dielectric constant      11.699999999999999
+           Barrier wrt n-Si (eV)                       0
+             Roughness parameter                       0
+                   Band gap (eV)      1.1245000000000001
+          Electron Affinity (eV)      4.1699999999999999
+[21]---- Material definition ---------------------------------------------------
+                    Material no.           4
+                            Name                                            SiO2
+    Relative dielectric constant      3.8999999999999999
+           Barrier wrt n-Si (eV)      3.1499999999999999
+             Roughness parameter                    0.25
+                   Band gap (eV)      8.9000000000000004
+          Electron Affinity (eV)                    1.02
+[21]---- Material definition ---------------------------------------------------
+                    Material no.           5
+                            Name                                           Si3N4
+    Relative dielectric constant                     7.5
+           Barrier wrt n-Si (eV)      3.1499999999999999
+             Roughness parameter                       0
+                   Band gap (eV)      1.1245000000000001
+          Electron Affinity (eV)                    1.02
+[21]---- Material definition ---------------------------------------------------
+                    Material no.           6
+                            Name                                              Al
+    Relative dielectric constant                       1
+           Barrier wrt n-Si (eV)     0.69000000000000006
+             Roughness parameter                       0
+                   Band gap (eV)      1.1245000000000001
+          Electron Affinity (eV)      3.4799999999999995
+[21]---- Material definition ---------------------------------------------------
+                    Material no.           7
+                            Name                                              Pt
+    Relative dielectric constant                       1
+           Barrier wrt n-Si (eV)     0.84999999999999998
+             Roughness parameter                       0
+                   Band gap (eV)      1.1245000000000001
+          Electron Affinity (eV)      3.3200000000000003
+[21]---- Material definition ---------------------------------------------------
+                    Material no.           8
+                            Name                                               W
+    Relative dielectric constant                       1
+           Barrier wrt n-Si (eV)     0.65000000000000002
+             Roughness parameter                       0
+                   Band gap (eV)      1.1245000000000001
+          Electron Affinity (eV)      3.5200000000000005
+[21]---- Material definition ---------------------------------------------------
+                    Material no.           9
+                            Name                                              Au
+    Relative dielectric constant                       1
+           Barrier wrt n-Si (eV)     0.79000000000000004
+             Roughness parameter                       0
+                   Band gap (eV)      1.1245000000000001
+          Electron Affinity (eV)      3.3799999999999999
+[22]---- Region definition -----------------------------------------------------
+                      Region no.           1
+                    Material no.           4
+                            Type           2
+                      Boundaries           0           0           0           0
+                      Boundaries                       0    0.095000000000000001   -0.061499999999999999    0.080000000000000002
+                            Name                                                
+         Use the FERMI parameter           0
+       Quasi-Fermi potential (V)                       0
+            Applied Voltage Bias                       0
+[22]---- Region definition -----------------------------------------------------
+                      Region no.           2
+                    Material no.           2
+                            Type           1
+                      Boundaries           0           0           0           0
+                      Boundaries                       0    0.095000000000000001                       0    0.080000000000000002
+                            Name                                                
+         Use the FERMI parameter           0
+       Quasi-Fermi potential (V)                       0
+            Applied Voltage Bias                       0
+[22]---- Region definition -----------------------------------------------------
+                      Region no.           3
+                    Material no.           4
+                            Type           3
+                      Boundaries           0           0           0           0
+                      Boundaries                       0    0.095000000000000001                 -0.0015                       0
+                            Name                                                
+         Use the FERMI parameter           0
+       Quasi-Fermi potential (V)                       0
+            Applied Voltage Bias                       0
+[22]---- Region definition -----------------------------------------------------
+                      Region no.           4
+                    Material no.           2
+                            Type           4
+                      Boundaries           0           0           0           0
+                      Boundaries                       0   0.0071999999999999998   0.0032999999999999995    0.013500000000000002
+                            Name                                          source
+         Use the FERMI parameter           0
+       Quasi-Fermi potential (V)                       0
+            Applied Voltage Bias                       0
+[22]---- Region definition -----------------------------------------------------
+                      Region no.           5
+                    Material no.           2
+                            Type           4
+                      Boundaries           0           0           0           0
+                      Boundaries    0.087799999999999989    0.095000000000000001   0.0032999999999999995    0.013500000000000002
+                            Name                                           drain
+         Use the FERMI parameter           1
+       Quasi-Fermi potential (V)                       0
+            Applied Voltage Bias                       0
+[22]---- Region definition -----------------------------------------------------
+                      Region no.           6
+                    Material no.           3
+                            Type           4
+                      Boundaries           0           0           0           0
+                      Boundaries    0.022499999999999999    0.072499999999999995   -0.061499999999999999                 -0.0015
+                            Name                                            gate
+         Use the FERMI parameter           0
+       Quasi-Fermi potential (V)                       0
+            Applied Voltage Bias                       0
+[22]---- Region definition -----------------------------------------------------
+                      Region no.           7
+                    Material no.           2
+                            Type           4
+                      Boundaries           0           0           0           0
+                      Boundaries                       0    0.095000000000000001    0.076099999999999987    0.080000000000000002
+                            Name                                       substrate
+         Use the FERMI parameter           0
+       Quasi-Fermi potential (V)                       0
+            Applied Voltage Bias                       0
+[24]---- X-Mesh definition -----------------------------------------------------
+                        Node no.           1
+                 X-Location (cm)                       0
+                    Growth ratio                       0
+[24]---- X-Mesh definition -----------------------------------------------------
+                        Node no.          76
+                 X-Location (cm)    0.022499999999999999
+                    Growth ratio                       1
+[24]---- X-Mesh definition -----------------------------------------------------
+                        Node no.         243
+                 X-Location (cm)    0.072499999999999995
+                    Growth ratio                       1
+[24]---- X-Mesh definition -----------------------------------------------------
+                        Node no.         318
+                 X-Location (cm)    0.095000000000000001
+                    Growth ratio                       1
+[25]---- Y-Mesh definition -----------------------------------------------------
+                        Node no.           1
+                 Y-Location (cm)   -0.061499999999999999
+                    Growth ratio                       0
+[25]---- Y-Mesh definition -----------------------------------------------------
+                        Node no.           6
+                 Y-Location (cm)                 -0.0015
+                    Growth ratio     0.40000000000000002
+[25]---- Y-Mesh definition -----------------------------------------------------
+                        Node no.           9
+                 Y-Location (cm) -0.00080000000000000004
+                    Growth ratio     0.40000000000000002
+[25]---- Y-Mesh definition -----------------------------------------------------
+                        Node no.          10
+                 Y-Location (cm)                       0
+                    Growth ratio     0.80000000000000004
+[25]---- Y-Mesh definition -----------------------------------------------------
+                        Node no.          15
+                 Y-Location (cm)  0.00050000000000000001
+                    Growth ratio                       1
+[25]---- Y-Mesh definition -----------------------------------------------------
+                        Node no.          89
+                 Y-Location (cm)    0.080000000000000002
+                    Growth ratio                  1.0508
+[26]---- MCDEVICE statement ----------------------------------------------------
+                           Dummy           0
+[27]---- Gaussian doping definition --------------------------------------------
+                          Dopant           1
+      Peak concentration (cm^-3)        1000000000000000
+            X, Y boundaries (cm)                       0                       0                       0                       0
+            X, Y boundaries (cm)                       0    0.095000000000000001                       0    0.080000000000000002
+X-,X+,Y-,Y+ characteristics (cm)                       0                       0                       0                       0
+[27]---- Gaussian doping definition --------------------------------------------
+                          Dopant           4
+      Peak concentration (cm^-3)                   2e+20
+            X, Y boundaries (cm)                       0                       0                       0                       0
+            X, Y boundaries (cm)                       0    0.029300000000000003                       0                  0.0001
+X-,X+,Y-,Y+ characteristics (cm)   0.0040000000000000001   0.0040000000000000001                  0.0001    0.016999999999999998
+[27]---- Gaussian doping definition --------------------------------------------
+                          Dopant           1
+      Peak concentration (cm^-3)                 2.5e+19
+            X, Y boundaries (cm)                       0                       0                       0                       0
+            X, Y boundaries (cm)                       0    0.029300000000000003    0.017899999999999999    0.018099999999999998
+X-,X+,Y-,Y+ characteristics (cm)    0.018200000000000001    0.018200000000000001                   0.016                   0.016
+[27]---- Gaussian doping definition --------------------------------------------
+                          Dopant           4
+      Peak concentration (cm^-3)                   2e+20
+            X, Y boundaries (cm)                       0                       0                       0                       0
+            X, Y boundaries (cm)    0.065700000000000008    0.095000000000000001                       0                  0.0001
+X-,X+,Y-,Y+ characteristics (cm)   0.0040000000000000001   0.0040000000000000001                  0.0001    0.016999999999999998
+[27]---- Gaussian doping definition --------------------------------------------
+                          Dopant           1
+      Peak concentration (cm^-3)                 2.5e+19
+            X, Y boundaries (cm)                       0                       0                       0                       0
+            X, Y boundaries (cm)    0.065700000000000008    0.095000000000000001    0.017899999999999999    0.018099999999999998
+X-,X+,Y-,Y+ characteristics (cm)    0.018200000000000001    0.018200000000000001                   0.016                   0.016
+[27]---- Gaussian doping definition --------------------------------------------
+                          Dopant           4
+      Peak concentration (cm^-3)                   2e+20
+            X, Y boundaries (cm)                       0                       0                       0                       0
+            X, Y boundaries (cm)    0.022499999999999999    0.072499999999999995   -0.061499999999999999                 -0.0015
+X-,X+,Y-,Y+ characteristics (cm)                       0                       0                       0                       0
+[29]---- Poisson solver --------------------------------------------------------
+      Time steps between updates           2
+           Max Newton iterations         100
+          Tolerance (Newton, CG)  0.00020000000000000001  1.0000000000000002e-06
+           Incomplete ionization           0
+              Starting iteration           1
+              Freezing iteration  1000000000
+ Toggle nonlinear/linear poisson           0
+Doping cutoff for complete ionization  9.9999999999999988e+24
+              Use POLY Depletion           0
+     Hide the effects of plamons           0
+[30]---- Import initial guess --------------------------------------------------
+           File type for imports           8
+                Import Potential           0
+        Import Average Potential           0
+                Import Electrons           0
+                    Import Holes           0
+        Import Average Electrons           0
+            Import Average Holes           0
+          Import doping profiles           0
+         Use ISE dipsh in IMPORT           0
+   Add native to imported doping           0
+                    Offset (X,Y)                       0                       0
+         Import boundary (nodes)           0           0           0           0
+         Import boundary (nodes)                       0                       0                       0                       0
+                     Import mesh           0
+                  Import regions           0
+                 Import contacts           0
+                2-D voltage file                                         volt.in
+        2-D MC carrier conc file                                         conc.in
+                 2-D doping file                                          dop.in
+                   2-D grid file                                   grid_filename
+               2-D solution file                                    sol_filename
+                 2-D vertex file                                    ver_filename
+               2-D triangle file                                    tri_filename
+    2-D source-drain doping file                                     sd_filename
+      2-D retrograde doping file                                  retro_filename
+              2-D structure file                                    str_filename
+[31]---- Ridley model for impurity scattering ----------------------------------
+                  Scaling factor      1.8999999999999999
+      Time step for conc. update          -1
+[34]---- Crossing estimators ---------------------------------------------------
+Collect extra info on this region           0
+[35]---- Pipe for interprocess communication -----------------------------------
+            Communication method           0
+            Master to slave pipe                                          msfile
+            Slave to master pipe                                          smfile
+       Slave number of particles           0
+  Initialize slave concentration           1
+Fraction to increase particle allocation                     0.5
+[37]---- Surface scattering parameters -----------------------------------------
+                           sexpL  2.2000000000000003e-09
+                           sexpD  1.7799999999999995e-10
+ Global surface scattering field                      -1
+Surface scattering rate output file                                    ssphonon.dat
+        Surface phonon prefactor                       0                       0
+[39]---- Track trajectories ----------------------------------------------------
+   mode=1 to activate traj block           0
+             Zero all scattering           0
+Bound initial particles positions                       0                       0                       0                       0
+Bound initial particles positions                       0                       0                       0                       0
+[40]---- Calculate gate tunnel current -----------------------------------------
+        0=none,1=fast,2=accurate           0
+[41]---- Parameters for 2D injection -------------------------------------------
+ dn fraction injection into grid                       0
+ dp fraction injection into grid                       1
+       inject on hemi-maxwellian           0
+         fraction to over-inject                   10000
+   inject every tstep iterations          -1
+[44]---- Quantum region --------------------------------------------------------
+                    Quantum mode          12
+         Ramp quantum correction           0           0
+         Quantum region boundary           0           0           0           0
+    Quantum region boundary pos.                       0    0.095000000000000001 -0.00080000000000000004   0.0026000000000000003
+Quantum region attenuation boundary           0           0           0           0
+Quantum region attenuation boundary pos.                       0                       0                       0                       0
+Fit function in (x,y); -1 = no fit           0           0           0
+             Fit region boundary           0           0           0           0
+             Fit region boundary                       0                       0                       0                       0
+ grid to shift for interpolation           0
+                 amount to shift                       0
+    direction if a 1D correction           2
+time step to calculate correction        4000
+space step to calculate correction           1
+correction set to zero at this grid line           0
+[45]---- Field -----------------------------------------------------------------
+  Beginning maximum field (V/cm)                      -1                      -1
+      Iteration to begin ramping          -1          -1
+           Use negative of field           0
+Include material barriers in field           0
+                     Test option           0           0           0           0
+                                           0           0
+[46]---- Quantum parameters ----------------------------------------------------
+      Restart quantum simulation           0
+                    Misc. option           0           0           0           0
+                                           0
+decay time in average, restart decay  1.0000000000000002e-13  2.0000000000000004e-12
+     Min concentration MC,non-MC             10000000000             10000000000
+Max quantum correction to potential                      -1
+ Max quantum correction to field                      -1
+           Multiplicative factor                       1
+                    1D averaging          -1          -1          -1
+                    smoothing 1D           0           0
+              Freezing iteration  1000000000
+Shift correction to 0 at transition point           0
+                 Smoothing sigma  8.0000000000000015e-08
+Integration radius for smoothing           3
+ Quantum potential contribute to           0
+                  No barrier fit           0           0
+               Number of ladders           1           0           0
+Take transverse temperatue into account           0
+[48]---- Properties for reflection ---------------------------------------------
+   Min distance after reflection                      -1
+[49]---- Etabarr region --------------------------------------------------------
+        Etabarr boundary (nodes)           0           0           0           0
+        Etabarr boundary (nodes)                       0    0.095000000000000001   -0.061499999999999999                  0.0178
+[54]---- Schroedinger mesh definition ------------------------------------------
+                        Node no.           1
+                 X-Location (cm)                 -0.0015
+                    Growth ratio                       0
+[54]---- Schroedinger mesh definition ------------------------------------------
+                        Node no.          11
+                 X-Location (cm)                       0
+                    Growth ratio     0.84000000000000008
+[54]---- Schroedinger mesh definition ------------------------------------------
+                        Node no.          41
+                 X-Location (cm)   0.0050000000000000001
+                    Growth ratio      1.0690000000000002
+[54]---- Schroedinger mesh definition ------------------------------------------
+                        Node no.          71
+                 X-Location (cm)    0.029999999999999999
+                    Growth ratio      1.0429999999999999
+[55]---- Schroedinger region definition ----------------------------------------
+                      Region no.           1
+                    Material no.           4
+                      Boundaries                       0                       0
+                      Boundaries                 -0.0015                       0
+[55]---- Schroedinger region definition ----------------------------------------
+                      Region no.           2
+                    Material no.           2
+                      Boundaries                       0                       0
+                      Boundaries                       0    0.029999999999999999
+[60]---- Electron scattering parameters ----------------------------------------
+     Choose fullband or analytic           0
+             Number of processes           7
+                 Number of bands           4
+             Number of processes          24
+                 Number of bands           1
+Scattering rates w/o coupling param                                 scatfl_c_uni.in
+Plot total phonon scattering rate                                    scateng_c.in
+                 Phonon coupling                                      phcpl_c.in
+               Phonon prefactors                          phon_fac_c_uni_300k.in
+[61]---- Hole scattering parameters --------------------------------------------
+     Choose fullband or analytic           0
+             Number of processes           7
+                 Number of bands           3
+             Number of processes          24
+                 Number of bands           1
+Scattering rates w/o coupling param                                     scatfl_v.in
+Plot total phonon scattering rate                                    scateng_v.in
+                 Phonon coupling                                      phcpl_v.in
+               Phonon prefactors                                   phon_fac_v.in
+[62]---- Multi-material parameters ---------------------------------------------
+                   Material type           0
+             electron bands file                                                
+                 hole bands file                                                
+[63]---- Strained silicon electron parameters ----------------------------------
+         Fittings for band param                          eder40_c_ssi_interp.in
+Fittings for rates w/o coupling param                           rates_ssi_c_45_uni.in
+Fittings for phonon coupling param                                  coupl_ssi_c.in
+ Fittings for lattice parameters                                  latts_ssi_c.in
+[65]---- Units -----------------------------------------------------------------
+   Units of length in input file           1           0           0           0
+[66]---- Perform MC solve ------------------------------------------------------
+                 Dummy parameter           0
+                    Contact name                                                
+                Voltage step (V)                       0
+               Field step (V/cm)                       0
+                   DC ramp steps           0
+          Use a logarithmic step           0
+               Final voltage (V)                       0
+              Final field (V/cm)                       0
+                Gate voltage (V)                       1
+                  GG voltage (V)                       0
+               Drain voltage (V)                       1
+                  DD voltage (V)                       0
+              Source voltage (V)                       0
+                Bulk voltage (V)                       0
+           Substrate voltage (V)                       0
+             Emitter voltage (V)                       0
+                  EE voltage (V)                       0
+           Collector voltage (V)                       0
+                  CC voltage (V)                       0
+                Base voltage (V)                       0
+                  BB voltage (V)                       0
+               Anode voltage (V)                       0
+             Cathode voltage (V)                       0
+               Fgate voltage (V)                       0
+               Cgate voltage (V)                       0
+               Ngate voltage (V)                       0
+               Pgate voltage (V)                       0
+                Well voltage (V)                       0
+               Nwell voltage (V)                       0
+               Pwell voltage (V)                       0
+             Channel voltage (V)                       0
+              Ground voltage (V)                       0
+                   Voltage 1 (V)                       0
+                   Voltage 2 (V)                       0
+                   Voltage 3 (V)                       0
+                   Voltage 4 (V)                       0
+                   Voltage 5 (V)                       0
+                   Voltage 6 (V)                       0
+                   Voltage 7 (V)                       0
+                   Voltage 8 (V)                       0
+                          Name 1                                                
+                          Name 2                                                
+                          Name 3                                                
+                          Name 4                                                
+                          Name 5                                                
+                          Name 6                                                
+                          Name 7                                                
+                          Name 8                                                

@@ -1,0 +1,168 @@
+# (c) Silvaco Inc., 2018
+# Solar example number 2.
+#
+#########################
+# Without Defects
+#########################
+go atlas 
+#
+# Start mesh.  The AUTO parameter indicates that we will
+# not specify y mesh lines directly but they will be inferred
+# from the region specifications.
+#
+mesh auto
+#
+x.mesh loc=0.0 spacing=0.2
+x.mesh loc=1.0 spacing=0.2
+#
+# This device will contain only 1 region of amorphous silicon
+# bounded on top and bottom by ITO electrodes.
+#
+region material=Silicon	bot ny=60 thick=0.05+0.25+0.05
+#
+elec num=1 name=anode   y.max=0.05            material=ITO
+elec num=2 name=cathode y.min=0.30 y.max=0.35 material=ITO
+#
+# Here we define a P-i-N diode using analytic Gaussian profiles.
+#
+doping uniform conc=1e14 n.type
+doping gaus peak=0.05 char=0.01 conc=1e18 p.type dir=y
+doping gaus peak=0.30 char=0.01 conc=1e18 n.type dir=y
+#
+# Here we override some of the default silicon parameter with
+# parameters that describe amorphous material.
+#
+material mat=Silicon mun=20 mup=1.5 nc300=2.5e20 nv300=2.5e20 eg300=1.9
+#
+# Here we indicate that the default complex index of refraction for
+# ITO will use the data from the Sopra database
+#
+material mat=ITO sopra=Ito2.nk
+#
+# We include recombination models
+#
+models srh auger  
+#
+# Here we specify the optical source.  In this case
+# we illuminate the device from above using normal
+# incidence (angle=90 default).  We also indicate
+# that we will use the transfer matrix method to
+# model the optical propogation.
+#
+beam num=1 x.o=0.5 y.o=-2.0 AM1.5 verbose tr.matrix
+#
+# Turn on the sun.
+#
+solve b1=1.0
+#
+# We collect the IV characteristic to a file
+#
+log outf=solarex02_0.log
+solve vanode=0.0 name=anode vstep=0.025 vfinal=1.2
+#
+# We perform extraction of useful figures of merit
+#
+extract init infile="solarex02_0.log"
+extract name="Jsc" y.val from curve(v."anode", i."anode") where x.val=0.0
+extract name="Voc" x.val from curve(v."anode", i."anode") where y.val=0.0
+extract name="P" curve(v."anode", (v."anode" * i."cathode")) outf="solarex02_3.log" 
+extract name="Pm" min(curve(v."anode", (v."anode" * i."anode"))) 
+extract name="Vm" x.val from curve(v."anode", (v."anode"*i."anode") ) \
+	where y.val=$"Pm"
+extract name="Im" $"Pm"/$"Vm"
+extract name="FF" $"Pm"/($"Jsc"*$"Voc")
+extract name="Eff_without" 1e8*$Pm/0.1
+#
+#########################
+# With Defects
+#########################
+go atlas 
+#
+# Start mesh.  The AUTO parameter indicates that we will
+# not specify y mesh lines directly but they will be inferred
+# from the region specifications.
+#
+mesh auto
+#
+x.mesh loc=0.0 spacing=0.2
+x.mesh loc=1.0 spacing=0.2
+#
+# This device will contain only 1 region of amorphous silicon
+# bounded on top and bottom by ITO electrodes.
+#
+region material=Silicon	bot ny=60 thick=0.05+0.25+0.05
+#
+elec num=1 name=anode   y.max=0.05 material=ITO
+elec num=2 name=cathode y.min=0.30 y.max=0.35 material=ITO
+#
+# Here we define a P-i-N diode using analytic Gaussian profiles.
+#
+doping uniform conc=1e14 n.type
+doping gaus peak=0.05 char=0.01 conc=1e18 p.type dir=y
+doping gaus peak=0.30 char=0.01 conc=1e18 n.type dir=y
+#
+# Here we override some of the default silicon parameter with
+# parameters that describe amorphous material.
+#
+material mat=Silicon mun=20 mup=1.5 nc300=2.5e20 nv300=2.5e20 eg300=1.9
+#
+# Here we indicate that the default complex index of refraction for
+# ITO will use the data from the Sopra database
+#
+material mat=ITO sopra=Ito2.nk
+#
+# In this case we define defect states in the bandgap as would
+# exist in amorphous materials.
+#
+defects nta=1.e21 ntd=1.e21 wta=0.033 wtd=0.049 \
+	nga=1.5e15 ngd=1.5e15 ega=0.62 egd=0.78 wga=0.15 wgd=0.15 \
+	sigtae=1.e-17 sigtah=1.e-15 sigtde=1.e-15 sigtdh=1.e-17  \ 
+	siggae=2.e-16 siggah=2.e-15 siggde=2.e-15 siggdh=2.e-16  \
+	tfile=solarex02_2.log continuous
+#
+# We include recombination models
+#
+models srh auger  
+#
+# Here we specify the optical source.  In this case
+# we illuminate the device from above using normal
+# incidence (angle=90 default).  We also indicate
+# that we will use the transfer matrix method to
+# model the optical propogation.
+#
+beam num=1 x.o=0.5 y.o=-2.0 AM1.5 verbose tr.matrix
+#
+# Turn on the sun.
+#
+solve b1=1.0
+#
+# We collect the IV characteristic to a file
+#
+log outf=solarex02_1.log
+solve vanode=0.0 name=anode vstep=0.025 vfinal=1.2
+#
+# We perform extraction of useful figures of merit
+#
+extract init infile="solarex02_1.log"
+extract name="Jsc" y.val from curve(v."anode", i."cathode") where x.val=0.0
+extract name="Voc" x.val from curve(v."anode", i."cathode") where y.val=0.0
+extract name="P" curve(v."anode", (v."anode" * i."cathode")) outf="solarex02_4.log" 
+extract name="Pm" max(curve(v."anode", (v."anode" * i."cathode"))) 
+extract name="Vm" x.val from curve(v."anode", (v."anode"*i."cathode") ) \
+	where y.val=$"Pm"
+extract name="Im" $"Pm"/$"Vm"
+extract name="FF" $"Pm"/($"Jsc"*$"Voc")
+extract name="Eff" 1e8*$Pm/0.1
+#
+# Plot a comparison of the results with and without defects
+#
+tonyplot -overlay solarex02_0.log solarex02_1.log -set solarex02_0.set
+#
+# Plot the defect states.
+#
+tonyplot solarex02_2.log -set solarex02_1.set
+#
+# Plot the power curves.
+#
+tonyplot -overlay solarex02_3.log solarex02_4.log
+quit

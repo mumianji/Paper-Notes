@@ -1,0 +1,194 @@
+# (c) Silvaco Inc., 2018
+go athena
+# TITLE: Polysilicon Emitter Bipolar Example  (PNP)
+ 
+line x loc=0.0         spacing=0.03 
+line x loc=0.2         spacing=0.02  
+line x loc=0.24        spacing=0.01 
+line x loc=0.3         spacing=0.015 
+line x loc=0.8        spacing=0.15
+
+line y loc=0.0         spacing=0.01
+line y loc=0.1         spacing=0.01
+line y loc=0.4         spacing=0.02 
+line y loc=0.5         spacing=0.06
+line y loc=1.0         spacing=0.15  
+
+init c.boron=2e16    
+
+# base implant
+implant   phos  energy=100 dose=8e13
+
+# base drive
+diffuse time=5 temp=900
+
+# deposit polysilicon
+deposit poly thick=0.3 divisions=6 min.space=0.05 
+
+# Implant to dope polysilicon
+implant bf2 dose=3e15 energy=35
+
+# Pattern the poly 
+etch poly right p1.x=0.2
+
+# relax the mesh in the substrate and extrinsic areas
+relax y.min=.5 
+relax x.min=0.4
+
+# emitter drive 
+method compress fermi
+diffuse time=45   temp=900 nitrogen 
+
+# extrinsic emitter implant under spacer
+implant phos dose=2e14 energy=70
+
+# deposit spacer
+deposit oxide thick=0.3 divisions=10  min.space=0.1
+
+# etch the spacer back
+etch oxide dry thick=0.3 
+
+# n+ base contact implant
+implant arsenic dose=1e15 energy=50
+
+# contact drive 
+diffuse time=30 temp=900   nitrogen
+
+
+# put down Al and etch to form contacts
+deposit alum thick=0.05 div=2 
+
+etch alum start x=0.16 y=-4
+etch continue x=0.16 y=0.2 
+etch continue x=0.6 y=0.2
+etch done  x=0.6 y=-4
+
+
+
+# Name the electrodes for use with Atlas 
+electrode x=0.0    name=emitter
+electrode x=0.7    name=base
+electrode backside name=collector
+
+
+
+# extract junction depths
+extract name="EB_xj" xj material="Silicon" mat.occno=1 x.val=0.1 junc.occno=1
+extract name="BC_xj" xj material="Silicon" mat.occno=1 x.val=0.1 junc.occno=2
+extract name="base_width" $BC_xj - $EB_xj
+
+#extract 1D electrical parameters
+extract name="base_rho" n.sheet.res material="Silicon" mat.occno=1 x.val=0.1 region.occno=2
+extract name="poly_emitter_rho" p.sheet.res material="Polysilicon" mat.occno=1 x.val=0.1 region.occno=1 semi.poly
+
+
+
+#  Save the final structure
+structure outfile=bjtex08_0.str
+tonyplot  bjtex08_0.str -set bjtex08_0.set
+
+
+
+
+
+##################### Gummel Plot Test ###########################
+
+ 
+
+go atlas
+
+# set poly lifetime and mobility
+material material=Polysilicon taun0=1e-9 taup0=1e-9 mun=40 mup=2
+material material=Silicon     taun0=5e-6 taup0=5e-6
+
+models  
+models material=Silicon bipolar print 
+models material=Polysilicon srh 
+
+solve init
+
+method newton autonr trap 
+solve prev
+
+solve vcollector=-2  
+solve vbase=-0.1 vstep=-0.1 vfinal=-0.4 name=base
+
+
+log outf=bjtex08_0.log
+
+solve vbase=-0.4 vstep=-0.05 vfinal=-1.0 name=base ac freq=1e6 aname=base
+
+# extract electrical parameters 
+extract name="peak collector current" max(abs(i."collector"))
+
+extract name="peak gain" max(i."collector"/ i."base")
+
+extract name="max fT" max(g."collector""base"/(2*3.1415*c."base""base")) 
+
+tonyplot  bjtex08_0.log -set bjtex08_0_log.set
+
+
+
+go atlas
+# IV/VCE simulation for PNP
+# set poly lifetime and mobility
+material material=Polysilicon taun0=1e-9 taup0=1e-9 mun=40 mup=2
+material material=Silicon     taun0=5e-6 taup0=5e-6
+models  
+models material=Silicon bipolar print
+models material=Polysilicon srh
+
+solve init
+
+solve vbase=-0.025
+solve vbase=-0.05
+solve  vbase=-0.1 vstep=-0.1 vfinal=-0.7 name=base
+
+
+# switch to current boundary conditions
+
+contact name=base current
+
+# ramp IB and save solutions
+
+
+solve ibase=-1.e-6 outf=bjtex08_1.str master
+solve ibase=-2.e-6 outf=bjtex08_2.str master
+solve ibase=-3.e-6 outf=bjtex08_3.str master
+solve ibase=-4.e-6 outf=bjtex08_4.str master
+solve ibase=-5.e-6 outf=bjtex08_5.str master
+
+
+
+# load in each initial guess file and ramp VCE
+ 
+load inf=bjtex08_1.str master
+log outf=bjtex08_1.log
+solve vcollector=0.0 vstep=-0.25 vfinal=-5.0 name=collector
+
+
+load inf=bjtex08_2.str master
+log outf=bjtex08_2.log
+solve vcollector=0.0 vstep=-0.25 vfinal=-5.0 name=collector
+
+load inf=bjtex08_3.str master
+log outf=bjtex08_3.log
+solve vcollector=0.0 vstep=-0.25 vfinal=-5.0 name=collector
+
+load inf=bjtex08_4.str master
+log outf=bjtex08_4.log
+solve vcollector=0.0 vstep=-0.25 vfinal=-5.0 name=collector
+
+load inf=bjtex08_5.str master
+log outf=bjtex08_5.log
+solve vcollector=0.0 vstep=-0.25 vfinal=-5.0 name=collector
+
+# extract peak current and slopes
+extract name="pnp_max_ic_mA" max(abs(i."collector"))*1.0e+3
+extract name="pnp_lin_slope" slope(maxslope(curve(v."collector",i."collector")))
+extract name="pnp_sat_slope" slope(minslope(curve(v."collector",i."collector")))
+
+tonyplot -overlay bjtex08_5.log bjtex08_4.log bjtex08_3.log bjtex08_2.log bjtex08_1.log -set bjtex08_1_log.set
+
+
+quit

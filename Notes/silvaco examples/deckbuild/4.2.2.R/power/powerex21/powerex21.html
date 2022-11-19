@@ -1,0 +1,88 @@
+<html>
+  <head>
+    <title>3D Mixed-Mode Simulation of Current Filaments in Multicell IGBT</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>3D Mixed-Mode Simulation of Current Filaments in Multicell IGBT</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>VictoryProcess3D / VictoryDevice3D</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Victory Process 7.2.3.R, Victory Mesh 1.2.4.R, Victory Device 1.12.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="powerex21_plot0.png" width="640" alt="powerex21_plot0" />
+      <p/>
+      <img src="powerex21_plot1.png" width="640" alt="powerex21_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+When an IGBT is turned on in the presence of a short-circuit in an output circuit for a period of time, it can dissipate power in the form of heat to such an extent that current filaments evolve in a localized area within the IGBT device. The heating effects of current filaments are destructive and thus should not be allowed to arise during a short-circuit operation of an IGBT.
+</p>
+<p>
+In this example, the 3D mixed-mode short-circuit simulation is performed on an IGBT composed of 8 cells to demonstrate the occurrence of current filaments in multicell IGBT.
+</p>
+<p>
+The 8-cell IGBT structure is constructed in cell mode of Victory Process by joining 8 duplicates of the IGBT single cell together using the parameter
+<b> mirror</b> on the
+<b> export</b> statement. Each IGBT single cell has a width of 1um and features a 1.3 kV trench-gate design with a field-stop layer (n-buffer).
+</p>
+<p>
+Short-circuit testing is conducted with a test circuit consisting of a
+<b> vc </b> 600V DC power supply in series with a 10-mohm resistor
+<b> rs </b> and a 10-nH inductor
+<b> ls</b> . A
+<b> vg </b> gate pulse generator in series with a 10-ohm resistor
+<b> rg</b> generates a 15V pulse in 10 ns with a pulse length of 10 us.
+</p>
+<p>
+It is assumed that the bottom collector electrode of the IGBT is maintained at an ambient temperature of 300 K via a thermal contact with a thermal resistance of 0.3 cm2.K/W (
+<b> thermcontact name=collector ext.temp=300 alpha=1/0.3</b> ).
+</p>
+<p>
+As the mixed-mode simulation starts from an initial DC voltage supply of 600V, a Victory Device solution
+<b> powerex21_1.str </b> for the IGBT device
+<b> adevice</b> at a collector-to-emitter voltage of 600V is first obtained from the stand-alone Victory Device simulation and then loaded into the mixed-mode part of the input deck
+with
+<b> .options loadsolutions </b> for use as an initial guess.
+</p>
+<p>
+Victory Device utilizes a set of physical models for the non-isothermal (
+<b> lat.temp</b> self-heating) simulation including
+<b> klassen </b> low-field doping-dependent mobility ,
+<b> fldmob</b> lateral electric field-dependent mobility,
+<b> srh </b> Shockley-Read-Hall recombination,
+<b> hnsaug</b> temperature and concentration dependence Auger recombination, and
+<b> selb</b> impact ionization. The
+<b> pas </b> MPI-based parallel direct solver specified in the Victory Device part of the mixed-mode input deck (
+<b> method device=adevice pas</b> ) proves to greatly enhance Victor Device performance in terms of speed and robustness.
+</p>
+<p>
+The simulation results give the short-circuit waveforms up to destruction of the IGBT at time
+<b> t=5.24 us </b> as evidenced by a sharp rising of temperature in conjunction with the establishment of current filaments. A 3D electron current density distribution at that device destruction time is captured and saved for visualization in TonyPlot with
+<b> .save tsave=&quot;5.24us&quot;.</b> </p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

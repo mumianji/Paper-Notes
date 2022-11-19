@@ -1,0 +1,123 @@
+# (c) Silvaco Inc., 2018
+go atlas 
+
+#
+mesh     width=1e3
+#
+x.m      l=-2.0  s=0.4
+x.m      l=0.0   s=0.4 
+x.m      l=9.0   s=0.1
+x.m      l=11.0  s=0.1
+x.m      l=20.0  s=0.4
+x.m      l=22.0  s=0.4
+#
+y.m      l=-0.02 s=0.01
+y.m      l=0     s=0.01
+y.m      l=0.3   s=0.01
+y.m      l=0.5   s=0.05
+#
+region   num=1 material=Al2O3                y.max=0.0
+region   num=2 user.material=Ga2O3 y.min=0.0 y.max=0.3
+region   num=3 user.material=Ga2O3 y.min=0.3 
+#
+elec     num=1 name=source x.min=-2.0  x.max=0.0  y.min=0.0   y.max=0.0
+elec     num=2 name=gate   x.min=9.0   x.max=11.0 y.min=-0.02 y.max=-0.02
+elec     num=3 name=drain  x.min=20.0  x.max=22.0 y.min=0.0   y.max=0.0
+#
+doping   region=2 uniform n.type conc=1.1e17
+doping   region=2 gauss x.max=0.0  y.min=0.0 y.max=0.15 conc=3.0e19 n.type char=0.01 ratio.lat=1.0
+doping   region=2 gauss x.min=20.0 y.min=0.0 y.max=0.15 conc=3.0e19 n.type char=0.01 ratio.lat=1.0
+doping   region=3 uniform n.type conc=1.5e16
+#
+material material=Ga2O3 user.default=GaN user.group=semiconductor \
+         affinity=4.0 eg300=4.8 nc300=3.72e18 nv300=3.72e18 permittivity=10.0 \
+         mun=118 mup=50 tcon.const tc.const=0.13
+material material=Al2O3 tcon.const tc.const=0.33
+material region=3 mun=20
+mobility tmun=2.0
+models   lat.temp print
+#
+thermcon num=1 x.min=-2.0 x.max=22.0 y.min=0.5 y.max=0.5 alpha=200 ext.temp=300
+thermcon num=2 elec=1 ext.temp=300 
+thermcon num=3 elec=3 ext.temp=300
+contact  num=2 workf=5.23
+#
+method   climit=1.0e-4 maxtrap=10
+#
+output   con.band val.band flowline
+solve    init
+solve    prev outf=vg+0.ini
+save outf=powerex17_0.str
+solve    vgate=0.1
+solve    vgate=0.5 
+solve    vstep=0.25 vfinal=1.5 name=gate
+solve    vstep=0.5  vfinal=4.0 name=gate
+solve    prev
+solve    vdrain=0.001
+solve    vdrain=0.01
+solve    vdrain=0.1
+solve    vdrain=1.0   
+solve    vdrain=2.0 vstep=1.0 vfinal=25.0 name=drain
+log      outfile=powerex17_0.log
+solve    vgate=4.0 vstep=-0.5 vfinal=-15.0 name=gate
+solve              vstep=-2.5 vfinal=-25.0 name=gate
+log      off
+#
+load     infile=vg+0.ini
+solve    prev
+solve    vgate=0.0 vstep=0.4  vfinal=4.0  name=gate outf=vg+4.ini onefile 
+#
+load     infile=vg+0.ini
+solve    vgate=0.0 vstep=-0.5 vfinal=-4.0 name=gate outf=vg-4.ini onefile
+solve              vstep=-0.5 vfinal=-8.0 name=gate outf=vg-8.ini onefile
+#
+load     infile=vg+4.ini
+log      outf=powerex17_1.log
+solve    prev
+solve    vdrain=0.001
+solve    vdrain=0.01
+solve    vdrain=0.1
+solve    vdrain=0.2
+solve    name=drain vdrain=1.0 vfinal=40.0 vstep=1.0
+log      off
+save     outf=vg+4d.sol
+#
+load     infile=vg+0.ini
+log      outf=powerex17_2.log
+solve    prev
+solve    vdrain=0.001
+solve    vdrain=0.01
+solve    vdrain=0.1
+solve    vdrain=0.5
+solve    name=drain vdrain=1.0 vfinal=40.0 vstep=1.0
+log      off
+save     outf=vg+0d.sol
+#
+load     infile=vg-4.ini
+log      outf=powerex17_3.log
+solve    prev
+solve    vdrain=0.001
+solve    vdrain=0.01
+solve    vdrain=0.1
+solve    vdrain=0.5
+solve    name=drain vdrain=1.0 vfinal=40.0 vstep=1.0
+log      off
+save     outf=vg-4d.sol
+#
+load     infile=vg-8.ini
+log      outf=powerex17_4.log
+solve    prev
+solve    vdrain=0.001
+solve    vdrain=0.01
+solve    vdrain=0.1
+solve    vdrain=0.5
+solve    name=drain vdrain=1.0 vfinal=40.0 vstep=1.0
+log      off
+save     outf=vg-8d.sol
+
+tonyplot powerex17_0.str powerex17_0.str -set powerex17_0.set
+tonyplot -overlay powerex17_1.log powerex17_2.log powerex17_3.log powerex17_4.log powerex17_1.dat powerex17_2.dat powerex17_3.dat powerex17_4.dat -set powerex17_1.set
+tonyplot -overlay powerex17_0.log powerex17_0.dat 
+
+ 
+

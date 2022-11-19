@@ -1,0 +1,79 @@
+<html>
+  <head>
+    <title>Hot Carrier Injection and Ionisation</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Hot Carrier Injection and Ionisation</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>SSuprem 4/DevEdit/S-Pisces</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R, Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="eprmex04_plot0.png" width="640" alt="eprmex04_plot0" />
+      <p/>
+      <img src="eprmex04_plot1.png" width="640" alt="eprmex04_plot1" />
+      <p/>
+      <img src="eprmex04_plot2.png" width="640" alt="eprmex04_plot2" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example is based upon exprmex01.in for the SSuprem 4/DevEdit simulations. It demonstrates
+</p>
+<ul>
+  <li>
+ Concannon model for substrate current
+<br/>
+  </li>
+  <li>
+ Concannon model for hot carrier injection to the gate
+<br/>
+  </li>
+  <li>
+ Plotting of gate current as a function of position on the gate
+  </li>
+</ul>
+<p>
+In practice, hot electron injection is normally analysed by measuring the gate
+current that is injected onto the floating gate contact.
+The Atlas input file was therefore created to simulate both the floating
+gate and substrate currrents.
+To, do this the electrode
+<b> fgate </b> was not specified as floating.
+</p>
+<p>
+The Concannon model for substrate current is implemented on the
+<b> impact </b> statement with the parameters
+<b> n.concannon p.concannon </b> to turn on the individual electron and hole components. The Concannon model for hot carrier injection is implemented on the
+<b> models </b> statement with the parameters
+<b> n.concannon p.concannon </b> for the individual components. Both of these models are based upon the carrier energies and therefore will automatically implement the electron and hole energy balance equations.
+</p>
+<p>
+This example finishes by saving a solution and plotting the structure and the injected current as a function of position across the polsilicon gate - oxide interface.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

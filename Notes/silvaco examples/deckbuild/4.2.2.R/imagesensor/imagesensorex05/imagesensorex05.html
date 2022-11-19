@@ -1,0 +1,110 @@
+<html>
+  <head>
+    <title>CIS Output Signal Characterization</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>CIS Output Signal Characterization</H1>
+    <table id="text">
+      <tr>
+        <td><b>Required:</b></td><td><i>Athena/Monte Carlo Implant/Luminous/Deckbuild</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Version:</b></td><td><i>Athena 5.22.3.R, Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="imagesensorex05_plot0.png" width="640" alt="imagesensorex05_plot0" />
+      <p/>
+      <img src="imagesensorex05_plot1.png" width="640" alt="imagesensorex05_plot1" />
+      <p/>
+      <img src="imagesensorex05_plot2.png" width="640" alt="imagesensorex05_plot2" />
+      <p/>
+      <img src="imagesensorex05_plot3.png" width="640" alt="imagesensorex05_plot3" />
+      <p/>
+      <img src="imagesensorex05_plot4.png" width="640" alt="imagesensorex05_plot4" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This examples shows the creation and calibration of a 3.3 Volt CMOS Image
+Sensor (CIS), using a standard 10 ohm-cm epitaxy process.  The
+Image Sensor is created using Athena process simulation and monte-carlo
+implantation.
+</p>
+<p>
+The pass transistors have a high threshold voltage of approximately 2.5 volts
+to minimize leakage currents in their off state.  Since the signal output
+contact of the image sensor is floating, the threshold voltage of the two
+pass transistors is determined by using the
+<b> probe</b> statement, whereby the electron concentration under their gates, tg_conc and
+rst_conc, are used to determine the relative conductivity of the channel,
+rather than the usual drain current plot.
+</p>
+<p>
+The first transient simulates what happens when the image sensor is depleted
+of electrons, and is simply left to integrate thermally generated charge
+(leakage current) in the dark for a period of 10 seconds.  The
+transient_dark.log plot shows that the concentration of electrons in the
+depleted image sensor well, starts to rise after approximately 0.1 seconds,
+so this effectively sets a maximum integration time limit on the image sensor
+to obtain a normal contrast image.
+</p>
+<p>
+The second set of transients, numbering 10 in all, calibrate the image sensor
+output for a typical light intensity range that would be expected in a normal
+out door setting.  The simulated intensity range was one order of magnitude,
+between 0.02 and 0.2 times the intensity of a standard solar AM-1.5 spectrum.
+It was found that the optimum integration time for such a photograph with
+this intensity range, was approximately 7.5e-04 seconds for this particular
+image sensor.  This integration time indicates the image sensor can be used
+in a range from bright sunshine images down to an average intensity of
+approximately four orders of magnitude less than this.
+</p>
+<p>
+The 10 simulations for the different intensities for written using the loop
+capability in deckbuild.  The loops are bounded by the deckbuild syntax
+<b> loop steps=16 </b> and
+<b> l.end </b> The values of intensity are increased inside each loop for each simulation
+using deckbuild&apos;s
+<b> set </b> statements, which assign a value to the light intensity variable defined in
+the set statement.
+</p>
+<p>
+The output signal voltage of the image sensor is taken from the common
+source / drain contact of the two series pass transistors.  In order to save
+the complication of creating a separate contact at this location, and then
+defining this contact as a high resistance voltage sense contact, the probe
+statement was used once again, to probe the potential at this location.
+</p>
+<p>
+The figure of image sensor output voltage (fd_potential) versus light
+integration time up to the chosen integration time of 7.5e-5 seconds, shows
+the effect of light intensity variation on the output voltage.  The output
+voltage at the final time of 7.5e-5 seconds is the final outptut signal of the
+image sensor and is captured by an
+<b> extract </b> statement.  The values of the extract statement were then collated in the
+final plot and show the output signal characteristics of the image sensor
+versus light intensity reflected from an image.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

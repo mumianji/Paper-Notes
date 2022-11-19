@@ -1,0 +1,85 @@
+!*************************************************************************
+! PURPOSE: defines a xi-command to build a MIM capa as a matrix of squares
+! USAGE example
+! Input parameters:
+! parameter W = number of colons of the matrix of cells
+! parameter L = number of rows of the matrix of cells
+!*************************************************************************
+
+DEFINE COMMAND/replace "capa";
+DEFINE ACTION
+PARAMETER W 
+PARAMETER L 
+DO BEGIN
+! UPDATE THE GDS NUMBER OF THESE LAYERS TO FIT WITH YOUR TECHNO. DO NOT CHANGE THE NAME
+  new layer "M5" /datatype=0 /gdsnumber=0 /red=0 /green=0 /blue=255;
+  new layer "MIM" /datatype=0 /gdsnumber=1 /red=0 /green=255 /blue=0; 
+  new layer "M6" /datatype=0 /gdsnumber=2 /red=255 /green=0 /blue=0;
+  new layer "Electrode_M5" /datatype=0 /gdsnumber=3 /red=0 /green=125 /blue=255;
+  new layer "Electrode_M6" /datatype=0 /gdsnumber=4 /red=0 /green=255 /blue=125;
+
+
+units /um;
+
+pos_y=0;
+pos_x=0;
+
+cell new "box";
+cell open "box";
+  polygon 38,38,0,38,0,0,12,0,12,26.5,27,26.5,27,11.5,12,11.5,12,0,38,0 /layer = "M5";
+
+  polygon 38,37.5,0.5,37.5,0.5,0,11.5,0,11.5,27,27.5,27,27.5,11,38,11 /layer = "MIM";
+  polygon 38,11,11.5,11,11.5,0,38,0 /layer = "MIM";
+
+!cell new "Capa";
+cell open "CELL";
+  box -34 (-135+14-27*(L-1)/2) 67.5 24 /layer = "M6";
+  box (-20.5-27*(W-1)/2) -5 (W*27+13.5) 10 /layer = "M6";
+  box -34 (111-13.5+27*(L-1)/2) 67.5 24 /layer = "M6";
+
+  box (-34+13.5-27*(W-1)/2) -1.5 2 3 /layer = "Electrode_M5";
+  box (31.5-13.5+27*(W-1)/2) -1.5 2 3 /layer = "Electrode_M5";
+  text (-33+13.5-27*(W-1)/2) 0 "In_M5" /height = 0.15 /width = 0.105 /middlecenter  /layer = "Electrode_M5";
+  text (32.5-13.5+27*(W-1)/2) 0 "Out_M5" /height = 0.15 /width = 0.105 /middlecenter  /layer = "Electrode_M5";
+
+  box -34 (-125+14-27*(L-1)/2) 2 5 /layer = "Electrode_M6";
+  box (-34+13.5-27*(W-1)/2) -1 2.5 2.5 /layer = "Electrode_M6";
+  box -34 (120-13.5+27*(L-1)/2) 2 5 /layer = "Electrode_M6";
+  box 31.5 (-125+14-27*(L-1)/2) 2 5 /layer = "Electrode_M6";
+  box (31.5-13.5+27*(W-1)/2) -1.5 2 3 /layer = "Electrode_M6";
+  box 31.5 (120-13.5+27*(L-1)/2) 2 5 /layer = "Electrode_M6";
+  text -33 (-122.5+14-27*(L-1)/2) "gin2" /height = 0.25 /width = 0.175 /middlecenter  /layer = "Electrode_M6";
+  text (-33+13.5-27*(W-1)/2) 0.5 "In_M6" /height = 0.15 /width = 0.105 /middlecenter  /layer = "Electrode_M6";
+  text -33 (122.5-13.5+27*(L-1)/2) "gin1" /height = 0.15 /width = 0.105 /middlecenter  /layer = "Electrode_M6";
+  text 32.7 (-122.5+14-27*(L-1)/2) "gout2" /height = 0.25 /width = 0.175 /middlecenter  /layer = "Electrode_M6";
+  text 32.8 (122.5-13.5+27*(L-1)/2)	 "gout1" /height = 0.15 /width = 0.105 /middlecenter  /layer = "Electrode_M6";
+  text (33-13.5+27*(W-1)/2) 0 "Out_M6" /height = 0.15 /width = 0.105 /middlecenter  /layer = "Electrode_M6";
+
+  pos_y = -5.5 - ((L/2)*27);
+  pos_x = -6 - ((W/2)*27);
+
+  W_mod = MODF(W);
+  L_mod = MODF(L);
+
+  W_int = W_mod[2];
+  L_int = L_mod[2];
+
+  array (pos_x) (pos_y) /cell = "box"  /col = (W_int) /row = (L_int) /xdeltacol = 27 /ydeltacol = 0 /xdeltarow = 0 /ydeltarow = 27;
+  select all;
+  explode /selected;
+  !zoom /all;
+
+      END;
+
+DEFINE ARGUMENT W /COERCE=(FLOAT)/NAMED/IS_DEFAULT/VALUE_REQUIRED;
+DEFINE ARGUMENT L /COERCE=(FLOAT)/NAMED/IS_DEFAULT/VALUE_REQUIRED;
+
+COMPLETE COMMAND;
+
+
+project new "/main/alpha/examples/quest/project_new.eld";
+cell new ("CELL");
+cell open ("CELL");
+capa /L=2 /W=2;
+cell_export_name = "/main/alpha/examples/quest/questex16_Length=2Width=2.gds";
+CELL EXPORT "CELL" (cell_export_name);

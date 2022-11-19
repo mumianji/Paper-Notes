@@ -1,0 +1,180 @@
+# (c) Silvaco Inc., 2018
+go athena
+
+# Sweep increment
+set vstart = 0
+set vstop = 15
+set vinc = .2
+
+# x plane meshing
+line x l=0.0 s=0.25 
+line x l=0.5 s=0.15
+line x l=1.0 s=0.25
+line x l=3.5 s=0.15
+line x l=5.5 s=0.15
+line x l=8   s=0.15
+line x l=8.5 s=0.15
+line x l=9   s=0.25 
+
+# y plane meshing
+line y l=0 s=1
+line y l=18 s=1 
+
+init two.d material=Sapphire space.mult=0.5
+
+deposit material=GaN thick=1.475 div=20 dy=0.001 ydy=0
+deposit material=AlGaN thick=0.025 div=20 
+
+deposit aluminum thick=2 div=10
+
+etch aluminum start x=3.5 y=-4
+etch cont x=3.5 y=-1.5
+etch cont x=0.5 y=-1.5
+etch done x=0.5 y=-4
+
+etch aluminum start x=5.5 y=-4
+etch cont x=5.5 y=-1.5
+etch cont x=8.5 y=-1.5
+etch done x=8.5 y=-4
+
+etch above p1.y=-2 aluminum
+
+deposit thick=0.25 nitride
+
+structure outf=ganfetex05_0.str
+
+
+go atlas simflags="-160"
+
+mesh inf=ganfetex05_0.str ^diag.flip
+
+region modify num=3 x.comp=0.3
+region modify material="GaN" num=2 substrate
+
+elec name=source x.min=0 x.max=0.5 y.min=-2 y.max=-1.5
+elec name=drain x.min=8.5 x.max=9 y.min=-2 y.max=-1.5
+elec name=gate x.min=3.5 x.max=5.5 y.min=-2 y.max=-1.5
+elec substrate
+
+contact name=gate work=5
+contact name=source work=4
+contact name=drain work=4
+
+models k.p print srh albrct
+mobility albrct.n 
+models POLARIZATION CALC.STRAIN TENSOR.SCALE=0 PSP.SCALE=0.8 PIEZO.SCALE=0.8
+
+output con.band val.band charge polar.charge band.par qss
+
+method newton trap maxtrap=20
+
+solve init
+save outf=ganfetex05_1.str
+
+solve vdrain=1
+solve name=gate vfinal=-8 vstep=-0.5
+log outf=ganfetex05_0.log
+solve name=gate vfinal=1.0 vstep=0.2
+log off
+
+
+go victorystress 
+
+init structure="ganfetex05_0.str" 
+
+material nitride intrin.sig=-5e9
+material nitride young.m=300e9
+material nitride poiss.r=0.24
+
+stress strain exposed rebalance  
+
+save structure="ganfetex05_2.str"
+
+go atlas simflags="-160"
+
+mesh inf=ganfetex05_2.str ^diag.flip
+
+region modify num=3 x.comp=0.3
+region modify material="GaN" num=2 substrate
+
+elec name=source x.min=0 x.max=0.5 y.min=-2 y.max=-1.5
+elec name=drain x.min=8.5 x.max=9 y.min=-2 y.max=-1.5
+elec name=gate x.min=3.5 x.max=5.5 y.min=-2 y.max=-1.5
+elec substrate
+
+contact name=gate work=5
+contact name=source work=4
+contact name=drain work=4
+
+models k.p print srh 
+mobility albrct.n 
+models POLARIZATION CALC.STRAIN TENSOR.SCALE=1 PSP.SCALE=0.8 PIEZO.SCALE=0.8
+
+output con.band val.band charge polar.charge band.par qss
+
+method newton trap maxtrap=20
+
+solve init
+save outf=ganfetex05_3.str
+
+solve vdrain=1.0
+
+solve name=gate vfinal=-8 vstep=-0.5
+log outf=ganfetex05_1.log
+solve name=gate vfinal=1 vstep=0.2
+log off
+
+
+go victorystress 
+
+init structure="ganfetex05_0.str" 
+
+material nitride intrin.sig=8e9
+material nitride young.m=300e9
+material nitride poiss.r=0.24
+
+
+stress strain exposed rebalance 
+
+save structure="ganfetex05_4.str"
+
+
+go atlas simflags="-160"
+
+mesh inf=ganfetex05_4.str ^diag.flip
+
+region modify num=3 x.comp=0.3
+region modify material="GaN" num=2 substrate
+
+elec name=source x.min=0 x.max=0.5 y.min=-2 y.max=-1.5
+elec name=drain x.min=8.5 x.max=9 y.min=-2 y.max=-1.5
+elec name=gate x.min=3.5 x.max=5.5 y.min=-2 y.max=-1.5
+elec substrate
+
+contact name=gate work=5
+contact name=source work=4
+contact name=drain work=4
+
+models k.p print srh 
+mobility albrct.n 
+models POLARIZATION CALC.STRAIN TENSOR.SCALE=1 PSP.SCALE=0.8 PIEZO.SCALE=0.8
+
+output con.band val.band charge polar.charge band.par qss
+
+method newton trap maxtrap=20
+
+solve init
+save outf=ganfetex05_5.str
+
+solve vdrain=1.0
+
+solve name=gate vfinal=-8 vstep=-0.5
+log outf=ganfetex05_2.log
+solve name=gate vfinal=1 vstep=0.2
+
+
+tonyplot -overlay ganfetex05_0.log ganfetex05_1.log ganfetex05_2.log  -set ganfetex05_1.set
+tonyplot ganfetex05_2.str ganfetex05_4.str -set ganfetex05_2.set
+tonyplot ganfetex05_1.str ganfetex05_3.str ganfetex05_5.str -set ganfetex05_3.set
+
+quit

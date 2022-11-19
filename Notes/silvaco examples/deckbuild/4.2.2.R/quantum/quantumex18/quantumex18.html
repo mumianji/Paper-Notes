@@ -1,0 +1,79 @@
+<html>
+  <head>
+    <title>GaAs n-type Resonant Tunneling Diode</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>GaAs n-type Resonant Tunneling Diode</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Blaze/Quantum</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="quantumex18_plot0.png" width="640" alt="quantumex18_plot0" />
+      <p/>
+      <img src="quantumex18_plot1.png" width="640" alt="quantumex18_plot1" />
+      <p/>
+      <img src="quantumex18_plot2.png" width="640" alt="quantumex18_plot2" />
+      <p/>
+      <img src="quantumex18_plot3.png" width="640" alt="quantumex18_plot3" />
+      <p/>
+      <img src="quantumex18_plot4.png" width="640" alt="quantumex18_plot4" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example considers n-type GaAs RTD with 2nm wide double barriers separated by a 2nm well.
+The sumulation is based of a self-consistent solution of Poisson and Non-Equilibrium Green&apos;s
+function equations.
+To launch the model, use N.NEGF_PL1D and/or  P.NEGF_PL1D on the MODELS statement.
+This will solve a 1D model in one slice and copy it to all other slices.
+If slices are not equivalent, use N.NEGF_PL and/or  P.NEGF_PL to solve a 1D model
+for each slice. Energy grid size in the NEGF solver is regulated
+by ESIZE.NEGF on the MODELS statement (default is 2001). You may increase it up
+to 10000   for better convergence. To set broadening in quazi-equilibrium regions,
+use ETA.NEGF (default is 0.0066 eV). Increase it to 0.01 eV for better convergence.
+Physically, the broadening corresponds to inelastic electron-phonon scattering, and
+is necessary  to fill emitter  quazi-bound states.
+</p>
+<p>
+In order to solve for eigen energies and wavefunctions, we use the NEGF.EIG paramater of the
+SOLVE and SAVE statement.  NEGF.EIG can be switchedoff to save computation time,
+if the information on eigen energies is not required.  Use EIG.YMIN and EIG.YMAX
+parameters on the models statement to choose only states localized in this region.
+</p>
+<p>
+To gain insight into  transmission, DOS and current spectra, we use PROBE statements.
+Spectra files will have names quantumex18_TranvsE_1.log,
+quantumex18_TranvsE_2.log etc. for each time you set NEGF.LOG on the SAVE statement.
+Setting X-location is not needed if you solve only one slice (N.NEGF_PL1D).
+</p>
+<p>
+Additionally, we probe total charge and resonant energies at each bias point
+and store them in the IV log file.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

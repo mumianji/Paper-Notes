@@ -1,0 +1,58 @@
+<html>
+  <head>
+    <title>3D SiC MOSFET</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>3D SiC MOSFET</H1>
+    <table id="text">
+      <tr>
+        <td><b>Required:</b></td><td><i>Device 3D</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="sicex08_plot0.png" width="640" alt="sicex08_plot0" />
+      <p/>
+      <img src="sicex08_plot1.png" width="640" alt="sicex08_plot1" />
+      <p/>
+      <img src="sicex08_plot2.png" width="640" alt="sicex08_plot2" />
+      <p/>
+      <img src="sicex08_plot3.png" width="640" alt="sicex08_plot3" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates 3D SiC MOSFET simulation using DEVICED3D.
+</p>
+<p>
+Since the 3D MOSFET in this example has a rectangular shape Device 3D can be used to both create
+the 3D structure and perform the device simulation. Device simulation were performed using extended
+precision arithmetic to be sure to resolve low intrinsic carrier concentration. 80 bits was used for IV curves
+whereas 128 and 160 bits were used for breakdown Voltage simulation. The purpose of using two different
+precision arithmetic was to show that we can get the same Breakdown Voltage for both precision. However
+using 128bits(compare to 160 bits) reduces simulation time but prevent to captur very low leakage current.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

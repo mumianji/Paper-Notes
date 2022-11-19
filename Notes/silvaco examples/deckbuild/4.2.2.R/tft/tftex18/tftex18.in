@@ -1,0 +1,222 @@
+# (c) Silvaco Inc., 2018
+
+go victorydevice
+
+# tftex18.in: NBIS(Negative Bias Illumination Stress) Example for a-IGZO TFT
+# Vo2+ & Io ionization by light. Vo2+ & Io ionization are described by chemical ion reaction formula
+
+
+set ea1=1.06128
+set ea2=0.888436
+
+set t01=7.75239e-13
+set t02=1.59289e-12
+
+set l=20
+set sin_gi=0.1
+set sio_gi=0.15
+set igzo_thick=0.02
+set pass=0.3/2
+set sd_thick=0.15
+
+# W/L=20/20
+mesh width=20
+
+x.m l=-$l/2-3 s=0.5
+x.m l=-$l/2 s=0.5
+x.m l=0  s=1
+x.m l=$l/2  s=0.5
+x.m l=$l/2+3 s=0.5
+
+y.m l=-$sin_gi-$sio_gi-$igzo_thick-$sd_thick-$pass s=0.05
+y.m l=-$sin_gi-$sio_gi-$igzo_thick-$sd_thick s=0.05
+y.m l=-$sin_gi-$sio_gi-$igzo_thick s=$igzo_thick/10
+y.m l=-$sin_gi-$sio_gi s=$igzo_thick/10
+y.m l=-$sin_gi s=0.05
+y.m l=-$sin_gi/2 s=0.05
+y.m l=0 s=0.03
+y.m l=0.06 s=0.03
+y.m l=0.5 s=0.1
+
+region num=1 oxide name=pass
+region num=2 nitride name=gi1 y.min=-$sin_gi y.max=0
+region num=3 oxide name=gi2 y.min=-$sin_gi-$sio_gi y.max=-$sin_gi
+region num=4 material=igzo name=channel y.min=-$sin_gi-$sio_gi-$igzo_thick y.max=-$sin_gi-$sio_gi
+
+elec num=1 name=gate y.min=0 y.max=0.06 mat=aluminum
+elec num=2 name=source x.min=-$l/2-3 x.max=-$l/2 \
+	y.min=-$sin_gi-$sio_gi-$igzo_thick-$sd_thick y.max=-$sin_gi-$sio_gi-$igzo_thick mat=aluminum
+elec num=3 name=drain x.min=$l/2 x.max=$l/2+3 \
+	y.min=-$sin_gi-$sio_gi-$igzo_thick-$sd_thick y.max=-$sin_gi-$sio_gi-$igzo_thick mat=aluminum
+
+save outfil=tftex18_0.str
+
+tonyplot tftex18_0.str
+
+# Species definition for donor: Vo+/Vo2+
+species formula="In:Ga:Zn:O"    charge=+2  name="Vo2+"
+species formula="In:Ga:Zn:O"    charge=0  name="Vo"
+
+species formula="In:Ga:Zn:O"    charge=-2  name="Io2-"
+species formula="In:Ga:Zn:O"    charge=0  name="Io"
+
+doping reg=4 n.type conc=2e16 uniform
+
+doping reg=4 species.name="Vo"  uniform conc=1.3e17
+doping reg=4 species.name="Io2-"  uniform conc=9.5e16
+
+
+# initial vo2+/Io should be the same as ngd
+doping reg=4 species.name="Vo2+"  uniform conc=2e16
+
+#acceptor-like trap
+doping reg=4 species.name="Io"  uniform conc=2e5
+
+#
+contact name=gate workf=4.53
+contact name=source workf=4.16
+contact name=drain workf=4.16
+
+# a-IGZO bandgap, density of states, and affinity
+material material=IGZO nc300=5e19 nv300=1.55e20 eg300=3.05 affinity=4.16 taun0=1e-9 taup0=1e-9 
+
+#
+material material=nitride permit=7
+
+#
+mobility mun=12 mup=0.1
+
+#
+models bound.trap fermi srh temp=300 
+
+#non-zero initial Vo at the interface
+interface s.i  x.min=-$l/2-3 x.max=$l/2+3 y.min=-0.26 y.max=-0.24 \
+          species.name="Vo"   concentration=0.2e11
+
+# diffusivity
+material material=IGZO species.name="Vo" species.ea=2.36 species.af=1e7 species.hop=1e-6 
+material material=IGZO species.name="Vo2+" species.ea=1.7 species.af=1e7 species.hop=1e-6 
+material material=IGZO species.name="Io" species.ea=1.14 species.af=1e5 species.hop=1e-6 
+material material=IGZO species.name="Io2-" species.ea=1.14 species.af=1e5 species.hop=1e-6 
+	
+# Vo => Vo2+ + 2e-
+reaction formula="Vo2+ + 2e- <=> Vo" forward.ea=1.0 forward.rate=1e7/1e19  \
+	reverse.ea=0.7 reverse.rate=5e18*1e7/1e18
+
+# Io neutral acceptor-like trap
+reaction formula="Io + 2e- <=> Io2-" reverse.ea=0.0 reverse.rate=5e18*1e5/1e18 \
+	forward.ea=0.83 forward.rate=1e-15
+
+# initial DOS for Vo, Vo2+, Io
+defect numa=24 numd=48 nta=5e19 wta=0.015 ntd=1.55e20 wtd=0.195+0.025 \
+	nga=2e16 ega=0.51 wga=0.26+0.02 ngd=6e17 egd=2.85 wgd=0.13+0.05  \
+	sigtae=1e-15 sigtah=1e-15 sigtde=1e-15 sigtdh=1e-15 \
+	siggae=1e-14 siggah=1e-14 siggde=1e-14 siggdh=1e-14 
+
+#refractive index file
+material material=igzo indx.real=IGZO_n.dat indx.imag=IGZO_k.dat
+
+#
+material material=aluminum sopra=Al.nk
+
+#photogeneration by light
+beam num=1 x.orig=0 y.orig=-1 angle=90 reflect=4 min.power=1e-16 front.refl \
+	wavelength=0.365 parallel rays=21 
+
+probe x=0.0 y=-0.25 material=IGZO ft.species="Vo2+"
+probe x=0.0 y=-0.25 material=IGZO ft.species="Vo"
+
+probe x=0.0 y=-0.25 material=IGZO ft.species="Io"
+probe x=0.0 y=-0.25 material=IGZO ft.species="Io2-"
+
+probe x=0.0 y=-0.25 material=IGZO e.trantrap 
+probe x=0.0 y=-0.25 material=IGZO h.trantrap
+
+probe x=0.0 y=-0.25 material=IGZO reaction.species="Vo"
+probe x=0.0 y=-0.25 material=IGZO reaction.species="Vo2+"
+probe x=0.0 y=-0.25 material=IGZO reaction.species="Io"
+probe x=0.0 y=-0.25 material=IGZO reaction.species="Io2-"
+
+probe x=0.0 y=-0.25 material=IGZO species.name="Vo"
+probe x=0.0 y=-0.25 material=IGZO species.name="Vo2+" 
+probe x=0.0 y=-0.25 material=IGZO species.name="Io2-"
+probe x=0.0 y=-0.25 material=IGZO species.name="Io" 
+
+output charge con.band val.band recomb u.srh u.species u.trap species traps traps.ft
+
+method maxtrap=10  lte.timestep norm.scaling.local dt.max=1e5
+
+# 
+solve init
+
+#
+solve vdrain=0.1 freezespecies
+
+# initial threshold voltage
+log outfile=tftex18_0.log no.trap
+solve  vgate=-5 vstep=0.5 vfinal=20 name=gate freezespecies 
+log off
+
+extract init infile="tftex18_0.log"
+extract name="vt0" x.val from curve(v."gate", i."drain") where y.val=10e-12
+extract name="vergin" curve(v."gate", i."drain") outfile="tftex18_0.dat"
+
+# Plot intial IdVg compared to experiment data
+#tonyplot -overlay tftex18_exp1.dat tftex18_0.dat -set tftex18_1.set
+
+#
+solve init
+
+# Equlibrium solution
+solve ramptime=1e-9 tstop=1e-6 tstep=1e-12
+solve prev tstop=1e-3 
+solve prev tstop=1e-1
+solve prev tstop=1
+solve prev tstop=10
+solve prev tstop=100
+solve prev tstop=1e3
+solve prev tstop=1e4 tstep=1e3
+solve prev tstop=1e5 tstep=1e4
+solve prev tstop=1e6 tstep=1e5
+
+#
+solve init 
+solve prev freezespecies
+
+#illumination 7 mWatt/cm^2
+solve b1=0.7e-3 freezespecies
+
+set vs=-20+$vt0
+
+log outfile=tftex18_1.log no.trap
+solve prev vgate=$vs ramptime=1e-9 tstop=1e-6 tstep=1e-10 
+
+solve tstop=2e3
+save outfile=tftex18_1.str
+
+solve tstop=10e3
+save outfile=tftex18_2.str
+
+tonyplot tftex18_1.log -set tftex18_2.set
+
+# post IV curve
+load infile=tftex18_1.str
+log outfile=tftex18_2.log no.trap
+solve prev vstep=0.5 vfinal=20 name=gate freezespecies vdrain=0.1
+log off
+
+extract init infile="tftex18_2.log"
+extract name="2k" curve(v."gate", i."drain") outfile="tftex18_1.dat"
+
+load infile=tftex18_2.str
+log outfile=tftex18_3.log no.trap
+solve prev  vstep=0.5 vfinal=20 name=gate freezespecies vdrain=0.1
+log off
+
+extract init infile="tftex18_3.log"
+extract name="10k" curve(v."gate", i."drain") outfile="tftex18_2.dat"
+
+
+tonyplot -overlay  tftex18_exp1.dat tftex18_exp2.dat tftex18_exp3.dat tftex18_0.dat tftex18_1.dat  tftex18_2.dat -set tftex18_3.set
+
+quit

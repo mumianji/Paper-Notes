@@ -1,0 +1,14 @@
+# (c) Silvaco Inc., 2018
+go internal
+
+load infile=organicex03_1.in
+
+sweep parameter=doping type=power range="1e17, 1e23, 14" \
+      parameter=gamma type=linear range="2.5e7, 3.5e7, 3"
+
+save type=sdb outfile=organicex03.dat
+
+tonyplot organicex03.dat -set organicex03.set
+
+quit
+

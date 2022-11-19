@@ -1,0 +1,113 @@
+# (c) Silvaco Inc., 2018
+#################################
+# built-in polarization model
+#################################
+
+
+go victorydevice simflags="-80"
+
+set th=0.035
+# set up some thickness dependent mesh parameters
+set ymin=-1*$th
+set ymin2=$ymin/2
+set ydelta=$th + 0.0010
+
+mesh width=1000
+
+x.m l=0.0 s=1
+x.m l=1.0 s=1
+#
+
+y.m l=$ymin-0.005  s=0.0001
+y.m l=$ymin  s=0.0001
+y.m l=$ymin2 s=0.001
+y.m l=0.0    s=0.0001
+y.m l=0.01   s=0.001
+y.m l=1.0    s=0.5
+y.m l=1.98   s=0.001
+y.m l=2.0    s=0.0001
+
+region num=1 mat=AlGaN y.min=$ymin y.max=0 x.min=0 x.max=1 x.comp=0.27 donors=1e+15
+region num=2 mat=GaN y.min=0 y.max=2.0 x.min=0 x.max=1 donors=1e+15 substrate
+region num=3 x.min=0 x.max=1 y.min=$ymin-0.005 y.max=$ymin material=oxide
+
+electrode name=cathode bottom
+
+models print srh fermi incomplete 
+model polarization calc.strain polar.scale=1.1 
+model pch.ins
+model pch.elec
+
+inttrap donor density=6e+13 degen=2 e.level=2.4 taun=1e-12 taup=1e-12 \
+y.min=$ymin y.max=$ymin s.i
+
+output con.band val.band band.param charge traps qss polar.charge
+
+solve 
+save outf="ganfetex18_0.str"
+
+extract init inf="ganfetex18_0.str"
+extract name="2DEG_built_in" 1e-4 * area from curve(depth,impurity="Electron Conc" \
+        material="All" mat.occno=1 x.val=0.5) \
+	where x.min=0 and x.max=0.5 
+
+
+#############################################
+# Manually added charge
+#############################################
+
+go victorydevice simflags="-80"
+
+set th=0.035
+# set up some thickness dependent mesh parameters
+set ymin=-1*$th
+set ymin2=$ymin/2
+set ydelta=$th + 0.0010
+
+mesh width=1000
+
+x.m l=0.0 s=1
+x.m l=1.0 s=1
+#
+
+y.m l=$ymin-0.005  s=0.0001
+y.m l=$ymin  s=0.0001
+y.m l=$ymin2 s=0.001
+y.m l=0.0    s=0.0001
+y.m l=0.01   s=0.001
+y.m l=1.0    s=0.5
+y.m l=1.98   s=0.001
+y.m l=2.0    s=0.0001
+
+region num=1 mat=AlGaN y.min=$ymin y.max=0 x.min=0 x.max=1 x.comp=0.27 donors=1e+15
+region num=2 mat=GaN y.min=0 y.max=2.0 x.min=0 x.max=1 donors=1e+15 substrate
+region num=3 x.min=0 x.max=1 y.min=$ymin-0.005 y.max=$ymin material=oxide
+
+electrode name=cathode bottom
+
+models print srh fermi incomplete 
+
+interface charge=1.613e13 s.s region=1 
+interface charge=-3.947e13 s.i region=1
+interface charge=2.334e13 s.i region=2
+
+inttrap donor density=6e+13 degen=2 e.level=2.4 taun=1e-12 taup=1e-12 \
+              y.min=$ymin y.max=$ymin s.i
+
+output con.band val.band band.param charge traps qss polar.charge
+
+method  
+
+solve 
+save outf=ganfetex18_1.str
+
+extract init inf="ganfetex18_1.str"
+extract name="2DEG_interface" 1e-4 * area from curve(depth,impurity="Electron Conc" \
+        material="All" mat.occno=1 x.val=0.5) \
+	where x.min=0 and x.max=0.5 
+
+quit
+
+
+
+

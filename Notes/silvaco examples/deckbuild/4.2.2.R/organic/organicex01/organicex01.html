@@ -1,0 +1,155 @@
+<html>
+  <head>
+    <title>Device Characteristics of MEH-PPV Polymer LED</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Device Characteristics of MEH-PPV Polymer LED</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Blaze/Organic Display</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="organicex01_plot0.png" width="640" alt="organicex01_plot0" />
+      <p/>
+      <img src="organicex01_plot1.png" width="640" alt="organicex01_plot1" />
+      <p/>
+      <img src="organicex01_plot2.png" width="640" alt="organicex01_plot2" />
+      <p/>
+      <img src="organicex01_plot3.png" width="640" alt="organicex01_plot3" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates the basic characteristics of an Organic Light Emitting Diode (OLED). It demonstrates:
+</p>
+<ul>
+  <li>
+ OLED structure definition using Atlas syntax
+<br/>
+  </li>
+  <li>
+ Material parameter specification
+<br/>
+  </li>
+  <li>
+ Choosing the OLED physical models
+<br/>
+  </li>
+  <li>
+ Current density versus anode voltage characteristics
+<br/>
+  </li>
+  <li>
+ Current density versus electric field characteristics
+<br/>
+  </li>
+  <li>
+ Luminescent power of the OLED
+<br/>
+  </li>
+  <li>
+ Langevin recombination plot at 10V
+<br/>
+  </li>
+</ul>
+<p>
+The file starts with the
+<b> SET </b> statement which defines the thickness variables for substitution into Atlas syntax. This is followed by defining the OLED structure such as the mesh, region, electrode location and doping.
+This is a three layer device consisting of the MEH-PPV polymer film sandwiched between an Indium-Tin-Oxide (ITO) coated glass substrate and a metal. The ITO is the anode while the cathode is made up of metal.
+In addition, the polymer film is p-type doped with a uniform concentration of 1e15 cm-3.
+</p>
+<p>
+After the device description, the
+<b> MATERIAL </b> statement is used to specify the material properties of the ITO and also the MEH-PPV material. In the first
+<b> MATERIAL </b> statement, the
+<b> REAL.INDEX </b> parameter is used to set the real refractive index (which is directly related to the absorption coefficient) of the ITO. In the second
+<b> MATERIAL </b> statement,
+<b> AFFINITY</b> specifies the polymer LUMO level and
+<b> EG300 </b> specifies the bandgap of the polymer. This gives a HOMO level of 4.9eV (i.e. HOMO level =
+<b> EG300 + AFFINITY</b> ).
+<b> RST.EXCITON </b> specifies the exciton singlet to triplet ratio of the polymer. This parameter is a key factor in determining the ultimate limit of the OLED efficiency.
+<b> TAUS.EXCITON </b> specifies the singlet exciton lifetime and
+<b> LDS.EXCITON </b> specifies the singlet exciton diffusion length.
+</p>
+<p>
+Other material parameters of the polymer such as bandgap, density of state (Nc and Nv), relative permittivity, lifetimes, Richardson constant
+and real refractive index are also specified in this statement.
+</p>
+<p>
+After the
+<b> MATERIAL </b> statements, the
+<b> MOBILITY </b> statement is used to set the polymer mobility parameters for the Poole-Frenkel-like mobility model. Parameters such as the
+<b> DELTAEN.PFMOB </b> and
+<b> DELTAEP.PFMOB </b> specify the thermal activation energy of the organic polymer at zero electric field for electrons and holes respectively, while
+<b> BETAN.PFMOB </b> and
+<b> BETAP.PFMOB </b> specify the electron and hole Poole-Frenkel factor respectively.
+<b> MUN </b> and
+<b> MUP </b> are used to set the low field electron and hole mobilities respectively.
+</p>
+<p>
+The
+<b> CONTACT </b> statements are used to specify the workfunction of metal and ITO at the cathode and the anode respectively. The first
+<b> CONTACT </b> statement specifies a workfunction of 2.9eV (equivalent to Calcium) at the cathode. This forms an electron-injection barrier of 0.1eV (i.e. Ca workfunction - polymer affinity) at the cathode.
+The second
+<b> CONTACT </b> statement specifies the workfunction of ITO as 4.7eV. This forms a hole-injection barrier of 0.2eV given the polymer HOMO level of 4.9eV. The
+<b> NEW.SCHOTT </b> option specifies a heterojunction thermionic tunneling model to be used, while the
+<b> AUTO.OHMIC </b> option automatically converts the contact to ohmic when there is no barrier.
+</p>
+<p>
+In the
+<b> MODELS </b> statements, several organic models are used such the Poole-Frenkel-like mobility model (
+<b>PFMOB</b> ), the Langevin bimolecular recombination model (
+<b> LANGEVIN</b> ) and the singlet exciton model (
+<b> SINGLET</b> ). The
+<b> PFMOB </b> and
+<b> LANGEVIN </b> models account for the transport and recombination mechanism of the polymer, while the
+<b> SINGLET </b> model is used to calculate the radiative rate for luminescence due to the Langevin recombination in the OLED. The
+<b> PRINT </b> option prints the status of all models, coefficients, and constants in the runtime output window.
+</p>
+<p>
+After specifying the structure, an initial solution is first performed with the
+<b> SOLVE INIT </b> statement. This is followed by biasing the anode to 10V. Here, the luminous wavelength
+<b> L.WAVE </b> is set in the
+<b> SOLVE </b> statement so that the luminous power can be extracted during the ramp. A
+<b> PROBE </b> statement is included to probe the maximum electric field of the device at x = 5um.
+</p>
+<p>
+The current density versus voltage and the current density versus electric field data are then extracted via the
+<b> EXTRACT </b> statement. After extracting the data, these data are plotted with the
+<b> TONYPLOT </b> statements.
+For the first plot of current density versus voltage, you should select to display &quot;anode bias&quot; along the x axis and &quot;anode current&quot; along the y axis.
+The second plot shows the current density versus the electric field.
+</p>
+<p>
+The third plot is the Luminescent power of the OLED. In this figure, it is
+seen that the device &quot;turns-on&quot; at about 2 Volts.  Finally, the contour plot
+of the Langevin recombination at 10V is displayed.  In this case, most of the
+radiative recombination is seen to be confined within the polymer layer
+close to the cathode.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

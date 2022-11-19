@@ -1,0 +1,56 @@
+#include <math.h>
+
+/*
+ * TFT donor trap density as function of energy
+ * Statement: DEFECTS
+ * Parameter: F.TFTDON
+ * Arguments:
+ * energy     energy relative to valence band (eV)
+ * eg         band gap (eV)
+ * *density   tft donor trap density (cm^-3)
+ * *sigmae    donor trap electron capture cross-section
+ * *sigmah    donor trap hole capture cross-section
+ */
+int tftdon(double energy,double eg,double *density,double *sigmae,double *sigmah)
+{
+
+	double ktd, ktov, eov;
+
+	ktd=0.1;
+	ktov=0.1;
+	eov=2.9;
+
+	*density = 4.5e21*exp( -energy / ktd ) + 1e16*exp( -( energy-eov)*(energy-eov) / (ktov*ktov));
+	*sigmah=1e-14;
+	*sigmae=1e-14;
+
+	return(0);
+}
+
+/*
+ * TFT acceptor trap density as function of energy
+ * Statement: DEFECTS
+ * Parameter: F.TFTACC
+ * Arguments:
+ * energy     energy relative to conduction band (eV)
+ * eg         band gap (eV)
+ * *density   tft acceptor trap density (cm^-3)
+ * *sigmae    donor trap electron capture cross-section
+ * *sigmah    donor trap hole capture cross-section
+ */
+int tftacc(double energy,double eg,double *density,double *sigmae,double *sigmah)
+{
+
+	double kta, kda;
+
+	kta=0.03;
+	kda=0.19;
+
+	*density = 8e18*exp( -energy / kta ) + 1e17*exp(-energy/kda);
+	*sigmah=1e-14;
+	*sigmae=1e-14;
+
+	return(0);
+}
+
+

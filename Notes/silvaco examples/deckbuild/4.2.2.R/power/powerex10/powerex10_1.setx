@@ -1,0 +1,15 @@
+<!DOCTYPE SetFile-2D>
+<setfile version="1" >
+ <properties key_opaque="false" mark_frequency="0" mark_overlay="1" graph_width_0="2" graph_width_1="1" graph_width_2="1" graph_width_3="0" graph_width_4="1" graph_width_5="0" sequence_size="1" sequence_width="0" log_zero="0" sequence_mark_0="0" sequence_mark_1="1" sequence_mark_2="2" sequence_mark_3="3" sequence_mark_4="4" sequence_mark_5="5" />
+ <functions impurity_1_name="" impurity_1_units="" impurity_2_name="" impurity_2_units="" graph_1_name="" graph_1_units="" graph_2_name="" graph_2_units="" />
+ <xygraph show_points="true" show_lines="true" xyg_type="0" xyg_convert="false" >
+  <cartesian xyg_yaxis_scale="linear" xyg_xaxis_lin="Drain Voltage" xyg_yaxis="none" xyg_yaxis_lin="Drain Current" xyg_group="(unknown electricals)" xyg_cie="false" />
+ </xygraph>
+ <key cont_1_at="3" cont_2_at="1" cont_3_at="6" elec_at="6" vectors_at="6" overlay_at="2" regions_at="4" />
+ <annotation title_main="ATLAS Simulation of DMOS Device" title_sub=" " footer_right="none" footer_left="none" show_xaxis="true" show_yaxis="true" show_grid="false" show_label_xaxis="true" show_label_yaxis="true" range_xaxis="auto" range_yaxis="auto" label_xaxis="Drain Voltage (V)" label_yaxis="Drain Current (A/um)" />
+ <plot zoom_from_x="0" zoom_from_y="0" zoom_scale_x="1" zoom_scale_y="1" label_overlay="powerex10_1.log" label_overlay="powerex10_2.log" label_overlay="powerex10_3.log" >
+  <label label_text="anisotropic mobility" label_from_x="41.5216" label_from_y="0.00021267" label_color="#000000" label_scale="1" label_align="3" label_to_x="46.1778" label_to_y="0.000183672" />
+  <label label_text="isotropic mobility &lt;1000&gt;" label_from_x="43.091" label_from_y="0.000121794" label_color="#000000" label_scale="1" label_align="0" label_to_x="34.8385" label_to_y="8.16441e-05" />
+  <label label_text="isotropic mobility &lt;1100&gt;" label_from_x="20.5685" label_from_y="0.000327374" label_color="#000000" label_scale="1" label_align="3" label_to_x="24.9561" label_to_y="0.000300953" />
+ </plot>
+</setfile>

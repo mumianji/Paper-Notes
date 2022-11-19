@@ -1,0 +1,61 @@
+v DBInternal
+# silvaco.file ASCII version=1.12.4 format=1 contents=SDB,Tables=1
+
+Copyright "###################################################################"
+Copyright "#               Copyright Silvaco International (c)               #"
+Copyright "#                            1992-2001                            #"
+Copyright "#                                                                 #"
+Copyright "# This file format and the following Key are copyright Silvaco    #"
+Copyright "# International. You may not use, this format or key without      #"
+Copyright "# reproducing this message in full and obtaining                  #"
+Copyright "# express written permission from Silvaco International.          #"
+Copyright "#                                                                 #"
+Copyright "# To obtain such permission please contact: Silvaco International #"
+Copyright "#                                           support@silvaco.com   #"
+Copyright "#                                                                 #"
+Copyright "# KEY=SVC86hn7562asdx                       PROD=345              #"
+Copyright "###################################################################"
+#libSDB 1.10.12 (Fri Oct  3 01:03:53 PDT 2008)
+j 1 1
+k 0
+p 4 10000 10001 10002 10003
+d 1 1e+8 500 0.515869
+d 2 3e+8 500 0.483737
+d 3 5e+8 500 0.466636
+d 4 7e+8 500 0.455321
+d 5 9e+8 500 0.447255
+d 6 1e+8 750 0.533506
+d 7 3e+8 750 0.510398
+d 8 5e+8 750 0.497884
+d 9 7e+8 750 0.488811
+d 10 9e+8 750 0.481794
+d 11 1e+8 1000 0.547617
+d 12 3e+8 1000 0.529153
+d 13 5e+8 1000 0.5186
+d 14 7e+8 1000 0.510346
+d 15 9e+8 1000 0.503517
+d 16 1e+8 1250 0.55872
+d 17 3e+8 1250 0.544692
+d 18 5e+8 1250 0.533953
+d 19 7e+8 1250 0.525319
+d 20 9e+8 1250 0.518404
+d 21 1e+8 1500 0.56767
+d 22 3e+8 1500 0.556606
+d 23 5e+8 1500 0.546551
+d 24 7e+8 1500 0.537259
+d 25 9e+8 1500 0.52923
+d 26 1e+8 1750 0.575032
+d 27 3e+8 1750 0.566025
+d 28 5e+8 1750 0.55634
+d 29 7e+8 1750 0.54695
+d 30 9e+8 1750 0.538479
+d 31 1e+8 2000 0.581191
+d 32 3e+8 2000 0.573658
+d 33 5e+8 2000 0.564163
+d 34 7e+8 2000 0.554628
+d 35 9e+8 2000 0.545917
+Q 10000 1 ex_id
+Q 10001 1 theta0
+Q 10002 1 seg0
+Q 10003 1 1dvt
+EOF 2114566225

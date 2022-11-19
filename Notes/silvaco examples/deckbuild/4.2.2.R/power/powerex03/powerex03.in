@@ -1,0 +1,117 @@
+# (c) Silvaco Inc., 2018
+go atlas
+
+TITLE : IGBT LATCHUP SIMULATION
+# IGBT steady state output characteristics
+# Save the solution at Vce=300 V
+
+mesh
+
+x.mesh loc=0.0  spac=1.3
+x.mesh loc=13.0 spac=0.75
+x.mesh loc=25.0 spac=1.4
+
+y.mesh loc=-0.08 spac=0.04
+y.mesh loc=0.0   spac=0.04
+y.mesh loc=0.6   spac=0.2
+y.mesh loc=8.0   spac=1.0
+y.mesh loc=70.0  spac=20.0
+y.mesh loc=100.0 spac=10.0
+
+region     num=1 y.max=0.0   oxide
+region     num=2 y.min=0.0  silicon
+
+#   electrodes #1 - gate; #2 - emitter #3 - collector
+
+elec       num=1 left  y.min=-0.08  length=13.0 name=gate
+elec       num=2 right y.min=0.0  y.max=0.0 length=6.8  name=emitter
+elec       num=3 bottom  name=collector
+
+#   impurity profile
+doping     uniform conc=1.5e14 n.type    
+doping     uniform conc=1.0e19 p.type    y.t=81.4 y.b=100
+doping     uniform conc=1.0e17 n.type    y.t=65.0 y.b=81.4
+doping     gauss conc=2.7e17 p.type junc=5.8 x.l=13   ratio=0.8
+doping     gauss conc=9.3e19 n.type junc=0.4 x.l=13 x.r=20 ratio=0.8
+
+save outf=powerex03_0.str
+
+tonyplot powerex03_0.str -set powerex03_0.set
+
+mater    region=2 taup0=1e-6 taun0=1e-6
+contact  num=1 n.poly
+
+models   analytic srh auger fldmob surfmob  
+   
+solve    init 
+    
+method  newton trap 
+
+# Vce increased from 0.0
+solve    vcollector=0.1
+solve    vcollector=0.5
+solve    vcollector=1
+solve    vcollector=2
+solve    vcollector=5
+solve    vcollector=10  vstep=10.0  vfinal=50 name=collector
+solve    vcollector=75  vstep=25.0  vfinal=300 name=collector
+save     outf=powerex03_1.str
+
+
+go atlas
+
+mesh
+
+x.mesh loc=0.0  spac=1.3
+x.mesh loc=13.0 spac=0.75
+x.mesh loc=25.0 spac=1.4
+
+y.mesh loc=-0.08 spac=0.04
+y.mesh loc=0.0   spac=0.04
+y.mesh loc=0.6   spac=0.2
+y.mesh loc=8.0   spac=1.0
+y.mesh loc=70.0  spac=20.0
+y.mesh loc=100.0 spac=10.0
+
+region     num=1 y.max=0.0   oxide
+region     num=2 y.min=0.0  silicon
+
+#   electrodes #1 - gate; #2 - emitter #3 - collector
+
+elec       num=1 left  y.min=-0.08  length=13.0 name=gate
+elec       num=2 right y.min=0.0  y.max=0.0 length=6.8  name=emitter
+elec       num=3 bottom  name=collector
+
+#   impurity profile
+doping     uniform conc=1.5e14 n.type    
+doping     uniform conc=1.0e19 p.type    y.t=81.4 y.b=100
+doping     uniform conc=1.0e17 n.type    y.t=65.0 y.b=81.4
+doping     gauss conc=2.7e17 p.type junc=5.8 x.l=13   ratio=0.8
+doping     gauss conc=9.3e19 n.type junc=0.4 x.l=13 x.r=20 ratio=0.8
+
+mater   region=2 taup0=1e-6 taun0=1e-6
+contact  num=1 n.poly
+
+thermcontact num=1 elec.num=3 temp=300
+
+models  analytic srh auger fldmob surfmob lat.temp  
+impact  selb
+
+method newton
+
+# Solution at Vge=0 and Vce= 300.0 V is loaded  
+load    inf=powerex03_1.str master
+
+solve   prev
+
+output  flowlines jx.e jy.e jx.h jy.h
+
+log     outf=powerex03.log 
+solve   v1=10.0 ramptime=100.e-9 tstep=1e-9 tstop=1.e-6  t.compl=1000
+
+save outf=powerex03_2.str
+
+tonyplot powerex03.log -set powerex03_log.set 
+
+quit
+

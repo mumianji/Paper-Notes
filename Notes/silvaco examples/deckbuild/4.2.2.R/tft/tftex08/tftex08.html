@@ -1,0 +1,70 @@
+<html>
+  <head>
+    <title>TFT Simulation Using the C-interpreter</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>TFT Simulation Using the C-interpreter</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>S-Pisces/TFT/C-Interpreter</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="tftex08_plot0.png" width="640" alt="tftex08_plot0" />
+      <p/>
+      <img src="tftex08_plot1.png" width="640" alt="tftex08_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+The DEFECTS statement only allows the user to specify a fixed density of states
+versus energy distribution. This would normally comprise one Gaussian
+and/or one exponential energy distribution of traps across the bandgap. This
+may not necessarily accurately reflect the users material.
+</p>
+<p>
+However, Atlas allows the user to use the C-interpreter to specify the density
+of states versus energy distribution. On the
+<b> DEFECTS </b> statement the options
+<b> f.tftacc</b> and
+<b> f.tftdon</b> specify files which should contain the distributions written as standard C routines.
+</p>
+<p>
+In this example the acceptor and donor densities are defined by two exponential
+equations each which begin from the conduction and the valence bands. The
+parameters that would normally specify the density of states should be set to
+<b> nta=ntd=nga=ngd=0 </b> otherwise they would be added to the C-interpreter values.
+</p>
+<p>
+The capture cross sections are then taken from the parameters in the DEFECTS statement.
+The acceptor capture cross section is defined by the Gaussian
+acceptor value and the donor capture cross section is defined by the Gaussian donor value.
+</p>
+<p>
+The remainder of this TFT input deck is the same as that described in tftex03.in.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

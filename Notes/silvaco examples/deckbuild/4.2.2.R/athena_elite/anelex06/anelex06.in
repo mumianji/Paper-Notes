@@ -1,0 +1,50 @@
+go athena
+# 
+line x loc=0.00 spac=0.05 
+line x loc=2.00 spac=0.05 
+#
+line y loc=0.00 spac=0.05 
+line y loc=1.00 spac=0.05 
+# 
+init orientation=100
+# 
+# 
+deposit photoresist  thick=0.5 div=8
+etch photo start x=.65 y=-10
+etch       cont  x=.75 y=10
+etch       cont  x=1.25 y=10
+etch       done  x=1.35 y=-10
+#
+structure outfile=anelex06_0.str
+#
+# Isotropic only
+#
+rate.etch machine=ad1 silicon a.s rie isotropic=50.0 
+#
+etch machine=ad1 time=2 minute dx.mult=0.5
+#
+structure outfile=anelex06_1.str
+#
+init infile=anelex06_0.str
+#
+# Directional only
+#
+rate.etch machine=ad1 silicon a.s rie directional=50.0
+#
+etch machine=ad1 time=2 minute dx.mult=0.5
+#
+structure outfile=anelex06_2.str
+#
+init infile=anelex06_0.str
+#
+# Chemical only
+#
+rate.etch machine=ad1 silicon a.s rie chemical=50.0 divergence=5
+#
+etch machine=ad1 time=2 minute dx.mult=0.5
+#
+structure outfile=anelex06_3.str
+#
+tonyplot anelex06_*.str 
+#
+quit

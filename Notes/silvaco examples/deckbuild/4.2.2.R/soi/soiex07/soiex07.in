@@ -1,0 +1,115 @@
+# (c) Silvaco Inc., 2018
+go atlas
+#
+TITLE 3D simulation of a Body Contacted SOI MOSFET
+#
+# 0.05um of silicon on 0.4um oxide substrate     
+#
+mesh   three.d space.mult=1.0
+# 
+x.mesh loc=0.00     spac=0.5
+x.mesh loc=2.0      spac=0.5
+x.mesh loc=2.8      spac=0.1
+x.mesh loc=2.95     spac=0.02
+x.mesh loc=3.2      spac=0.2
+x.mesh loc=3.45     spac=0.02
+x.mesh loc=3.6      spac=0.1
+x.mesh loc=4.50     spac=0.5
+x.mesh loc=6.5      spac=0.5
+#
+y.mesh loc=-0.022   spac=0.02
+y.mesh loc=-0.012   spac=0.02
+y.mesh loc=0.00     spac=0.0025
+y.mesh loc=0.025    spac=0.005
+y.mesh loc=0.05     spac=0.005
+y.mesh loc=0.1     spac=0.05
+y.mesh loc=0.5      spac=0.2
+#
+z.mesh loc=0        spac=0.5
+z.mesh loc=1        spac=0.5
+z.mesh loc=2        spac=0.5
+z.mesh loc=2.5      spac=0.1
+z.mesh loc=3.5      spac=0.25
+z.mesh loc=4        spac=0.1
+
+region      num=1 y.max=0  z.min=0 z.max=4 oxide 
+region      num=2 y.min=0 y.max=0.05 z.min=0 z.max=4 silicon
+region      num=3 y.min=0.05  z.min=0 z.max=4 oxide
+#
+#*********** define the electrodes ************
+# Electrodes #1 source, #2 gate, #3 drain, #4 (Body electrode), #5 substrate 
+#
+electrode     name=source x.max=2.0 y.min=-0.012 y.max=0 z.min=0 z.max=1
+electrode     name=gate    x.min=2.8 x.max=3.6 y.min=-0.022 y.max=-0.012 z.min=0 z.max=2.5
+electrode     name=drain  x.min=4.5 y.min=-0.012 y.max=0 z.min=0 z.max=1
+electrode     name=body   x.min=2.8 x.max=3.6 y.min=-0.012 y.max=0.0 z.min=3.5 z.max=4
+electrode     substrate
+#
+#*********** define the doping concentrations *****
+#
+doping     uniform  p.type conc=1.5e17 
+doping     uniform  n.type conc=5.e19 x.left=0. x.right=3.0 y.top=0.0 y.bottom=0.05 z.min=0 z.max=2
+doping     uniform  n.type conc=5.e19 x.left=3.5 x.right=6.5 y.top=0.0 y.bottom=0.05 z.min=0 z.max=2
+doping     uniform  p.type conc=5.e19 x.left=2.8 x.right=3.6 y.top=0.0 y.bottom=0.05 z.min=3.5 z.max=4
+#
+save         outf=soiex07_0.str
+#
+# set workfunction of gate
+contact      name=gate n.poly
+#
+# select models
+models       conmob srh auger bgn fldmob print 
+#
+impact selb
+#
+tonyplot3d soiex07_0.str -set soiex07_0.set
+solve init
+solve prev
+#
+# do IDVG characteristic
+method bicgst  maxtrap=6  trap
+solve vdrain=0.025
+solve vdrain=0.05
+solve vdrain=0.1
+
+#ramp the gate and store the results
+
+log outf=soiex07_1.log
+
+solve vgate=0.025 vstep=0.025 vfinal=0.2 name=gate
+solve vgate=0.3 vstep=0.1 vfinal=1.5 name=gate
+
+tonyplot soiex07_1.log -set soiex07_1.set
+ 
+# Id-Vd calculations 
+
+#ramp the gate to 1.5V
+
+log off
+solve init
+
+method bicgst  maxtrap=6  trap
+
+solve vgate=0.5 
+solve vgate=1
+solve vgate=1.5 
+
+#ramp the drain and store the results
+
+log outf=soiex07_2.log master
+solve vdrain=0.00625
+solve vdrain=0.0125
+solve vdrain=0.025
+solve vdrain=0.05
+solve vdrain=0.1 vstep=0.1 vfinal=1 name=drain
+solve vdrain=1.25 vstep=0.25 vfinal=3 name=drain
+     
+method  bicgst  maxtrap=6  trap  
+
+solve vdrain=3.25 vstep=0.25 name=drain vfinal=4
+
+tonyplot soiex07_2.log -set soiex07_2.set
+tonyplot soiex07_2.log -set soiex07_3.set
+
+
+quit

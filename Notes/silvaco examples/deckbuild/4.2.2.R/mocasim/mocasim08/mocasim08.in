@@ -1,0 +1,67 @@
+go mocasim
+
+####################################################################
+# (c) SILVACO International 2009                                   #
+# MOCASIM example 8: doping dependent GaAs input deck              #
+#                                                                  #
+# file: mocasim08.in                                               #
+####################################################################
+
+# Section 1
+# =========
+# Select the material.
+initialize material=GaAs burn_in=40000 num_time_step=80000
+
+# Section 2
+# =========
+# Assign the intra valley scattering mechanisms.
+deformation_potential_acoustic_phonon E1=7.0
+polar_optical_phonon energy=0.0353355
+ionised_impurity
+
+# Assign the inter valley scattering mechanisms.
+intervalley_phonon LL energy=0.02900 defpot=1.0e9 num_L_valleys=3
+intervalley_phonon XX energy=0.02995 defpot=7.0e8 num_X_valleys=2
+intervalley_phonon GL energy=0.02788 defpot=1.0e9 num_L_valleys=4
+intervalley_phonon GX energy=0.02995 defpot=1.0e9 num_X_valleys=3
+intervalley_phonon LX energy=0.02934 defpot=5.0e8 num_L_valleys=4 num_X_valleys=3
+
+# Section 3
+# =========
+# Define the range over which to simulate the transport.
+field value=1000
+temperature value=300
+doping value=1.0e14,1.778e14,3.162e14,5.623e14
+doping value=1.0e15,1.778e15,3.162e15,5.623e15
+doping value=1.0e16,1.778e16,3.162e16,5.623e16
+doping value=1.0e17,1.778e17,3.162e17,5.623e17
+doping value=1.0e18
+
+# Section 4
+# =========
+# Assign a backup file.
+log outfile=mocasim08_1.bak
+
+# Section 5
+# =========
+# Do the Monte Carlo simulation
+solve
+
+# Section 6
+# =========
+# Save the Monte Carlo results.
+save outfile=mocasim08_2.dat
+
+# Section 7
+# =========
+# Fit the ATLAS analytical low-field model to the Monte-Carlo data.
+#
+# Also generate a c-interpreter file of this model.
+fit analytic lm compare=mocasim08_3.dat munsat ci_file=mocasim08_4.lib
+
+# Tonyplot
+# ========
+tonyplot mocasim08_2.dat -set mocasim08_2.set
+tonyplot mocasim08_3.dat -set mocasim08_3.set
+ 
+quit

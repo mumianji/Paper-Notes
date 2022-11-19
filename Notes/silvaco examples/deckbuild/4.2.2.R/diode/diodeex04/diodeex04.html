@@ -1,0 +1,157 @@
+<html>
+  <head>
+    <title>Silicon Carbide Diode Characteristics</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Silicon Carbide Diode Characteristics</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Blaze</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="diodeex04_plot0.png" width="640" alt="diodeex04_plot0" />
+      <p/>
+      <img src="diodeex04_plot1.png" width="640" alt="diodeex04_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+In this example, a SiC diode is simulated to demonstrate the Atlas
+capabilities to handle wide band gap semiconductor devices under room and
+elevated temperature conditions. The interest toward SiC technologies
+is growing due to the thermal and electronic properties of the material
+potentially leading to very high figures of merit for high-power,
+high-speed, high-temperature, and radiation hard applications.
+</p>
+<p>
+The p+/n/n+ diode structure considered is a device based on one of the SiC
+polytypes called alpha-SiC (or 6H-SiC), and is constructed using Atlas syntax.
+The input file consists of the following main parts:
+</p>
+<ul>
+  <li>
+ Mesh, regions, electrodes and doping specification using Atlas syntax
+<br/>
+  </li>
+  <li>
+ Material and models definition for SiC
+<br/>
+  </li>
+  <li>
+ Calculation of forward I-V characteristic under the room temperature conditions
+<br/>
+  </li>
+  <li>
+ Calculation of forward I-V characteristics under elevated temperature 623K
+<br/>
+  </li>
+  <li>
+ Calculation of reverse and breakdown characteristics at 623K
+  </li>
+</ul>
+<p>
+The simulations at elevated temperatures are performed in  a separate Atlas run within the same input file with the respective resetting/changing of the material and models
+definition.
+</p>
+<p>
+The input file starts by defining the mesh. The location and grid spacing
+along x and y directions are specified in the
+<b> x.m </b> and
+<b> y.m </b> statements. This
+simulation employs cylindrical symmetry and is therefore quasi-3-dimensional.
+To activate this feature, the parameter
+<b> cylindrical </b> is included in the
+<b> mesh</b> statement.
+</p>
+<p>
+The structure consists of 3 regions: p+ emitter, n base, and n+ emitter
+regions, each uniformly doped. The dimensions of the regions and their
+doping are defined in the
+<b> region </b> and
+<b> doping </b> statements respectively.
+The anode and cathode contacts are specified in the
+<b> electrode </b> statements.
+</p>
+<p>
+Basic material parameters of alpha-SiC are defined in the
+<b> material </b> statements.
+These include dielectric permittivity, energy band gap, parameters related to
+the band gap narrowing, auger recombination coefficients, saturation velocity,
+and parameters describing mobility and lifetime temperature dependencies. The
+low field mobilities and lifetimes are specified on a region-by-region basis
+taking into consideration the level of doping in the respective regions.
+</p>
+<p>
+The set of physical models in the
+<b> model </b> statement includes electric field
+mobility dependence, Shockley-Read-Hall and Auger recombination, and band gap
+narrowing. The temperature is also specified in the model statement.
+</p>
+<p>
+The first run is completed by the
+<b> solve </b> statement in which the anode bias is
+stepped from 0.1 up to 4 V to calculate the diode forward characteristic
+under room temperature conditions. The I-V data is saved in the log file.
+</p>
+<p>
+The second Atlas run simulates the forward, reverse, and breakdown
+characteristics under elevated temperature conditions. It starts by
+reading in the mesh and structure data from the file produced by the first run.
+In order to use the same cylindrical symmetry as the first run the
+<b> cylindrical </b> parameter must be specified whilst loading the mesh.  The
+same material and model statements are used in this input file with the
+temperature set at 623K. Then the solving procedure is repeated to
+obtain the forward I-V characteristic which is saved in the log file.
+</p>
+<p>
+The set of physical models needs to be extended for simulating reverse
+and breakdown characteristics to include the impact
+ionization-generation model.  This is done in the following part of the
+input file, in the
+<b> impact </b> statement.  The Selberherr impact
+ionization model is used with the parameters changed to reflect the
+properties of alpha-SiC. The other material and model statements are
+repeated here to ensure proper reinitialization of the material and
+models parameters. Since the breakdown in diode structures is typically
+very sharp  the
+<b> curvetrace </b> feature of Atlas is used to bias the curve. Note that the parameter
+<b> step.init </b> is negative. This is sufficient to force a negative voltage sweep on
+the anode.  The reverse/breakdown characteristic is saved in the log
+file. To plot the breakdown the
+<b> anode int.bias </b> should be used as the x-axis.
+</p>
+<p>
+The graphs with the forward I-V characteristics at the room and elevated
+temperatures, and the reverse and breakdown characteristic at 623K are
+displayed using TonyPlot.
+</p>
+<p>
+Since cylindrical coordinates were used, Note that in all I-V plots the
+units of current is Amps and not Amps/micron.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

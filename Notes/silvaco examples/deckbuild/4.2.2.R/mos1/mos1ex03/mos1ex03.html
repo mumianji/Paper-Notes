@@ -1,0 +1,87 @@
+<html>
+  <head>
+    <title>Sub-Threshold Slope Extraction</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Sub-Threshold Slope Extraction</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>SSuprem 4/S-Pisces</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R, Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="mos1ex03_plot0.png" width="640" alt="mos1ex03_plot0" />
+      <p/>
+      <img src="mos1ex03_plot1.png" width="640" alt="mos1ex03_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This is a basic MOS Athena to Atlas interface example simulating an Id/Vgs curve
+and extracting sub-threshold slope.  No advanced features are used in
+this example so as to demonstrate simple functionality. This example demonstrates:
+</p>
+<ul>
+  <li>
+ Process simulation of a MOS transistor in Athena
+<br/>
+  </li>
+  <li>
+ Process parameter extraction (eg. oxide thicknesses)
+<br/>
+  </li>
+  <li>
+ Autointerface between Athena and Atlas
+<br/>
+  </li>
+  <li>
+ Simple Id/Vgs curve generation with Vds=0.1V
+<br/>
+  </li>
+  <li>
+ Parameter extraction for Sub-Threshold Slope
+  </li>
+</ul>
+<p>
+The process simulation, process parameter extraction and electrode
+definition for this example are exactly as described in the first
+example in this section.
+</p>
+<p>
+In Atlas the same sequence of statements is used as in the first
+example in this section. The only difference is that the gate voltage is
+ramped from zero to 1.0V only in 0.1V steps.
+</p>
+<p>
+The
+<b> extract </b> statement used in this example measures the sub-threshold slope of the
+MOSFET. The syntax uses the operators log10(), slope() and curve() to
+specify the reciprocal of the steepest slope to the curve of Vgs vs.
+log(Id). Note that the operator log10() is needed here. The operator
+log() specifies the function for natural logarithm.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

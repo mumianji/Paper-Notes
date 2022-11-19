@@ -1,0 +1,36 @@
+v DBInternal
+# silvaco.file ASCII version=1.14.23 format=1 contents=SDB,Tables=1
+
+Copyright "###################################################################"
+Copyright "#                    Copyright Silvaco Inc. (c)                   #"
+Copyright "#                            1992-2014                            #"
+Copyright "#                                                                 #"
+Copyright "# This file format and the following Key are copyright Silvaco    #"
+Copyright "# International. You may not use, this format or key without      #"
+Copyright "# reproducing this message in full and obtaining                  #"
+Copyright "# express written permission from Silvaco Inc.                    #"
+Copyright "#                                                                 #"
+Copyright "# To obtain such permission please contact: Silvaco Inc.          #"
+Copyright "#                                           support@silvaco.com   #"
+Copyright "#                                                                 #"
+Copyright "# KEY=SVC86hn7562asdx                       PROD=345              #"
+Copyright "###################################################################"
+#dbinternal 2.11.7.R (Thu Feb  8 16:02:37 GMT 2018)
+#libSDB 1.12.42 (Thu Oct 26 19:20:24 PDT 2017)
+p 10 10000 10001 10002 10003 10004 10005 10006 10007 10008 10009
+d 1 10 2.4052600000000002 2.4052699999999998 2.4052699999999998 2.4053499999999999 2.4060999999999999 2.4134600000000002 2.4736199999999999 2.6365799999999999
+d 2 12 2.4052600000000002 2.4055300000000002 2.4078900000000001 2.43031 2.5601099999999999 2.9041600000000001 3.5270700000000001 3.90951
+d 3 14 2.4052600000000002 2.41926 2.5177 2.8868800000000001 3.5297700000000001 4.1881300000000001 4.7064300000000001 5.08711
+d 4 16 2.4052600000000002 2.5671599999999999 3.1367600000000002 3.8350900000000001 4.7042099999999998 5.3536700000000002 5.8788999999999998 6.2559500000000003
+d 5 18 2.4052600000000002 3.1440299999999999 3.70614 4.4723800000000002 6.1085000000000003 6.5770600000000004 6.9685800000000002 7.3549100000000003
+Q 10000 1 ex_id
+Q 10001 1 vgate
+Q 10002 1 "Charged for 0s"
+Q 10003 1 "Charged for 1.0E-6 s"
+Q 10004 1 "Charged for 1.0E-5 s"
+Q 10005 1 "Charged for 1.0E-4 s"
+Q 10006 1 "Charged for 0.001 s"
+Q 10007 1 "Charged for 0.01 s"
+Q 10008 1 "Charged for 0.1 s"
+Q 10009 1 "Charged for 1.0 s"
+EOF 605390087

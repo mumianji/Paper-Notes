@@ -1,0 +1,37 @@
+go internal
+
+set example=doeex01
+
+load infile=$"example"_tmpl.in
+
+##################### CONTENT OF doeex01_tmpl.in file ######################
+# go athena                                                                #
+#                                                                          #
+# line x loc=-0.02 spac=0.01                                               #
+# line x loc=0.02  spac=0.01                                               #
+# line y loc=0     spac=0.001                                              #
+# line y loc=0.2   spac=0.01                                               #
+# init silicon orientation=100                                             #
+#                                                                          #
+# set energy=5                                                             #
+# set dose=1e13                                                            #
+# set example=doeex01                                                      #
+# set trial_id=0                                                           #
+#                                                                          #
+# deposit oxide thick=0.004 divisions=2                                    #
+# implant arsenic dose=$dose energy=$energy tilt=0 rotation=0 bca sampling #
+#                                                                          #
+# struct outfile=$"example"_trial$"trial_id".str remove.gas                #
+############################################################################
+
+sweep parameter=dose type=power range="1e13, 1e15, 3" \
+      parameter=energy type=linear range="5, 15, 3"
+
+tonyplot -overlay $"example"_trial1.str $"example"_trial2.str \
+      $"example"_trial3.str -set $"example"_5keV.set
+tonyplot -overlay $"example"_trial4.str $"example"_trial5.str \
+      $"example"_trial6.str -set $"example"_10keV.set
+tonyplot -overlay $"example"_trial7.str $"example"_trial8.str \
+      $"example"_trial9.str -set $"example"_15keV.set
+
+quit

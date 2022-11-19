@@ -1,0 +1,70 @@
+<html>
+  <head>
+    <title>Amorphous IGZO TFT Hysteresis Simulation</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Amorphous IGZO TFT Hysteresis Simulation</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Victoryprocess/Atlas</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="tftex20_plot0.png" width="640" alt="tftex20_plot0" />
+      <p/>
+      <img src="tftex20_plot1.png" width="640" alt="tftex20_plot1" />
+      <p/>
+      <img src="tftex20_plot2.png" width="640" alt="tftex20_plot2" />
+      <p/>
+      <img src="tftex20_plot3.png" width="640" alt="tftex20_plot3" />
+      <p/>
+      <img src="tftex20_plot4.png" width="640" alt="tftex20_plot4" />
+      <p/>
+      <img src="tftex20_plot5.png" width="640" alt="tftex20_plot5" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<br/>
+<p>
+The hysteresis effect is caused by different reaction time scale between forward and reverse sweep.
+This is related to differnt reaction time scale between trapping and de-trapping process.
+In IGZO TFT case, the hysteresis simulation can be shown by several method.
+One of easiest way is to use Heiman interface trapping model. Or we can use chemical ion reaction model which was
+introduced in previous tft example to explain the oxygen vacancy ionization and recovery process.
+In this example, we used direct transient simulation with adjusting capture cross section.
+In steady state(DC) simulation, it always show small current than transient mode simulation current. It means that
+in DC case, there is enough time to trap carrier but in transient mode it depends on how ramping speed is performed to
+measure IV curve given capture cross section.
+In this simulation, we choosed somewhat small capture cross section(SIGTAE) to enlarge the effect of hysteresis.
+</p>
+<br/>
+<p>
+tftex20.aux is skeleton input file which include all necessary input information.
+tftex20.in is launch file to split various ramping time to get the different hysteresis effect.
+</p>
+<p>
+To load and run this example, select the
+<b> Load example </b> button in DeckBuild. This will copy the input file and any support
+files to your current working directory. Select the
+<b> run </b> button to execute the example.
+</p>
+  </div></body>
+</html>

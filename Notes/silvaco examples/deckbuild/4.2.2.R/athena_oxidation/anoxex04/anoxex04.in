@@ -1,0 +1,49 @@
+go athena
+
+#TITLE: Polysilicon Oxidation Example
+
+# Polysilicon oxidation and consumption can be observed in the example.
+
+# Substrate mesh definition
+line y loc=0  spac=0.05
+line y loc=0.6 spac=0.2
+line y loc=1   
+
+line x loc=-1   spac=0.2
+line x loc=-0.2 spac=0.05
+line x loc=0.2  spac=0.05
+line x loc=1  spac=0.2
+
+init orient=100
+
+# Anisotropic silicon etch
+etch    silicon left p1.x=-0.218 p1.y=0.3 p2.x=0 p2.y=0
+
+# Pad oxide and polysilicon gate
+deposit oxide thick=0.02 div=1
+deposit poly thick=0.5 div=5
+etch    poly left p1.x=-0.1 p1.y=0.51 p2.x=0.1 p2.y=-0.55
+etch    oxide   left p1.x=0
+#
+# modify polysilicon oxidation rate relative to silicon
+#
+# The original coefficients (same as silicon)
+#oxide poly wet par.l.0 =283.333     par.l.e =1.17
+#oxide poly wet par.h.0 =7.00        par.h.e =0.78    p.break=950.
+#oxide poly wet lin.l.0=3.45e4       lin.l.e=1.60
+#oxide poly wet lin.h.0=2.95e6       lin.h.e=2.05     l.break=900.
+
+# Modified
+oxide poly wet par.l.0=600       par.l.e =1.17
+oxide poly wet par.h.0=14.       par.h.e =0.78    p.break=950.
+oxide poly wet lin.l.0=7e4       lin.l.e=1.60
+oxide poly wet lin.h.0=6e6       lin.h.e=2.05     l.break=900.
+
+# Field oxidation
+diffuse tim=30 tem=1000 wet dump=1 dump.pre=anoxex04m
+#
+tonyplot anoxex04m*.str
+# Save the structure
+structure    outfile=anoxex04.str
+
+quit

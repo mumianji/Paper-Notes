@@ -1,0 +1,168 @@
+# (c) Silvaco Inc., 2018
+go atlas
+
+mesh
+
+x.mesh loc=-0.20  spac=0.025
+x.mesh loc=-0.15  spac=0.025
+x.mesh loc=-0.05  spac=0.010
+x.mesh loc=0.05   spac=0.010
+x.mesh loc=0.15   spac=0.025
+x.mesh loc=0.20   spac=0.025
+
+y.mesh loc=-0.04  spac=0.005
+y.mesh loc=-0.03  spac=0.005
+y.mesh loc=-0.005 spac=0.0025
+y.mesh loc=0.0    spac=0.0005
+y.mesh loc=0.01   spac=0.002
+y.mesh loc=0.10   spac=0.02
+
+region number=1 x.min=-0.20 x.max=0.20 y.min=-0.04 y.max=0.0    \
+       material=oxide
+region number=2 x.min=-0.20 x.max=0.20 y.min=0.0 y.max=0.10     \
+       material=silicon
+region number=3 x.min=-0.05 x.max=0.05 y.min=-0.03 y.max=-0.005 \
+       material=poly
+region number=4 x.min=-0.05 x.max=0.05 y.min=-0.04 y.max=-0.03  \
+       material=aluminum
+region number=5 x.min=-0.20 x.max=-0.15 y.min=-0.04 y.max=0.0   \
+       material=aluminum
+region number=5 x.min=0.15  x.max=0.20  y.min=-0.04 y.max=0.0   \
+       material=aluminum
+
+electrode x.min=-0.20 x.max=-0.15 y.min=-0.04 y.max=0.0   name=source
+electrode x.min=-0.05 x.max=0.05  y.min=-0.04 y.max=-0.03 name=gate
+electrode x.min=0.15  x.max=0.20  y.min=-0.04 y.max=0.0   name=drain
+electrode bottom name=substrate
+
+doping region=2 p.type concentration=1e18 uniform
+doping region=3 n.type concentration=1e19 uniform
+doping x.min=-0.2 x.max=-0.05 y.min=0.0 y.max=0.01 concentration=1e20 \
+       n.type uniform
+doping x.min=0.05 x.max=0.2   y.min=0.0 y.max=0.01 concentration=1e20 \
+       n.type uniform 
+
+models cvt srh
+
+solve init
+solve vdrain=0.005
+solve vdrain=0.05
+solve vgate=0.05
+log outfile=mos2ex16_19.log
+solve vgate=0.4 vstep=0.05 vfinal=1.0 name=gate
+extract name="nVt" x.val from curve(v."gate",i."drain") where y.val=0.5e-8/0.1 
+
+save outfile=mos2ex16.str
+tonyplot mos2ex16.str
+
+
+go atlas
+
+mesh
+
+x.mesh loc=-0.20  spac=0.025
+x.mesh loc=-0.15  spac=0.025
+x.mesh loc=-0.05  spac=0.010
+x.mesh loc=0.05   spac=0.010
+x.mesh loc=0.15   spac=0.025
+x.mesh loc=0.20   spac=0.025
+
+y.mesh loc=-0.04  spac=0.005
+y.mesh loc=-0.03  spac=0.005
+y.mesh loc=-0.005 spac=0.0025
+y.mesh loc=0.0    spac=0.0005
+y.mesh loc=0.01   spac=0.002
+y.mesh loc=0.10   spac=0.02
+
+region number=1 x.min=-0.20 x.max=0.20 y.min=-0.04 y.max=0.0    \
+       material=oxide
+region number=2 x.min=-0.20 x.max=0.20 y.min=0.0 y.max=0.10     \
+       material=silicon
+region number=3 x.min=-0.05 x.max=0.05 y.min=-0.03 y.max=-0.005 \
+       material=poly
+region number=4 x.min=-0.05 x.max=0.05 y.min=-0.04 y.max=-0.03  \
+       material=aluminum
+region number=5 x.min=-0.20 x.max=-0.15 y.min=-0.04 y.max=0.0   \
+       material=aluminum
+region number=5 x.min=0.15  x.max=0.20  y.min=-0.04 y.max=0.0   \
+       material=aluminum
+
+electrode x.min=-0.20 x.max=-0.15 y.min=-0.04 y.max=0.0   name=source
+electrode x.min=-0.05 x.max=0.05  y.min=-0.04 y.max=-0.03 name=gate
+electrode x.min=0.15  x.max=0.20  y.min=-0.04 y.max=0.0   name=drain
+electrode bottom name=substrate
+
+doping region=2 p.type concentration=1e18 uniform
+doping region=3 n.type concentration=1e20 uniform
+doping x.min=-0.2 x.max=-0.05 y.min=0.0 y.max=0.01 concentration=1e20 \
+       n.type uniform
+doping x.min=0.05 x.max=0.2   y.min=0.0 y.max=0.01 concentration=1e20 \
+       n.type uniform 
+
+models cvt srh
+
+solve init
+solve vdrain=0.005
+solve vdrain=0.05
+solve vgate=0.05
+log outfile=mos2ex16_20.log
+solve vgate=0.4 vstep=0.05 vfinal=1.0 name=gate
+extract name="nVt" x.val from curve(v."gate",i."drain") where y.val=0.5e-8/0.1 
+
+
+go atlas
+
+mesh
+
+x.mesh loc=-0.20  spac=0.025
+x.mesh loc=-0.15  spac=0.025
+x.mesh loc=-0.05  spac=0.010
+x.mesh loc=0.05   spac=0.010
+x.mesh loc=0.15   spac=0.025
+x.mesh loc=0.20   spac=0.025
+
+y.mesh loc=-0.04  spac=0.005
+y.mesh loc=-0.03  spac=0.005
+y.mesh loc=-0.005 spac=0.0025
+y.mesh loc=0.0    spac=0.0005
+y.mesh loc=0.01   spac=0.002
+y.mesh loc=0.10   spac=0.02
+
+region number=1 x.min=-0.20 x.max=0.20 y.min=-0.04 y.max=0.0    \
+       material=oxide
+region number=2 x.min=-0.20 x.max=0.20 y.min=0.0 y.max=0.10     \
+       material=silicon
+region number=3 x.min=-0.05 x.max=0.05 y.min=-0.03 y.max=-0.005 \
+       material=poly
+region number=4 x.min=-0.05 x.max=0.05 y.min=-0.04 y.max=-0.03  \
+       material=aluminum
+region number=5 x.min=-0.20 x.max=-0.15 y.min=-0.04 y.max=0.0   \
+       material=aluminum
+region number=5 x.min=0.15  x.max=0.20  y.min=-0.04 y.max=0.0   \
+       material=aluminum
+
+electrode x.min=-0.20 x.max=-0.15 y.min=-0.04 y.max=0.0   name=source
+electrode x.min=-0.05 x.max=0.05  y.min=-0.04 y.max=-0.03 name=gate
+electrode x.min=0.15  x.max=0.20  y.min=-0.04 y.max=0.0   name=drain
+electrode bottom name=substrate
+
+doping region=2 p.type concentration=1e18 uniform
+doping region=3 n.type concentration=1e21 uniform
+doping x.min=-0.2 x.max=-0.05 y.min=0.0 y.max=0.01 concentration=1e20 \
+       n.type uniform
+doping x.min=0.05 x.max=0.2   y.min=0.0 y.max=0.01 concentration=1e20 \
+       n.type uniform 
+
+models cvt srh
+
+solve init
+solve vdrain=0.005
+solve vdrain=0.05
+solve vgate=0.05
+log outfile=mos2ex16_21.log
+solve vgate=0.4 vstep=0.05 vfinal=1.0 name=gate
+extract name="nVt" x.val from curve(v."gate",i."drain") where y.val=0.5e-8/0.1 
+
+tonyplot -overlay mos2ex16_21.log mos2ex16_20.log mos2ex16_19.log
+
+quit

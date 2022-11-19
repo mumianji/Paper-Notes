@@ -1,0 +1,38 @@
+# (c) Silvaco Inc., 2018
+go atlas
+mcdevice
+# Bulk simulation for electron transport in silicon at STP
+algo mode=0 carrier=e iter=10000 dt=1e-15
+# bulk simulation
+bulk field=(5e2,5e2)
+#bulk field=(1e3,1e3)
+# write output
+output tstep=1000 \
+  difflogfile    ="mcdeviceex01_diff.log" \
+  difframplogfile="mcdeviceex01_diff_ramp.log" \
+  summaryoutfile ="mcdeviceex01_summary.out"
+# Set the number of particles (i.e. electrons).
+particle n=10000
+
+# Do a single solve at field=(5e2,5e2) V/cm.
+solve
+tonyplot mcdeviceex01_diff.log -set mcdeviceex01_diff_log.set
+
+# Do a 1-step field ramp from field=5e2 V/cm to field=1e3 V/cm.
+# with uniform spacing on a linear scale.
+#solve fstep=5e2 ffinal=1e3
+#tonyplot mcdeviceex01_diff_ramp.log -set mcdeviceex01_diff_ramp_log.set
+
+# Do a 3-step field ramp from field=1e3 V/cm to field=1e6 V/cm.
+# with uniform spacing on a logarithmic scale.
+#bulk field=(1e3,1e3)
+#solve nsteps=3 ffinal=1e6 uselog=1
+#tonyplot mcdeviceex01_diff_ramp.log -set mcdeviceex01_diff_ramp_log.set
+
+# Do a second solve at field=(1e3,1e3) V/cm.
+#output difflogfile="mcdeviceex01_diff2.log"
+#bulk field=(1e3,1e3)
+#solve
+#tonyplot mcdeviceex01_diff2.log -set mcdeviceex01_diff_log.set
+
+quit

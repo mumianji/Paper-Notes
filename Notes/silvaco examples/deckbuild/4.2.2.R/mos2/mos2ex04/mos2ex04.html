@@ -1,0 +1,156 @@
+<html>
+  <head>
+    <title>3D Width Effect Simulation</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>3D Width Effect Simulation</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>SSuprem 4/DevEdit 3D/Device 3D</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R, Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="mos2ex04_plot0.png" width="640" alt="mos2ex04_plot0" />
+      <p/>
+      <img src="mos2ex04_plot1.png" width="640" alt="mos2ex04_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates Id/Vgs simulation of a narrow N-channel MOS
+structure in three dimensions.
+</p>
+<p>
+In this example a 2D width cross-section of a MOS transistor is
+constructed using SSuprem 4. The structure is then passed to DevEdit 3D
+for extending to 3D. Then the structure is interfaced to  Atlas for
+electrical testing. The input file consists of the following main
+portions:
+</p>
+<ul>
+  <li>
+ Process simulation of field oxide bird&apos;s beak in Athena
+<br/>
+  </li>
+  <li>
+ Interface of the 2D structure from Athena to DevEdit 3D
+<br/>
+  </li>
+  <li>
+ Structure editing to create 3D MOSFET
+<br/>
+  </li>
+  <li>
+ Interface of the 3D structure from DevEdit 3D to Atlas
+<br/>
+  </li>
+  <li>
+ Simulation of the Id/Vgs characteristic in Atlas
+<br/>
+  </li>
+  <li>
+ Extraction of Vt and sub-threshold leakage parameters
+  </li>
+</ul>
+<p>
+The first stage of the input file simulates width cross section on an
+NMOS device. The process sequence is for a LOCOS oxidation with a mask
+edge at X=0.0um. A channel stop implant is performed before the oxidation.
+Following the mask removal, a gate oxide is grown. Then a channel
+implant is done before poly deposition.
+</p>
+<p>
+The gate and substrate electrodes are defined at the end of the process sequence.
+Only these two electrodes are present in this 2D section.
+The source and drain will be added in DevEdit 3D.
+</p>
+<p>
+DevEdit 3D is used convert the 2D Athena result to a 2D structure. Each
+region from the 2D structure is given an extent in the Z direction.
+This example will be a 0.5 micron long transistor. Thus the polysilicon
+region extends only from 0.3 to 0.8 microns. The basic procedure in DevEdit 3D is:
+</p>
+<ul>
+  <li>
+ Modify existing region extent in Z direction (eg. polysilicon)
+<br/>
+  </li>
+  <li>
+ Add new aluminum regions for source and drain contacts.
+Specify these as electrode regions.
+<br/>
+  </li>
+  <li>
+ Add N+ arsenic doping for source and drain. Be sure the Z
+extent of the doping includes a 0.1 micron spacer away from the gate
+edge. Specify y-rolloff (junction depth) and x and z rolloffs (lateral spread).
+<br/>
+  </li>
+  <li>
+ Define base level mesh (0.2x0.2 microns) and mesh the structure in X and Y.
+<br/>
+  </li>
+  <li>
+ Use REFINE to add mesh points in the channel region
+<br/>
+  </li>
+  <li>
+ Use the
+<b> z.plane </b> statement to control the mesh in the Z direction. The Z direction mesh
+is made up of planes XY mesh leading to prismatic mesh elements.
+  </li>
+</ul>
+<p>
+To generate DevEdit 3D syntax for a given set of structure editing and
+mesh operation, it is often best to do these same operations in the
+graphical mode of DevEdit 3D. DevEdit 3D allows users to save the
+commands used in the graphical mode to a command file. It is this
+command file that is used as the basis for the batch-mode DevEdit 3D
+used in this example.
+</p>
+<p>
+The Atlas simulation begins by reading in the structure from DevEdit 3D.
+DeckBuild provides an automatic interface between DevEdit 3D and Atlas so that the
+structure produced by DevEdit 3D is transferred to Atlas without having to
+indicate the mesh statement in Atlas
+</p>
+<p>
+The
+<b> contact </b> statement is used to set a work function on the polysilicon gate. The
+<b> models </b> statement is used to select a set of physical models for this simulation.  In
+this case, these models are SRH recombination, the CVT mobility model,
+and one carrier model (carriers=1)
+</p>
+<p>
+The drain voltage is set to 0.1V, and gate voltage is ramped. The IV
+data is saved to a log file. This file is used as input to the EXTRACT
+routines for threshold voltage and sub-threshold leakage. This file can
+also be plotted in TonyPlot. The
+<b> save </b> statement saves a 3D solution file. This can be plotted in
+<b> TonyPlot 3D </b> to see 3D distributions of potential and carriers.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

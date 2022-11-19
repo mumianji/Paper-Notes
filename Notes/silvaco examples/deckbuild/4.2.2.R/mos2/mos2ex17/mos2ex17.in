@@ -1,0 +1,95 @@
+# (c) Silvaco Inc., 2018
+go athena 
+
+line x loc=0    spac=0.002
+line x loc=0.01 spac=0.001
+line x loc=0.03 spac=0.005
+line x loc=0.07 spac=0.005
+
+line y loc=0    spac=0.001
+line y loc=0.25 spac=0.02
+
+init silicon boron resistivity=10 orientation=100
+
+deposit oxide thick=0.02 divisions=10
+etch oxide start x=0.03 y=-0.02
+etch cont x=0 y=-0.02
+etch cont x=0 y=0
+etch done x=0.03 y=0
+deposit nitride thick=0.02 divisions=10
+struct mirror left
+
+implant boron dose=5e14 energy=10 tilt=7 bca n.ion=200000
+
+etch nitride dry thick=0.02
+deposit oxynitride thick=0.0015 divisions=2
+deposit polysilicon thick=0.02 divisions=10 c.arsenic=1e16
+etch polysilicon dry thick=0.02
+etch oxynitride dry thick=0.0015
+etch oxide dry thick=0.02
+deposit polysilicon thick=0.02 divisions=10 c.arsenic=1e16
+deposit oxide thick=0.004 divisions=2
+
+implant arsenic dose=1e16 energy=10 tilt=7 bca n.ion=200000
+
+method full.cpl high.conc grid.silici=0.002
+diffus time=0.1 temp=750 t.final=1050 nitro
+diffus time=0.12 temp=1050 nitro
+etch oxide dry thick=0.01
+etch polysilicon dry thick=0.02
+deposit cobalt thick=0.02 divisions=10
+diffus time=1 temp=550 nitro
+etch cobalt all
+etch polysilicon dry thick=0.002
+
+electrode name=source x=-0.065
+electrode name=source x=-0.04
+electrode name=gate x=0
+electrode name=drain x=0.04
+electrode name=drain x=0.065
+electrode name=substrate backside
+
+material nitride intrin.sig=2e10
+stress temp1=20 temp2=20
+struct outfile=mos2ex17_0.str
+tonyplot mos2ex17_0.str -set mos2ex17_0.set
+
+
+
+go atlas
+
+mesh infile=mos2ex17_0.str
+
+material material=oxynitride permittivity=8
+models consrh cvt fermi bbt.kl STRESS
+MOBILITY EGLEY.N EGLEY.P
+method climit=1e-4 itlimit=35 maxtraps=10
+output e.mob e.velocity
+
+solve init
+solve previous
+solve vdrain=0.01
+solve vdrain=0.1
+log outfile=mos2ex17_0.log
+solve previous
+solve vgate=0.01
+solve vgate=0.05 vstep=0.05 vfinal=1.2 name=gate
+extract name="vt" (xintercept(maxslope(curve(abs(v."gate"),abs(i."drain")))) \
+        - abs(ave(v."drain"))/2.0)
+log off
+
+
+solve init
+solve previous
+solve vdrain=0.01
+solve vdrain=0.1
+solve vdrain=1.2
+log outfile=mos2ex17_1.log
+solve previous
+solve vgate=0.01
+solve vgate=0.05 vstep=0.05 vfinal=1.2 name=gate
+log off
+save outfile=mos2ex17_1.str
+tonyplot mos2ex17_0.log -overlay mos2ex17_1.log -set mos2ex17_1.set
+tonyplot mos2ex17_1.str -set mos2ex17_2.set
+

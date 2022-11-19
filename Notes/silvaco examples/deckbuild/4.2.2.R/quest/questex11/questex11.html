@@ -1,0 +1,107 @@
+<html>
+  <head>
+    <title>Comparing one turn and straight line inductors</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Comparing one turn and straight line inductors</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>QUEST</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>QUEST 2.0.2.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="questex11_plot0.png" width="640" alt="questex11_plot0" />
+      <p/>
+      <img src="questex11_plot1.png" width="640" alt="questex11_plot1" />
+      <p/>
+      <img src="questex11_plot2.png" width="640" alt="questex11_plot2" />
+      <p/>
+    </div>
+    <div id="text" >
+<p>
+This example demonstrates the advantages of straight line inductors.
+</p>
+<p>
+Introduction:
+</p>
+<p>
+It is often perceived that the highest inductance and Q factor are obtained using
+spiral inductors. This, however, is only true if the inductor has more than
+approximately 1.5 turns. Designers will often design 1 turn or 1.25 turn inductors
+out of habit, not realizing that a significantly better performing inductor can be
+designed with a straight line inductor.
+</p>
+<p>
+The reason a straight inductor outperforms a one turn inductor in terms of
+inductance per length and Q factor is two fold:
+</p>
+<p>
+1) If an inductor only has one turn, there is no added inductance from the mutual
+inductance of the other coils as occurs in a multi-turn inductor.
+</p>
+<p>
+2) In a one turn inductor, inductance is lost due to the current travelling in
+opposite directions in the opposite conductor which is not mitigated by mutual
+inductance from other windings.
+</p>
+<p>
+In a straight line inductor, there is also no mutual inductance benefit, BUT there
+is also no inductance lost due to opposite conductors having current flowing in
+opposite directions, because there are no opposite conductors in a straight line.
+</p>
+<p>
+Experiment Description:
+</p>
+<p>
+In this Quest experiment, two inductor layouts are compared:
+</p>
+<ul>
+  <li>
+ The first layout is a straight line inductor 480um long and 10um wide.
+  </li>
+</ul>
+<ul>
+  <li>
+ The second inductor has an identical length and width but is as a one turn 
+design.
+  </li>
+</ul>
+<p>
+Results:
+</p>
+<p>
+The results show that not only does the straight line inductor exhibit a greater
+inductance than its one turn counter part, but the maximum Q factor is also
+significantly higher.
+</p>
+<p>
+Running the Example
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+<p>
+questex11_command.in is the quest input file common to the line and one turn inductor gds.
+Two simulations will thus be run one after the other.
+</p>
+  </div></body>
+</html>

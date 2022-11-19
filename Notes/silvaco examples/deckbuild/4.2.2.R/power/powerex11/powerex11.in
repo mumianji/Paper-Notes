@@ -1,0 +1,219 @@
+# (c) Silvaco Inc., 2018
+
+go athena
+
+# Building 2D DMOS structure for Gate Charging characteristics (powerex11)
+
+line x loc=0.00 spac=0.25
+line x loc=3.00 spac=0.10 
+line x loc=10.00 spac=1.0
+#
+line y loc=7.00 spac=0.5
+line y loc=8.00 spac=0.5
+# 
+init c.phosphor=1.0e18 orientation=100 space.mult=2
+# 
+epitaxy time=10 temp=1200 thickness=7 divisions=15 \
+        dy=0.10 ydy=0.00 c.phos=1.0e15
+
+deposit oxide thickness=0.06 div=1
+deposit poly thickness=0.35 div=3
+deposit oxide thickness=0.35 div=3
+deposit photores thickness=1 div=3
+
+
+etch photores p1.x=3 left
+etch oxide p1.x=3 left
+etch poly p1.x=3 left
+etch oxide p1.x=3 left
+
+implant boron dose=1e14 energy=80
+
+etch photores all
+
+diffuse time=100 temp=1100
+
+implant arsenic dose=3e15 energy=100
+diffuse time=20 temp=1100
+
+
+deposit oxide thickness=0.5 div=4
+etch oxide thickness=0.5 
+
+etch start x=0 y=-0.1 
+etch cont x=0 y=0.8 
+etch cont x=2.5 y=0.8 
+etch done x=2.5 y=-0.1
+
+diffuse time=1 temp=1100
+
+deposit alum thickness=1 div=8
+etch alum right p1.x=3.5
+
+electrode name=source x=0
+electrode name=gate x=5 y=-0.2
+electrode name=drain backside
+
+structure outfile=powerex11_0.str
+
+tonyplot  powerex11_0.str -set powerex11_0.set
+
+#################################################################
+
+go devedit
+
+DevEdit version=2.4.0.R
+#
+init infile=powerex11_0.str
+
+work.area x1=0 y1=-1.76 x2=10 y2=8
+# devedit 2.4.0.R (Thu May  8 12:10:27 PDT 1997)
+# libsflm 2.0.0.R (Thu May  1 18:03:38 PDT 1997)
+# libDW_Misc 1.20.0.R (Mon Apr 28 17:55:25 PDT 1997)
+# libCardDeck 1.20.0.R (Tue Apr 29 15:01:54 PDT 1997)
+# libGeometry 1.20.0.R (Mon Apr 28 18:17:55 PDT 1997)
+# libDW_Set 1.20.0.R (Mon Apr 28 17:57:52 PDT 1997)
+# libSVC_Misc 1.20.0.R (Mon Apr 28 18:20:53 PDT 1997)
+# libSDB 1.0.6.C (Mon May  5 16:28:49 PDT 1997)
+# libSSS 1.20.0.R (Mon May  5 16:29:45 PDT 1997)
+# libMeshBuild 1.20.0.R (Wed May  7 23:57:48 PDT 1997)
+# libDW_Make 1.1.3.R (Thu May  1 20:07:31 PDT 1997)
+
+# Set Meshing Parameters
+#
+base.mesh height=1 width=2
+#
+bound.cond !apply max.slope=30 max.ratio=100 rnd.unit=0.001 line.straightening=1 align.points when=automatic
+#
+imp.refine imp="Net Doping" scale=log transition=1e+10 sensitivity=2
+imp.refine min.spacing=0.2
+#
+constr.mesh  max.angle=90 max.ratio=300 max.height=10000 \
+	max.width=10000 min.height=0.0001 min.width=0.0001
+#
+constr.mesh type=Semiconductor default
+#
+constr.mesh type=Insulator default
+#
+constr.mesh type=Metal default
+#
+constr.mesh type=Other default
+#
+constr.mesh region=1 default
+#
+constr.mesh region=2 default
+#
+constr.mesh region=3 default
+#
+constr.mesh region=4 default
+constr.mesh id=1 x1=2.5 y1=0 x2=1e+06 y2=0.5 default max.height=0.1 max.width=2
+constr.mesh id=2 x1=2 y1=0 x2=4.5 y2=0.5 default max.height=0.1 max.width=0.2
+Mesh Mode=MeshBuild
+refine mode=y x1=0.15 y1=5.98 x2=9.82 y2=7.53
+
+base.mesh height=1 width=1
+
+bound.cond !apply max.slope=30 max.ratio=100 rnd.unit=0.001 line.straightening=1 align.Points when=automatic
+
+structure outf=powerex11_1.str
+
+
+############################################################################
+############################################################################
+
+#go atlas
+go victorydevice
+
+# This example demonstrates Gate Charge characteristics of a DMOS structure.
+# 
+# Mixed-Mode is used
+# 
+# Part 1: Steady state solution
+#
+# Circuit description
+.begin
+#
+iin  0  GG  0  
+Rg   GG  G  10
+amos G=gate D=drain 0=source infile=powerex11_1.str width=1e4
+iout 0 D 0
+dout D DD idealDiode
+vdd DD 0 0
+#
+# End of circuit description
+#
+.model idealDiode d()
+#
+.nodeset v(G)=0 v(D)=0 v(DD)=0
+#
+.numeric vchange=1.0 LTE=0.05
+#
+.options M2LN print 
+#
+.save outfile=powerex11
+#
+.log outfile=powerex11
+#
+.dc iout 0 1e-9 0.1e-9
+.dc iout 1e-9 1e-8 1e-9
+.dc iout 1e-8 1e-7 1e-8
+.dc iout 1e-7 1e-6 1e-7
+.dc iout 1e-6 1e-5 1e-6
+.dc iout 1e-5 2e-5 1e-5
+.dc vdd 0 20 0.2
+#
+.end
+#
+contact device=amos name=gate n.poly
+interface device=amos qf=2e11
+
+models device=amos cvt  srh auger bgn print
+impact device=amos selb
+
+method climit=1e-4 
+
+##############################################################
+
+#go atlas
+go victorydevice
+
+# Part 2: Transient Solution
+#
+# Circuit descriptions
+.begin
+#  transient PULSE i1 i2  td tr tf  pwidth period
+iin  0  GG  0  pulse 0 1e-5  1e-8 1e-8 1e-8  1.0 2.0
+Rg   GG  G  10
+amos G=gate D=drain 0=source infile=powerex11_1.str width=1e4
+iout 0 D 2e-5
+dout D DD idealDiode
+vdd DD 0 20
+#
+# End of circuit description
+#
+.model idealDiode d()
+#
+.numeric vchange=1.0 imaxtr=50
+#
+.load infile=powerex11
+.save outfile=powerex11_tr
+#
+.options fulln print
+#
+.log outfile=powerex11
+#
+.tran 1e-8 1e-4
+#
+.end
+#
+contact device=amos name=gate n.poly
+interface device=amos qf=2e11
+
+models device=amos cvt  srh auger bgn print
+impact device=amos selb
+
+go internal
+
+tonyplot powerex11_tr.log -set powerex11_tr.set
+
+quit

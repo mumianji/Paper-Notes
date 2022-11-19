@@ -1,0 +1,136 @@
+<html>
+  <head>
+    <title>Crosstalk at Angular Incidence</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Crosstalk at Angular Incidence</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Blaze/Luminous</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="imagesensorex03_plot0.png" width="640" alt="imagesensorex03_plot0" />
+      <p/>
+      <img src="imagesensorex03_plot1.png" width="640" alt="imagesensorex03_plot1" />
+      <p/>
+      <img src="imagesensorex03_plot2.png" width="640" alt="imagesensorex03_plot2" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+In this example we attempt to look at the crosstalk between adjacent
+colors due to angularly incident light.  In this case we simulate two
+adjacent pixels; one red and one green.  We then obtain solutions
+as a function of angle of incidence and collect the integrated
+photogeneration rate as a measure of the relative charge collected
+in each of the adjacent pixels.  This measure can be used to quantify
+crosstalk as a function of angle of incidence.
+</p>
+<p>
+The simulations begins with a description of the device
+structure and mesh using the
+<b> MESH</b> ,
+<b> X.M</b> ,
+<b> Y.M</b> ,
+<b> REGION</b> ,
+<b> ELEC</b> , and
+<b> DOPING </b> statements.
+</p>
+<p>
+In this example we add a couple of extra oxide regions to represent the
+color filters for the adjacent pixels.  The optical characteristics of
+these regions will be modified to pass or not pass the source
+light.
+</p>
+<p>
+Next, we specify some material models and parameter defaults.  Of
+significance is the specification of the complex index of refraction
+of aluminum using the
+<b> REAL.INDEX</b> and
+<b> IMAG.INDEX</b> parameters
+of the
+<b> MATERIAL</b> statement.  In this case we set the imaginary
+index to a very high value.  This makes the aluminum blocking
+regions highly reflective/absorptive to light.
+</p>
+<p>
+Here we also specify the imaginary index of the red filter.  In this case
+the thickness of the filter was used to calculate an index that will absorb
+99% of the incident light.  We do not need to specify the index of the
+green filter since it is assumed to pass all of the incident light.
+</p>
+<p>
+Next we specify the optical source on the
+<b> BEAM</b> statement.  We
+specify the light with normal incidence from above with a wavelength
+of 0.5325 microns.  This wavelength corresponds to the band pass of
+the green filter.  We also define the sampling in the FDTD mesh.
+This sampling should typically be a small fraction of the incident
+wavelength.  The
+<b> TD.WAVES</b> parameter specifies how many source
+wavelengths are propogated in this simulation.  Finally, we specify
+a file for capture of the structure as represented in the final
+FDTD mesh solution.  This is useful to examine the interference
+and diffraction patterns that might not be otherwise discernable in
+the standard finite-difference structure file.
+</p>
+<p>
+Next, we specify the lenslets above the two pixels.
+</p>
+<p>
+We add perfectly matched layers (PMLs) at the top and bottom of the FDTD domain
+to absorb reflected and transmitted light.  This is specified on the
+<b> PML</b> statements.
+</p>
+<p>
+After obtaining the initial solution, we define probes using the
+<b> PROBE</b> statement to allow us to measure the integrated photogeneration rate as
+a function of wavelength in both of the green and red sensor wells.
+It is important to notice
+that we specified the
+<b> FDTD</b> parameter on the
+<b> PROBE</b> statement.
+This indicates that the integration of the generation rate will take place
+in the FDTD analysis domain.  The FDTD domain presents a more accurate
+estimate since some loss is expected during interpolation to the
+finite-difference domain.
+</p>
+<p>
+Finally, we capture the solutions for various angles as specified by the
+<b> ANGLE</b> parameter of the
+<b> SOLVE</b> statement.  These angles were selected to provide integer numbers of
+wavelengths in phase shift at the edges of the source.
+</p>
+<p>
+When the simulation is complete we can look at the integrated photogeneration
+rates in the adjacent wells as a function of angle of incidence.  Here we
+can see that after about 20 degrees, the collected green rate decreases and
+the collected red rate begins to increase.  This information is very useful
+in designing the collection system of the camera.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

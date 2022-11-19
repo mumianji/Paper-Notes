@@ -1,0 +1,79 @@
+<html>
+  <head>
+    <title>CV Analysis Of Thin Gate Oxide NMOS Capacitor</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>CV Analysis Of Thin Gate Oxide NMOS Capacitor</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>S-Pisces/Quantum</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="quantumex02_plot0.png" width="640" alt="quantumex02_plot0" />
+      <p/>
+      <img src="quantumex02_plot1.png" width="640" alt="quantumex02_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates the CV characteristics of a p-type substrate
+MOS capacitor with a nominal 30A gate oxide. The example shows:
+</p>
+<ul>
+  <li>
+ Calculation of CV curves using ac Analysis 
+<br/>
+  </li>
+  <li>
+ Use of the Quantum moments quantum model for holes
+<br/>
+  </li>
+  <li>
+ Difference between classical and quantum gate thickness
+<br/>
+  </li>
+  <li>
+ Classical and Quantized electron density
+  </li>
+</ul>
+<p>
+A simple 1D MOS capacitor is created in this example with a 30A gate
+oxide thickness.  An AC analysis is performed on the device firstly
+with the
+<b> classical </b> simulation and the with the
+<b> quantum </b> model swtiched on.
+</p>
+<p>
+The quantum model for holes is activated by using the
+<b> p.quantum </b> switch in the models statement for holes.  Note that this activates
+a quantum moments model which uses a quantum temperature calculation.
+This quantum temperature can be viewed in the structure files.  Also,
+the cutline created in TonyPlot can be used to examine the classical
+and quantum hole concenration differences in the structure.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

@@ -1,0 +1,126 @@
+<html>
+  <head>
+    <title>PHEMT High Frequency Analysis</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>PHEMT High Frequency Analysis</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>DevEdit/Blaze</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="hemtex06_plot0.png" width="640" alt="hemtex06_plot0" />
+      <p/>
+      <img src="hemtex06_plot1.png" width="640" alt="hemtex06_plot1" />
+      <p/>
+      <img src="hemtex06_plot2.png" width="640" alt="hemtex06_plot2" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<ul>
+  <li>
+ AC parameters as a function of the gate bias
+<br/>
+  </li>
+  <li>
+ Frequency domain AC calculation
+<br/>
+  </li>
+  <li>
+ Calculation of s-parameters
+  </li>
+</ul>
+<p>
+This example is based on the previous example (see that text for details on
+the structure).
+</p>
+<p>
+Once the structure is loaded into BLAZE, a small signal AC perturbation
+is applied at a frequency of 1 MHz to calculate the AC parameters
+(conductances and capacitances) as functions of Vgs. This also allows
+the user to obtain the cutoff frequency using the low frequency
+approximation using TonyPlot or using the extraction feature of
+DeckBuild. Currents, voltages, and AC parameters are saved in the log
+file, and internal structure information is saved  in a solution file
+for the final bias condition of Vgs=0V, Vds=2 V.
+</p>
+<p>
+The next step is a full frequency domain AC simulation when the Y parameter
+matrix (conductances and capacitances) are calculated as functions of frequency
+from 10 Hz up to 50 GHz. These results are stored in a log file. Additionally,
+with the specification of
+<b> s.param </b> on the log statement, the s-parameters are stored to the file.
+</p>
+<p>
+At the end of simulation, parameter extraction statements are used to extract the
+following parameters using the
+<b> extract </b> feature of DeckBuild:
+</p>
+<ul>
+  <li>
+ Maximum gate-source capacitance
+<br/>
+  </li>
+  <li>
+ Gate-source capacitance at Vgs=0
+<br/>
+  </li>
+  <li>
+ Maximum cutoff frequency
+<br/>
+  </li>
+  <li>
+ Cutoff frequency at Vgs=0
+<br/>
+  </li>
+  <li>
+ Maximum AC current gain f=1MHz
+<br/>
+  </li>
+  <li>
+ AC current gain at Vgs=0 f=1MHz
+<br/>
+  </li>
+</ul>
+<p>
+The results are also displayed using TonyPlot:
+</p>
+<ul>
+  <li>
+ Transconductance versus gate bias characteristic
+<br/>
+  </li>
+  <li>
+ s-parameters: S12 &amp; S21 in polar coordinates
+<br/>
+  </li>
+  <li>
+ s-parameters: S11 &amp; S22 on a Smith Chart
+  </li>
+</ul>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

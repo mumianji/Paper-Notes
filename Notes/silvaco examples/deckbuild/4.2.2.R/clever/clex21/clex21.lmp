@@ -1,0 +1,38 @@
+
+; Logical Combination of Masks to Define Active Devices
+
+And POLY  !AA   GATES
+And GATES NWELL PGATE
+And GATES PWELL NGATE
+
+And NSD   !AA   nplus
+And nplus PWELL nsdp
+And nsdp !NGATE N_SD
+
+And PSD   !AA   pplus
+And pplus NWELL psdp
+And psdp !PGATE P_SD
+
+And CONT !POLY SCONT
+
+
+; Export Any Layers Required
+
+Export GATES
+Export N_SD
+Export P_SD
+
+
+; Define Connectivity
+
+Connect SCONT CONT
+Connect POLY CONT
+Connect CONT M1
+Connect M1 VIA1
+Connect VIA1 M2
+
+
+; Define Device Model Name and Gate/Source/Drain/Well Connections
+
+ELEMENT MOS[myNMOS] NGATE N_SD PWELL SCONT
+ELEMENT MOS[myPMOS] PGATE P_SD NWELL SCONT

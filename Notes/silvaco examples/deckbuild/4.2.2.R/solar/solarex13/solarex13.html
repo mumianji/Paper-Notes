@@ -1,0 +1,79 @@
+<html>
+  <head>
+    <title>CIGS Module simulation and optimization</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>CIGS Module simulation and optimization</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>SSuprem 4/S-Pisces/Luminous</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="solarex13_plot0.png" width="640" alt="solarex13_plot0" />
+      <p/>
+      <img src="solarex13_plot1.png" width="640" alt="solarex13_plot1" />
+      <p/>
+      <img src="solarex13_plot2.png" width="640" alt="solarex13_plot2" />
+      <p/>
+      <img src="solarex13_plot3.png" width="640" alt="solarex13_plot3" />
+      <p/>
+      <img src="solarex13_plot4.png" width="640" alt="solarex13_plot4" />
+      <p/>
+      <img src="solarex13_plot5.png" width="640" alt="solarex13_plot5" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+The Thin-film solar cell module based on CIGS is a technology with
+great potential. Two reasons for this are low material consumption
+and relatively high efficiency. This example demonstrates CIGS solar
+cell module simulation and optimization.
+</p>
+<p>
+In a solar cell module several cells are connected in series. The cells
+are the active area of the module whereas the interconnections between
+cells are the dead area. The efficiency of the module is thus dependent
+on the number of cells in the module. Indeed there is a tradeoff between
+maximizing absorption and minimizing resistance of the interconnection.
+</p>
+<p>
+Solarex13.in is a complete parameterized input deck in order to be able
+to make variation of both process and geometry to optimize the design.
+the
+<b> loop</b> statement was used to do so. In this input deck, 4 cells were used to
+create the module. Key figures of merit of the CIGS module (Voc, Jsc,
+Efficiency ...) were extracted at the end of the simulation.
+</p>
+<p>
+Solarex13.in uses dbinternal to obtain the solar cell key figures
+of merit versus the number of cells. The advantage of using dbinternal
+is that simulations are automatically run one after the other and the
+data file containing the solar cell figures of merit can be plotted
+directly in TonyPlot.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

@@ -1,0 +1,84 @@
+<html>
+  <head>
+    <title>IGBT Ic/Vce Characteristics</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>IGBT Ic/Vce Characteristics</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>S-Pisces</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="powerex04_plot0.png" width="640" alt="powerex04_plot0" />
+      <p/>
+      <img src="powerex04_plot1.png" width="640" alt="powerex04_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+The Ic / Vce characteristics of an Insulated Gate Bipolar
+Transistor (IGBT) are simulated.  This example shows:
+</p>
+<ul>
+  <li>
+ Creating the IGBT structure using Atlas
+<br/>
+  </li>
+  <li>
+ Ic / Vce test definition
+<br/>
+  </li>
+  <li>
+ IGBT Ic versus Vce characteristics
+  </li>
+</ul>
+<p>
+The Atlas simulation begins with the definition of the IGBT structure.
+Atlas is used to define the IGBT structure including mesh, materials, electrodes, and doping.
+A fine rectangular mesh is first defined.  Next the materials are assigned to specific regions using the
+<b> region </b> command.  The electrodes and doping profiles are then defined.  Additionally, specific characteristics of these materials, their electrodes and the charge carriers within can be modified.  The
+<b> material </b> statement is
+used to define the electron and hole recombination lifetimes in the semiconductor.  The
+<b> contact </b> statement defines the workfunction of the polysilicon electrode, in this case, that of degenerately doped n-type polysilicon.   This completes the IGBT structure definition.
+</p>
+<p>
+For any Atlas device simulation, the physical transport models must be enabled using the
+<b> model </b> statement.  In this case, they reflect the different physical effects important to the IGBT device.
+They are analytic: analytic concentration dependent mobility, fldmob: lateral electric field dependent mobility, surfmob: surface mobility degradation, srh:
+Shockley-Read-Hall recombination, and auger:  recombination accounting for high level injection
+effects.
+</p>
+<p>
+IGBT output characteristics are simulated by sweeping the collector contact voltage for several discrete values
+of gate voltage.  In this example, the collector voltage will be swept from 0 to 20 V for gate voltages of 5
+and 10 V.  This is accomplished by first obtaining a solution at each gate bias of interest with all other
+electrodes set to 0V.  Next, each gate solution is used as the initial solution for a collector sweep.
+Output log files are saved for each gate-collector sweep combination.  TonyPlot displays the IGBT Ic / Vce
+family of curves by overlaying all output curves on one plot.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

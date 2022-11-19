@@ -1,0 +1,111 @@
+<html>
+  <head>
+    <title>CMOS Latch-Up By Negative Voltage on Vss</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>CMOS Latch-Up By Negative Voltage on Vss</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>MaskViews/SSuprem 4/S-Pisces</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R, Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="latchex03_plot0.png" width="640" alt="latchex03_plot0" />
+      <p/>
+      <img src="latchex03_plot1.png" width="640" alt="latchex03_plot1" />
+      <p/>
+      <img src="latchex03_plot2.png" width="640" alt="latchex03_plot2" />
+      <p/>
+      <img src="latchex03_plot3.png" width="640" alt="latchex03_plot3" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates a latch-up caused by a DC ramp in an npnp
+structure typical of CMOS processes . The stages of this examples are:
+</p>
+<ul>
+  <li>
+ Definition of a CMOS layout to include a parasitic npnp structure
+<br/>
+  </li>
+  <li>
+ Interface of the layout information to Athena
+<br/>
+  </li>
+  <li>
+ Process simulation of the npnp structure
+<br/>
+  </li>
+  <li>
+ Interface of the structure to Atlas with automatic electrode specification
+<br/>
+  </li>
+  <li>
+ Negative ramp of Vss to cause latch-up using curve tracing algorithm.
+  </li>
+</ul>
+<p>
+The parasitic npnp device used is identical to the device in the
+previous example. The use of MASKVIEWS and Athena to create this
+structure is given in the description of that example. The initial part
+of the Atlas run is also identical.
+</p>
+<p>
+This file differs only in the manner of triggering the latch-up. A DC
+ramp of the n+ contact in the p-well (named Vss) is used as the
+trigger. Once the voltage on Vss becomes less than the 0.0V on the pwell, the
+n+/p-well junction is forward biased and latch-up may be triggered.
+</p>
+<p>
+To
+allow the complete holding voltage and current to be extracted simply,
+the curve tracing algorithm in Atlas is used. The key command
+is the
+<b> curvetrace </b> statement coupled with &apos;solve curvetrace&apos;. The parameters on the trace
+statement are used to set initial conditions and limits on the curve
+tracing. In particular the
+<b> step.init </b> parameter is given as a negative voltage step. This is all that is
+required to select the polarity of the voltage sweep. A detailed
+description of the use of this technique in tracing IV curves with
+turning points can be found in the description of the MOS snapback
+example.
+</p>
+<p>
+The latch-up characteristic can be seen in the stored log file. It is
+important to plot the current versus
+<b> vss int. bias </b> rather then &apos;vss bias&apos;, since the former is the voltage actually
+applied to the semiconductor and the latter includes the effect of the
+load line used during the curve trace.
+</p>
+<p>
+To load and run this example, select the
+<b> Load  </b> button in DeckBuild. This will copy the input file and any support
+files to your current working directory. You
+<b> cannot </b> run this file until the cross-section file is loaded. To do this go to
+the DeckBuild menu
+<b> Tools-&gt;MaskViews-&gt;Cutlines </b> Then select the name of the cross-section file from the list. The name
+will be &lt;file&gt;.sec where &lt;file&gt; is the name of this example. Then press
+<b> Load </b> on this Cutline menu. Once the cross-section file is loaded, select
+<b> run </b> in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

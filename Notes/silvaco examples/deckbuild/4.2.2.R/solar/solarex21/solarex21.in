@@ -1,0 +1,149 @@
+# Construct silicon pyramid solar cell with (111) facets in Victory Mesh
+
+go victorymesh
+
+# 1 Create a silicon cuboid (note that the cuboid is in two layers - this simplifies subsequent slice since one interface already exists)
+layers point="0.0,0.0,-0.5" num.edges=1 cuboid.width=0.5 axis.deltas="0.5,5" \
+       layer.offset=0 layer.deltas="0.5" materials="(silicon, silicon)" \
+       out="solarex21_pyramid1" separate
+
+# 2 Create the pyramid planes to use for the slice into the cuboid
+# Using a quarter pyramid to minimize the slicing planes
+pyramid base.center="0,0,0" \
+        length.x="1.0" length.y="1.0" \
+        angle=54.7 out="slice1"
+
+# 3 Invert slice1 to match cuboid (we typically grow devices in the negative z-axis)
+reflect axis="z" offset="0"
+
+# 4 Slice the pyramid boundary interfaces into the silicon layered cuboid
+slice in="solarex21_pyramid1" shape="slice1"
+
+# 5 Convert the region above the pyramid interfaces to gas
+tag point="0.1,0.1,-0.45" value="tag-top-gas"
+material regions="tag-top-gas" value="gas"
+
+# Merge adjacent regions of similar material
+merge
+
+# keep the gas on the save (needed for Victory Process)
+save out="solarex21_pyramid1" erase.regions=none 
+
+# Use Victory Process to add dopant
+go victoryprocess
+
+load name=solarex21_pyramid1.str
+
+# Add volume data mesh
+Line x location=0 spacing=0.05
+Line x location=0.5  spacing=0.05
+
+Line y location=0 spacing=0.05
+Line y location=0.5  spacing=0.05
+
+Line z location=-0.5 spacing=0.01
+Line z location=0 spacing=0.01
+Line z location=5 spacing=0.25
+
+# 6 Diffuse boron into the top surface
+diffuse time=5 min temperature=950 c.boron=1e18
+
+save name="solarex21_pyramid2"
+
+# Return to Victory Mesh
+go victorymesh simflags="-P all"
+
+load in="solarex21_pyramid2"
+
+# Steps 7-9 mimic a conformal deposit
+
+# 7 Copy the structure (this will be used for the second slice)
+copy in="solarex21_pyramid2" out="slice2"
+
+# Translate distance equal to the oxide layer thickness
+translate delta="0,0,-0.01" 
+
+# Erasing the gas leaves only the silicon, its boundary interfaces will be used for the slice
+erase regions="material:gas"
+
+# 8 convert the gas in our pyramid structure to oxide and then slice
+tag in="solarex21_pyramid2" point="0.1,0.1,-0.45" value="tag-top-oxide"
+material regions="tag-top-oxide" value="oxide"
+
+# 9 slice the original structure with the translated pyramid.
+slice shape="slice2"
+
+# 10 The oxide now has an interface sliced in 0.01 microns above the silicon interface. 
+# Convert the oxide above that interface back to gas
+tag point="0.1,0.1,-0.45" value="tag-top-gas"
+material regions="tag-top-gas" value="gas"
+
+# 11 Mirror the quarter to create the full pyramid 
+mirror axes="-x, -y"
+
+# 12 Add a top aluminium contact
+slice from="0.45, 0.45, 0" to="0.5, 0.5, 0.05" 
+tag point="0.4975,0.4975,0.005" value="to_aluminium"
+material regions="to_aluminium" value="aluminum"
+merge
+
+# 13 Create Delaunay mesh for Victory Device simulation
+# activate multithreading to speed up this operation
+remesh delaunay
+refine max.size=0.5
+refine max.interface.size=0.01 interface.regions="material:silicon" grading="linear"
+
+# 14 Mirror the structure to generate a larger repeated surface
+mirror axes="+x, +y" out="solarex21_pyramid3"
+save
+
+# Device simulation
+go victorydevice simflags="-P all"
+
+mesh inf=solarex21_pyramid3.str verbose=3 
+
+elec   num=1 name=anode region=1
+elec   num=2 name=cathode bottom
+
+doping uniform n.type conc=1e14 
+
+doping uniform p.type conc=1e12
+
+model srh
+
+method pam.mpi norm.scaling.local
+
+# Use periodic boundary conditions for realistic sampling
+beam       num=1 x.o=0.5 y.o=0.5 z.o=-1.0 front.refl periodic \
+           raytrace=solarex21_rays.str wavelength=0.55 
+
+
+solve init
+save outfile=solarex21_0.str
+solve b1=0.001
+solve b1=0.01
+solve b1=0.1
+solve b1=1
+
+# Obtain spectral response
+log outf=solarex21_1.log
+solve b1=1 beam=1  lambda1=0.3 wstep=0.02 wfinal=1.1
+log off
+
+solve b1=1 beam=1 lambda1=0.55
+
+# Obtain monochromatic IV characteristics for speed
+log outf=solarex21_2.log
+solve name=anode vanode=0 vfinal=0.6 vstep=0.02
+
+# Obtain design indicators
+extract init infile="solarex21_2.log"
+extract name="Jsc" y.val from curve(v."anode", i."cathode") where x.val=0.0
+extract name="Voc" x.val from curve(v."anode", i."cathode") where y.val=0.0 
+
+save outfile=solarex21_1.str
+
+tonyplot solarex21_1.log -set solarex21_1.setx
+tonyplot solarex21_2.log -set solarex21_2.setx
+tonyplot solarex21_rays.str -set solarex21_3.setx
+quit

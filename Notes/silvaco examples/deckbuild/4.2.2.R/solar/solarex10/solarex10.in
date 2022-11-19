@@ -1,0 +1,294 @@
+# (c) Silvaco Inc., 2018
+# CIGS solar cell simulation with Grain Boundaries
+
+go internal
+
+set thick=3
+set width=2
+set xgrain=0.5
+set ygrain=1
+set boundary=0.01
+
+go atlas 
+
+mesh 
+
+set i=0
+set steps=$width/$xgrain
+loop steps=$steps
+x.mesh loc=$i*$xgrain             spacing=($boundary)/4
+x.mesh loc=($i*$xgrain)+$xgrain/2 spacing=$xgrain/4
+set i=1+$i
+l.end
+x.mesh loc=$i*$xgrain             spacing=($boundary)/4
+
+y.m loc=-0.25 s=0.02
+y.m loc=-0.05 s=0.005
+
+set i=0
+set steps=$thick/$ygrain
+loop steps=$steps
+y.mesh loc=$i*$ygrain             spacing=($boundary)/4
+y.mesh loc=($i*$ygrain)+$ygrain/2 spacing=$ygrain/4
+set i=1+$i
+l.end
+y.mesh loc=$i*$ygrain             spacing=($boundary)/4
+
+
+region num=1 material=ZnO  y.min=-0.25 y.max=-0.05 	 
+region num=2 material=CdS   y.min=-0.05 y.max=0 
+# CuIn1-xGaxSe2
+region num=3 material=CIGS  y.min=0 y.max=3
+
+set region=4
+
+set i=1
+set steps=$width/$xgrain-1
+loop steps=$steps
+region number=$region material=CIGS \
+       x.min=$i*$xgrain-0.5*$boundary x.max=$i*$xgrain+0.5*$boundary y.min=0 y.max=$thick
+set region=1+$region
+set i=1+$i
+l.end
+
+set i=1
+set steps=$thick/$ygrain-1
+loop steps=$steps
+region number=$region material=CIGS \
+       y.min=$i*$ygrain-0.5*$boundary y.max=$i*$ygrain+0.5*$boundary
+set region=1+$region
+set i=1+$i
+l.end
+
+# Electrodes 
+electrode name=anode bottom
+electrode name=cathode top 
+
+
+doping region=1 uniform n.type concentration=1e18
+doping region=2 uniform n.type concentration=1.1e18
+doping x.min=0 x.max=$width y.min=0 y.max=$thick uniform p.type concentration=2e16 
+
+# CIGS
+material mat=CIGS EG300=1.15 PERMITTIVITY=13.6 AFFINITY=4.8 MUN=100 MUP=25 \
+		  NC300=2.2e18 NV300=1.8e19 taup0=1e-7 taun0=1e-7 
+	          
+# Cds
+material mat=CdS EG300=2.4 PERMITTIVITY=10 AFFINITY=4.5 MUN=100 MUP=25 \
+		  NC300=2.2e18 NV300=1.8e19 taup0=1e-7 taun0=1e-7
+material mat=CdS index.file=solarex10.nk 
+
+# ZnO
+material mat=ZnO EG300=3.3 PERMITTIVITY=9 AFFINITY=4.7 MUN=100 MUP=25 \
+		  NC300=2.2e18 NV300=1.8e19 taup0=1e-7 taun0=1e-7
+
+material mat=ZnO sopra=Ito2.nk 
+
+# Material
+defects mat=CIGS nta=0 ntd=0 wta=1 wtd=1 \
+	nga=0 ngd=1e14 ega=0.575 egd=0.575 wga=1 wgd=0.1 \
+	sigtae=1.e-17 sigtah=1.e-15 sigtde=1.e-15 sigtdh=1.e-17  \ 
+	siggae=2.e-16 siggah=2.e-15 siggde=5.e-13 siggdh=1.e-15 continuous
+
+defects mat=CdS nta=0 ntd=0 wta=1 wtd=1 \
+	nga=1e18 ngd=0 ega=1.2 egd=1.2 wga=0.1 wgd=1 \
+	sigtae=1.e-17 sigtah=1.e-15 sigtde=1.e-15 sigtdh=1.e-17  \ 
+	siggae=1.e-17 siggah=1.e-12 siggde=5.e-13 siggdh=1.e-15 continuous
+
+defects mat=ZnO nta=0 ntd=0 wta=1 wtd=1 \
+	nga=0 ngd=1e17 ega=1.65 egd=1.65 wga=1 wgd=0.1 \
+	sigtae=1.e-17 sigtah=1.e-15 sigtde=1.e-15 sigtdh=1.e-17  \ 
+	siggae=2.e-16 siggah=2.e-15 siggde=1.e-12 siggdh=1.e-15 continuous
+
+# Neutral Grain boundary  
+trap region=4 donor density=1e11 sign=1e-8 sigp=1e-8 degen.fac=1.0 e.level=0.575
+trap region=5 donor density=1e11 sign=1e-8 sigp=1e-8 degen.fac=1.0 e.level=0.575
+trap region=6 donor density=1e11 sign=1e-8 sigp=1e-8 degen.fac=1.0 e.level=0.575
+trap region=7 donor density=1e11 sign=1e-8 sigp=1e-8 degen.fac=1.0 e.level=0.575
+trap region=8 donor density=1e11 sign=1e-8 sigp=1e-8 degen.fac=1.0 e.level=0.575
+
+contact name=anode  workf=5.75 SURF.REC VSURFN=1e7 VSURFP=1e7 
+contact name=cathode reflect=0.1 workf=4.7 SURF.REC VSURFN=1e7 VSURFP=1e7 
+
+# set interface recombination 
+interface s.s y.min=-0.01 y.max=0.01 s.n=1e6  s.p=1e6
+
+beam num=1 x.o=0.5 y.o=-0.5 angle=90 power.file=solarex10.spec  
+
+models srh fermi ni.fermi conmob optr auger bgn 
+ 
+output band.temp opt.int
+method itlimit=40 maxtraps=10
+
+solve init
+save outf=solarex10_0.str
+
+tonyplot solarex10_0.str -set solarex10_0.set
+
+solve b1=1e-01 lit.step=1e-1 nstep=9
+solve b1=1
+save outf=solarex10_1.str
+
+tonyplot solarex10_1.str -set solarex10_1.set
+
+log outf=solarex10_0.log
+solve vanode=0 b1=1
+solve name=anode vstep=0.01 vfinal=1 b1=1
+
+extract init infile="solarex10_0.log"
+extract name="Jsc" y.val from curve(v."anode", i."anode") where x.val=0.0
+extract name="JscmAcm2" $Jsc*1e08*1e03/$width
+extract name="Voc" x.val from curve(v."anode", i."anode") where y.val=0.0 
+extract name="Pm" min(curve(v."anode", (v."anode" * i."anode"))) 
+extract name="Vm" x.val from curve(v."anode", (v."anode"*i."anode") ) \
+	where y.val=$"Pm"
+extract name="Im" $"Pm"/$"Vm"
+extract name="FF" ($"Pm"/($"Jsc"*$"Voc"))*100
+extract name="Eff" (-1e8*$Pm/(0.1*$width))*100
+
+
+
+# CIGS solar cell simulation without Grain Boundaries
+
+go internal
+
+set thick=3
+set width=2
+set xgrain=0.5
+set ygrain=1
+set boundary=0.01
+
+go atlas 
+
+mesh 
+
+set i=0
+set steps=$width/$xgrain
+loop steps=$steps
+x.mesh loc=$i*$xgrain             spacing=($boundary)/4
+x.mesh loc=($i*$xgrain)+$xgrain/2 spacing=$xgrain/4
+set i=1+$i
+l.end
+x.mesh loc=$i*$xgrain             spacing=($boundary)/4
+
+y.m loc=-0.25 s=0.02
+y.m loc=-0.05 s=0.005
+
+set i=0
+set steps=$thick/$ygrain
+loop steps=$steps
+y.mesh loc=$i*$ygrain             spacing=($boundary)/4
+y.mesh loc=($i*$ygrain)+$ygrain/2 spacing=$ygrain/4
+set i=1+$i
+l.end
+y.mesh loc=$i*$ygrain             spacing=($boundary)/4
+
+
+region num=1 material=ZnO  y.min=-0.25 y.max=-0.05 	 
+region num=2 material=CdS   y.min=-0.05 y.max=0 
+# CuIn1-xGaxSe2
+region num=3 material=CIGS  y.min=0 y.max=3
+
+set region=4
+
+set i=1
+set steps=$width/$xgrain-1
+loop steps=$steps
+region number=$region material=CIGS \
+       x.min=$i*$xgrain-0.5*$boundary x.max=$i*$xgrain+0.5*$boundary y.min=0 y.max=$thick
+set region=1+$region
+set i=1+$i
+l.end
+
+set i=1
+set steps=$thick/$ygrain-1
+loop steps=$steps
+region number=$region material=CIGS \
+       y.min=$i*$ygrain-0.5*$boundary y.max=$i*$ygrain+0.5*$boundary
+set region=1+$region
+set i=1+$i
+l.end
+
+# Electrodes 
+electrode name=anode bottom
+electrode name=cathode top 
+
+
+doping region=1 uniform n.type concentration=1e18
+doping region=2 uniform n.type concentration=1.1e18
+doping x.min=0 x.max=$width y.min=0 y.max=$thick uniform p.type concentration=2e16 
+
+# CIGS
+material mat=CIGS EG300=1.15 PERMITTIVITY=13.6 AFFINITY=4.8 MUN=100 MUP=25 \
+		  NC300=2.2e18 NV300=1.8e19 taup0=1e-7 taun0=1e-7 
+	          
+# Cds
+material mat=CdS EG300=2.4 PERMITTIVITY=10 AFFINITY=4.5 MUN=100 MUP=25 \
+		  NC300=2.2e18 NV300=1.8e19 taup0=1e-7 taun0=1e-7
+material mat=CdS index.file=solarex10.nk 
+
+# ZnO
+material mat=ZnO EG300=3.3 PERMITTIVITY=9 AFFINITY=4.7 MUN=100 MUP=25 \
+		  NC300=2.2e18 NV300=1.8e19 taup0=1e-7 taun0=1e-7
+
+material mat=ZnO sopra=Ito2.nk 
+
+# Material
+defects mat=CIGS nta=0 ntd=0 wta=1 wtd=1 \
+	nga=0 ngd=1e14 ega=0.575 egd=0.575 wga=1 wgd=0.1 \
+	sigtae=1.e-17 sigtah=1.e-15 sigtde=1.e-15 sigtdh=1.e-17  \ 
+	siggae=2.e-16 siggah=2.e-15 siggde=5.e-13 siggdh=1.e-15 continuous
+
+defects mat=CdS nta=0 ntd=0 wta=1 wtd=1 \
+	nga=1e18 ngd=0 ega=1.2 egd=1.2 wga=0.1 wgd=1 \
+	sigtae=1.e-17 sigtah=1.e-15 sigtde=1.e-15 sigtdh=1.e-17  \ 
+	siggae=1.e-17 siggah=1.e-12 siggde=5.e-13 siggdh=1.e-15 continuous
+
+defects mat=ZnO nta=0 ntd=0 wta=1 wtd=1 \
+	nga=0 ngd=1e17 ega=1.65 egd=1.65 wga=1 wgd=0.1 \
+	sigtae=1.e-17 sigtah=1.e-15 sigtde=1.e-15 sigtdh=1.e-17  \ 
+	siggae=2.e-16 siggah=2.e-15 siggde=1.e-12 siggdh=1.e-15 continuous
+
+# Neutral Grain boundary  
+#trap region=4 donor density=1e11 sign=1e-8 sigp=1e-8 degen.fac=1.0 e.level=0.575
+#trap region=5 donor density=1e11 sign=1e-8 sigp=1e-8 degen.fac=1.0 e.level=0.575
+#trap region=6 donor density=1e11 sign=1e-8 sigp=1e-8 degen.fac=1.0 e.level=0.575
+#trap region=7 donor density=1e11 sign=1e-8 sigp=1e-8 degen.fac=1.0 e.level=0.575
+#trap region=8 donor density=1e11 sign=1e-8 sigp=1e-8 degen.fac=1.0 e.level=0.575
+
+contact name=anode  workf=5.75 SURF.REC VSURFN=1e7 VSURFP=1e7 
+contact name=cathode reflect=0.1 workf=4.7 SURF.REC VSURFN=1e7 VSURFP=1e7 
+
+# set interface recombination 
+interface s.s y.min=-0.01 y.max=0.01 s.n=1e6  s.p=1e6
+
+beam num=1 x.o=0.5 y.o=-0.5 angle=90 power.file=solarex10.spec  
+
+models srh fermi ni.fermi conmob optr auger bgn 
+ 
+output band.temp opt.int
+method itlimit=40 maxtraps=10
+
+solve init
+
+solve b1=1e-01 lit.step=1e-1 nstep=9
+solve b1=1
+
+log outf=solarex10_1.log
+solve vanode=0 b1=1
+solve name=anode vstep=0.01 vfinal=1 b1=1
+
+extract init infile="solarex10_1.log"
+extract name="Jsc" y.val from curve(v."anode", i."anode") where x.val=0.0
+extract name="JscmAcm2" $Jsc*1e08*1e03/$width
+extract name="Voc" x.val from curve(v."anode", i."anode") where y.val=0.0 
+extract name="Pm" min(curve(v."anode", (v."anode" * i."anode"))) 
+extract name="Vm" x.val from curve(v."anode", (v."anode"*i."anode") ) \
+	where y.val=$"Pm"
+extract name="Im" $"Pm"/$"Vm"
+extract name="FF" ($"Pm"/($"Jsc"*$"Voc"))*100
+extract name="Eff" (-1e8*$Pm/(0.1*$width))*100
+
+tonyplot -overlay solarex10_0.log solarex10_1.log  -set solarex10_2.set
+
+quit

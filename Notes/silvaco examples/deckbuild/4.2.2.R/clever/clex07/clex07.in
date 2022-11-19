@@ -1,0 +1,62 @@
+
+go clever
+
+Init Layout="clex07.lay" Depth=1 Map="clex07.lmp"
+
+Save Spice="clex07.before.net" Layout="clex07_1.lay"
+
+
+## Process Description ##
+
+go victoryprocess
+
+init Layout=clex07_1.lay Depth=1 material=silicon
+
+# Gate Stack
+Deposit material=Oxide Thickness=0.3 Max
+Deposit material=Poly  Thickness=0.25 Max
+Etch material=Polysilicon Thickness=0.3 angle=87 Mask=POLY max
+Electrodes mask=*GATE material=poly
+
+# Contacts
+Deposit material=Oxide Thickness=0.5 Max
+Etch material=Oxide Thickness=1.2 angle=87 Mask=CONT Reverse max
+Electrodes mask=*CONT material=Silicon
+
+# Metal 1
+Deposit material=Aluminum Thickness=0.5 Max
+Etch material=Aluminum Thickness=0.6 angle=87 Mask=METAL1 max
+Electrodes mask=METAL1 material=Aluminum
+
+# Via 1
+Deposit material=Oxide Thickness=0.5 Max
+Etch material=Oxide Thickness=0.6 Isotropic=87 Mask=VIA1 Reverse max
+
+# Metal 2
+Deposit material=Aluminum Thickness=0.5 Max
+Etch material=Aluminum Thickness=0.6 angle=87 Mask=METAL2 max
+Electrodes mask=METAL2 material=Aluminum
+
+# Via 2
+Deposit material=Oxide Thickness=1 Max
+
+Export clever(unstructured) Structure="clex07.str"
+
+## After creating the 3D structure   ##
+## Perform the Interconnect Analysis ##
+
+
+go clever
+
+Init Layout="clex07.lay" Map="clex07.lmp" structure="clex07.str"
+
+Save Spice="clex07.before.net"
+
+Material Poly Conductivity=5e4
+Material Aluminum Conductivity=1e6
+
+Interconnect Adapt=(0.04,0.02) capsolver=1
+
+Save Spice="clex07.net"
+
+quit

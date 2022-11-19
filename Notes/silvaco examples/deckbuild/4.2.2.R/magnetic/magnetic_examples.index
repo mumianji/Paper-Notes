@@ -1,0 +1,147 @@
+
+{section} MAGNETIC : Magnetic Transport Application Examples
+
+
+
+{subsection} magneticex01.in : Hall Voltage for n-type and p-type resistor
+
+Requires:  S-Pisces/Magnetic
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+The example shows :
+
+{bullet} How to specify the Magnetic field and Hall scattering factors.
+{newline}
+{bullet} The Hall voltage set up across a resistor.
+{newline}
+{bullet} How the Hall effect shows the type of carrier dominating conduction. 
+{newline}
+
+To apply a magnetic field to Atlas,  simply assign a value to the parameter
+{bold} bz 
+on the 
+{bold} models 
+statement.   The magnetic field must be 
+perpendicular to the current flow, and so attempts to assign a non-zero value
+to either 
+{bold} bx 
+or 
+{bold} by 
+will result in an error message.
+
+
+The voltages at the centre left and right of the device are given relative
+to the reference voltage in the centre of the device. Their difference is the Hall Voltage,  which is zero if no magnetic field is applied.
+
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} magneticex02.in : Current based Magnetic field detector
+
+Requires: S-Pisces/Magnetic
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+The example shows : 
+
+{bullet} A dual collector bipolar structure made using Atlas syntax
+{newline}
+{bullet} Bifurcation of the collector currents due to Magnetic field
+{newline}
+
+Without the field, the collector currents are identical,  applying the
+magnetic field breaks the symmetry causing more current to flow to one of
+the collectors.  The difference in collector currents allows the magnetic
+field to be measured.  This structure is not strictly speaking a
+magneto-transistor as the base thickness is zero in some directions.
+
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} magneticex03.in : Directional magnetic field detector
+
+Requires:  Device 3D/Magnetic 3D
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+The example shows:
+
+{bullet} 3D structure formation using Atlas syntax
+{newline}
+{bullet} Model settings for 3D Magnetic field
+{newline}
+{bullet} Field detection using open circuited contacts
+
+The Magnetic field in Atlas 3D is specified by setting some combination of
+BX,BY, or BZ on the MODELS statement. In this case the current flow is in the x-direction and so we set up a field in the y-direction and z-directions
+by setting BY and BZ on the 
+{bold} models
+ statement.  Open circuited contacts
+are placed perpendicular to the y-direction and z-direction respectively. The
+potential drop in the y-direction (and hence
+{bold} BZ
+) is measured between contacts Hall1 and Hall2
+ and that in the z-direction (and hence 
+{bold} BY
+) is measured between contacts Hall3 and Hall4. The ratio of potential
+differences generated can be seen to be in proportion to the ratio of 
+magnetic field components,  thus giving the direction of the field in 
+the y-z plane. 
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} magneticex04.in : Extraction of Hall scattering factors
+Requires:  S-Pisces/Magnetic
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+{bullet} Creating a 2d Hall cross structure
+{newline}
+{bullet} How to set Hall scattering factors
+{newline}
+{bullet} How to extract Hall scattering factors from simulation data
+
+The Hall scattering factors, r_n and r_p, are theoretical constants 
+which is put into MAGNETIC2D and affects the terms of the Magnetic
+matrix. For the limit n >> p we have a theoretical Hall coefficient
+of -r_n/n e and for p >> n we have a theoretical Hall coefficient of
+r_p/p e.  The Hall coefficients can also be calculated directly from
+the simulated  Hall voltage, current density and magnetic field as 
+explained in the Atlas manual.
+
+The purpose of this deck is to obtain the Hall coefficients directly 
+from the simulation results, and multiply by the relevant carrier
+density to extract values for the hall scattering factors over a range of
+biases.  These are then plotted to show that they agree closely with the
+values of Hall-scattering factor input on the MODELS statement.  This acts
+as one validation of the Magnetic module.
+
+Note: You should select anode bias as the 
+X-quantity in the plot of the extracted data.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+

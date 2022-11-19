@@ -1,0 +1,79 @@
+<html>
+  <head>
+    <title>Planar N-Type MESFET</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Planar N-Type MESFET</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Mercury</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="mercuryex01_plot0.png" width="640" alt="mercuryex01_plot0" />
+      <p/>
+      <img src="mercuryex01_plot1.png" width="640" alt="mercuryex01_plot1" />
+      <p/>
+      <img src="mercuryex01_plot2.png" width="640" alt="mercuryex01_plot2" />
+      <p/>
+      <img src="mercuryex01_plot3.png" width="640" alt="mercuryex01_plot3" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This is a basic introduction to the Mercury module.  Mercury is
+optimized for the fast simulation of epitaxial FETs (that is FETs that
+have a constant epistructure and doping profile from the source to the
+drain).
+</p>
+<p>
+This example defines a simple, planar n-type MESFET and simulates the
+DC-IV curves and the small-signal AC characteristics.
+</p>
+<p>
+Most of the commands are familiar Atlas commands, however there are a
+few commands and parameters that are specific to the Mercury module.
+</p>
+<p>
+The
+<b> network clear </b> command removes the external circuit that surrounds the FET.  As
+Mercury can do a large-signal harmonic balance simulation on the FET
+it needs to be able to solve the FET within an external circuit.  This
+circuit is not usually needed when simulating the DC or small-signal
+behavior.
+</p>
+<p>
+The
+<b> models n_depletion </b> command tells Mercury that the device is an n-type depletion mode
+FET.  Mercury can use this information to optimize the simulation.
+</p>
+<p>
+The
+<b> poisson </b> command is used to generate a look-up table that characterizes the
+channel as a function of surface condition.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

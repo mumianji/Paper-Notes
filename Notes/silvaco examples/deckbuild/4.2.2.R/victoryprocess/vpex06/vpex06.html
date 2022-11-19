@@ -1,0 +1,97 @@
+<html>
+  <head>
+    <title>Deep Reactive Ion Etch example</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Deep Reactive Ion Etch example</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Victory Process : Core Simulator, 3D Physical Etch &amp; Deposit</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Victory Process 7.22.0.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="vpex06_1.png" width="640" alt="vpex06_1" />
+      <p/>
+      <img src="vpex06_2.png" width="640" alt="vpex06_2" />
+      <p/>
+      <img src="vpex06_3.png" width="640" alt="vpex06_3" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates the syntax needed for the simulation of a reactive ion etch
+and passivation process. This example also illustrates the definition of mask
+polygons in
+<b> Victory Process</b> </p>
+<p>
+After preparing the initial structure using a polygon mask and a geometrical
+deposition step, the reactive ion etch (RIE) model is activated. Finally the
+reactive ion etch model is called in a sequence with a conformal passivation step.
+</p>
+<p>
+List of key syntax:
+</p>
+<b> Init: </b> <p>
+Defines simulation domain and geometrical mesh resolution and number of
+Adaptive Mesh Refinement
+<b> (AMR) </b> levels
+</p>
+<b> SpecifyMaskPoly: </b> <p>
+Defines mask layer polygon
+</p>
+<b> Deposit: </b> <p>
+Deposition with geometrical mode
+</p>
+<b> Etchdepoproperties: </b> <p>
+Defines material properties relevant to etch and depo steps. Parameters include:
+<b> name, </b> to assign a deck name to the material properties for later reference,
+<b> material, </b> to define the material for which the following parameters are valid,
+<b> rate, </b> to define the etch rate in um/sec, um/min or um/hour with um/min being the default.
+</p>
+<b> Flux: </b> <p>
+Defines a c-function based flux model. In this case the
+<b> rieetcherflux </b> model which has two parameters and two dependencies.
+</p>
+<b> TopographyModel: </b> <p>
+Once given a name, defines a deposition or etching model by combining a surface reaction
+model and a flux model.
+</p>
+<b> Deposit: </b> <p>
+Performs a physical deposition process. Parameters include:
+<b> model, </b> to select the depo model,
+<b> material, </b> to define the deposited material,
+<b> depositionrate, </b> to define the deposition rate in um/sec, um/min or um/hour with um/min being the default and
+<b> time </b> to define the deposition time in sec, min or hour with min being the default.
+</p>
+<b> Etch: </b> <p>
+Performs a physical etching step. Parameters include:
+<b> model </b> to select the etch model,
+<b> materialproperties </b> to select the material properties (see Etchdepoproperties statement),
+<b> time </b> to define the etching time in sec, min or hour with min being the default and
+<b> maxCFL </b> to control the maximal time step for the simulation of this process step.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

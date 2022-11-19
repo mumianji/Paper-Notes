@@ -1,0 +1,118 @@
+# (c) Silvaco Inc., 2018
+go atlas
+
+set width=500
+
+mesh width=$width
+
+x.mesh location=-2.5  spacing=0.5
+x.mesh location=-1.2  spacing=0.1
+x.mesh location=-1    spacing=0.1
+x.mesh location=0     spacing=0.02
+x.mesh location=0.25  spacing=0.01
+x.mesh location=3     spacing=0.1
+x.mesh location=3.2   spacing=0.1
+x.mesh location=4.5   spacing=0.5
+
+y.mesh location=-0.01  spacing=0.002
+y.mesh location=0      spacing=0.001
+y.mesh location=0.023  spacing=0.001
+y.mesh location=1.923  spacing=0.5
+
+region number=1 material=oxide y.max=0.023
+region number=2 material=GaN y.min=0.023 substrate polarization
+region number=3 material=AlGaN x.min=-1 x.max=3 y.min=0 y.max=0.023 \
+       x.comp=0.28 calc.strain polarization
+
+electrode name=source x.min=-2.5 x.max=-1.2 y.min=-0.01 y.max=0.023
+electrode name=gate   x.min=0    x.max=0.25 y.min=-0.01 y.max=0
+electrode name=drain  x.min=3.2  x.max=4.5  y.min=-0.01 y.max=0.023
+
+doping  n.type gaussian conc=6e19 characteristic=0.01 lat.char=0.1 \ 
+        peak=0.023 x.min=-2.5 x.max=-0.8
+doping  n.type gaussian conc=6e19 characteristic=0.01 lat.char=0.1 \
+        peak=0.023 x.min=2.8 x.max=4.5
+
+doping  trap acceptor e.level=1.0 concentration=1e18 gaussian peak=1 \
+        characteristic=0.455 degen.fac=1 sign=1e-15 sigp=1e-15
+
+models srh print
+mobility fmct.n gansat.n mup0=50
+contact name=gate resistance=50*$width workfunc=5.15
+contact name=drain resistance=50*$width
+
+method climit=1e-4 ir.tol=1e-22 tol.time=1e9 dt.max=1.5625e-12 itlimit=100
+output con.band charge
+
+waveform amplitude=1.75 elec.name=gate frequency=1e10 number=1 periods=10 sinusoid
+waveform amplitude=2  elec.name=gate frequency=1e10 number=2 periods=10 sinusoid
+waveform amplitude=2.25 elec.name=gate frequency=1e10 number=3 periods=10 sinusoid
+waveform amplitude=2.5    elec.name=gate frequency=1e10 number=4 periods=10 sinusoid
+waveform amplitude=2.75 elec.name=gate frequency=1e10 number=5 periods=10 sinusoid
+waveform amplitude=3  elec.name=gate frequency=1e10 number=6 periods=10 sinusoid
+waveform amplitude=3.25 elec.name=gate frequency=1e10 number=7 periods=10 sinusoid
+waveform amplitude=3.5    elec.name=gate frequency=1e10 number=8 periods=10 sinusoid
+waveform amplitude=3.75 elec.name=gate frequency=1e10 number=9 periods=10 sinusoid
+waveform amplitude=4 elec.name=gate frequency=1e10 number=10 periods=10 sinusoid
+
+system rm ganfetex11.dat
+
+solve init
+solve previous
+solve vdrain=2.5 vstep=2.5 vfinal=30 name=drain
+solve vgate=-0.5 vstep=-0.5 vfinal=-5.5 name=gate
+save outfile=ganfetex11.str
+tonyplot ganfetex11.str -set ganfetex11_0.set
+
+system echo "Large Signal Power Curves" >> ganfetex11.dat
+system echo "10 4 4" >> ganfetex11.dat
+system echo "Power In (Watts)" >> ganfetex11.dat
+system echo "Power Out (Watts)" >> ganfetex11.dat
+system echo "Power Gain (dB)" >> ganfetex11.dat
+system echo "Power Output Efficiency (Percent)" >> ganfetex11.dat
+
+set wave=0
+log outfile=ganfetex11.log
+loop steps=10
+set wave=(1+$wave)
+
+solve wave$wave dt=1.5625e-12 tfinal=(1e-10*$wave)
+
+extract init infile="ganfetex11.log"
+
+# Extract Voltages
+extract name="max_Vg" max(curve(time, v."gate"))
+extract name="min_Vg" min(curve(time, v."gate"))
+extract name="max_Vd" max(curve(time, vint."drain"))
+extract name="min_Vd" min(curve(time, vint."drain"))
+
+# Extract Transient Times of Voltages
+extract name="Vgmax_t" x.val from curve(time, v."gate") where y.val=$"max_Vg" 
+extract name="Vgmin_t" x.val from curve(time, v."gate") where y.val=$"min_Vg" 
+extract name="Vdmax_t" x.val from curve(time, vint."drain") where y.val=$"max_Vd" 
+extract name="Vdmin_t" x.val from curve(time, vint."drain") where y.val=$"min_Vd" 
+
+# Extract Currents
+extract name="Vmax_Ig" y.val from curve(time, i."gate") where x.val=$"Vgmax_t"
+extract name="Vmin_Ig" y.val from curve(time, i."gate") where x.val=$"Vgmin_t"
+extract name="Vmax_Id" y.val from curve(time, i."drain") where x.val=$"Vdmax_t"
+extract name="Vmin_Id" y.val from curve(time, i."drain") where x.val=$"Vdmin_t"
+
+# Extract Powers
+extract name="Pin" abs((($"max_Vg")-($"min_Vg"))*(($"Vmax_Ig")-($"Vmin_Ig")))/8
+extract name="Pout" abs((($"max_Vd")-($"min_Vd"))*(($"Vmin_Id")-($"Vmax_Id")))/8
+extract name="Power_Gain" 10*log10(($"Pout")/($"Pin"))
+extract name="Power_Supply" 30*abs((($"Vmax_Id")+($"Vmin_Id"))/2)
+extract name="Efficiency" 100*($"Pout")/($"Power_Supply")
+
+system echo "$"Pin" $"Pout" $"Power_Gain" $"Efficiency" ">> ganfetex11.dat
+
+l.end
+
+tonyplot ganfetex11.log -set ganfetex11_1.set
+tonyplot ganfetex11.dat -set ganfetex11_2.set
+tonyplot ganfetex11.dat -set ganfetex11_3.set
+tonyplot ganfetex11.dat -set ganfetex11_4.set
+
+quit
+

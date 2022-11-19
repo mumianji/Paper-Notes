@@ -1,0 +1,155 @@
+# (c) Silvaco Inc., 2018
+
+go atlas 
+
+# generation of the device structure
+mesh width=0.150
+x.m l=0.00 s=0.05
+x.m l=0.15 s=0.02
+x.m l=0.30 s=0.01
+x.m l=0.40 s=0.01
+x.m l=0.55 s=0.02
+x.m l=0.70 s=0.05
+
+y.m l=-0.003    s=0.001
+y.m l=-0.0022   s=0.001
+y.m l=0.0       s=0.001
+y.m l=0.1       s=0.025
+y.m l=0.4         s=0.1
+
+region      num=1 y.min=+0.000 y.max=1 material=Silicon
+region      num=2 y.min=-0.003 y.max=0.0 x.min=0.0 x.max=0.7 material=SiO2
+
+electrode   num=1 name=gate   x.min=0.30 x.max=0.40 y.max=-0.0022 y.min=-0.003
+electrode   num=2 name=source x.min=0.00 x.max=0.15 y.max=0.0 y.min=-0.003
+electrode   num=3 name=drain  x.min=0.55 x.max=0.70 y.max=0.0 y.min=-0.003
+electrode   num=4 substrate
+
+doping uniform conc=1.5e17 n.type   
+doping erfc p.type conc=2e18 char=0.07 lat.char=0.0004 reg=1 x.r=0.30
+doping erfc p.type conc=2e18 char=0.07 lat.char=0.0004 reg=1 x.l=0.40
+
+
+material material=Si taun0=1e-7 taup0=1e-7
+model temp=373 mos
+contact name=gate workf=4.75
+
+# refinement of the simulation grid
+solve init
+solve prev
+solve vgate=-2
+solve vgate=-5
+solve vgate=-10
+regrid potential ratio=0.5 max.level=2 smooth.k=4
+
+save outf=mos2ex23_0.str
+
+
+
+go atlas 
+
+mesh infile=mos2ex23_0.str master.in
+
+
+trap material=SiO2 subcontact=Silicon \
+x.min=0.3 x.max=0.4 y.min=-0.002 y.max=-0.000 \
+nmp4.sto nmp4.samples=10 \
+density=1.0e+20 sign=1e-14 sigp=1.0e-14 \
+nmp4.et1=4.2 nmp4.et1.sd=-0.4 nmp4.s12s=2.0 nmp4.s12s.sd=1.0 nmp4.r12s=1.0 nmp4.r12s.sd=0.3 \
+nmp4.et2=6.0 nmp4.s1s2=3.0 nmp4.s1s2.sd=0.5 nmp4.r1s2=1.0 \
+nmp4.nu=1e13 nmp4.epsT2s=0.6 nmp4.epsT2s.sd=0.2 nmp4.eps2s2=0.2 nmp4.eps2s2.sd=0.2 nmp4.eps1s1=3.0 \
+nmp4.nit=1e11 nmp4.Ea=1.65 nmp4.Ea.sd=0.40 nmp4.Ed=0.15 nmp4.Ed.sd=0.0 nmp4.gamma=8e-8 nmp4.nup=1e12
+
+material material=Si taun0=1e-7 taup0=1e-7
+material material=SiO2 me.tunnel=0.3 mh.tunnel=0.3
+model temp=373 mos
+contact name=gate workfunction=4.75
+
+# simulation of the pre-stress conditions
+solve init
+solve prev
+solve vdrain=0.1
+
+probe ft.msc msc.state=1 x=0.351 y=-0.00051
+probe ft.msc msc.state=2 x=0.351 y=-0.00051
+probe ft.msc msc.state=3 x=0.351 y=-0.00051
+probe ft.msc msc.state=4 x=0.351 y=-0.00051
+probe ft.msc msc.state=5 x=0.351 y=-0.00051
+
+# save the trapped oxide charges
+output devdeg
+save outf=mos2ex23_1.str
+tonyplot mos2ex23_1.str -set mos2ex23_1.set
+
+# transient simulation of the stress phase
+output u.trantrap traps
+method tol.time=1.0e+2 quasi
+log outf=mos2ex23_1.log
+solve vgate=-2.0 vdrain=0.1 ramptime=1.0e-6 tstep=1.0e-8 tfinal=1.0e+0
+log off
+
+tonyplot mos2ex23_1.log -set mos2ex23_2.set
+
+# save the trapped oxide charges
+output devdeg
+save outf=mos2ex23_2.str
+tonyplot mos2ex23_2.str -set mos2ex23_3.set
+
+# transient simulation of the relaxation phase
+output u.trantrap traps
+method tol.time=1.0e-2 quasi
+log outf=mos2ex23_2.log
+solve vgate=0.0 vdrain=0.1 ramptime=1.0e-6 tstep=1.0e-8 tfinal=1.0e+3
+log off
+
+tonyplot mos2ex23_2.log -set mos2ex23_4.set
+
+# save the trapped oxide charges
+output devdeg
+save outf=mos2ex23_3.str
+tonyplot mos2ex23_3.str -set mos2ex23_5.set
+
+
+go atlas
+
+mesh infile=mos2ex23_0.str master.in
+
+material material=Si taun0=1e-7 taup0=1e-7
+model temp=373 mos
+contact name=gate workfunction=4.75
+
+
+loop steps=3
+
+assign name="i_str" print n.value=1 delta=1
+assign name="i_log" print n.value=3 delta=1
+
+solve init
+solve prev
+
+# loading the trapped oxide charges
+load infile=mos2ex23_${i_str}.str master
+
+solve vdrain=+0.005
+solve vdrain=+0.005 vgate=+0.25
+solve vdrain=+0.005 vgate=+0.5
+solve vdrain=+0.005 vgate=+1.0
+solve vdrain=+0.005 vgate=+1.5
+solve vdrain=+0.005 vgate=+2.0
+solve vdrain=+0.005 vgate=+2.5
+
+# calculation of the Id(Vg) curves
+log outf=mos2ex23_${i_log}.log
+solve vgate=+3.0 vstep=-0.1 vfinal=-3.0 name=gate
+
+# extraction of the Vth
+extract name="Vth${i_str}" -(xintercept(maxslope(curve(abs(v."gate"),abs(i."drain"))))\
+        -abs(ave(v."drain"))/2.0)
+log off
+
+l.end
+
+tonyplot -overlay mos2ex23_3.log mos2ex23_4.log mos2ex23_5.log -set mos2ex23_6.set
+
+quit
+

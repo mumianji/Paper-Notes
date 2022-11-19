@@ -1,0 +1,54 @@
+# (c) Silvaco Inc., 2018
+go atlas
+
+mesh three.d
+
+x.m l=0  s=0.1
+x.m l=5  s=0.1
+y.m l=0  s=0.1
+y.m l=5  s=0.1
+z.m l=0  s=0.1
+z.m l=5  s=0.1
+
+region num=1 GaAs
+
+elec num=1 name=anode x.min=0.0 x.max=0.1 y.min=1.0 y.max=4.0 \
+     z.min=1.0 z.max=4.0
+elec num=2 name=cathode x.min=4.9 x.max=5.0 y.min=1.0 y.max=4.0 \
+     z.min=1.0 z.max=4.0
+
+elec num=3 name=hall1 y.min=0.0 y.max=0.1 z.min=2 z.max=3 \
+     x.min=2 x.max=3
+elec num=4 name=hall2 y.min=4.9 y.max=5.0 z.min=2 z.max=3 \
+     x.min=2 x.max=3
+elec num=5 name=hall4 y.min=2 y.max=3 z.min=0 z.max=0.1 \
+     x.min=2 x.max=3
+elec num=6 name=hall3 y.min=2 y.max=3 z.min=4.9 z.max=5.0 \
+     x.min=2 x.max=3
+
+doping conc=1e16 unif n.type
+
+contact num=3 current
+contact num=4 current 
+contact num=5 current
+contact num=6 current
+
+models srh bz=0.1 by=0.2
+
+method bicgst
+
+solve init
+solve prev
+save outfile=0V.str
+
+log outfile=magneticex03.log
+
+solve name=anode vanode=0.0 vstep=0.1 vfinal=0.5
+
+log off
+ 
+save outf=magneticex03.str
+tonyplot3d magneticex03.str -set magneticex03_str.set
+tonyplot magneticex03.log -set magneticex03.set
+
+

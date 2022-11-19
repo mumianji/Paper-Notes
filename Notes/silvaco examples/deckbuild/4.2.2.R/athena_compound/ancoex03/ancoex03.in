@@ -1,0 +1,23 @@
+go athena
+
+# GaAs Mesfet Gate Simulation
+
+#the x dimension definition
+line x loc = 0.0  spacing=0.1
+line x loc = 0.1  spacing=0.1
+
+#the vertical definition
+line y loc = 0     spacing = 0.01 
+line y loc = 2.0   spacing = 0.20 
+
+#initialize the mesh
+init gaas c.carbon=1e15
+
+implant bery dose=2e13 ener=100 
+implant silicon dose=5e13 ener=50 
+impurity i.bery gaas /nitride seg.0=0.5 seg.e=0.0
+impurity i.sili gaas /nitride seg.0=0.5 seg.e=0.0
+deposit nitride thick=0.1 div=4
+diffuse time=15 temp=800
+struct outf=ancoex03.str
+tonyplot ancoex03.str -set ancoex03.set

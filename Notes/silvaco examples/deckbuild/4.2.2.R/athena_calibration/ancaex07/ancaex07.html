@@ -1,0 +1,104 @@
+<html>
+  <head>
+    <title>Multiple Implant Profile Optimization</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Multiple Implant Profile Optimization</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>SSuprem 4, OPTIMIZER</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="ancaex07_plot0.png" width="640" alt="ancaex07_plot0" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example performs optimization of implant doses and energies as well as
+diffusion temperature in order to obtain a specified boron doping profile as
+well as pn-junction depth.
+The target boron profile is a constant doping with concentration of 2e16
+all the way from the silicon surface until x=1.0. The target for the pn-junction
+depth is 1.5 micron.
+</p>
+<p>
+To load and execute this example, select the
+<b> Load </b> button.
+</p>
+<p>
+First, run the example without optimization. From, the
+<b> TonyPlot </b> profile you will see that boron concentration varies between 2e16 and 5e16
+and the pn-junction is around 1.3 microns.
+</p>
+<p>
+In order to find an optimized solution select
+<b> Optimizer... </b> from the
+<b> Main Control </b> menu. The
+<b> Deckbuild: Optimizer </b> screen will appear in a moment. Select
+<b> Load File ... </b> from the
+<b> File </b> menu and then load the special optimizer file
+<b> ancaex07.in.opt </b> from the scrolling
+<b> Optimizer Load </b> menu.
+</p>
+<p>
+Preset parameters and targets are included in this file. When you
+select
+<b> Parameters </b> from the
+<b> Mode </b> menu you will find that doses and energies for all 4 implants as well as diffusion
+temperature are chosen as parameters for optimization.
+</p>
+<p>
+Boron profile
+<b> bcurve </b> is chosen as an optimization target. Constant concentrations of 2e16 are set as target
+values for depths from 0.02 to 1 micron. Then a concentration of 1e16
+is set for 1.1 micron. Weights for all these points are set to 1.0. A junction depth of 1.5 microns is
+an additional point target with a weight of 6.0.
+</p>
+<p>
+Now you can modify any of these targets and/or parameters. Please refer to
+Chapter
+<b> Optimizer </b> in the VWF Interactive Tools Manual.
+</p>
+<p>
+If you want to run the preset optimization
+task it is better to slightly relax the default stop criteria as follows:
+</p>
+<p>
+Select
+<b> Setup </b> from the
+<b> Mode </b> menu and increase the maximum error to 20.
+</p>
+<p>
+After this just select the
+<b> Optimize </b> button.
+</p>
+<p>
+After optimization is completed you may execute the
+<b> TonyPlot </b> which will the plot final optimized profile.
+After optimization is completed you may copy optimized parameters back to the input deck
+by selecting
+<b> Copy to Deck </b> from the
+<b> Edit </b> menu. After that you can run the optimized deck from the beginning and obtain a
+<b> Tonyplot </b> of the optimized profile.
+</p>
+  </div></body>
+</html>

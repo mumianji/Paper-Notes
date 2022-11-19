@@ -1,0 +1,103 @@
+<html>
+  <head>
+    <title>NMOS Snapback</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>NMOS Snapback</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>SSuprem 4/DevEdit/S-Pisces</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R, Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="mos2ex07_plot0.png" width="640" alt="mos2ex07_plot0" />
+      <p/>
+      <img src="mos2ex07_plot1.png" width="640" alt="mos2ex07_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates the curve tracing algorithm in Atlas to
+simulate  the snapback of a MOSFET. The example shows:
+</p>
+<ul>
+  <li>
+ Creation of a N-channel MOSFET in Athena
+<br/>
+  </li>
+  <li>
+ Remesh by DEVEDIT,
+<br/>
+  </li>
+  <li>
+ The Atlas curve tracing algorithm is used to trace MOS snapback.
+  </li>
+</ul>
+<p>
+A standard NMOS device is constructed, remeshed and loaded into Atlas.
+The process simulation, interface to DEVEDIT and initial setup in Atlas
+are described in the previous section under MOS examples.
+</p>
+<p>
+The initial syntax in Atlas sets all the required contact, interface
+and model setting used for MOS simulation. These settings are described
+in earlier example descriptions. Calculation of  impact ionization is
+necessary for breakdown and snapback simulation. The
+<b> impact </b> statement is used to activate the Selberherr impact ionization model.
+</p>
+<p>
+Curve tracing is an algorithm for choosing the boundary conditions for
+a simulation to trace out an IV curve. It is typically used on curves
+such as snapback or latchup with many turning points.
+</p>
+<p>
+For curve tracing simulations the key statement is :
+<b> curvetrace end.val=1.e-3 contr.name=drain curr.cont mincur=1e-10 nextst.ratio=1.3.</b> It is used to initialize parameters for the curve tracing algorithm. The
+<b>contr.name </b> parameter specifies the name of electrode for which the load line
+technique will be applied. Here this is the &apos;drain&apos;. The
+<b>curr.cont </b> parameter sets
+that value of current will be monitored. The simulation will stop when
+the current exceeds the value specified by
+<b>end.val </b> parameter.
+The
+<b>mincur </b> parameter defines the minimum current value after which the load
+line technique will be actually be applied. Before that, pure voltage boundary
+conditions are used. The
+<b>nextst.ratio </b> parameter defines the factor which is
+used to increase voltage step on parts of the IV curve away from the turning
+points. The main place this is used is in the pre-breakdown voltage ramp.
+<b> solve curvetrace </b> is used to activate the curve tracing algorithm.
+</p>
+<p>
+The final snapback curve can be plotted using TonyPlot. To plot the drain
+voltage actually applied to the device, the x-axis should be set to
+<b> drain int. bias</b> and not drain bias. &apos;drain int. bias&apos; is the voltage on the
+drain contact/semiconductor interface. The value of drain bias should be
+disregarded since it includes the effect of the load line algorithm
+used for the curve trace.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

@@ -1,0 +1,45 @@
+
+# Section 4. Stress calculations
+
+go victorystress
+
+init structure="vsex07_1_vp_conformal.str"
+
+# By default the absolute value of the initial intrinsic stress is 1GPa;
+# for the n-Fet it is positive; for the p-Fet it is negative:
+
+material material("nliner") intrin.sig=1.0e10
+material material("pliner") intrin.sig=-1.0e10
+
+# The following  material property parameters are used for 
+# user-defined materials in the structure: 
+
+material material("nliner") young.m=3.89e12
+material material("nliner") poiss.r=0.3
+
+material material("pliner") young.m=3.89e12
+material material("pliner") poiss.r=0.3
+
+material material("box") young.m=6.6e11
+material material("box") poiss.r=0.2
+
+material material("metal") young.m=3.89e12
+material material("metal") poiss.r=0.3
+
+material material("nfin") young.m=1.67e12
+material material("nfin") poiss.r=0.28
+material material("pfin") young.m=1.67e12
+material material("pfin") poiss.r=0.28
+
+material material("nstressor") young.m=1.67e12
+material material("nstressor") poiss.r=0.28
+material material("pstressor") young.m=1.67e12
+material material("pstressor") poiss.r=0.28
+
+stress exposed rebalance
+
+save structure="vsex07_2_vp_conformal.str"
+
+tonyplot3d vsex07_2_vp_conformal.str -set vsex07.set
+
+quit

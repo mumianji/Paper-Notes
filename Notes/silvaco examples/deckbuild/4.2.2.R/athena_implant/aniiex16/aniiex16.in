@@ -1,0 +1,46 @@
+go athena
+
+#the x dimension definition
+line x loc = 0.0  spacing=0.01
+line x loc = 0.1  spacing=0.01
+
+#the vertical definition
+line y loc = 0     spacing = 0.005 
+line y loc = 1.0   spacing = 0.020 
+ 
+
+#initialize the mesh
+init silicon  
+
+#deposit screen oxide
+deposit   oxide thickness=0.005 div=5
+
+#perform boron  implant with +1 and 311-cluster models 
+
+method  cluster.dam 
+cluster min.clust=1e16 max.clust=3e18 clust.fact=2.0 i.boron
+implant boron dose=1e14 energy=40  unit.dam dam.f=0.1
+
+structure outfile=aniiex16_1.str
+
+#the x dimension definition
+line x loc = 0.0  spacing=0.01
+line x loc = 0.1  spacing=0.01
+
+#the vertical definition
+line y loc = 0     spacing = 0.005 
+line y loc = 1.0   spacing = 0.020 
+ 
+
+#initialize the mesh
+init silicon  
+
+#deposit screen oxide
+deposit   oxide thickness=0.005 div=5
+
+# The same implant with C-interpreter control of +1 and 311-cluster models 
+method  cluster.dam  
+implant boron dose=1e14 energy=40  unit.dam dam.mod=aniiex16.lib
+structure outfile=aniiex16_2.str
+
+tonyplot aniiex16_1.str aniiex16_2.str -set aniiex16.set

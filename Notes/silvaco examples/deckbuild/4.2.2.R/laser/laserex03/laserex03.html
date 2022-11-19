@@ -1,0 +1,120 @@
+<html>
+  <head>
+    <title>GaAs/AlGaAs Stripe Geometry Laser</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>GaAs/AlGaAs Stripe Geometry Laser</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Blaze/Laser</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="laserex03_plot0.png" width="640" alt="laserex03_plot0" />
+      <p/>
+      <img src="laserex03_plot1.png" width="640" alt="laserex03_plot1" />
+      <p/>
+      <img src="laserex03_plot2.png" width="640" alt="laserex03_plot2" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates simulation of a the  stripe geometry
+GaAs/AlGaAs laser diode. Physically based frequency dependent optical
+gain model is used in this example. The example shows:
+</p>
+<ul>
+  <li>
+ Laser structure definition using Atlas syntax
+<br/>
+  </li>
+  <li>
+ Material parameters specification
+<br/>
+  </li>
+  <li>
+ Setting conventional physical models
+<br/>
+  </li>
+  <li>
+ Device initial biasing 
+<br/>
+  </li>
+  <li>
+ Activating LASER module of Atlas
+<br/>
+  </li>
+  <li>
+ Mesh definition for solving the Helmholtz wave equation
+<br/>
+  </li>
+  <li>
+ Definition of laser physical models and their parameters
+including optical gain model
+<br/>
+  </li>
+  <li>
+ Calculation of laser electrical and optical characteristics
+  </li>
+</ul>
+<p>
+In this example the same approach is applied to simulate a laser structure of
+a different geometry and material composition. The active region of the
+device under consideration represents a narrow stripe made of GaAs
+included between two AlGaAs regions. The logistics of the structure,
+material parameters and physical models definition repeat that of the
+previous two examples in this section. Refer to those examples for
+more detailed explanations.
+</p>
+<p>
+After performing the LASER simulation and saving the results in the log and
+structure output files, the following results are displayed in
+TonyPlot:
+</p>
+<ul>
+  <li>
+ Total light output power versus current 
+<br/>
+  </li>
+  <li>
+ Light intensity distribution over the structure
+  </li>
+</ul>
+<p>
+Since stripe geometry lasers do not provide sufficient light confinement
+in the direction parallel to the p-n- and heterojunction planes, the
+lasing region
+can be smeared laterally along the active region or shifted to a side
+of the structure due to fluctuations in the carrier density and
+dielectric permittivity. The latter may lead to the  spatial hole
+burning effect and have a negative influence on the laser
+characteristics. In this particular example spatial hole burning does
+not occur, but the lack of index waveguiding in the lateral direction
+which results in spreading the lasing area along the active region is
+clearly visible.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

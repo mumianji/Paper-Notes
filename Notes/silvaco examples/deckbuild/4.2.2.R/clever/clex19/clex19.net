@@ -1,0 +1,11 @@
+M1 H3 i gnd! H2 myNMOS w=0.7u l=0.24u As=1.61p Ad=0.49p Ps=6.52u Pd=2.8u Nrs=2.01747 Nrd=0.371429 geo=0
+M2 vdd! i zn H4 myPMOS w=1.05u l=0.24u As=0.735p Ad=2.055p Ps=3.5u Pd=7.84u Nrs=0.247619 Nrd=1.63469 geo=0
+C1   substrate i      1.034945e-15
+C2   substrate H4     5.3069966e-16
+C3   substrate gnd!   5.6422728e-16
+C4   substrate zn     4.083774e-16
+C5   i      H4     5.3914784e-17
+C6   i      gnd!   9.9220156e-17
+C7   i      zn     2.8930638e-16
+C8   H4     zn     2.7627196e-17
+C9   gnd!   zn     2.4320254e-17

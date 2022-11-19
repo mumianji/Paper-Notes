@@ -1,0 +1,85 @@
+<html>
+  <head>
+    <title>NPN - AC Frequency Response</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>NPN - AC Frequency Response</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>S-Pisces</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="bjtex06_plot0.png" width="640" alt="bjtex06_plot0" />
+      <p/>
+      <img src="bjtex06_plot1.png" width="640" alt="bjtex06_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example calculates the frequency response of an NPN
+transistor at a single DC bias point. It shows:
+</p>
+<ul>
+  <li>
+ Formation of an NPN BJT using Atlas syntax
+<br/>
+  </li>
+  <li>
+ DC ramp of Vbe up to 0.8V, with Vce=2.0V 
+<br/>
+  </li>
+  <li>
+ AC simulation with ramped frequency 
+  </li>
+</ul>
+<p>
+The device structure and DC biasing of this device are as described in
+the NPN Gummel plot example in this section. All models and numerical
+methods are in common with the other NPN examples.
+</p>
+<p>
+The key line of syntax is:
+<br/>
+<b> solve prev ac freq=1e6 aname=base fstep=5 mult.f nfstep=10</b> .
+<br/>
+This line specifies the solution of the previous DC bias point with a small AC signal. The
+<b> freq </b> parameter sets the initial frequency.
+<b> aname </b> sets the contact on which the AC signal is applied. If no
+aname is given the AC signal is applied to all contacts in turn. The
+<b> fstep </b> parameter sets the step in frequency,
+<b> nfstep </b> set the number of frequency steps and
+<b> mult.f </b> indicates that this is a multiplier. At each step the frequency is
+multiplied by mult.f rather than having mult.f added to the initial
+frequency.
+</p>
+<p>
+The resulting capacitance and conductance parameters are stored in the
+log file. They can be plotted against log(frequency) to see the
+frequency response in TonyPlot.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

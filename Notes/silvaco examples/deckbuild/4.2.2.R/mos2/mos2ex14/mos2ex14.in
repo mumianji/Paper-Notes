@@ -1,0 +1,113 @@
+# (c) Silvaco Inc., 2018
+go atlas
+
+# define fine mesh at surface
+set surf_a=0.0005
+
+mesh outf=mmos.str
+x.m l=0    spac=0.2
+x.m l=0.75  spac=0.04
+x.m l=1    spac=0.08
+x.m l=1.17  spac=0.01
+x.m l=1.27  spac=0.01
+x.m l=2    spac=0.2
+y.m l=-0.010 spac=0.005
+y.m l=0    spac=$"surf_a"
+y.m l=0.2    spac=0.02
+y.m l=2    spac=0.5
+
+eliminate columns y.min=0.6
+eliminate columns y.min=1.0
+eliminate columns y.min=1.5
+eliminate rows    x.max=0.8 y.min=0.01 y.max=0.1
+eliminate rows    x.min=1.5 y.min=0.01 y.max=0.15
+
+region num=1 material=Silicon y.min=0
+region num=2 material=Oxide   y.max=0
+
+electrode name=gate x.min=0.75 length=0.5    
+electrode name=source y.max=0.0 left length=0.4    
+electrode name=drain y.max=0.0 right length=0.4    
+electrode name=substrate bottom
+
+doping uniform conc=2e17 p.type
+doping gauss   conc=1e18 n.type junc=0.1 x.right=0.75 rat=0.5
+doping gauss   conc=1e18 n.type junc=0.1 x.left=1.25  rat=0.5
+doping gauss   conc=1e20 n.type junc=0.2 x.right=0.65 rat=0.5
+doping gauss   conc=1e20 n.type junc=0.2 x.left=1.35 rat=0.5
+
+save outf=mos2ex14_0.str
+
+
+go atlas
+
+mesh inf=mos2ex14_0.str
+
+contact name=gate n.poly
+
+models cvt srh  print  
+ 
+method newton gummel carriers=1 electron
+solve init
+solve vdrain=0.1
+
+# define probe of electron mobility vs. perpendicular field
+probe name="channel mobility" n.mob dir=0 x=1 y=0.0001
+probe name="channel field" field dir=90 x=1 y=0.0001
+
+method newton carriers=1 electron
+log outf=mos2ex14_1.log
+solve vgate=0.0 vfinal=3.0 vstep=0.2 name=gate 
+output e.mob h.mob
+save outf=mos2ex14_1.str
+
+go atlas
+
+mesh inf=mos2ex14_0.str
+
+contact name=gate n.poly
+
+models kla shi fldmob srh  print  
+ 
+method newton gummel carriers=1 electron
+solve init
+solve vdrain=0.1
+
+# define probe of electron mobility vs. perpendicular field
+probe name="channel mobility" n.mob dir=0 x=1 y=0.0001
+probe name="channel field" field dir=90 x=1 y=0.0001
+
+method newton carriers=1 electron
+log outf=mos2ex14_2.log
+solve vgate=0.0 vfinal=3.0 vstep=0.2 name=gate 
+output e.mob h.mob
+save outf=mos2ex14_2.str
+
+go atlas
+
+mesh inf=mos2ex14_0.str
+
+contact name=gate n.poly
+
+models conmob fldmob srh  print  min.surf
+mobility watt.n mod.watt.n ymaxn.watt=0.01 
+
+method newton gummel carriers=1 electron
+solve init
+solve vdrain=0.1
+
+# define probe of electron mobility vs. perpendicular field
+probe name="channel mobility" n.mob dir=0 x=1 y=0.0001
+probe name="channel field" field dir=90 x=1 y=0.0001
+
+method newton carriers=1 electron
+log outf=mos2ex14_3.log
+solve vgate=0.0 vfinal=3.0 vstep=0.2 name=gate 
+output e.mob h.mob
+save outf=mos2ex14_3.str
+
+tonyplot -overlay mos2ex14_1.log mos2ex14_2.log mos2ex14_3.log -set mos2ex14_1.set
+tonyplot -overlay mos2ex14_1.log mos2ex14_2.log mos2ex14_3.log -set mos2ex14_1a.set
+tonyplot mos2ex14_1.str mos2ex14_2.str mos2ex14_3.str -set mos2ex14_2.set
+
+quit

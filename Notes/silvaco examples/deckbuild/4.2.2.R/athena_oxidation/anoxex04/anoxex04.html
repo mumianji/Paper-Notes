@@ -1,0 +1,69 @@
+<html>
+  <head>
+    <title>Polysilicon Oxidation</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Polysilicon Oxidation</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>SSuprem 4</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="anoxex04_plot0.png" width="640" alt="anoxex04_plot0" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates the simultaneous oxidation of polysilicon and
+silicon.  This example also shows the lifting of polysilicon as a small
+bird&apos;s beak is formed.
+</p>
+<p>
+The example begins by forming a structure that is a sandwich of
+polysilicon, oxide, and silicon with a recessed area in the exposed
+silicon. Prior to oxidization, the coefficients for polysilicon
+oxidation are modified using the
+<b> oxide </b> statement.
+</p>
+<p>
+The structure is then oxidized to show the polysilicon oxidation
+model. The dump parameter of the diffuse statement causes
+<b> SSuprem 4 </b> to save a structure file after each time step. The dump.pre parameter
+specifies that the name of these structure files will be of the
+form anoxex09mxxx.xxx.str where xxx.xxx is the current total time
+of the diffusion step. This allows the making of a movie using the MOVIE
+capability of
+<b> TonyPlot</b> .
+</p>
+<p>
+The second
+<b> TonyPlot </b> statement loads intermediate files for a movie.
+To watch the movie, first select &quot;Select all plots&quot; from the &quot;View&quot;
+popup and then select &quot;Movie..&quot; from the &quot;Tools&quot; popup.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

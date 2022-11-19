@@ -1,0 +1,41 @@
+go athena
+
+#TITLE: Doping Dependent Oxidation Example
+#
+# Create the initial mesh
+line x loc=-0.30 spac=0.03
+line x loc=0.30  spac=0.03
+#
+line y loc=0.00  spac=0.02
+line y loc=0.50  spac=0.1
+#
+init orientation=100 c.boron=1e15
+#
+# Mask part of the surface with nitride
+deposit nitride th=.3 div=4
+#
+etch right nitride p1.x=0.0
+#
+# Implant with very high dose to dope part of the silicon
+implant phos dose=3e15 energy=50
+#
+etch nitride all
+#
+# Oxidize and observe thicker oxidation on doped material
+# Specify grid.ox to enhance the mesh in the growing oxide 
+method fermi compress grid.ox=0.03
+diff time=5 temp=1000 weto2  
+
+
+extract name="toxlow" thickness material="SiO~2" mat.occno=1 x.val=-0.25
+
+extract name="toxhigh" thickness material="SiO~2" mat.occno=1 x.val=0.25
+
+
+# save it and plot it
+structure outfile=anoxex03.str 
+tonyplot anoxex03.str -set anoxex03.set
+
+
+quit
+

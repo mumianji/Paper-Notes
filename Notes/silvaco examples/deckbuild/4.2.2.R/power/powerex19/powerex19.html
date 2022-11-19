@@ -1,0 +1,75 @@
+<html>
+  <head>
+    <title>Super-Junction "RESURF" LDMOS</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Super-Junction "RESURF" LDMOS</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Victory Process - Victory Device</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Victory Process 7.22.3.R, Victory Mesh 1.2.4.R, Victory Device 1.12.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="powerex19_plot0.png" width="640" alt="powerex19_plot0" />
+      <p/>
+      <img src="powerex19_plot1.png" width="640" alt="powerex19_plot1" />
+      <p/>
+      <img src="powerex19_plot2.png" width="640" alt="powerex19_plot2" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+By default Victory Process and Device run on just one processor.
+To ensure better perfomance on your computer the following simulation condition
+<b> simflags=&quot;-P all&quot;</b> could be specified in the
+<b> go</b> statement starting Victory Process or Device. This means that all processors available will be used.
+If you want to use a smaller number of processors you can substitute &quot;all&quot; with a desired number, e.g.
+<b> simflags=&quot;-P 4&quot;.</b> </p>
+<p>
+This simulation is similar to the previous
+<b> Buffered Superjunction LDMOS </b> but uses a low doped substrate and longer superjunctions to increase the
+off state breakdown voltage to approximately 500 volts.
+</p>
+<p>
+The structure is modelled after the one proposed by Ming Qiao et al.
+in the &quot;Proceedings of the 23rd International Symposium on Power Semiconductor
+Devices &amp; IC&apos;s&quot;, May 23-26, 2011 SanDiego, CA, entitled: &quot;A Noval Substrate-
+Assisted
+<b> RESURF </b> Technology for Small Curvature Radius Junction&quot;.
+</p>
+<p>
+This simulation models the active region unit cell of the above device.
+By careful optimization of the superjunction widths and lengths together with
+the doping concentrations of these super-junctions and the related N-Well,
+a 500 volt breakdown device is realized when coupled with a high resistivity
+substrate.
+</p>
+<p>
+The 3D device is then passed to Victory Device to simulate the breakdown voltage
+and threshold voltage curves (IdVg)
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

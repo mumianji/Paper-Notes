@@ -1,0 +1,86 @@
+<html>
+  <head>
+    <title>Diffracting 2D Gaussian Beam.</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Diffracting 2D Gaussian Beam.</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>S-Pisces/Luminous</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="optoex16_plot0.png" width="640" alt="optoex16_plot0" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates:
+<br/>
+ </p>
+<ul>
+  <li>
+ Diffraction of a spatially confined beam
+<br/>
+  </li>
+</ul>
+<p>
+This example shows an added capability of Luminous to describe
+diffraction in 2D. The input deck of this example is identical to that
+of optoex10.in except for the
+<b> bpm</b> parameter in the
+<b> BEAM </b> statement. This
+parameter specifies that the beam propagation method be used by
+Luminous instead of ray tracing. This is equivalent to using the wave
+optics approach instead of geometrical optics. The effects of optical
+wave diffraction and interference are automatically taken into
+account when the beam propagation method is used.
+</p>
+<p>
+Diffraction effects of a Gaussian beam propagating in silicon is shown
+in this particular example.
+</p>
+<p>
+Other parameters that can be specified in the beam statement for the
+beam propagation method are
+<b> longit.step </b> and
+<b> transv.step</b> . These parameters are used to set respective step sizes for the internal bpm
+grid. When the step sizes are not defined explicitly, the default
+values are used. The default step size in both directions is equal to
+wavelength/16.0. It is
+<b> emphatically not recommended </b> to use step sizes
+larger than wavelength/2.0, especially if coherent effects are of
+interest. The user is also cautioned against use of extremely small step
+sizes as they can result in unnecessarily long computation times.
+Default values provide for adequate treatment in most cases.
+</p>
+<p>
+Some parameters specific for the ray tracing are ignored in the beam
+propagation method. For details, see BEAM statement in the Atlas
+manual.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

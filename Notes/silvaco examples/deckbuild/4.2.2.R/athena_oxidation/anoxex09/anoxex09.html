@@ -1,0 +1,55 @@
+<html>
+  <head>
+    <title>Trench Sidewall Oxidation with Orientation Dependence</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Trench Sidewall Oxidation with Orientation Dependence</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>SSuprem 4</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="anoxex09_plot0.png" width="640" alt="anoxex09_plot0" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example shows that the orientation of the wafer will affect the growth
+rate of an oxide on trench sidewalls. The orientation od the substrate
+is specified by
+<b> init orientation=xyz</b> . xyz willbe 100, 110 or 111. The rotation of the substrate is
+specified by the
+parameter
+<b> rot.sub</b> </p>
+<p>
+The method statement parameters
+<b> GRID.OX </b> and
+<b> GRIDINIT.OX </b> are used to improve the grid within the grown oxide layer. The thicknesses of
+sidewall oxide are extracted for all cases.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

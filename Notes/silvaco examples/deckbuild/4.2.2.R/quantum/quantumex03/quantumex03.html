@@ -1,0 +1,71 @@
+<html>
+  <head>
+    <title>Channel Quantization in a PHEMT</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Channel Quantization in a PHEMT</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Blaze/Quantum</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="quantumex03_plot0.png" width="640" alt="quantumex03_plot0" />
+      <p/>
+      <img src="quantumex03_plot1.png" width="640" alt="quantumex03_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates the behaviour of a Pseudomorphic HEMT structure
+using the quantum model.  The device is a standard AlGaAs / GaAs / InGaAs
+PHEMT with a delta doped layer.
+</p>
+<p>
+The structure is created within the Atlas syntax.  For more information
+on HEMT simulation see the HEMT Examples Section.
+</p>
+<p>
+Before any external biases are applied,
+<b> qfactor </b> is ramped from zero to unity -
+this allows the inclusion of the quantum moments function to be introduced
+gradually into the equation set. A value of one represents a unity pre-multiplier
+on the quantum moments function.
+</p>
+<p>
+With the Quantum model, the electron concentration will typically be quite
+different to classical prediction. This presents some difficulty for the
+program in terms of the initial estimate to the electron concentration. In
+classical simulations a very good initial estimate to the carrier concentration
+can be derived from the doping profile. However, with Quantum this is not
+always the case. Thus the quantum moments effect can be turned on gradually
+using the parameter
+<b> qfactor</b> .
+<b> qfactor </b> might need to be ramped from very small values to unity to obtain
+convergence for difficult problems.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

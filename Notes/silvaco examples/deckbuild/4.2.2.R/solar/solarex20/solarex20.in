@@ -1,0 +1,141 @@
+# (c) Silvaco Inc., 2018
+
+go victoryprocess noauto
+
+init GDS2="solarex20.gds" cell="CELL" depth=3.8 silicon gasheight=2 
+
+
+line x location=0 spacing=0.1
+line x location=1 spacing=0.1
+
+line y location=0 spacing=0.1
+line y location=1 spacing=0.1
+
+line z location=-2    spacing=0.5
+line z location=-0.25 spacing=0.01
+line z location=0     spacing=0.01
+line z location=3.8     spacing=0.5
+
+doping silicon phosphorus=1e15
+doping silicon boron=1e12
+deposit silicon thickness=0.2 boron=1e20  max
+
+save name=solarex20_vp_0
+ 
+deposit oxide thick=0.4 max
+etch oxide thick=0.4 mask="L#2" angle=45 max
+
+save name=solarex20_vp_0_lens
+   
+
+go victorymesh
+
+load in=solarex20_vp_0
+
+remesh delaunay
+
+refine max.size=0.15
+refine max.junction.size=0.05 max.junction.distance=0.5
+
+save out=solarex20_0.str
+
+load in="solarex20_vp_0_lens"
+
+remesh delaunay
+
+refine max.size=0.15
+refine max.junction.size=0.05 max.junction.distance=0.5
+
+save out=solarex20_0_lens.str
+
+
+###############
+# NO LENS
+###############
+
+go victorydevice
+
+mesh inf=solarex20_0.str verbose=3
+
+elec   num=1 name=anode x.min=0 x.max=1 y.min=0 y.max=1 z.min=-0.2 z.max=-0.2
+elec   num=2 name=cathode x.min=0 x.max=1 y.min=0 y.max=1 z.min=3.8 z.max=3.8
+
+model srh
+
+method pam.mpi norm.scaling.local
+
+beam       num=1 x.o=0.5 y.o=0.5 z.o=-1.0 front.refl \
+           raytrace=solarex20_1.str wavelength=0.55
+
+
+log outf=solarex20_0.log
+solve name=anode vanode=0 vfinal=0.6 vstep=0.025
+log off
+
+solve init
+solve b1=0.001
+solve b1=0.01
+solve b1=0.1
+solve b1=1
+
+log outf=solarex20_1.log
+solve b1=1 beam=1  lambda1=0.3 wstep=0.02 wfinal=1.1
+log off
+
+solve b1=1 beam=1 lambda1=0.5
+
+log outf=solarex20_2.log
+solve name=anode vanode=0 vfinal=0.6 vstep=0.025
+
+extract init infile="solarex20_2.log"
+extract name="Jsc" y.val from curve(v."anode", i."cathode") where x.val=0.0
+extract name="Voc" x.val from curve(v."anode", i."cathode") where y.val=0.0 
+
+##############
+# LENS
+##############
+
+go victorydevice
+
+mesh inf=solarex20_0_lens.str verbose=3
+
+elec   num=1 name=anode x.min=0 x.max=1 y.min=0 y.max=1 z.min=-0.2 z.max=-0.2
+elec   num=2 name=cathode x.min=0 x.max=1 y.min=0 y.max=1 z.min=3.8 z.max=3.8
+
+model srh
+
+method pam.mpi norm.scaling.local
+
+beam       num=1 x.o=0.5 y.o=0.5 z.o=-1.0 front.refl \
+           raytrace=solarex20_1_lens.str wavelength=0.55 
+
+
+solve init
+solve b1=0.001
+solve b1=0.01
+solve b1=0.1
+solve b1=1
+
+log outf=solarex20_1_lens.log
+solve b1=1 beam=1  lambda1=0.3 wstep=0.02 wfinal=1.1
+log off
+
+solve b1=1 beam=1 lambda1=0.55
+
+log outf=solarex20_2_lens.log
+solve name=anode vanode=0 vfinal=0.6 vstep=0.02
+
+extract init infile="solarex20_2_lens.log"
+extract name="Jsc" y.val from curve(v."anode", i."cathode") where x.val=0.0
+extract name="Voc" x.val from curve(v."anode", i."cathode") where y.val=0.0 
+
+
+tonyplot -overlay solarex20_0.log solarex20_2.log solarex20_2_lens.log -set solarex20_0.set
+tonyplot -overlay solarex20_1.log solarex20_1_lens.log  -set solarex20_1.set
+tonyplot3d solarex20_1_lens.str -set solarex20_2.set
+tonyplot3d solarex20_1_lens.str -set solarex20_3.set -cut solarex20_1_lens_2D.str
+
+system sleep 4
+
+tonyplot solarex20_1_lens_2D.str  -set solarex20_4.set
+tonyplot3d solarex20_1_lens.str -set solarex20_5.set

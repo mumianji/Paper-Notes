@@ -1,0 +1,115 @@
+<html>
+  <head>
+    <title>Dynamic Simulation of Relaxation Oscillation</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Dynamic Simulation of Relaxation Oscillation</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Blaze/Laser</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="laserex06_plot0.png" width="640" alt="laserex06_plot0" />
+      <p/>
+      <img src="laserex06_plot1.png" width="640" alt="laserex06_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates the simulation of the buried heterostructure
+InP/InGaAsP laser diode described earlier in example laserex02. A
+description of the structure and the DC behaviour is contained in
+example laserex02. This example performs a transient simulation of an
+impulse applied to the anode contact of the laser diode.
+</p>
+<p>
+The key points of this simulation are :
+</p>
+<ul>
+  <li>
+ Mulit-longitudinal mode simulation
+<br/>
+  </li>
+  <li>
+ Addition of laser losses of bulk absorption and free carrier loss
+<br/>
+  </li>
+  <li>
+ DC simulation to obtain the operating point at the lasing threshold
+<br/>
+  </li>
+  <li>
+ Transient simulation response to a small impulse at the anode contact
+<br/>
+  </li>
+  <li>
+ Resultant oscillation in simulated photon density
+<br/>
+  </li>
+</ul>
+<p>
+The dynamic laser equations used in Atlas include the photon rate
+equation as well as the equations for gain and spontaneous
+recombination. This set of equations will be shown in this example to
+reproduce the dynamic characteristics of relaxation oscillation.
+</p>
+<p>
+The example described in laserex02 for DC characteristics of a laser
+diode has been extended to examine the relaxation oscillations that
+exist when a sudden impulse is applied to the anode contact. This
+requires a transient simulation of the laser to reproduce these
+oscillations. The physical origin of the oscillation is is based upon
+the following principle: an increase in carrier density in the laser
+(caused by the small impulse) will cause an increase in the calculated
+gain which results in a rise in  the photon density inside the laser.
+This increase in photon density causes an increase in the stimulated
+recombination rate which decreases the carrier density, which causes
+the photon density to fall, which causes the carrier density to rise,
+and so on. An oscillatory process is therefore established which will
+have some characteristic frequency and a characteristic damping time
+constant.
+</p>
+<p>
+This simulation uses the multi-longitudinal mode calculation, first
+used in laserex02, in both the DC and transient parts of the
+simulation. The final plots will illustrate how the laser emission
+spectrum will change from the beginning to the end of the transient
+simulation.
+</p>
+<p>
+Four laser loss mechanisms have also been included; internal losses,
+mirror loss, bulk absorption loss and free carrier loss. These
+mechanisms have been activated with the parameters
+<b> las.losses, </b> <b> las.mirror, </b> <b> las.absorption </b> and
+<b> las.fcarrier. </b> </p>
+<p>
+The plot of the final logfile produced by the transient simulation will
+plot the photon density versus time, and will show the oscillation
+described previously.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

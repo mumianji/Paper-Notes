@@ -1,0 +1,46 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include <ctype.h>
+#include <malloc.h>
+#include <string.h>
+#include <template.h>
+/*
+ * -----------------------------------------------------------------
+ * ATLAS Parser Function Template
+ * ATLAS Version 5.2.0.R
+ * c 1993 - 2000 SILVACO International. 
+ * All rights reserved.
+ * -----------------------------------------------------------------
+ */
+
+/*
+ * Composition, temperature and doping dependent electron mobility
+ * Statement: MATERIAL
+ * Parameter: F.CONMUN
+ * Arguments:
+ * xcomp      composition fraction x
+ * ycomp      composition fraction y
+ * temp       temperature (K)
+ * nd         net concentration of donors
+ * na         net concentration of acceptors
+ * *mun       electron mobility
+ */
+
+int conmun(double xcomp,double ycomp,double temp,double nd,double na,double x,double y,double taun,double *mun)
+{
+	double mu0, ntot;
+	ntot = nd+na;
+	if(xcomp < 0.429)
+		mu0 = (8000.0-1.818e4*xcomp);
+	else if(xcomp < 0.46)
+		mu0 = (90.0 + 1.145e5*(xcomp-0.46)*(xcomp-0.46));
+	else if(xcomp < 0.5)
+		mu0 = (90.0 + 3.75e4*(xcomp-0.46)*(xcomp-0.46));
+	else
+		mu0 = (200.0-2.0/(xcomp-0.46));
+		
+	*mun = (mu0*(0.34+0.66/(1.0+pow(ntot/9.85e16,0.553))));
+
+	return(0);                /* 0 - ok */
+}

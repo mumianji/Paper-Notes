@@ -1,0 +1,689 @@
+
+{section} BJT : BJT Application Examples 
+
+
+
+{subsection} bjtex01.in : NPN Gummel Plot and fT Extraction
+
+Requires: SSuprem 4/DevEdit/S-Pisces
+{newline}
+Minimum Versions: Athena 5.22.3.R, Atlas 5.26.1.R
+
+This example demonstrates the processing, remeshing and electrical test
+of a poly silicon emitter NPN bipolar transistor. Design parameters are
+finally extracted from the IV Curve, including fT and Gain. This
+example demonstrates the use of:
+
+{bullet} Process simulation of a polysilicon emitter bipolar device
+{newline}
+{bullet} Re-meshing of the structure in DevEdit
+{newline}
+{bullet} DC ramp of Vbe with fixed Vce 
+{newline}
+{bullet} Simultaneous AC simulation during Vbe ramp
+{newline}
+{bullet} Extraction of peak gain and fT
+
+The file starts with the definition of the process flow for an NPN
+bipolar transistor in Athena. The first boron implant forms the
+intrinsic base region. A second boron implant is self-aligned to the
+polysilicon emitter region to form a connection between the intrinsic
+base and p+ base contact regions. Spacer-like structures are used on
+the side of the poly emitter to space the p+ base contact and provide
+self-alignment. During the simulation, the 
+{bold} relax 
+statement is used to reduce the mesh density in the deep regions of the
+structure. Only half of the full device is simulated. Mirroring of this
+half device into a full structure is performed with
+{bold} structure mirror left
+. The final stage of the Athena syntax defines the electrode positions.
+In this example only one base contact is used. A subsequent example
+describes how two base contacts can be specified and linked together.
+
+Often a mesh that is used for process simulation is not optimal for
+use with device simulation. In this example, the mesh generation tool
+{bold} DevEdit 
+is used to recreate a mesh that has zero obtuse triangles in the
+semiconductor region. It is then refined as a function of a number of
+solution quantities on the mesh (eg: boron conc).
+
+Popup windows under the DeckBuild Command window were used to create this
+set of commands to control DevEdit.  To switch to  DevEdit Commands,
+select the current simulator to DevEdit from the Main Control window.
+Further use of DevEdit in more advanced applications is shown in later
+examples.
+
+In Atlas the solution procedure starts with a solution for a collector bias
+of 2V. Next, the 
+{bold} log 
+statement is used to specify a file for collection of Gummel plot
+data.  The Gummel data is collected by applying a bias ramp on the
+base electrode up to 0.9.  The parameter
+{bold} ac 
+on the solve statement sets the ac analysis on. The frequency of this
+signal is set to 1MHz. Once the bias ramp is completed the data is
+plotted using TonyPlot.
+
+Finally, the
+{bold} extract 
+statement is used to extract the maximum gain, "maxgain", and the maximum
+ft, "maxft", for the BJT.  The extracted parameters may be used as
+optimization targets for simulator tuning.
+
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+{subsection} bjtex02.in : 3D Bipolar Simulation
+
+Requires: DevEdit 3D/Device 3D
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates Gummel plot simulation of a BJT structure
+in three dimensions.  It shows:
+
+{bullet} Construction of the device in DevEdit 3D
+{newline}
+{bullet} Simulation of the Gummel plot in Atlas
+
+In this example a bipolar transistor is constructed using DevEdit 3D. The 
+structure is then passed to Atlas for electrical testing. The input file
+consists of the following 2 main portions:
+
+The first stage of the input constructs the BJT geometry, material regions,
+doping profiles, and electrodes in DevEdit 3D. The structure was created in 
+DevEdit 3D by drawing the device regions in interactive mode and specifying 3D
+doping distribution. Finally the mesh was generated automatically by specifying 
+basic mesh constraints and refining in the important areas of the device.
+
+The Atlas simulation begins by reading in the structure from DevEdit 3D.
+DeckBuild provides autointerface between DevEdit 3D and Atlas so that the
+structure produced by DevEdit 3D is transferred to Atlas without having to
+indicate the mesh statement.
+
+The 
+{bold} models 
+statement is used to select a set of physical models for this simulation.  In 
+this case, these models are 'srh' and 'auger' recombination, the concentration
+and field dependent mobility model, and the two carriers model 
+
+Then the initial solution for zero biases is obtained using
+{bold} solve init 
+The emitter voltage is then ramped negatively. The Newton algorithm is
+used for these calculations. This is the default method in Atlas.
+
+The results of simulation are then displayed using TonyPlot.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} bjtex03.in : Analysis of NPN Device with 2 Base Contacts
+
+Requires: SSuprem 4/DevEdit/S-Pisces
+{newline}
+Minimum Versions: Athena 5.22.3.R, Atlas 5.26.1.R
+
+This example has been created with two symmetrical extrinsic base contacts
+in an effort to more clearly demonstrate the use of the
+{bold} contact 
+statement for 
+{italic} slaving 
+electrode contacts together. This example is equivalent to the first example in this section in all other respects. It shows:
+
+
+{bullet} Process simulation of a polysilicon emitter bipolar device
+{newline}
+{bullet} Re-meshing of the structure in DevEdit
+{newline}
+{bullet} Specification of the linking of two electrode together
+{newline}
+{bullet} DC ramp of Vbe with fixed Vce 
+{newline}
+{bullet} Simultaneous AC simulation during the Vbe ramp
+{newline}
+{bullet} Extraction of peak gain and fT
+
+
+The process simulation, remeshing and basic device simulation syntax
+used in this example is exactly equivalent to the first example in this
+section. The difference is in the use to two 'tied' electrodes.
+
+The electrode names  
+{italic} base 
+and 
+{italic} base1 
+are defined within Athena and are then held together with the
+{newline}
+{bold} contact name=base common=base1 
+{newline}
+statement within Atlas.
+Thus, the subsequent use of the  name 
+{bold} v."base" 
+in the 
+{bold} solve 
+statements will apply to both the 
+{italic} base 
+contact and the 
+{italic} base1 
+contact.
+
+The 
+{bold} extract 
+statement at the end of the file makes the addition of the currents from 
+two base contacts for parameter extraction purposes.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+{subsection} bjtex04.in : NPN - Gummel Plot and Ic/Vce Characterization
+
+Requires: S-Pisces
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example simulates a Gummel plot and the Ic vs. Vce characteristics
+for different values of base current of a silicon BJT. It shows:
+
+{bullet} Formation of an NPN BJT using Atlas syntax
+{newline}
+{bullet} Ic and Ib extraction versus Vbe (Gummel plot)
+{newline}
+{bullet} Ic extraction versus Vce for various Ib 
+
+
+The initial stage of the example uses the 
+{bold} mesh, region, 
+and
+{bold} electrode 
+statements in Atlas to construct the NPN structure.  Analytical doping profiles are added in the 
+{bold} doping 
+statement. The structure has a heavy n+ emitter, 1.0e18 peak base
+concentration, a buried collector layer and heavy p+ extrinsic base
+contact.
+
+The 
+{bold} contact 
+statement is used to define the emitter contact as a N-type polysilicon
+emitter.  Surface recombination is also specified at the polysilicon/
+silicon interface.  Next, the 
+{bold} material 
+statement is used to specify the electron and hole SRH lifetimes.  The
+{bold} models bipolar 
+statement is set to specify that the default set of bipolar models is
+to be used.  The default set of bipolar models includes: concentration
+dependent mobility, field dependent mobility, band-gap narrowing,
+concentration dependent lifetimes and Auger recombination. 
+
+The gummel plot syntax is similar to that described in the first
+example of this section. The syntax for the Ic/Vce simulation is
+described under the PNP example in this section. The key point is the
+use of current boundary conditions on the base contact as defined by
+{bold} contact name=base current
+. This allows a constant base current to be forced while Vce is ramped.
+The family of Ic/Vce curves can be overlaid in TonyPlot or exported to
+UTMOST for SPICE model extraction.
+ 
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} bjtex05.in : NPN - BVCEO Breakdown Voltage
+
+Requires: S-Pisces
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example calculates the BVCEO breakdown voltage in an NPN
+transistor. It shows:
+
+{bullet} Formation of an NPN BJT using Atlas syntax
+{newline}
+{bullet} Selection of the correct models and methods for breakdown simulation
+{newline}
+{bullet} Setting of current boundary conditions to force an open base contact 
+{newline}
+{bullet} Ic extraction versus Vce with an open base contact 
+
+
+In the first part of the input file the device is described, including
+mesh, electrodes location, and doping distribution. The device geometry
+and doping are as used in the previous example.
+
+The {bold} impact statement is used to specify the Selberherr impact
+ionization model required for breakdown analysis.
+
+For increased stability which is typically needed for such kind of simulation
+with zero base current, the solution with small value of base current
+Ib=3.e-15 A/um is obtained at the first stage of simulation. Then the
+collector voltage is ramped until the collector current reaches the
+value 5.e-11 A/um.
+
+
+To set the open base contact, it is necessary to define zero current
+passing through the base electrode. This is done by setting current
+boundary conditions on the base using
+{bold} contact name=base current
+. Then throughout the breakdown simulation Ib is held at zero. This is
+the most effective approach for BVCEO simulation.
+
+The ramp of collector voltage is set on the final
+{bold} solve 
+statement. The ramp continues up to 10V. However a compliance limit on the collector current is set using the parameters
+{bold} compl=<num> cname=collector
+. The <num> specifies the value of the compliance limit in A/um, whilst
+the cname indicates which contact the complaince current should be
+measured on. Once the simulated collector current exceeds the
+complaince value the simulation steps on to the next line of syntax.
+Here that line is to plot the results in TonyPlot.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} bjtex06.in : NPN - AC Frequency Response
+
+Requires: S-Pisces
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example calculates the frequency response of an NPN
+transistor at a single DC bias point. It shows:
+
+{bullet} Formation of an NPN BJT using Atlas syntax
+{newline}
+{bullet} DC ramp of Vbe up to 0.8V, with Vce=2.0V 
+{newline}
+{bullet} AC simulation with ramped frequency 
+
+The device structure and DC biasing of this device are as described in
+the NPN Gummel plot example in this section. All models and numerical
+methods are in common with the other NPN examples.
+
+The key line of syntax is:
+{newline}
+{bold} solve prev ac freq=1e6 aname=base fstep=5 mult.f nfstep=10
+.
+{newline}
+This line specifies the solution of the previous DC bias point with a small AC signal. The 
+{bold} freq 
+parameter sets the initial frequency.
+{bold} aname 
+sets the contact on which the AC signal is applied. If no
+aname is given the AC signal is applied to all contacts in turn. The 
+{bold} fstep 
+parameter sets the step in frequency,
+{bold} nfstep 
+set the number of frequency steps and 
+{bold} mult.f 
+indicates that this is a multiplier. At each step the frequency is
+multiplied by mult.f rather than having mult.f added to the initial
+frequency.
+
+The resulting capacitance and conductance parameters are stored in the
+log file. They can be plotted against log(frequency) to see the
+frequency response in TonyPlot.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} bjtex07.in : 3D NPN Transient Response
+
+Requires: DevEdit 3D/Device 3D
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This examples demonstrates transient simulation of a BJT structure
+in three dimensions.
+
+In this example a bipolar transistor is constructed using DevEdit 3D. The 
+structure is then passed to Atlas for electrical testing. The input file
+consists of the following 2 main portions:
+
+{bullet} Construction of the device in DevEdit 3D
+{newline}
+{bullet}  Simulation of the Gummel plot in Atlas
+
+The first stage of the input constructs the BJT geometry, material regions,
+doping profiles, and electrodes in DevEdit 3D. The structure was created in 
+DevEdit 3D by drawing the device regions in interactive mode and specifying 3D
+doping distribution. Finally the mesh was generated automatically by specifying 
+basic mesh constraints and refining in the important areas of the device.
+
+The Atlas simulation begins by reading in the structure from DevEdit 3D.
+DeckBuild provides the autointerface between DevEdit 3D and Atlas so that the
+structure produced by DevEdit 3D is transferred to Atlas without having to
+indicate the mesh statement.
+
+The 
+{bold} models 
+statement is used to select a set of physical models for this simulation.  In 
+this case, these models are SRH and AUGER recombination, the concentration
+and field dependent mobility model, and the two carriers model.
+
+The initial solution for zero biases is obtained using
+{bold} solve init
+. The steady-state solution for Veb=-0.4V and Vcb=1V is then obtained.
+
+Then the emitter voltage is ramped to -0.8V with a ramptime of 0.1ns,
+and transient simulation are performed. The Newton algorithm, which is
+the default method in Atlas is used for these calculations.
+
+The results of the simulation are then displayed using TonyPlot.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+{subsection} bjtex08.in : PNP Gummel Plot and Ic/Vce Characteristic 
+
+
+Requires: SSuprem 4/S-Pisces
+{newline}
+Minimum Versions: Athena 5.22.3.R, Atlas 5.26.1.R
+
+This example demonstrates the formation and characterization of a PNP
+bipolar transistor. It consists of:
+
+{bullet} Structure formation in Athena
+{newline}
+{bullet}  Gummel plot simulation in Atlas
+{newline}
+{bullet}  Ic/Vce simulation in Atlas
+
+The first part of this input file uses Athena to construct the
+geometry and doping of the PNP transistor. The device is a polysilicon
+emitter PNP with an emitter length of 0.4um. Since the device is
+symmetrical through the center of the emitter, only half the device
+needs to be simulated. The resulting currents from Atlas can always be
+doubled to account for this reflection. The intrinsic base is formed by
+a 100keV  phosphorus implant at the start of the process. Extrinsic
+base is formed by spacers on the sidewall of the emitter polysilicon.
+The emitter area is formed by p+ doped polysilicon directly deposited
+onto the silicon.
+
+At the end of the process, metal contacts are patterned to give an
+emitter contact on top of the polysilicon and a base contact to the
+right. These metal regions are defined as electrodes in Athena to
+prepare the structure for Atlas.
+
+The final step in the process simulation is to extract some process
+parameters. The base width is extracted by measuring the base/collector
+and emitter/base junctions individually and subtracting the two
+results. Using the 1D Poisson solver in DeckBuild, the sheet resistances
+of the base and polysilicon emitter region are obtained.
+
+The first of the two Atlas runs in this file is to extract the Gummel
+plot characteristics. From this plot the gain and fT can be obtained. The
+material parameters for polysilicon and silicon regions are set in
+separate lines in the Atlas input file. 
+
+The material parameters for polysilicon reflect the low mobility and
+short carrier lifetimes seen in this material. They also contribute to
+the reduction in base current and consequent increase in gain seen in
+polysilicon emitter bipolar transistors. The effect of the native oxide
+layer that exists between the polysilicon and silicon is emulated by
+these material parameters.  The effect of the native oxide is to force
+recombination of carriers at the polysilicon/silicon interface rather
+than the carriers diffusing further in to emitter region. The short
+lifetime and low mobility in the polysilicon accomplish the same
+effect and have been widely used in polysilicon emitter bipolar device
+simulation.
+
+The Gummel plot is simulated at Vce=-2.0V by ramping Vbe from -0.4 to
+-1.0V. In addition to the DC solution, a small AC signal is also
+applied. This enables fT vs. Ic to be extracted.  The AC signal is
+specified using the parameter AC on the 
+{bold} solve 
+statement. The frequency
+of this signal is 1MHz. At the end of the solve sequence several device
+parameters are extracted: peak gain, peak collector current and peak
+fT.
+
+
+The second Atlas run extracts a family of Ic/Vce curves for different
+base currents. For each curve it is necessary to force a constant
+current through the base electrode. This is done using the current
+boundary condition set by 
+{bold} contact name=base current
+.
+
+Since the base currents used are quite high, it is easier to first ramp
+the base voltage up close to the initial current level required. In
+this case Vbe is ramped to -0.7V. Then the current boundary conditions
+are applied and solutions for base currents of 1uA/um to 5uA/um were
+obtained. At each step in Ib a solution file is stored for later use.
+
+During the ramp up and storing of files with different Ib the collector
+voltage is left at ground. Next a sequence of statements is used to
+LOAD the stored file for a particular Ib value, open a 
+{bold} log 
+file for the
+results, and 
+{bold} solve 
+a ramp of collector voltage to -5V. This sequence is
+repeated for each Ib considered. Separate results files for each Ib
+value are recommended for use in TonyPlot and for extracting parameters
+from the results. It is possible to store all IV data output for this
+simulation into one file. A full bipolar extraction for SPICE models
+can be done by interfacing these log files with UTMOST.
+
+Finally some extraction on the Ic/Vce data with Ib=5uA/um is done. The
+peak current in mA, the peak slope in the linear region and the slope
+of the saturation region can all be obtained using 
+{bold} extract.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} bjtex09.in : Emitter-Coupled Logic Element Simulation 
+
+Requires: S-Pisces/MixedMode 
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This simulation shows a transient process of gate switching in an ECL
+circuit. A SPICE-like circuit description is used by Atlas/MIXEDMODE to
+specify two ECL inverters. Two NPN transistors modeled using device
+simulation are included in the circuit alongside two devices simulated
+using a simple SPICE model. This example shows:
+
+{bullet} Specification of an NPN device using Atlas syntax
+{newline}
+{bullet} Specification of an ECL inverter circuit using MIXEDMODE netlist syntax.
+{newline}
+{bullet} Inclusion of two SPISCES devices within the SPICE circuit.
+{newline}
+{bullet} Specification of device simulation models and parameters in MIXEDMODE syntax
+{newline}
+{bullet} Simulation of the DC initial bias point
+{newline}
+{bullet} Simulation of transient switching characteristics
+
+This example file consists of three runs. The first uses Atlas syntax
+to define the NPN device geometry, mesh and doping, the second sets up
+the MIXEDMODE circuit to simulate the initial DC bias point, the third
+performs the transient circuit simulation using Atlas/MIXEDMODE.
+
+The first run uses Atlas syntax to define the NPN structure. There are two identical NPN devices in the ECL circuit. Both devices can be loaded from a single mesh file
+{bold} bjtex09_0.str
+. 
+
+The second run starts with a netlist description of the ECL circuit.
+For details of the syntax used in MIXEDMODE, see the MIXEDMODE
+section of Atlas  Manual. The key non-standard element in the circuit
+is the Atlas device. These are circuit elements where Atlas device
+simulation is used to give the terminal characteristics as opposed to
+a SPICE model equation. The primitives letter 
+{bold} a 
+is used to identify these devices. In this example there are two such
+primitives; ai and an. There are also two more NPN bipolar transistors
+simulated using the SPICE model modbjt. These are labeled qi and qn.
+
+After the 
+{bold} .end 
+statement, regular SPISCES syntax is used to define parameters for the device simulation. 
+{bold} models 
+is used to set the physical models to be used in each of the devices to
+be modeled by device simulation. Note the use of the 
+{bold} device=<name> 
+parameter. This is compulsory in MIXEDMODE simulation to identify the
+device to which these parameters are applied. This is true even if only
+one device simulation element exists in the circuit.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} bjtex10.in :  Athena/Atlas Simulation of an NPN BJT
+
+Requires: Athena/S-Pisces
+{newline}
+Minimum Versions: Athena 5.22.3.R, Atlas 5.26.1.R
+
+This example demonstrates how to use combination of several Athena 
+runs in 1D mode and Atlas to simulate the electrical characteristics of a
+vertical NPN bipolar transistor. This example shows:
+
+{bullet} Four Athena simulations in 1D mode of various doping distributions in a
+1D NPN bipolar structure
+{newline}
+{bullet} Athena-Atlas interface for 1D doping profiles
+{newline}
+{bullet} Ic and Ib extraction versus Vbe (Gummel Plot)
+
+
+Athena process simulation in 1D mode is taken as
+the starting point for this simulation. P+ and n+ contact implants and
+final anneal are added at the very end.
+
+The input file is run four times with different steps commented out.
+As a result, four doping profiles in different vertical sections  of
+the NPN device are obtained. The structure file names correspond to
+areas where the vertical sections are taken.
+
+When all four Athena simulations are completed DeckBuild switches simulation
+to Atlas where mesh and electrodes are set. After that, doping profiles
+from all four 1D structures are used to build 2-D doping in Atlas.
+Uniform antimony (buried layer) and arsenic (epi layer) profiles are
+imported from 
+{bold} bjtex10_1.str
+. Afterwards emitter doping is specified in the area between x=0 and x=1 using
+phosphorus component of the bjtex10_1.str profile. The parameter
+{bold} ratio.lat 
+represent lateral diffusion during emitter formation.
+Base boron doping is specified in the area between x=0 and x=5 from 
+{bold} bjtex10_2.str
+. P+ contact boron doping and N+ phosphorus doping under collector contact
+are imported from corresponding Athena structure files.
+
+Then a standard Gummel plot simulation with Atlas is then performed.
+This is described in detail in the first example in this section.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+{subsection} bjtex11.in : NPN - Gummel plot in 2D and 3D
+
+Requires: S-Pisces/Device 3D
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example simulates a Gummel plot for a silicon BJT in 2D and 3D. It shows:
+
+{bullet} Formation of a 2D NPN BJT using Atlas syntax
+{newline}
+{bullet} Ic and Ib extraction versus Vbe (Gummel plot) of the 2D structure
+{newline}
+{bullet} Formation of a 3D NPN BJT using Atlas syntax
+{newline}
+{bullet} Ic and Ib extraction versus Vbe (Gummel plot) of the 3D structure
+
+
+The initial stage of the example uses the 
+{bold} mesh, region
+, and
+{bold} electrode 
+statements in Atlas to construct the 2D NPN structure.  Analytical doping profiles are added in the 
+{bold} doping 
+statement. The structure has a heavy n+ emitter, 1.0e18 peak base
+concentration, a buried collector layer and heavy p+ extrinsic base
+contact.
+
+The
+{bold} models bipolar 
+statement is set to specify that the default set of bipolar models is
+to be used.  The default set of bipolar models includes: concentration
+dependent mobility, field dependent mobility, band-gap narrowing,
+concentration dependent lifetimes and Auger recombination. 
+
+The gummel plot syntax is similar to that described in the first
+example of this section.  Following the calculation of the gummel plot 
+for the 2D structure, 
+{bold} go atlas 
+triggers the initiation of an Atlas run that will be used to perform 
+an equivalent calculation in 3D.  The 3D mode of Atlas is triggered
+by the inclusion of the 
+{bold} three.d 
+parameter on the 
+{bold} mesh 
+statement.  The extent in the z-direction is set by the 
+{bold} z.mesh 
+statements.  The syntax for the remainder of the input is similar 
+to that used in 2D.
+
+Following the completion of the calculation of the Gummel plot 
+for the 3D structure, the characteristics of the two structures
+are plotted for comparison.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.

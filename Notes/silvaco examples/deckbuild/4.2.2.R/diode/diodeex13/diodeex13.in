@@ -1,0 +1,113 @@
+# (c) Silvaco Inc., 2018
+# Low-Temperature (Cryogenic) TCAD Simulation
+#
+# References:
+# [1] "TCAD Simulation of Impact Ionization at Cryogenic Temperatures, down to 3 K", 
+#     Silvaco, The Simulation Standard, Oct-Dec 2016.
+# [2] X.J. Chen et al., "Cryogenic CMOS Avalanche Diodes for Nuclear Physics Research", 
+#     Proc. SPIE Vol. 8142 (2011).
+#
+# The n-p diode structure and breakdown IV curves in this example are based on [2].
+
+LOOP steps=7
+
+assign name=T n.value=(300, 200, 100, 40, 20, 10, 3)
+
+#set T=3
+
+# An increased precision (simflags="-160") must be used for low T:
+
+#go victorydevice simflags="-160"
+
+go atlas simflags="-160"
+
+##########  DEVICE PARAMETERS AND GEOMETRY  ##############
+
+# Total model length (X) [um]:
+set Xmax = 3.0
+# Cathode contact end (X) [um]:
+set CathEnd = 1.0
+# Total model height (Y) [um]:
+set Ymax = 7.0
+# n+ junction depth [um]:
+set np_junc = 0.5
+# n+ peak doping [/cm^3]:
+set nplus_dop = 3e19
+# Epi-layer p- doping [/cm^3]:
+set epi_dop = 2e16
+
+# Current Scaling factor for the 2D model currents
+set CurScale = 300
+
+##===================  MESH  ===========================
+
+# mesh width in the 3rd (Z) direction = Current Scaling:
+#
+mesh  width=$CurScale 
+
+x.mesh location=0.0           spac=$Xmax/10
+x.mesh location=$CathEnd      spac=0.1
+x.mesh location=$Xmax         spac=$Xmax/10
+
+y.mesh location=0		spac=0.05
+y.mesh location=$np_junc   	spac=0.05
+y.mesh location=$Ymax/2 	spac=0.2
+y.mesh location=$Ymax  		spac=0.4
+
+#########  Structure Specification  ############################
+
+region num=1  material=silicon
+
+electrode name=cathode x.min=0 x.max=$CathEnd y.min=0 y.max=0.1  
+electrode name=anode bottom
+
+# P- epi doping 
+doping p.type uniform conc=$epi_dop
+
+# N+ doping 
+doping n.type gauss conc=$nplus_dop  y.char=0.1  \
+       y.min=0 y.max=$np_junc-0.25
+
+####################  MODELS  ####################################
+
+models temperature=$T  SRH Arora fermi ni.fermi  print
+
+impact SELBERHERR  SELB.SET2  \
+       E.SIDE  JNY.MIN=1E-15 JPY.MIN=1E-15 
+
+# Below RHSNORM is needed for E.SIDE above, 
+#      and cr.tol=1e-20 is needed for T < 150K
+method climit=1e-4 ir.tol=1e-40 ix.tol=1e-40  RHSNORM  \
+       cr.tol=1e-20  DVMAX=0.1  MIN.TEMP=2.0 MAX.TEMP=1000.0 \
+       itlimit=50  maxtraps=4
+         # c.maximum.divisor
+
+#------------------------------------------
+# Ramp to Breakdown with Impact Ionization
+#------------------------------------------
+solve init
+solve previous
+
+output e.mobility h.mobility impact
+
+if cond=($T=300)
+  save outfile=diodeex13_$'T'K_0V.str 
+if.end
+
+log outfile=diodeex13_$'T'K.log
+solve vcathode=0.1
+solve vcathode=0.2 
+solve vfinal=1 vstep=0.2 name=cathode
+solve vfinal=22 vstep=1.0 name=cathode 
+solve vfinal=38 vstep=0.2 name=cathode compl=1e-2 cname=cathode
+
+# change to current-driven contact to resolve breakdown
+contact name=cathode current 
+solve prev
+solve name=cathode imult istep=2.0 ifinal=1e-2
+
+L.END
+tonyplot diodeex13_300K_0V.str -set diodeex13_str.set
+tonyplot -overlay diodeex13_3K.log diodeex13_10K.log diodeex13_20K.log diodeex13_40K.log diodeex13_100K.log diodeex13_200K.log diodeex13_300K.log -set diodeex13_iv_log.set
+
+quit

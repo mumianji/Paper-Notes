@@ -1,0 +1,206 @@
+# (c) Silvaco Inc., 2018
+go atlas
+
+mesh
+
+x.mesh loc=0.00 spac=0.05
+x.mesh loc=0.10 spac=0.05
+
+y.mesh loc=0.00 spac=0.20
+y.mesh loc=1.00 spac=0.01
+y.mesh loc=2.00 spac=0.20
+
+region number=1 x.min=0.0 x.max=0.1 y.min=0.0 y.max=1.0 material=silicon
+region number=2 x.min=0.0 x.max=0.1 y.min=1.0 y.max=2.0 material=silicon
+
+electrode name=anode   top
+electrode name=cathode bottom
+
+doping uniform conc=1e18 n.type region=1
+doping uniform conc=1e18 p.type region=2
+
+models bipolar temperature=150 kla analytic
+
+probe lat.temp x=0.05 y=1.0
+probe n.mob    x=0.05 y=0.2
+probe p.mob    x=0.05 y=1.8
+solve
+save outfile=diodeex09.str
+solve  vanode=0.01
+log outfile=diodeex09.log
+solve  vanode=1
+
+go atlas
+mesh infile=diodeex09.str
+models bipolar temperature=200 kla analytic
+probe lat.temp x=0.05 y=1.0
+probe n.mob    x=0.05 y=0.2
+probe p.mob    x=0.05 y=1.8
+solve  vanode=0.1
+log outfile=diodeex09.log append
+solve vanode=1.0
+
+go atlas
+mesh infile=diodeex09.str
+models bipolar temperature=250 kla analytic
+probe lat.temp x=0.05 y=1.0
+probe n.mob    x=0.05 y=0.2
+probe p.mob    x=0.05 y=1.8
+solve  vanode=0.1
+log outfile=diodeex09.log append
+solve vanode=1.0
+
+go atlas
+mesh infile=diodeex09.str
+models bipolar temperature=300 kla analytic
+probe lat.temp x=0.05 y=1.0
+probe n.mob    x=0.05 y=0.2
+probe p.mob    x=0.05 y=1.8
+solve  vanode=0.1
+log outfile=diodeex09.log append
+solve vanode=1.0
+
+go atlas
+mesh infile=diodeex09.str
+models bipolar temperature=350 kla analytic
+probe lat.temp x=0.05 y=1.0
+probe n.mob    x=0.05 y=0.2
+probe p.mob    x=0.05 y=1.8
+solve  vanode=0.1
+log outfile=diodeex09.log append
+solve vanode=1.0
+
+go atlas
+mesh infile=diodeex09.str
+models bipolar temperature=400 kla analytic
+probe lat.temp x=0.05 y=1.0
+probe n.mob    x=0.05 y=0.2
+probe p.mob    x=0.05 y=1.8
+solve  vanode=0.1
+log outfile=diodeex09.log append
+solve vanode=1.0
+
+go atlas
+mesh infile=diodeex09.str
+models bipolar temperature=450 kla analytic
+probe lat.temp x=0.05 y=1.0
+probe n.mob    x=0.05 y=0.2
+probe p.mob    x=0.05 y=1.8
+solve  vanode=0.1
+log outfile=diodeex09.log append
+solve vanode=1.0
+
+go atlas
+mesh infile=diodeex09.str
+models bipolar temperature=500 kla analytic
+probe lat.temp x=0.05 y=1.0
+probe n.mob    x=0.05 y=0.2
+probe p.mob    x=0.05 y=1.8
+solve  vanode=0.1
+log outfile=diodeex09.log append
+solve vanode=1.0
+
+go atlas
+mesh infile=diodeex09.str
+models bipolar temperature=550 kla analytic
+probe lat.temp x=0.05 y=1.0
+probe n.mob    x=0.05 y=0.2
+probe p.mob    x=0.05 y=1.8
+solve  vanode=0.1
+log outfile=diodeex09.log append
+solve vanode=1.0
+
+go atlas
+mesh infile=diodeex09.str
+models bipolar temperature=600 kla analytic
+probe lat.temp x=0.05 y=1.0
+probe n.mob    x=0.05 y=0.2
+probe p.mob    x=0.05 y=1.8
+solve  vanode=0.1
+log outfile=diodeex09.log append
+solve vanode=1.0
+
+go atlas
+mesh infile=diodeex09.str
+models bipolar temperature=650 kla analytic
+probe lat.temp x=0.05 y=1.0
+probe n.mob    x=0.05 y=0.2
+probe p.mob    x=0.05 y=1.8
+solve  vanode=0.1
+log outfile=diodeex09.log append
+solve vanode=1.0
+
+go atlas
+mesh infile=diodeex09.str
+models bipolar temperature=700 kla analytic
+probe lat.temp x=0.05 y=1.0
+probe n.mob    x=0.05 y=0.2
+probe p.mob    x=0.05 y=1.8
+solve  vanode=0.1
+log outfile=diodeex09.log append
+solve vanode=1.0
+
+go atlas
+mesh infile=diodeex09.str
+models bipolar temperature=750 kla analytic
+probe lat.temp x=0.05 y=1.0
+probe n.mob    x=0.05 y=0.2
+probe p.mob    x=0.05 y=1.8
+solve  vanode=0.1
+log outfile=diodeex09.log append
+solve vanode=1.0
+
+go atlas
+mesh infile=diodeex09.str
+models bipolar temperature=800 kla analytic
+probe lat.temp x=0.05 y=1.0
+probe n.mob    x=0.05 y=0.2
+probe p.mob    x=0.05 y=1.8
+solve  vanode=0.1
+log outfile=diodeex09.log append
+solve vanode=1.0
+
+go atlas
+mesh infile=diodeex09.str
+models bipolar temperature=850 kla analytic
+probe lat.temp x=0.05 y=1.0
+probe n.mob    x=0.05 y=0.2
+probe p.mob    x=0.05 y=1.8
+solve  vanode=0.1
+log outfile=diodeex09.log append
+solve vanode=1.0
+
+go atlas
+mesh infile=diodeex09.str
+models bipolar temperature=900 kla analytic
+probe lat.temp x=0.05 y=1.0
+probe n.mob    x=0.05 y=0.2
+probe p.mob    x=0.05 y=1.8
+solve  vanode=0.1
+log outfile=diodeex09.log append
+solve vanode=1.0
+
+go atlas
+mesh infile=diodeex09.str
+models bipolar temperature=950 kla analytic
+probe lat.temp x=0.05 y=1.0
+probe n.mob    x=0.05 y=0.2
+probe p.mob    x=0.05 y=1.8
+solve  vanode=0.1
+log outfile=diodeex09.log append
+solve vanode=1.0
+
+go atlas
+mesh infile=diodeex09.str
+models bipolar temperature=1000 kla analytic
+probe lat.temp x=0.05 y=1.0
+probe n.mob    x=0.05 y=0.2
+probe p.mob    x=0.05 y=1.8
+solve  vanode=0.1
+log outfile=diodeex09.log append
+solve vanode=1.0
+
+tonyplot diodeex09.log -set diodeex09.set
+tonyplot diodeex09.log -set diodeex09_mob.set
+
+quit

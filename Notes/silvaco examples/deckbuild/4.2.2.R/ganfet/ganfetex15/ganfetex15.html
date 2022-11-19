@@ -1,0 +1,96 @@
+<html>
+  <head>
+    <title>GaN HEMT BV versus Gate to Drain distance</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>GaN HEMT BV versus Gate to Drain distance</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Blaze</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="ganfetex15_plot0.png" width="640" alt="ganfetex15_plot0" />
+      <p/>
+      <img src="ganfetex15_plot1.png" width="640" alt="ganfetex15_plot1" />
+      <p/>
+      <img src="ganfetex15_plot2.png" width="640" alt="ganfetex15_plot2" />
+      <p/>
+      <img src="ganfetex15_plot3.png" width="640" alt="ganfetex15_plot3" />
+      <p/>
+      <img src="ganfetex15_plot4.png" width="640" alt="ganfetex15_plot4" />
+      <p/>
+      <img src="ganfetex15_plot5.png" width="640" alt="ganfetex15_plot5" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates the influence of the Gate to Drain distance on the
+breakdown voltage with and without silicon substrate. This example is based on
+the following reference
+</p>
+<p>
+Experimental and simulation study of breakdown voltage enhancement of AlGaN/gaN
+heterostructures by Si substrate removal. D.Visalli et al Apl. Phys. Lett. 97, 113501 2010.
+</p>
+<p>
+The structure consists of 20nm AlGaN with xcomp=0.2 and 1um GaN buffer layer.
+Donor and acceptor traps are included in the simulation. Gaussian profile
+acceptor traps are used with a peak concentration close to the bottom of the
+buffer layer to mimic the fact that the material quality improves toward
+the surface of the device.
+</p>
+<p>
+Donor Interface traps at the AlGaN/Nitride interface and acceptor interface
+traps at the GaN/Silicon interface are also included during the simulation.
+</p>
+<p>
+Forward charateristic simulation reveals a threshold voltage of around -2V.
+Slow transient simulation is used to simulate the breakdown voltage curve.
+</p>
+<p>
+The deck is parametrized so that we can make variation of the distance between
+gate and drain (LGD). Deckbuild DoE capability is used to automate simulations
+of BV versus LGD with and without substrate.
+</p>
+<p>
+We can observe in tonyplot an almost linear increase of BV versus LGD when silicon
+substrate is not present. An increase of the gate current is observed near breakdown
+and the value is of the same order as the drain current. This result indicates
+that BV is defined by an avalanche phenomenon between the gate and the drain.
+</p>
+<p>
+BV does not depend significantly on LGD when silicon substrate is present due to
+charge accumulation at the GaN/Silicon interface, related to the presence of interface
+traps, which screen the electric field. During the simulation and for comparison
+purpose, a resistance is added to the substrate so that the current leakage through
+the substrate is reduced. Note that if no resistance is added to the substrate
+an increase of the substrate current is observed near breakdown and the value is
+of the same order as the drain current. This result indicates that BV is defined
+by an avalanche phenomenon between the gate and the substrate in this case.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

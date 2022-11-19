@@ -1,0 +1,69 @@
+<html>
+  <head>
+    <title>Local Interconnect - MOS Current Source</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Local Interconnect - MOS Current Source</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>CLEVER</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="clex13_plot0.png" width="640" alt="clex13_plot0" />
+      <p/>
+      <img src="clex13_plot1.png" width="640" alt="clex13_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<p>
+This example demonstrates the use of CLEVER to analyze non planerised structures
+such as local interconnects commonly used in current sources and in memory
+cells.  To emphasise the true 3D capability CLEVER, a MOSFET with
+TiN (titanium nitride) local interconnect between drain and gate is
+implemented using a trench isolation structure together with realistic layer
+depositions.
+</p>
+<p>
+The 3D structure is created using the 3D process simulator Victory Process,
+and is then loaded into Clever for the resiistance extraction.
+</p>
+<p>
+At the end of the 3D process simulation, a 2D cutline of the structure is
+plotted to show a representative cross sectional view of the created device.
+This 2D cross section may be plotted without running the simulation from the
+stored structure file called &quot;clex13_2D.str&quot; by using the standard
+<b> tonyplot</b> program.  The 3 dimensional structure file can be plotted using
+<b> tonyplot3d.</b> It should be noted that when using the
+<b> padding</b> command to create a wider boarder around the masks in conjunction with the
+<b> cut line</b> statement, a warning in the runtime output will occur informing the user that
+the cutline defined is larger than the mask area.  This is to be expected since
+the padding command generates a larger simulation volume.  This warning can
+therefore be ignored.
+</p>
+<p>
+The resistance of the local interconnect is extracted using the
+<b> Interconnect Resistance Adapt</b> statement in the usual way after defining the conductivity of the TiN material.
+The value of the extracted resistance is stored in clex14.net.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

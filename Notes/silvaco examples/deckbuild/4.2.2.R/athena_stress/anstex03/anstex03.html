@@ -1,0 +1,60 @@
+<html>
+  <head>
+    <title>Stresses in a Buried-SiGe Strained-Silicon MOSFET. Part 2.</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Stresses in a Buried-SiGe Strained-Silicon MOSFET. Part 2.</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>SSuprem 4</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R</i></td>
+      </tr>
+    </table>
+    <div id="text" >
+<p>
+This example is similar to the previous example anstex02.in. There are three main differences:
+</p>
+<p>
+1. This example demonstrates the use of the STRESS.HIST method instead of several STRESS statements.
+</p>
+<p>
+2. It calculates dopant induced intrinsic stresses based on Germanium fraction in Silicon instead of user-defined intrinsic stresses in the SiGe layer. This is achieved by specifying
+<b> DOPANT.STRESS</b> parameter in the METHOD statement.
+</p>
+<p>
+3. It uses more realistic angled etching of source/drain area.
+</p>
+<p>
+Two additional process parameters,
+<b> Ge_fraction </b> and
+<b> etch_angle, </b> are introduced. These parameters could be used for further optimization of the process.
+It is interesting to note that if a realistic 70-75 degrees etch is applied the stress
+transfer efficiency (see previous example) could be increased by 12-15% in some cases.
+</p>
+<p>
+The results of the calculation are plotted using
+<b> TonyPlot </b> to display 2D contours of the XX component of stress in the final structure.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

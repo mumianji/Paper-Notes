@@ -1,0 +1,152 @@
+# (c) Silvaco Inc., 2018
+go atlas
+
+# Solar cell example number 1.
+# This example is based on the reference:
+#
+# From Krc, J. Zeman et all "Optical Modeling of a-Si:H Solar cells 
+# deposited on textured glass/SnO2 substrates" J. Appl. Phys., Vol. 92
+# No. 2, 15 July 2002, pp. 749-755
+#
+# Here we specify a mesh of 0.1 square meter ( 1um x 1e11 um).
+# Since the structure is essentially one dimensional we ignore
+# variations if x and z.
+#
+mesh width=1e11 outfile=solarex08_0.str
+#
+x.m l=0 s=0.5
+x.m l=1 s=0.5
+#
+y.m l=-0.1 s=0.02
+y.m l=0 s=0.05
+y.m l=0.5 s=0.01
+y.m l=0.509 s=0.002
+y.m l=0.584 s=0.01
+y.m l=0.659 s=0.005
+y.m l=0.679 s=0.005
+y.m l=0.6805 s=0.0005
+y.m l=0.9805 s=0.05
+#
+# Here we introduce a set of material layers comprising
+# the solar cell device.
+#
+# It is important to introduce all material layers even
+# if they have little or no electrical effect since they
+# will have significant effects on the transfer matrix
+# analysis used to model the optical problem
+#
+region num=1 mat=oxide y.min=-0.1 y.max=0
+region num=2 mat=ZnO y.min=0 y.max=0.5 conductor
+region num=3 mat=silicon y.min=0.5 y.max=0.509
+region num=4 mat=silicon y.min=0.509 y.max=0.659
+region num=5 mat=silicon y.min=0.659 y.max=0.679
+region num=6 mat=Aluminum y.min=0.679 y.max=0.6805 conductor
+#
+# Electrodes at the top and bottom.
+#
+elec name=anode y.min=0 y.max=0.5 mat=ZnO 
+elec name=cathode y.min=0.6805 y.max=0.9805 mat=Silver
+#
+# The DOPING statements are used to define a P-N diode.
+#
+doping region=3 p.type conc=2e18 uniform 
+doping region=5 n.type conc=1e19 uniform
+#
+# In this case we use the INTERFACE statement to define some
+# interface recombination velocities at one interface.
+# All recombination mechanisms should be accounted for since
+# they may have a significant impact on device quantum efficiency.
+#
+interface s.s s.n=1e5 s.p=1e5 p1.y=0.509 p2.y=0.509 p1.x=0 p2.x=1
+#
+# We assign a resistivity to the ZnO and aluminum using the RESISTIVITY
+# parameter of the MATERIAL statement.
+#
+material material=ZnO      resistivity=1e-5
+material material=Aluminum resistivity=1e-4
+#
+# Here we define several of the interfaces as diffusive with certain
+# haze function parameter specifications and angular distribution
+# functions.
+#
+#SnO/p
+interface opti p1.x=0 p2.x=1 p1.y=0.5 p2.y=0.5 diff lambert sig=45 cr=0.3 ct=0.3 nr=2 nt=3 		  
+#p/i
+interface opti p1.x=0 p2.x=1 p1.y=0.509 p2.y=0.509 diff lambert sig=45 cr=0.3 ct=0.3 nr=2 nt=3
+#i/n
+interface opti p1.x=0 p2.x=1 p1.y=0.659 p2.y=0.659 diff lambert sig=30 cr=0.2 ct=0.2 nr=2 nt=3
+#n/Ag
+interface opti p1.x=0 p2.x=1 p1.y=0.6805 p2.y=0.6805 diff lambert sig=30 cr=0.2 ct=0.2 nr=2 nt=3 
+#
+# We define the complex index of refraction for some of the active layers
+# using tabular data.  We can save these data using the OUT.INDEX
+# parameter for later examination using Tonyplot.
+#
+material region=3 index.file=solarex08_0.nk out.index=solarex08_0
+material region=4 index.file=solarex08_1.nk out.index=solarex08_1
+material region=5 index.file=solarex08_2.nk out.index=solarex08_2
+material material=ZnO indx.real=solarex08_3.n indx.imag=solarex08_3.k out.index=solarex08_3
+#
+# For the metals and oxide we use the Sopra data base for the default
+# complex index of refraction.
+#
+material material=Silver   sopra=Ag.nk   out.index=solarex08_4
+material material=Aluminum sopra=Al.nk   out.index=solarex08_5
+material material=oxide    sopra=Sio2.nk out.index=solarex08_6
+#
+# Plot the complex index of refraction data
+#
+tonyplot -overlay solarex08_0-k.log solarex08_1-k.log solarex08_2-k.log solarex08_3-k.log solarex08_41-k.log solarex08_51-k.log solarex08_61-k.log -set solarex08_0.set
+tonyplot -overlay solarex08_0-n.log solarex08_1-n.log solarex08_2-n.log solarex08_3-n.log solarex08_41-n.log solarex08_51-n.log solarex08_61-n.log -set solarex08_1.set
+#
+# Here we define default band parameter values of the active layers.
+#
+material region=3 taun0=1e-6 taup0=1e-6 eg300=1.8 nv300=1e20 nc300=2e20 \
+	permit=7.2 affinity=4 eab=0.3576 edb=0.3576
+material region=4 taun0=1e-6 taup0=1e-6 eg300=1.7 nv300=1e20 nc300=2e20 \
+	permit=11.9 affinity=4.15
+material region=5 taun0=1e-6 taup0=1e-6 eg300=1.7 nv300=1e20 nc300=2e20 \
+	permit=11.9 affinity=4.15 eab=0.2397 edb=0.2397
+#
+# We use the MOBILITY statement to define electron and hole mobilities
+# in the active layers.
+#
+mobility region=3 mun0=1 mup0=0.1
+mobility region=4 mun0=2 mup0=0.5
+mobility region=5 mun0=1 mup0=0.1
+#
+# Enable Shockley-Read-Hall recombination
+#
+models srh bound.trap incomp
+#
+# We model the optical source as coming from above the device normal to
+# the top surface.  We define the source as monochromatic with an arbitrary
+# wavelength since we will be performing spectral analysis later.
+#
+# We also enable the transfer matrix (TR.MATRIX) with diffuse interfaces
+# (DIFFUSE).
+#
+beam num=1 x.origin=0.5 y.origin=-1 angle=90.0 tr.matrix diffuse reflect=1 \
+	wavelength=0.4 
+#
+# We set the operatiing bias voltage.
+#
+solve vanode=-1
+#
+# We save the spectral response fo the device to a log file.
+log outf=solarex08.log
+solve b1=0.1 beam=1 lambda=0.4 wstep=0.01 wfinal=0.8
+log off
+#
+# We can extract useful performance measures using the EXTRACT statements.
+#
+extract init infile="solarex08.log"
+extract name="eqe_top" curve(elect."optical wavelength", \
+	abs(i."cathode")/(elect."source photo current")) outfile="solarex08_0.dat"
+#
+# Finally, we can plot the results as compared against measurement.
+#
+tonyplot -overlay solarex08_0.dat solarex08_1.dat -set solarex08_2.set
+
+quit
+

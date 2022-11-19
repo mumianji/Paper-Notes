@@ -1,0 +1,428 @@
+﻿
+
+{section} MOCASIM : Mocasim Application Examples
+
+
+{subsection} mocasim01.in : Default GaAs material simulation
+
+
+Requires: Mocasim, TonyPlot
+Minimum Versions: Mocasim 5.16.0.R
+
+
+
+This example demonstrates the simulation of the bulk parameters for a
+default material (GaAs).  There are seven Mocasim sub-sections plus
+two calls to TonyPlot:
+{newline}
+{bullet} Define the material.
+{newline}
+{bullet} Define the scattering mechanisms.
+{newline}
+{bullet} Define the range to simulate over.
+{newline}
+{bullet} Specify a backup file.
+{newline}
+{bullet} Do the Monte Carlo simulation.
+{newline}
+{bullet} Save the results.
+{newline}
+{bullet} Fit a standard model to the results.
+{newline}
+{bullet} Output the results.
+{newline}
+
+The first section uses the 
+{bold} initialize
+statement to select the material to simulate. 
+
+The second section uses the
+{bold} deformation_potential_acoustic_phonon,
+{bold} polar_optical_phonon,
+{bold} ionised_impurity
+and
+{bold} intervalley_phonon
+commands to activate the scattering mechanisms
+associated with the material, and to assign appropriate
+parameters to model this scattering.
+
+The third section uses the
+{bold} field,
+{bold} temperature, 
+and
+{bold} doping
+commands to define the range over which to perform the Monte Carlo
+simulation.  In this example, we are calculating the parameters
+as a function of electric field at a fixed temperature and a
+fixed doping.
+
+The fourth section uses the
+{bold} log
+command to define a backup file.  A Monte Carlo simulation usually
+takes a long time, so it is sensible to save the results once they
+have been calculated (so that if a running simulation is interrupted
+the points that have already been calculated don't have to be
+simulated again).
+
+The fifth section uses the
+{bold} solve
+command to carry out the Monte Carlo simulation.
+
+The sixth section uses the
+{bold} save
+command to save the transport results in a form that can
+be viewed in TonyPlot.
+
+The seventh section uses the
+{bold} fit
+command to fit a standard model to the Monte Carlo data.  In this
+example we are fitting the ATLAS negative-differential mobility
+model to the GaAs mobility.  The resultant coefficients can be
+used in ATLAS.  The
+{bold} compare
+parameter is used to specify a file that can be used to output a
+comparison between the Monte Carlo data and the fitted model.
+
+The final section uses the
+{bold} tonyplot
+command to display the results of the simulation.  The first
+plot displays the raw Monte Carlo data.  The second plot displays
+the Monte Carlo data and the fitted model.
+
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+{subsection} mocasim02.in : Default Si material simulation
+
+
+Requires: Mocasim, TonyPlot
+Minimum Versions: Mocasim 5.16.0.R
+
+
+This example has exactly the same structure as example 1.
+
+This example demonstrates the simulation of the bulk parameters for a
+default material (Silicon).  There are seven Mocasim sub-sections plus
+two calls to TonyPlot:
+{newline}
+{bullet} Define the material.
+{newline}
+{bullet} Define the scattering mechanisms.
+{newline}
+{bullet} Define the range to simulate over.
+{newline}
+{bullet} Specify a backup file.
+{newline}
+{bullet} Do the Monte Carlo simulation.
+{newline}
+{bullet} Save the results.
+{newline}
+{bullet} Fit a standard model to the results.
+{newline}
+{bullet} Output the results.
+{newline}
+
+The first section uses the 
+{bold} initialize
+statement to select the material to simulate. 
+
+The second section uses the
+{bold} defpot_acoustic_phonon,
+{bold} ionised_impurity
+and
+{bold} intervalley_phonon
+commands to activate the scattering mechanisms
+associated with the material, and to assign appropriate
+parameters to model this scattering.
+
+The third section uses the
+{bold} field,
+{bold} temperature, 
+and
+{bold} doping
+commands to define the range over which to perform the Monte Carlo
+simulation.  In this example we are calculating the parameters
+as a function of electric field at a fixed temperature and a
+fixed doping.
+
+The fourth section uses the
+{bold} log
+command to define a backup file.  A Monte Carlo simulation usually
+takes a long time so it is sensible to save the results once they
+have been calculated. This is so that if a running simulation is interrupted,
+the points that have already been calculated do not have to be
+simulated again.
+
+The fifth section uses the
+{bold} solve
+command to do the Monte Carlo simulation.
+
+The sixth section uses the
+{bold} save
+command to save the transport results in a form that can
+be viewed in TonyPlot.
+
+The seventh section uses the
+{bold} fit
+command to fit a standard model to the Monte Carlo data.  In this
+example we are fitting the ATLAS Caughey-Thomas mobility
+model to the GaAs mobility.  The resultant coefficients can be
+used in ATLAS.  The
+{bold} compare
+parameter is used to specify a file that can be used to output a
+comparison between the Monte Carlo data and the fitted model.
+
+The final section uses the
+{bold} tonyplot
+command to display the results of the simulation.  The first
+plot displays the raw Monte Carlo data.  The second plot displays
+the Monte Carlo data and the fitted model.
+
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+
+{subsection} mocasim03.in : User-defined material simulation 
+
+
+Requires: Mocasim, TonyPlot
+Minimum Versions: Mocasim 5.16.0.R
+ 
+
+This example demonstrates how to override the default material
+and simulation parameters.
+
+The
+{bold} material
+command is used to override the default materials parameters.
+The
+{bold} dc_dielectric
+parameter is used to set the DC dielectric constant.  The
+{bold} energy_gap
+parameter is used to set the three energy gaps of the three-
+valley model.  The energy gaps must be defined in the order
+Gamma, L, and X.  So in this example the direct (Gamma) band
+gap is being set to 1.4 eV.
+
+On the
+{bold} initialize
+statement the
+{bold} burn_in
+parameter is used to set the number of time steps we run
+before we start calculating the transport parameters. This
+is so that the non-physical initial distribution of electrons
+does not affect the results. The
+{bold} num_time_step
+parameter is used to set the number of time steps we use
+to actually calculate the transport parameters. The more time
+steps are used, the more accurate the results will be, but
+the longer the simulation will take.
+
+The
+{bold} print
+statement is used to output the parameters used in the
+Monte Carlo simulation.  This file contains the "internal"
+parameters (such as number of time steps, the energy
+range over which the scattering is calculated), the "material"
+parameters (such as band-gaps, electron masses, dielectric
+constants), and the "scattering" parameters (such as
+phonon energies and deformation potentials).
+
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+{subsection} mocasim04.in : Scattering rate extraction 
+
+
+Requires: Mocasim, TonyPlot
+Minimum Versions: Mocasim 5.16.0.R
+ 
+
+In this example we output the scattering rates generated by Mocasim.
+
+In Section 1 and 2 we set up the scattering mechanisms used in 
+example 1.
+
+In Section 5 we calculate the scattering rate at a temperature of
+300 K and a doping of 1e14 cm^-2 and output the rates to 
+mocasim04_1.dat.  The scattering rates are calculated as a function
+of electron energy, from 0 eV to 7.5 eV by default.
+
+The first tonyplot shows the individual scattering rates for electrons
+in the L-valley.
+
+The second tonyplot shows the total scattering rates for low energy
+electrons, and for all electrons.
+
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+{subsection} mocasim05.in : Default GaN material simulation
+
+
+Requires: Mocasim, TonyPlot
+Minimum Versions: Mocasim 5.16.0.R
+ 
+
+This example repeats example 1 and 2 with a Wurtzite material.
+
+The main difference between examples 1 and 2 and this example is
+on the
+{bold} intervalley_phonon
+command.
+
+In Zincblende and Diamond structure crystals, the structure of the
+conduction band minima is fairly consistent.  There is a minimum at
+the Gamma point of the Brillouin zone, a minimum along the L direction
+of the Brillouin zone, and a minimum along the X direction of the
+Brillouin zone.
+
+In Wurtzite structure crystals there is no such uniformity.  The
+three-valley model uses the three lowest conduction band minima.
+The lowest minima is given the ordinal 0, the next lowest minima
+is given the ordinal 1, and the third lowest minim is given the
+ordinal 2.
+
+The three lowest minima for GaN can be seen from the output of the
+{bold} print
+command in section 5.
+
+The 
+{bold} fit
+command to fit a polynomial model to the Monte Carlo data.  The
+polynomial model is of the form
+
+mu = Sum{e=0...numE-1,n=0...numN-1,t=0...numT-1} Cent*E^e*log(N)^n*T^t
+
+This polynomial contains numE*numN*numT terms and so can very quickly 
+become unwieldy.  In this example the doping and the temperature are
+fixed, so electric field is the only independent variable.
+
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+{subsection} mocasim06.in : User-defined scattering example 
+
+
+Requires: Mocasim, TonyPlot
+Minimum Versions: Mocasim 5.16.0.R
+
+
+This example demonstrates the bulk parameter simulation of a default
+material (GaAs), however user-defined scattering mechanisms are defined
+for the Gamma<->L intervalley transition.
+
+This example is basically the same as example 1 except that some of
+the scattering mechanisms are defined by a c-interpreter file (and 
+we don't fit a model to the results, so there is no Section 7 in this
+example).
+
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+ 
+
+{subsection} mocasim07.in : Temperature dependent Si simulation
+
+Requires: Mocasim, TonyPlot
+Minimum Versions: Mocasim 5.16.0.R
+
+
+This example is very similar to example 2.  However in example 2
+we did a simulation over a range of electric fields (at a fixed
+temperature and doping), in this example we do a simulation over
+a range of temperatures (at a fixed electric field and doping).
+
+Instead of fitting the Caughey-Thomas mobility model we fit the
+basic ATLAS low-field temperature dependent mobility model.
+
+As well as fitting the model to the Monte Carlo data we generate
+a c-interpreter function that will calculate the model.  The
+parameter
+{bold} tofimun
+tells Mocasim to generate a file with the template of the ATLAS
+"int tofimun(...)" function.  The parameter
+{bold} ci_file
+tells Mocasim where to save the c-interpreter function to.
+
+This c-interpreter function could be read into ATLAS with
+the command
+
+mobility material=silicon f.tofimun=mocasim07_4.lib
+
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+ 
+
+
+
+{subsection} mocasim08.in : Doping dependent GaAs simulation
+
+Requires: Mocasim, TonyPlot
+Minimum Versions: Mocasim 5.16.0.R
+
+
+This example is very similar to example 1.  However in example 1
+we did a simulation over a range of electric fields at a fixed
+temperature and doping. In this example we do a simulation over
+a range of doping at a fixed electric field and temperature.
+
+Instead of fitting the Negative Differential mobility model, we fit the
+basic ATLAS analytic low-field mobility model.
+
+As well as fitting the model to the Monte Carlo data, we generate
+a c-interpreter function that will calculate the model.  The
+parameter
+{bold} munsat
+tells Mocasim to generate a file with the template of the ATLAS
+"int munsat(...)" function.  The parameter
+{bold} ci_file
+tells Mocasim where to save the c-interpreter function to.
+
+This c-interpreter function could be read into ATLAS with
+the command
+
+mobility material=gaas f.munsat=mocasim08_4.lib
+
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+ 

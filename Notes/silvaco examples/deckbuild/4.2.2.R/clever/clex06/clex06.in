@@ -1,0 +1,96 @@
+go clever
+
+## Process Description ##
+
+Init Layout="clex06.lay" Depth=1 Map="clex06.lmp"
+
+Save Spice="clex06.before.net"
+
+## gate oxide ##
+
+Deposit Oxide Thickness=0.3 Max
+
+## poly ##
+ 
+Deposit Poly Thickness=0.25 Max
+
+Deposit Resist Thickness=0.3 Max
+
+Mask "POLY"
+
+Etch Poly
+
+Strip Resist
+
+Electrodes "*GATE" Poly
+
+## contact holes ##
+
+Deposit Oxide Thickness=0.5 Max
+
+Deposit Resist Thickness=0.3 Max
+
+Mask "CONT" Reverse
+
+Etch Oxide
+
+Strip Resist
+
+Electrodes "*CONT" Silicon
+
+## metal1 ##
+
+Deposit Aluminum Thickness=0.5 Max
+
+Deposit Resist Thickness=0.3 Max
+
+Mask "METAL1"
+
+Etch Aluminum 
+
+Strip Resist
+
+Electrodes "METAL1" Aluminum
+
+## via1 ##
+
+Deposit Oxide Thickness=0.5 Max
+
+Deposit Resist Thickness=0.3 Max
+
+Mask "VIA1" Reverse
+
+Etch Oxide
+
+Strip Resist
+
+## metal2 ##
+
+Deposit Aluminum Thickness=0.5 Max
+
+Deposit Resist Thickness=0.3 Max
+
+Mask "METAL2"
+
+Etch Aluminum
+
+Strip Resist
+
+Electrodes "METAL2" Aluminum
+
+Deposit Oxide Thick=1 Max
+
+Save Layout="clex06_1.lay" structure="clex06.str"
+
+## After creating the 3D structure   ##
+## Perform the Interconnect Analysis ##
+
+Material Poly Conductivity=5e4
+Material Aluminum Conductivity=1e6
+
+Interconnect Adapt=(0.04,0.02) capsolver=1
+
+Save Spice="clex06.net" 
+
+quit
+

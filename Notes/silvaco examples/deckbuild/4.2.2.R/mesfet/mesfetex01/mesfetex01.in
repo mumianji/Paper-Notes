@@ -1,0 +1,140 @@
+# (c) Silvaco Inc., 2018
+go athena
+
+# GaAs MESFET fabrication and analysis using DevEdit
+
+line x loc=-1.5 spac=0.2
+line x loc=-.7  spac=0.1
+line x loc=-.5  spac=0.05
+line x loc=0.0  spac=0.1
+line x loc=0.5  spac=0.05
+line x loc=0.7  spac=0.1
+line x loc=1.5  spac=0.2
+#
+line y loc=0.00 spac=0.02
+line y loc=2.00 spac=0.5
+# 
+init gaas c.beryllium=1.0e13 orient=100 space.mult=1
+
+implant beryllium energy=100 dose=2e11
+implant silicon energy=100 dose=1e12
+
+diffus time=10 temp=850
+
+# deposit and pattern gate metal 
+deposit titanium thick=.3 divisions=10
+etch titanium right p1.x=0.5
+etch titanium left  p1.x=-0.5
+
+deposit oxide thick=0.35 divisions=8
+
+etch oxide thick=.4
+
+# regrid before implant
+go devedit
+
+base.mesh height=0.08 width=0.08
+bound.cond apply=false max.ratio=300
+bound.cond when=automatic max.slope=28 rnd.unit=0.001 line.straightening=2 \
+        align.points
+constr.mesh max.angle=90 max.ratio=300 max.height=1 max.width=1 \
+        min.height=0.0001 min.width=0.0001
+constr.mesh type=Semiconductor default
+constr.mesh type=Insulator default
+constr.mesh type=Metal default
+
+
+imp.refine min.spacing=0.02
+imp.refine imp="net doping" sensitivity=1
+mesh
+
+go athena
+
+# perform source/drain implant
+implant silicon energy=50 dose=1e13
+
+# regrid to reduce grid in un-implanted areas
+go devedit
+
+base.mesh height=0.4 width=0.4
+bound.cond apply=false max.ratio=300
+bound.cond when=automatic max.slope=28 rnd.unit=0.001 line.straightening=2 \
+        align.points
+constr.mesh max.angle=90 max.ratio=300 max.height=1 max.width=1 \
+        min.height=0.0001 min.width=0.0001
+constr.mesh type=Semiconductor default
+constr.mesh type=Insulator default max.angle=180
+constr.mesh type=Metal default
+
+imp.refine min.spacing=0.03
+imp.refine imp="net doping" sensitivity=.5
+mesh
+
+
+go athena
+
+diff time=10 temp=850
+
+# deposit ohmic metal 
+deposit aluminum thick=.2 divisions=4
+
+etch aluminum        start x=-1 y=10
+etch cont                  x=-1 y=-10
+etch cont                  x=1 y=-10
+etch done                  x=1 y=10
+#
+electrode name=source x=-1.4
+electrode name=drain x=1.4
+electrode name=gate x=0.0
+
+# regrid to resolve new junction position
+go devedit
+
+base.mesh height=0.1 width=0.1
+bound.cond apply=false max.ratio=300
+bound.cond when=automatic max.slope=28 rnd.unit=0.001 line.straightening=2 \
+        align.points
+constr.mesh max.angle=90 max.ratio=300 max.height=1 max.width=1 \
+        min.height=0.0001 min.width=0.0001
+constr.mesh type=Semiconductor default
+constr.mesh type=Insulator default max.angle=180
+constr.mesh type=Metal default
+
+imp.refine min.spacing=0.03
+imp.refine imp="net doping" sensitivity=1
+mesh
+
+structure outfile=mesfetex01_0.str
+tonyplot  mesfetex01_0.str  -set mesfetex01_0.set
+
+go atlas
+
+
+# set work function for gate
+contact name=gate work=4.87
+
+# specify lifetimes in GaAs and models
+material material=GaAS taun0=1.e-8 taup0=1.e-8
+models   conmob fldmob srh optr print
+
+# Begin solution
+method newton trap
+solve vdrain=0.1
+
+# Ramp gate and log results
+log    outf=mesfetex01.log master  
+solve vgate=0.0 vstep=-0.1 vfinal=-3 name=gate 
+
+extract init infile="mesfetex01.log"
+extract name="vt" (xintercept(maxslope(curve((v."gate"),(i."drain")))))
+
+save outfile=mesfetex01_1.str
+
+tonyplot  mesfetex01.log
+
+quit
+
+
+
+
+

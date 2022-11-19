@@ -1,0 +1,76 @@
+# TPCS version: 8
+# various properties
+log label 0
+key opaque 0
+mark frequency 0
+mark overlay 0
+graph width 0 2
+graph width 1 1
+graph width 2 1
+graph width 3 1
+graph width 4 2
+graph width 5 1
+sequence size 2
+sequence width 1
+log zero 0
+sequence mark 0 0
+sequence mark 1 1
+sequence mark 2 2
+sequence mark 3 3
+sequence mark 4 4
+sequence mark 5 5
+# Functions
+function 1 "" ""
+function 2 "" ""
+function 3 "" ""
+function 4 "" ""
+select 1
+# xygraph flags
+show points off
+show lines on
+# xygraph types
+xygraph type 0 convert 0
+xygraph yaxis scale log
+# xygraph x-axis
+xygraph xaxis "Anode Voltage" linear
+# xygraph y-axes
+xygraph yaxis none
+xygraph yaxis "Anode Current" log "left"
+# xygraph group
+xygraph group "(unknown electricals)"
+# key positions
+key contours 1 at 0
+key contours 2 at 0
+key contours 3 at 0
+key electrical at 0
+key vectors at 0
+key overlay at 0
+key regions at 0
+key apply 
+# annotation, titles
+title main "IV Curves with L=122nm at T=150, 193, 213, 233, 253 and 271K"
+title sub "Figure 3(b) van Mensfoort PRB 78, 085208"
+# annotation, footers
+footer right none
+footer left none
+# annotation, show
+show xaxis on
+show yaxis on
+show grid off
+show label xaxis on
+show label yaxis on
+# annotation, axes
+range xaxis 0, 15 increment 5,2
+range yaxis -4, 3 increment 1,10
+label xaxis "Anode Voltage (V)"
+label yaxis "Anode Current (A)"
+# zoom
+zoom from 0, 0 scale 1, 1
+# user labels
+# overlay level names
+label overlay 0 "organicexXX_150_122.log"
+label overlay 1 "organicexXX_170_122.log"
+label overlay 2 "organicexXX_171_122.log"
+label overlay 3 "organicexXX_193_122.log"
+label overlay 4 "organicexXX_213_122.log"
+label overlay 5 "organicexXX_233_122.log"

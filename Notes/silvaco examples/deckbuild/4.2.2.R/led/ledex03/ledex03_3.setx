@@ -1,0 +1,15 @@
+<!DOCTYPE SetFile-2D>
+<setfile version="1" >
+ <properties key_opaque="false" mark_frequency="0" mark_overlay="0" graph_width_0="2" graph_width_1="1" graph_width_2="1" graph_width_3="1" graph_width_4="3" graph_width_5="1" sequence_size="2" sequence_width="1" log_zero="1" sequence_mark_0="0" sequence_mark_1="1" sequence_mark_2="2" sequence_mark_3="3" sequence_mark_4="4" sequence_mark_5="5" />
+ <functions impurity_1_name="" impurity_1_units="" impurity_2_name="" impurity_2_units="" graph_1_name="" graph_1_units="" graph_2_name="" graph_2_units="" />
+ <xygraph show_points="true" show_lines="true" xyg_type="1" xyg_convert="true" >
+  <polar xyg_polar_a0="Angle" xyg_polar_r0="TE Radiant Intensity" xyg_polar_a1="Angle" xyg_polar_r1="TM Radiant Intensity" xyg_polar_a2="Angle" xyg_polar_r2="Total Radiant Intensity" xyg_polar_a3="(unknown electricals)" xyg_polar_r3="(unknown electricals)" xyg_polar_show="3" xyg_polar_angle="15" />
+ </xygraph>
+ <key cont_1_at="3" cont_2_at="1" cont_3_at="6" elec_at="6" vectors_at="6" overlay_at="2" regions_at="4" />
+ <annotation title_main="ATLAS/BLAZE/QUANTUM/LED" title_sub="Angular Power Pattern" footer_right="none" footer_left="none" show_xaxis="true" show_yaxis="true" show_grid="false" show_label_xaxis="true" show_label_yaxis="true" range_xaxis="auto" range_yaxis="auto" />
+ <plot zoom_from_x="0" zoom_from_y="0" zoom_scale_x="1" zoom_scale_y="1" label_overlay="ledex03.ang.log" >
+  <label label_text="TE" label_from_x="2.4295e-09" label_from_y="-3.11923e-09" label_color="#ff0000" label_scale="1" label_align="7" />
+  <label label_text="TM" label_from_x="7.18556e-09" label_from_y="-7.53557e-09" label_color="#00e500" label_scale="1" label_align="7" />
+  <label label_text="Total" label_from_x="1.26211e-08" label_from_y="-1.36505e-08" label_color="#0000ff" label_scale="1" label_align="8" label_to_x="1.26211e-08" label_to_y="-1.35373e-08" />
+ </plot>
+</setfile>

@@ -1,0 +1,292 @@
+# (c) Silvaco Inc., 2018
+go athena
+
+line x location=-2    spacing=0.5
+line x location=-1.04 spacing=0.2
+line x location=-0.61 spacing=0.2
+line x location=0     spacing=0.2
+line x location=0.75  spacing=0.1
+line x location=2.08  spacing=0.5
+line x location=2.58  spacing=0.5
+line x location=3.08  spacing=0.5
+line x location=4.4   spacing=0.05
+line x location=5.05  spacing=0.1
+line x location=5.7   spacing=0.05
+line x location=6.2   spacing=0.05
+line x location=7.3   spacing=0.5
+
+line y location=0   spacing=0.002
+line y location=0.6 spacing=0.05
+line y location=7   spacing=1
+
+# 7um required in Y direction to ensure 
+# Drain Diode does not fully deplete to the back contact at Vd=4V
+
+init silicon boron resistivity=100 orientation=100
+
+# Set TMA Values for Phosphorus diffusion in Oxide 
+impurity i.phosphor donor oxide Dix.0=7.14 Dix.E=4.44
+
+# Poly Diffusion model for correct Lateral Diffusion in Poly
+method full.cpl high.conc poly.diff
+
+# PD to TG Link Implant 
+deposit oxide thick=0.008 divisions=4
+implant phosphorus energy=40 dose=1e13 tilt=7 rotation=27 s.oxide=0.008 \
+        lat.ratio1=0.7 lat.ratio2=0.1
+
+deposit polysilicon thick=0.15 divisions=8 dy=0.002 ydy=0.15 GR.SIZE=0.1
+deposit polysilicon thick=0.15 divisions=8 dy=0.002 ydy=0 GR.SIZE=0.1    
+deposit barrier thick=0.15 divisions=8 dy=0.002 ydy=0.15
+deposit barrier thick=0.15 divisions=8 dy=0.002 ydy=0
+etch barrier start x=0.75 y=-1
+etch cont x=4.4 y=-1
+etch cont x=4.4 y=0
+etch done x=0.75 y=0
+etch polysilicon dry thick=0.3
+
+# Buried N- Implant
+# Set dose to almost fully deplete buried n at zero volts
+implant phosphorus energy=200 dose=2e12 tilt=45 rotation=0 \
+        lat.ratio1=0.7 lat.ratio2=0.1
+implant phosphorus energy=160 dose=1e11 tilt=0 rotation=0 \
+        lat.ratio1=0.7 lat.ratio2=0.1
+etch barrier left p1.x=2.5
+etch polysilicon dry thick=0.3
+
+# Trench
+deposit barrier thick=0.15 divisions=8 dy=0.002 ydy=0.15
+deposit barrier thick=0.15 divisions=8 dy=0.002 ydy=0
+etch barrier start x=-0.61 y=-1
+etch cont x=0 y=-1
+etch cont x=0 y=0
+etch done x=-0.61 y=0
+etch oxide dry thick=0.008
+etch silicon dry thick=0.6
+implant boron energy=80 dose=7e13 tilt=7 rotation=0 \
+        lat.ratio1=0.7 lat.ratio2=0.1
+implant boron energy=80 dose=7e13 tilt=7 rotation=180 \
+        lat.ratio1=0.7 lat.ratio2=0.1
+implant boron energy=160 dose=7e13 tilt=7 rotation=0 \
+        lat.ratio1=0.7 lat.ratio2=0.1
+implant boron energy=160 dose=7e13 tilt=7 rotation=180 \
+        lat.ratio1=0.7 lat.ratio2=0.1
+implant boron energy=200 dose=7e13 tilt=0 rotation=0 \
+        lat.ratio1=0.7 lat.ratio2=0.1
+etch barrier all 
+
+# P+ Implant
+# Set dose high enough to ensure a one sided junction characteristic
+implant bf2 energy=10 dose=5e13 tilt=7 rotation=27 \
+        lat.ratio1=0.7 lat.ratio2=0.1
+implant bf2 energy=10 dose=5e13 tilt=7 rotation=207 \
+        lat.ratio1=0.7 lat.ratio2=0.1
+etch barrier all
+
+# Drain Isolation Implant
+deposit barrier thick=0.15 divisions=8 dy=0.002 ydy=0.15
+deposit barrier thick=0.15 divisions=8 dy=0.002 ydy=0
+etch barrier right p1.x=5.7
+etch polysilicon dry thick=0.3
+implant boron energy=160 dose=7e13 tilt=0 rotation=0 \
+        lat.ratio1=0.7 lat.ratio2=0.1
+implant phosphorus energy=30 dose=7e13 tilt=7 rotation=207 amorphous \
+        lat.ratio1=0.7 lat.ratio2=0.1
+etch barrier all
+
+# Spacer
+deposit nitride thick=0.15 divisions=8 dy=0.002 ydy=0.15
+deposit nitride thick=0.15 divisions=8 dy=0.002 ydy=0
+etch nitride dry thick=0.3
+
+# Oxide
+deposit oxide thick=0.15 divisions=8 dy=0.002 ydy=0.15
+deposit oxide thick=0.15 divisions=8 dy=0.002 ydy=0
+deposit barrier thick=0.15 divisions=8 dy=0.002 ydy=0.15
+deposit barrier thick=0.15 divisions=8 dy=0.002 ydy=0
+etch barrier right p1.x=5.05
+etch oxide dry thick=0.3
+
+# Nsd and Iso Implant
+implant phosphorus energy=80 dose=2e16 tilt=7 rotation=207 amorphous \
+        lat.ratio1=0.7 lat.ratio2=0.1
+implant boron energy=80 dose=7e13 tilt=7 rotation=27 amorphous \
+        lat.ratio1=0.7 lat.ratio2=0.1
+implant boron energy=160 dose=7e13 tilt=7 rotation=27 amorphous \
+        lat.ratio1=0.7 lat.ratio2=0.1
+etch barrier all
+deposit oxide thick=0.004 divisions=2
+
+# Activation - set diffusion time to achieve 0.2um Pplus diffusion
+diffus time=5 temp=1050 nitro
+
+# Contacts
+etch oxide dry thick=0.012
+deposit aluminum thick=0.004 divisions=2
+etch aluminum left p1.x=6.2
+electrode name=gate x=5.1 y=-0.2
+electrode name=drain x=6.5
+electrode name=substrate backside
+
+structure outfile=imagesensorex04_0.str
+
+# BACK END PROCESS
+deposit oxide thick=0.05 div=5
+deposit nitride thick=0.04 div=5
+deposit oxide thick=0.15 div=5
+deposit oxynitride thick=0.15 div=5
+
+# Metal2
+deposit aluminum thick=0.3 div=5
+
+etch aluminum start x=1 y=0
+etch cont x=1 y=-5
+etch cont x=3 y=-5
+etch done x=3 y=0
+etch aluminum p1.x=3.5 right
+etch aluminum p1.x=-0.5 left
+
+electrode name=1 x=0 y=-0.8
+electrode name=2 x=3.5 y=-0.8
+
+deposit oxide thick=0.1 div=5
+deposit nitride thick=0.2 div=5
+
+# Metal3
+deposit aluminum thick=0.3 div=5
+ 
+etch aluminum start x=0 y=0
+etch cont x=0 y=-5
+etch cont x=4 y=-5
+etch done x=4 y=0
+
+electrode name=3 x=-1 y=-1.2
+electrode name=4 x=6 y=-1.2
+
+# Color Filter
+deposit material="CF" thick=0.2 div=5
+
+# lens in athena
+deposit nitride thick=1.5 divisions=8
+etch nitride left p1.x=1.5
+etch nitride right p1.x=2.5
+deposit nitride thick=1.5 divisions=8
+etch nitride dry thick=1.6
+
+structure outfile=imagesensorex04_1.str
+
+tonyplot imagesensorex04_1.str -set imagesensorex04_0.set
+
+go atlas 
+
+mesh infile=imagesensorex04_1.str width=1
+
+# Put false source contact in buried N layer to simulate FET IV characteristics
+electrode name=source x.min=2.5 x.max=3.3 y.min=0.83 y.max=0.93
+models consrh cvt fermi
+
+solve init
+solve previous
+
+# Un-Saturated D.C. IV Characteristics
+solve vdrain=0.02
+solve vdrain=0.1 
+log outfile=imagesensorex04_1.log
+solve vgate=0.05 vstep=0.05 vfinal=3.3 name=gate
+log off
+
+# Saturated D.C. IV Characteristics
+solve init
+solve previous
+solve vdrain=0.02
+solve vdrain=3.3  
+log outfile=imagesensorex04_2.log
+solve vgate=0.05 vstep=0.05 vfinal=3.3 name=gate 
+log off
+
+tonyplot -overlay imagesensorex04_1.log imagesensorex04_2.log -set imagesensorex04_1.set
+
+
+# Transient with Green Light - Do not put false source electrode
+# 
+
+go atlas 
+mesh infile=imagesensorex04_1.str width=1
+
+models consrh cvt fermi
+
+material material=oxynitride sopra=Sio2.nk
+material material=Aluminum sopra=Al.nk
+material material="CF" sopra=Sion0.nk user.group=insulator user.default=oxide
+
+beam num=1 x.origin=2 y.origin=-5 angle=90 wavelength=0.53 \
+     reflects=1 metal.reflect con.reflect
+    
+probe qfn x=2.85 y=0.88
+probe potential x=2.85 y=0.88
+probe name="QPD" n.conc integrate x.min=0.8 x.max=4.5  y.min=0.3 y.max=1.3
+
+solve init
+solve previous
+
+# set vd to vdd
+solve vdrain=0.02 
+solve vdrain=3.3 
+save outfile=imagesensorex04_2.str
+
+# Extract 
+extract init inf="imagesensorex04_2.str"
+extract name="Surfpot" curve(depth,potential material="Silicon" mat.occno=1 \
+        y.val=0.8) outfile="imagesensorex04_1.dat"
+extract name="Electron_init" 2d.area impurity="Electron conc" x.step=0.25  \
+                    x.min=0.8 x.max=4.5  y.min=0.3 y.max=1.3
+extract name="Maxpot_init" max(curve(depth,potential material="Silicon" mat.occno=1 \
+        y.val=0.8))       
+         
+# Float the drain
+contact name=drain current
+
+# Shine light
+log outfile=imagesensorex04_3.log
+solve b1=0.1 ramp.lit ramptime=1e-6 dt=1e-7 tstop=49e-6
+save outfile=imagesensorex04_3.str
+solve b1=0 ramp.lit ramptime=1e-6 dt=1e-7 tstop=50e-6
+
+tonyplot imagesensorex04_3.str -set imagesensorex04_2.set
+
+extract init inf="imagesensorex04_3.str"
+extract name="Electron_light" 2d.area impurity="Electron conc" x.step=0.25  \
+                    x.min=0.8 x.max=4.5  y.min=0.3 y.max=1.3
+extract name="Surfpot" curve(depth,potential material="Silicon" mat.occno=1 \
+        y.val=0.8) outfile="imagesensorex04_2.dat"
+extract name="Maxpot_light" max(curve(depth,potential material="Silicon" mat.occno=1 \
+        y.val=0.8)) 
+
+# Transfert the charge multiple gate pulse
+solve vgate=3.3 ramptime=1e-6 tstep=1e-7 tstop=88e-6 
+solve vgate=0 ramptime=1e-6 tstep=1e-7 tstop=130e-6 
+solve vgate=3.3 ramptime=1e-6 tstep=1e-7 tstop=179e-6 
+solve vgate=0 ramptime=1e-6 tstep=1e-7 tstop=500e-6 
+
+save outf=imagesensorex04_4.str
+
+# Surface potential
+extract init inf="imagesensorex04_4.str"
+extract name="Surfpot" curve(depth,potential material="Silicon" mat.occno=1 \
+        y.val=0.8) outfile="imagesensorex04_3.dat"
+
+tonyplot imagesensorex04_3.str imagesensorex04_4.str -set imagesensorex04_3.set
+
+extract init inf="imagesensorex04_4.str"
+extract name="Electron_after" 2d.area impurity="Electron conc" x.step=0.25  \
+                    x.min=0.8 x.max=4.5  y.min=0.3 y.max=1.3
+extract name="Maxpot_after" max(curve(depth,potential material="Silicon" mat.occno=1 \
+        y.val=0.8)) 
+extract init inf="imagesensorex04_4.str"
+extract name="Created_e" $Electron_light - $Electron_init 
+extract name="Transfered_e" $Electron_after - $Electron_init
+extract name="Transfered_e_%" (($Electron_after - $Electron_init)/$Created_e)*100
+
+tonyplot imagesensorex04_3.log -set imagesensorex04_4.set
+
+tonyplot -overlay imagesensorex04_1.dat imagesensorex04_2.dat imagesensorex04_3.dat -set imagesensorex04_5.set

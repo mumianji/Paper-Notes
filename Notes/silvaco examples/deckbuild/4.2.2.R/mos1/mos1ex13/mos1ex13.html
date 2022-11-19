@@ -1,0 +1,129 @@
+<html>
+  <head>
+    <title>Substrate and Gate Current Extraction</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Substrate and Gate Current Extraction</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>SSuprem 4/DevEdit/S-Pisces</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R, Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="mos1ex13_plot0.png" width="640" alt="mos1ex13_plot0" />
+      <p/>
+      <img src="mos1ex13_plot1.png" width="640" alt="mos1ex13_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This is a MOS Athena/DevEdit/Atlas interface example simulating substrate and
+gate current versus gate bias using energy balance and impact
+ionization models. This example demonstrates:
+</p>
+<ul>
+  <li>
+ Process simulation of a MOS transistor in Athena
+<br/>
+  </li>
+  <li>
+ Process parameter extraction (eg. oxide thicknesses)
+<br/>
+  </li>
+  <li>
+ Autointerface between Athena and DevEdit
+<br/>
+  </li>
+  <li>
+ Remeshing using DevEdit
+<br/>
+  </li>
+  <li>
+ Autointerface between DevEdit and Atlas
+<br/>
+  </li>
+  <li>
+ Solution for a Vgs ramp with Vds=-3.3V
+<br/>
+  </li>
+  <li>
+ Parameter extraction for maximum gate and substrate currents
+  </li>
+</ul>
+<p>
+The process simulation, process parameter extraction and electrode
+definition for this example are exactly as described in the first
+example in this section.
+</p>
+<p>
+The grid requirements for Atlas simulation of impact ionization effects
+are more stringent than for the low electric field cases described
+earlier.
+<b> DevEdit </b> is used to remesh the Athena structure before proceeding to Atlas.
+DevEdit has two modes. The graphical mode allows users to draw and
+interactively edit regions and impurities. The batch mode used here
+executes structure and mesh commands similar to these. The syntax used
+by DevEdit is described in the DevEdit manual. It can be constructed
+from the DeckBuild Command menu or most commonly mesh edits made during
+a graphical session can be saved as a &apos;command file&apos; from the SAVE menu of
+DevEdit.
+</p>
+<p>
+The imp.refine commands specify regrids on impurities. Here a regrid on
+net doping is performed.  The constr.mesh command defines the base mesh. The
+refine commands specify mesh refinements inside boxes specified by the
+coordinates in each statement.
+</p>
+<p>
+The Atlas simulation contains similar syntax to the simple examples
+described earlier in this section. The solution of the energy balance
+equations for holes is specified by the parameter
+<b> hcte.ho</b> . The parameter
+<b> hhi </b> specifies the hot carrier injection model, which gives the gate
+current.  The equivalent hcte.el and hei exist for electrons but are not
+required in PMOS simulation.
+</p>
+<p>
+The impact ionization model is selected on the
+<b>impact </b> statement. The
+parameter lrel.ho sets the relaxation time for holes in this
+model.  Although the hhi model is directly responsible for the gate
+current, there is no &apos;special&apos; model required to simulate substrate
+current.  Running this sweep of gate voltage with a high drain bias and
+including impact ionization and energy balance supplies all the
+necessary physics. The substrate current can simply be plotted from the
+log file in a similar manner to drain current. No special extraction of
+substrate current is needed.
+</p>
+<p>
+The
+<b> extract </b> statements used in this run extract the peak value and position of the
+substrate and gate currents. The value of the peak current is measured
+first. This result is then used in a current search to find the gate
+voltage where this current is measured.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

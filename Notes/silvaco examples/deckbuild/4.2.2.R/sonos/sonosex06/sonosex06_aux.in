@@ -1,0 +1,62 @@
+set minus=2
+
+# Uses the minus variable only to set up the filename of
+# the snapshot file. The gate stack materials are kept as
+# insulators as we are only interested in the trapped charge.
+
+go atlas
+
+mesh width=1.0
+
+x.m  loc=0.0  spac=0.025
+x.m  loc=0.2  spac=0.005
+x.m  loc=0.3  spac=0.005
+x.m  loc=0.5  spac=0.025
+
+
+y.m  loc=-0.1   spac=0.02
+y.m  loc=-0.03  spac=0.005
+y.m  loc=-0.02  spac=0.002
+y.m  loc=-0.005 spac=0.002
+y.m  loc=0.0    spac=0.002
+y.m  loc=0.1    spac=0.01
+y.m  loc=1.0    spac=0.2
+
+region num=1 silicon y.min=0.0
+region num=2 oxide y.max=0.0
+region num=3 nitride y.min=-0.02 y.max=-0.005 x.min=0.2 x.max=0.3
+
+
+electrode name=gate x.min=0.2 x.max=0.3 y.min=-0.1 y.max=-0.03
+electrode name=source y.min=0.0 y.max=0.0 x.max=0.1
+electrode name=drain  y.min=0.0 y.max=0.0 x.min=0.4
+electrode name=substrate bottom
+
+doping uniform conc=1e17 p.type region=1
+doping gauss   conc=1e20 n.type junc=0.15 x.right=0.15 ratio.lat=0.1 region=1
+doping gauss   conc=1e20 n.type junc=0.15 x.left=0.35  ratio.lat=0.1 region=1 
+
+contact name=gate n.poly
+
+load inf=sonosex06_m${minus}.str master
+
+# solve init preserves trapped charge, sonos flag not essential here
+
+solve init sonos
+
+solve prev
+
+solve name=drain vstep=0.05 vfinal=0.5
+
+log outf=sonosex06_m${minus}.log
+
+# Ramp drain to obtain Vt
+solve name=gate vstep=0.1 vfinal=10.0
+
+extract name="vt" (xintercept(maxslope(curve(abs(v."gate"),abs(i."drain")))) \
+        - abs(ave(v."drain"))/2.0)
+
+
+log off
+
+exit

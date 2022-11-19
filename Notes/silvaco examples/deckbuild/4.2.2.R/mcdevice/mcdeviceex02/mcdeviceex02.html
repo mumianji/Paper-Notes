@@ -1,0 +1,141 @@
+<html>
+  <head>
+    <title>25-nm n-MOSFFET</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>25-nm n-MOSFFET</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>MC Device</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="mcdeviceex02_plot0.png" width="640" alt="mcdeviceex02_plot0" />
+      <p/>
+      <img src="mcdeviceex02_plot1.png" width="640" alt="mcdeviceex02_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates 2D Monte Carlo device modeling of a silicon
+n-MOSFET without quantum correction.
+</p>
+<p>
+The first part of the input file specifies the algorithmic parameters of the
+Monte Carlo model.  Many of the same parameters specified in the
+input file for the bulk example (mcdeviceex01)
+are used again here.  In this case,
+the number of computational carriers (electrons) is set to 40,000 with the
+<b> N </b> parameter on the
+<b> PARTICLE </b> statement.
+<b> N </b> = 40000 is large enough to adequately sample
+the spatial distribution of mobile charge in the device.
+To better sample the tail of the distribution function, use a
+higher value of
+<b> N </b> or statistical enhancement.
+</p>
+<p>
+On the
+<b> ALGO </b> statement,
+<b> DT</b> = 0.1e-15 s = 0.1 fs is ten times smaller than in the bulk example
+since the electrons must sense small variations in the 2D doping and
+field profiles.  To get even closer to the steady-state solution,
+change from
+<b> ITER </b> = 2500 to
+<b> ITER</b> = 25000.  With this change, MCDEVICE will take about 10
+times longer to run the example, but the averages will be closer
+to the steady-state solution.  As in the bulk case, you may want
+to change from
+<b> TRANS</b> = 0 to
+<b> TRANS</b> = 1000 to obtain a more
+accurate solution before TIME = 0 when MCDEVICE begins collecting data
+for its averages.
+We have kept this example short by using
+<b> ITER</b> = 2500 and
+<b> TRANS</b> = 0
+so you can experience running a complete simulation in just a couple
+of minutes.
+</p>
+<p>
+In this case,
+<b> TSTEP</b> = 5
+on the
+<b> POISSON </b> statement indicates that Poisson&apos;s equation will be solved every 5 iterations
+(or every 5 *
+<b> DT</b> = 0.5 fs).  This time must remain short in order for the
+electrons to properly
+sample spatial and temporal variations of the electric fields.
+</p>
+<p>
+The second part of the input file specifies a rectangular tensor product
+mesh used
+to represent the physical structure of the device,
+to solve Poisson&apos;s equation,
+and to help enforce the MC carrier boundary conditions.
+A finer mesh captures more
+carrier-carrier interaction.  A courser mesh captures less
+carrier-carrier interaction.  In this example, we use a typical size
+of the 2D mesh for a 25-nm n-MOSFET.  This 2D mesh is finer
+than what is typically used when solving for the steady-state
+solution of the drift diffusion or energy balance equations for the
+same device.
+</p>
+<p>
+The third part of the input file specifies rectangular regions
+on the mesh.  The REGION statements indicate both the
+material (MAT parameter) and type of region (TYPE parameter).
+When you specify the regions in your input file, always
+include regions with the TYPE of OUT, MC, BLOCK, and CONTACT.
+Please see the MCDEVICE chapter of the Atlas User&apos;s Manual for
+a complete description of
+the region types and how they control the Monte
+Carlo solution.
+</p>
+<p>
+The fourth part of the input file specifies the rectangular current
+regions used to estimate the current in the device.  In this case,
+the x-directed estimates of
+the current (dim=1 values in the mcdeviceex02_current.log file)
+from the first and third regions represent the terminal currents at
+the source and drain, respectively.
+</p>
+<p>
+The fifth part of the input file specifies the doping profiles.
+</p>
+<p>
+The last part of the input file includes a
+<b> SOLVE </b> statement.  The
+<b> SOLVE </b> statement performs the Monte Carlo solve at the voltage biases
+provided by the
+<b> V&lt;NAME&gt; </b> parameters on the
+<b> SOLVE </b> statement.
+Additional commented
+<b> SOLVE </b> statements may be
+used to do perform voltage ramps
+or obtained solutions at other bias points.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

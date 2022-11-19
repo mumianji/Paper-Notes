@@ -1,0 +1,210 @@
+# (c) Silvaco Inc., 2018
+#################################################################################################
+# Spectral characteristics of stacked organic photodetectors are obtained in this example.
+# Due to the lack of material parameters in the reference, some parameters are taken from
+# other literatures or estimated from typical values.
+#
+# Reference: H. Seo, S. Aihara, T. Watabe, H. Ohtake, M. Kubota, and N. Egami, 
+#  "Color sensors with three vertically stacked organic photodetectors", 
+#  Jpn. J. Appl. Phys., Vol. 46, pp. L1240-L1242, 2007.
+#################################################################################################
+
+go atlas 
+
+set wkfn=4.7
+set ttopito=0.02
+set tbotito=0.15
+set tsub=700
+
+#########################################
+# Structural parameters for blue cell
+#########################################
+set tntcda1=0.4
+set talq31=0.22
+set tcotpp=0.08
+set tblue=$ttopito+$tntcda1+$talq31+$tcotpp+$tbotito+$tsub
+
+#########################################
+# Structural parameters for green cell
+#########################################
+set tntcda2=0.3
+set talq32=0.05
+set tnnqa=0.2
+set tblgr=$ttopito+$tbotito+$tsub+$tntcda2+$talq32+$tnnqa+$tblue
+
+#########################################
+# Structural parameters for red cell
+#########################################
+set tntcda3=0.3
+set talq33=0.05
+set tznpc=0.25
+
+mesh 
+x.m l=0 s=2
+x.m l=10 s=2
+
+y.m l=0 s=$ttopito/5
+y.m l=$ttopito s=$ttopito/5
+y.m l=$ttopito+$tntcda1/2 s=$tntcda1/40
+y.m l=$ttopito+$tntcda1 s=$talq31/44
+y.m l=$ttopito+$tntcda1+$talq31 s=$tcotpp/20
+y.m l=$ttopito+$tntcda1+$talq31+$tcotpp s=$tcotpp/20
+y.m l=$ttopito+$tntcda1+$talq31+$tcotpp+$tbotito s=$tbotito/15
+y.m l=$ttopito+$tntcda1+$talq31+$tcotpp+$tbotito+$tsub/2 s=$tsub/100
+
+y.m l=$tblue s=$ttopito/5
+y.m l=$ttopito+$tblue s=$ttopito/5
+y.m l=$ttopito+$tntcda2/2+$tblue s=$tntcda1/30
+y.m l=$ttopito+$tntcda2+$tblue s=$talq32/10
+y.m l=$ttopito+$tntcda2+$talq32+$tblue s=$tnnqa/50
+y.m l=$ttopito+$tntcda2+$talq32+$tnnqa+$tblue s=$tnnqa/50
+y.m l=$ttopito+$tntcda2+$talq32+$tnnqa+$tbotito+$tblue s=$tbotito/15
+y.m l=$ttopito+$tntcda2+$talq32+$tnnqa+$tbotito+$tsub/2+$tblue s=$tsub/100
+
+y.m l=$tblgr s=$ttopito/5
+y.m l=$ttopito+$tblgr s=$ttopito/5
+y.m l=$ttopito+$tntcda3/2+$tblgr s=$tntcda1/30
+y.m l=$ttopito+$tntcda3+$tblgr s=$talq33/10
+y.m l=$ttopito+$tntcda3+$talq33+$tblgr s=$tznpc/50
+y.m l=$ttopito+$tntcda3+$talq33+$tznpc+$tblgr s=$tznpc/50
+y.m l=$ttopito+$tntcda3+$talq33+$tznpc+$tbotito+$tblgr s=$tbotito/15
+y.m l=$ttopito+$tntcda3+$talq33+$tznpc+$tbotito+$tsub/2+$tblgr s=$tsub/100
+y.m l=$ttopito+$tntcda3+$talq33+$tznpc+$tbotito+$tsub+$tblgr s=$tsub/40
+
+#################################
+# Create the top blue cell.
+#################################
+region num=1 user.mat=NTCDA user.group=semicond y.min=$ttopito y.max=$ttopito+$tntcda1 
+region num=2 mat=Alq3 y.min=$ttopito+$tntcda1 y.max=$ttopito+$tntcda1+$talq31 
+region num=3 user.mat=COTPP user.group=semicond y.min=$ttopito+$tntcda1+$talq31 \
+       y.max=$ttopito+$tntcda1+$talq31+$tcotpp 
+region num=4 mat=sio2 y.min=$ttopito+$tntcda1+$talq31+$tcotpp+$tbotito y.max=$tblue 
+
+#################################
+# Create the middle green cell.
+#################################
+region num=5 user.mat=NTCDA user.group=semicond y.min=$ttopito+$tblue y.max=$ttopito+$tntcda2+$tblue 
+region num=6 mat=Alq3 y.min=$ttopito+$tntcda2+$tblue y.max=$ttopito+$tntcda2+$talq32+$tblue 
+region num=7 user.mat=NNQA user.group=semicond y.min=$ttopito+$tntcda2+$talq32+$tblue \
+       y.max=$ttopito+$tntcda2+$talq32+$tnnqa+$tblue 
+region num=8 mat=sio2 y.min=$ttopito+$tntcda2+$talq32+$tnnqa+$tbotito+$tblue y.max=$tblgr 
+
+#################################
+# Create the bottom red cell.
+#################################
+region num=9 user.mat=NTCDA user.group=semicond y.min=$ttopito+$tblgr y.max=$ttopito+$tntcda3+$tblgr 
+region num=10 mat=Alq3 y.min=$ttopito+$tntcda3+$tblgr y.max=$ttopito+$tntcda3+$talq33+$tblgr 
+region num=11 user.mat=ZnPc user.group=semicond y.min=$ttopito+$tntcda3+$talq33+$tblgr \
+              y.max=$ttopito+$tntcda3+$talq33+$tznpc+$tblgr 
+region num=12 mat=sio2 y.min=$ttopito+$tntcda3+$talq33+$tznpc+$tbotito+$tblgr \
+              y.max=$ttopito+$tntcda3+$talq33+$tznpc+$tbotito+$tsub+$tblgr 
+
+#################################
+# Create ITO electrodes
+#################################
+elec num=1 name=cathode1 mat=ITO y.min=0 y.max=$ttopito
+elec num=2 name=anode1 mat=ITO y.min=$ttopito+$tntcda1+$talq31+$tcotpp \
+           y.max=$ttopito+$tntcda1+$talq31+$tcotpp+$tbotito
+elec num=3 name=cathode2 mat=ITO y.min=$tblue y.max=$ttopito+$tblue
+elec num=4 name=anode2 mat=ITO y.min=$ttopito+$tntcda2+$talq32+$tnnqa+$tblue \
+           y.max=$ttopito+$tntcda2+$talq32+$tnnqa+$tbotito+$tblue
+elec num=5 name=cathode3 mat=ITO y.min=$tblgr y.max=$ttopito+$tblgr
+elec num=6 name=anode3 mat=ITO y.min=$ttopito+$tntcda3+$talq33+$tznpc+$tblgr \
+           y.max=$ttopito+$tntcda3+$talq33+$tznpc+$tbotito+$tblgr
+
+######################################################
+# Set the same workfunction for all ITO electrodes.
+######################################################
+contact name=anode1 workf=$wkfn
+contact name=cathode1 workf=$wkfn
+contact name=anode2 workf=$wkfn
+contact name=cathode2 workf=$wkfn
+contact name=anode3 workf=$wkfn
+contact name=cathode3 workf=$wkfn
+
+material material=ITO sopra=Ito2.nk 
+ 
+##########################################################################
+# Specify organic material properties: LUMO, HOMO, DOS, permittivity, 
+# exciton related parameters and index of refraction.
+##########################################################################
+material mat=Alq3 affinity=3 eg300=2.8 nc300=1.5e20 nv300=1.5e20 permi=2.9 \
+  qe.exc=1 rst.exc=0.25 lds.exc=0.01 taus.exc=1e-9 s.binding=0.1 k.singlet=1 \
+  index.file=organicex07_alq3_index.nk out.index=alq3 lam1=0.4 lam2=0.75 nlam=40
+
+material mat=NTCDA user.def=organic affinity=4 eg300=4 nv300=1e20 nc300=1e20 permit=2.6 \
+  qe.exc=1 rst.exc=0.25 lds.exc=0.01 taus.exc=1e-9 s.binding=0.1 k.singlet=1 real.index=1.8
+
+material mat=COTPP user.def=organic affinity=2.9 eg300=2.2 nv300=1e20 nc300=1e20 permit=3 \
+  qe.exc=1 rst.exc=0.25 lds.exc=0.01 taus.exc=1e-9 s.binding=0.1 k.singlet=1 \
+  index.file=organicex07_cotpp_absorp.nk out.index=cotpp lam1=0.4 lam2=0.75 nlam=40
+
+material mat=NNQA user.def=organic affinity=3.1 eg300=2.3 nv300=1e20 nc300=1e20 permit=3 \
+  qe.exc=1 rst.exc=0.25 lds.exc=0.01 taus.exc=1e-9 s.binding=0.1 k.singlet=1 \
+  index.file=organicex07_nnqa_absorp.nk out.index=nnqa lam1=0.4 lam2=0.75 nlam=40
+
+material mat=ZnPc user.def=organic affinity=2.9 eg300=1.9 nv300=1e20 nc300=1e20 permit=3.2 \
+  qe.exc=1 rst.exc=0.25 lds.exc=0.01 taus.exc=1e-9 s.binding=0.1 k.singlet=1 \
+  index.file=organicex07_znpc_absorp.nk out.index=znpc lam1=0.4 lam2=0.75 nlam=40
+
+################################################
+# Set Poole-Frankel mobility parameters.
+################################################
+mobility material=Alq3 mun0=1.4e-6 mup0=2e-8 e0n.pfmob=1e4 e0p.pfmob=1e4 
+mobility material=NTCDA mun0=3e-3 mup0=1e-6 e0n.pfmob=2e4 e0p.pfmob=2e4 
+mobility material=COTPP mun0=1e-7 mup0=1e-5 e0n.pfmob=1e4 e0p.pfmob=1e4 
+mobility material=NNQA mun0=1e-7 mup0=1e-5 e0n.pfmob=1e4 e0p.pfmob=1e4 
+mobility material=ZnPc mun0=1e-7 mup0=1e-5 e0n.pfmob=1e4 e0p.pfmob=1e4 
+
+##########################################################################################
+# Enable Poole-Frankel mobility, Langevin recombination, singlet exciton rate equation
+# and exciton dissociation model.
+##########################################################################################
+models pfmob langevin singlet s.dissoc print 
+
+################################################################################
+# Use transfer matrix method to correctly model the optical coherent effect. 
+################################################################################
+beam num=1 x.o=5 y.o=-1 angle=90 tr.mat
+  
+output con.band val.band band.param e.mob h.mob u.langevin opt.int 
+
+solve init
+save outf=organicex07_0.str
+
+######################
+# Set DC biases.
+######################
+solve name=cathode1 vstep=2 vfinal=78
+solve name=cathode2 vstep=1 vfinal=8
+solve name=cathode3 vstep=1 vfinal=11
+
+########################################################################
+# Ramp wavelength from 0.4 to 0.75um under 50uW/cm2 illumination.
+########################################################################
+log outf=organicex07_0.log
+solve b1=50e-6 beam=1 lambda=0.4 wstep=0.001 wfinal=0.75
+
+###############################################################################################
+# Extract external quantum efficiency and sensitiviy of each cell from the spectral file.
+###############################################################################################
+extract init infile="organicex07_0.log"
+extract name="EQE1" curve(elect."optical wavelength", i."cathode1"/elect."source photo current") \
+        outf="organicex07_blue_eqe.log"
+extract name="Sensitivity1" curve(elect."optical wavelength", i."cathode1"/50e-6*1e7) \
+        outf="organicex07_blue_sens.log"
+extract name="EQE2" curve(elect."optical wavelength", i."cathode2"/elect."source photo current") \
+        outf="organicex07_green_eqe.log"
+extract name="Sensitivity2" curve(elect."optical wavelength", i."cathode2"/50e-6*1e7) \
+        outf="organicex07_green_sens.log"
+extract name="EQE3" curve(elect."optical wavelength", i."cathode3"/elect."source photo current") \
+        outf="organicex07_red_eqe.log"
+extract name="Sensitivity3" curve(elect."optical wavelength", i."cathode3"/50e-6*1e7) \
+        outf="organicex07_red_sens.log"
+
+tonyplot -overlay organicex07_red_sens.log organicex07_green_sens.log organicex07_blue_sens.log -set organicex07_0.set
+
+tonyplot -overlay organicex07_red_eqe.log organicex07_green_eqe.log organicex07_blue_eqe.log -set organicex07_1.set
+
+quit
+

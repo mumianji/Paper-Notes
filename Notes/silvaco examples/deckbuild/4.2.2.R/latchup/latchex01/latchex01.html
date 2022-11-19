@@ -1,0 +1,154 @@
+<html>
+  <head>
+    <title>Transient Simulation of CMOS Latch-Up</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Transient Simulation of CMOS Latch-Up</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>MaskViews/SSuprem 4/S-Pisces</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R, Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="latchex01_plot0.png" width="640" alt="latchex01_plot0" />
+      <p/>
+      <img src="latchex01_plot1.png" width="640" alt="latchex01_plot1" />
+      <p/>
+      <img src="latchex01_plot2.png" width="640" alt="latchex01_plot2" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates a latch-up transient in an npnp structure
+typical of CMOS processes. The stages of this examples are:
+</p>
+<ul>
+  <li>
+ Definition of a CMOS layout to include a parasitic npnp structure
+<br/>
+  </li>
+  <li>
+ Interface of the layout information to Athena
+<br/>
+  </li>
+  <li>
+ Process simulation of the npnp structure
+<br/>
+  </li>
+  <li>
+ Interface of the structure to Atlas with automatic electrode specification
+<br/>
+  </li>
+  <li>
+ Setting of a transient negative voltage pulse on the Vss contact to trigger latch-up.
+  </li>
+</ul>
+<p>
+The process simulation for this example is defined using MASKVIEWS.
+Users not familiar with the MASKVIEWS/Athena interface should read the
+description under the ATHENA_SSUPREM4 examples section. Along with the
+input file that can be seen by loading this example in to DeckBuild is
+a layout file. The layout is of a CMOS well boundary with n+ and p+
+contact layers. An n-p-n-p structure is formed by these layers. By
+modifying the layers it is possible to misalign the contacts with
+respect to the well boundary and repeat this latch-up simulation. Using
+the MASKVIEWS/Athena interface avoids having to set etch coordinates
+manually.
+</p>
+<p>
+Along with the layout file, a MASKVIEWS cross-section file is copied to
+the user&apos;s current working directory when &apos;Load&apos; is selected.
+For this example, the cross-section information is indicated on the
+<b> go athena</b> line at the top of the input file.  This is a cross section drawn by the
+user through the layout. In this layout it is drawn through the center
+of the n+ and p+ contacts.
+</p>
+<p>
+The key syntax in Athena that load the mask edge coordinates are
+<b> mask  </b> statements. A syntax sequence such as:
+</p>
+<p>
+deposit alum thickness=0.05 div=2
+<br/>
+mask name=&quot;MET&quot;
+<br/>
+etch alum dry thickness=0.06
+<br/>
+strip
+</p>
+<p>
+will deposit a metal layer, deposit photoresist, load the etch
+coordinates of the layer defined in the cross section file as &apos;MET&apos;,
+etch the photoresist pattern, etch the exposed metal with the specified
+thickness, and then finally strip off all photoresist.
+</p>
+<p>
+In the layout file, each area of metal (layer MET) was defined with a
+name to be used as the name of the electrode associated with that area
+of metal. Each of the n+ and p+ contacts were defined in this manner.
+The statement
+<b> autoelectrode </b> at the end of the Athena run will automatically define the electrodes
+for Atlas.
+</p>
+<p>
+In Atlas the material and model parameters are set first as usual.
+Carrier lifetimes are set in the
+<b> material </b> statement. These lifetimes will affect the gain of the parasitic
+bipolar devices in this structure. Typical bipolar models are set. Here
+all models are listed individually, but they could be replaced by the
+macro
+<b> models bip. </b> For latch-up, impact ionization must also be included. Two DC solve
+statements are required to bias the device into the correct initial
+voltage with 5V reverse bias between nwell and pwell.
+</p>
+<p>
+Latch-up in this example will be caused by a transient pulse on the Vss
+contact. This is defined by two solve statements. The first defines the
+ramp to the negative voltage and the time at that voltage. The second
+sets the time for the ramp down and the final simulation time.  If no
+latch-up occurs, the device should return at the end of this transient
+to the same state as at the beginning of the transient.
+</p>
+<p>
+Latch-up is seen in the terminal characteristics as the current rises
+during the negative pulse, begins to fall, but in the end keeps rising.
+At the final simulation point the current is still rising and
+eventually burn-out of the device would occur. The time taken for this
+to occur could also be simulated by including lattice heating (using
+GIGA) into this simulation.
+</p>
+<p>
+Latch-up can also be seen in the internal distributions of carriers and
+current density in the solution files generated by this example.
+</p>
+<p>
+To load and run this example, select the
+<b> Load  </b> button in DeckBuild. This will copy the input file and any support
+files to your current working directory. You
+<b> cannot </b> run this file until the cross-section file is loaded. To do this go to
+the DeckBuild menu
+<b> Tools-&gt;MaskViews-&gt;Cutlines </b> Then select the name of the cross-section file from the list. The name
+will be &lt;file&gt;.sec where &lt;file&gt; is the name of this example. Then press
+<b> Load </b> on this Cutline menu. Once the cross-section file is loaded, select
+<b> Run </b> in DeckBuild to execute the example
+</p>
+  </div></body>
+</html>

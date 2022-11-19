@@ -1,0 +1,54 @@
+
+.lib "./clex09.lib" cmos
+
+
+.subckt inv in out
+.include "./clex09.net"
+.ends inv
+
+
+.param supply=5
+.global vdd gnd
+
+vvdd vdd 0 'supply'
+
+
+xinv1 in out1 inv
+
+xinv2 out1 out2 inv
+
+xinv3 out2 out3 inv
+
+xinv4 out3 out4 inv
+
+xinv5 out4 out5 inv
+
+xinv6 out5 out6 inv
+
+
+xinv7 out6 out7 inv
+
+xinv8 out7 out8 inv
+
+xinv9 out8 in inv
+
+
+.tran 5p 4n
+
+.IC V(in)=0 
+
+.save all
+
+
+.MEASURE TRAN maxvin max v(in)
+.MEASURE TRAN minvin min v(in) 
+.measure tran rsdel wave v(in) rise=1 val0=0 val1=maxvin              
+.measure tran fldel wave v(in) fall=1 val0=maxvin val1=minvin 
+.MEASURE TRAN rsporte EXPR VAL="(rsdel/9)"
+.MEASURE TRAN flporte EXPR VAL="(fldel/9)"
+.measure tran delay delay v(in) rise=1 val='supply/2' targ=v(in) rise=2 val='supply/2'
+.MEASURE TRAN FREQ EXPR VAL="((1/delay)*1e-06)"
+
+
+.end
+

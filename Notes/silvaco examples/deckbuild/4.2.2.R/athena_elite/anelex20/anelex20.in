@@ -1,0 +1,48 @@
+go athena
+
+#TITLE: Trench etch and monte carlo deposit
+# 
+line x loc=0.0 spac=0.1 
+line x loc=1.0 spac=0.05
+line x loc=2.0 spac=0.05
+line x loc=3.0 spac=0.1 
+#
+line y loc=0.0 spac=0.05
+line y loc=1.0 spac=0.1 
+initialize 
+#
+deposit oxide        thick=.3 divis=30
+deposit nitride      thick=.1 div=2
+#
+etch    nitride      start x=1.0 y=-10
+etch                 cont  x=1.0 y=10
+etch                 cont  x=2.0 y=10
+etch                 done  x=2.0 y=-10
+
+rate.etch machine=m2 rie oxide iso=1.0 dir=0.0 u.m
+#
+etch machine=m2 time=50.0 second dx.mult=.2
+
+structure outfile=anelex20_0.str
+
+rate.depo machine=m2 monte1 tungsten dep.rate=0.5 u.m stick.c=1 sigma.dep=0.1
+
+deposit div=1 mach=m2 time=.1 minute n.particle=10000
+
+structure outfile=anelex20_1.str
+init infile=anelex20_0.str
+rate.depo machine=m2 monte1 tungsten dep.rate=0.5 u.m stick.c=.1 sigma.dep=0.1
+
+deposit div=1 mach=m2 time=.1 minute n.particle=30000
+
+structure outfile=anelex20_2.str
+init infile=anelex20_0.str
+rate.depo machine=m2 monte1 tungsten dep.rate=0.5 u.m stick.c=.01 sigma.dep=0.1
+
+deposit div=1 mach=m2 time=.1 minute n.particle=90000
+
+structure outfile=anelex20_3.str
+tonyplot anelex20_*.str
+
+quit
+

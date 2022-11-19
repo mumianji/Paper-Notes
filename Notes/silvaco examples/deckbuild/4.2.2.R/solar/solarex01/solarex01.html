@@ -1,0 +1,211 @@
+<html>
+  <head>
+    <title>Solar Cell Simulation</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Solar Cell Simulation</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>SSuprem 4/S-Pisces/Luminous</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R, Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="solarex01_plot0.png" width="640" alt="solarex01_plot0" />
+      <p/>
+      <img src="solarex01_plot1.png" width="640" alt="solarex01_plot1" />
+      <p/>
+      <img src="solarex01_plot2.png" width="640" alt="solarex01_plot2" />
+      <p/>
+      <img src="solarex01_plot3.png" width="640" alt="solarex01_plot3" />
+      <p/>
+      <img src="solarex01_plot4.png" width="640" alt="solarex01_plot4" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example shows how a solar cell structure can be simulated in
+Athena and Atlas. The structure used and the results obtained are
+similar to those in the book &quot;VLSI Technology&quot; by Sze. The example file
+consists of:
+<br/>
+</p>
+<ul>
+  <li>
+ Construction of solar cell doping and geometry in Athena
+<br/>
+  </li>
+  <li>
+ Simulation of short circuit current
+<br/>
+  </li>
+  <li>
+ Simulation of open circuit voltage
+<br/>
+  </li>
+  <li>
+ Simulation of spectral response
+<br/>
+  </li>
+  <li>
+ Simulation of illuminated and unilluminated IV characteristics
+  </li>
+</ul>
+<p>
+The initial part of the example file uses Athena to create a typical
+solar cell structure. The device used is a diode of n+ over a p
+substrate. The junction depth is approx 0.25um. A single contact is
+placed in the center of the structure. Typical solar cells will have
+this structure repeated many times across a large area. Here
+advantage is taken of the reflecting boundary conditions at the edges of the
+structure to simulate just one cathode contact.
+</p>
+<p>
+The process consists of an implant and diffusion followed by electrode
+formation. The electrode statement is then used to define the
+electrodes for Atlas.
+</p>
+<p>
+The first Atlas run in the file simulates the response of the device to
+illumination by the solar spectrum. The material parameters for the
+structure are set at the start of the file . The imaginary refractive
+index (which is directly related to the absorption coefficient) of the
+metal is defined to a high value to ensure it is opaque to the
+incident radiation.
+</p>
+<p>
+The illumination by solar spectrum is defined by the
+<b> beam </b> statement.
+The origin and angle of incidence need to be defined. An angle of 90
+degrees means normal incidence from the top. The parameter
+<b> power.file</b> points to an external file that contains a list of wavelengths vs.
+intensity.  The file &apos;solarex01.spec&apos; contains data for the Air Mass Zero
+Solar Spectrum. The intensity in the file can be considered just as
+relative intensity between the wavelengths.
+</p>
+<p>
+It is possible to store the optical intensity of the illumination by
+specifying
+<b> output opt.int </b> at any time before saving a structure file.
+The photogeneration rate will appear in the solution structure file
+by default.
+</p>
+<p>
+The short circuit current is the current when the anode and cathode are
+shorted. This is simulated by illuminating the device with zero voltage
+on all contacts. The B&lt;n&gt; parameter of the
+<b> solve </b> statement sets the
+power of the light. An
+<b> extract </b> statement is used to
+measure the short circuit current. An extracted target like this can be
+used for optimization or as targets in VWF.
+</p>
+<p>
+The system is reset using the command &apos;solve init&apos; for the second test.
+To simulate open circuit voltage, the current through the device is
+forced to be zero. The device is illuminated and the voltage sustained
+across the device is measured.
+</p>
+<p>
+To set the current to zero it is first necessary to set one electrode
+to have current boundary conditions. This is performed on the cathode using
+the
+<b> current </b> parameter of the
+<b> contact </b> statement. Simulating with the
+device illuminated and
+<b> icathode=0 </b> gives the open circuit voltage. This
+voltage is measured using the
+<b> extract </b> statement. Note the use of the
+syntax
+<b> vint.&quot;cathode&quot; </b> as opposed to
+<b> v.&quot;cathode&quot;</b> . This is necessary
+when you want to extract the voltage directly on the semiconductor
+contact as opposed to the applied bias.
+</p>
+<p>
+The structure stored at this point can be plotted to show contours of
+photogeneration, carrier concentration or potential. The
+photogeneration contours show the effect of the opaque cathode contact.
+It is also possible to show ray tracing of light beams in this file.
+However in our example normal illumination was used so there are no
+refractive effects to see. A similar run using non-normal incidence and
+a narrower illumination spot would show the ray tracing inside the
+device.
+</p>
+<p>
+The second Atlas run in this file is used to simulate the spectral
+response of the solar cell. At the start the definition of material
+parameters and opaque metal contact is repeated. For this test
+a different light beam is required. A beam origin and
+angle of incidence are set as before. The wavelength or spectrum file is not
+defined since  the wavelength is to be varied in this test.
+</p>
+<p>
+The short circuit case is considered, so zero biases are set on both
+electrodes. The parameter
+<b> lambda </b> of the
+<b> solve </b> statement is used to set
+the wavelength of the incident light. The range of wavelength used was
+300nm to 1000nm.
+</p>
+<p>
+Plotting the resulting
+<b> log </b> file it is possible to see how the cathode
+current varies with wavelength. Setting a plot vs wavelength of source
+photocurrent (current available in the light beam), available
+photocurrent (current available for collection), and actual cathode
+current can show how the device behaves. The losses between source and
+available photocurrent are caused by reflections and transmission. This
+dominates the losses at all except the shortest wavelengths. The losses
+from available photocurrent to the actual simulated cathode current are
+due to recombination. These are very low except at the extremes.
+</p>
+<p>
+This simulation has produced all the data needed to create a plot of
+efficiency vs light frequency as used in the reference.  All that is
+needed is to transform the data in TonyPlot.
+</p>
+<p>
+On the y-axis the quantum efficiency is needed. This is defined as
+(current in/current out). In TonyPlot the following function is needed:
+</p>
+<b>Source Photocurrent/cathode current</b> <p>
+.
+</p>
+<p>
+This plot shows the same functional form as the reference material.
+The peak efficiency falls off quickly at low
+energies and more slowly at higher energies.
+</p>
+<p>
+The third simulation is a plot of illuminated and un-illuminated
+I-V characteristics, allowing the designer to choose a suitable load
+line for the device under normal operating conditions.
+A number of useful parameters are also extracted from this curve
+using the extract statement.  Finally the extracted plot of external power
+versus cathode voltage is displayed.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

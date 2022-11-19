@@ -1,0 +1,173 @@
+<html>
+  <head>
+    <title>VCSEL with Multiple Transverse Modes</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>VCSEL with Multiple Transverse Modes</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Blaze / VCSEL</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="vcselex04_plot0.png" width="640" alt="vcselex04_plot0" />
+      <p/>
+      <img src="vcselex04_plot1.png" width="640" alt="vcselex04_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates the basic DC and optical characteristics of a
+Vertical Cavity Surface Emitting Laser (VCSEL).  It demonstrates:
+</p>
+<ul>
+  <li>
+ VCSEL structure definition using Atlas syntax
+<br/>
+  </li>
+  <li>
+ Material parameter specification
+<br/>
+  </li>
+  <li>
+ Choosing the optical and electrical physical models
+<br/>
+  </li>
+  <li>
+ Initial biasing of the device
+<br/>
+  </li>
+  <li>
+ Activating the VCSEL module of Atlas
+<br/>
+  </li>
+  <li>
+ Calculation of laser electrical and optical characteristics
+<br/>
+  </li>
+  <li>
+ Calculation of 4 transverse modes
+<br/>
+  </li>
+</ul>
+<p>
+The first half of the input file describes the Atlas structural syntax,
+including the mesh, region electrode and doping commands that are also common
+to other Atlas examples.  LASER specific structural commands include the
+powerful DBR  statements which allow the definition of the numerous
+periodic semiconductor hetero-structure layers that make up the two mirrors of
+a VCSEL and its active region respectively, each in a single line of the input
+file.  VCSELs are modelled using a pseudo-3D method which assumes the device
+has cylindrical geometry and symetry.  This is activated using the MESH CYL
+statement.  The point X=0 represents the center of the device.  The mesh
+statements define the mesh in the X direction only.  Mesh in the Y direction is
+defined using SY=&lt;n&gt; parameter the REGION statements.  This creates &quot;n&quot; number
+of mesh points in the Y direction in the region to which it refers.  DBR
+statements also contain Y mesh parameters and are described below.
+</p>
+<p>
+The REGION statements contain &quot;TOP&quot; or &quot;BOTTOM&quot; parameters to define the
+location of the region.  The device can therefore have the new region being
+defined attached to either the top or bottom of the device.  Donor or acceptor
+doping can also be assigned in each region statement using the DONOR=&lt;n&gt; or
+ACCEPT=&lt;n&gt; parameters respectively.
+</p>
+<p>
+The Distributed Bragg Reflectors (DBRs) are defined using the DBR statement.
+The DBR statement allows the definition of a mirrors consisting of alternating
+layers of two materials with differing refractive index.  The number of layers
+is defined by the HALF.CYC=&lt;n&gt; parameter.  The thickness of each type of layer
+is defined by the THICK1=&lt;n&gt; and THICK2=&lt;n&gt; parameters respectively.  The
+number of mesh points in the Y direction are defined by the N1=&lt;n&gt; and N2=&lt;n&gt;
+parameters respectively.  The materials of each layer are defined by the
+MAT1=&lt;material&gt; and MAT2=&lt;material&gt; parameters.  Mole fractions for ternary and
+quaternary materials are defined by X1.COMP=&lt;n&gt;, X2.COMP=&lt;n&gt; Y1.COMP=&lt;n&gt; and
+Y2.COMP=&lt;n&gt; parameters.  Donor or acceptor doping is defined by ND1=&lt;n&gt;,
+ND2=&lt;n&gt;, NA1=&lt;n&gt; and NA2=&lt;n&gt; parameters respectively.
+</p>
+<p>
+The active region of the VCSEL consists of one or more quantum wells.  In this
+example, the active region contains 6 wells that are defined by the QWELL
+parameter on the associated REGION statements.  The sampling for Schrodinger
+solutions is given by the WELL.NX and WELL.NY parameters of the REGION
+statement.  The gain model for the active quantum wells is specified by the
+LI parameter on the MODEL statement.  The SPONT parameter specifies that
+the gain model will be used to model spontaneous recombination.
+</p>
+<p>
+In order to maximize their reflectivity, the DBRs must be defined such that
+intensity peaks and troughs of the standing wave light pattern fall at the
+boundary between the two dissimilar semiconductors.  The standing wave light
+pattern for each mode is a function of the light propogation velocity and the
+thickness of each layer of the DBR.  The ratio of light propogation velocity in
+a vacuum compared to each layer in the DBR is given by the refractive index,
+which in turn is the square root of the permittivity of the material at the
+wavelengths concerned.  The permittivity of each semiconductor is defined by
+the ESPINF=&lt;n&gt; parameter in the MATERIAL statement.  It should be noted that
+this is the optical permittivity which can be significantly lower than the
+permittivity at electrical frequencies.
+</p>
+<p>
+Once the structure has been defined, a number of parameters regarding the
+photonic equations are defined in the VCSEL statement.  The photonic energy
+range over which the user wishes to look for standing wave patterns is defined
+by the EINIT=&lt;n&gt; and EFINAL=&lt;n&gt; parameters.  There is little point in
+investigating photonic energies less than the bandgap of the active region,
+as these will not laze.  The NMODES=4 parameter instructs the simulator
+to calculate not just the fundamental lasing mode but a total of four most
+significant transverse modes which can be plotted in the structure files.
+</p>
+<p>
+During execution, the program stores structure files at various biases
+so that the user can track which standing wave pattern has the most
+gain both before and after lasing occurs.  The standing wave pattern
+associated with lasing in the fundamental mode usually consists of an
+envelope function with a single large peak of light output located at
+the active region.  Lasing is also associated with a sudden constancy
+of the optical gain with bias which can be plotted in TonyPlot using
+the creatd LOG FILE.  Typical parameters that can be viewd in TonyPlot
+using the created structure and log files are:
+</p>
+<ul>
+  <li>
+ DC I-V diode characteristics
+<br/>
+  </li>
+  <li>
+ Light power versus electrical bias
+<br/>
+  </li>
+  <li>
+ Optical gain versus electrical bias
+<br/>
+  </li>
+  <li>
+ Light intensity distributed over the structure for 4 modes
+<br/>
+  </li>
+</ul>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

@@ -1,0 +1,92 @@
+<html>
+  <head>
+    <title>NPN - Gummel plot in 2D and 3D</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>NPN - Gummel plot in 2D and 3D</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>S-Pisces/Device 3D</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="bjtex11_plot0.png" width="640" alt="bjtex11_plot0" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example simulates a Gummel plot for a silicon BJT in 2D and 3D. It shows:
+</p>
+<ul>
+  <li>
+ Formation of a 2D NPN BJT using Atlas syntax
+<br/>
+  </li>
+  <li>
+ Ic and Ib extraction versus Vbe (Gummel plot) of the 2D structure
+<br/>
+  </li>
+  <li>
+ Formation of a 3D NPN BJT using Atlas syntax
+<br/>
+  </li>
+  <li>
+ Ic and Ib extraction versus Vbe (Gummel plot) of the 3D structure
+  </li>
+</ul>
+<p>
+The initial stage of the example uses the
+<b> mesh, region</b> , and
+<b> electrode </b> statements in Atlas to construct the 2D NPN structure.  Analytical doping profiles are added in the
+<b> doping </b> statement. The structure has a heavy n+ emitter, 1.0e18 peak base
+concentration, a buried collector layer and heavy p+ extrinsic base
+contact.
+</p>
+<p>
+The
+<b> models bipolar </b> statement is set to specify that the default set of bipolar models is
+to be used.  The default set of bipolar models includes: concentration
+dependent mobility, field dependent mobility, band-gap narrowing,
+concentration dependent lifetimes and Auger recombination.
+</p>
+<p>
+The gummel plot syntax is similar to that described in the first
+example of this section.  Following the calculation of the gummel plot
+for the 2D structure,
+<b> go atlas </b> triggers the initiation of an Atlas run that will be used to perform
+an equivalent calculation in 3D.  The 3D mode of Atlas is triggered
+by the inclusion of the
+<b> three.d </b> parameter on the
+<b> mesh </b> statement.  The extent in the z-direction is set by the
+<b> z.mesh </b> statements.  The syntax for the remainder of the input is similar
+to that used in 2D.
+</p>
+<p>
+Following the completion of the calculation of the Gummel plot
+for the 3D structure, the characteristics of the two structures
+are plotted for comparison.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+  </div></body>
+</html>

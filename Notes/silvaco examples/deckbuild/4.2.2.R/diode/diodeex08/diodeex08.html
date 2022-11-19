@@ -1,0 +1,103 @@
+<html>
+  <head>
+    <title>3D Diode using lifetime killing</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>3D Diode using lifetime killing</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>DevEdit 3D/Device 3D/Giga 3D</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="diodeex08_plot0.png" width="640" alt="diodeex08_plot0" />
+      <p/>
+      <img src="diodeex08_plot1.png" width="640" alt="diodeex08_plot1" />
+      <p/>
+      <img src="diodeex08_plot2.png" width="640" alt="diodeex08_plot2" />
+      <p/>
+      <img src="diodeex08_plot3.png" width="640" alt="diodeex08_plot3" />
+      <p/>
+      <img src="diodeex08_plot4.png" width="640" alt="diodeex08_plot4" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+A common practice in high power electronics is to vary carrier lifetime across a device by bombarding the region of silicon  with particles or introducing gold impurities.
+This example demonstrates how such an analysis may be performed using device simulation. This example shows:
+</p>
+<ul>
+  <li>
+ The formation of a 3D diode structure in DEVEDIT3D
+<br/>
+  </li>
+  <li>
+ Device simulation driving the diode into forward bias 
+<br/>
+  </li>
+  <li>
+ How to create a 3D plot showing the current crowding effect
+  </li>
+</ul>
+<p>
+The structure is first created by running DEVEDIT3D in batch mode using the command
+<b> go devedit.</b> DEVEDIT3D performs three functions: creation of the diode topology with the
+<b> region </b> statement, addition of impurities with the
+<b> impurity </b> statement and finally creates the mesh for the device simulation by setting various
+<b> Meshing Parameters </b> options. Further information on these statements may be found in the
+<b> VWF Interactive Tools User&apos;s Manual: Volume 1</b> .
+</p>
+<p>
+Only the top left quarter of the complete cell will be simulated as the three quarters are identical.
+The structure created by DEVEDIT3D contains two different silicon regions which will exhibit different carrier lifetimes during the device simulation.
+</p>
+<p>
+The completed structure is then piped into the device simulator which is started with the
+<b> go atlas </b> command. The Atlas syntax is then used to modify the material parameters in the different regions. The
+<b> material </b> statement is used to specify the electron and hole lifetime in each silicon region. In this example we have made the carrier lifetime 20 times smaller in
+the region which has undergone a lifetime killing process- region number 1. It is also highly important that the necessary physical models are switched on if the simulation is to be accurate. The
+<b> model </b> statement is used to switch on the appropriate models for the simulation. In this case the example uses analytic and conmob: the doping and temperature
+dependent low field mobility model, fldmob: the lateral electric field-dependent mobility model, srh: Shockley-Read-Hall recombination, auger: recombination
+accounting for high level injection effects, and bgn: band gap narrowing.
+</p>
+<p>
+In addition, if thermal self heating effects are required in the simulation, an additional parameter
+<b> lat.temp </b> will be required to cause the simulator to solve the lattice heat flow equation. If this is the case a thermal boundary condition must also be specified using the
+<b> thermcontact </b> statement. This example uses the cathode electrode, number 2, as the thermal boundary condition and specifies a fixed temperature there of 300 K.
+</p>
+<p>
+As the solution proceeds all terminal characteristics are saved into a file, with the command
+<b> log outf=&lt;filename&gt;</b> , which can then be plotted at the end of the simulation. Two simulations are
+performed in this example, with and without the lattice heating model switched on, both driving the diode into forward bias. TonyPlot is then used to display
+both of the I-V results on the same plot as well as the change in lattice temperature. When the lattice heating model is turned on the increase in lattice
+temperature causes a decrease in carrier mobility and thereby a roll-off in current under forward bias.
+</p>
+<p>
+Note that the user can use
+<i> TonyPlot3d </i> to plot the 3D mesh and solution files. By displaying the total current density in an isosurface contour plot, the current crowding effect can be seen.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

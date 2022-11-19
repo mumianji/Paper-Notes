@@ -1,0 +1,34 @@
+{subsection} radex04.in : Arbitrary Charge Generation using C-Interpreter 
+
+Requires: Device 3D/C-Interpreter
+{newline}
+Minimum Versions: Atlas 5.20.2.R
+
+This examples demonstrates the use of the C interpreter function
+{bold} F3.RADIATE.  
+This function allows the user to specify arbitrary
+electron hole pair generation as a function of position and time.
+This example illustrates the functionality using a simple block 
+function for the charge. Other template files are loaded along
+with the input file. These can be substituted in the line:
+
+{bold} beam num=1 f3.radiate=(filename)
+
+{bold} Note 
+that a generation value calculated by the C function for each XYZ
+location in the device. This value is multiplied by the value of the
+{bold} b1 
+of the 
+{bold} solve 
+statement before being applied.
+
+To load and run this example, select the
+{bold} Load example 
+button in DeckBuild. This will copy the input file and any support
+files to your current working directory. Select the
+{bold} run 
+button to execute the example.
+
+
+
+

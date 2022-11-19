@@ -1,0 +1,78 @@
+# (c) Silvaco Inc., 2018
+go athena
+# 
+line x loc=0.00 spac=0.10
+line x loc=2 spac=0.10
+#
+line y loc=0.1 spac=0.01
+line y loc=0.5 spac=0.1
+# 
+init gaas c.silicon=1.0e11
+# 
+deposit gaas thick=0.10 c.silicon=2.0e17 divisions=15 dy=0.005 ydy=0.00
+# 
+deposit nitride thick=0.5 divisions=4
+etch nitride left  p1.x=0.2 
+etch nitride right p1.x=1.8
+relax y.min=0.2
+# 
+implant silicon dose=1.0e15 energy=30  
+etch nitride all
+#
+deposit alum thickness=0.01 div=1
+etch alum start x=0.2 y=-5
+etch cont       x=0.7 y=-5
+etch cont       x=0.7 y=5
+etch done       x=0.2 y=5
+etch alum start x=1.3 y=-5
+etch cont       x=1.8 y=-5
+etch cont       x=1.8 y=5
+etch done       x=1.3 y=5
+#
+electrode  name=source x=0.1
+electrode  name=gate x=1.0
+electrode  name=drain x=1.9
+#
+structure outf=mesfetex06_0.str
+tonyplot  mesfetex06_0.str -set mesfetex06_0.set
+
+
+go atlas
+#
+contact name=gate work=4.87
+models  print fldmob srh  
+material vsat=0.92e7 taun0=1e-9 taup0=1e-9
+trap acceptor e.level=0.45 density=1.0e16 degen=12  sign=1e-14 sigp=3.e-14 fast
+# 
+method newton trap 
+solve prev
+solve vdrain=0.01
+solve vdrain=0.05
+solve vdrain=0.2
+solve vdrain=0.5
+#
+log outf=mesfetex06_actr.log s.param inport=gate outport=drain width=50 imped=50
+solve prev ac freq=1e6 mult.f fstep=2 nfstep=15 
+
+go atlas
+contact name=gate work=4.87
+models  print fldmob srh  
+material vsat=0.92e7 taun0=1e-9 taup0=1e-9
+#
+method  newton trap
+solve prev
+solve vdrain=0.01
+solve vdrain=0.05
+solve vdrain=0.2
+solve vdrain=0.5
+#
+log outf=mesfetex06_ac.log s.param inport=gate outport=drain width=50 imped=50
+solve prev ac freq=1e6 mult.f fstep=2 nfstep=15 
+#
+tonyplot  mesfetex06_ac.log -overlay mesfetex06_actr.log -set mesfetex06_1.set
+tonyplot  mesfetex06_ac.log -overlay mesfetex06_actr.log -set mesfetex06_2.set
+#
+quit
+
+
+

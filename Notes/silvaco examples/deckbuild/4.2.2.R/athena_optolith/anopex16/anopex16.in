@@ -1,0 +1,38 @@
+go athena
+# 
+#                   OPTOLITH input file: anopex16.in
+#                   --------------------------------
+#
+#		    Interference Imaging Technique 
+#
+line x loc=0.00 spac=0.01
+line x loc=1.00 spac=0.01
+#
+line y loc=0.0  spac=.5
+line y loc=0.5  spac=.5
+# 
+init silicon
+#
+deposit aluminum thick=1.0 divis=50
+# 
+# Etch the aluminum to create a simple wedge structure
+#
+etch aluminum right p1.x=0.0 p1.y=-1.0 p2.x=0.5 p2.y=0.0
+# 
+deposit photo thick=.1 divis=10 min.spac=0.001
+deposit photo thick=.9 divis=30 min.spac=0.001
+#
+etch photo start x=0.0 y=-1
+etch cont        x=1.0 y=-1
+etch cont        x=1.0 y=-2
+etch done        x=0.0 y=-2
+#
+expose inf=anopex16.exp dose=200.0
+
+#
+structure outfile=anopex16.str
+tonyplot anopex16.str -set anopex16.set
+
+#
+quit
+

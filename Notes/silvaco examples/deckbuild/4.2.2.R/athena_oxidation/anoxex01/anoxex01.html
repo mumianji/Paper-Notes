@@ -1,0 +1,62 @@
+<html>
+  <head>
+    <title>Evolution of a Bird's Beak in Recessed SILO</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Evolution of a Bird's Beak in Recessed SILO</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>SSuprem 4</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="anoxex01_plot0.png" width="640" alt="anoxex01_plot0" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates the bird&apos;s beak profile evolution for a
+Recessed SILO process. A nitride mask is deposited and patterned. A
+recess into the silicon is then performed using a sequence of etch
+statements.
+</p>
+<p>
+SSuprem 4&apos;s ability to dump a structure after a specified number of
+time steps and
+<b> TonyPlot&apos;s </b> movie function are used to show the formation of the
+growing birds beak.  This is accomplished by specifying
+<b> DUMP </b> and
+<b> DUMP.PREFIX </b> parameters in the
+<b> DIFFUSE </b> statement.
+</p>
+<p>
+To watch the movie, first select &quot;Select all plots&quot; from the &quot;View&quot;
+popup, and then select &quot;Movie..&quot; from the &quot;Tools&quot; popup. Evolution of the
+vertical oxidation velocities is also shown in the movie. This was achieved
+by saving a set file with the Y velocity contours. This file is called anoxex02.set.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

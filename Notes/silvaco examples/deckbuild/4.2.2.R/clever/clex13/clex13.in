@@ -1,0 +1,68 @@
+
+#####   3D MOS-FET SIMULATION WITH LOCAL INTER-COMNNECT   #####
+
+go victoryprocess
+
+init Layout=clex13.lay material=silicon Depth=1.0 gasheight=5 \
+     padding=3 resolution=0.4
+
+option cartesian.spacing.on
+
+cartesian mask=LOCOS spacing=0.1
+cartesian mask=POLY  spacing=0.5
+cartesian mask=CONT  spacing=0.2
+cartesian mask=SD    spacing=0.5
+cartesian mask=INT   spacing=0.5
+
+## Pad oxide ##
+Deposit material=Oxide Thickness=0.01 Max
+
+## LOCOS ##
+Deposit material=Nitride Thickness=0.1 Max Mask=LOCOS
+Oxidize thickness=0.572
+Strip material=Nitride
+
+## Gate ##
+Deposit material=Polysilicon Thickness=0.2 conformal Mask=POLY
+
+## Deposit Local Interconnect Oxide ##
+Deposit material=Oxide Thickness=0.04 conformal Mask=OXIDE Reverse
+
+## Deposit Local Interconnect ##
+Deposit Material=TiNi Thickness=0.06 Mask=INT conformal
+
+## Deposit BPSG ##
+Deposit BPSG Thickness=0.7 conformal Mask=CONT Reverse
+
+## Source-Drain Contacts ##
+Etch material=Oxide Thickness=0.7 min Mask=CONT Reverse
+Deposit material=Aluminum Thickness=0.4 conformal Mask=SD
+Electrodes mask=SD material=Aluminum
+
+export structure=clex13.str
+export clever(conformal) structure=clex13_3D.str
+
+
+go clever
+
+Init Layout="clex13.lay" structure="clex13_3D.str"
+
+Material TitaniumNitride Conductivity=187000
+
+Interconnect Resistance AdaptR=0.05
+
+Save Spice="clex13.net"
+
+
+#####   NOW DO A 2D CUTLINE AND PLOT IN 2D   #####
+
+go clever
+
+Init Layout="clex13.lay" structure="clex13_3D.str"
+
+Cut line=(0, 13.5, 27, 13.5)
+
+Save Structure="clex13_2D.str"
+
+tonyplot clex13_2D.str -set clex13.set
+

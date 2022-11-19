@@ -1,0 +1,100 @@
+<html>
+  <head>
+    <title>Single Event Latchup of a 3D 65nm CMOS Inverter</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Single Event Latchup of a 3D 65nm CMOS Inverter</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Victory Process Cell Mode / Victory Mesh / Victory Device</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Victory Process 7.22.3.R / Victory Mesh 1.2.4.R / Victory Device 1.12.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="radex17_plot0.png" width="640" alt="radex17_plot0" />
+      <p/>
+      <img src="radex17_plot1.png" width="640" alt="radex17_plot1" />
+      <p/>
+      <img src="radex17_plot2.png" width="640" alt="radex17_plot2" />
+      <p/>
+      <img src="radex17_plot3.png" width="640" alt="radex17_plot3" />
+      <p/>
+      <img src="radex17_plot4.png" width="640" alt="radex17_plot4" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+A common issue for any CMOS circuit is the existance of a parasitic thyristor
+resulting from the NPNP structure that exists between any complementary pair
+source/drain contacts.  The four regions creating the NPNP thyristor, are the
+N-channel drain, N-channel Well, P-channed well, and P-channel drain
+respectively.
+</p>
+<p>
+In order for the parasitic thyristor to trigger, the NPN and PNP transistors,
+making up the parasitic thyristor, must have a multiplied bipolar gain of at
+least unity at the operating condition of the circuit.  Negating the triggering
+of this parasitic thyristor is simply a matter of ensuring that this condition
+almost never happens.  There are two main ways to do this:
+</p>
+<ul>
+  <li>
+ Reduce the bipolar gain of the parasitic bipolars by heavily doping the
+respective base regions (the N and Pwell regions)  This is most often
+done by doping the bottom of the trench.  Careful consideration of
+where this doping is placed is required so as to not increase any
+parasitic capacitance significantly, which would slow the circuit
+response time.
+<br/>
+  </li>
+</ul>
+<ul>
+  <li>
+ use body tie contacts to connect the N-channel well to ground and the
+p-channel well to supply.  What this does is to short the two bipolar
+base regions to their respective emitters, such that the parasitic
+bipolar transistors can never reach a conducting state.  However, these
+body ties take up valuable circuit area, and so are used as sparsely as
+is practical.  If these body ties are too far apart, the voltage drop
+can become sufficient for thyristor action to start.
+  </li>
+</ul>
+<p>
+In this example, body ties and implanting the base of the trench,  are
+deliberatly omitted, making this CMOS inverter particularly vulnerable to
+thyristor action.  So much so that and SEU with an LET of unity, is sufficient
+to trigger the CMOS inverter into a permanant conducting state, that can
+be reset, as with any thyristor, by temporary removal of the supply voltage.
+</p>
+<p>
+This example can be used as a starting point to investigate how the placement
+of body ties and trench implantation techniques, will greatly increase the LET
+value of an SEU strike that is required to make the circuit latch up.  The
+higher the LET value required to make the circuit latch up, translates
+directly, with an inverse relationship, into how often this will happen for any
+given level of background cosmic or local radiation.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

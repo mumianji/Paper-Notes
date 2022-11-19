@@ -1,0 +1,71 @@
+<html>
+  <head>
+    <title>Effect of Poly Depletion on C-V curves</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Effect of Poly Depletion on C-V curves</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>S-Pisces</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="mos2ex15_plot0.png" width="640" alt="mos2ex15_plot0" />
+      <p/>
+      <img src="mos2ex15_plot1.png" width="640" alt="mos2ex15_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example shows how reduced poly doping can result in depletion occuring in
+the poly gate under bias.  This undesireable effect shows up in
+Capacitance-Voltage (C-V) curves as anomolies in the shape of the plot.
+</p>
+<p>
+The effect of reduced poly doping in a MOSFET with a thin gate is to reduce
+drain current drive and increase the threshold voltage, since some of the
+voltage that should be dropped across the gate oxide is now dropped across the
+depletion region in the poly gate.
+</p>
+<p>
+The usual causes of reduced doping in the poly are counter doping process flows,
+insufficient source-drain implant dose, and evapouration of dopant during
+thermal anneals due to the lack of a capping oxide.
+</p>
+<p>
+The example shows both the band diagram and Capacitance-Voltage curve of a P+
+poly gate doped to a concentration of 1e19/cm3.  The program then goes on to
+compare the same C-V plot and band diagram for the poly gate doped to 1e20/cm3
+and 1e21/cm3 by overlaying the three cases.
+</p>
+<p>
+It will be obseved that even for a poly gate doped to 1e20/cm3, depletion
+occurs in the poly gate giving anomolous C-V characteristics.  This can have
+serious consequences if the maximum value from the C-V curve is used to measure
+the thickness of the gate oxide.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

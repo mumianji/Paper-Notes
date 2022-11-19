@@ -1,0 +1,146 @@
+# (c) Silvaco Inc., 2018
+go athena
+TITLE:         NMOS Silicon Gate Example
+#              Active device region initial processing.
+
+#              Initialize silicon substrate in 1D mode
+line x location=0 spacing=0.1
+line x location=0.1 spacing=0.1
+Initialize     <100> Silicon c.boron=1e15 Thick=1.5 \
+               dX=.005 XdX=.02  Spaces=150 one.d x.loc=0.05
+
+#              Grow pad oxide, 400A.
+Diffusion      Temperature=1000  Time=40  DryO2
+
+#              Deposit 800A of CVD Nitride.
+Deposit        Nitride  Thickness=.0800  Spaces=15
+
+#              Grow field oxide.
+Diffusion      Temperature=1000  Time=180  WetO2
+
+
+#              Etch to silicon surface.
+Etch           Oxide all
+Etch           Nitride all
+Etch           Oxide all
+
+#              Implant boron to shift the threshold voltage.
+Implant        Boron  Dose=4e11  Energy=50
+
+#              Grow gate oxide in dry oxygen ambient with 3% HCl.
+method grid.ox=0.01
+Diffusion      Temperature=1050  Time=30  DryO2  HCL%=3
+
+#              Deposit polysilicon
+Deposit        Polysilicon  Thickness=0.5  Temperature=600
+
+#              Heavily dope the polysilicon using POCl3
+Diffusion      Temperature=1000  Time=25  c.phos=4e20
+
+#              Save the structure at this point.  The simulation runs
+#              are split for the gate and source/drain regions.
+structure      outfile=mos2ex10.str
+
+#              Carry on processing the Source/drain regions.
+
+#              Etch polysilicon and oxide over source/drain regions.
+Etch           Polysilicon
+Etch           Oxide
+
+#              Implant Arsenic for source/drain regions.
+Implant        Arsenic  Dose=5E15  Energy=150
+
+#              Drive-in Arsenic and re-oxidize source/drain regions.
+Diffusion      Temperature=1000  Time=30  DryO2
+
+#              Etch contact holes to gate, source, and drain regions.
+Etch           oxide
+
+#              Deposit Phosphorus doped SiO2 using CVD.
+Deposit        Oxide  Thickness=.7500  c.phos=1e21
+
+#              Reflow glass to smooth surface and dope contact holes.
+Diffusion      Temperature=1000  Time=30
+
+#              Reopen contact holes.
+Etch           Oxide
+#              Save the structure.
+structure      outfile=mos2ex10_0.str
+
+#              Process the gate region.
+
+#              Initialize previously saved structure
+Initialize     infile=mos2ex10.str 
+
+#              Implant Arsenic for source/drain regions.
+Implant        Arsenic  Dose=5E15  Energy=150
+
+#              Drive-in Arsenic and re-oxidize source/drain regions.
+Diffusion      Temperature=1000  Time=30  DryO2
+
+#              Etch contact holes to gate, source, and drain regions.
+Etch           Oxide
+
+#              Deposit Phosphorus doped SiO2 using CVD.
+Deposit        Oxide  Thickness=.75  
+
+#              Reflow glass to smooth surface and dope contact holes.
+Diffusion      Temperature=1000  Time=30
+
+
+#              Reopen contact holes.
+Etch           Oxide
+#etch polygate to get the structure to ATLAS
+etch poly
+etch oxide
+
+#              Save the structure.
+Structure      outfile=mos2ex10_1.str
+
+
+go atlas noauto
+
+# N-channel MOSFET grid generation from ATHENA 1D doping profile
+
+# Form grid of the structure and give doping distribution 
+
+# define rectangular grid 
+mesh        rect diag.flip 
+x.mesh      l=0   spac=0.1
+x.mesh      l=3.0 spac=0.1
+y.mesh      l=-0.02 spac=0.01
+y.mesh      l=0     spac=0.01
+y.mesh      l=0.7   spac=0.1
+y.mesh      l=2.5   spac=0.5
+
+# eliminate substrate mesh
+elim columns y.min=0.7
+
+# regions 
+
+region      num=1 y.max=0 oxide
+region      num=2 y.min=0 silicon
+
+# electrodes 
+
+electrode   num=1 name=gate  x.min=0.8 length=1.4
+electrode   num=2 name=substrate substrate
+electrode   num=3 name=source left  length=0.5 y.min=0 y.max=0
+electrode   num=4 name=drain  right length=0.5 y.min=0 y.max=0
+
+# doping and fixed charge 
+
+doping athena.1d master inf=mos2ex10_1.str  boron outfile=mos2ex10.dat
+doping athena.1d master inf=mos2ex10_0.str  arsenic x.right=0.8 ratio=0.75 
+doping athena.1d master inf=mos2ex10_0.str  arsenic x.left=2.2  ratio=0.75 
+
+# regrid on doping 
+
+regrid      doping log reg=2 ratio=4 smooth.k=4  dopfile=mos2ex10.dat
+regrid      doping log reg=2 ratio=4 smooth.k=4  dopfile=mos2ex10.dat
+
+savefile outfile=mos2ex10_2.str
+tonyplot mos2ex10_2.str -set mos2ex10.set
+
+quit
+

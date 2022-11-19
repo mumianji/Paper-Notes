@@ -1,0 +1,12 @@
+# (c) Silvaco Inc., 2018
+go internal
+
+load inf=sonosex02_aux.in
+
+sweep parameter=vgate type=list data="10,12,14,16,18"
+
+save type=sdb outfile=sonosex02.dat
+
+tonyplot -overlay sonosex02.dat -set sonosex02_0.set
+
+quit

@@ -1,0 +1,158 @@
+# (c) Silvaco Inc., 2018
+go devedit
+
+DevEdit version="2.1" library="1.15"
+
+work.area left=0 top=-0.1 right=10 bottom=6.1
+
+#  DevEdit V2.1 L1.15
+
+region reg=1 mat=Silicon color=0xffc000 pattern=0x3 Z1=0 Z2=7 \
+	points="1,0 2,0 8,0 9,0 9,6 1,6 1,0"
+#
+impurity id=1 region.id=1 imp=Boron color=0x906000 \
+	x1=0 x2=0 y1=0 y2=0 \
+	peak.value=5e+15 ref.value=0 z1=0 z2=0 comb.func=Multiply \
+	rolloff.y=both conc.func.y=Constant \
+	rolloff.x=both conc.func.x=Constant \
+	rolloff.z=both conc.func.z=Constant
+
+region reg=2 mat=Aluminum color=0xffc0c0 pattern=0x6 Z1=1 Z2=2 \
+	points="1,-0.1 2,-0.1 2,0 1,0 1,-0.1" elec.id=1
+
+region reg=3 mat=Aluminum color=0xffc0c0 pattern=0x6 Z1=1 Z2=2 \
+	points="8,-0.1 9,-0.1 9,0 8,0 8,-0.1" elec.id=2
+
+region reg=4 mat=Aluminum color=0xffc0c0 pattern=0x6 Z1=5 Z2=6 \
+	points="1,-0.1 2,-0.1 2,0 1,0 1,-0.1" elec.id=3
+
+region reg=5 mat=Aluminum color=0xffc0c0 pattern=0x6 Z1=5 Z2=6 \
+	points="8,-0.1 9,-0.1 9,0 8,0 8,-0.1" elec.id=4
+
+region reg=6 mat=Aluminum color=0xffc8c8 pattern=0x6 Z1=0 Z2=7 \
+	points="1,6 9,6 9,6.1 1,6.1 1,6" elec.id=5
+
+
+impurity id=1 imp=Boron color=0x906000 \
+	x1=1 x2=2 y1=0 y2=0 \
+	peak.value=1e+20 ref.value=0 z1=1 z2=2 comb.func=Multiply \
+	rolloff.y=both conc.func.y=Gaussian conc.param.y=0.05 \
+	rolloff.x=both conc.func.x=Gaussian conc.param.x=0.05 \
+	rolloff.z=both conc.func.z=Gaussian conc.param.z=0.05
+impurity id=2 imp=Arsenic color=0x906000 \
+	x1=8 x2=9 y1=0 y2=0 \
+	peak.value=1e+20 ref.value=0 z1=1 z2=2 comb.func=Multiply \
+	rolloff.y=both conc.func.y=Gaussian conc.param.y=0.05 \
+	rolloff.x=both conc.func.x=Gaussian conc.param.x=0.05 \
+	rolloff.z=both conc.func.z=Gaussian conc.param.z=0.05
+impurity id=3 imp=Arsenic color=0x906000 \
+	x1=1 x2=2 y1=0 y2=0 \
+	peak.value=1e+20 ref.value=0 z1=5 z2=6 comb.func=Multiply \
+	rolloff.y=both conc.func.y=Gaussian conc.param.y=0.05 \
+	rolloff.x=both conc.func.x=Gaussian conc.param.x=0.05 \
+	rolloff.z=both conc.func.z=Gaussian conc.param.z=0.05
+impurity id=4 imp=Arsenic color=0x906000 \
+	x1=8 x2=9 y1=0 y2=0 \
+	peak.value=1e+20 ref.value=0 z1=5 z2=6 comb.func=Multiply \
+	rolloff.y=both conc.func.y=Gaussian conc.param.y=0.05 \
+	rolloff.x=both conc.func.x=Gaussian conc.param.x=0.05 \
+	rolloff.z=both conc.func.z=Gaussian conc.param.z=0.05
+impurity id=5 imp=Arsenic color=0x906000 \
+	x1=1 x2=4 y1=0 y2=0 \
+	peak.value=1e+16 ref.value=0 z1=0 z2=7 comb.func=Multiply \
+	rolloff.y=both conc.func.y=Gaussian conc.param.y=2.7 \
+	rolloff.x=both conc.func.x=Gaussian conc.param.x=1 \
+	rolloff.z=both conc.func.z=Gaussian conc.param.z=1
+impurity id=6 imp=Arsenic color=0x906000 \
+	x1=1 x2=4 y1=0 y2=0 \
+	peak.value=1e+17 ref.value=0 z1=0 z2=7 comb.func=Multiply \
+	rolloff.y=both conc.func.y=Gaussian conc.param.y=0.05 \
+	rolloff.x=both conc.func.x=Gaussian conc.param.x=0.2 \
+	rolloff.z=both conc.func.z=Gaussian conc.param.z=0.2
+impurity id=7 imp=Boron color=0x906000 \
+	x1=6 x2=9 y1=0 y2=0 \
+	peak.value=1e+17 ref.value=0 z1=0 z2=7 comb.func=Multiply \
+	rolloff.y=both conc.func.y=Gaussian conc.param.y=0.05 \
+	rolloff.x=both conc.func.x=Gaussian conc.param.x=0.2 \
+	rolloff.z=both conc.func.z=Gaussian conc.param.z=0.2
+
+# Set Meshing Parameters
+#
+base.mesh height=1 width=1
+#
+bound.cond !apply max.slope=28 max.ratio=300 rnd.unit=0.001 line.straightening=1 align.points when=automatic
+#
+imp.refine imp="Total Doping" sensitivity=0.5
+imp.refine min.spacing=0.01 z=1
+#
+constr.mesh max.angle=90 max.ratio=300 max.height=1 \
+	max.width=1 min.height=0.0001 min.width=0.0001
+#
+# Perform mesh operations
+#
+Mesh Mode=MeshBuild
+refine mode=x x1=4.9 y1=0.006 x2=5.52 y2=3.49
+refine mode=y x1=1.07 y1=3.096 x2=3.97 y2=3.452
+refine mode=y x1=1.07 y1=2.549 x2=3.98 y2=3.26
+refine mode=x x1=5.04 y1=0.611 x2=5.19 y2=2.693
+refine mode=both x1=4.4 y1=2.022 x2=5.07 y2=2.905
+refine mode=x x1=8.38 y1=0.102 x2=8.57 y2=2.703
+refine mode=x x1=1.41 y1=0.064 x2=1.54 y2=2.885
+refine mode=y x1=1.09 y1=2.789 x2=4.01 y2=2.789
+
+imp.refine imp="Total Doping" sensitivity=0.5
+imp.refine min.spacing=0.01 z=1
+
+constr.mesh max.angle=90 max.ratio=300 max.height=1 \
+	max.width=1 min.height=0.0001 min.width=0.0001
+
+z.plane z=0 spacing=0.5
+#
+z.plane z=2 spacing=0.25
+#
+z.plane z=5 spacing=0.25
+#
+z.plane z=7 spacing=0.5
+#
+z.plane max.spacing=1000000 max.ratio=1.5
+
+base.mesh height=1 width=1
+
+bound.cond !apply max.slope=28 max.ratio=300 rnd.unit=0.001 line.straightening=1 align.Points when=automatic
+
+structure outf=latchex04_0.str
+
+go atlas
+
+
+# name the electrodes 
+electrode num=1 name=el1
+electrode num=2 name=el2
+electrode num=3 name=el3
+electrode num=4 name=el4
+electrode num=5 name=el5
+#
+models bgn srh auger conmob fldmob 
+
+#
+solve init
+
+method gummel newton carriers=2
+solve   v1=0.1  v3=0.1 local
+solve   v1=0.5  v3=0.5
+solve   v1=1.0  v3=1.0
+solve   v1=3.0  v3=3.0  
+
+method dt.min=10.e-12
+log outf=latchex04.log
+
+solve	v4=-2.0 ramptime=500.e-12 tfinal=500.e-12 tstep=10.e-12
+solve	v4=-2.0 tfinal=4.5e-9    tstep=10.e-12
+solve	v4= 0.0 ramptime=400e-12  tfinal=6.e-9 tstep=10.e-12 outf=latchex04_1.str onefile 
+tonyplot latchex04.log -set latchex04_log.set
+tonyplot3d latchex04_0.str -set latchex04_0.set
+tonyplot3d latchex04_1.str -set latchex04_1.set
+
+quit
+
+

@@ -1,0 +1,113 @@
+# (c) Silvaco Inc., 2018
+go atlas
+mercury
+
+#######################################################################
+### ATLAS example mercuryex04
+#######################################################################
+### The simulation of a recessed n-type HEMT
+#######################################################################
+### Initialization
+#######################################################################
+
+###--------------------------------------------------------------------
+network clear
+
+###--------------------------------------------------------------------
+mesh width=100
+
+###--------------------------------------------------------------------
+### The spacing associated with the y.mesh is 0.05.  This is larger
+### than the thickness of the InGaAs layers and so will be politely
+### ignored when automatically generating the mesh around this layer
+### when calculating Poisson's equation.
+x.mesh location=0.0 spacing=0.1
+x.mesh location=2.5 spacing=0.1
+y.mesh location=0.0 spacing=0.05
+y.mesh location=3.0 spacing=0.05
+
+#######################################################################
+### Device Specification
+#######################################################################
+
+###--------------------------------------------------------------------
+region number=1 material=GaAs   thickness=0.135
+region number=2 material=InGaAs thickness=0.010 x.mole=0.78
+region number=3 material=GaAs   thickness=2.855
+
+###--------------------------------------------------------------------
+doping acceptor uniform concentration=3e17 y.min=0.0 y.max=0.1
+doping acceptor gaussian dose=3e12 peak=0.13 characteristic=0.002
+
+###--------------------------------------------------------------------
+surface x=0.45 y=0.00
+surface x=0.50 y=0.10
+surface x=1.00 y=0.10
+surface x=1.05 y=0.00
+
+###--------------------------------------------------------------------
+electrode name=gate x.min=0.5 length=0.5
+contact name=gate workfun=4.8
+
+###--------------------------------------------------------------------
+### This is a modulation doped device so we need the "n_modulation"
+### parameter
+models p_modulation fldmob print
+
+###--------------------------------------------------------------------
+options quiet
+
+#######################################################################
+### Poisson solution.
+#######################################################################
+
+###--------------------------------------------------------------------
+output all
+
+###--------------------------------------------------------------------
+poisson gate v.gate=0.0 out.file=mercuryex04_1.str
+poisson gate v.gate=1.0 out.file=mercuryex04_2.str
+
+###--------------------------------------------------------------------
+tonyplot mercuryex04_1.str -overlay mercuryex04_2.str -add mercuryex04_1.str -set mercuryex04_1.set
+
+###--------------------------------------------------------------------
+poisson look_up vg_min=0.0 vg_max=1.25 vd_min=-2.0 vd_max=0.0
+
+#######################################################################
+### DC-IV simulation
+#######################################################################
+
+###--------------------------------------------------------------------
+solve initial
+log out.file=mercuryex04_3.log
+solve vgate=0.00 vdrain=0.0 vstep=0.05 vfinal=-2.0 name=drain
+solve vgate=0.25 vdrain=0.0 vstep=0.05 vfinal=-2.0 name=drain
+solve vgate=0.50 vdrain=0.0 vstep=0.05 vfinal=-2.0 name=drain
+solve vgate=0.75 vdrain=0.0 vstep=0.05 vfinal=-2.0 name=drain
+solve vgate=1.00 vdrain=0.0 vstep=0.05 vfinal=-2.0 name=drain
+solve vgate=1.25 vdrain=0.0 vstep=0.05 vfinal=-2.0 name=drain
+log off
+
+###--------------------------------------------------------------------
+tonyplot mercuryex04_3.log -set mercuryex04_3.set
+
+#######################################################################
+### Small-signal AC simulation
+#######################################################################
+
+###--------------------------------------------------------------------
+solve initial
+solve vgate=0.75 vdrain=0.0 vstep=0.05 vfinal=1.5 name=drain
+log s.param gains noise.v out.file=mercuryex04_4.log
+solve ac noise frequency=1.0e6 fstep=1.258925412 nfstep=40 mult.freq
+
+###--------------------------------------------------------------------
+tonyplot mercuryex04_4.log -add mercuryex04_4.log -add mercuryex04_4.log -add mercuryex04_4.log -set mercuryex04_4.set
+
+#######################################################################
+### Exit the simulation
+#######################################################################
+
+###--------------------------------------------------------------------
+quit

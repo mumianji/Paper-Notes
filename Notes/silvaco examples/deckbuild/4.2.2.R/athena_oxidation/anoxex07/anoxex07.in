@@ -1,0 +1,31 @@
+go athena 
+
+#TITLE: Effect of Elastic Constants on Bird's Beak
+
+line x loc = 0.0 spacing=.05
+line x loc = 2.0 spacing=.05
+
+line y loc=0     spacing = 0.04
+line y loc=0.8   spacing = 0.3
+
+init    
+material   nitride s11.elast= 0.257e-12  s12.elast=-0.077e-12 s44.elast=0.668e-12
+material   material=nitride1 s11.elast= 0.257e-14  s12.elast=-0.077e-14 s44.elast=0.668e-14
+
+deposit oxide thick=.01 div=1
+deposit  material=nitride1 thick=0.15 div=2
+etch     material=nitride1 right p1.x=0.5
+
+deposit  nitride thick=0.15 div=2
+etch     nitride left  p1.x=1.5
+
+#the diffusion card
+method fermi compress grid.ox=0.05
+diffuse time=30 temp=1100 wet
+
+#save the structure
+structure outfile=anoxex07.str
+
+#plot the resulting structure
+tonyplot anoxex07.str
+quit

@@ -1,0 +1,81 @@
+<html>
+  <head>
+    <title>Large Signal Output Power Analysis</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Large Signal Output Power Analysis</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Blaze</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="ganfetex11_plot0.png" width="640" alt="ganfetex11_plot0" />
+      <p/>
+      <img src="ganfetex11_plot1.png" width="640" alt="ganfetex11_plot1" />
+      <p/>
+      <img src="ganfetex11_plot2.png" width="640" alt="ganfetex11_plot2" />
+      <p/>
+      <img src="ganfetex11_plot3.png" width="640" alt="ganfetex11_plot3" />
+      <p/>
+      <img src="ganfetex11_plot4.png" width="640" alt="ganfetex11_plot4" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example describes how to simulate typical 10 GHz large signal measured
+performance quantities related to power output, such as power out versus
+power in, power gain and amplifier efficiency as the device is over-driven
+into high distortion.  The example also plots the output signal shape versus
+time for each of the ten input signal levels simulated.
+</p>
+<p>
+Ten large signal input amplitudes are defined using
+<b> WAVEFORM </b> statements.  Each of these waveforms are applied to the gate in order of
+increasing amplitude by using the
+<b> LOOP </b> statements. After each waveform simulation is complete, a number of
+large signal parameters are calculated using a number of
+<b> EXTRACT </b> statments.
+</p>
+<p>
+First the peak input and output voltages are extracted, followed by the exact
+times at which these peak voltages occurred.  Then the input and output
+currents are extracted at the same times as the peak voltages occur.  It is
+important to extract the currents at the same time as the peak voltages in
+order to take account of the phase between current and voltage, so that the
+correct power values can be calculated.  For example, if the current is zero
+at the time the peak output voltage occurs, the calculated power is correctly
+calculated to be also zero, since in this case the output signal would be
+purely reactive.
+</p>
+<p>
+After each waveform simulation, all the calculated quantities are entered into
+a data file format using
+<b> SYSTEM </b> statements.  At the end of the last simulation, the tonyplot format data file
+is complete and the results are displayed as a number of plots.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

@@ -1,0 +1,107 @@
+# (c) Silvaco Inc., 2018
+# Pseudomorphic MODFET example with BQP 
+# Approximate calibration to S-P results via comparison of
+# charge distribution in quantum well at 0V bias
+#
+go atlas
+#
+# Schrodinger-Poisson solution at zero bias
+#
+mesh
+
+x.mesh loc=0.0   spac=0.01
+x.mesh loc=0.1   spac=0.01
+x.mesh loc=0.25  spac=0.04
+x.mesh loc=0.4   spac=0.01
+x.mesh loc=0.5   spac=0.01
+
+y.mesh loc=0.0    spac=0.005
+y.mesh loc=0.020  spac=0.005
+y.mesh loc=0.035  spac=0.0002
+y.mesh loc=0.050  spac=0.0002
+y.mesh loc=0.2    spac=0.01
+y.mesh loc=1.0    spac=0.1
+
+region     num=1  material=AlGaAs y.min=0.0 y.max=0.035 x.composition=0.3
+region     num=2  material=InGaAs y.min=0.035 y.max=0.05 x.composition=0.8
+# Note: the above means 20 per cent Indium
+region     num=3  material=GaAs y.min=0.05 y.max=1.0 
+# 
+elec       num=1  name=source x.min=0.0  x.max=0.01 y.min=0.035 y.max=0.05
+elec       num=2  name=gate   x.min=0.1  x.max=0.4 y.min=0.0 y.max=0.005
+elec       num=3  name=drain  x.min=0.49  x.max=0.5 y.min=0.035 y.max=0.05
+
+doping     gaussian x.min=0.1 x.max=0.4 y.min=0.012 y.max=0.025 n.type conc=1.0e18 char=0.001 lat.char=0.005
+doping     uniform y.min=0.0  n.type conc=1.e12
+
+material material=InGaAs  affinity=4.25
+
+model schrodinger.n eigens=8 fixed.fermi ^calc.fermi qy.min=0.001 qy.max=0.25 qx.min=0.1 qx.max=0.4 fermi new.eig num.direct=1 qminconc=1.0e13 srh incomplete
+#
+contact  name=gate workfun=4.4 
+#
+#
+method itlim=20 nblockit=30 trap  maxtrap=6 vsatmod.inc=0.01 carriers=0
+
+output con.band val.band eigens=5
+
+solve init
+solve prev
+
+output con.band val.band eigens=5
+save outf=quantumex09_sp.str
+
+#BQP at 0V bias
+go atlas
+
+mesh
+
+x.mesh loc=0.0   spac=0.01
+x.mesh loc=0.1   spac=0.01
+x.mesh loc=0.25  spac=0.04
+x.mesh loc=0.4   spac=0.01
+x.mesh loc=0.5   spac=0.01
+
+y.mesh loc=0.0    spac=0.005
+y.mesh loc=0.020  spac=0.005
+y.mesh loc=0.035  spac=0.0002
+y.mesh loc=0.050  spac=0.0002
+y.mesh loc=0.2    spac=0.01
+y.mesh loc=1.0    spac=0.1
+
+region     num=1  material=AlGaAs y.min=0.0 y.max=0.035 x.composition=0.3
+region     num=2  material=InGaAs y.min=0.035 y.max=0.05 x.composition=0.8
+# Note: the above means 20 per cent Indium
+region     num=3  material=GaAs y.min=0.05 y.max=1.0 
+# 
+elec       num=1  name=source x.min=0.0  x.max=0.01 y.min=0.035 y.max=0.05
+elec       num=2  name=gate   x.min=0.1  x.max=0.4 y.min=0.0 y.max=0.005
+elec       num=3  name=drain  x.min=0.49  x.max=0.5 y.min=0.035 y.max=0.05
+
+doping     gaussian x.min=0.1 x.max=0.4 y.min=0.012 y.max=0.025 n.type conc=1.0e18 char=0.001 lat.char=0.005
+doping     uniform y.min=0.0  n.type conc=1.e12
+
+#
+material material=GaAs bqp.ngamma=0.45
+material material=InGaAs bqp.ngamma=0.78 bqp.nalpha=0.41 affinity=4.25
+material material=AlGaAs bqp.ngamma=0.55
+mobility material=InGaAs vsatn=1.4e7 ecritn=3.5e3
+# Note: AlGaAs and GaAs defaults are vsatn = 7.7e6, ecritn =4e3
+
+#
+contact  name=gate workfun=4.4 
+#
+model bqp.n srh incomplete
+#
+method block itlim=20 nblockit=30 trap  maxtrap=6 vsatmod.inc=0.01 carriers=2
+
+
+solve init
+solve vgate=0 nocurrent
+
+output con.band val.band p.quantum
+save outf=quantumex09_bqp.str
+
+tonyplot -overlay quantumex09_sp.str quantumex09_bqp.str -set quantumex09.set
+
+quit

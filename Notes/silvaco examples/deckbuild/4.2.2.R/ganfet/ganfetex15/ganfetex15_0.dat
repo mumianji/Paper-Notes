@@ -1,0 +1,30 @@
+v DBInternal
+# silvaco.file ASCII version=1.14.23 format=1 contents=SDB,Tables=1
+
+Copyright "###################################################################"
+Copyright "#                    Copyright Silvaco Inc. (c)                   #"
+Copyright "#                            1992-2014                            #"
+Copyright "#                                                                 #"
+Copyright "# This file format and the following Key are copyright Silvaco    #"
+Copyright "# International. You may not use, this format or key without      #"
+Copyright "# reproducing this message in full and obtaining                  #"
+Copyright "# express written permission from Silvaco Inc.                    #"
+Copyright "#                                                                 #"
+Copyright "# To obtain such permission please contact: Silvaco Inc.          #"
+Copyright "#                                           support@silvaco.com   #"
+Copyright "#                                                                 #"
+Copyright "# KEY=SVC86hn7562asdx                       PROD=345              #"
+Copyright "###################################################################"
+#dbinternal 2.11.7.R (Thu Feb  8 16:02:37 GMT 2018)
+#libSDB 1.12.42 (Thu Oct 26 19:20:24 PDT 2017)
+p 3 10000 10001 10002
+d 1 3 421.06599999999997
+d 2 4 500.44400000000002
+d 3 5 573.851
+d 4 6 643.471
+d 5 10 873.10799999999995
+d 6 12 965.46699999999998
+Q 10000 1 ex_id
+Q 10001 1 dg_space
+Q 10002 1 BV
+EOF 309143266

@@ -1,0 +1,84 @@
+<html>
+  <head>
+    <title>Silicon FINFET device in 3D with BQP</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Silicon FINFET device in 3D with BQP</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>DevEdit 3D/Device 3D/Quantum 3D</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="quantumex08_plot0.png" width="640" alt="quantumex08_plot0" />
+      <p/>
+      <img src="quantumex08_plot1.png" width="640" alt="quantumex08_plot1" />
+      <p/>
+      <img src="quantumex08_plot2.png" width="640" alt="quantumex08_plot2" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates:
+</p>
+<ul>
+  <li>
+ Application of the BQP model coupled with energy balance to
+a complex 3D device.
+<br/>
+  </li>
+  <li>
+ Application of BQP in case of 2D quantisation.
+<br/>
+  </li>
+  <li>
+ Effect of quantum confinement on carrier density in FINFET.
+<br/>
+  </li>
+</ul>
+<p>
+The example illustrates the modelling of a FINFET device using BQP and Energy balance in 3D.
+The quantisation inside the channel is almost 2-dimensional and since we
+do not have a principal direction of quantisation we cannot be sure that
+the model is calibrated until we do a calibration against a 2D
+Schrodinger-Poisson model. This is not currently available in Atlas but
+a calibration performed for SILVACO by the authors of the BQP model suggests
+using isotropic effective masses in Silicon of 0.7 m0 with BQP.NALPHA = 0.3
+and BQP.NGAMMA = 1.4.
+</p>
+<p>
+The 3D device structure is created in DevEdit 3D and the required
+models are set.  After the SOLVE.INIT statement, the solution for
+a gate voltage of 0.2 Volts is obtained using the NOCURRENT initial
+guess parameter.  A drain bias is applied and then the gate voltage is
+ramped to turn the device on. The drain current is plotted in TonyPlot
+and the device structure in TonyPlot3D. The cutplane facility of
+TonyPlot3D can be used to look at the electron density and quantum
+potential in the channel, which illustrate the reduced electron density
+at the Si/Oxide interface.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

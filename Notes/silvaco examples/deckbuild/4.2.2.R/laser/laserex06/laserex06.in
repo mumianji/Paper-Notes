@@ -1,0 +1,115 @@
+# (c) Silvaco Inc., 2018
+go atlas
+mesh  space.mult=1.0 diag.flip
+# 
+x.mesh loc=0.00 spac=2
+x.mesh loc=8 spac=0.5
+x.mesh loc=9 spac=0.2
+x.mesh loc=11 spac=0.2
+x.mesh loc=12 spac=0.5
+x.mesh loc=20 spac=2
+#
+y.mesh loc=0.00 spac=0.25
+y.mesh loc=1 spac=0.25
+y.mesh loc=1.75 spac=0.02
+y.mesh loc=1.9 spac=0.02
+y.mesh loc=2 spac=0.075
+y.mesh loc=2.5 spac=0.1
+y.mesh loc=3.5 spac=0.1
+y.mesh loc=4.5 spac=0.2
+y.mesh loc=10 spac=1.5
+#
+region     num=1  material=InP x.min=0. x.max=20.0 \
+ y.min=0.0 y.max=1.0
+#
+region     num=2  material=InP x.min=0. x.max=9.0 \
+ y.min=1.0 y.max=2.5
+#
+region     num=3  material=InP x.min=11.0 x.max=20.0 \
+ y.min=1.0 y.max=2.5
+#
+region     num=4  material=InP x.min=9.0 x.max=11.0 \
+ y.min=1.0 y.max=1.75
+#
+region     num=5  material=InGaAsP x.min=9.0 x.max=11.0 y.min=1.75 \
+ y.max=1.9 x.comp=0.25 y.comp=0.5
+#
+region     num=6  material=InP x.min=0.0 x.max=9.0 \
+ y.min=2.5 y.max=3.5
+#
+region     num=7  material=InP x.min=11.0 x.max=20.0 \
+ y.min=2.5 y.max=3.5
+#
+region     num=8  material=InP x.min=9.0 x.max=11.0 \
+ y.min=1.9 y.max=3.5
+#
+region     num=9  material=InP x.min=0.0 x.max=20.0 \
+ y.min=3.5 y.max=4.5
+#
+region     num=10  material=InP x.min=0.0 x.max=20.0 \
+ y.min=4.5 y.max=10.0
+#
+elec       num=1  name=cathode       \
+ x.min=8.0 x.max=12.0 y.min=0.0 y.max=0.0
+#
+elec       num=2  name=anode       bottom
+#
+doping     uniform reg=1  n.type conc=1.e18
+doping     uniform reg=2  p.type conc=2.e17
+doping     uniform reg=3  p.type conc=2.e17
+doping     uniform reg=4  n.type conc=1.e18
+doping     uniform reg=5  p.type conc=2.e15
+doping     uniform reg=6  n.type conc=2.e17
+doping     uniform reg=7  n.type conc=2.e17
+doping     uniform reg=8  p.type conc=1.e18
+doping     uniform reg=9  p.type conc=1.e18
+doping     uniform reg=10 p.type conc=2.e18
+#
+material material=InP     taun0=2.e-9  taup0=2.e-9  copt=1.5e-10 \
+ mun=2400.0 mup=80.0 align=0.6
+#
+material material=InGaAsP taun0=10.e-9 taup0=10.e-9 copt=1.5e-10 \
+ mun=4600.0 mup=150.0  
+#
+material fcn=3e-18 fcp=2.3e-17 alphaa=50
+
+models  
+models material=InP     fldmob  srh optr fermi print
+models material=InGaAsP fldmob  srh optr fermi print
+#
+solve init
+output con.band val.band
+save outf=laserex06_0.str
+#
+method newton autonr trap
+#
+solve vfinal=1.0 vstep=0.1 name=anode
+#
+#    LASER models
+#
+lx.m n=1  x=6.0
+lx.m n=37 x=14.0
+#
+ly.m n=1  y=1.25
+ly.m n=33 y=2.4
+#
+models material=InGaAsP fldmob  srh optr fermi print \
+ laser gainmod=1 las_maxch=100. spec.name=laserex06 \
+ photon_energy=1.025 lmodes las_einit=1.01 las_efinal=1.1 cavity_length=150 \
+ las.losses=5 las.absorption las.fcarrier las.mirror=95
+#
+log  outf=laserex06_1.log 
+#
+solve vfinal=1.2 vstep=0.05 name=anode
+#
+output con.band val.band recomb u.srh u.aug u.rad flowlines
+save outfile=laserex06_1.str
+#
+method dt.max=1e-11
+log outf=laserex06_2.log
+solve vanode=1.3 ramptime=1e-11 dt=1e-13 tfinal=1e-9
+
+tonyplot laserex06_2.log -set laserex06_1.set
+tonyplot -overlay laserex06_tr105.log laserex06_tr0.log -set laserex06_2.set
+
+quit

@@ -1,0 +1,71 @@
+
+go athena 
+
+#TITLE: MC Plasma Etch Example. 
+#Demonstration of Polymer Etch Rate Effect
+
+# Substrate mesh definition
+line y loc=0    spac=0.04
+line y loc=2  spac=0.04
+
+ 
+
+line x loc=-0.5   spac=0.1
+line x loc=-0.2 spac=0.025
+line x loc=0 spac=0.05
+
+init orient=100  
+
+# Make 0.4 um opening in oxide mask 
+depo oxide thick=0.5 div=10
+etch oxide right p1.x=-0.2
+structure mirror right
+
+# Save initial structure 
+struct outf=anelex34_1.str
+
+#Specify parameters for MCETCH machine for all 3 participating materials
+
+rate.etch machine=MCETCH silicon mc.plasma ion.types=2 mc.parts1=10000 mc.norm.t1=10.0 mc.lat.t1 = 1.0 mc.ion.cu1=10 mc.etch1=1e-05 mc.alb1=0.2 mc.plm.alb=0.9 mc.parts2=10000 mc.norm.t2=6.0 mc.lat.t2 = 1.0 mc.ion.cu2=5 mc.etch2=1e-05 mc.alb2=0.2 mc.polympt=3000 mc.rflctdif=0.5
+
+
+rate.etch machine=MCETCH oxide   mc.plasma   mc.etch1=0.0 mc.alb1=0.9 \ 
+mc.etch2=0.0 mc.alb2=0.9 mc.plm.alb=0.1 mc.rflctdif=0.5
+
+
+
+# Set the etch rate for polymer equal to that of silicon
+
+rate.etch machine=MCETCH material=polymer   mc.plasma   mc.etch1=1e-05 \
+ mc.alb1=0.2  mc.etch2=1e-05 mc.alb2=0.2 mc.plm.alb=0.5 mc.rflctdif=0.5
+
+etch machine=MCETCH time=3 minutes mc.sm=0.001 mc.redepo=t mc.dt.fact=2 
+
+structure outf=anelex34_2.str remove.gas
+
+
+# The same as the first tun but with etch rate for polymer five times 
+# lower than that of silicon
+
+init inf=anelex34_1.str
+rate.etch machine=MCETCH material=polymer   mc.plasma   mc.etch1=2e-06 \
+ mc.alb1=0.2  mc.etch2=2e-06 mc.alb2=0.2 mc.plm.alb=0.5 mc.rflctdif=0.5
+
+etch machine=MCETCH time=3 minutes mc.sm=0.001 mc.redepo=t mc.dt.fact=2 
+
+structure outf=anelex34_3.str remove.gas
+
+
+# The same as the first run but with five times lower reflection of polymer 
+# particles from already redeposited polymer material 
+
+
+init inf=anelex34_1.str
+
+rate.etch machine=MCETCH material=polymer   mc.plasma   mc.etch1=1e-05 \
+ mc.alb1=0.2  mc.etch2=1e-05 mc.alb2=0.2 mc.plm.alb=0.1 mc.rflctdif=0.5
+
+etch machine=MCETCH time=3 minutes mc.sm=0.001 mc.redepo=t mc.dt.fact=2 
+
+structure outf=anelex34_4.str remove.gas
+tonyplot  anelex34_2.str anelex34_3.str anelex34_4.str

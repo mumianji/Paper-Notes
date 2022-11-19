@@ -1,0 +1,69 @@
+<html>
+  <head>
+    <title>Solar cell circuit simulation</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Solar cell circuit simulation</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>S-Pisces/Luminous/MixedMode</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R, Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="solarex09_plot0.png" width="640" alt="solarex09_plot0" />
+      <p/>
+      <img src="solarex09_plot1.png" width="640" alt="solarex09_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example shows how a TCAD solar cell can be included in a more realistic
+circuit with series and shunt resistance by using MixedMode.  The solar cell is
+the same as in solarex01, but with the addition of four MixedMode simulations
+which are variations of the same circuit.  Also, the width is set so that the
+cell has an area of 1 cm^2.  All four circuits have the same topology for
+easily overlaying the output log files.  The fill factor and efficiency are
+calculated for each case.
+</p>
+<p>
+Circuit 0 is the solar cell by itself - the shunt resistance Rsh is set to 1e6
+ohms and the series resistance Rs is set to 1e-6 ohms.
+</p>
+<p>
+Circuit 1 uses a shunt resistance of 100 ohms - Rs is still set to 1e-6.
+</p>
+<p>
+Circuit 2 uses a series resistance of 5 ohms - Rsh is set to 1e6.
+</p>
+<p>
+Circuit 3 uses Rs=5 and Rsh=100.
+</p>
+<p>
+The resulting log files are overlaid and the result is very much like Figure 12
+on page 806 of Sze&apos;s &quot;Physics of Semiconductor Devices&quot; 2nd edition.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

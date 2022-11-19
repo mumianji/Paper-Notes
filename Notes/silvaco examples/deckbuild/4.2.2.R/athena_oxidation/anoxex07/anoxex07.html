@@ -1,0 +1,81 @@
+<html>
+  <head>
+    <title>Effect of Young's Modulus on Bird's Beak</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Effect of Young's Modulus on Bird's Beak</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>SSuprem 4</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="anoxex07_plot0.png" width="640" alt="anoxex07_plot0" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example illustrates a method for tuning the shape of bird&apos;s beak
+by varying elastic characteristics. This example also demonstrates
+how user defined materials can be created and used in Athena.
+</p>
+<p>
+The example creates a comparison between the default coefficients for
+nitride and a user defined material that is similar to nitride but with
+modified elastic constants.
+</p>
+<p>
+The simulation begins with the initial mesh definition in silicon.
+</p>
+<p>
+Following the
+<b> INITIALIZE </b> statement, a
+<b> MATERIAL </b> statement redefines elastic constants for the new material
+<b> nitride1</b> . The elastic constant
+<b> s11.elast</b> is a reverse value of Young&apos;s modulus for non-crystalline materials. This means that the aritficial material
+<b> nitride1 </b> is much stiffer than default nitride.
+</p>
+<p>
+The new material can now be deposited and patterned just like any other
+default material in
+<b> Athena</b> .
+A deposition and an etch of
+<b> nitride1 </b> is performed.
+</p>
+<p>
+Following the patterning of the new material, nitride is deposited and
+patterned, so that the structure has the right side with a nitride
+barrier to oxidation and the left side with a barrier made of the user
+defined stiff material
+<b> nitride1 </b> .
+</p>
+<p>
+The structure is then oxidized and the final structure is plotted.  The
+final structure shows that
+<b> nitride1 </b> is flexed much less than default nitride which results in a different shaped bird&apos;s beak on each side.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

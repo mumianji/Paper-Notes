@@ -1,0 +1,82 @@
+<html>
+  <head>
+    <title>Fully Depleted SOI - Vt and Subthreshold Slope</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Fully Depleted SOI - Vt and Subthreshold Slope</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>S-Pisces</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="soiex02_plot0.png" width="640" alt="soiex02_plot0" />
+      <p/>
+      <img src="soiex02_plot1.png" width="640" alt="soiex02_plot1" />
+      <p/>
+      <img src="soiex02_plot2.png" width="640" alt="soiex02_plot2" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example repeats soiex01.in but for a device that has been designed to operate with a fully depleted SOI film.  It demonstrates:
+</p>
+<ul>
+  <li>
+ Basic SOI structure definition using Atlas syntax
+<br/>
+  </li>
+  <li>
+ Setting transport models including impact ionization
+<br/>
+  </li>
+  <li>
+ Generating an Id/Vgs curve with Vds=0.1V
+<br/>
+  </li>
+  <li>
+ Extracting threshold voltage and subthreshold slope from the results
+<br/>
+  </li>
+  <li>
+ Plotting output curves and structures
+  </li>
+</ul>
+<p>
+Thin film fully depleted SOI MOSFETs have been shown to achieve low threshold voltages and near ideal inverse subthreshold slopes. This makes them ideal for low power operation.
+This example demonstrates that Atlas is capable of reproducing the differences between a partially depleted transistor in soiex01.in and the fully depleted transistor in this example.
+</p>
+<p>
+The syntax and methodology used within this example are identical to that of soiex01.in with only two three modifications.
+</p>
+<p>
+The
+<b> mesh </b> has been modified to support the thinner SOI film thickness of 0.1um and the definition of the SOI layers on the
+<b> region </b> statement has similarly been adapted. Also, the channel doping has been reduced on the
+<b> doping </b> statement to ensure the film is fully depleted.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

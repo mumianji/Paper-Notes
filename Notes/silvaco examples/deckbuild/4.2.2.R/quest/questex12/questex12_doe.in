@@ -1,0 +1,8 @@
+go internal
+
+load inf=questex12.in
+
+sweep	parameter=MIM3_THICK 	type=linear range="0.2, 1, 5" 
+	
+save type=sdb outf=questex12_C.dat
+save type=spayn outf=questex12_C.db

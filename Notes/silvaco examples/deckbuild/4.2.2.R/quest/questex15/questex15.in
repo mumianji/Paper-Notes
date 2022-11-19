@@ -1,0 +1,134 @@
+go quest 
+
+# Techno FILE
+
+layermapping layer.name = "MET5" gds.Number = 33 gds.Datatype = 0
+layermapping layer.name = "MET6" gds.Number = 38 gds.Datatype = 0
+layermapping layer.name = "VIA56" gds.Number = 39 gds.Datatype = 0
+layermapping layer.name = "METAL_5_PIN" gds.Number = 45 gds.Datatype = 0
+layermapping layer.name = "METAL_6_PIN" gds.Number = 46 gds.Datatype = 0
+layermapping layer.name = "METAL_5_PIN_T" gds.Number = 45 gds.Datatype = 0 isText
+layermapping layer.name = "METAL_6_PIN_T" gds.Number = 46 gds.Datatype = 0 isText
+
+attach electrode.layer = "METAL_5_PIN" metal.layer = "MET5"
+attach electrode.layer = "METAL_6_PIN" metal.layer = "MET6"
+
+connection layer = "METAL_5_PIN" con.layer1 = "METAL_5_PIN_T"
+connection layer = "METAL_6_PIN" con.layer1 = "METAL_6_PIN_T"
+connection layer = "VIA56" con.layer1 = "MET5" con.layer2 = "MET6"
+
+
+# PROCESS
+
+material name = "aluminum" cond = 3.76676e+07 permittivity = 1 permeability = 1 losstangent = 0
+material name = "oxide" cond =  0 permittivity = 3.9 permeability = 1 losstangent = 0
+material name = "silicon" cond = 100 permittivity = 11.8 permeability = 1 losstangent = 0
+material name = "copper" cond = 5.88235e+07 permittivity = 1 permeability = 1 losstangent = 0
+material name = "air" cond =  0 permittivity = 1 permeability = 1 losstangent = 0
+material name = "oxide37" cond =  0 permittivity = 3.7 permeability = 1 losstangent = 0
+material name = "oxide42" cond =  0 permittivity = 4.2 permeability = 1 losstangent = 0
+material name = "nitride" cond =  0 permittivity = 7.5 permeability = 1 losstangent = 0
+
+
+deposit type = "substrate" layer.name = "SUBS" thick = 200 matName = "silicon"
+deposit type = "dielectric" layer.name = "FOX" thick = 0.35 matName = "oxide"
+deposit type = "dielectric" layer.name = "ILD" thick = 0.65 matName = "oxide"
+deposit type = "dielectric" layer.name = "PMD1a" thick = 1.2 matName = "oxide37"
+deposit type = "dielectric" layer.name = "PMD1b" thick = 0.2 matName = "oxide42"
+deposit type = "dielectric" layer.name = "PMD2a" thick = 1.2 matName = "oxide37"
+deposit type = "dielectric" layer.name = "PMD2b" thick = 0.2 matName = "oxide42"
+deposit type = "dielectric" layer.name = "PMD3a" thick = 1.2 matName = "oxide37"
+deposit type = "dielectric" layer.name = "PMD3b" thick = 0.2 matName = "oxide42"
+deposit type = "dielectric" layer.name = "PMD4a" thick = 1.2 matName = "oxide37"
+deposit type = "dielectric" layer.name = "PMD4b" thick = 0.2 matName = "oxide42"
+deposit type = "metal" layer.name = "MET5" thick = 0.5 matName = "aluminum" anglex = 0 angley = 0
+deposit type = "dielectric" layer.name = "PMD6a" thick = 1.2 matName = "oxide37"
+deposit type = "dielectric" layer.name = "PMD6b" thick = 0.35 matName = "oxide42"
+deposit type = "via" layer.name = "VIA56" matName = "aluminum" from_layer ="MET5" to_layer="MET6" anglex = 0 angley = 0
+deposit type = "metal" layer.name = "MET6" thick = 1 matName = "aluminum" anglex = 0 angley = 0
+deposit type = "dielectric" layer.name = "PASS1" thick = 1 matName = "oxide42"
+deposit type = "dielectric" layer.name = "PASS2" thick = 0.2 matName = "oxide42"
+deposit type = "dielectric" layer.name = "PASS3" thick = 0.6 matName = "nitride"
+deposit type = "dielectric" layer.name = "AIR" thick = 200 matName = "air"
+
+
+# SOLVER
+
+Init simulation.type = "PORT" \
+	 impedance.residual = 0.01 impedance.iteration = 50	\
+	 capacitance.residual = 0.01 capacitance.iteration = 50 \
+	 domainbase = "Grounded"	Z0 = 50	add.resistance = 0	\
+	 dx = 1.5 dy = 1.5 dz = 0.5	\
+	 computation.domain = "Automatic"
+
+electrodes ports = "IN", "subs_ground", "OUT", "subs_ground" 
+
+Frequency type="List" frequency.list=1, 5, 10, 50, 100, 500, 1000, 1500, \
+        2000, 2500, 3000, 3500, 4000, 4500, 5000, 5500, 6000, 6500, 7000, \
+        7500, 8000, 8500, 9000, 9500, 10000
+
+
+# OUTPUT
+
+save	database.path = "questex15_db" \
+		 spice.file. = "questex15" tony.file= "questex15" \
+		 sparameter.file = "questex15" \
+                 3D.file = "questex15" ut4.batchfile="SPICE"  
+
+# RUN
+
+set wire_width = 15
+set space = 2
+set nb_coils = 3
+set radius = 50
+
+creategds script = "questex15.xis" outgdsfile = "questex15.gds" \
+		  argumentnames = "wire_width","space","nb_coils","radius"	\
+		  arguments = $"wire_width",$"space",$"nb_coils",$"radius"
+
+layout gdsfile = "questex15.gds" cell = "CELL"
+
+solve
+
+go utmost4
+
+script begin
+
+var mydir, allDataSets, dataSets, database, error, modelLibrary, netlist, optimSetup, project
+
+mydir = Silvaco.Utmost4.openCurrentWorkingDirectory ();
+
+project = mydir.readProject ("questex15.prj");
+
+modelLibrary = project.getModelLibrary ();
+netlist = project.getNetlist ();
+
+dataSets = mydir.readDataSets ("questex15_db/questex15@@CELL/questex15_ind_model.uds");
+
+optimSetup = project.getOptimSetup ("IND");
+error = Silvaco.Utmost4.optimize (dataSets, optimSetup, netlist, modelLibrary, "GA");
+
+optimSetup = project.getOptimSetup ("RES");
+error = Silvaco.Utmost4.optimize (dataSets, optimSetup, netlist, modelLibrary, "GA");
+
+optimSetup = project.getOptimSetup ("Y_loglin");
+error = Silvaco.Utmost4.optimize (dataSets, optimSetup, netlist, modelLibrary, "GA");
+
+modelLibrary.exportModelCardToSSF ("PARAMS", "optVal", mydir, "inductor.ssf");
+
+script end
+
+run script
+
+extract init inf="inductor.ssf"
+extract name="L1" param="L1"
+extract name="RAC1" param="RAC1"
+extract name="RSK1" param="RSK1"
+extract name="LSK1" param="LSK1"
+extract name="COX1" param="COX1"
+extract name="CSUB1" param="CSUB1"
+extract name="RSUB1" param="RSUB1"
+extract name="CP" param="CP"
+
+
+

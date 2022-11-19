@@ -1,0 +1,58 @@
+<html>
+  <head>
+    <title>Heterojunction Diode Leakage</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Heterojunction Diode Leakage</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Blaze/Quantum</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="quantumex04_plot0.png" width="640" alt="quantumex04_plot0" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates the difference between an AlGaAs / GaAs
+heterojunction diode modeled with and without quantum physics.
+</p>
+<p>
+In the first half of the file, the example calculates the forward and
+reverse characteristics of a classically modeled diode.  In the second
+half of the example, the quantum model is switched on.  Note that, as
+in the previous example, the
+<b> qfactor </b> is used to ramp the level
+of quantum moments included in the example for zero to unity.
+</p>
+<p>
+The overlayed results show around an order of magnitude higher reverse
+leakage in the quantum case. This is due to the
+<i> smearing</i> of the electron concentration across the heterojunction.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

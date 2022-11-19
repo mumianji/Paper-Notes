@@ -1,0 +1,170 @@
+silvaco.file ASCII version=1.14.19 format=1
+""
+#non-visible objects
+number-of-non-visible-objects 1
+non-visible-object "Material SiO2"
+
+#non-enable-contour objects
+number-of-non-enable-contour-objects 0
+
+#Cut Plane Settings
+point_1 0 0 0
+point_2 1 0 0
+point_3 0 0 1
+three_points 0
+PAN 0
+PITCH 90
+ELEV 1
+
+#Cut Plane Axes Settings
+X_REVERSE 0
+Y_REVERSE 0
+XY_SWAP 0
+
+#Electrode Properties
+electrode pwell 0 0 0
+electrode drain 0 0 0
+electrode cgate 0 0 0
+electrode ngate 0 0 0
+
+#Electrode Labels
+electrode_label pwell pwell 0 255 170 0
+electrode_label drain drain 0 255 170 0
+electrode_label cgate cgate 0 255 170 0
+electrode_label ngate ngate 0 255 170 0
+
+#Region Properties
+region "Region #1" 1 0 4
+region "Region #2" 0 0 4
+
+#Region Labels
+region_label "Region #1" "Region #1" 1 0 0 0
+region_label "Region #2" "Region #2" 1 0 0 0
+
+#Overlay Properties
+overlay_mode_active 0
+
+#Define the scene matrix
+sm_00 0.89687448522869961
+sm_01 0.44196096637344118
+sm_02 -0.016931094117961277
+sm_03 -4.4665412863114078
+
+sm_10 -0.29901867194894949
+sm_11 0.63411806000867732
+sm_12 0.71307932223331849
+sm_13 -0.61897182101260428
+
+sm_20 0.32588953891105765
+sm_21 -0.63447993677743453
+sm_22 0.70087888986276015
+sm_23 1.978542207754862
+
+sm_30 0
+sm_31 0
+sm_32 0
+sm_33 1
+
+#Define the camera matrix
+cm_00 1
+cm_01 0
+cm_02 0
+cm_03 0
+
+cm_10 0
+cm_11 1
+cm_12 0
+cm_13 0
+
+cm_20 0
+cm_21 0
+cm_22 1
+cm_23 -122.60544147148606
+
+cm_30 0
+cm_31 0
+cm_32 0
+cm_33 1
+
+#Define the scene scaling factors
+ss_xyz 1 1 1
+
+#Define 3D projection
+proj_3d_aspect 1.097799511002445
+proj_3d_z_near 116.56331423925199
+proj_3d_z_far 128.99165153929647
+proj_3d_height 10.361465548045507
+proj_3d_fovy 5
+proj_3d_type 0
+proj_3d_depth_cue 2
+
+coord_selection 0
+coord_type 0
+
+modelview_x_scale 1
+modelview_y_scale 1
+modelview_z_scale 1
+
+#Global BBox Settings
+global_bbox_min -0.38954877692016954 -0.38954877692016954 -0.60554877692016951
+global_bbox_max 7.2304039567253175 7.2304039567253175 3.7304039567253175
+
+#Define x-y-z Axis Visibility
+x_axis_visibility 1
+y_axis_visibility 1
+z_axis_visibility 1
+
+#Define Legend Visibility
+contour_legend 1
+region_legend 1
+
+#Define the DisplayMode
+display_mode_id 3
+
+#Define Show Cut Plane
+show_cut_plane 0
+
+#Define Show Cut Plane X Y Axes
+show_cut_plane_x_axis 1
+show_cut_plane_y_axis 1
+
+#Define the DrawMode
+draw_mode_id 0
+
+#Define the Region_Color_Type
+region_color_type 0
+
+mat_info "4H-SiC 66 1"
+mat_info "Air 1 1"
+mat_info "Copper 7 1"
+mat_info " 2 1"
+mat_info "Tungsten 76 1"
+
+#Define light0 and light1 information
+light0_enabled 1
+light0_color 255 255 255
+light0_intensity 0.52999997138977051
+light0_latitude 30
+light0_longitude 0
+
+light1_enabled 1
+light1_color 255 255 255
+light1_intensity 0.52999997138977051
+light1_latitude 0
+light1_longitude 270
+
+#Define contours information
+imp_menu_index 0
+name-of-doping "Abs Net Doping"
+limit_select_type 0
+auto_max_limit 0
+auto_min_limit 0
+contour_max_imp_value 1e+20
+contour_min_imp_value 1e+14
+legend_type 0
+legend_auto_mapping 1
+legend_mapping 0
+legend_palette 0
+legend_nbr_of_colors 5
+
+EOF 474041043

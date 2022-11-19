@@ -1,0 +1,120 @@
+# TPCS version: 7
+# various properties
+log label 0
+key opaque 1
+mark frequency 0
+mark overlay 0
+graph width 0 1
+graph width 1 1
+graph width 2 1
+graph width 3 1
+graph width 4 2
+graph width 5 1
+sequence size 2
+sequence width 0
+log zero 0
+sequence mark 0 0
+sequence mark 1 1
+sequence mark 2 2
+sequence mark 3 3
+sequence mark 4 4
+sequence mark 5 5
+# Functions
+function 1 "" ""
+function 2 "" ""
+function 3 "" ""
+function 4 "" ""
+select 1
+# xygraph flags
+show points off
+show lines on
+# xygraph types
+xygraph type 0 convert 0
+xygraph yaxis scale linear
+# xygraph x-axis
+xygraph xaxis "Electron energy (eV)" linear
+# xygraph y-axes
+xygraph yaxis none
+xygraph yaxis "Total G valley scattering rate" linear
+xygraph yaxis "Total L valley scattering rate" linear
+xygraph yaxis "Total X valley scattering rate" linear
+xygraph yaxis "Total scattering rate" linear
+# xygraph group
+xygraph group "(unknown electricals)"
+# key positions
+key contours 1 at 3
+key contours 2 at 1
+key contours 3 at 6
+key electrical at user 0.257996, -0.00142248
+key vectors at 6
+key overlay at 2
+key regions at 4
+key apply 
+# annotation, titles
+title main "Total scattering rate (low energy electrons)"
+title sub "for electrons in individual valleys and for all electrons"
+# annotation, footers
+footer right none
+footer left none
+# annotation, show
+show xaxis on
+show yaxis on
+show grid off
+show label xaxis on
+show label yaxis on
+# annotation, axes
+range xaxis -0.05, 1.05 increment 0.2,4
+range yaxis 0, 2e+14 increment 2e+13,4
+label xaxis "Electron energy (eV)"
+# zoom
+zoom from 0, 0 scale 1, 1
+# user labels
+# overlay level names
+label overlay 0 "mocasim04_1.dat"
+select 2
+# xygraph flags
+show points off
+show lines on
+# xygraph types
+xygraph type 0 convert 0
+xygraph yaxis scale linear
+# xygraph x-axis
+xygraph xaxis "Electron energy (eV)" linear
+# xygraph y-axes
+xygraph yaxis none
+xygraph yaxis "Total G valley scattering rate" linear
+xygraph yaxis "Total L valley scattering rate" linear
+xygraph yaxis "Total X valley scattering rate" linear
+xygraph yaxis "Total scattering rate" linear
+# xygraph group
+xygraph group "(unknown electricals)"
+# key positions
+key contours 1 at 3
+key contours 2 at 1
+key contours 3 at 6
+key electrical at user 0.0021322, 0.00142248
+key vectors at 6
+key overlay at 2
+key regions at 4
+key apply 
+# annotation, titles
+title main "Total scattering rate"
+title sub "individual valleys and total rate"
+# annotation, footers
+footer right none
+footer left none
+# annotation, show
+show xaxis on
+show yaxis on
+show grid off
+show label xaxis on
+show label yaxis on
+# annotation, axes
+range xaxis -0.2, 7.7 increment 1,5
+range yaxis 0, 4.01e+15 increment 1e+15,5
+label xaxis "Electron energy (eV)"
+# zoom
+zoom from 0, 0 scale 1, 1
+# user labels
+# overlay level names
+label overlay 0 "mocasim04_1.dat"

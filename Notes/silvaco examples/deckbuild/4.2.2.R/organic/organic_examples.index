@@ -1,0 +1,561 @@
+
+{section} ORGANIC : Organic Device Application Examples
+
+
+
+{subsection} organicex01.in : OLED: Device Characteristics of MEH-PPV Polymer LED 
+
+Requires: Blaze/Organic Display
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates the basic characteristics of an Organic Light Emitting Diode (OLED). It demonstrates:
+
+{bullet} OLED structure definition using Atlas syntax
+{newline}
+{bullet} Material parameter specification
+{newline}
+{bullet} Choosing the OLED physical models
+{newline}
+{bullet} Current density versus anode voltage characteristics
+{newline}
+{bullet} Current density versus electric field characteristics
+{newline}
+{bullet} Luminescent power of the OLED
+{newline}
+{bullet} Langevin recombination plot at 10V
+{newline}
+
+The file starts with the
+{bold} SET 
+statement which defines the thickness variables for substitution into Atlas syntax. This is followed by defining the OLED structure such as the mesh, region, electrode location and doping. 
+This is a three layer device consisting of the MEH-PPV polymer film sandwiched between an Indium-Tin-Oxide (ITO) coated glass substrate and a metal. The ITO is the anode while the cathode is made up of metal. 
+In addition, the polymer film is p-type doped with a uniform concentration of 1e15 cm-3.
+
+After the device description, the
+{bold} MATERIAL 
+statement is used to specify the material properties of the ITO and also the MEH-PPV material. In the first
+{bold} MATERIAL 
+statement, the
+{bold} REAL.INDEX 
+parameter is used to set the real refractive index (which is directly related to the absorption coefficient) of the ITO. In the second
+{bold} MATERIAL 
+statement,
+{bold} AFFINITY
+ specifies the polymer LUMO level and  
+{bold} EG300 
+specifies the bandgap of the polymer. This gives a HOMO level of 4.9eV (i.e. HOMO level = 
+{bold} EG300 + AFFINITY
+). 
+{bold} RST.EXCITON 
+specifies the exciton singlet to triplet ratio of the polymer. This parameter is a key factor in determining the ultimate limit of the OLED efficiency.
+{bold} TAUS.EXCITON 
+specifies the singlet exciton lifetime and
+{bold} LDS.EXCITON 
+specifies the singlet exciton diffusion length.
+
+Other material parameters of the polymer such as bandgap, density of state (Nc and Nv), relative permittivity, lifetimes, Richardson constant 
+and real refractive index are also specified in this statement.
+
+After the 
+{bold} MATERIAL 
+statements, the 
+{bold} MOBILITY 
+statement is used to set the polymer mobility parameters for the Poole-Frenkel-like mobility model. Parameters such as the 
+{bold} DELTAEN.PFMOB 
+and
+{bold} DELTAEP.PFMOB 
+specify the thermal activation energy of the organic polymer at zero electric field for electrons and holes respectively, while 
+{bold} BETAN.PFMOB 
+and
+{bold} BETAP.PFMOB 
+specify the electron and hole Poole-Frenkel factor respectively. 
+{bold} MUN 
+and
+{bold} MUP 
+are used to set the low field electron and hole mobilities respectively. 
+
+The
+{bold} CONTACT 
+statements are used to specify the workfunction of metal and ITO at the cathode and the anode respectively. The first 
+{bold} CONTACT 
+statement specifies a workfunction of 2.9eV (equivalent to Calcium) at the cathode. This forms an electron-injection barrier of 0.1eV (i.e. Ca workfunction - polymer affinity) at the cathode. 
+The second 
+{bold} CONTACT 
+statement specifies the workfunction of ITO as 4.7eV. This forms a hole-injection barrier of 0.2eV given the polymer HOMO level of 4.9eV. The 
+{bold} NEW.SCHOTT 
+option specifies a heterojunction thermionic tunneling model to be used, while the 
+{bold} AUTO.OHMIC 
+option automatically converts the contact to ohmic when there is no barrier. 
+
+In the
+{bold} MODELS 
+statements, several organic models are used such the Poole-Frenkel-like mobility model (
+{bold}PFMOB
+), the Langevin bimolecular recombination model (
+{bold} LANGEVIN
+) and the singlet exciton model (
+{bold} SINGLET
+). The
+{bold} PFMOB 
+and
+{bold} LANGEVIN 
+models account for the transport and recombination mechanism of the polymer, while the
+{bold} SINGLET 
+model is used to calculate the radiative rate for luminescence due to the Langevin recombination in the OLED. The
+{bold} PRINT 
+option prints the status of all models, coefficients, and constants in the runtime output window. 
+
+After specifying the structure, an initial solution is first performed with the 
+{bold} SOLVE INIT 
+statement. This is followed by biasing the anode to 10V. Here, the luminous wavelength 
+{bold} L.WAVE 
+is set in the
+{bold} SOLVE 
+statement so that the luminous power can be extracted during the ramp. A 
+{bold} PROBE 
+statement is included to probe the maximum electric field of the device at x = 5um.
+
+The current density versus voltage and the current density versus electric field data are then extracted via the 
+{bold} EXTRACT 
+statement. After extracting the data, these data are plotted with the 
+{bold} TONYPLOT 
+statements. 
+For the first plot of current density versus voltage, you should select to display "anode bias" along the x axis and "anode current" along the y axis. 
+The second plot shows the current density versus the electric field. 
+
+The third plot is the Luminescent power of the OLED. In this figure, it is 
+seen that the device "turns-on" at about 2 Volts.  Finally, the contour plot 
+of the Langevin recombination at 10V is displayed.  In this case, most of the 
+radiative recombination is seen to be confined within the polymer layer 
+close to the cathode.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+
+{subsection} organicex02.in : OLED: Transient Simulation of MEH-PPV Polymer LED 
+
+Requires: Blaze/Organic Display
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates the transient simulation of an Organic Light Emitting Diode (OLED). It demonstrates:
+
+{bullet} OLED structure definition using Atlas syntax
+{newline}
+{bullet} Material parameter specification
+{newline}
+{bullet} Choosing the OLED physical models
+{newline}
+{bullet} The Langevin and Exciton Density contour plot at 12V
+{newline}
+{bullet} Transient response of the Exciton Density and Anode Current
+{newline}
+
+The simulation structure used in this example is the same as the previous example. After specifying the simulation structure, a steady-state simulation is performed to initialize the transient analysis. 
+{bold} DT.MAX 
+on the
+{bold} METHOD 
+statement specifies the maximum time-step for transient simulation. 
+
+The
+{bold} PROBE 
+statement is used to save the singlet exciton density at the centre of the OLED structure. The value of this parameter is saved to the log file. The 
+{bold} OUTPUT 
+statement is used to specify the Langevin recombination rate to be saved in the structure file.
+
+In this example, a 12V square voltage pulse of 0.5us is used to study the transient response of the OLED. 
+To perform this simulation, a log file is first opened to save all the simulated data after the LOG statement. Next, the
+{bold} SOLVE 
+statement sets the anode at 0V for 50ns. This is followed by ramping the anode from 0V to 12V with a ramp time of 5ns. The parameter
+{bold} DT 
+in the second
+{bold} SOLVE 
+statement is used to set the first time step of the transient. All other time steps are calculated automatically by the program. A
+{bold} DT 
+value of ramptime/100 is a safe one under most circumstances. The
+{bold} TSTOP 
+parameter will set the time until which the simulation will continue. Once the simulation reaches 500ns, the third
+{bold} SOLVE 
+statement will ramp down the anode voltage from 12V to 0V with a ramp time of 5ns. The anode voltage remains at 0V till 550ns. 
+
+In this example, 4 plots are automatically generated by the 
+{bold} TONYPLOT 
+statements after the simulation. The first and second plots show the Langevin Recombination and singlet exciton density contour plots at 12V. 
+The third plot shows the transient response of the exciton density due to a 12V square voltage pulse of 0.5us. 
+Since the exciton density is proportional to the Electro-Luminescence (EL) intensity, the generic features of the simulated exciton density transient curve are similar to that of an EL curve. 
+
+Lastly, the final plot is a transient response of the anode current. 
+The transient response of the anode current is characterized by a sharp charging spike due to the capacitance of the device followed by a quasi-steady state. 
+At turn-off, there is a sharp discharging spike followed by some decay. 
+The current spikes seen in this plot are due to capacitances of the OLED structure. 
+These transient current spikes may affect timing requirements and also the power consumption, thus, degrading the performance of the OLED device.
+
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} organicex03.in : Doping Dependent Hopping Mobility 
+
+Requires: Blaze/Organic Display
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates the basic characteristics of the doping dependent organic hopping mobility model. 
+The simulations will produce graphs of mobility as a function of doping for an organic material. It demonstrates: 
+
+{bullet} Single organic layer definition using Atlas syntax
+{newline}
+{bullet} Hopping mobility model specification using the ODEFECTS and MODELS statements
+{newline}
+{bullet} Material parameter specification
+{newline}
+{bullet} Mobility specification
+{newline}
+{bullet} Contact specification
+{newline}
+{bullet} DBInternal specification
+{newline}
+
+The template Atlas input deck "organicex03_1.in" is used to calculate the hopping mobility in an organic material. 
+The doping value is specified using the DeckBuild 
+{bold} set 
+command. 
+The parameters of interest (the hopping mobility) are extracted using the "
+{bold}extract from 2d.max.conc
+" capability. 
+
+The content of the template file can be seen inside the input deck file "organicex03.in". 
+
+The file "organicex03.in" starts with the
+{bold} GO INTERNAL 
+command which transfers control from the current simulator (i.e. Atlas) to DBInternal. The deck file consists of two main parts: 
+
+The 
+{bold} LOAD 
+command specifies which template file should be used for multiple runs. The 
+{bold} SWEEP 
+command specifies how the variables set in the template file should be changed. 
+In this example, the doping varies from 1e17 to 1e23, and the gamma varies from 2.5e7 to 3.5e7. 
+The number of simulations is set to 14 times 3 (i.e. 42). 
+
+The 
+{bold} SAVE 
+command tells DBInternal to collate the data generated in all extract commands into the file "organicex03.dat".
+
+After all simulations are complete, the resulting mobility vs doping are plotted in TonyPlot.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} organicex04.in : OLED: 2 layers versus 3 layers OLED 
+
+Requires: Blaze/Organic Display
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+
+A conventional 2 layer organic light emitting diode consists of a Hole 
+Transport Layer (HTL) and an electron transport layer (ETL). A good OLED 
+structure requires sufficient carrier injection so that large exciton density 
+is generated when the carriers recombine. However, a 2-layer OLED structure 
+has a low injection current due to the poor metal/organic material interface 
+and therefore has a low device output efficiency. Commercial OLED structures 
+are multi-layers and this example compare 2 layers versus 3-layers OLED. 
+
+This example is based on the following reference:
+
+J.Staudigel et al, "A quantitative numerical model of multilayer vapor-deposited 
+organic light emitting diodes" Journal of Applied Physics Vol. 86, Number 7  
+October 1999
+
+In the first part on this example a hole-only unipolar organic device is simulated 
+and simulation result is compared to measurement. Schottky contacts are defined 
+for both anode and cathode electrodes and defect states are defined whithin the 
+organic material using the 
+{bold} odefect 
+statement. A good fit is obtained between simulation and measurement. 
+
+The second part of the deck compare a 2 layers OLED versus a 3 layers OLED. 
+
+To demonstrate why the 3-layer OLED has a higher efficiency than a 2-layer device, 
+we need to take into account interface defect between organic/organic material. To
+do so we have defined interface defect states using the
+{bold} ointdefect 
+statement combined with interface thermionic emission model. 
+The main effect of the organic/organic interface is to add trap states which reduces 
+the energy barrier height and enhance carriers injection.
+
+Simulation results indeed show thatthe 3 layers OLED has a lower anode current
+as expected but a higher luminescent power due to higher Langevin recombination rate.
+The same simulations done without interface defect states show opposite behavior (i.e
+luminescent power is higher in 2 layers OLED). 
+
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+{subsection} organicex05.in : Pasveer Hopping Mobility Model and Gaussian DOS
+
+Requires: Blaze/Organic Display
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+
+This example compares I-V curves generated using the Pasveer hopping mobility
+model [1] with using a constant mobility model when using a Gaussian energy
+distribution of band states.  It also shows the effects of electron 
+concentration throughout the device for different structure bias.  An 
+explanation of the Pasveer mobility model together with the gaussian energy 
+density of states distribution and diffusion models is briefly described below.
+
+
+{bold} Gaussian Density of States Energy Band Structure
+
+It has been found that the band structure of organic materials is better
+represented by a gaussian energy distribution for the density of states rather
+than using the normal parabolic energy distribution of states used for 
+crystalline semiconductor materials.  The average eneregy level cited for the 
+equivilent "valence" and "conduction" bands in organic materials, is therefore
+in the middle of the gaussian energy distribution, rather than at the band 
+edges of the distribution as in the case for ordered crystalline materials.
+
+A gaussian energy band distribution is specified on the material statement, 
+where for the conduction band, the total density of states is specified by 
+setting the 
+{bold} NtC.gauss 
+parameter and the width of the gaussian distribution is set by the 
+{bold} SigC.gauss 
+parameter.  Two analagous parameters are also avalable for the valence band. 
+
+
+{bold} Pasveer Hopping Mobility Model [1]
+
+Also demonstrated in the example is the Pasveer hopping mobility model [1], 
+which was developed to be used in conjuction with the Gaussian energy 
+distribution of the density of states.  In an analagous way to mobility models
+in crystalline materials, the Pasveer model makes the mobility dependent on
+both the fraction of filled states (similar to the conmob model in silicon)
+and the electric field (similer to fldmob).
+
+To activate the Pasveer hopping mobility model for electrons, specify
+{bold} Pasveer.N 
+on the mobility statement.  The parameter that determines the maximum carrier
+density used in the carrier dependent mobility model is specified using the
+{bold} CCutoff.N 
+parameter, and the analagous maximum field used in the field dependent 
+mobility model is specified using the 
+{bold} FCutoff.N 
+parameter.  Once again there are analagous parameters for the valence band.
+
+
+{bold} Diffusion Model 
+
+The diffusion model resulting from a gaussian distribution of states 
+necessitates a corrective term to the Einstein diffusion relationship which
+is also included in the models.
+
+
+[1] The Pasveer reference publication is as follows:
+	W.F.Pasveer et al., Physics Review Letters, 94, 206601 (2005)
+ 
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} organicex06.in : Hole transport in polyfluorene based sandwich devices
+
+
+Requires: Blaze/Organic Display
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+The IV curves of hole-only sandwich-type devices containing a blue-emitting 
+polyﬂuorene-based copolymer are simulated for a wide range of temperatures and 
+for several thicknesses of the active organic layer based on [1]. In [1] it is 
+shown that IV curves cannot be accurately describe using a commonly used mobility 
+model which only depend on the electric field but that a consistent and quantitatively
+precise description of all curves can only be obtained using an extended Gaussian 
+disorder model EGDM [2]. In this model, the mobility depends on the electric field 
+and on the carrier concentration.Please refer to organicex05 for a detailed description 
+and simulation of the EGDM model implementation. 
+
+The device under test is a single hole-only layer device. The input deck is parametrized
+so that the variation of temperature and active layer thickness can be simulated easily 
+using the internal Design of Experiment feature of deckbuild. Model parameters 
+are set in the input deck using Table 1 from [1] and Low carrier density and low 
+electric field mobility model is defined as mu0(T) = mu0 * exp(-C * (sigma/kT)^2)
+(see equation 6 in [1]). The "baseline" input deck is named organixex06_aux.in and
+in organicex06.in, simulations are performed in order to reproduce Fig2, Fig3(b), 
+Fig5(c) and Fig5(d) from [1]. Even if a direct comparison with measurement is not
+done a very good agreement is obtained for the full range of temperature and 
+thicknesses. 
+
+Linear search damping is activated with the 
+{bold} ls.damping
+parameter in the 
+{bold} method
+statement. 
+{bold} lsd.skip.iter 
+is the number of Newton iterations that occurs before linear search damping is 
+used. This is an alternative to the default Newton iteration scheme and shouldn't 
+be used in all cases, but helps convergence in this case.
+
+
+[1] S.L.M.van Mensfoort, S.I.E.Vulto, R.A.J.Janssen, and R.Coehoorn      
+    Hole transport in polyflourene-based sandwich-type devices:          
+    Quantitative analysis of the role of energetic disorder              
+    Physical Review B 78, 085208 (2008)    
+
+[2] The Pasveer reference publication is as follows:
+	W.F.Pasveer et al., Physics Review Letters, 94, 206601 (2005)
+ 
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} organicex07.in : Color sensor with vertically stacked organic photodetectors
+
+Requires: Blaze/Organic Solar
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates the spectral simulation of an organic color sensor
+The device consists of three vertically stacked organic photodetectors which
+are individually sensitive to blue, green and red light from top to bottom [1]. 
+
+In the first part of the example, we create successively the blue, green and 
+red-sensitive detectors which are separated by thick glass substrates. ITO 
+electrodes of each detector are then created and assigned the same workfunction. 
+
+Organic materials are defined in the second part of the input deck. The dispersive
+refractive index is given in an index file where the absorption coefficients of
+primary absorptive materials are taken from Ref.[1]. Other material parameters 
+are taken from other literatures or estimated from typical values. 
+
+Similar to organic solar cells, singlet exciton rate equation and exciton 
+dissociation model are enabled by setting the
+{bold} SINGLET
+and
+{bold}  S.DISSOC
+parameters of the
+{bold}  MODEL
+statement, respectively. Poole Frenkel 
+mobility model and Langevin recombination model are used in this example as well.
+
+Transfer matrix method is activated in the
+{bold}  BEAM
+statement by setting
+{bold}  TR.MAT 
+to correctly simulate coherent effects of light.
+
+After setting DC biases of each detector, wavelength ramping is performed from 
+0.4 to 0.75 um under 50 uW/cm2 illumination power density for each monochromatic
+light beam. 
+
+External quantum efficiency and the sensitiviy of each detector are 
+extracted from the spectral file. It should be noted that there exist dense ripples upon 
+the envelope of the spectral response because of the optical interference effect.
+
+[1] H. Seo, S. Aihara, T. Watabe, H. Ohtake, M. Kubota, and N. Egami      
+    "Color sensors with three vertically stacked organic photodetectors"          
+    Jpn. J. Appl. Phys., Vol. 46, pp. L1240-L1242, 2007              
+    
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} organicex08.in :  Simulation of OLED device using a Quantum Model for Emission Spectrum
+
+Requires: Blaze/Organic Display/Quantum
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+In this example we simulate a 3-layer device with Alq3/Alq3:DCJTB/NPB
+similar to that described in [1]
+
+Photon emission model:
+
+We use the Holstein model for the Alq3 and DCJTB spectra in both the electron
+transport and the emissive layers. The model is parameterized by the exciton-phonon
+coupling and the exciton hopping energies. The former is set to 1.61 for Alq3.
+This value was taken from  [2].
+
+For DCJTB this number is not available from experiments. We used a slightly
+higher number than Alq3 since we expect excitons to be localized on DCJTB.
+
+The homogeneous and inhomogeneous broadenings were derived by fitting to
+experimental data in [2] for Alq3 and then similar broadenings were used for DCJTB.
+
+The additional Stokes shift due to reorganization energy was also used as an
+additional parameter to properly align the emission and absorption spectra with
+experiment [2].
+
+Photon Propagation model:
+
+We use the transfer matrix method to propagate the light from emissive layers
+to the outside. Emission is modeled as Hertzian dipoles placed uniformly across
+the thickness of the layer, and added incoherently. We observe a strong modification
+of spontaneous emission lifetime of the dipole due to the presence of interfaces
+and metal electrode. This is plotted as the average Purcell factor, which is produced
+by weighing the Purcell factors of each dipole according to the amount of light it
+emits in free space.
+
+The strong modification of spontaneous emission lifetime must also be fed back into
+the drift diffusion model. At present, ATLAS is not capable of doing this. 
+
+Modification of spontaneous emission lifetime is higher in ETL layer than in EML layer
+due to the vicinity of ETL to metal electrode.
+
+[1] C.C. Lee et. al. "Electrical and Optical Simulation of Organic Light-emitting
+devices with fluorescent dopant in the emitting layer" Journal of Applied Physics
+vol 101, 114501 (2007)
+[2] Martin Brinkmann, Gregory Gadret, Michele Muccini, Carlo Taliani
+Correlation between Molecular Packing and Optical Properties in Different Crystalline
+Polymorphs and Amorphous Thin Films of mer -Tris ( 8-hydroxyquinoline )
+aluminum ( III ) Journal of American Chemical Society    122 p. 5147-5157 (2000)
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+

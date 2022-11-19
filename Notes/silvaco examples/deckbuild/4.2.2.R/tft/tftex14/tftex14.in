@@ -1,0 +1,146 @@
+go athena
+
+title  Amorphous InGaZnO thin-film transistors pixel simulation
+
+
+# W/L=200um/100um
+# Lgs_overlap=10um
+
+#mesh initialize
+line x loc=-60 s=2.5
+line x loc=-50 s=0.5
+line x loc=0 s=5
+line x loc=50 s=0.5
+line x loc=60 s=2.5
+
+line y loc=0 spac=0.1
+line y loc=0.5 spac=0.2
+
+#gate
+init material=aluminum
+
+#Gate metal
+#deposit aluminum thick=0.5 div=5
+
+#double Gate ins depo
+deposit material=Si3N4 thick=0.4  div=8
+deposit material=SiO2 thick=0.05 div=4
+
+# active a-IGZO : 50nm
+deposit material=IGZO thick=0.05 div=5 
+#ydy=0.05/2 dy=0.01
+
+# S/D metal
+deposit aluminum thick=0.2 div=10
+
+#SD pattern
+#deposit photo thick=1 div=10
+etch aluminum start x=-50 y=-10
+etch cont x=-50 y=1
+etch cont x=50 y=1
+etch done x=50 y=-10
+#etch aluminum thick=0.55
+#strip
+
+#passivation
+deposit oxide thick=0.2 div=5
+#deposit nitride thick=0.1 div=2
+
+#S/D electrode definition 
+electrode name=gate x=0 y=-0.2
+electrode name=source x=-55 
+electrode name=drain x=55
+
+structure outfile=tftex14_0.str
+
+tonyplot tftex14_0.str -set tftex14_0.set
+
+
+go atlas simflags="-80"
+
+#load original Athena 2D structure
+mesh infile=tftex14_0.str 
+
+# modify IGZO to have a name "channel" and gate oxide to GI
+region num=2 modify material=IGZO name=channel
+region num=3 modify material=oxide name=GI
+
+save outfile=tftex14_1.str
+
+go atlas simflags="-80"
+
+mesh infile=tftex14_1.str width=200
+
+############### start circuit description ########
+.begin
+
+vcom 6 0 5
+vg 1 0 0 pulse 0 15 0 1us 1us 40us 180us
+vd 3 0 0 pulse 0 10 0 1us 1us 160us 320us
+
+atft 2=source 1=gate 3=drain  infile=tftex14_1.str width=200
+
+cst 2 6 1.06p
+clc 2 6 125f
+#bLC 2 6 infile=tftex14_0.c function=my_lc_rc
+
+.numeric imaxdc=500 
+.options fulln
+.log outfile=tftex14_1
+.tran 0.1us 320us
+.end
+
+#actual gate metal workfunction
+contact name=gate workf=5 device=atft
+
+#S/D metal WF.
+contact name=source workf=5 surf.rec vsurfn=1.636e7*2 vsurfp=1.636e7*2 device=atft
+contact name=drain workf=5 surf.rec vsurfn=1.636e7*2 vsurfp=1.636e7*2 device=atft
+
+#GI and passivation insulator epsilon
+material material=Si3N4 permit=7
+material material=nitride permit=7
+material material=oxide permit=3.9
+
+#
+mobility material=IGZO mun0=8.15 mup0=8.15/5 vsatn=1.636e7*2 vsatp=1.636e7*2
+material mun=8.15 mup=8.15
+
+# a-IGZO bandgap, density of states, and affinity
+material material=IGZO nc300=8e18 nv300=4.5e21 eg300=3.2 affinity=4.6
+
+
+# a-IGZO channel bulk DOS
+defect material=IGZO cont numa=12 numd=12 nta=8e18 wta=0.03 nga=0 ngd=1e16 \
+	wtd=0.1 ntd=4.5e21 egd=2.9 wgd=0.1 \
+	sigtae=1.e-14 sigtah=1.e-14 sigtde=1.e-14 sigtdh=1.e-14 \  
+       siggae=1e-14 siggah=1e-14 siggde=1e-14 siggdh=1e-14  tfile=tftex14_0.dat
+
+defect material=IGZO cont numa=12 numd=12 nta=1e17 wta=0.19 ntd=0 nga=0 ngd=0 \
+	sigtae=1.e-14 sigtah=1.e-14 sigtde=1.e-14 sigtdh=1.e-14 \  
+       siggae=1e-14 siggah=1e-14 siggde=1e-14 siggdh=1e-14  tfile=tftex14_1.dat
+
+# between AOS(Amorphous Oxide Semiconductor) and gate insul 
+intdefect s.i intregion="GI/channel" continuous tfile=tftex14_2.dat numa=24 numd=24  \
+  nta=2.38e12 ntd=2.25e16 wta=0.19 wtd=0.1 \
+  nga=0 ngd=0 ega=0.62 egd=0.78 wga=0.15 wgd=0.15 \
+  sigtae=1.e-14 sigtah=1.e-14 sigtde=1.e-14 sigtdh=1.e-14 \  
+  siggae=1.e-14 siggah=1.e-14 siggde=1.e-14 siggdh=1.e-14  device=atft
+
+
+material material=IGZO taun0=1e-8 taup0=1e-8 
+
+models fermi ust device=atft print temp=300
+
+material d.tunnel=2e-6 me.tunnel=0.2
+
+method  maxtrap=10 
+
+go internal
+
+tonyplot tftex14_1_tr.log -set tftex14_1.set
+
+
+
+quit
+

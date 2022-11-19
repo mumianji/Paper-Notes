@@ -1,0 +1,106 @@
+<html>
+  <head>
+    <title>Simulation of OLED device using a Quantum Model for Emission Spectrum</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Simulation of OLED device using a Quantum Model for Emission Spectrum</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Blaze/Organic Display/Quantum</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="organicex08_plot0.png" width="640" alt="organicex08_plot0" />
+      <p/>
+      <img src="organicex08_plot1.png" width="640" alt="organicex08_plot1" />
+      <p/>
+      <img src="organicex08_plot2.png" width="640" alt="organicex08_plot2" />
+      <p/>
+      <img src="organicex08_plot3.png" width="640" alt="organicex08_plot3" />
+      <p/>
+      <img src="organicex08_plot4.png" width="640" alt="organicex08_plot4" />
+      <p/>
+      <img src="organicex08_plot5.png" width="640" alt="organicex08_plot5" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+In this example we simulate a 3-layer device with Alq3/Alq3:DCJTB/NPB
+similar to that described in [1]
+</p>
+<p>
+Photon emission model:
+</p>
+<p>
+We use the Holstein model for the Alq3 and DCJTB spectra in both the electron
+transport and the emissive layers. The model is parameterized by the exciton-phonon
+coupling and the exciton hopping energies. The former is set to 1.61 for Alq3.
+This value was taken from  [2].
+</p>
+<p>
+For DCJTB this number is not available from experiments. We used a slightly
+higher number than Alq3 since we expect excitons to be localized on DCJTB.
+</p>
+<p>
+The homogeneous and inhomogeneous broadenings were derived by fitting to
+experimental data in [2] for Alq3 and then similar broadenings were used for DCJTB.
+</p>
+<p>
+The additional Stokes shift due to reorganization energy was also used as an
+additional parameter to properly align the emission and absorption spectra with
+experiment [2].
+</p>
+<p>
+Photon Propagation model:
+</p>
+<p>
+We use the transfer matrix method to propagate the light from emissive layers
+to the outside. Emission is modeled as Hertzian dipoles placed uniformly across
+the thickness of the layer, and added incoherently. We observe a strong modification
+of spontaneous emission lifetime of the dipole due to the presence of interfaces
+and metal electrode. This is plotted as the average Purcell factor, which is produced
+by weighing the Purcell factors of each dipole according to the amount of light it
+emits in free space.
+</p>
+<p>
+The strong modification of spontaneous emission lifetime must also be fed back into
+the drift diffusion model. At present, ATLAS is not capable of doing this.
+</p>
+<p>
+Modification of spontaneous emission lifetime is higher in ETL layer than in EML layer
+due to the vicinity of ETL to metal electrode.
+</p>
+<p>
+[1] C.C. Lee et. al. &quot;Electrical and Optical Simulation of Organic Light-emitting
+devices with fluorescent dopant in the emitting layer&quot; Journal of Applied Physics
+vol 101, 114501 (2007)
+[2] Martin Brinkmann, Gregory Gadret, Michele Muccini, Carlo Taliani
+Correlation between Molecular Packing and Optical Properties in Different Crystalline
+Polymorphs and Amorphous Thin Films of mer -Tris ( 8-hydroxyquinoline )
+aluminum ( III ) Journal of American Chemical Society    122 p. 5147-5157 (2000)
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

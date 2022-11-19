@@ -1,0 +1,63 @@
+<html>
+  <head>
+    <title>Lateral Implant Straggle</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Lateral Implant Straggle</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>SSuprem 4, MC IMPLANT</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="aniiex09_plot0.png" width="640" alt="aniiex09_plot0" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example compares analytical methods for simulation of 2D implantation.
+It also shows how to use Monte Carlo simulation for estimation of spatial
+moments.
+</p>
+<p>
+In the first part, Monte Carlo simulation is used to save a structure
+with spatial moments. Only 20000 trajectories is enough to estimate the moments.
+</p>
+<p>
+In the second part, all 8 spatial moments are extracted. Then, the default
+and
+<b>FULL.LAT </b> model are used to simulate 2D implant into the 0.2 microns mask window. The default method uses only 5 spatial moments, and lateral distribution is
+Gaussian  with standard deviation independent from the vertical coordinate.
+FULL.LAT model uses 8 spatial moments and lateral distribution is a symmetrical
+Pearson function with standard deviation varying as a parabolic function
+of the vertical coordinate.
+In general, lateral kurtosis should also depend on the vertical
+coordinate, however the simplified approach with constant kurtosis slightly
+smaller than the averaged fourth lateral moment KURTT is used. Obtained 2D
+profiles are overlaid in TonyPlot.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

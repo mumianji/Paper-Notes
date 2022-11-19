@@ -1,0 +1,180 @@
+# (c) Silvaco Inc., 2018
+go atlas
+#
+TITLE SOI device simulation WITHOUT lattice heating
+#
+# 0.2um of silicon on 0.4um oxide substrate     
+#
+mesh   three.d space.mult=1.0
+# 
+x.mesh loc=0.00   spac=0.25
+x.mesh loc=0.5    spac=0.25
+x.mesh loc=1.00   spac=0.02
+x.mesh loc=1.15   spac=0.02
+x.mesh loc=1.5    spac=0.2
+x.mesh loc=1.85   spac=0.02
+x.mesh loc=2.00   spac=0.02
+x.mesh loc=2.50   spac=0.25
+x.mesh loc=3      spac=0.25
+#
+y.mesh loc=-0.017 spac=0.02
+y.mesh loc=0.00   spac=0.0075
+y.mesh loc=0.1    spac=0.025
+y.mesh loc=0.2    spac=0.015
+y.mesh loc=0.6    spac=0.25
+#
+z.mesh loc=0 spac=0.5
+z.mesh loc=1 spac=0.5
+z.mesh loc=2 spac=0.5
+z.mesh loc=2.5 spac=0.1
+z.mesh loc=3.5 spac=0.25
+z.mesh loc=4 spac=0.1
+
+region      num=1 y.max=0  z.min=0 z.max=4 oxide 
+region      num=2 y.min=0 y.max=0.2 z.min=0 z.max=4 silicon
+region      num=3 y.min=0.2  z.min=0 z.max=4 oxide
+#
+#*********** define the electrodes ************
+# #1-GATE #2-SOURCE #3-DRAIN #4-SUBSTRATE(below oxide)
+#
+electrode     name=gate    x.min=1 x.max=2 y.min=-0.017 y.max=-0.017 z.min=0 z.max=2.5
+electrode     name=source x.max=0.5 y.min=0 y.max=0 z.min=0 z.max=1
+electrode     name=drain  x.min=2.5 y.min=0 y.max=0 z.min=0 z.max=1
+electrode     substrate
+electrode     name=body   x.min=1 x.max=2 y.min=0.0 y.max=0.0 z.min=3.5 z.max=4
+#
+#*********** define the doping concentrations *****
+#
+doping       uniform conc=2e17 p.type  reg=2
+doping       gauss n.type conc=1e20 char=0.2 lat.char=0.05 reg=2 x.r=1.0 z.min=0 z.max=2 
+doping       gauss n.type conc=1e20 char=0.2 lat.char=0.05 reg=2 x.l=2.0 z.min=0 z.max=2
+doping       uniform  p.type conc=5.e19 x.left=1 x.right=2 y.top=0.0 y.bottom=0.2 z.min=3.5 z.max=4
+#
+save         outf=soiex09_0.str
+#
+# set interface charge separately on front and back oxide interfaces
+interf       qf=3e10 y.max=0.1
+interf       qf=1e11 y.min=0.1
+#
+# set workfunction of gate
+contact      name=gate n.poly
+#
+# select models
+models       conmob srh auger bgn fldmob print 
+#
+impact selb
+#
+# do IDVG characteristic
+#
+method       bicgst    trap 
+#
+solve init
+solve prev
+solve vdrain=0.005
+solve vdrain=0.025 vfinal=0.1 vstep=0.025 name=drain
+#
+# Ramp up gate voltage
+solve vgate=0.2 vfinal=3 vstep=0.2 name=gate
+#
+# Perform ID-VG sweep
+log outf=soiex09_1.log
+solve vdrain=0.25 vfinal=3.5 vstep=0.25 name=drain
+solve vdrain=3.6 vfinal=4.1 vstep=0.1 name=drain
+#
+save         outf=soiex09_1.str
+#
+go atlas
+#
+TITLE SOI device simulation WITH lattice heating
+#
+# 0.2um of silicon on 0.4um oxide substrate     
+#
+mesh   three.d space.mult=1.0
+# 
+x.mesh loc=0.00   spac=0.25
+x.mesh loc=0.5    spac=0.25
+x.mesh loc=1.00   spac=0.04
+x.mesh loc=1.15   spac=0.04
+x.mesh loc=1.5    spac=0.1
+x.mesh loc=1.85   spac=0.02
+x.mesh loc=2.00   spac=0.02
+x.mesh loc=2.50   spac=0.25
+x.mesh loc=3      spac=0.25
+#
+y.mesh loc=-0.017 spac=0.02
+y.mesh loc=0.00   spac=0.0075
+y.mesh loc=0.1    spac=0.025
+y.mesh loc=0.2    spac=0.015
+y.mesh loc=0.4    spac=0.25
+y.mesh loc=0.5    spac=0.25
+y.mesh loc=0.6    spac=0.25
+#
+z.mesh loc=0 spac=0.5
+z.mesh loc=1 spac=0.5
+z.mesh loc=2 spac=0.5
+z.mesh loc=2.5 spac=0.1
+z.mesh loc=3.5 spac=0.25
+z.mesh loc=4 spac=0.1
+#
+region      num=1 y.max=0  z.min=0 z.max=4 oxide 
+region      num=2 y.min=0 y.max=0.2 z.min=0 z.max=4 silicon
+region      num=3 y.min=0.2  z.min=0 z.max=4 oxide
+#
+#*********** define the electrodes ************
+# #1-GATE #2-SOURCE #3-DRAIN #4-SUBSTRATE(below oxide)
+#
+electrode     name=gate    x.min=1 x.max=2 y.min=-0.017 y.max=-0.017 z.min=0 z.max=2.5
+electrode     name=source x.max=0.5 y.min=0 y.max=0 z.min=0 z.max=1
+electrode     name=drain  x.min=2.5 y.min=0 y.max=0 z.min=0 z.max=1
+electrode     substrate
+electrode     name=body   x.min=1 x.max=2 y.min=0.0 y.max=0.0 z.min=3.5 z.max=4
+#
+#*********** define the doping concentrations *****
+#
+doping       uniform conc=2e17 p.type  reg=2
+doping       gauss n.type conc=1e20 char=0.2 lat.char=0.05 reg=2 x.r=1.0 z.min=0 z.max=2 
+doping       gauss n.type conc=1e20 char=0.2 lat.char=0.05 reg=2 x.l=2.0 z.min=0 z.max=2
+doping       uniform  p.type conc=5.e19 x.left=1 x.right=2 y.top=0.0 y.bottom=0.2 z.min=3.5 z.max=4
+#
+# set interface charge separately on front and back oxide interfaces
+interf       qf=3e10 y.max=0.1
+interf       qf=1e11 y.min=0.1
+#
+# set workfunction of gate
+contact      name=gate n.poly
+#
+# select models
+models       conmob srh auger bgn fldmob lat.temp print
+#
+thermcontact num=1 ext.temp=300 x.min=0 x.max=3 y.min=0.35 z.min=0 z.max=4  
+#
+impact selb
+#
+# do IDVG characteristic
+#
+method       bicgst    trap 
+#
+solve init
+solve prev
+solve vdrain=0.005
+solve vdrain=0.025 vfinal=0.1 vstep=0.025 name=drain
+#
+# Ramp up gate voltage
+#
+solve vgate=0.2 vfinal=3 vstep=0.2 name=gate
+#
+# Perform ID-VG sweep
+#
+log outf=soiex09_2.log
+solve vdrain=0.25 vfinal=3.5 vstep=0.25 name=drain
+solve vdrain=3.6 vfinal=4.0 vstep=0.1 name=drain
+#
+save         outf=soiex09_2.str
+#
+tonyplot3d soiex09_0.str -set soiex09_0.set
+tonyplot -overlay soiex09_1.log soiex09_2.log -set soiex09_1.set
+tonyplot soiex09_2.log -set soiex09_2.set
+tonyplot3d soiex09_1.str -set soiex09_3.set
+tonyplot3d soiex09_2.str -set soiex09_4.set
+#
+quit

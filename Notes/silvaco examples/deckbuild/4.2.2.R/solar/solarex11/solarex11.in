@@ -1,0 +1,15 @@
+# (c) Silvaco Inc., 2018
+go internal 
+
+load infile=solarex11_aux.in 
+
+sweep parameter=tunnel_doping type=list range="1e19, 2e19, 4e19, 6e19, 8e19, 1e20"
+
+save sdb outfile=solarex11_0.dat
+
+tonyplot -overlay solarex11_1e+19.log solarex11_2e+19.log solarex11_4e+19.log solarex11_6e+19.log solarex11_8e+19.log solarex11_1e+20.log -set solarex11_0.set
+
+tonyplot solarex11_0.dat -set solarex11_1.set
+
+quit
+

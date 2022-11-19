@@ -1,0 +1,86 @@
+<html>
+  <head>
+    <title>Doping dependence of resistivity and electron mobility</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Doping dependence of resistivity and electron mobility</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Atlas</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.18.3.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="doeex02_plot0.png" width="640" alt="doeex02_plot0" />
+      <p/>
+      <img src="doeex02_plot1.png" width="640" alt="doeex02_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example shows how to use the DBInternal capability to investigate the doping
+dependence of resistivity and electron mobility. The simulations will reproduce
+the graphs of mobility and resistivity for n-type silicon shown in Figures 18
+and 21 in chapter 1 of S.M. Sze&apos;s &quot;Physics of Semiconductor Devices&quot;.  The
+template
+Atlas input deck &quot;doeex02_tmpl.in&quot; for a simple resistor is created. The
+uniform doping is specified by the set command of Deckbuild. The parameters of
+interest,
+resistivity and mobility, are extracted using &quot;extract from curve&quot; capability.
+The content of the template file can be seen inside the Experiment input deck
+file &quot;doeex02.in&quot;.
+</p>
+<p>
+The Experiment file starts with the
+<b> go internal </b> command which transfers control from the current simulator (i.e. Atlas) to
+DBInternal. The Experiment file consists of the following sections:
+</p>
+<ul>
+  <li>
+The    
+<b> load </b> command specifies which template file should be used for multiple runs.
+  </li>
+</ul>
+<ul>
+  <li>
+The
+<b> sweep </b> command specifies how the variables set in the template file should be changed.
+In this example the doping varies from 1e12 to 1e21. The number of simulations
+is set to 37.
+  </li>
+</ul>
+<ul>
+  <li>
+The 
+<b> save </b> command tells DBInternal to collate the data
+generated in all extract commands into the file &quot;doeex02.dat&quot;.
+  </li>
+</ul>
+<p>
+After all simulations are complete, the resulting resistivity vs doping and
+mobility vs doping dependencies are plotted in TonyPlot.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

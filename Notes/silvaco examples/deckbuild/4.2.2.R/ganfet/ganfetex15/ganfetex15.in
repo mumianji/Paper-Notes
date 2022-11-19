@@ -1,0 +1,38 @@
+# (c) Silvaco Inc., 2018
+#########################
+# Without Substrate
+#########################
+go internal
+
+load inf=ganfetex15_aux.in
+
+sweep parameter=dg_space type=list data="3, 4, 5, 6, 10, 12" 
+
+save type=sdb outf=ganfetex15_0.dat
+ 
+
+#########################
+# With Substrate
+#########################
+
+
+go internal
+
+load inf=ganfetex15_aux_subs.in
+
+sweep parameter=dg_space type=list data="3, 4, 5, 6, 10, 12" 
+
+save type=sdb outf=ganfetex15_0_subs.dat
+
+#########################
+#Plot the results
+#########################
+
+tonyplot ganfetex15_0.str ganfetex15_0_subs.str -set ganfetex15_0.set
+tonyplot -overlay ganfetex15_0.dat ganfetex15_0_subs.dat -set ganfetex15_1.set
+tonyplot -overlay ganfetex15_1_3.log ganfetex15_1_4.log ganfetex15_1_5.log ganfetex15_1_6.log  ganfetex15_1_10.log ganfetex15_1_12.log  -set ganfetex15_2.set
+tonyplot -overlay ganfetex15_1_3_subs.log ganfetex15_1_4_subs.log ganfetex15_1_5_subs.log ganfetex15_1_6_subs.log  ganfetex15_1_10_subs.log ganfetex15_1_12_subs.log -set ganfetex15_3.set
+tonyplot ganfetex15_3.str ganfetex15_4.str ganfetex15_5.str ganfetex15_6.str ganfetex15_10.str ganfetex15_12.str -set ganfetex15_4.set
+tonyplot ganfetex15_3_subs.str ganfetex15_4_subs.str ganfetex15_5_subs.str ganfetex15_6_subs.str ganfetex15_10_subs.str ganfetex15_12_subs.str -set ganfetex15_4.set
+
+quit

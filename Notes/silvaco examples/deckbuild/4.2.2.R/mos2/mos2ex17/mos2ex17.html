@@ -1,0 +1,96 @@
+<html>
+  <head>
+    <title>20nm n-MOSFET created using 60nm lthography</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>20nm n-MOSFET created using 60nm lthography</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>SSuprem 4/MC Implant/Elite/S-Pisces</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R, Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="mos2ex17_plot0.png" width="640" alt="mos2ex17_plot0" />
+      <p/>
+      <img src="mos2ex17_plot1.png" width="640" alt="mos2ex17_plot1" />
+      <p/>
+      <img src="mos2ex17_plot2.png" width="640" alt="mos2ex17_plot2" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This examples demonstrates the creation of a self-aligned 20nm n-MOSFET using a
+60nm lithography node.  This Silvaco designed process has several advantages:
+</p>
+<ul>
+  <li>
+ The channel implant does not penetrate the gate insulator
+<br/>
+  </li>
+  <li>
+ Transient enhanced diffusion effects in the silicon are avoided
+<br/>
+  </li>
+  <li>
+ Very low energy implants are avoided
+<br/>
+  </li>
+  <li>
+ 20nm gate length devices can be fabricated using 60nm litography
+  </li>
+</ul>
+<p>
+Non penetration of the gate stack by the channel implants removes the damage
+that this implant usually causes.  The source/drain implants are also arranged
+in such a way that damage to the silicon is avoided. Transient enhanced
+diffusion in the silicon and other damage effects therefore do not occur.
+Implant energies of 10keV are used, allowing the use of standard implanters,
+and finally the 20nm device can be created with 60nm lithography technology,
+thus reducing the cost.
+</p>
+<p>
+The stress induced by the nitride spacers is calculated in Athena which is
+passed to the Atlas device simulator and converted into strain.  This strain
+is used to calculate the strain modified bandgaps and mobilities in the device.
+</p>
+<p>
+In Atlas, the strain dependent bandgap model is invoked by the
+<b> STRESS </b> parameter in the
+<b> models </b> statement and the strain dependent mobility models are
+invoked by the
+<b> EGLEY.N </b> and
+<b> EGLEY.P </b> parameters in the
+<b> mobility </b> statement.
+</p>
+<p>
+The output statement adds electron mobility and velocity to the saved structure
+files, from which it can be seen that most of the channel is velocity saturated,
+or close to it, as a result of the extreme dimensions of this device.  As a
+result of these dimensions, the device yields an output current density
+exceeding 2000uA/um for Vg=Vd=1.2V
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

@@ -1,0 +1,130 @@
+<html>
+  <head>
+    <title>Polarization Charge Analysis</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Polarization Charge Analysis</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Victory Device</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Victory Device 1.12.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="ganfetex18_plot0.png" width="640" alt="ganfetex18_plot0" />
+      <p/>
+      <img src="ganfetex18_plot1.png" width="640" alt="ganfetex18_plot1" />
+      <p/>
+      <img src="ganfetex18_plot2.png" width="640" alt="ganfetex18_plot2" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates the interaction between polarization charges,
+surface states, cap layer thickness and Al composition in AlGaN/GaN HFETs.
+</p>
+<p>
+By default Victory Device run on just one processor.
+To ensure better perfomance on your computer the following simulation condition
+<b> simflags=&quot;-P all&quot; </b> could be specidied in the
+<b> go </b> line starting Victory Device. This means that all processors available will be used.
+If you want to use a smaller number of processors you can substitute &quot;all&quot; with a desired number, e.g.
+<b> simflags=&quot;-P 4&quot;.</b> </p>
+<p>
+The input deck vdex06.in uses dbinternal to obtain the channel charge density
+(i.e 2DEG) for each of the saved structure files.  It does this using the file
+vdex06_aux_0.in and vdex06_aux_1.in. The advantage of using dbinternal is that
+the data file containing the charge densities can be plotted using
+<b> TonyPlot</b> .
+These charge densities are plotted  against the cap layer thickness and Al
+composition in AlGaN Cap layer.
+</p>
+<p>
+The input deck containing the actual description of the devices is found in
+ganfetex01_aux_0.in and ganfetex01_aux_0.in.
+</p>
+<p>
+Victory device is a 2D and 3D device simulator.In this example we demonstrate
+the use of Victory Device in 2D mode.
+</p>
+<p>
+The Victorydevice input deck consists of the following parts:
+</p>
+<ul>
+  <li>
+ Construction of the device and the grid using victorydevice syntax
+<br/>
+  </li>
+  <li>
+ Specification of material regions
+<br/>
+  </li>
+  <li>
+ models, interface charge and interface trap parameters
+<br/>
+  </li>
+  <li>
+ Extraction of the 2DEG. 
+<br/>
+  </li>
+</ul>
+<p>
+In the first part of the input deck (ganfetex01_aux_0.in) the device is described
+using Victorydevice syntax, including mesh, regions and electrodes locations.
+The
+<b> REGION </b> statements are used to define AlGaN and GaN regions. The Al composition
+fraction (x.composition=0.27) is defined here as well.
+After the device description, the
+<b> MODEL </b> statement is used to specify the built-in polarization model set by specifying
+<b> POLARIZATION </b> for spontaneous polarization and
+<b> CALC.STRAIN </b> for piezoelectric polarization.
+<b> PCH.INS and PCH.ELEC </b> are set in order to allow charges at the interface between AlGaN and Oxide
+(pch.ins) and between GaN and conductor at the bottom of the structure (pch.elec).
+</p>
+<p>
+Next the
+<b> SOLVE </b> statement is used to obtain a zero biased solution.  The
+<b> SAVE </b> statement is used to save this solution for perform extraction of the 2DEG.
+</p>
+<p>
+In the second part of the input deck we do the same simulation but instead
+of using the built-in polarization model that calculate the polarization charges
+as a function of composition, strain and lattice constant for the various materials,
+we set polarization charges directly using the
+<b> INTERFACE CHARGE=</b> statement.
+</p>
+<p>
+2DEG simulation results using the built-in polarization model, manually added
+charges and measurement taken from the dissertation &quot;High voltage GaN HEMTs with
+low on-resistance for switching  applications&quot; written by Naiqian Zhang UNIVERSITY
+of CALIFORNIA Santa Barbara September 2002 are compared and show good correlation.
+</p>
+<p>
+The built-in polarization model being validated, it can be used to perform the same
+simulation but instead of making variation of cap layer thickness, Al composition
+is used instead (ganfetex18_aux_1.in). As expected 2DEG increases with Al composition.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

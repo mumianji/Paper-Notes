@@ -1,0 +1,64 @@
+go athena
+
+#the x dimension definition
+line x loc = 0.0  spacing=0.1
+line x loc = 0.1  spacing=0.1
+
+#the vertical definition
+line y loc = 0     spacing = 0.005 
+line y loc = 2.0   spacing = 0.20 
+line y loc = 25.0  spacing = 2.5 
+
+#initialize the mesh
+init silicon c.boron=1.0e17
+
+#deposit screen oxide
+deposit oxide thickness=0.005 div=2
+
+#perform arsenic implant with damage 
+implant arsenic dose=1.0e15 energy=40 tilt=7 unit.damage dam.factor=0.1
+
+#set diffusion model for TED
+method full.cpl
+
+#perform diffusion
+diffuse time=15/60 temperature=1000 
+#
+extract name="xj_fullcpl" xj silicon mat.occno=1 x.val=0.0 junc.occno=1
+
+#save the structure
+structure outfile=andfex03_0.str
+
+# repeat the simulation with FERMI model
+
+#the x dimension definition
+line x loc = 0.0  spacing=0.1
+line x loc = 0.1  spacing=0.1
+
+#the vertical definition
+line y loc = 0     spacing = 0.005 
+line y loc = 2.0   spacing = 0.20 
+line y loc = 25.0  spacing = 2.5 
+
+#initialize the mesh
+init silicon c.boron=1.0e17
+
+#deposit screen oxide
+deposit oxide thickness=0.005 div=2
+
+#perform arsenic implant with damage 
+implant arsenic dose=1.0e15 energy=40 tilt=7 unit.damage dam.factor=0.1
+
+#set default model 
+method fermi
+
+#perform diffusion
+diffuse time=15/60 temperature=1000 
+#
+extract name="xj_fermi" xj silicon mat.occno=1 x.val=0.0 junc.occno=1
+
+#save the structure
+structure outfile=andfex03_1.str
+
+# compare diffusion models
+tonyplot -overlay andfex03_0.str andfex03_1.str -set andfex03.set

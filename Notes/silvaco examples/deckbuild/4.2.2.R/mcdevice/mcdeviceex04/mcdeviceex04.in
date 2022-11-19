@@ -1,0 +1,95 @@
+# (c) Silvaco Inc., 2018
+go atlas
+mcdevice
+# This p-MOSFET example was created by changing the type
+# of all dopants and the polarity of all applied biases for the
+# the n-MOSFET example (mcdeviceex02).  Please see comments
+# in mcdeviceex02.in for a description of key parameter settings.
+algo mode=2 carrier=h iter=2500 dt=0.1e-15
+poisson tstep=5 linpoi=no
+output outfiles=no tstep=500 \
+  currentlogfile    ="mcdeviceex04_current.log" \
+  currentramplogfile="mcdeviceex04_current_ramp.log" \
+  solstrfile        ="mcdeviceex04_sol.str" \
+  summaryoutfile    ="mcdeviceex04_summary.out"
+particle n=40000
+# X Mesh Lines
+xmesh node=1   loc=0.0000
+xmesh node=45  loc=0.0225 ratio=1.00
+xmesh node=145 loc=0.0725 ratio=1.00
+xmesh node=189 loc=0.0950 ratio=1.00
+# Y Mesh Lines
+ymesh node=1   loc=-0.0615
+ymesh node=6   loc=-0.0015 ratio=0.400
+ymesh node=11  loc =0.0000 ratio=0.800
+ymesh node=90  loc =0.0800 ratio=1.035
+# Simulation Box
+region n=1 mat=SiO2 type=out     boundp=(0.0,0.095,-0.0615,0.08)
+# Substrate
+region n=2 mat=Si   type=mc      boundp=(0.0,0.095,0.0,0.08)
+# Gate oxide
+region n=3 mat=SiO2 type=block   boundp=(0.0,0.095,-0.0015,0.0)
+# Source contact
+region n=4 mat=Si   type=contact boundp=(0.0,0.0026,0.0026,0.0073) \
+  name="source"
+# drain contact
+region n=5 mat=Si   type=contact boundp=(0.0924,0.095,0.0026,0.0073) \
+  name="drain" usefermi=1
+# Poly gate
+region n=6 mat=Poly type=contact boundp=(0.0225,0.0725,-0.0615,-0.0015) \
+  name="gate"
+# Substrate contact
+region n=7 mat=Si  type=contact  boundp=(0.0,0.095,0.0771,0.08) \
+  name="substrate"
+# calculate current in cregions
+cregion boundp=(0.0275,0.0675,0.0,0.08)
+cregion boundp=(0.0325,0.0475,0.0,0.080)
+cregion boundp=(0.0475,0.0625,0.0,0.08)
+## background
+doping dopant=As conc=1e15 \
+  boundp=(0.0000,0.0950,0.0,0.0800)
+## source 
+doping dopant=B conc=2e20 \
+  boundp=(0.0000,0.0293,0.0,      0.0001) \
+  char  =(0.0040,0.0040,0.0001,0.0170)
+## source halo
+doping dopant=As conc=1e19 \
+  boundp=(0.0000,0.0293,0.0179,0.0181) \
+  char  =(0.0182,0.0182,0.0160,0.0160)
+## drain 
+doping dopant=B conc=2e20 \
+  boundp=(0.0657,0.0950,0.0,      0.0001) \
+  char  =(0.0040,0.0040,0.0001,0.0170)
+## drain halo
+doping dopant=As conc=1e19 \
+  boundp=(0.0657,0.0950,0.0179,0.0181) \
+  char =(0.0182,0.0182,0.0160,0.0160)
+## gate
+doping dopant=B conc=5e20 \
+  boundp=(0.0225,0.0725,-0.0615,-0.0015)
+#Uncomment to use surface scattering in this region
+##ssregion bound=(31,71,11,14)
+#ssregion boundp=(0.0153,0.0355,0.0e+0,0.0006)
+#Make rough=0.0 for the Si-SiO2 interface when using ssregion
+#matdef n=4 name="SiO2" eps=3.9 barrier=3.15 rough=0.0
+# These settings are for MC holes in unstrained silicon.
+phon eth=1.5 model=0 file="dos_v.in"
+bands n=3 nk=40 file="eder40_3v_so.in"
+final n=267228 nk=100 format=0 file="eord100_3v_so.in"
+
+# Do a singe solve at Vgate=vdrain=-1.0 V.
+solve vgate=-1.0 vdrain=-1.0
+tonyplot mcdeviceex04_current.log -set mcdeviceex04_current_log.set
+tonyplot mcdeviceex04_sol.str -set mcdeviceex04_sol_str.set
+
+# Do a 1-step voltage ramp from vdrain=-1 V to vdrain=-2 V.
+#solve vgate=-1.0 vdrain=-1.0 name="drain" vfinal=-2.0 vstep=-1.0
+
+# Do a second solve at Vgate=vdrain=-2.0 V.
+#output currentlogfile="mcdeviceex04_current2.log" \
+#       solstrfile    ="mcdeviceex04_sol2.str"
+#solve vgate=-2.0 vdrain=-2.0
+#tonyplot mcdeviceex04_current2.log -set mcdeviceex04_current_log.set
+#tonyplot mcdeviceex04_sol2.str -set mcdeviceex04_sol_str.set
+
+quit

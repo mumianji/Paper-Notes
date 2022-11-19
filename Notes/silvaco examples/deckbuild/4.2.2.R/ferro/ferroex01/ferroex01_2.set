@@ -1,0 +1,55 @@
+# TPCS version: 6
+# key positions
+key contours 1 at 3
+key contours 2 at 1
+key contours 3 at 6
+key electrical at 4
+key vectors at 6
+key overlay at user 0.072089, 0.062761
+key regions at 4
+# various properties
+log label 0
+select 1
+# xygraph flags
+show points on
+show lines on
+# xygraph types
+xygraph type 0 convert 0
+xygraph yaxis scale linear
+# xygraph x-axis
+xygraph xaxis "gate bias" linear
+# xygraph y-axes
+xygraph yaxis none
+xygraph yaxis "Polarization" linear
+# xygraph group
+xygraph group "None"
+# annotation, titles
+title main auto
+title sub auto
+# annotation, footers
+footer right none
+footer left none
+# annotation, show
+show xaxis on
+show yaxis on
+show grid off
+show label xaxis on
+show label yaxis on
+# annotation, axes
+range xaxis auto
+range yaxis auto
+label xaxis "gate bias (V)"
+# zoom
+zoom from 0, 0 scale 1, 1
+# user labels
+label "Ec = 50 kV/cm" from -3.04124, 5.71383e-06 color 0 scale 1
+label 0 at 5 5
+label "Pr = 0.5 e-6 C/sqcm" from -2.20219, 4.95678e-06 color 0 scale 1
+label 1 at 5 5
+label "Ps = 1.0 e-6 C/sqcm" from -2.22427, 4.25381e-06 color 0 scale 1
+label 2 at 5 5
+label "eps = 200" from -4.05693, 3.52381e-06 color 0 scale 1
+label 3 at 5 5
+# overlay level names
+label overlay 0 "ferroex01_0.log"
+draw all

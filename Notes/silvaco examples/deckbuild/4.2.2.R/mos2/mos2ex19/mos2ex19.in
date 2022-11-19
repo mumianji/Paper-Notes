@@ -1,0 +1,16 @@
+# (c) Silvaco Inc., 2018
+go internal
+
+load inf=mos2ex19_aux.in
+
+sweep parameter=measurementtime type=power range="1.0, 1.0e-4, 9" 
+
+save type=sdb outfile=mos2ex19.dat
+
+tonyplot mos2ex19.dat -set mos2ex19_0.set
+
+tonyplot -overlay mos2ex19_0.log mos2ex19_1.log  -set mos2ex19_1.set
+
+tonyplot -overlay mos2ex19_0.log mos2ex19_1.log  -set mos2ex19_2.set
+
+quit

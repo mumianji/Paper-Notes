@@ -1,0 +1,42 @@
+go mocasim
+
+####################################################################
+# (c) SILVACO International 2000-2009                              #
+# MOCASIM example 4: scattering rate generation input deck         #
+#                                                                  #
+# file: mocasim04.in                                               #
+####################################################################
+
+# Section 1
+# =========
+# Select the material.
+initialize material=GaAs num_energy=751
+
+# Section 2
+# =========
+# Assign the intra valley scattering mechanisms.
+deformation_potential_acoustic_phonon E1=7.0
+polar_optical_phonon energy=0.0353355
+ionised_impurity
+
+# Assign the inter valley scattering mechanisms.
+intervalley_phonon LL energy=0.02900 defpot=1.0e9 num_L_valleys=3
+intervalley_phonon XX energy=0.02995 defpot=7.0e8 num_X_valleys=2
+intervalley_phonon GL energy=0.02788 defpot=1.0e9 num_L_valleys=4
+intervalley_phonon GX energy=0.02995 defpot=1.0e9 num_X_valleys=3
+intervalley_phonon LX energy=0.02934 defpot=5.0e8 num_L_valleys=4 num_X_valleys=3
+
+# Section 5
+# =========
+# Print out the material parameters to the deckbuild window.
+print
+# Output the scattering rates as a function of energy.
+print scattering_rates temp=300 doping=1.0e14 outfile=mocasim04_1.dat
+
+# Tonyplot
+# ========
+# Plot the scattering rates.
+tonyplot mocasim04_1.dat -set mocasim04_1.set
+tonyplot mocasim04_1.dat -add mocasim04_1.dat -set mocasim04_2.set
+
+quit

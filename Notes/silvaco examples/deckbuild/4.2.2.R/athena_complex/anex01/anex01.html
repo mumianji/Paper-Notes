@@ -1,0 +1,170 @@
+<html>
+  <head>
+    <title>Non-planar Optical Lithography</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Non-planar Optical Lithography</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>SSuprem 4, Elite, and Optolith</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="anex01_plot0.png" width="640" alt="anex01_plot0" />
+      <p/>
+    </div>
+    <div id="text" >
+</p>
+<br/>
+<p>
+This example uses
+<b> Optolith  </b> to show non-planar lithography over a complex topography created using
+<b> SSuprem 4  </b> and
+<b> Elite</b> .
+</p>
+<p>
+The example begins with a silicon substrate that is 24 microns wide
+and 1 micron deep.  Two parameters on the
+<b> INITIALIZE  </b> statement specify that the no impurity (geometric) mode and
+the coarse grid mode be employed.  The parameter
+<b> NO.IMP  </b> specifies that the introduction of impurities
+will be bypassed. This results in a much faster calculation for
+many steps and still produces similar topographies to the calculation
+including impurities.  For simulations that are concerned
+primarily with topography, the no impurity mode can typically
+be applied without loss of significant information.
+</p>
+<p>
+The parameter
+<b> SPACE.MULT  </b> specifies that all grid spacings specified by the parameter
+<b> SPACING  </b> on the
+<b> LINE </b> statement should be multiplied by the specified value.  This results
+in a global grid coarsening by the specified factor.  This speeds the
+simulation by reducing the discretization.
+</p>
+<p>
+The process sequence begins with deposition of a thin oxide
+to model the effect of gate oxidation. Next, nitride is deposited and
+patterned simply by specifying the positions of a vertical
+plane that defines the boundary of the etch region.
+Following the nitride patterning, field oxidation is performed
+and the nitride mask is stripped.
+</p>
+<p>
+Next, gate polysilicon is deposited and patterned using the geometric
+etch capability and a structure file is saved.
+</p>
+<p>
+Following the structure file save, the structure is implanted.
+Since the no impurity mode is being used, the implant step will be
+ignored.  Next, the sidewall spacers are formed by depositing
+oxide and etching it using the vertical etch model.  The source/drain
+implant is performed next, but due to the use of the no impurity
+mode, it is bypassed. The next step is the source/drain implant anneal.
+This step runs much more quickly in no impurity mode.  This is
+because impurity diffusion, which typically limits the time step size
+during diffusion and causes more equations to be solved, does not
+need to be calculated.
+</p>
+<p>
+The next step is to deposit spin-on-glass. The glass deposition and
+reflow process are approximated here by performing a deposit that includes
+a geometric smoothing performed during the deposit. This is accomplished
+by defining an
+<b> Elite  </b> machine using the
+<b> RATE.DEPO  </b> statement and including the parameters
+<b> SMOOTH.WIN  </b> and
+<b> SMOOTH.STEP  </b> as part of the statement. The
+<b> Elite</b> machine is invoked by specifying the
+<b> DEPOSIT  </b> statement with the
+<b> MACHINE  </b> parameter used to specify the previously defined machine.
+</p>
+<p>
+The next sequence of process steps deposits photoresist, patterns the resist
+with the geometric etch capability, defines a wet etch machine and
+employs that machine on the structure, defines a directional
+etch machine and employs that machine on the structure, saves
+the structure, and strips the photoresist.
+</p>
+<p>
+Following this, a short wet etch is performed to remove fillets from the
+structure, and aluminum is deposited using the
+<b> Elite</b> hemispherical model.
+</p>
+<p>
+Next, photoresist is deposited using the same geometric smoothing approach that is applied to model spin-on-glass reflow. This results in a nearly planar top surface following the resist deposit.
+The parameter
+<b> NAME.RESIST  </b> specifies the type of resist that will be used from the library of
+resists included in the models file. In this case, the photoresist
+named OiR32 is applied.
+</p>
+<p>
+After the resist is deposited, the simulation begins the
+<b> Optolith   </b> portion of the process. This performs a detailed analysis of the
+photolithographic process of this final structure.
+<b> Optolith  </b> simulation begins by performing imaging.  The
+<b> ILLUMINATION</b> ,
+<b> ILLUM.FILTER</b> ,
+<b> PROJECTION</b> ,  and
+<b> PUPIL.FILTER  </b> statements describe the illumination system.  The
+<b> LAYOUT  </b> statements define two mask features. The parameter
+<b> LAY.CLEAR  </b> removes any previously defined layout information so that a new layout can be
+initialized.  Once the illumination system and the layout have been
+defined, the imaging module is invoked. The
+<b> IMAGE  </b> statement invokes the imaging module and specifies the
+window in which imaging will be performed.  The parameter
+<b> DX  </b> specifies the discretization along the x-dimension and the parameter
+<b> ONE.D  </b> specifies that the imaging should consider only one dimension. The
+parameter
+<b> CLEAR  </b> specifies that the mask should be considered as a clear field
+with dark features defined by the
+<b> LAYOUT  </b> statements.
+</p>
+<p>
+The
+<b> OPTICAL  </b> statement defines the index of refraction for BPSG material at
+a wavelength of 0.365 microns.  The
+<b> EXPOSE   </b> statement performs the resist exposure from the results of the
+imaging module.
+</p>
+<p>
+Following exposure, the
+<b> BAKE  </b> statement performs post-exposure bake and calculates the diffusion
+of the photoactive component.  Finally, resist development
+is performed using the
+<b> DEVELOP  </b> statement. The
+<b> MACK </b> model is specified along with the development
+<b> TIME  </b> , number of
+<b> STEPS </b> at which regridding will be performed, and
+the number of non-regridded
+<b> SUBSTEPS  </b> that will be taken per step.
+</p>
+<p>
+Finally the results of the simulation are plotted using
+<b> TonyPlot  </b> .  The non-ideal features in the photoresist due to reflections from the
+underlying topography can be seen in the lines of resist that remain.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

@@ -1,0 +1,22 @@
+go athena
+
+#TITLE: Tilt angle dependence for MC implantation in GaAs
+
+line x loc = 0.0   spacing=0.25
+line x loc = 0.25  spacing=0.25
+line y loc = 0     spacing = 0.01
+line y loc = 0.4  spacing = 0.01
+init gaas
+
+structure outfile=ancoex01.str
+
+implant beryllium energy=10 dose=1e14 bca tilt=0 n.ion=10000 sampling
+structure outfile=ancoex01_1.str  remove.gas
+
+init infile=ancoex01.str
+implant beryllium energy=10 dose=1e14 bca tilt=7 n.ion=10000 sampling
+structure outfile=ancoex01_2.str  remove.gas
+
+
+tonyplot -overlay ancoex01_1.str ancoex01_2.str -set ancoex01.set
+

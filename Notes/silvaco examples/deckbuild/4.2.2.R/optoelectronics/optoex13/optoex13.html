@@ -1,0 +1,72 @@
+<html>
+  <head>
+    <title>A 3D Diode Simulation with Small Signal Optical AC Analysis</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>A 3D Diode Simulation with Small Signal Optical AC Analysis</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Device 3D/Luminous 3D</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="optoex13_plot0.png" width="640" alt="optoex13_plot0" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates:
+<br/>
+ </p>
+<ul>
+  <li>
+ How to define an optical source that has a small signal ac optical component.
+  </li>
+</ul>
+<p>
+This input file analyzes the small signal response of a 3D device
+to a small signal optical source.
+</p>
+<p>
+The first four sections of the input file are similiar to the
+corresponding sections in the input file for example optoex01.in
+described previously.
+</p>
+<p>
+The fifth section of the file defines the optical source in a similiar manner to example optoex10.in described previously.
+The applied bias to the cathode contact is then increased to 2 V with no applied light.
+</p>
+<p>
+The sixth section defines an optical source intensity of 1 mW/cm^2 and a small signal response of the device to this optical source is extracted
+for each decade in frequency between 0.1 MHz and  100GHz  inclusive. The
+full AC terminal characteristics  are saved in the log file.
+</p>
+<p>
+When the results are viewed in TonyPlot it shows that the device has a
+cutoff frequency of about 1 GHz.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

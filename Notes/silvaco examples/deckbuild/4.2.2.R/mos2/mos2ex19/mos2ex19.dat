@@ -1,0 +1,35 @@
+v DBInternal
+# silvaco.file ASCII version=1.14.23 format=1 contents=SDB,Tables=1
+
+Copyright "###################################################################"
+Copyright "#                    Copyright Silvaco Inc. (c)                   #"
+Copyright "#                            1992-2014                            #"
+Copyright "#                                                                 #"
+Copyright "# This file format and the following Key are copyright Silvaco    #"
+Copyright "# International. You may not use, this format or key without      #"
+Copyright "# reproducing this message in full and obtaining                  #"
+Copyright "# express written permission from Silvaco Inc.                    #"
+Copyright "#                                                                 #"
+Copyright "# To obtain such permission please contact: Silvaco Inc.          #"
+Copyright "#                                           support@silvaco.com   #"
+Copyright "#                                                                 #"
+Copyright "# KEY=SVC86hn7562asdx                       PROD=345              #"
+Copyright "###################################################################"
+#dbinternal 2.11.7.R (Thu Feb  8 16:02:37 GMT 2018)
+#libSDB 1.12.42 (Thu Oct 26 19:20:24 PDT 2017)
+p 5 10000 10001 10002 10003 10004
+d 1 1 1.85762 1.8576900000000001 6.9999999999999994e-05
+d 2 0.316227766016838 1.85609 1.8576900000000001 0.0016
+d 3 0.1 1.8481799999999999 1.8576900000000001 0.00951
+d 4 0.031622776601683798 1.82918 1.8576900000000001 0.02851
+d 5 0.01 1.8008200000000001 1.8576900000000001 0.05687
+d 6 0.003162277660168382 1.7613300000000001 1.8563700000000001 0.09504
+d 7 0.001 1.7230099999999999 1.84724 0.12423
+d 8 0.00031622776601683837 1.68357 1.8260400000000001 0.14247
+d 9 0.0001000000000000001 1.64255 1.7961800000000001 0.15363
+Q 10000 1 ex_id
+Q 10001 1 measurementtime
+Q 10002 1 vt_abs_fwd
+Q 10003 1 vt_abs_bwd
+Q 10004 1 "Threshold Voltage Difference"
+EOF 591988445

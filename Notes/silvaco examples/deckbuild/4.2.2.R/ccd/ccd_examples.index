@@ -1,0 +1,255 @@
+
+{section} CCD : CCD Application Examples 
+
+
+
+{subsection} ccdex01.in : Illumination and Charge Transfer
+
+Requires: SSuprem 4/S-Pisces/Luminous
+{newline}
+Minimum Versions: Athena 5.22.3.R, Atlas 5.26.1.R
+
+In this example a CCD structure is constructed using the Athena process
+simulator. This structure is passed to Atlas for electrical testing.
+The input file tests consist of four portions:
+{newline}
+{bullet} Construction of a CCD device
+{newline}
+{bullet} Emptying the storage well of carriers
+{newline}
+{bullet} Illuminating the CCD with a light source and measuring the generated carriers
+{newline}
+{bullet} Transfer of the carriers to the drain
+
+The first stage of the input constructs the CCD geometry and doping
+profiles in Athena. The CCD device consists of a storage node on the
+left of the structure controlled by a polysilicon gate. A transfer node
+to the right of this is also controlled by both a polysilicon gate and a drain
+region of heavy n+ doping with a metal contact.
+
+The CCD structure has an n- active region at the surface above a p-type
+substrate. Under the transfer node an extra p-type implant is given.
+This implant is of sufficient magnitude to create a potential
+difference between the storage and transfer nodes, but is not so large
+as to cause a junction.
+
+The process simulation is designed to run extremely quickly so there is
+a minimum of diffusion steps included. The final stages of the Athena
+input performs the electrode definition needed by Atlas.  Also some
+EXTRACT statements are used to measure the junction depth of the active
+region under the storage and transfer nodes.
+
+The Atlas simulation begins with definition of the models and material
+parameters of the device.  The 
+{bold} contact 
+statement is used to define the
+workfunction of the two polysilicon electrodes.  The 
+{bold} material 
+statement
+is used to define minority carrier lifetimes in the semiconductor.  The
+interface charge between the gate oxide and the semiconductor is set by
+the 'qf' parameter of the 
+{bold} interface 
+statement.
+
+The physical models used in this simulation reflect different
+physical effects that are important in CCD devices. The mobility model CVT
+includes a surface mobility degradation  which is important in the
+transfer phase of the simulation as the charge moves from the storage
+node to the drain. The recombination models consrh and auger are needed
+as the recombination of the carriers is important in determining the
+capacity and charge transfer characteristics. Band gap narrowing is
+also needed to model the properties of areas with high carrier concentration.
+
+The initial part of the Atlas input file biases the drain to +20V,
+whilst the two gates are held at -6V. This is done to deplete the electrons
+from the n- active layer. The final structure with the active layer
+empty of carriers is saved. At this point 
+{bold} extract 
+statements are used
+to extract the integrated electron concentration in the storage well.
+This will be a small number.
+
+
+Next, Luminous is used to illuminate the storage node. The light beam is
+defined near the start of the input file using the 
+{bold} beam 
+statement. This
+beam is defined with a 500nm wavelength, an origin at (0,-1) and width of
+2um. The angle of 90 degrees specifies normal incidence onto the top of
+the CCD. Luminous calculates all internal reflections and absorption by
+the layers within the simulation structure.
+
+To illuminate the structure, a transient simulation is used. The power of the
+light beam is controlled by the parameter B1 on the SOLVE statement.
+This is defined to rise from zero to 1 W/cm^2 in 5ns, to remain at this
+power for a further 15ns, and then to fall to zero in another 5ns.  The
+{bold} tstep 
+parameter is used to define the initial timestep of the
+simulation. All other timesteps are automatically calculated by Atlas
+based on the local truncation error. The 
+{bold} tstop 
+parameter defines the
+end of the simulation time. The illumination part is set to last 50ns.
+
+At the end of the illumination section a structure is stored. This
+structure can be plotted to see the charge collected under the storage
+node. The potential difference between the storage and transfer nodes
+created by the extra boron implant stops charge from leaking away to
+the large positive potential on the drain.  
+{bold} extract 
+statements are used
+once again to measure the integrated electron concentration. The value
+obtained is subtracted from the value obtained from the empty well.
+
+The final stage of the Atlas simulation is the charge transfer. This is
+also performed as a transient simulation. It is very important to note
+that during a single Atlas run the time is 
+{italic} not
+reset to zero. Since the
+illumination section was 50ns, that is the starting time for this
+section. In this section the transfer gate is ramped from -6V to +2V.
+This causes the potential barrier between the storage node and the
+drain to be removed, Charge can now flow form the storage node, under the
+transfer gate and into the drain.
+
+At each timestep in the transfer simulation a structure is saved.
+By loading several of these structure files into TonyPlot it is possible
+to observe the movement of charge across the device.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+{subsection} ccdex02.in : Emptying The Storage Well Using Quasi Fermi Levels
+
+Requires: SSuprem 4/S-Pisces/Luminous
+{newline}
+Minimum Versions: Athena 5.22.3.R, Atlas 5.26.1.R
+
+
+In this example a CCD structure is constructed using the Athena process
+simulator. This structure is passed to Atlas for electrical testing.
+The input file tests consist of three portions:
+
+{bullet} Construction of a CCD device
+{newline}
+{bullet} Emptying the storage well of carriers by directly setting the quasi-fermi levels
+{newline}
+{bullet} Illuminating the CCD with a light source and measuring the generated carriers
+
+This example differs from the previous one in that  
+{bold} no drain contact is used
+. The emptying of the well is performed by setting the quasi-fermi level
+of the n- active region directly.
+
+The structure of this CCD is two polysilicon gates on top of silicon
+separated by a nitride/oxide insulator layer. The right hand gate will
+be used to collect the charge and the left hand gate will confine this
+charge under the right-hand gate.
+
+At the start of the input file is the Athena process to produce the
+structure as described for the previous example. Electrodes are defined
+in  Athena and the
+{bold} extract 
+statement is used to measure the junction depth of the n- active
+layer.
+
+In the Atlas simulation the material and models definition is similar
+to the previous example. The CVT surface transport model is not needed
+as this simulation does not include charge transfer.
+
+The key technique demonstrated by this example is the use of setting
+the quasi fermi levels directly in Atlas. To set the quasi fermi levels
+for electrons the parameter 
+{bold} n.bias 
+is used. For this to work, 
+it is necessary to use a zero carrier solution. The
+setting of 
+{bold} method carriers=0 
+specifies a zero carrier solution, and only Poisson's 
+equation for potential is solved. 
+
+
+Using 'n.bias' the electron quasi fermi level is set to +20V. This is a
+non equilibrium condition so the only way to use the solution of the
+continuity equations is to observe the electron concentration is in
+transient mode. Atlas is switched to solve for electron and holes using
+{bold} method carriers=2
+. A short transient simulation then is performed and a
+structure file is saved. Plotting electron concentration in this structure
+file shows the CCD storage well to be depleted of electrons. An 
+{bold} extract 
+statement is used to quantify this.
+
+In this CCD biasing scheme the storage node to the left is biased to
++12V and the containment node to the left is biased at -8V. This
+ensures that charges generated under the storage gate are collected
+there.
+
+In the final stage of the input file the CCD storage node is
+illuminated.  The light beam is defined in the BEAM statement to be
+normally incident from the top, with an origin of (6.85,-1), width 4um
+and wavelength 800nm. All reflections, refraction and absorption in the
+layers of the structure are simulated by Atlas.
+
+A transient illumination is defined lasting 1us. At the end of this
+time the amount of electrons trapped in the CCD can be measured using
+the 
+{bold} extract 
+statement.
+
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} ccdex03.in : Finding the Maximum Potential and Integrated Charge
+
+Requires: Atlas
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+
+This example demonstrates postprocessing on CCD structures from the
+previous examples. It shows:
+
+{bullet} Extraction of the line of
+ maximum potential from a 2D structure
+{newline}
+{bullet} 2D integration of a charge packet
+
+The first section of the example takes a solution file from the transient
+charge transfer in the first example in this section. It uses the extract
+feature
+{bold} max.conc.file 
+to store a file of the maximum potential for each x location in the
+structure. This file can be plotted directly in TonyPlot. Alternatively,
+the file can be overlayed onto the 2D structure in TonyPlot. This can
+be performed by plotting the 2D CCD structure with the flag
+{bold} -ccd
+.  To overlay the file saved by extract, right mouse click on the main
+TonyPlot window and choose "Maximum Potential".
+
+The second and third extract statements use the 2D integration feature of 
+{bold} extract 
+to give the integrated electron concentration in the charge packet. 
+This is done for both empty and full well conditions.
+
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+

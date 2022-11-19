@@ -1,0 +1,1266 @@
+
+{section} TFT : TFT Application Examples
+
+
+
+{subsection} tftex01.in : Amorphous Silicon TFT : Passivated Device
+
+Requires:  S-Pisces/TFT
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This file performs Id/Vgs simulation of a TFT device with material
+properties corresponding to passivated alpha-Si:H material. The example
+shows:
+
+{bullet} Structure formation using Atlas syntax
+{newline}
+{bullet} Material and model settings for passivated a-Si
+{newline}
+{bullet} Forward Id/Vgs characteristics
+
+The key command in TFT simulation is the
+{bold} defect 
+statement. It is used to define a continuous density of trap states in
+the silicon and the relevant trapping cross-sections.
+
+The Id/Vgs ramping is done in a similar manner to the threshold voltage
+tests for MOS devices described in the MOS example. Results from this
+example can be compared with the un-passivated a-Si device.
+
+A more detailed description of TFT material settings is given in the
+{italic} Forward/Reverse Gate Voltage Characteristic 
+example. 
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+{subsection} tftex02.in : Amorphous Silicon TFT : Un-Passivated Device
+
+Requires:  S-Pisces/TFT
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This file performs Id/Vgs simulation of a TFT device with material
+properties corresponding to un-passivated alpha-Si:H material. The example
+shows:
+
+{bullet} Structure formation using Atlas syntax
+{newline}
+{bullet} Material and model settings for un-passivated a-Si
+{newline}
+{bullet} Forward Id/Vgs characteristics
+
+The key command in TFT simulation is the
+{bold} defect 
+statement. It is used to define a continuous density of trap states in
+the silicon and the relevant trapping cross-sections.
+
+The Id/Vgs ramping is performed in a similar manner to the threshold voltage
+tests for MOS devices described in the MOS example. Results from this
+example can be compared with the passivated a-Si device.
+
+A more detailed description of TFT material settings is given in the
+{italic} Forward/Reverse Gate Voltage Characteristic 
+example. 
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+{subsection} tftex03.in : Polysilicon TFT : Passivated Device
+
+Requires:  S-Pisces/TFT
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This file performs Id/Vgs simulation of a TFT device with material
+properties corresponding to passivated polysilicon material. The example
+shows:
+
+{bullet} Structure formation using Atlas syntax
+{newline}
+{bullet} Material and model settings for passivated polysilicon
+{newline}
+{bullet} Forward Id/Vgs characteristics
+
+The key command in TFT simulation is the
+{bold} defect 
+statement. It is used to define a continuous density of trap states in
+the silicon and the relevant trapping cross-sections.
+
+The Id/Vgs ramping is performed in a similar manner to the threshold voltage
+tests for MOS devices described in the MOS example. Results from this
+example can be compared with the un-passivated polysilicon device.
+
+A more detailed description of TFT material settings is given in the
+{italic} Forward/Reverse Gate Voltage Characteristic 
+example. 
+
+This corresponds to a passivated polysilicon material.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+{subsection} tftex04.in : Polysilicon TFT : Un-Passivated Device
+
+Requires:  S-Pisces/TFT
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This file performs Id/Vgs simulation of a TFT device with material
+properties corresponding to un-passivated polysilicon material.  The
+example shows:
+
+{bullet} Structure formation using Atlas syntax
+{newline}
+{bullet} Material and model settings for passivated polysilicon
+{newline}
+{bullet} Forward Id/Vgs characteristics
+
+The key command in TFT simulation is the
+{bold} defect 
+statement. It is used to define a continuous density of trap states in
+the silicon and the relevant trapping cross-sections.
+
+The Id/Vgs ramping is performed in a similar manner to the threshold voltage
+tests for MOS devices described in the MOS example. Results from this
+example can be compared with the passivated polysilicon device.
+
+A more detailed description of TFT material settings is given in the
+{italic} Forward/Reverse Gate Voltage Characteristic 
+example. 
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+{subsection} tftex05.in : Forward/Reverse Gate Voltage Characteristic 
+
+Requires: SSuprem 4/S-Pisces/TFT
+{newline}
+Minimum Versions: Athena 5.22.3.R, Atlas 5.26.1.R
+
+This example demonstrates how integrated process and device TFT simulations
+can be performed in Athena and Atlas. The input files consists of :
+
+{bullet} Construction of TFT device in Athena
+{newline}
+{bullet} Forward (positive) Vgs sweep in Atlas
+{newline}
+{bullet} Reverse (negative) Vgs sweep in Atlas
+
+The first part of the file uses Athena to construct the geometry and
+doping of a TFT device. The starting substrate is defined as silicon
+dioxide to emulate the flat panel display glass. The transistor is
+simulated with a metal gate on the bottom and a gate insulator made
+from Oxide and Nitride. A lightly doped Silicon layer is deposited to
+act as the channel region. A heavily doped layer is placed on top to
+become the source/drain regions. Single crystal Silicon or Polysilicon
+could be used equally well at this stage. However the important
+electrical properties of the material are set in Atlas, so at this stage
+it is not important which material is used.  Metal for the source/drain
+contacts is then applied. An etchback through the metal and
+heavily doped silicon is then carried out. Some of the lightly doped silicon layer
+is also removed. This final etch separates the source and drain. The
+final stage in Athena is to define the electrodes for use in Atlas.
+
+
+The Atlas part of this file is used to simulate the gate voltage bias
+from -20V to +20V with the drain at +10V. Before the biasing is applied
+it is first necessary to set all the relevant material parameters.
+
+In simulating TFTs, the most important requirement is setting of the
+{bold} defect 
+statement specifying the density of states in the semiconductor
+bandgap. The defect states are specified as donor-like and
+acceptor-like and as tail and mid-gap gaussian states. This  gives a
+total of four distributions each with their own trapping cross sections
+for electrons and holes for a total of eight cross section values. The
+values included in this example are typical of amorphous silicon used
+in TFT transistors, but each user has a different process. The defect
+densities are sensitive to the hydrogen annealing of the device and so
+must be tuned by the user.
+  
+The 
+{bold} material 
+statement is used to set the material constants of the
+semiconductor to those of amorphous silicon. The interface step defines
+an interface charge on each semiconductor/insulator interface. It is
+possible to vary this charge by position using the bounding box
+parameters on the interface statement.
+
+The models needed for TFT simulation are simple. A constant mobility as
+defined by the material statement is used and SRH recombination is
+included. In order to simulate reverse leakage the band-band tunneling
+model is included by:
+{bold} models bbt.std
+. The exponential parameter of the band-band tunneling model is
+adjusted for amorphous silicon.
+
+The first step in the solve sequence is to ramp the drain voltage up to
++10V. At this point a file is stored. The reverse gate voltage
+ramp is then applied. The gate voltage is ramped up to -20V. The drain
+current will increase during this ramp due to tunneling current in the
+TFT. The magnitude of this is controlled by the parameters of the
+band-band tunneling model. at the end of the ramp the final drain
+current is extracted. 
+
+At the highest reverse gate bias a structure file is saved. By plotting
+the recombination in the device at this bias it is possible to see the
+band-band generation current as a negative recombination term.
+
+The final step is the forward gate voltage sweep. This is performed by first
+loading the solution saved with zero gate voltage. Then the gate is
+ramped to +20V. From this data the 
+{bold} extract 
+syntax is used to get the
+sub-threshold leakage slope. This slope, which is typically 0.5-1.5
+V/decade is sensitive to the defect distribution in the semiconductor.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+{subsection} tftex06.in : 3D TFT Simulation 
+
+Requires: Device 3D/TFT 3D
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates Ids/Vgs and Id/Vds  3D analysis of a 10um
+channel length, ultra-thin TFT transistor. The example shows:
+
+{bullet} Formation of 3D structure using Atlas syntax
+{newline}
+{bullet} Id/Vgs solution with Vds=0.1V
+{newline}
+{bullet} Id/Vds solution with Vgs=1.5V
+
+The formation of this 3D structure is performed using the Atlas syntax.
+The syntax used is very similar to that used to create a normal 2D example. The
+definition of dimensions in the third direction is defined by the
+{bold} z 
+indicator. Thus z.min and z.max define extents in the z direction, just
+as x.min and x.max do in the x direction. 
+
+The TFT device is composed of a 0.05 micron layer of polysilicon on a 0.45
+micron silicon dioxide substrate.  The device has a 12 nm thick gate
+oxide and a gate length of 10 microns.  The gate width is 80um.
+
+After the device description the
+{bold} model 
+statement is used to select a set of physical models for this simulation.  In this case,
+these models are 'srh' recombination, bandgap narrowing, and the conmob and fldmob mobility models.
+The 
+{bold} impact 
+statement is used to specify the Selberherr model for impact ioisation in the 3D simulation. This is necessary to model "kink" effects that are often observed in TFT Id-Vd characteristics.
+The 
+{bold} contact 
+statement is used to assign the work function on the gate material. It this case an aluminum gate is used which assigns a workfunction of 4.10 V to the gate contact.
+
+The numerical methods used are also similar to the previous example:
+{bold} METHOD gummel newton carr=2
+. This means that if convergence is not reached in decoupled mode (gummel) the simulator
+will automatically switch to coupled mode (newton). In addition, a two carrier solution 
+is performed by solving Poisson's equation for potential and the electron and hole 
+continuity equations.
+
+
+The drain voltage is set to 0.1V, and then the gate voltage is swept to 1.5V to measure the Ids/Vgs curve. 
+
+
+Then the gate voltage is set to 1.5V, and then the drain voltage is
+swept to 3V.  At this point faster solutions are obtained using the
+coupled newton algorithm so the simulation switches to this
+method.  The drain voltage is then ramped to 4V.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+{subsection} tftex07.in :  Comparing a Discrete and Continuous Distribution of Traps
+
+Requires: S-Pisces/TFT
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+It is possible to specify an energy dependent distribution of traps in
+two ways using SPISCES/TFT. The original method assumed a discrete set
+of traps across the bandgap but now it is possible to use a
+mathematically continuous energy distribution of states.
+
+The syntax used in this example is identical to that in tftex03.in
+except that now two simulations are performed each with the density of
+states assumed to contain 24 energy levels across the bandgap. This is
+speciied using the 
+{bold} DEFECT
+ parameters 
+{bold} numa
+ and 
+{bold} numd
+. The first simulation is otherwise identical to that described in tftex03.in. The second simulation uses the keyword  
+{bold} continuous
+ on the 
+{bold} DEFECTS
+ statement to define that the distribution is continuous. The simulation then compares the Id-Vg characteristics for the two simulations.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+{subsection} tftex08.in :  TFT Simulation Using the C-interpreter
+
+Requires: S-Pisces/TFT/C-Interpreter
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+The DEFECTS statement only allows the user to specify a fixed density of states 
+versus energy distribution. This would normally comprise one Gaussian
+and/or one exponential energy distribution of traps across the bandgap. This 
+may not necessarily accurately reflect the users material. 
+
+However, Atlas allows the user to use the C-interpreter to specify the density 
+of states versus energy distribution. On the 
+{bold} DEFECTS 
+statement the options 
+{bold} f.tftacc
+ and 
+{bold} f.tftdon
+ specify files which should contain the distributions written as standard C routines.
+
+In this example the acceptor and donor densities are defined by two exponential 
+equations each which begin from the conduction and the valence bands. The 
+parameters that would normally specify the density of states should be set to
+{bold} nta=ntd=nga=ngd=0 
+otherwise they would be added to the C-interpreter values.
+
+The capture cross sections are then taken from the parameters in the DEFECTS statement. 
+The acceptor capture cross section is defined by the Gaussian 
+acceptor value and the donor capture cross section is defined by the Gaussian donor value.
+
+The remainder of this TFT input deck is the same as that described in tftex03.in.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} tftex09.in :  TFT Simulation of Grains and Grain Boundaries
+
+Requires: S-Pisces/TFT
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates how Atlas and SPISCES may be used to model the influence of 
+grain boundaries on the device simulation results. The input deck has been created in 
+such a way as to allow easy implementation into a VWF automation tools environment.
+
+The input deck initially uses the
+{bold} internal
+ simulator within DeckBuild to define a number of variables using the DeckBuild
+{bold} set
+ statement syntax. There are six variables the the user is required to specify which 
+define the physical geometry of the TFT.  The other variables are automatically defined 
+and are used to create the mesh, regions and electrodes.
+
+The grain and grain boundary are created by defining two regions in the polysilicon. 
+Each region then has its own
+{bold} material
+and 
+{bold} defect
+ statements that define the properties within the grain and the grain boundary.
+
+The remainder of the syntax is as normal and is described in the previous TFT examples.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+{subsection} tftex10.in : Amorphous IGZO TFT Simulation
+
+Requires:  Blaze/TFT
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This file performs Id/Vgs and Id/Vd simulations of a TFT device with material
+properties corresponding to amorphous IGZO (indium galium zinc oxide) material.
+The example shows:
+
+{bullet} Structure formation using Atlas syntax
+{newline}
+{bullet} Material and model settings for passivated IGZO
+{newline}
+{bullet} Forward Id/Vgs characteristics
+{newline}
+{bullet}  On state Id/Vds characteristics
+
+The key command in TFT simulation is the
+{bold} defect 
+statement. It is used to define a continuous density of trap states in
+the silicon and the relevant trapping cross-sections.
+
+The Id/Vgs and Id/Vd ramping is done in a similar manner to the threshold voltage
+tests for MOS devices described in the MOS examples. Results from this
+example are compared with published experimental data.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+{subsection} tftex11.in : 3D Amorphous TFT simulation
+
+Requires:  Victory Process/Victory Mesh/Victory Device
+{newline}
+Minimum Version Victory Process 7.22.3.R, Victory Mesh 1.2.4.R, Victory Device 1.12.1.R
+
+By default Victory Process and Device run on just one processor.
+To ensure better perfomance on your computer the following simulation condition
+{bold} simflags="-P all"
+could be specidied in the 
+{bold} go
+line starting Victory Process or Device. This means that all processors available will be used.
+If you want to use a smaller number of processors you can substitute "all" with a desired number, e.g.
+{bold} simflags="-P 4".
+
+Although various design and physical effects have been successfully analyzed in 2D, it becomes 
+important to start to analyze and predict device performance dependent on layout effect with 3D
+simulations. We will show in the following example here that a complete 3D process and device 
+simulation solution is available to address future challenges in TFT design.  Using SILVACO tools,
+designers  can accelerate and optimize the development of  for next generation display technologies.
+ 
+This example demonstrates 3D A-Si:H TFT simulation using  3D process simulation Victory Cell and 3D device simulation
+Victory Device. 
+
+in order to create the 3D structure we used Victory Cell our 3D process simulator. Victory Cell is
+very suitable for 3D TFT devices simulation since it is layout driven, accurate, fast and easy to use.
+The 3D structure creation takes only few minutes. The particularity of the structure under test is that
+non 90 degree side-wall was used but 45 degree instead.  After the process simulation is done a 3D
+structure is saved using a tetrahedron mesh to ensure that any shape created during 3D process 
+simulation is well conserved and transferred to Victory Device for further device simulation.
+ 
+Disordered materials contain a large number of defect states within the band gap of the material. 
+To accurately model devices made of polycrystalline or amorphous materials, we need to take into 
+account these defects. Victory Device can model interface states as well as defect states. Defect 
+states is a combination of two exponentially decaying band tail states and two Gaussian distributions
+of mid-gap states. In addition to the defect models, band to band tunneling model was used to simulate
+accurately TFT devices in reverse. Device simulation were performed using 80 bits extended precision 
+arithmetic to be sure to resolve accurately low current at low Vds. It is also very interesting to 
+notice that due to the specific 3D effect the simulated IDVD curve when we reverse the source and 
+the drain are different.
+
+The
+{bold} e.field.derivs 
+parameter causes Victory Device to consider the partial derivatives of the field-dependent band
+to band tunneling model with respect to the gradient of the potential. Including these derivatives 
+slows down the computation and is usually not necessary, but in this case it helps the convergence.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+{subsection} tftex12.in : Atlas : Insulator Trap Induced Measurement Sweep Hysterisis
+
+Requires: SSuprem 4/Blaze/TFT
+{newline}
+Minimum Versions: Athena 5.22.3.R,  Atlas 5.26.1.R
+
+
+This example shows the effect of measurement time on the results obtained for
+typical TFT DC I-V measurements.  For some TFT devices, where the insulator 
+contains traps that are within communication distance of the semiconductor
+channel, the time and bias dependent trapping and de-trapping events create a
+{bold} hysterisis effect 
+in the IV curves.  The time dependency of the insulator trapping and 
+de-trapping events, creates a hysterisis effect, the magnitude of which depends
+on the time taken to take the measurements.
+
+In order to greatly simplify the time dependency simulation of insulator trap
+induced effects, the device simulator has incorporated the 
+{bold} Heiman model 
+which is invoked by specifying the "heiman" parameter in the 
+{bold} inttrap 
+statement.
+The Heiman model allows the simulation of insulator trap time dependency 
+effects using simple DC solve statements.  The maximum effective communication
+distance of the insulator traps with the semiconductor channel, is specified
+using the 
+{bold} depth 
+parameter in the "inttrap" statement.  The depth resolution of the insulator
+traps is specified by the
+{bold} hpoints 
+parameter in the inttrap statement.  Other than these Heiman related 
+parameters, the rest of the inttrap statement is exactly the same as a normal
+inttrap statement.
+
+All that remains to take account of the measurement time dependency effects,
+caused by the insulator traps, is to specify the total measurement time on
+the solve statement.   This is done using the 
+{bold} timespan 
+parameter on the solve statement.  In this particular example, the "timespan"
+parameter is set as a variable called 
+{bold} measurementtime 
+at the begining of the Atlas section of the input file, so that the input file
+can be easily modified to create a design of experiments using the measurement
+time as a variable.
+
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+{subsection} tftex13.in : Amorphous IGZO TFT Simulation 2. Simulation v.s Experiment
+
+Requires:  Athena/Blaze/TFT
+{newline}
+Minimum Versions: Athena 5.22.3.R / Atlas 5.26.1.R
+{newline}
+This example performs Id/Vgs, Id/Vd, and CV simulations of TFT device with material
+properties corresponding to amorphous IGZO (indium galium zinc oxide) material and show comparison with
+published experiment data. Measured a-IGZO material DOS(density-of-state) by CV analysis is inserted
+into simulation input and show almost the same transfer curve and output curve behaviour.
+{newline}
+
+Reference: Amorphous InGaZnO thin-film transistors - Part I: Complete Extracton of Density of States Over the Full Subband-Gap Energy Range, Yongsik Kim, et al., IEEE Transactions On Electron Devices Vol. 59, No. 10, Oct 2012
+{newline}
+The example shows:
+
+{bullet} Structure formation using Athena syntax
+{newline}
+{bullet} Material and model settings for passivated IGZO
+{newline}
+{bullet} DOS(Density Of State) in a-IGZO bulk and at interface between IGZO and gate insulator
+{newline}
+{bullet} Forward Id/Vgs characteristics and comparison with experiment
+{newline}
+{bullet}  Ouput Id/Vds characteristics and comparison with experiment
+{newline}
+{bullet} multi-frequency CV characteristics with extracted DOS(Density Of State)
+
+The key command in a-IGZO:TFT simulation is the
+{bold} Source/Drain Schottky barrier and height
+This is done by proper workfunction of source/drain metal and activated by model UST(Universal Schottky Tunnling Model). gate metal and both S/D metal are the same workfunction=5.0 [eV]
+{newline}
+{bold} DOS-defect/intdefect statement. 
+It is used to define a continuous density of trap states in
+the a-IGZO active channel and the relevant trapping cross-sections.Also bottom interface fixed charge.
+For this purpose, we used C-interpreter function to define DOS in IGZO active channel region.
+{newline}
+{bold} IDVG/IDVD DC Analysis
+The Id/Vgs and Id/Vd ramping is done in a similar manner to the threshold voltage
+tests for MOS devices described in the MOS examples.
+{bold} CV-analysis
+The Cgs and Cgd are simulated and compared to published data for each frequency.
+{newline}
+The measured data were taken from published paper with digitizer. 
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+{subsection} tftex14.in : Amorphous IGZO TFT Pixel MixedMode Simulation
+
+Requires:  Athena/Blaze/TFT/MixedMode
+{newline}
+Minimum Versions: Athena 5.22.3.R / Atlas 5.26.1.R
+{newline}
+
+The purpose of example explains how to make an equivalent TFT pixel circuit in Atlas/Mixedmode simulation softwares.
+This aims at demonstrating how to set up TFT pixel equivalent circuit including passive element
+such as resistance and capacitance arising from pixel and liquid crystal.
+The actual pixel size is very large in scale and practically device simulation takes long time to simulate pixel behavior and charging/discharging characteristics of liquid crystal.
+MixedMode circuit simulation performs both device level simulation and circuit level simulation,
+in which IGZO TFT test active structure is for device level and TFT pixel(Cst), liquild crystal(Clc) is for circuit level. As a result, users could trace pixel electrode's voltage during TFT on/off periods and additionally estimates pixel voltage shift by active device characteristics such as a-IGZO
+traps, backlight, and other facts. 
+
+{newline}
+This example performs 
+{bold}MixedMode pixel simulations of IGZO TFT device 
+with material properties corresponding to amorphous IGZO (indium galium zinc oxide) material.
+For pixel simulation, we refer to articles on SILVACO website(http://www.silvaco.com/content/kbase/tftlcd_sol.pdf or http://www.silvaco.com/tech_lib_TCAD/simulationstandard/2008/apr_may_jun/a2/a2.html).
+{newline}
+{bold} MixedMode syntax description
+Mixedmode circuit description starts with .BEGIN statement and ends with .END statement.
+Some passiive elements(Cst and Clc) are connected to Atlas TFT structure in ATFT element. 
+Here, Cst is storage capacitance and  Clc is liquid crystal capacitance.
+Both are connected to active IGZO TFT device. Gate, Drain, and Vcom pulse are applied to circuit using "Vname" statement. For liquid crytal capacitance model, we used simple constant capacitance value.
+Regarding real LC capacitance model, we can use user-defined two terminal element which is defined in
+C-interpreter function(tftex14_0.c) and uncomment "bLC" statement.
+{newline}
+
+The example shows:
+
+{bullet} Structure formation using Athena syntax
+{newline}
+{bullet} Structure loading into Atlas and regioin modification to have a region name "GI" and "channel"
+{newline}
+{bullet} MixedMode Active IGZO device and circuit element description
+{newline}
+{bullet}  Pixel transient simulation
+{newline}
+{bullet} Plotting transient response of pixel
+{newline}
+
+The key command in a-IGZO:TFT Mixedmode pixel simulation is the
+{bold} active device element which is defined in "Aname" statement between .BEGIN and .END.
+"atft" device's each electrodes name(gate,source,drain) is connected to passive element and
+time dependent voltage source via node number.
+For two termianl user-defined device( here, bLC), please refer to 
+{bold}tftex14_0.c c-function file and detail descriptions on www.silvaco.com link.
+{newline}
+{bold} .numeric 
+controls various mixedmode convergence and iteration during solution.
+{bold} .options fulln
+sets the numerical method in mixedmode. Default is full newton method
+{newline}
+{bold}go atlas  
+activates Mixedmode simulation.
+{newline}
+After completion of transient simulation, it plots charging and discharging behavior of LC in Tonyplot.
+{newline}
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+{subsection} tftex15.in : 3D Amorphous Bottom-Gate IGZO TFT Simulation
+
+Requires:  Victory Process/Victory Mesh/Victory Device
+{newline}
+Minimum Versions: Victory Process 7.22.3.R / Victory Mesh 1.2.4.R / Victory Device 1.12.1.R
+{newline}
+The oxide TFTs utilizing amorphous InGaZnO material is the candidate material as a switching transistor for pixel or driver transistor for AMOLED in the future large scale and flexible consumer electronics. The foundamental and basic understanding of IGZO materials is very important to realize such a devices in display area. This example performs 3D bottom gate oxide TFT structure generation using 3D Victoryprocess process simulation and then simulates IDVG device characteristics extracting threshold voltage and subthreshold swing.
+{newline}
+
+{bullet} Structure formation using Victoryprocess syntax
+{newline}
+{bullet} Material and model settings for bottom gate passivated IGZO TFT
+{newline}
+{bullet} DOS(Density Of State) in a-IGZO bulk and at interface between IGZO and gate insulator
+{newline}
+{bullet} Forward Id/Vgs characteristics and extraction of Vth and Subthreshold swing
+{newline}
+
+The bottom gate oxide TFT is initialized by glass substrate thickness of 5um using 
+the init statment. The device size in x-y plane is defined by loading Maskviews's layout file "tftex15_0.lay". The initial mesh is added by cartesian statement from loaded mask polygon edge information.
+{newline}
+The next step is to deposit bottom gate metal and then make gate pattern with mask statement.
+The gate edge angle is defined by geometrical etching with 45 degree. The electrode statement is
+used to attach "gate" electrode name which is defined in Maskviews layout file.
+{newline}
+The double gate insulator is composed by SiO2(50nm) and Si3N4(400nm) and deposited by conformal deposition which
+is uniformly deposited on the bottom gate topography.
+{newline}
+The active oxide semiconductor(here, amorphous IGZO) with thickness of 50nm is uniformly deposited
+and then patterned by mask "ACT" layer. Here we used a silicon as a default active channel material which will be modified to physical IGZO material in Victorydevice part using REGION MODIFY statement.
+{newline}
+The etch stopper oxide is deposied for active channel length and source/drain metal contact size.
+For etch stopper size we used the same mask layer as "SD" with reverse polarity. This makes a contact to channel layer, channel length, and gate source/drain overlap length. And then source/drain metal
+layer is deposted on this etch stopper layer. In this example, 10um channel length is assumed.
+The final electrode satement is to make source/drain electrode names.
+{newlines}
+
+The SiO2/Si3N4 passivation layers are deposited and then final structure is saved using Victory Mesh  to "tftex15_0.str" file using Delaunay triangulation for subsequent Victory Device simulation.
+
+For better accuracy we used "max.size=0.5" as a global mesh refinement, which means minimum feature size is not exceeded to 0.5um.
+{newline}
+For more information about Delaunay meshing refinement, you can refer to victoryprocess example section.
+
+The key command in amorphous InGaZnO oxide TFT device simulation is the
+{bold} n-type doping in the channel layer
+We put 1e16/cm^3 n-type doping for electron carrier in the channel layer using region modify statement.
+{newline}
+{bold} Source/Drain metal workfunction with barrier height
+The source/drain metal workfunction is the sume of IGZO affinity(4.16) and barrrier height of 0.16eV.
+{newline}
+{bold} Physical model parameters for transport.
+You can use finite non-zero contact resistance at source/drain by CONTACT statement.
+The dielectric permittivity constant and basic band parameters such as band gap, band-edge mobility, and effective mass of electron were considered in MATERIAL statement. The effective density of states
+in band(Nc,NV) were assumed by matching tails states of density of state in sub-band gap. The electron effective mass of 0.34*me is Nc~5e18/cm^3 at room temperature.
+{bold} Density of states in sub-band gap of oxide semiconductor 
+It is used to define a continuous density of trap states in the a-IGZO active channel bulk with DEFECT
+statement. Next, we added interface traps site to the interface between gate insulator and channel using INTDEFECT statement. It is now believed that density of states for oxygen-vacancy(Vo) in a-IGZO material is formed by shallow donor-like states or deep donor-like states. The tail distribution from 
+conduction band-edge(Ec) is taken into account by NTA and WTA which are very important factor to characterize the performance of a-IGZO TFT under sub-threshold or below threshold conditions. The high
+mobility of amorphous IGZO materials as compared to a-Si:TFT is due to the low acceptor-like tail states(NTA).
+{newline}
+{bold} Model statement
+In this model statement, we assumed the ambient temperature of 300K and Fermi statistics for carrier.
+The field-dependent saturation mobility model is taken into account to saturation current level.
+{newline}
+{bold} Nemerical method
+Next, we use PAM.GMRES(64bit) muti-threaded version of iterative numerical solver. it is possible to define the number of CPUs used (-P "all" or -P "# of CPUS) during simulation. The default is 1.
+{newline}
+For detailed numerical options, please refer to victorydevice manual.
+{newline}
+{bold} IDVG DC simulation
+The IdVg at low drain bias and high bias conditions were simulated and then threshold voltage
+and subthreshold swing values are extracted by EXTRACT statement. For sub-threshold swing value, we used slope of transconductance curve and then extracted by 1/Gm.
+For accurate subthreshold extraction, it is required to use very small voltage step during DC bias sweep.
+{newline}
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} tftex16.in : Amorphous IGZO TFT Degradation Simulation by PBTS(Positive Bias Temperature Stress)
+
+Requires:  Victory Device
+{newline}
+Minimum Versions: Victory Device 1.12.1.R
+{newline}
+In this example, we demonstrate the Positive Bias Temperature Stress simulation due to electron trapping by oxygen related trap.
+In Victorydevice, we can make an electrochemical reaction formula for explaining the positive threshold voltage shift by electron trapping.
+This electron trapping state is idenfied as "Oxygen interstitial" which is acceptor-like state when empty.
+This can be formulated as "O(neutral) + e <=> O-(single ionized negative charged state) or 
+O2(neutral) + 2e- => O2-(double ionized charged state).
+In this example, we just demonstrate the single ionized charged state.
+In the other side, we can think of Vo2+ + 2e- <=> Vo reaction, but in this example we omit this electron trapping reaction. 
+So, ionized oxygen vacancy(Vo2+) remains as donor-like trap(NGD).
+{newline}
+
+{bullet} Structure formation using Victorydevice syntax
+{newline}
+{bullet} Initial doping concentration of each species for each neutral oxygen and ionized oxygen.
+{newline}
+{bullet} Material and model settings for bottom gate passivated IGZO TFT
+{newline}
+{bullet} Initial DOS(Density Of State) in a-IGZO bulk.
+{newline}
+{bullet}  Reaction formula for electron trapping.
+{newline} 
+{bullet} Initial threshold voltage extraction before applying PBTS.
+{newline}
+{bullet} Simulation of Equilibrium concentration.
+{newline}
+{bullet} Positive Bias Temperature Stress Simulation.
+{newline}
+{bullet} Final threshold voltage shift after applying PBTS.
+{newline}
+
+The bottom gate oxide TFT is initialized by glass substrate thickness of 0.5um.
+The gate insulator is composed of 0.1um thick nitride(SiNx) and 0.15um thick oxide(SiOx).
+The IGZO channel thickness is 0.05um and then passivation layer(SiOx) is 0.3um.
+The gate length is 20um and the device width is 20um.
+{newline}
+
+After constructing bottom gate IGZO TFT structure, we define each ion using 
+{bold} "species" command.
+{newline}
+{bold} Species formula="In:Ga:Zn:O" charge=0 name="O"
+{newline}
+{bold} Species formula="In:Ga:Zn:O" charge=-1 name="O-"
+{newline}
+
+The formula just define the element composition of IGZO material. In this simulation, each metal cation(In,Ga,Zn) is not reacted with
+other species. We will use "name" flag to distinguish each species.
+name="O" define neutral trap state of InGaZnO configuration.
+The name="O-" defines the ionized charged trap state after reaction.
+{newline}
+
+{bold} doping reg=4 species.name="O"  uniform conc=1e17
+{newline}
+{bold} doping reg=4 species.name="O-"  uniform conc=1e16
+{newline}
+
+which define the initial concentration of each ion species before applying PBTS.
+{newline}
+We also added the interface trap concentration using interface command.
+{newline}
+
+{bold} interface s.i  x.min=-$l/2-3 x.max=$l/2+3 y.min=-0.36 y.max=-0.34 species.name="O"   concentration=2e11
+{newline}
+{bold} interface s.i  x.min=-$l/2-3 x.max=$l/2+3 y.min=-0.36 y.max=-0.34 species.name="O-"   concentration=0.2e11
+{newline}
+
+For drift-diffusion simulation of ion during applied bias and temperature,
+we also need to define the diffusion coefficient as follows.
+{newline}
+{bold}
+material material=IGZO species.name="O" species.ea=1.14 species.af=1e7 species.hop=1e-6 
+{newline}
+{bold}
+material material=IGZO species.name="O-" species.ea=1.14 species.af=1e7 species.hop=1e-6 
+{newline}
+
+Next, we define the chemical reaction formula using "reaction" command.
+{newline}
+
+{bold} reaction formula="O + e- <=> O-" forward.ea=0.83 forward.rate=1e-7 reverse.ea=0 reverse.rate=1e-7
+{newline}
+
+Probe statement measure the concentration of each ion and the occupation probability during stress time.
+{newline}
+
+{bold} probe x=0.0 y=-0.25 material=IGZO ft.species="O" name="ft_O_front"
+{newline}
+{bold} probe x=0.0 y=-0.25 material=IGZO species.name="O" name="O_front"
+{newline}
+{bold} probe x=0.0 y=-0.25 material=IGZO ft.species="O-" name="ft_O-_front"
+{newline}
+{bold} probe x=0.0 y=-0.25 material=IGZO species.name="O-" name="O-_front"
+{newline}
+
+To compare the threshold voltage shift by PBTS, we have simulated the initial threshold voltage curve.
+After obtaining initial threshold voltage curve, we performed the equlibrium state before actual PBTS.
+Now, we applied actual positive gate bias, and it continue up to 5e3 sec stress time.
+At each stress time, the solution structure is saved for later use in order to get final threshold voltage shift. 
+{newline}
+
+After obtaining forward reaction simulation, we continue to get a backward reaction(reverse recovery)
+applying zero voltage at gate.
+{newline}
+
+To control the amount of vth shift and how fast ion react with stress time, 
+user can fit the activation energy(forward.ea/reverse.ea)
+and reaction coefficient(forward.rate/reverse.rate) in the forward reaction and reverse reaction  
+{newline}
+
+This example demonstrate the positive vth shift by forward reaction and negative shift 
+from stressed voltage by reverse reaction.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+{subsection} tftex17.in : Amorphous IGZO TFT Degradation Simulation: PBTS(Positive Bias Temperature Stress) & Hydrogen Passivation.
+
+Requires:  Victoryprocess/Vicitorydevice
+{newline}
+
+Minimum Versions: Victory Process: 7.22.3.R, Victory Mesh 1.2.4.R, Victory Device 1.12.1.R
+{newline}
+
+In this example, we demonstrate the Positive Bias Temperature Stress simulation due to electron trapping by oxygen related trap, and the role of hydrogen passivation in InGaZnO TFT device. In Victoryprocess part, we simulate the hydrogen diffusion in etch stopper
+process. The partial pressure during etch stopper process show the different hydrogen concentration.
+In Victorydevice, we simulate the electrochemical reaction formula for explaining the positive threshold voltage shift by electron trapping as well as hydrogen passivation forming OH-(Hydroxyl) bond.
+{newline}
+
+The hydrogen atom is a donor in a-IGZO material when it forms to make a OH-(Hydroxyl) bond 
+as well as it passivate the neutral precursor state(electron trap site: O(neutral)).
+This neutral precursor trap can be an electron trapping state or passivated by hydrogen atom. 
+We simulated the hydrogen passivation reaction and electron trapping reaction using chemical ion reaction/transport model in Victorydevice.
+{newline}
+
+{bold} Victoryprcess process simulation and hydrogen diffusion
+
+{bullet} Bottom gate SiOx etch stopper a-IGZO structure formation using Victoryprocess:
+{newline}
+
+-To simulate hydrogen diffusion process, we used material/interface statement to modify a default hydrogen
+diffusion coefficient in Victoryprocess.
+{newline}
+-The hydrogen concentration depending on partial pressure is adjusted in etch stopper deposition,
+ and it diffuse in subsequent diffusion process.
+{newline}
+
+{bold} Victorydevice Ion Reaction and Transport Simulation
+{newline}
+
+After hydrogen diffusion process and structure formation, 
+initial hydrogen concentration is imported from Victoryprocess using 
+
+{bold} doping f.doping=tftex17_0.c species.name="H"
+{newline}
+
+This C-interpreter function reads hydrogen profile from process structure.
+{newline}
+
+After reading hydrogen concentration, we define each ion's charge state.
+{newline}
+In this example, IGZO is the neutral precursor state which is an electron trap. 
+It will decompose to negatively charged state(IGZO-) by electron trapping and neutral
+passivated state(IGZOH) by hydrogen passivation. The overall hydrogen passivation rate is affected by hydrogen concentration , 
+reaction rate of passivation, and hydrogen diffusion.
+{newline}
+{bold} species formula="H"    charge=0  name="H"
+{newline}
+{bold} species formula="In:Ga:Zn:O2"   charge=0  name="IGZO"
+{newline}
+{bold} species formula="In:Ga:Zn:O2" charge=-1 name="IGZO-"
+{newline}
+{bold} species formula="In:Ga:Zn:O2:H" charge=0  name="IGZOH"
+{newline}
+
+In this example, we only consider interface trap concentration using interface command.
+User can add bulk dopig using doping statement as we demonstrate in tftex16 example.
+{newline}
+{bold} interface s.i  x.min=-12.0 x.max=12.0 y.min=-0.21 y.max=-0.19 \
+          species.name="IGZO"   concentration=8e11
+{newline}
+{bold} interface s.i x.min=-12.0 x.max=12.0 y.min=-0.21 y.max=-0.19 \
+          species.name="IGZO-" concentration=1e10
+{newline}
+{bold} interface s.i x.min=-12.0 x.max=12.0 y.min=-0.21 y.max=-0.19 \
+          species.name="IGZOH"  concentration=1e10
+{newline}
+Total amount of neutral precursor trap concentration at th front interface is 8e11/sqcm.
+This trap will decompose to passivated state(IGZOH) and electron trapping state(IGZO-) depending on the hydrogen
+concentration.
+
+For drift-diffusion simulation of hydrogen atom during applied bias and temperature,
+we need to define the diffusion coefficient. Other ion species is immobile. In this example, we assumed the same
+diffusivity over all regions.
+{newline}
+{bold} material species.name="H" species.ea=0.35 species.af=1e3 species.hop=1e-6
+{newline}
+
+Next, we define the chemical reaction formula using "reaction" command.
+{newline}
+{bold} (1) reaction formula="IGZO  + H  <=> IGZOH"  forward.rate=2e-17 forward.ea=0 reverse.rate=1e-15 reverse.ea=1.5
+{newline}
+{bold} (2) reaction formula="IGZO + e- <=> IGZO-" forward.rate=1e-10  forward.ea=0.83 reverse.rate=1e-15 reverse.ea=1.5
+{newline}
+
+The probe statement measure the occupation probability of each ion speceis and concentration at the front interface during stress time.
+{newline}
+{bold} probe x=0.0 y=-0.2 material=IGZO ft.species="IGZO"
+{newline}
+{bold} probe x=0.0 y=-0.2 material=IGZO ft.species="IGZO-"
+{newline} 
+{bold} probe x=0.0 y=-0.2 material=IGZO ft.species="IGZOH"
+{newline}
+{bold} probe x=0.0 y=-0.2 material=IGZO species.name="IGZO"
+{newline}  
+{bold} probe x=0.0 y=-0.2 material=IGZO species.name="IGZO-"
+{newline}
+{bold} probe x=0.0 y=-0.2 material=IGZO species.name="IGZOH" 
+{newline}
+
+The simulation starts to get the intial threshold voltage.
+Then, PBTS simulaton proceeds with stress voltage of "Vgs=+20V + intial threhold voltage" 
+to maintain the constant stress voltage.
+{newline}
+After obtaining stress solution, it is saved to different structure file to get the threshold voltage shift at each time.
+{newline}
+
+tftex17.doe is a simple doe file which select different hydrogen concentration(low/med/high),
+and it load tftex17.in file which simulate the hydrogen concentration effect on PBTS at each hydrogen concentration from tftex17.doe file.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+{subsection} tftex18.in : Amorphous IGZO TFT Degradation Simulation: NBIS(Negative Bias Illumination Stress) 
+
+Requires:  Vicitorydevice
+{newline}
+
+Minimum Versions: Victorydevice 1.12.1.R
+{newline}
+
+In this example, we demonstrate the Negative Bias Illumination Stress simulation due to ionization of oxygen vacancy and interstitial oxygen.
+In Victorydevice, we simulate the electrochemical reaction formula for explaining the negative threshold voltage shift by ionization process.
+{newline}
+
+The oxygen vacancy ionization is described in chemical ion reaction formula as "Vo2+ + 2e- <-> Vo". Here Vo is neutral oxygen vacancy.
+The interstitial oxygen ionization is Io + 2e- <=> Io2-. Here Io is neutral oxygen and Io2- is double negative charged trap state.
+{newline}
+
+{bold} Victorydevice Ion Reaction and Transport Simulation
+{newline}
+
+First step is to define each ion's charge state.
+{newline}
+species formula="In:Ga:Zn:O"   charge=+2  name="Vo2+"
+{newline}
+species formula="In:Ga:Zn:O" charge=0 name="Vo"
+{newline}
+species formula="In:Ga:Zn:O" charge=-2 name="Io2-"
+{newline}
+species formula="In:Ga:Zn:O" charge=0 name="Io"
+{newline}
+
+Next step is to define the initial ionization concentration before reaction in IGZO region.
+{newline}
+
+doping reg=4 species.name="Vo"  uniform conc=1.3e17
+{newline}
+doping reg=4 species.name="Io2-"  uniform conc=9.5e16
+{newline}
+# initial vo2+/Io should be the same as ngd
+doping reg=4 species.name="Vo2+"  uniform conc=2e16
+{newline}
+#acceptor-like trap
+doping reg=4 species.name="Io"  uniform conc=2e5
+{newline}
+
+For drift-diffusion simulation of hydrogen atom during applied bias and temperature,
+we need to define the diffusion coefficient. Other ion species is immobile. 
+The ion's diffusion coefficient is defined in material statement.
+{newline}
+# diffusivity
+material material=IGZO species.name="Vo" species.ea=2.36 species.af=1e7 species.hop=1e-6 
+material material=IGZO species.name="Vo2+" species.ea=1.7 species.af=1e7 species.hop=1e-6 
+material material=IGZO species.name="Io" species.ea=1.14 species.af=1e5 species.hop=1e-6 
+material material=IGZO species.name="Io2-" species.ea=1.14 species.af=1e5 species.hop=1e-6 
+{newline}
+
+
+Finally, we define the chemical reaction formula using "reaction" command.
+{newline}
+# Vo => Vo2+ + 2e-
+reaction formula="Vo2+ + 2e- <=> Vo" forward.ea=1.0 forward.rate=1e7/1e19  \
+	reverse.ea=0.7 reverse.rate=5e18*1e7/1e18
+{newline}
+# Io neutral acceptor-like trap
+reaction formula="Io + 2e- <=> Io2-" reverse.ea=0.0 reverse.rate=5e18*1e5/1e18 \
+	forward.ea=0.83 forward.rate=1e-15
+{newline}
+
+The simulation starts to get the intial threshold voltage.
+Then, NBIS simulaton proceeds with stress voltage of "Vgs=-20V + intial threhold voltage" 
+to maintain the constant stress voltage.
+During stress time simulation, the time evolution of each ion's concentration is plotted to see the change of ion concentration.
+It is plotted on tftex18_1.log.
+After obtaining stress solution, it is saved to different structure file to get the final threshold voltage shift at each time.
+It is plotted on tftex18_2.log for each stress time  at 0 sec(initial), 2000 sec and 10,000 sec.
+{newline}
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+{subsection} tftex19.in : Amorphous IGZO TFT Degradation Simulation: PBTS(Positive Bias Temperature Stress) with Hydrogen Passivation Using Multistate Trap Model
+
+Requires:  Victoryprocess/Atlas
+{newline}
+
+Minimum Versions: Victoryprocess: 7.22.0.R/Atlas 5.26.1.R
+{newline}
+
+We have shown the positive bias temperature stress simulation in tftex17.in using chemical ion transport model.
+In this example, we will demonstrate the Positive Bias Temperature Stress simulation due to electron trapping by multistate trap model. 
+This model is described well in Atlas manual section of 3.3.4. It can define various trap state of the material system such as a-Si:H and IGZO(InGaZnO). 
+In Victoryprocess part, we simulated the hydrogen diffusion in etch stopper process. 
+The partial pressure during etch stopper process show the different hydrogen concentration.
+In Victorydevice, we simulate the electrochemical reaction formula for explaining the positive threshold voltage shift by electron trapping as well as hydrogen passivation forming OH-(Hydroxyl) bond.
+{newline}
+
+The hydrogen atom is a donor in a-IGZO material when it forms to make a OH-(Hydroxyl) bond 
+as well as it passivate the neutral precursor state(electron trap site: O(neutral)).
+This neutral precursor trap can be an electron trapping state or passivated by hydrogen atom. 
+We simulated the hydrogen passivation reaction and electron trapping reaction using multistate trap model.
+For simiplicity and practical use of multistate trap model, we employed the basic 3-state.
+The state#1 is neutral precursor state and state#2 is negatively charged state which trap the electron, and state#3 is
+neutral passivated state by hydrogen. We will estimate each state's occupation probability and also the effect on the threshold voltage shift.
+{newline}
+
+{bold} Victoryprcess process simulation and hydrogen diffusion
+
+{bullet} Bottom gate SiOx etch stopper a-IGZO structure formation using Victoryprocess:
+{newline}
+
+-To simulate hydrogen diffusion process, we used material/interface statement to modify a default hydrogen
+diffusion coefficient in Victoryprocess.
+{newline}
+-The hydrogen concentration depending on partial pressure is adjusted in etch stopper deposition,
+ and it diffuse in subsequent diffusion process.
+{newline}
+
+{bold} Atlas Multistate Trap Simulation
+{newline}
+
+After hydrogen diffusion process and structure formation, 
+initial hydrogen concentration is imported from Victoryprocess using 
+{bold} doping f.doping=tftex19_0.lib species1
+{newline}
+The hydrogen is named as "species1" in the following simulation.
+This C-interpreter function(tftex19_0.lib) reads hydrogen profile from process structure into device structure.
+After reading hydrogen concentration, we define each charge state through TRAP and INTTRAP statement.
+{newline}
+In this example, initial IGZO state can be depicted as neutral precursor state.
+It will decompose to negatively charged state(IGZO-) by electron trapping and neutral
+passivated state(IGZOH) by hydrogen passivation. The overall hydrogen passivation rate is affected by hydrogen concentration, 
+rate of passivation, and hydrogen diffusion.
+{newline}
+The first trap is fixed charge from ionized oxygen vacancy(Vo2+) which is not transform to other state.
+MSC1.FT0/MSC2.FT0/MSC3.FT0 are initial occupation probability and only state#1 is occupied with charge state +2.
+This state will give two free electron to the conduction band. f.extmscrates read the C-function which define the tranistion rate among states.
+If you look at the tftex19_1.lib file, there is no transition rate among states with *rate=0. MSC1.SP1/MSC2.SP1/MSC3.SP3 define the how many "species1 atom(ex, hydrogen) is occupied at each state. Because there is no transition rate, MSC#.SP1 have no meaning in this fixed bulk trap state.
+This trap statement is just to fit the initial transfer curve by somewhat initial ionized trap. It is initial Vo2+(donor-like trap).
+MSC.NSTATES=3 says that the total number of available state is three.(precursor/electron trapping/hydrogen passivated state)
+The multistate trap model is enabled with MSCTRAP option in trap/inttrap statement.
+
+trap density=1.5e17*0.7 degen.fac=1 sign=1.0e-16 sigp=2.0e-18 msctrap msc.nstates=3 \
+	msc1.ft0=1.0 msc1.sp1=0 msc1.charge=2 msc1.et.cb msc1.elevel=0.2  \
+	msc2.ft0=0.0  msc2.sp1=1 msc2.charge=2  \
+	msc3.ft0=0.0 msc3.sp1=1  msc3.charge=0 msc3.elec=2 f.extmscrates=tftex19_1.lib \
+	x.min=-12.0 x.max=12.0 y.min=-0.245 y.max=-0.2
+{newline}
+Next, we define the bulk trap density for various charge states.
+MSC1.charge=-1 is occupied with one electron which means it is negatively charged state.
+MSC2.charge=-2 is electron traped state which trap one more electron. This state is responsible for positve shift of threshold voltage.
+MSC3.charge=-1 is single negatively charged state with electron and is occuppied with species1(hydrogen) by MSC3.SP1=1.
+Each state's transition rate is defined in f.extmscrates="tftex19_2.lib"
+The state#1 can be one of possible electron trap site such as oxygen deficiency(interstitial or vacancy) or unbounded metal dangling bonds.
+The state#3 is the passivated state which could be hydridic passivation of metal dangling bonds.
+Thus, precursor state is fully acccesible into other state via non-negligible transition rate.
+
+#bulk 
+trap density=1.5e17*0.7 degen.fac=1 sign=1.0e-27*0.4*0.5*5 sigp=2.0e-29 msctrap msc.nstates=3 \
+	msc1.ft0=1.0 msc1.sp1=0 msc1.charge=-1 msc1.elec=1  \
+	msc2.ft0=0.0   msc2.sp1=0 msc2.charge=-2 msc2.elec=2 \
+	msc3.ft0=0.0 msc3.sp1=1  msc3.charge=-1 msc3.elec=1 \
+	f.extmscrates="tftex19_2.lib" x.min=-12.0 x.max=12.0 y.min=-0.245 y.max=-0.2 probe_id=1
+{newline}
+We added two interface trap state using INTTRAP statement as the same way as the TRAP statements.
+For general ion transport model, we need to define number of species and charge state.
+In this example, we define hydrogen as MODELS NSPECIE=1 SPECIES1.Z=0.
+
+For drift-diffusion simulation of hydrogen atom during applied bias and temperature,
+we need to define the diffusion coefficient. Other ion species is immobile. In this example, we assumed the same
+diffusivity over all regions.
+{newline}
+{bold} material  species1.ea=1.5 species1.af=1.5e10 species1.hop=1e-6
+{newline}
+The probe statement measure the occupation probability of each ion speceis, concentration, and transition rate 
+at the various point in the device during stress time.
+{newline}
+
+The Vt shift due to each hydrogen concentration (low/med/high) is simulated and the results are plotted in Tonyplot. 
+
+To load and run this example, select the
+{bold} Load example 
+button in DeckBuild. This will copy the input file and any support
+files to your current working directory. Select the
+{bold} run 
+button to execute the example.
+
+
+{subsection} tftex20.in : Amorphous IGZO TFT Hysteresis Simulation
+Requires:  Victoryprocess/Atlas
+{newline}
+
+Minimum Versions: Atlas 5.26.1.R
+{newline}
+The hysteresis effect is caused by different reaction time scale between forward and reverse sweep.
+This is related to differnt reaction time scale between trapping and de-trapping process.
+In IGZO TFT case, the hysteresis simulation can be shown by several method.
+One of easiest way is to use Heiman interface trapping model. Or we can use chemical ion reaction model which was 
+introduced in previous tft example to explain the oxygen vacancy ionization and recovery process.
+In this example, we used direct transient simulation with adjusting capture cross section.
+In steady state(DC) simulation, it always show small current than transient mode simulation current. It means that
+in DC case, there is enough time to trap carrier but in transient mode it depends on how ramping speed is performed to
+measure IV curve given capture cross section.
+In this simulation, we choosed somewhat small capture cross section(SIGTAE) to enlarge the effect of hysteresis.
+
+{newline}
+
+
+tftex20.aux is skeleton input file which include all necessary input information.
+tftex20.in is launch file to split various ramping time to get the different hysteresis effect.
+
+To load and run this example, select the
+{bold} Load example 
+button in DeckBuild. This will copy the input file and any support
+files to your current working directory. Select the
+{bold} run 
+button to execute the example.
+
+
+
+{subsection} tftex21.in : Temperature Properties of Amorphous In-Ga-Zn-O Thin-Film Transistors with a new Mobility Model
+
+Requires:  Atlas
+{newline}
+
+Minimum Versions: Atlas 5.26.1.R
+{newline}
+
+In this example, we demonstrate the temperature properties of amorphous IGZO TFT. 
+We reproduced the measured transfer curve as well as mobility with temperature through newly developed IGZO.TOKYO model.
+For detailed informatioin, please refer to simulation standard article on www.silvaco.com.
+{newline}
+
+{bold} Atlas Structure
+
+The IGZO thickness is 40nm and channel length is 40um.
+The mesh structure is generated with x.mesh(x.m) and y.mesh(y.m) statement.
+Each generated mesh is defined with material usimg region statement.
+The electrode and doping statement were used to define metal electrode and channel doping.
+For intrinsic IGZO n-type doping, we assumed uniform 8e15/cm^3 concentration.
+{newline}
+
+{bold} Models
+
+We used fixed trap states for the IGZO sub-gate states with temperature. It is validated from experimental data, in which the extracted DOS is not significantly changed during temperature change.
+The IGZO band gap is 3.1 eV and constant band edge mobility is assumed to be 14.
+During transfer curve simulation, threshold voltage is defined at drain current of 1e-10 Ampere and
+subthreshold voltage and linear mobility are extracted.
+
+To enable new IGZO.TOKYO model, use mobility statement and model flag name "IGZO.TOKYO".
+
+{bullet} mobility IGZO.TOKYO mun=$mue0 mup=0.01 tmun=0 tmup=0 \
+{bullet}		igzo.gamma0=$gm0 igzo.tgamma=$tgm igzo.ncrit=$necr
+
+Other related parameters are defined with set command in the tftex21_aux.in file.
+{newline}
+
+{bold} Simulation Results
+
+tftex21.in is simple doe file which select different temperature from 253K to 393K.
+and it loads tftex21_aux.in file which simulate the temperature effect on IGZO TFT.
+After completion, it will plot the mobility v.s temperature curve, transfer curve v.s temperature as well as overlaying with experimental data, and threshold voltage shift with temperature which is automatically saved in tftex21_temperature.dat file during simulation.
+
+To load and run this example, select the
+{bold} Load example 
+button in DeckBuild. This will copy the input file and any support
+files to your current working directory. Select the
+{bold} run 
+button to execute the example.
+
+
+

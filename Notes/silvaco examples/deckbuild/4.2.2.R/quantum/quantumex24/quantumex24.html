@@ -1,0 +1,78 @@
+<html>
+  <head>
+    <title>Silicon NanoWire Gate-All-Around Tunneling Field-Effect Transistor (TFET)</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Silicon NanoWire Gate-All-Around Tunneling Field-Effect Transistor (TFET)</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Atlas</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="quantumex24_plot0.png" width="640" alt="quantumex24_plot0" />
+      <p/>
+      <img src="quantumex24_plot1.png" width="640" alt="quantumex24_plot1" />
+      <p/>
+      <img src="quantumex24_plot2.png" width="640" alt="quantumex24_plot2" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates the capability of a TCAD simulation for Silicon NanoWire (NW) Gate-All-Around (GAA) Tunneling Field-Effect Transistor (TFET) using the non-local band-to-band tunneling (BTBT) model.
+</p>
+<p>
+This example is related to the IEEE T-ED publication:
+Z. Y. Chen et al., &quot;Demonstration of Tunneling FETs Based on Highly Scalable Vertical Silicon Nanowires,&quot; in IEEE Electron Device Letters, vol. 30, no. 7, pp. 754-756, July 2009,
+and to the Silvaco Simulation Standard 2017 article &quot;TCAD Simulations of TFET and Tunneling Diode&quot;.
+</p>
+<p>
+This gives an example of using the
+<b> BBT.NONLOCAL </b> ,
+<b> QTX.MESH </b> , and
+<b> QTY.MESH </b> models to study the Id-Vg characteristics of a Si NW-GAA-TFET at room temperature (300K) with two different drain voltages, 1.2 V and 0.05 V.
+</p>
+<p>
+The deck uses the
+<b> LOOP </b> statement to loop commands in
+<b> DeckBuild. </b> </p>
+<p>
+The
+<b> LOOP </b> is used to modify the drain voltage for two Id-Vg simulations.  The TFET has a fine mesh at the junctions, specifically at the tunneling junction between the p and i regions.  For tunneling to occur in the simulation, the p-i junction is overlayed with a quantum mesh. This quantum mesh is defined by the statement:
+<b> QTX.MESH </b> and
+<b> QTY.MESH</b> . This creates simple mesh for planar tunneling junctions.
+</p>
+<p>
+The model
+<b> BBT.NONLOCAL </b> is specified on the MODELS statement to use the non-local tunneling model. The direction of tunneling is specified by the
+<b> QTUNN.DIR </b> statement, with 0 being the y-direction and 1 being the x-direction.
+</p>
+<p>
+The structure file of each device in equilibrium is saved, and can be viewed in
+<b> Tonyplot</b> . You can view the band diagrams and other information about the device.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

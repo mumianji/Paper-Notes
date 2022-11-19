@@ -1,0 +1,255 @@
+# (c) Silvaco Inc., 2018
+
+go victoryprocess 
+
+set vge=15
+set mirrorTimes=4
+set Xhalf=pow(2,$'mirrorTimes')
+
+option cartesian.spacing.ratio=1.5
+
+set peakB1=2.0e17 
+set refB1=7.0e13 
+set distB1=3.0 
+set sigB1=$'distB1'/sqrt(-2*log($'refB1'/$'peakB1'))
+set sigB1=floor(1000*(0.0005+$'sigB1'))/1000 
+set latB1=floor(1000*(0.0005+0.8*$'sigB1'))/1000 
+
+set peakB2=1e20 
+set refB2=7.0e13 
+set distB2=0.4 
+set sigB2=$'distB2'/sqrt(-2*log($'refB2'/$'peakB2'))
+set sigB2=floor(1000*(0.0005+$'sigB2'))/1000 
+set latB2=floor(1000*(0.0005+0.8*$'sigB2'))/1000 
+
+set peakB3=2.0e17 
+set refB3=7.0e13 
+set distB3=6.0 
+set sigB3=$'distB3'/sqrt(-2*log($'refB3'/$'peakB3'))
+set sigB3=floor(1000*(0.0005+$'sigB3'))/1000 
+set latB3=floor(1000*(0.0005+0.8*$'sigB3'))/1000 
+
+set peakP1=1e19 
+set refP1=7.0e13 
+set distP1=0.3 
+set sigP1=$'distP1'/sqrt(-2*log($'refP1'/$'peakP1'))
+set sigP1=floor(1000*(0.0005+$'sigP1'))/1000 
+set latP1=floor(1000*(0.0005+0.8*$'sigP1'))/1000 
+
+
+init silicon depth=140 from="0,0" to="10,1" gasheight=3 
+
+line x loc=0    spac=0.2
+line x loc=0.4  spac=0.1 
+line x loc=0.5  spac=0.1 
+line x loc=1.25 spac=0.75
+line x loc=2    spac=0.1
+line x loc=2.1  spac=0.1
+line x loc=2.5  spac=0.4
+line x loc=2.9  spac=0.1
+line x loc=3.0  spac=0.1
+line x loc=3.75 spac=0.75
+line x loc=10   spac=5
+
+line y loc=0    spac=1
+line y loc=1    spac=1 
+
+line z loc=-1.5   spac=0.75
+line z loc=-1     spac=0.5 
+line z loc=0      spac=0.25 
+line z loc=0.25    spac=0.25
+line z loc=1.5    spac=0.5
+line z loc=3      spac=0.25
+line z loc=4.5    spac=1
+line z loc=6      spac=0.5
+line z loc=10     spac=1.5
+line z loc=70     spac=20
+line z loc=118    spac=4
+line z loc=126    spac=5
+line z loc=134    spac=2
+line z loc=140    spac=4
+
+doping phosphorus=7e13 silicon min=0 max=125
+doping phosphorus=9.993e16 silicon min=118 max=134 
+doping boron=2e17 silicon min=134 max=140
+
+specifymaskpoly maskid=1 istransparent=false \
+    p="0,0" p="2.1,0" p="2.1,1" p="0,1"
+mask maskid=1 
+doping boron conc=$'peakB1' peak=0 sigma=$'sigB1' lateral=1e-5 
+strip barrier
+
+specifymaskpoly maskid=2 istransparent=false \
+    p="0.4,0" p="1,0" p="1,1" p="0.4,1"
+mask maskid=2 
+doping phosphorus conc=$'peakP1' peak=0 sigma=$'sigP1' lateral=$'latP1' 
+strip barrier
+
+specifymaskpoly maskid=3 istransparent=false \
+    p="1,0" p="2.1,0" p="2.1,1" p="1,1"
+mask maskid=3 
+doping boron conc=$'peakB2' peak=0 sigma=$'sigB2' lateral=$'latB2' 
+strip barrier
+
+specifymaskpoly maskid=4 istransparent=false \
+    p="2.5,0" p="10,0" p="10,1" p="2.5,1"
+mask maskid=4 
+doping boron conc=$'peakB3' peak=0 sigma=$'sigB3' lateral=1e-5 
+strip barrier
+
+specifymaskpoly maskid=5 istransparent=false \
+    p="0,0" p="0.5,0" p="0.5,1" p="0,1"
+specifymaskpoly maskid=5 istransparent=false add \
+    p="2,0" p="3,0" p="3,1" p="2,1"
+mask maskid=5 
+etch silicon thickness=6 max 
+strip barrier
+
+deposit oxide thickness=0 max
+
+specifymaskpoly maskid=6 istransparent=false \
+    p="0,0" p="0.4,0" p="0.4,1" p="0,1"
+specifymaskpoly maskid=6 istransparent=false add \
+    p="2.1,0" p="2.9,0" p="2.9,1" p="2.1,1"
+mask maskid=6
+etch oxide thickness=5.9 max
+strip barrier
+
+deposit aluminum thickness=0 max
+
+specifymaskpoly maskid=6 electrode=gate \
+    p="0,0" p="0.4,0" p="0.4,1" p="0,1"
+specifymaskpoly maskid=6 electrode=gate0v \
+    p="2.1,0" p="2.9,0" p="2.9,1" p="2.1,1"
+electrodes maskid=6 aluminum
+
+deposit oxide thickness=1 max
+
+specifymaskpoly maskid=7 istransparent=false \
+    p="0.7,0" p="1.8,0" p="1.8,1" p="0.7,1"
+mask maskid=7
+etch oxide thickness=1 max
+strip barrier
+
+deposit aluminum thickness=0.5 max
+
+specifymaskpoly maskid=8 istransparent=false \
+    p="0,0" p="10,0" p="10,1" p="0,1"
+specifymaskpoly maskid=8 electrode=emitter \
+    p="0,0" p="10,0" p="10,1" p="0,1"
+electrodes maskid=8 aluminum 
+
+electrodes name=collector substrate
+
+save name=powerex21_vp_0
+
+go victorymesh 
+
+load in=powerex21_vp_0
+mirror axes="-x, +8x"
+remesh conformal
+save out=powerex21_0.str
+
+#################################
+# DC off 600V
+#################################
+
+go victorydevice  
+
+# intrinsic reference of silicon
+set Ei=4.72280189
+
+# device area (cm^2)
+set scale=10e-4 * $'Xhalf' * 1e-4 
+
+mesh inf=powerex21_0.str 
+
+material silicon \
+         f.vsatn=powerex21.so f.vsatp=powerex21.so \
+         taun0=1e-5 taup0=3e-6 lt.taun=-1.5 lt.taup=-1.5
+
+models print klassen fldmob bgn.kla srh hnsaug lat.temp
+mobility alphp.cvt=0.719 feln.cvt=5.82e30 felp.cvt=2.0546e30 \
+         n.lcrit=1e-6 p.lcrit=1e-6 n.canali p.canali 
+impact selb 
+
+contact name=gate workfunc=0.2+$Ei
+
+thermcontact name=collector alpha=1/0.3 ext.temp=300 
+
+method print pas norm.scaling.local carriers=2 
+
+output con.band val.band 
+
+solve init 
+solve prev
+
+solve vcollector=0.01 prev
+solve vcollector=0.1 vstep=0.1 vstop=1 name=collector 
+solve vcollector=2 vstep=1 vstop=10 name=collector
+solve vstep=1.2 vmult vstop=450 name=collector 
+solve vstep=50 vstop=600 name=collector
+save outf=powerex21_1.str 
+
+
+log off
+
+#################################
+# Short-Circuit by MixedMode
+#################################
+
+go victorydevice  
+
+# intrinsic reference of silicon
+set Ei=4.72280189
+
+# device area (cm^2)
+set scale=10e-4 * $'Xhalf' * 1e-4 
+
+.begin 
+
+vg 1 0 0. pwl 0 0 0.01u $'vge' 10u $'vge' 10.01u 0 15u 0   
+rg 2 1 10 
+adevice 2=gate 3=emitter 4=collector 7=gate0v width=1/$scale infile=powerex21_1.str
+vs1 3 0 0. 
+vs2 7 0 0.
+ls 5 4 10nH
+rs 6 5 10m
+vc 6 0 600 
+
+.nodeset v(1)=0. v(2)=0. v(3)=0. v(4)=0. v(5)=600. v(6)=600. v(7)=0. 
+.options print relpot m2ln m2ln.tr loadsolutions noshift temp=300 m2ln.cutback 
+.numeric amp.precond elec.parallel.num=4 
+
+.save outfile=powerex21 master=powerex21 tsave="6.5us"
+
+.log outfile=powerex21_0
+.tran 1ns 6.5u 
+
+.end 
+
+material device=adevice silicon \
+         f.vsatn=powerex21.so f.vsatp=powerex21.so \
+         taun0=1e-5 taup0=3e-6 lt.taun=-1.5 lt.taup=-1.5
+
+models device=adevice  klassen fldmob bgn.kla srh hnsaug lat.temp 
+mobility device=adevice alphp.cvt=0.719 feln.cvt=5.82e30 felp.cvt=2.0546e30 \
+         n.lcrit=1e-6 p.lcrit=1e-6 n.canali p.canali 
+impact selb 
+
+contact device=adevice name=gate workfunc=0.2+$Ei
+thermcontact device=adevice name=collector ext.temp=300 alpha=1/0.3  
+
+method device=adevice pastix norm.scaling.local block.tran
+
+output con.band val.band errors
+
+probe device=adevice j.electron v.mag x=0 z=118 name="Jec"
+probe device=adevice j.hole v.mag x=0 z=118 name="Jhc"
+
+go victorydevice 
+
+tonyplot powerex21_0_tr.log -set powerex21_0.set
+tonyplot3d powerex21_tr_1_adevice.str -set powerex21_1.set
+
+

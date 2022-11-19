@@ -1,0 +1,112 @@
+<html>
+  <head>
+    <title>A Normally-OFF Vertical Superjunction HEMT I-V Characteristics and Breakdown</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>A Normally-OFF Vertical Superjunction HEMT I-V Characteristics and Breakdown</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Victory Device  or  Atlas</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Victory Device 1.12.1.R  or  Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="ganfetex21_plot0.png" width="640" alt="ganfetex21_plot0" />
+      <p/>
+      <img src="ganfetex21_plot1.png" width="640" alt="ganfetex21_plot1" />
+      <p/>
+      <img src="ganfetex21_plot2.png" width="640" alt="ganfetex21_plot2" />
+      <p/>
+      <img src="ganfetex21_plot3.png" width="640" alt="ganfetex21_plot3" />
+      <p/>
+      <img src="ganfetex21_plot4.png" width="640" alt="ganfetex21_plot4" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates TCAD computation of Id-Vg, Id-Vd, and Breakdown I-V characteristics of a gallium nitride (GaN) field-effect transistor (FET) called Enhancement-Mode Vertical Superjunction HEMT, with P+ Gate and P-pillar. The P+ gate region makes it a Normally-OFF (Enhancement-Mode) HEMT device.
+</p>
+<p>
+The example is based on the following reference paper:
+</p>
+<p>
+[1] L. Zhongda, T.P. Chow, &quot;Design and simulation of 5-20-kV GaN enhancement-mode vertical superjunction HEMT&quot;, IEEE Trans. Electron Dev, vol.60, no.10, 2013, pp.3230-3237.
+</p>
+<p>
+The input deck provided with this example can be run by either Victory Device or Atlas simulator, just by changing the solver name in the command
+<b> go victorydevice </b> into
+<b> go atlas</b> . It shows that both Victory Device and Atlas device simulators can be fully compatible in terms of input commands, producing same results, and allowing easy transition between Atlas and Victory Device.
+</p>
+<p>
+This example demonstrates:
+</p>
+<ul>
+  <li>
+ Construction of the Vertical GaN-FET structure using the device simulator syntax
+<br/>
+  </li>
+  <li>
+ Material and models parameter specification 
+<br/>
+  </li>
+  <li>
+ Simulation of Id-Vg, Id-Vd, and Breakdown I-V characteristics 
+<br/>
+  </li>
+  <li>
+ Display of the results in TonyPlot
+  </li>
+</ul>
+<p>
+The device under consideration is a Normally-OFF Vertical Superjunction AlGaN/GaN HEMT. The main concept here is that the polarization charge is calculated using the built-in models as specified by the
+<b> polarization </b> parameter on the
+<b> models </b> statement.
+</p>
+<p>
+First, the initial solution is obtained (for zero bias), which includes also calculation of the 2D Electron Gas (2DEG) sheet density.
+</p>
+<p>
+Then, the Id-Vg transfer characteristic is computed, for one selected Vds voltage (corresponding to Fig. 9 in the reference [1]), and then the Id-Vd output characteristics are computed, for several selected Vgs voltages (corresponding to Fig. 8 in [1]). Finally, four Breakdown I-V curves are computed for Vg = 0, 1, 2, and 3 V (corresponding to Fig. 13 in [1]).
+</p>
+<p>
+Note that in the reference [1] a different device structure was used for the Id-Vg and Id-Vd analysis, and a different design (different dimensions and doping) for the Breakdown I-V. Therefore, the input deck has two separate sections:
+</p>
+<p>
+- PART I: Id-Vg and Id-Vd curves computation
+</p>
+<p>
+- PART II: Breakdown I-V curve simulation
+</p>
+<p>
+The Part I computations are run with the standard precision of 64 bits, since increasing precision (e.g. to 80 bits) makes no visible difference in the computed I-V curves, while simulation time gets about 2X longer. However, the Breakdown I-V computations require higher precision: 80-bit for Vg &gt; 0 V, and 128-bit for Vg close to 0 V. This is set in the very first command of the input deck, by
+<b> simflags=&quot;-80&quot; </b> .
+</p>
+<p>
+The families of I-V curves are plotted using the TonyPlot tool. All the computed I-V curves compare quite well with the I-V characteristics published in the reference paper [1]. You can plot similar overlaid plots yourself if you use
+<b> Overlay </b> feature in
+<b> TonyPlot</b> .
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

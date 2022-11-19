@@ -1,0 +1,37 @@
+v DBInternal
+# silvaco.file ASCII version=1.14.23 format=1 contents=SDB,Tables=1
+
+Copyright "###################################################################"
+Copyright "#                    Copyright Silvaco Inc. (c)                   #"
+Copyright "#                            1992-2014                            #"
+Copyright "#                                                                 #"
+Copyright "# This file format and the following Key are copyright Silvaco    #"
+Copyright "# International. You may not use, this format or key without      #"
+Copyright "# reproducing this message in full and obtaining                  #"
+Copyright "# express written permission from Silvaco Inc.                    #"
+Copyright "#                                                                 #"
+Copyright "# To obtain such permission please contact: Silvaco Inc.          #"
+Copyright "#                                           support@silvaco.com   #"
+Copyright "#                                                                 #"
+Copyright "# KEY=SVC86hn7562asdx                       PROD=345              #"
+Copyright "###################################################################"
+#dbinternal 2.11.7.R (Thu Feb  8 16:02:37 GMT 2018)
+#libSDB 1.12.42 (Thu Oct 26 19:20:24 PDT 2017)
+p 10 10000 10001 10002 10003 10004 10005 10006 10007 10008 10009
+d 1 1e+19 -2.0513000000000001e-07 -41.026000000000003 0.562484 -3.79089e-08 0.219999 -1.7231399999999999e-07 32.854999999999997 7.5817800000000002
+d 2 2e+19 -2.05191e-07 -41.038200000000003 0.563974 -5.9713699999999998e-08 0.319999 -1.86606e-07 51.6008 11.9427
+d 3 4e+19 -2.0524700000000001e-07 -41.049399999999999 0.563703 -8.9816099999999994e-08 0.46 -1.9525200000000001e-07 77.629499999999993 17.963200000000001
+d 4 6e+19 -2.0525299999999999e-07 -41.050600000000003 0.563349 -9.3121299999999994e-08 0.48 -1.9400299999999999e-07 80.534499999999994 18.624300000000002
+d 5 8e+19 -2.0525299999999999e-07 -41.050600000000003 0.563301 -9.3346299999999997e-08 0.48 -1.9447099999999999e-07 80.736000000000004 18.6693
+d 6 1e+20 -2.0525299999999999e-07 -41.050600000000003 0.563294 -9.3375100000000006e-08 0.48 -1.9453100000000001e-07 80.761899999999997 18.675000000000001
+Q 10000 1 ex_id
+Q 10001 1 tunnel_doping
+Q 10002 1 Jsc
+Q 10003 1 JscmAcm2
+Q 10004 1 Voc
+Q 10005 1 Pm
+Q 10006 1 Vm
+Q 10007 1 Im
+Q 10008 1 FF
+Q 10009 1 Eff
+EOF 647339673

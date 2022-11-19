@@ -1,0 +1,99 @@
+<html>
+  <head>
+    <title>3D Trench IGBT</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>3D Trench IGBT</H1>
+    <table id="text">
+      <tr>
+        <td><b>Required:</b></td><td><i>Victory Process, Victory Mesh, Victory Device</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Victory Process 7.22.3.R, Victory Mesh 1.2.4.R, Victory Device 1.12.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="sicex09_plot0.png" width="640" alt="sicex09_plot0" />
+      <p/>
+      <img src="sicex09_plot1.png" width="640" alt="sicex09_plot1" />
+      <p/>
+      <img src="sicex09_plot2.png" width="640" alt="sicex09_plot2" />
+      <p/>
+      <img src="sicex09_plot3.png" width="640" alt="sicex09_plot3" />
+      <p/>
+      <img src="sicex09_plot4.png" width="640" alt="sicex09_plot4" />
+      <p/>
+      <img src="sicex09_plot5.png" width="640" alt="sicex09_plot5" />
+      <p/>
+      <img src="sicex09_plot6.png" width="640" alt="sicex09_plot6" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+By default Victory Process and Device run on just one processor.
+To ensure better perfomance on your computer the following simulation condition
+<b> simflags=&quot;-P all&quot;</b> could be specidied in the
+<b> go</b> line starting Victory Process or Device. This means that all processors available will be used.
+If you want to use a smaller number of processors you can substitute &quot;all&quot; with a desired number, e.g.
+<b> simflags=&quot;-P 4&quot;.</b> </p>
+<p>
+Silicon based power devices are still dominant today in power electronics. However, wide bandgap semiconductors like SiC are
+now more and more used for  high power, high-temperature applications because of superior thermal conductivity, lower intrinsic
+carrier concentration and better on-resistance compare to Silicon, which is a key figure of merit in power switching applications.
+</p>
+<p>
+Simulating SiC devices is however more challenging compare to Silicon. Indeed very low intrinsic concentration combined with
+high doping values is usually detrimental to convergence. Victory Device can handle this situation thanks to his
+built-in extended precision solvers. Indeed whereas normal 64bits version has a relative accuracy of around 1e-16, 80 bits version
+can increase the accurary up to 1e-19, 128bits to 1e-32 and 256bits to 1e-63.  We may however get some penalty in term of simulation
+time especially for 128 and 256 bits version. SiC exhibits hexagonal crystal structures. As a consequence anisotropy features in many important physical parameters like impact ionization must be taken into account.
+</p>
+<p>
+The following example demonstrate 3D trench SiC IGBT simulation using Victory Cell and Victory Device.
+</p>
+<p>
+The particularity of this device is to have low doping long drift region of about 160um. This will lead to high breakdown voltage.
+In this example we did not focus only on breakdown voltage simulation but we also wanted to perform IV simulation including
+IDVG and IDVD to illustrate a 3D specific effect. Indeed a &quot;hump&quot; effect was observed on the IDVG characteristic due to their
+non planar structure as reported in &quot;Quantitative Analysis of Hump Effects of Gate-All_Around Metal_Oxide_Semiconductor Field_Effect
+Transistors&quot; Woojun Lee,and Woo Young Choi Japanese Journal of Applied Physics 49 (2010) 04DC11. This &quot;hump&quot; effect is characterized in the IDVG curve as a parasitic transistor. This may be problematic in term of power consumption since it increases the off-current. In order to overcome this problem a non-Manhattan structure
+(including rounded trench corner instead of 90 degree trench corner) was simulated. The &quot;hump&quot; effect is reduced and the
+breakdown voltage improved.
+</p>
+<p>
+In order to create the 3D structure we used Victory Cell our 3D process simulator. Victory Cell is very suitable for 3D SiC
+power devices simulation since it is layout driven, accurate, fast and easy to use. The 3D structure creation takes only few
+minutes. After the process simulation is done a 3D structure is saved using a tetrahedron mesh to ensure that any shape created
+during 3D process simulation is well conserved and transferred to Victory Device for further device simulation. Device simulations
+were performed using extended precision arithmetic, 80 bits or 128-bit depending on the type of simulation done, to be sure to
+resolve low intrinsic carrier concentrations.
+</p>
+<p>
+As mentioned above we can clearly see the effect of the trench corner on the IDVG and IDVD characteristics. 2D cut plane
+were also made on the diagonal of the device right at the trench corner where we can clearly see higher electron current
+density for the Manhattan compare to the case where the trench corner was rounded. Note that BV is also affected by this
+effect and BV of around 12KV is obtained when the trench edge is rounded. We can clearly see when we plot the 3D structure
+that the maximium of the Electric Field as well as the Impact Generation rate is located at the bottom of the trench.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

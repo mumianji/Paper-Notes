@@ -1,0 +1,54 @@
+
+# Vertical RSD, Nitride liner as stressor and corresponding IV characteristics
+
+go victorystress 
+
+init structure="vsex05_1.str"
+
+material material("Stress_liner") intrin.sig=-1.0e10 
+
+material silicon model.iso=0
+
+material material("RSD_stressor") young.m=1.87e12
+material material("RSD_stressor") poiss.r=0.28
+
+material material("Stress_liner") young.m=3.89e12
+material material("Stress_liner") poiss.r=0.3
+
+material polysilicon young.m=1.87e12
+material polysilicon poiss.r=0.28
+
+stress exposed strain rebalance
+
+mobility nhance phance
+
+save structure="vsex05_3.str"
+
+
+# Faceted RSD, Nitride liner as stressor and corresponding IV characteristics
+
+go victorystress
+
+init structure="vsex05_2.str"
+
+material material("Stress_liner") intrin.sig=-1.0e10 
+
+material silicon model.iso=0
+
+material material("RSD_stressor") young.m=1.87e12
+material material("RSD_stressor") poiss.r=0.28
+
+material material("Stress_liner") young.m=3.89e12
+material material("Stress_liner") poiss.r=0.3
+
+material polysilicon young.m=1.87e12
+material polysilicon poiss.r=0.28
+
+stress exposed strain rebalance
+
+mobility nhance phance
+
+
+save structure="vsex05_4.str"
+
+quit

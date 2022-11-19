@@ -1,0 +1,188 @@
+# (c) Silvaco Inc., 2018
+# Bipolar Transistor Process Simulation
+
+go athena
+
+line x location=0 spacing=0.2
+line x location=1 spacing=0.2
+line x location=2 spacing=0.02
+line x location=3 spacing=0.2
+line x location=4 spacing=0.2
+line x location=5 spacing=0.02
+line x location=6 spacing=0.2
+
+line y location=0 spacing=0.2
+line y location=6 spacing=2
+
+init silicon c.phosphor=4e20 orientation=111
+
+method pls
+
+# Collector Drift Region
+epitaxy time=3 temp=1000 thickness=3 divisions=10 dy=0.2 ydy=4 \
+        c.phosphor=5e15
+epitaxy time=2.45 temp=1000 thickness=2.45 divisions=10 dy=0.05 ydy=0 \
+        c.phosphor=5e15
+epitaxy time=0.55 temp=1000 thickness=0.55 divisions=15 dy=0.05 ydy=0.5 \
+        c.phosphor=5e15
+
+# Base Epitaxy
+epitaxy time=0.2 temp=1000 thickness=0.36 divisions=18 c.boron=1.4e18
+
+method full.cpl high.conc grid.ox=0.01 poly.diff ^pls
+
+# Base Contact Doping
+diffus time=2 temp=1000 weto2
+etch oxide right p1.x=5
+diffus time=2 temp=1000 nitro c.boron=1e20
+
+# Emitter Hard Mask
+diffus time=2 temp=1000 weto2
+etch oxide left p1.x=2
+
+# Emitter Poly and Diffusion
+deposit polysilicon thick=0.1 c.phosphor=1e21 divisions=5 gr.size=0.05
+deposit oxide thick=0.05 divisions=5
+diffus time=0.2 temp=1100 nitro
+etch oxide dry thick=0.9
+etch polysilicon right p1.x=3
+
+# Ohmic Contacts
+etch oxide right p1.x=5
+deposit aluminum thick=0.04 divisions=4
+etch aluminum start x=2 y=-7
+etch cont x=4 y=-7
+etch cont x=4 y=-6
+etch done x=2 y=-6
+electrode name=emitter x=0.5
+electrode name=base x=5.5
+electrode name=collector backside
+
+struct outfile=radex18.str
+
+
+# Pre-Irradiation Gummel Plot at Vce=10 Volts
+
+go atlas simflags="-80"
+
+mesh infile=radex18.str width=2000
+
+defects material=polysilicon nta=1.4e20 ntd=5e19 wta=0.025 wtd=0.05 \
+        nga=1.2e17 ngd=3.7e17 ega=0.4 egd=0.4 wga=0.1 wgd=0.1 \
+        sigtae=1e-16 sigtah=1e-14 sigtde=1e-14 sigtdh=1e-16  \ 
+        siggae=1e-16 siggah=1e-14 siggde=1e-14 siggdh=1e-16
+
+models klasrh klaaug kla fldmob bgn fermi ni.fermi
+
+method climit=1e-6 maxtraps=10 dvmax=0.2 ix.tol=1e-30 ir.tol=1e-30
+
+solve init
+solve previous
+solve vcollector=0.01
+solve vcollector=0.05
+solve vcollector=0.1 vstep=0.3 vfinal=10 name=collector
+solve vbase=0.01
+solve vbase=0.05 vstep=0.05 vfinal=0.25 name=base
+
+log outfile=radex18_0.log
+solve vbase=0.26 vstep=0.02 vfinal=0.84 name=base
+
+
+# Radiation Fluence 1e11/cm2 protons
+
+go atlas simflags="-80"
+
+mesh infile=radex18.str width=2000
+
+radiation proton fluence=1e11 energy=1.8
+material dam.proton=50 dam.niel=3.1
+
+defects material=polysilicon nta=1.4e20 ntd=5e19 wta=0.025 wtd=0.05 \
+        nga=1.2e17 ngd=3.7e17 ega=0.4 egd=0.4 wga=0.1 wgd=0.1 \
+        sigtae=1e-16 sigtah=1e-14 sigtde=1e-14 sigtdh=1e-16  \ 
+        siggae=1e-16 siggah=1e-14 siggde=1e-14 siggdh=1e-16
+defects fluence.model \
+        sigtae=1e-16 sigtah=1e-14 sigtde=1e-14 sigtdh=1e-16 \
+        siggae=1e-16 siggah=1e-14 siggde=1e-14 siggdh=1e-16
+
+models klasrh klaaug kla fldmob bgn fermi ni.fermi
+
+method climit=1e-6 maxtraps=10 dvmax=0.2 ix.tol=1e-30 ir.tol=1e-30
+
+solve init
+solve previous
+solve vcollector=0.01
+solve vcollector=0.05
+solve vcollector=0.1 vstep=0.3 vfinal=10 name=collector
+solve vbase=0.01
+solve vbase=0.05 vstep=0.05 vfinal=0.25 name=base
+
+log outfile=radex18_1.log
+solve vbase=0.26 vstep=0.02 vfinal=0.84 name=base
+
+
+# Radiation Fluence 1e12/cm2 protons
+
+go atlas simflags="-80"
+
+mesh infile=radex18.str width=2000
+
+radiation proton fluence=1e12 energy=1.8
+material dam.proton=50 dam.niel=3.1
+
+defects material=polysilicon nta=1.4e20 ntd=5e19 wta=0.025 wtd=0.05 \
+        nga=1.2e17 ngd=3.7e17 ega=0.4 egd=0.4 wga=0.1 wgd=0.1 \
+        sigtae=1e-16 sigtah=1e-14 sigtde=1e-14 sigtdh=1e-16  \ 
+        siggae=1e-16 siggah=1e-14 siggde=1e-14 siggdh=1e-16
+defects fluence.model \
+        sigtae=1e-16 sigtah=1e-14 sigtde=1e-14 sigtdh=1e-16 \
+        siggae=1e-16 siggah=1e-14 siggde=1e-14 siggdh=1e-16
+
+models klasrh klaaug kla fldmob bgn fermi ni.fermi
+
+method climit=1e-6 maxtraps=10 dvmax=0.2 ix.tol=1e-30 ir.tol=1e-30
+
+solve init
+solve previous
+solve vcollector=0.01
+solve vcollector=0.05
+solve vcollector=0.1 vstep=0.3 vfinal=10 name=collector
+solve vbase=0.01
+solve vbase=0.05 vstep=0.05 vfinal=0.25 name=base
+
+log outfile=radex18_2.log
+solve vbase=0.26 vstep=0.02 vfinal=0.84 name=base
+
+
+go atlas simflags="-80"
+
+mesh infile=radex18.str width=2000
+
+radiation proton fluence=1e13 energy=1.8
+material dam.proton=50 dam.niel=3.1
+
+defects material=polysilicon nta=1.4e20 ntd=5e19 wta=0.025 wtd=0.05 \
+        nga=1.2e17 ngd=3.7e17 ega=0.4 egd=0.4 wga=0.1 wgd=0.1 \
+        sigtae=1e-16 sigtah=1e-14 sigtde=1e-14 sigtdh=1e-16  \ 
+        siggae=1e-16 siggah=1e-14 siggde=1e-14 siggdh=1e-16
+defects fluence.model \
+        sigtae=1e-16 sigtah=1e-14 sigtde=1e-14 sigtdh=1e-16 \
+        siggae=1e-16 siggah=1e-14 siggde=1e-14 siggdh=1e-16
+
+models klasrh klaaug kla fldmob bgn fermi ni.fermi
+
+method climit=1e-6 maxtraps=10 dvmax=0.2 ix.tol=1e-30 ir.tol=1e-30
+
+solve init
+solve previous
+solve vcollector=0.01
+solve vcollector=0.05
+solve vcollector=0.1 vstep=0.3 vfinal=10 name=collector
+solve vbase=0.01
+solve vbase=0.05 vstep=0.05 vfinal=0.25 name=base
+
+log outfile=radex18_3.log
+solve vbase=0.26 vstep=0.02 vfinal=0.84 name=base
+
+tonyplot radex18_0.log -overlay radex18_1.log radex18_2.log radex18_3.log -set radex18_0.set
+tonyplot radex18_0.log -overlay radex18_1.log radex18_2.log radex18_3.log -set radex18_1.set

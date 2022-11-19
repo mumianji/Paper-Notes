@@ -1,0 +1,150 @@
+# (c) Silvaco Inc., 2018
+go atlas 
+
+mesh space.mult=1.0 
+x.mesh loc=0.0  spacing=10.0
+x.mesh loc=10.0  spacing=10.0
+y.mesh loc=0.0   spacing=0.2
+y.mesh loc=50.0  spacing=0.2
+
+region num=1 material=Silicon
+#
+elec  name=cathode bottom
+#
+doping uniform conc=1e14 n.type
+
+# define a beam (be sure to include REFLECT and BACK parameters)
+beam num=1 x.origin=5.0 y.origin=-1.0 angle=90.0    \
+     back.refl front.refl reflect=5 min.w=-2 max.w=2 \
+     min.power=0.001 
+
+solve init
+
+log outf=optoex09_noarc.log
+
+solve	 b1=1 lambda=0.3 index.check 
+solve	 b1=1 lambda=0.325 index.check 
+solve	 b1=1 lambda=0.35 index.check 
+solve	 b1=1 lambda=0.375 index.check 
+solve	 b1=1 lambda=0.4 index.check 
+solve	 b1=1 lambda=0.425 index.check 
+solve	 b1=1 lambda=0.45 index.check 
+solve	 b1=1 lambda=0.475 index.check 
+solve	 b1=1 lambda=0.5 index.check 
+solve	 b1=1 lambda=0.525 index.check 
+solve	 b1=1 lambda=0.55 index.check 
+solve	 b1=1 lambda=0.575 index.check 
+solve	 b1=1 lambda=0.6 index.check 
+solve	 b1=1 lambda=0.625 index.check 
+solve	 b1=1 lambda=0.65 index.check 
+solve	 b1=1 lambda=0.675 index.check 
+solve	 b1=1 lambda=0.7 index.check 
+solve	 b1=1 lambda=0.725 index.check 
+solve	 b1=1 lambda=0.75 index.check 
+solve	 b1=1 lambda=0.775 index.check 
+solve	 b1=1 lambda=0.8 index.check
+log off
+
+go atlas 
+
+mesh space.mult=1.0 
+x.mesh loc=0.0  spacing=10.0
+x.mesh loc=10.0  spacing=10.0
+y.mesh loc=0.0   spacing=0.2
+y.mesh loc=50.0  spacing=0.2
+
+region num=1 material=Silicon
+#
+elec  name=cathode bottom
+#
+doping uniform conc=1e14 n.type
+
+# define a beam (be sure to include REFLECT and BACK parameters)
+beam num=1 x.origin=5.0 y.origin=-1.0 angle=90.0    \
+     back.refl front.refl reflect=5 min.w=-2 max.w=2 \
+     min.power=0.001 
+
+#define anti-reflective coating
+interface optical ar.index=2.05 ar.thick=0.07 p1.x=0.0 p1.y=0.0 p2.x=10.0 p2.y=0.0
+
+solve init
+
+log outf=optoex09_1arc.log
+
+solve	 b1=1 lambda=0.3 index.check 
+solve	 b1=1 lambda=0.325 index.check 
+solve	 b1=1 lambda=0.35 index.check 
+solve	 b1=1 lambda=0.375 index.check 
+solve	 b1=1 lambda=0.4 index.check 
+solve	 b1=1 lambda=0.425 index.check 
+solve	 b1=1 lambda=0.45 index.check 
+solve	 b1=1 lambda=0.475 index.check 
+solve	 b1=1 lambda=0.5 index.check 
+solve	 b1=1 lambda=0.525 index.check 
+solve	 b1=1 lambda=0.55 index.check 
+solve	 b1=1 lambda=0.575 index.check 
+solve	 b1=1 lambda=0.6 index.check 
+solve	 b1=1 lambda=0.625 index.check 
+solve	 b1=1 lambda=0.65 index.check 
+solve	 b1=1 lambda=0.675 index.check 
+solve	 b1=1 lambda=0.7 index.check 
+solve	 b1=1 lambda=0.725 index.check 
+solve	 b1=1 lambda=0.75 index.check 
+solve	 b1=1 lambda=0.775 index.check 
+solve	 b1=1 lambda=0.8 index.check 
+log off
+
+go atlas 
+
+mesh space.mult=1.0 
+x.mesh loc=0.0  spacing=10.0
+x.mesh loc=10.0  spacing=10.0
+y.mesh loc=0.0   spacing=0.2
+y.mesh loc=50.0  spacing=0.2
+
+region num=1 material=Silicon
+#
+elec  name=cathode bottom
+#
+doping uniform conc=1e14 n.type
+
+# define a beam (be sure to include REFLECT and BACK parameters)
+beam num=1 x.origin=5.0 y.origin=-1.0 angle=90.0    \
+     back.refl front.refl reflect=5 min.w=-2 max.w=2 \
+     min.power=0.001 
+
+#define anti-reflective coating
+interface optical ar.material=Oxide ar.thick=0.06 \
+	x.min=0.0 y.min=0.0 x.max=10.0 y.max=0.0 z.min=0 z.max=10
+interface optical ar.material=Nitride ar.thick=0.05 coating=1 layer=2
+
+
+solve init
+
+log outf=optoex09_2arc.log
+
+solve	 b1=1 lambda=0.3 index.check 
+solve	 b1=1 lambda=0.325 index.check 
+solve	 b1=1 lambda=0.35 index.check 
+solve	 b1=1 lambda=0.375 index.check 
+solve	 b1=1 lambda=0.4 index.check 
+solve	 b1=1 lambda=0.425 index.check 
+solve	 b1=1 lambda=0.45 index.check 
+solve	 b1=1 lambda=0.475 index.check 
+solve	 b1=1 lambda=0.5 index.check 
+solve	 b1=1 lambda=0.525 index.check 
+solve	 b1=1 lambda=0.55 index.check 
+solve	 b1=1 lambda=0.575 index.check 
+solve	 b1=1 lambda=0.6 index.check 
+solve	 b1=1 lambda=0.625 index.check 
+solve	 b1=1 lambda=0.65 index.check 
+solve	 b1=1 lambda=0.675 index.check 
+solve	 b1=1 lambda=0.7 index.check 
+solve	 b1=1 lambda=0.725 index.check 
+solve	 b1=1 lambda=0.75 index.check 
+solve	 b1=1 lambda=0.775 index.check 
+solve	 b1=1 lambda=0.8 index.check 
+
+tonyplot -overlay optoex09_noarc.log optoex09_1arc.log optoex09_2arc.log -set optoex09.set
+
+quit

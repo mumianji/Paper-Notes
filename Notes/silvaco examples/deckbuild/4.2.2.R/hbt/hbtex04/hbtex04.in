@@ -1,0 +1,171 @@
+# (c) Silvaco Inc., 2018
+go atlas
+TITLE AlGaAs/GaAs HBT Ic-Vce simulation with EB and NEB Models
+#
+# EB simulation
+
+
+# SECTION 1: Mesh spectification
+
+mesh  space.mult=1.0
+# 
+x.mesh loc=0.00 spac=0.25
+x.mesh loc=2.00 spac=0.25
+x.mesh loc=3.00 spac=0.2
+x.mesh loc=4.00 spac=0.2
+#
+y.mesh loc=0.00 spac=0.03
+y.mesh loc=0.15 spac=0.005
+y.mesh loc=0.20 spac=0.015
+y.mesh loc=0.25 spac=0.01
+y.mesh loc=0.50 spac=0.05
+y.mesh loc=0.75 spac=0.01
+y.mesh loc=0.90 spac=0.03
+
+
+# SECTION 2: Structure definition
+
+region num=1 material=GaAs y.min=0.75
+region num=2 material=GaAs y.min=0.25 y.max=0.75
+region num=3 material=AlGaAs y.max=0.12 x.comp=0.3 grad.34=0.03  
+region num=4 material=GaAs y.min=0.15 y.max=0.25 
+region num=5 material=SiO2 y.max=0.15 x.max=3.0
+
+elec num=1  name=emitter x.min=3.0 x.max=4.0 y.min=0.0 y.max=0.0
+elec num=2  name=base    x.min=0.0 x.max=2.0 y.min=0.15 y.max=0.15
+elec num=3  name=collector bot 
+
+doping uniform region=1 n.type conc=1.e18
+doping uniform region=2 n.type conc=1.e17
+doping uniform region=3 n.type conc=5e17
+doping uniform region=4 p.type conc=1.e19
+
+
+save outf=hbtex04_0.str
+tonyplot  hbtex04_0.str -set hbtex04_0.set
+
+
+
+material taun0=2.e-10 taup0=2.e-10  taurel.el=1.e-12 \
+         taumob.el=1.e-12 
+
+material material=AlGaAs mun=2170 mup=350 tmun=1 tmup=2.1 
+
+model srh  fldmob  print hcte.el   
+model material=GaAs conmob evsatmod=1 
+
+
+output val.band con.band e.velocity
+
+
+solve init
+
+method  newton  maxtrap=6  temp.tol=1.e-4  trap itlim=50 \
+  vsatmod.inc=0.01 
+
+solve vbase=0.005
+solve vbase=0.02
+solve vbase=0.05
+solve vbase=0.2 vstep=0.2 vfinal=1.2 electr=2
+
+contact num=2 current
+solve i2=1.e-5
+solve i2=1.2e-5
+solve i2=1.5e-5
+
+log outf=hbtex04_eb.log master
+
+
+solve vcollector=0.025
+solve vcollector=0.05
+solve vcollector=0.1 vstep=0.05 vfinal=2 electr=3 
+
+save outf=hbtex04_eb.str
+
+go atlas
+
+# NEB simulation
+
+
+# SECTION 1: Mesh spectification
+
+mesh  space.mult=1.0
+# 
+x.mesh loc=0.00 spac=0.25
+x.mesh loc=2.00 spac=0.25
+x.mesh loc=3.00 spac=0.2
+x.mesh loc=4.00 spac=0.2
+#
+y.mesh loc=0.00 spac=0.03
+y.mesh loc=0.15 spac=0.005
+y.mesh loc=0.20 spac=0.015
+y.mesh loc=0.25 spac=0.01
+y.mesh loc=0.50 spac=0.05
+y.mesh loc=0.75 spac=0.01
+y.mesh loc=0.90 spac=0.03
+
+
+# SECTION 2: Structure definition
+
+region num=1 material=GaAs y.min=0.75
+region num=2 material=GaAs y.min=0.25 y.max=0.75
+region num=3 material=AlGaAs y.max=0.12 x.comp=0.3 grad.34=0.03  
+region num=4 material=GaAs y.min=0.15 y.max=0.25 
+region num=5 material=SiO2 y.max=0.15 x.max=3.0
+
+elec num=1  name=emitter x.min=3.0 x.max=4.0 y.min=0.0 y.max=0.0
+elec num=2  name=base    x.min=0.0 x.max=2.0 y.min=0.15 y.max=0.15
+elec num=3  name=collector bot 
+
+doping uniform region=1 n.type conc=1.e18
+doping uniform region=2 n.type conc=1.e17
+doping uniform region=3 n.type conc=5e17
+doping uniform region=4 p.type conc=1.e19
+
+
+
+material taun0=2.e-10 taup0=2.e-10  taurel.el=1.e-12  \
+         taumob.el=1.e-12 
+
+material material=AlGaAs mun=2170 mup=350 tmun=1 tmup=2.1 
+
+material region=1 tc.a=2.27 tc.b=0 tc.c=0
+material region=2 tc.a=2.27 tc.b=0 tc.c=0
+material region=3 tc.a=7.9  tc.b=0 tc.c=0
+material region=4 tc.a=2.27 tc.b=0 tc.c=0
+material region=5 tc.a=1.e4 tc.b=0 tc.c=0
+
+
+model srh  fldmob  print hcte.el lat.temp   
+model material=GaAs conmob evsatmod=1 
+thermcontact num=1 y.min=0.9 y.max=0.9  ext.temp=300 alpha=1500.
+
+output val.band con.band e.velocity 
+
+solve init
+
+method newton maxtrap=6  temp.tol=1.e-4  trap itlim=50 \
+  vsatmod.inc=0.01 
+ 
+solve vbase=0.005
+solve vbase=0.02
+solve vbase=0.05
+solve vbase=0.2 vstep=0.2 vfinal=1.2 electr=2
+
+contact num=2 current
+solve i2=1.e-5
+solve i2=1.2e-5
+solve i2=1.5e-5
+
+log outf=hbtex04_neb.log master
+
+solve vcollector=0.025
+solve vcollector=0.05
+solve vcollector=0.1 vstep=0.05 vfinal=2 electr=3 
+
+save outf=hbtex04_neb.str
+
+tonyplot -overlay  hbtex04_neb.log hbtex04_eb.log -set hbtex04.set
+quit
+
+

@@ -1,0 +1,82 @@
+<html>
+  <head>
+    <title>Parameterized Inductor layout</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Parameterized Inductor layout</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>QUEST</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>QUEST 2.0.2.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="questex14_plot0.png" width="640" alt="questex14_plot0" />
+      <p/>
+      <img src="questex14_plot1.png" width="640" alt="questex14_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<p>
+This example demonstrates the use of an Expert LISA script used by QUEST to generate
+a parameterized gds layout.
+</p>
+<p>
+Introduction:
+</p>
+<p>
+In order to build an inductance model or make a variation of layout parameters it
+is especially interesting to have parametrized gds. This is possible in QUEST
+using Expert&apos;s LISA scripting language.
+</p>
+<p>
+Running the Example
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+<p>
+In this example, four layout variables are defined (number of coils, radius,wire_width
+and space) and the layout is created accordingly using the creategds command in
+QUEST associated with the EXPERT script file.
+</p>
+<p>
+Results analysis
+</p>
+<p>
+Inductor performance is monitored using the extract capability of DeckBuild.
+</p>
+<p>
+This example shows how to use the
+<b> DBinternal </b> capability to investigate the geometrical layout variation on the inductor
+performance. Please refer to the DeckBuild example DOE: Design of Experiment Examples
+for detailed explanation of the
+<b> DBinternal </b> syntax and the DeckBuild manual.
+</p>
+<p>
+When loaded in SPAYN (start SPAYN and load inductor.db) a quadratic model of L as a
+function of 3 layout variables can be done. For that in SPAYN go to tool
+regression and select L as target and NB_COILS, WIRE_WIDTH and RADIUS as predictors.
+Perform a quadratic model with interaction and click on TonyPlot. You thus have a
+Response Surface Model (RSM) that you can use for synthesis for example.
+</p>
+  </div></body>
+</html>

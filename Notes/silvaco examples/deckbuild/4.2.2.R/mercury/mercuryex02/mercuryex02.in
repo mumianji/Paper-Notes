@@ -1,0 +1,151 @@
+# (c) Silvaco Inc., 2018
+go atlas
+mercury
+
+#######################################################################
+### ATLAS example mercuryex02
+#######################################################################
+### The simulation of a recessed n-type MESFET.
+#######################################################################
+### Mercury is a quasi-2D simulator.  This is a combination of two
+### 1D simulators.
+###
+### The first solves Poisson's equation in the y-direction of the 
+### device to generate a look-up table that maps a channel as a
+### function of surface boundary conditions.
+###
+### The second solves the transport equations in the x-direction,
+### along the channel described by the first part.
+#######################################################################
+### Initialization
+#######################################################################
+
+###--------------------------------------------------------------------
+network clear
+
+###--------------------------------------------------------------------
+mesh width=100
+
+###--------------------------------------------------------------------
+### The meshes used by Mercury are automatically generated.  But they
+### can be influenced by the values on the "spacing" parameter.  The
+### lowest value is used at the spacing for the initial regular mesh,
+### the highest value is the maximum step for a refined mesh (if the
+### mesh needs to be refined).
+###
+### The limits are only applied to the relevant mesh.  So the
+### "spacing" values on the x.mesh commands are only applied to the
+### channel grid, and the "spacing" values on the y.mesh commands are
+### only applied to the poisson grid.
+x.mesh location=0.0 spacing=0.1
+x.mesh location=2.5 spacing=0.1
+y.mesh location=0.0 spacing=0.05
+y.mesh location=3.0 spacing=0.05
+
+#######################################################################
+### Device Specification
+#######################################################################
+
+###--------------------------------------------------------------------
+region number=1 material=GaAs thickness=0.2 donor=1e17 acceptor=1e11
+region number=1 material=GaAs thickness=0.2 nd.top=1e17 nd.bottom=1e11 acceptor=1e11
+region number=1 material=GaAs thickness=2.6 donor=1e11 acceptor=1e11
+
+###--------------------------------------------------------------------
+### "surface" is a Mercury specific command that is used to define any
+### recess in the surface of the device.
+surface x=0.45 y=0.00
+surface x=0.50 y=0.10
+surface x=1.00 y=0.10
+surface x=1.05 y=0.00
+
+###--------------------------------------------------------------------
+### Only the x-position of the gate is defined.  Mercury automatically
+### places the gate on the top surface of the device.  IE whatever
+### recess is defined at the given x-coordinate.
+electrode name=gate x.min=0.5 length=0.5
+
+###--------------------------------------------------------------------
+models n_depletion fldmob print
+
+###--------------------------------------------------------------------
+### It is a good idea to reduce the run-time output to a minimum.  In
+### some operating systems handling the run-time output can slow down
+### a simulation by three or four times.
+options quiet
+
+#######################################################################
+### Poisson solution.
+#######################################################################
+
+###--------------------------------------------------------------------
+output all
+
+###--------------------------------------------------------------------
+### The "poisson" command solves Poisson's equation in the y-
+### direction of the device.  The surface of the slice can either
+### be bare or can have the gate on.
+###
+### The "cap" parameter means this solves Poisson's equation for a
+### slice with a bare surface.  The recess parameter shows how much
+### of the epistructure has been removed.
+poisson cap recess=0.0 out.file=mercuryex02_1.str
+poisson cap recess=0.3 out.file=mercuryex02_2.str
+
+###--------------------------------------------------------------------
+tonyplot mercuryex02_1.str -add mercuryex02_1.str -set mercuryex02_1.set
+
+###--------------------------------------------------------------------
+### The "gate" parameter" means this solves Poisson's equation for a
+### slice with a gate on the surface.  The recess is automatically set
+### to be the recess of the gate.
+poisson gate v.gate=-0.3 out.file=mercuryex02_3.str
+poisson gate v.gate=-0.0 out.file=mercuryex02_4.str
+poisson gate v.gate=+0.4 out.file=mercuryex02_5.str
+
+###--------------------------------------------------------------------
+tonyplot mercuryex02_3.str -overlay mercuryex02_4.str -overlay mercuryex02_5.str -add mercuryex02_4.str -set mercuryex02_3.set
+
+###--------------------------------------------------------------------
+poisson look_up vg_min=-2.5 vg_max=0.0 vd_min=0.0 vd_max=0.8 \
+    debug.cap=mercuryex02_6.str debug.gate=mercuryex02_7.str
+
+tonyplot mercuryex02_6.str -add mercuryex02_6.str -add mercuryex02_7.str -add mercuryex02_7.str -set mercuryex02_6.set
+
+#######################################################################
+### DC-IV simulation
+#######################################################################
+
+###--------------------------------------------------------------------
+solve initial
+log out.file=mercuryex02_8.log
+solve vgate=0.0 vdrain=0.0 vstep=0.01 vfinal=0.8 name=drain
+solve vgate=-0.5 vdrain=0.0 vstep=0.01 vfinal=0.8 name=drain
+solve vgate=-1.0 vdrain=0.0 vstep=0.01 vfinal=0.8 name=drain
+solve vgate=-1.5 vdrain=0.0 vstep=0.01 vfinal=0.8 name=drain
+solve vgate=-2.0 vdrain=0.0 vstep=0.01 vfinal=0.8 name=drain
+solve vgate=-2.5 vdrain=0.0 vstep=0.01 vfinal=0.8 name=drain
+log off
+
+###--------------------------------------------------------------------
+tonyplot mercuryex02_8.log -set mercuryex02_8.set
+
+#######################################################################
+### Small-signal AC simulation
+#######################################################################
+
+###--------------------------------------------------------------------
+solve initial
+solve vgate=-1.0 vdrain=0.0 vstep=0.05 vfinal=0.6 name=drain
+log s.param gains noise.v out.file=mercuryex02_9.log
+solve ac noise frequency=1.0e6 fstep=1.258925412 nfstep=40 mult.freq
+
+###--------------------------------------------------------------------
+tonyplot mercuryex02_9.log -add mercuryex02_9.log -add mercuryex02_9.log -add mercuryex02_9.log -set mercuryex02_9.set
+
+#######################################################################
+### Exit the simulation
+#######################################################################
+
+###--------------------------------------------------------------------
+quit

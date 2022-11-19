@@ -1,0 +1,120 @@
+# (c) Silvaco Inc., 2018
+go atlas
+# Compares small signal a.c. parameters for MOS-C
+# with and without two ionic species in the oxide
+# Run with species model enabled first
+mesh width=1.0
+
+x.m loc=0.0 spac=0.5
+x.m loc=1.0 spac=0.5
+
+y.m loc=0.0 spac=0.0025
+y.m loc=0.25 spac=0.0025
+y.m loc=1.0 spac=0.025
+
+region num=1 oxide y.max=0.25
+region num=2 silicon y.min=0.25
+
+electrode name=anode top
+electrode name=cathode bottom
+
+doping region=2 p.type uniform conc=1.0e16
+
+doping region=1 species1 gaussian conc=1e16 char=0.06 lat.char=0.15  peak=0.125
+
+doping region=1 species2 gaussian conc=1e16 char=0.06 lat.char=0.15  peak=0.125
+
+contact name=anode aluminum
+
+probe species1 x.min=0.0 x.max=1.0 y.min=0.0 y.max=1.0 integrate
+
+probe species2 x.min=0.0 x.max=1.0 y.min=0.0 y.max=0.5 integrate
+
+probe species1 x=0.5 y=0.125 
+
+probe species2 x=0.5 y=0.125
+
+models srh nspecies=2 species1.z=2 species2.z=-1
+
+method species.maxx=1.0e6 species.ins
+
+solve init
+
+#steady state solve changes initial distribution but
+#preserves total dose
+
+solve prev 
+
+save outf=diodeex11_0.str
+
+solve vanode=1.0 nocurrent freezespecies
+
+save outf=diodeex11_0.str
+
+log outf=diodeex11_0.log
+
+solve vanode=1.0 vfinal=-2.0 vstep=-0.02 name=anode  ac.analysis freq=1.0e2
+
+log off
+
+save outf=diodeex11_1.str
+
+load infile=diodeex11_0.str master
+
+solve init
+
+solve prev
+
+solve vanode=1.0 nocurrent freezespecies
+
+log outf=diodeex11_1.log
+
+solve vanode=1.0 vfinal=-2.0 vstep=-0.02 name=anode  ac.analysis freq=1.0e9
+
+log off
+
+# Now run without any ions present
+go atlas
+
+mesh width=1.0
+
+x.m loc=0.0 spac=0.5
+x.m loc=1.0 spac=0.5
+
+y.m loc=0.0 spac=0.025
+y.m loc=1.0 spac=0.025
+
+region num=1 oxide y.max=0.25
+region num=2 silicon y.min=0.25
+
+electrode name=anode top
+electrode name=cathode bottom
+
+doping region=2 p.type uniform conc=1.0e16
+
+contact name=anode aluminum
+
+models srh 
+
+solve init
+
+# Straightforward MOS-C simulation 
+
+solve prev 
+
+solve vanode=1.0 nocurrent
+
+log outf=diodeex11_2.log
+
+solve vanode=1.0 vfinal=-2.0 vstep=-0.02 name=anode  ac.analysis freq=1.0e2
+
+log off
+
+# Things to view are capacitance and integrated ionic densities
+# which should be constant because of ion localisation in device
+# and lack of reactions between ions and carriers
+tonyplot -overlay diodeex11_0.log diodeex11_1.log diodeex11_2.log -set diodeex11_0.set
+tonyplot -overlay diodeex11_0.str diodeex11_1.str -set diodeex11_1.set
+tonyplot diodeex11_0.log  -set diodeex11_2.set
+
+quit

@@ -1,0 +1,33 @@
+go athena
+
+#TITLE: Oxide Profile Evolution Example
+
+# Substrate mesh definition
+line y loc=0    spac=0.05
+line y loc=0.6  spac=0.2
+line y loc=1       
+
+line x loc=-1   spac=0.2
+line x loc=-0.2 spac=0.05
+line x loc=0    spac=0.05
+line x loc=1    spac=0.2
+
+init orient=100
+
+# Anisotropic silicon etch
+etch    silicon left p1.x=-0.218 p1.y=0.3 p2.x=0 p2.y=0
+
+# Pad oxide and nitride mask
+deposit oxide thick=0.02 div=1
+deposit nitride thick=0.1 div=1
+etch    nitride left p1.x=0
+etch    oxide   left p1.x=0
+
+# Field oxidation with structure file output for movie
+diffuse tim=90 tem=1000 weto2 dump=1 dump.prefix=anoxex01m
+
+tonyplot anoxex01m*.str  
+
+structure outfile=anoxex01_0.str
+
+quit

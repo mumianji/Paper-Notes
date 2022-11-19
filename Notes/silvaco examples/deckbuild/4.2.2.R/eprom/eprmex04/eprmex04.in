@@ -1,0 +1,180 @@
+# (c) Silvaco Inc., 2018
+go athena
+#TITLE: EEPROM cell formation example
+#
+
+line x loc=0.0  spac=0.1 
+line x loc=0.6  spac=0.025
+line x loc=0.9  spac=0.05
+line x loc=1.5  spac=0.2
+#
+line y loc=0.00 spac=0.01 
+line y loc=0.3  spac=0.03
+line y loc=2.0  spac=0.25
+
+#
+init c.boron=3e16 orientation=100 space.mult=1
+
+#
+method compress fermi
+diffuse time=10 temp=950 dryo2
+#
+extract name="tunnelox" thickness oxide mat.occno=1 x.val=0
+#
+implant boron dose=1e12 energy=25 
+#
+deposit poly thick=.25 div=4
+#
+implant phos dose=6e14 energy=30 
+#
+diffuse time=5 temp=950 dryo2 
+#
+deposit nitride thick=0.02 div=1
+#
+deposit oxide thick=0.01 div=1
+#
+deposit poly thick=.25 div=4 c.phos=8e19
+# 
+etch poly    right p1.x=.6
+# 
+etch oxide   right p1.x=.6
+# 
+etch nitride right p1.x=.6
+#
+etch oxide   right p1.x=.6
+#
+etch poly    right p1.x=.6
+#
+etch oxide   right p1.x=.6
+#
+relax y.min=.3 dir.y=f
+#
+implant arsenic dose=1e15 energy=40 
+#
+diff time=50 temp=950
+deposit oxide thick=.03 div=2
+ 
+ 
+
+#
+structure mirror left
+#
+etch oxide left  p1.x=-0.8
+etch oxide right p1.x=0.8
+
+deposit alum thick=0.05 div=1
+#
+etch alum start x=0.9 y=-10.
+etch alum cont x=0.9 y=10.
+etch alum cont x=-.9 y=10.
+etch alum done x=-.9 y=-10.
+#
+# define electrode names
+electrode name=fgate x=0 y=-0.1
+electrode name=cgate x=0 y=-0.4
+electrode name=source x=-1.5 
+electrode name=drain x=1.5 
+electrode name=substrate backside
+# save the structure
+structure outfile=eprmex04_0.str
+
+go devedit
+
+#init infile=eprmex01_0.str
+
+DevEdit version=2.3.2.A
+
+work.area x1=-1.5000001 y1=-0.5724238 x2=1.5000001 y2=2
+# devedit 2.3.2.A (Wed Apr 16 13:29:36 PDT 1997)
+# libsflm 2.0.0.R (Tue Apr  8 20:00:47 PDT 1997)
+# libDW_Misc 1.20.0.A (Wed Apr 16 01:48:23 PDT 1997)
+# libCardDeck 1.19.10.A (Wed Apr 16 01:59:26 PDT 1997)
+# libGeometry 1.19.10.A (Wed Apr 16 02:06:31 PDT 1997)
+# libDW_Set 1.19.0.R (Wed Apr 16 01:50:04 PDT 1997)
+# libSVC_Misc 1.19.0.R (Wed Apr 16 02:09:29 PDT 1997)
+# libSDB 1.0.6.A (Wed Apr 16 02:12:50 PDT 1997)
+# libSSS 1.19.0.R (Wed Apr 16 02:21:54 PDT 1997)
+# libMeshBuild 1.20.0.A (Wed Apr 16 13:01:32 PDT 1997)
+# libDW_Make 1.1.3.R (Mon Apr  7 14:21:50 PDT 1997)
+
+# Set Meshing Parameters
+#
+base.mesh height=0.5 width=0.5
+#
+bound.cond !apply max.slope=30 max.ratio=100 rnd.unit=0.001 line.straightening=1 align.points when=automatic
+#
+imp.refine imp="Net Doping" scale=log sensitivity=2 transition=1e+10
+imp.refine min.spacing=0.02
+#
+constr.mesh  max.angle=90 max.ratio=300 max.height=10000 \
+	max.width=10000 min.height=0.0001 min.width=0.0001
+#
+constr.mesh type=Semiconductor default
+#
+constr.mesh type=Insulator default
+#
+constr.mesh type=Metal default
+#
+constr.mesh type=Other default
+#
+constr.mesh region=1 default
+#
+constr.mesh region=2 default
+#
+constr.mesh region=3 default
+#
+constr.mesh region=4 default
+#
+constr.mesh region=5 default
+#
+constr.mesh region=6 default
+#
+constr.mesh region=7 default
+constr.mesh id=1 under.mat=PolySilicon depth=0.06 default max.height=0.015 max.width=0.1
+constr.mesh id=2 x1=0.42 y1=0 x2=0.62 y2=0.1 default max.width=0.01
+Mesh Mode=MeshBuild
+
+
+base.mesh height=0.5 width=0.5
+
+bound.cond !apply max.slope=30 max.ratio=100 rnd.unit=0.001 line.straightening=1 align.Points when=automatic
+
+# save structure
+struct outfile=eprmex04_1.str
+tonyplot  eprmex04_1.str -set eprmex04_1.set
+
+
+go atlas
+
+#mesh infile=eprmex04_1.str
+
+#
+# Set workfunction for the poly gates, 
+# 
+contact name=fgate n.polysilicon 
+contact name=cgate n.polysilicon
+#
+#Define some Qss...
+interface qf=3e10
+models srh cvt  print nearflg  n.concannon cgate.n=5.0e3
+impact n.concannon csub.n=1e11
+#
+solve init
+#
+method block newton trap maxtraps=8 autonr
+#
+solve vfinal=1 vstep=0.05 name=drain
+#
+# Apply initial gate voltage
+solve vfinal=1 vstep=0.2 name=fgate
+#
+# Ramp the drain voltage to 5V
+solve vfinal=5 vstep=0.2 name=drain
+#
+log outf=eprmex04_1.log
+solve vfinal=7 vstep=0.2 name=fgate
+#
+tonyplot eprmex04_1.log -set eprmex04_2.set
+tonyplot eprmex04_1.log -set eprmex04_3.set
+#
+quit

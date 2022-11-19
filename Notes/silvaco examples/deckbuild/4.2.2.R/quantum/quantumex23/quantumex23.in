@@ -1,0 +1,89 @@
+# SILVACO 2017
+#
+# Simulation of a Band-to-Band Tunneling diode
+#
+# Reference:
+# [1] "T. A. Jokinen and S. McNamara, "Band-to-Band Tunneling Diode for
+#      Ultralow-Voltage Applications," in IEEE Transactions on Electron 
+#      Devices, vol. 64, no. 6, pp. 2702-2706, June 2017.
+#
+
+LOOP steps=3
+
+assign name=doping n.value=(2.5, 2.25 2.15)
+
+go atlas simflags="-80"
+
+# SECTION 1: Mesh Definition #################################################
+#
+mesh 	
+
+x.mesh 	location=0.00 	spacing=0.050
+x.mesh 	location=0.15 	spacing=0.020
+x.mesh  location=0.25	spacing=0.001
+x.mesh 	location=0.35 	spacing=0.020
+x.mesh 	location=0.50 	spacing=0.050
+
+y.mesh 	location=0 	spacing=0.005
+y.mesh 	location=0.06 	spacing=0.002
+y.mesh 	location=0.08 	spacing=0.005
+y.mesh 	location=0.1 	spacing=0.01
+y.mesh 	location=0.2  	spacing=0.05
+y.mesh 	location=.5 	spacing=0.1
+
+# SECTION 2: Structure Specification #########################################
+#
+region	num=1  	material=Si
+
+elec  name=anode   top 	   x.min=0  x.max=0.2
+elec  name=cathode top     x.min=0.3 
+
+# SECTION 3: Quantum Region ##################################################
+#
+qtregion number=1 PTS.TUNNEL=51 PTS.NORMAL=5 \
+X1=0.000 Y1=0.025 \
+X2=0.215 Y2=0.025 \
+X3=0.250 Y3=0.075 \
+X4=0.000 Y4=0.075
+
+qtregion number=1 pts.normal=5 \
+x2=0.225 y2=0.015 \
+x3=0.275 y3=0.050
+
+qtregion number=1 pts.normal=5 \
+x2=0.225 y2=0.000 \
+x3=0.275 y3=0.000
+
+# SECTION 4: Doping Specification ############################################
+#
+doping 	uniform  n.type conc=${doping}e19
+
+doping 	gaussian p.type conc=2*${doping}e19 x.min=0.0 	x.max=0.249 \
+					    y.min=0.0 	y.max=0.05 \
+					    x.char=.01 	y.char=.01
+
+# SECTION 5: Models ##########################################################
+#
+models temperature=300 srh fermi ni.fermi bbt.nonlocal bgn print
+output band.temp traps u.srh j.electron j.hole j.total 
+
+# SECTION 6: Calculations ####################################################
+solve init
+save outf=quantumex23_$'doping'_0V.str
+
+log outf=quantumex23_$'doping'.log
+solve name=anode vanode= .10	vstep=-0.0050	vfinal= 0.02
+solve name=anode vanode= .02	vstep=-0.0005	vfinal=-0.02
+solve name=anode vanode=-.02	vstep=-0.0050	vfinal=-0.10
+log off
+
+save outf=quantumex23_$'doping'_-100mV.str
+
+L.END
+
+# SECTION 7: TonyPlot ########################################################
+tonyplot quantumex23_$'doping'_-100mV.str -set quantumex23_2Ddop.set
+tonyplot quantumex23_2.5.log quantumex23_2.25.log quantumex23_2.15.log -set \
+quantumex23_3iv.set
+
+quit

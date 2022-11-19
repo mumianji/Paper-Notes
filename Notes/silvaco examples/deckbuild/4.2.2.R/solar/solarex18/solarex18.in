@@ -1,0 +1,51 @@
+# (c) Silvaco Inc., 2018
+# Influence of intrinsic aSi thickness
+go internal
+
+load inf=solarex18_aux.in
+
+sweep parameter=iasi_thk type=list data="0.002, 0.007, 0.012, 0.015, 0.02" 
+      
+save type=sdb outf=solarex18_0.dat
+
+tonyplot solarex18_1.str -set solarex18_0.set
+
+tonyplot -overlay solarex18_0_0.002.log solarex18_0_0.007.log solarex18_0_0.012.log solarex18_0_0.015.log solarex18_0_0.02.log -set solarex18_1.set
+
+tonyplot solarex18_0.dat solarex18_0.dat solarex18_0.dat solarex18_0.dat -set solarex18_2.set
+
+
+# Influence of n-strip width 
+go internal
+
+load inf=solarex18_aux.in
+
+sweep parameter=n_width type=list data="250, 500, 750, 1000, 1250"
+
+save type=sdb outf=solarex18_1.dat
+
+tonyplot solarex18_1.dat solarex18_1.dat solarex18_1.dat solarex18_1.dat -set solarex18_3.set
+
+
+# Influence of gap width
+go internal
+
+load inf=solarex18_aux.in
+
+sweep parameter=gap type=list data="50, 100, 200, 300, 500"
+
+save type=sdb outf=solarex18_2.dat
+
+tonyplot solarex18_2.dat solarex18_2.dat solarex18_2.dat solarex18_2.dat -set solarex18_4.set
+
+
+# # Influence of p-strip width
+go internal
+
+load inf=solarex18_aux.in
+
+sweep parameter=p_width type=list data="250, 500, 750, 1000, 1250"
+
+save type=sdb outf=solarex18_3.dat
+
+tonyplot solarex18_3.dat solarex18_3.dat solarex18_3.dat solarex18_3.dat -set solarex18_5.set

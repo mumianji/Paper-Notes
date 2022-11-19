@@ -1,0 +1,96 @@
+<html>
+  <head>
+    <title>A Normally-off GaN MISFET with High Vth uniformity</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>A Normally-off GaN MISFET with High Vth uniformity</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Blaze</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="ganfetex06_plot0.png" width="640" alt="ganfetex06_plot0" />
+      <p/>
+      <img src="ganfetex06_plot1.png" width="640" alt="ganfetex06_plot1" />
+      <p/>
+      <img src="ganfetex06_plot2.png" width="640" alt="ganfetex06_plot2" />
+      <p/>
+      <img src="ganfetex06_plot3.png" width="640" alt="ganfetex06_plot3" />
+      <p/>
+      <img src="ganfetex06_plot4.png" width="640" alt="ganfetex06_plot4" />
+      <p/>
+      <img src="ganfetex06_plot5.png" width="640" alt="ganfetex06_plot5" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates the simulation of a GaN metal-insulator-semiconductor
+field effect transistor (MISFET) with Piezo Neutralization Technique (PNT).
+</p>
+<p>
+This example is based on the work of:
+</p>
+<p>
+Ota, K. et. al. &quot;A Normally-off GaN FET with High Threshold Voltage
+Uniformity Using A Novel Piezo Neutralization Technique&quot;, IEDM 2009, pp. 153-156.
+</p>
+<p>
+The features of the PNT structure are described below and simulated with Blaze
+</p>
+<p>
+The first feature is an AlGaN buffer layer to realize a
+normally-off operation. The polarization charges at the interface
+between the AlGaN buffer and the GaN channel act as virtual p-type
+doping and contribute to simustaneously increase Vt and charge
+density in the channel.The band diagram and IdVg simulations
+demonstrate the impact of the buffer Al-concentration on the
+electron-channel energy beneath the gate and Vth respectively
+</p>
+<p>
+The second is an Al0.07Ga0.93N PNT layer having an identical
+Al composition with the buffer layer to realize high Vth uniformity.
+Since PNT and buffer layers have an identical Al mole fraction, the polarization charges formed between these layers are completely
+canceled and hence, a flat band condition occurs throughout the PNT
+layer. Vth dependence on the AlGaN layer thickness under the gate
+electrode was simulated. For the GaN FETs with the PNT structure,
+the Vth is not affected by the variation of AlGaN thickness whereas
+it varies for the conventional Al0.15Ga0.85N/GaN single heterojunction
+FETs.
+</p>
+<p>
+The last is the 2nd supply layer at the region outside the gate
+electrode to reduce on-resistance of the GaN FET. Since the 2nd
+supply layer is consisted of AlGaN with higher Al composition than
+that for the 1st supply layer, a large amount of 2DEG is produced
+both in the channel layer and the PNT layer when enabling the
+<b> POLARIZATION </b> model of the
+<b> MODELS </b> statement. This polarization model accounts for the fact that a
+layer may not have homogenous strain due to e.g. recessed gates
+so polarization charge is calculated locally.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

@@ -1,0 +1,70 @@
+<html>
+  <head>
+    <title>Implant Dose Effect at Different Energies</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Implant Dose Effect at Different Energies</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>SSuprem 4, MCIMPLANT</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="doeex01_plot0.png" width="640" alt="doeex01_plot0" />
+      <p/>
+      <img src="doeex01_plot1.png" width="640" alt="doeex01_plot1" />
+      <p/>
+      <img src="doeex01_plot2.png" width="640" alt="doeex01_plot2" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example shows how to use the
+<b> DBInternal </b> capability of DeckBuild to investigate the dose
+effect on As implant profiles at different energies. A simple template
+Athena input deck &quot;doeex01_tmpl.in&quot; is created. It includes one BCA
+implant statement with dose and energy specified using set capability
+of Deckbuild. The content of &quot;doeex01_tmpl.in can be seen inside the Experiment
+input deck file doeex01.in.
+</p>
+<p>
+The Experiment file starts with the
+<b> go internal </b> command which transfers control from the current simulator (i.e. Athena) to
+DBInternal. The Experiment file consist of two main parts. The
+<b> load </b> command specifies which template file should be used for multiple runs. The
+<b> sweep </b> command specifies how the variables set in the template file should be changed.
+Both parameters specified by the
+<b> set </b> command in the template file are set to be changed.
+The
+<b> range </b> specifies the initial value of the parameter, final value value of the parameter, and number of points. The dose varies in log scale, so its values will be 1e13, 1e14, and 1e15.
+The energy is changed linearly, so its values will be 5keV, 10keV, and 15keV. The total number of simulations will be 3 X 3 = 9.
+</p>
+<p>
+After all simulations are complete, the resulting profiles are combined in
+3 TonyPlots.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

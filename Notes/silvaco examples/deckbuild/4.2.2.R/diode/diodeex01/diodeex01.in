@@ -1,0 +1,43 @@
+# (c) Silvaco Inc., 2018
+go atlas
+
+mesh  space.mult=1.0
+# 
+x.mesh loc=0.00 spac=0.5
+x.mesh loc=3.00 spac=0.2
+x.mesh loc=5.00 spac=0.25
+x.mesh loc=7.00 spac=0.25
+x.mesh loc=9.00 spac=0.2
+x.mesh loc=12.00 spac=0.5
+#
+y.mesh loc=0.00 spac=0.1
+y.mesh loc=1.00 spac=0.1
+y.mesh loc=2.00 spac=0.2
+y.mesh loc=5.00 spac=0.4
+
+
+region  num=1  silicon
+
+electr  name=anode  top
+electr  name=cathode  bot
+
+#....   N-epi doping 
+doping  n.type conc=2e16 uniform
+doping  p.type conc=2e16 x.min=0 x.max=12 y.top=0 y.bottom=2 uniform
+
+
+save outf=diodex01.str
+
+
+model  conmob  fldmob  srh  auger  bgn 
+
+solve  init
+
+method newton
+
+log   outfile=diodex01.log
+solve      vanode=0.05  vstep=0.5  vfinal=10  name=anode
+tonyplot diodex01.log
+quit
+
+

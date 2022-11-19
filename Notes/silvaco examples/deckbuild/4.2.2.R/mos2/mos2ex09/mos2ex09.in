@@ -1,0 +1,142 @@
+# (c) Silvaco Inc., 2018
+go athena
+# LDD MOSFET Gate Overlap Capacitance Extraction
+
+
+#
+line x loc=0 spac=0.1 
+line x loc=0.2 spac=0.01
+line x loc=0.5 spac=0.01 
+#
+line y loc=0.00 spac=0.01 
+line y loc=0.2 spac=0.01
+line y loc=0.5 spac=0.05
+line y loc=0.8 spac=0.15 
+#
+init orientation=100 c.phos=1e14 space.mul=3
+
+#pwell formation including masking off of the nwell
+#
+diffus time=30 temp=1000 dryo2 press=1.00 hcl=3
+#
+etch oxide thick=0.02
+#
+#P-well Implant
+# 
+implant boron dose=8e12 energy=100 pears
+#
+diffus temp=950 time=100 weto2 hcl=3
+#
+#N-well implant not shown -
+#
+# welldrive starts here
+diffus time=50 temp=1000 t.rate=4.000 dryo2 press=0.10 hcl=3
+#
+diffus time=220 temp=1200 nitro press=1
+#
+diffus time=90 temp=1200 t.rate=-4.444 nitro press=1
+#
+etch oxide all
+#
+#sacrificial "cleaning" oxide
+diffus time=20 temp=1000 dryo2 press=1 hcl=3
+#
+etch oxide all
+#
+#gate oxide grown here:-
+diffus time=11 temp=925 dryo2 press=1.00 hcl=3
+#
+#
+extract thickness name="gateox" oxide mat.occno=1 min.v=140
+
+#
+#vt adjust implant 
+implant boron dose=9.5e11 energy=10 pearson
+#
+depo poly thick=0.2 divi=10 
+#
+#from now on the situation is 2-D
+#
+etch poly left p1.x=0.35
+#
+method fermi compress
+diffuse time=3 temp=900 weto2 press=1.0
+#
+implant phosphor dose=3.0e13 energy=20 pearson
+#
+depo oxide thick=0.120 divisions=8
+#
+etch oxide dry thick=0.120
+#
+implant arsenic dose=5.0e15 energy=50 pearson
+#
+method fermi compress
+diffuse time=1 temp=900 nitro press=1.0
+#
+
+#
+etch oxide left p1.x=0.2
+deposit alumin thick=0.03 divi=2
+etch alumin right p1.x=0.18
+structure mirror right
+
+electrode name=gate x=0.5 y=0.1
+electrode name=source x=0.1
+electrode name=drain x=0.9
+electrode name=substrate backside
+
+structure outfile=mos2ex09.str 
+
+
+go devedit 
+
+
+# Set Meshing Parameters
+#
+base.mesh height=1000000 width=1000000
+#
+bound.cond !apply max.slope=28 max.ratio=300 rnd.unit=0.001 line.straightening=1 align.points when=automatic
+#
+imp.refine imp="NetDoping" sensitivity=1
+imp.refine min.spacing=0.02
+#
+constr.mesh max.angle=90 max.ratio=300 max.height=1 \
+	max.width=1 min.height=0.0001 min.width=0.0001
+#
+# Perform mesh operations
+#
+Mesh Mode=MeshBuild
+refine mode=y x1=0.34 y1=0.22 x2=0.65 y2=0.24
+refine mode=y x1=0.35 y1=0.22 x2=0.67 y2=0.23
+refine mode=both x1=0.65 y1=0.26 x2=0.82 y2=0.34
+refine mode=y x1=0 y1=0.40 x2=1.0 y2=0.57
+refine mode=y x1=0 y1=0.40 x2=1.0 y2=0.53
+refine mode=y x1=0.80 y1=0.34 x2=1.0 y2=0.38
+
+structure outf=mos2ex09_0.str
+
+tonyplot  mos2ex09_0.str -set mos2ex09_0.set
+
+go atlas
+
+# Set workfunction for poly gate and interface charge
+contact name=gate n.polysilicon 
+interf  qf=3E10
+
+# Set models
+models  mos print  
+
+solve init
+
+method newton  trap 
+
+# initialise and ramp VGS to get GATE and OVERLAP  CAPACITANCE
+solve prev
+solve vgate=-2 local
+log outf=mos2ex09.log master
+solve vstep=0.2 vfinal=2 name=gate ac freq=1e6 aname=gate
+
+#  plot results
+tonyplot mos2ex09.log -set mos2ex09_log.set
+
+quit

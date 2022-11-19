@@ -1,0 +1,126 @@
+# (c) Silvaco Inc., 2018
+go atlas
+TITLE Bipolar Gummel plot and  IC/VCE with constant IB
+
+mesh 
+x.m l=0   spacing=0.15
+x.m l=0.8 spacing=0.15
+x.m l=1.0 spacing=0.03
+x.m l=1.5 spacing=0.12
+x.m l=2.0 spacing=0.15
+
+
+y.m l=0.0  spacing=0.006
+y.m l=0.04 spacing=0.006
+y.m l=0.06 spacing=0.005
+y.m l=0.15 spacing=0.02
+y.m l=0.30 spacing=0.02
+y.m l=1.0  spacing=0.12
+
+
+
+region num=1 silicon
+
+electrode num=1 name=emitter left length=0.8
+electrode num=2 name=base    right length=0.5 y.max=0
+electrode num=3 name=collector bottom
+
+doping reg=1 uniform n.type conc=5e15 
+doping reg=1 gauss   n.type conc=1e18 peak=1.0 char=0.2
+doping reg=1 gauss   p.type conc=1e18 peak=0.05 junct=0.15 
+doping reg=1 gauss   n.type conc=5e19 peak=0.0  junct=0.05 x.right=0.8
+doping reg=1 gauss   p.type conc=5e19 peak=0.0  char=0.08 x.left=1.5
+
+
+
+
+# set bipolar models
+models conmob fldmob consrh auger print  
+contact name=emitter n.poly surf.rec
+
+
+
+solve init
+
+save outf=bjtex04_0.str
+
+tonyplot  bjtex04_0.str -set bjtex04_0.set
+
+# Gummel plot
+
+method  newton autonr trap
+solve vcollector=0.025
+solve vcollector=0.1
+solve vcollector=0.25 vstep=0.25 vfinal=2 name=collector
+
+
+solve vbase=0.025
+solve vbase=0.1
+solve vbase=0.2
+
+
+log outf=bjtex04_0.log
+solve vbase=0.3 vstep=0.05 vfinal=1 name=base
+
+tonyplot  bjtex04_0.log -set bjtex04_0_log.set
+
+
+
+
+#IC/VCE with constant IB
+
+#ramp Vb
+
+log off
+solve init
+solve vbase=0.025
+solve vbase=0.05
+
+
+solve  vbase=0.1 vstep=0.1 vfinal=0.7 name=base
+
+
+# switch to current boundary conditions
+
+contact name=base current
+
+# ramp IB and save solutions
+solve ibase=1.e-6
+save outf=bjtex04_1.str master
+solve ibase=2.e-6
+save outf=bjtex04_2.str master
+solve ibase=3.e-6
+save outf=bjtex04_3.str master
+solve ibase=4.e-6
+save outf=bjtex04_4.str master
+solve ibase=5.e-6
+save outf=bjtex04_5.str master
+
+
+# load in each initial guess file and ramp VCE
+load inf=bjtex04_1.str master
+log outf=bjtex04_1.log 
+solve vcollector=0.0 vstep=0.25 vfinal=5.0 name=collector
+
+load inf=bjtex04_2.str master
+log outf=bjtex04_2.log
+solve vcollector=0.0 vstep=0.25 vfinal=5.0 name=collector
+
+load inf=bjtex04_3.str master
+log outf=bjtex04_3.log
+solve vcollector=0.0 vstep=0.25 vfinal=5.0 name=collector
+
+load inf=bjtex04_4.str master
+log outf=bjtex04_4.log
+solve vcollector=0.0 vstep=0.25 vfinal=5.0 name=collector
+
+load inf=bjtex04_5.str master
+log outf=bjtex04_5.log
+solve vcollector=0.0 vstep=0.25 vfinal=5.0 name=collector
+
+
+
+
+# plot results
+tonyplot -overlay  bjtex04_1.log bjtex04_2.log bjtex04_3.log bjtex04_4.log bjtex04_5.log  -set bjtex04_1_log.set
+quit

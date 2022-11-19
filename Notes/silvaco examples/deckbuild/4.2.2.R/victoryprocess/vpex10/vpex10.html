@@ -1,0 +1,63 @@
+<html>
+  <head>
+    <title>Photolithography example</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Photolithography example</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Victory Process : Core Simulator</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Victory Process 7.22.0.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="vpex10_1.png" width="640" alt="vpex10_1" />
+      <p/>
+      <img src="vpex10_aimg.png" width="640" alt="vpex10_aimg" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates photolithography through a user defined mask.
+</p>
+<p>
+List of key syntax:
+</p>
+<b> Init: </b> <p>
+Defines simulation domain, geometrical mesh resolution and number of
+Adaptive Mesh Refinement
+<b> (AMR) </b> levels
+</p>
+<b> Lithography: </b> <p>
+Photolithography for a predefined mask.
+<b> mask </b> names the layer to which the photolithography step to be applied.
+<b> maskAperture </b> defines the numerical aperture of the optical system.
+<b> standardWl </b> sets the wavelength to one of predefined values.
+<b> resultImage </b> nominates the file where the areal image is stored.
+</p>
+<b> Deposit: </b> <p>
+Deposition with geometrical mode
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+  </div></body>
+</html>

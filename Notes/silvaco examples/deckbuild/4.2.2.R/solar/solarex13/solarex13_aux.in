@@ -1,0 +1,202 @@
+go internal
+
+set Mo_thk=0.1
+set CIGS_thk=1.5
+set CdS_thk=0.05
+set ZnO_thk=0.05
+set ZnOAl_thk=0.5
+set doping=1e15
+set mun=7.5
+
+set nbcells=4
+set total_width=11260
+
+set P1=40
+set P12=150
+set P2=100
+set P23=150
+set P3=100
+set dead_width=$P1+$P12+$P2+$P3+$P23
+
+set active_width=($total_width-(($nbcells-1)*($dead_width)))/($nbcells)
+set cell_width=$active_width+$P1+$P12+$P2+$P3+$P23
+
+go athena
+
+line x loc=0.00 				                  spac=200
+line x loc=$active_width				          spac=100
+
+set i=0
+set steps=$nbcells-1
+loop steps=$steps
+line x loc=$i*$cell_width+$active_width+$P1 			  spac=10
+line x loc=$i*$cell_width+$active_width+$P1+$P12 		  spac=40
+line x loc=$i*$cell_width+$active_width+$P1+$P12+$P2 		  spac=40
+line x loc=$i*$cell_width+$active_width+$P1+$P12+$P2+$P23 	  spac=40
+line x loc=$i*$cell_width+$active_width+$P1+$P12+$P2+$P23+$P3 	  spac=200
+set i=1+$i
+l.end
+
+line x loc=($nbcells-1)*$cell_width+$active_width 	          spac=200
+
+line y loc=0.0 spac=0.1
+line y loc=0.1 spac=0.1
+
+init oxide
+
+deposit material=Molybdenum thick=$Mo_thk divisions=2
+
+set i=0
+set steps=$nbcells-1
+loop steps=$steps
+etch material=Molybdenum start  x=$active_width+$i*$cell_width 	   y=-10
+etch cont  	 		x=$active_width+$i*$cell_width     y=0
+etch cont  	 		x=$active_width+$i*$cell_width+$P1 y=0
+etch done 			x=$active_width+$i*$cell_width+$P1 y=-10
+set i=1+$i
+l.end
+
+deposit material=CuInGaSe thick=$Mo_thk divisions=5
+etch above material=CuInGaSe p1.y=-$Mo_thk
+deposit material=CuInGaSe thick=$CIGS_thk divisions=45
+deposit material=CdS	  thick=$CdS_thk  divisions=5
+
+set i=0
+set steps=$nbcells-1
+loop steps=$steps
+etch material=CdS start  	x=$active_width+$P1+$P12+$i*$cell_width     	     y=-10
+etch cont  	 		x=$active_width+$P1+$P12+$i*$cell_width      	     y=0
+etch cont  	 		x=$active_width+$P1+$P12+$P2+$P3+$P23+$i*$cell_width y=0
+etch done 			x=$active_width+$P1+$P12+$P2+$P3+$P23+$i*$cell_width y=-10
+
+etch material=CuInGaSe start  	x=$active_width+$P1+$P12+$i*$cell_width     	     y=-10
+etch cont  	 		x=$active_width+$P1+$P12+$i*$cell_width      	     y=0
+etch cont  	 		x=$active_width+$P1+$P12+$P2+$P3+$P23+$i*$cell_width y=0
+etch done			x=$active_width+$P1+$P12+$P2+$P3+$P23+$i*$cell_width y=-10
+set i=1+$i
+l.end
+
+deposit material=iZnO thick=$ZnO_thk divisions=5
+
+set i=0
+set steps=$nbcells-1
+loop steps=$steps
+etch material=iZnO start  	x=$active_width+$P1+$P12+$i*$cell_width     	     y=-10
+etch cont  	 		x=$active_width+$P1+$P12+$i*$cell_width      	     y=0
+etch cont  	 		x=$active_width+$P1+$P12+$P2+$P3+$P23+$i*$cell_width y=0
+etch done 			x=$active_width+$P1+$P12+$P2+$P3+$P23+$i*$cell_width y=-10
+set i=1+$i
+l.end
+
+deposit material=poly thick=$Mo_thk+$CIGS_thk+$ZnO_thk+$CdS_thk+$ZnOAl_thk divisions=20
+etch above material=poly p1.y=-$Mo_thk-$CIGS_thk-$ZnO_thk-$CdS_thk-$ZnOAl_thk
+
+set i=0
+set steps=$nbcells-1
+loop steps=$steps
+etch material=poly start  	x=$active_width+$P1+$P12+$P2+$i*$cell_width    	     y=-10
+etch cont  	 		x=$active_width+$P1+$P12+$P2+$i*$cell_width          y=0
+etch cont  	 		x=$active_width+$P1+$P12+$P2+$P3+$P23+$i*$cell_width y=0
+etch done 			x=$active_width+$P1+$P12+$P2+$P3+$P23+$i*$cell_width y=-10
+set i=1+$i
+l.end
+
+
+electrode name=anode x=$active_width/2 y=-0.04
+set i=2
+set steps=$nbcells-1
+loop steps=$steps
+electrode name=anode$i x=100+$active_width+$P1+$P12+$P2+($i-2)*$cell_width y=-0.04
+set i=1+$i
+l.end
+
+structure outf=solarex13_$'nbcells'cells_0.str 
+
+
+go atlas 
+
+mesh inf=solarex13_$'nbcells'cells_0.str 
+
+electrode name=cathode y.min=-$Mo_thk-$CIGS_thk-$ZnO_thk-$CdS_thk-$ZnOAl_thk \
+y.max=-$Mo_thk-$CIGS_thk-$ZnO_thk-$CdS_thk-$ZnOAl_thk \
+x.min=($nbcells-1)*$cell_width x.max=($nbcells-1)*$cell_width+$active_width
+
+contact name=anode  workf=6.2
+
+set i=2
+set steps=$nbcells-1
+loop steps=$steps
+contact name=anode$i resist=1e16
+set i=1+$i
+l.end
+
+doping x.comp uniform conc=0.5 material=CuInGaSe
+
+doping uniform p.type conc=$doping material=CuInGaSe
+doping uniform n.type conc=6e16 material=CdS
+doping uniform n.type conc=5e17 material=iZnO
+doping uniform n.type conc=1e20 material=poly
+
+material material=CuInGaSe PERMITTIVITY=13.6 AFFINITY=4.8 MUN=200 MUP=25 \
+		  NC300=2.2e18 NV300=1.8e19 taup0=1e-7 taun0=1e-7 \
+                  indx.real=solarex13_1.n indx.imag=solarex13_1.k
+
+material mat=CdS EG300=2.4 PERMITTIVITY=10 AFFINITY=4.5 MUN=100 MUP=25 \
+		  NC300=2.2e18 NV300=1.8e19 taup0=1e-7 taun0=1e-7 
+                  
+material user.default=ZnO mat=iZnO EG300=3.3 PERMITTIVITY=9 AFFINITY=4.7 MUN=100 MUP=25 \
+		  NC300=2.2e18 NV300=1.8e19 taup0=1e-7 taun0=1e-7 \
+                  indx.real=solarex13_2.n indx.imag=solarex13_2.k 
+
+mobility material=poly mun=$mun
+material mat=poly index.file=solarex13.index 
+
+defects material=CuInGaSe nta=0 ntd=0 wta=1 wtd=1 \
+	nga=0 ngd=8e15 ega=0.575 egd=0.575 wga=1 wgd=0.1 \
+	sigtae=1.e-17 sigtah=1.e-15 sigtde=1.e-15 sigtdh=1.e-17  \ 
+	siggae=2.e-16 siggah=2.e-15 siggde=5.e-13 siggdh=1.e-15 continuous
+
+defects mat=CdS nta=0 ntd=0 wta=1 wtd=1 \
+	nga=2.3e17 ngd=0 ega=1.2 egd=1.2 wga=0.1 wgd=1 \
+	sigtae=1.e-17 sigtah=1.e-15 sigtde=1.e-15 sigtdh=1.e-17  \ 
+	siggae=1.e-17 siggah=1.e-12 siggde=5.e-13 siggdh=1.e-15 continuous
+
+defects mat=iZnO nta=0 ntd=0 wta=1 wtd=1 \
+	nga=0 ngd=1e17 ega=1.65 egd=1.65 wga=1 wgd=0.1 \
+	sigtae=1.e-17 sigtah=1.e-15 sigtde=1.e-15 sigtdh=1.e-17  \ 
+	siggae=2.e-16 siggah=2.e-15 siggde=1.e-12 siggdh=1.e-15  continuous
+
+models srh optr fermi ni.fermi print
+
+beam num=1 x.origin=$active_width/2 y.origin=-20 angle=90 power.file=solarex13.spec wavel.end=1.65
+  
+output band.temp opt.int 
+
+probe name=inten beam=1 intensity max
+
+method itlimit=40 maxtraps=30
+
+solve init
+save outf=solarex13_$'nbcells'cells_1.str
+ 
+solve b1=1
+
+log outf=solarex13_$'nbcells'cells_0.log
+solve vanode=0 name=anode vstep=0.05 vfinal=$nbcells*0.9
+
+extract init inf="solarex13_$'nbcells'cells_0.log"
+extract name="IV" curve(v."anode", i."cathode") outf="solarex13_$'nbcells'cells.dat"
+
+extract init inf="solarex13_$'nbcells'cells_0.log"
+extract name="Jsc" y.val from curve(v."anode", i."cathode") where x.val=0.0
+extract name="JscmAcm2" $Jsc*1e08*1e03/($active_width)
+extract name="Voc" x.val from curve(v."anode", i."cathode") where y.val=0.0 
+extract name="Pm" max(curve(v."anode", (v."anode" * i."cathode"))) 
+extract name="Vm" x.val from curve(v."anode", (v."anode"*i."cathode") ) \
+	where y.val=$"Pm"
+extract name="Im" $"Pm"/$"Vm"
+extract name="FF" ($"Pm"/($"Jsc"*$"Voc"))
+extract name="intens" max(probe."inten")
+extract name="Eff" (1e+04*$"Jsc"*$"Voc"*$FF)/($"intens")*100
+extract name="dead" ($nbcells*$dead_width)/($nbcells*$cell_width+$active_width)*100
+extract name="active" 100-$dead

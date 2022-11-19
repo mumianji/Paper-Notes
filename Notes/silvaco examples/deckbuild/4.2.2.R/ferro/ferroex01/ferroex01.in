@@ -1,0 +1,115 @@
+# (c) Silvaco Inc., 2018
+go atlas
+# Ferroelectric MOS Capacitor example (1D)
+# Demonstrates effect of various material settings
+#
+mesh outf=ferroex01_0.str
+#
+x.m loc=0.0 spacing=1.0
+x.m loc=1.0 spac=1.0
+#
+y.m loc=-0.2 spacing=0.2
+y.m loc=0.0 spacing=0.2
+y.m loc=5.0 spac=1.0
+#
+region num=1 silicon y.min=0.0
+region num=2 oxide y.max=0.0
+#
+electrode top name=gate
+electrode bottom name=sub
+#
+doping region=1 conc=1e15 uniform p.type
+#
+models region=2 ferro
+material region=2 ferro.ec=20e3 ferro.pr=0.5e-6 ferro.ps=1.0e-6 ferro.epsf=200
+#
+method newton trap
+#
+solve vgate=-5
+probe x=0 y=-0.1 dir=90 polarization
+#
+log outf=ferroex01_0.log master
+#
+solve  name=gate vfinal=5 vstep=0.1 ac freq=1e-6 direct
+material region=2 ferro.ec=-20e3
+solve  name=gate vfinal=-5 vstep=-0.1 ac freq=1e-6 direct
+#
+tonyplot ferroex01_0.log -set ferroex01_0.set 
+tonyplot ferroex01_0.log -set ferroex01_1.set 
+#
+go atlas
+#
+mesh outf=ferroex01_1.str
+#
+x.m loc=0.0 spacing=1.0
+x.m loc=1.0 spac=1.0
+#
+y.m loc=-0.2 spacing=0.2
+y.m loc=0.0 spacing=0.2
+y.m loc=5.0 spac=1.0
+#
+region num=1 silicon y.min=0.0
+region num=2 oxide y.max=0.0
+#
+electrode top name=gate
+electrode bottom name=sub
+#
+doping region=1 conc=1e15 uniform p.type
+#
+models region=2 ferro
+material region=2 ferro.ec=50e3 ferro.pr=0.5e-6 ferro.ps=1.0e-6 ferro.epsf=200
+#
+method newton trap
+#
+solve vgate=-5
+#
+probe x=0 y=-0.1 dir=90 polarization
+# 
+log outf=ferroex01_1.log master 
+#
+solve  name=gate vfinal=5 vstep=0.1 ac freq=1e-6 direct
+material region=2 ferro.ec=-50e3
+solve  name=gate vfinal=-5 vstep=-0.1 ac freq=1e-6 direct
+#
+tonyplot  ferroex01_1.log  -set ferroex01_2.set
+tonyplot  ferroex01_1.log  -set ferroex01_3.set
+#
+go atlas
+#
+mesh outf=ferroex01_2.str
+#
+x.m loc=0.0 spacing=1.0
+x.m loc=1.0 spac=1.0
+#
+y.m loc=-0.2 spacing=0.2
+y.m loc=0.0 spacing=0.2
+y.m loc=5.0 spac=1.0
+#
+region num=1 silicon y.min=0.0
+region num=2 oxide y.max=0.0
+#
+electrode top name=gate
+electrode bottom name=sub
+#
+doping region=1 conc=1e15 uniform p.type
+#
+models region=2 ferro
+material region=2 ferro.ec=20e3 ferro.pr=2.5e-6 ferro.ps=5.0e-6 ferro.epsf=200
+#
+method newton trap
+#
+solve vgate=-5
+#
+probe x=0 y=-0.1 dir=90 polarization
+#
+log outf=ferroex01_2.log master 
+#
+solve  name=gate vfinal=5 vstep=0.1 ac freq=1e-6 direct
+material region=2 ferro.ec=-20e3
+solve  name=gate vfinal=-5 vstep=-0.1 ac freq=1e-6 direct
+save outf=ferroex01_2.str
+#
+tonyplot ferroex01_2.log -set ferroex01_4.set 
+tonyplot ferroex01_2.log -set ferroex01_5.set 
+#
+quit

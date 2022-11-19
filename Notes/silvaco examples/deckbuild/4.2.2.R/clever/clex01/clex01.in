@@ -1,0 +1,35 @@
+go clever
+
+## Process Description ##
+
+Init Layout="clex01.lay" Depth=1 
+
+Deposit Oxide Thickness=0.5 Max
+
+Deposit Aluminum Thickness=0.5 Max
+
+Deposit Resist Thickness=0.1 Max
+
+# grid becomes 3D after lithography process
+
+Mask "MET1" 
+
+Etch Aluminum Thickness=0.5 Max
+
+Strip Resist
+
+Electrodes "MET1" Aluminum
+
+Deposit Oxide Thickness=1 Max
+
+Save Structure="clex01_0.str"
+
+## Parasitic Extraction ##
+
+Material Silicon Inherit(Oxide)
+
+Interconnect Capacitance AdaptC=0.02
+
+Save Spice="clex01.net"
+
+quit

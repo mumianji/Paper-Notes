@@ -1,0 +1,80 @@
+go athena
+#
+#                   OPTOLITH input file: anopex13.in
+#                   --------------------------------
+#
+#            Example of the use of contrast enhancement layers
+#
+# Define the structure
+# 
+line x loc=0.00 spac=0.2 tag=left
+line x loc=0.50 spac=0.025 
+line x loc=2.00 spac=0.2 tag=right
+# 
+line y loc=1. spac=0.5 tag=top
+line y loc=2.0 spac=0.5 tag=bottom
+# 
+init silicon orientation=100
+#
+# Define exposure parameters for the Dill exposure model and development
+# rate parameters for the Kim development rate model for the photoresists
+# AAA and BBB.
+#
+rate.develop name.resist=AAA  i.line\
+    r1.kim = 0.085329 r2.kim = 0.000002 r3.kim = 11.74276 \
+    r4.kim = 0.0 r5.kim = 0.0 r6.kim = 0.0 r7.kim = 0.0 \
+    r8.kim = 0.0 r9.kim = 0.0 r10.kim = 0.0 \
+    a.dill =  0.73 b.dill =  0.07 c.dill =  0.018 \
+    Dix.0 = 7.55e-13 Dix.E = 3.34e-2
+rate.develop name.resist=BBB  i.line\
+    r1.kim = 0.085329 r2.kim = 0.000002 r3.kim = 11.74276 \
+    r4.kim = 0.0 r5.kim = 0.0 r6.kim = 0.0 r7.kim = 0.0 \
+    r8.kim = 0.0 r9.kim = 0.0 r10.kim = 0.0 \
+    a.dill =  0.73 b.dill =  0.07 c.dill =  0.018 \
+    Dix.0 = 7.55e-13 Dix.E = 3.34e-2
+#
+# Define index of refraction of user defined photoresists AAA and BBB.
+#
+optical photo name.resist=AAA lambda=0.365 refrac.real=1.6 refrac.imag=0.02
+optical photo name.resist=BBB lambda=0.365 refrac.real=1.9 refrac.imag=0.01
+#  
+# Deposit user defined photoresists AAA and BBB
+#
+deposit photoresist name.resist=AAA thick=.5 divisions=20
+deposit photoresist name.resist=BBB thick=.5 divisions=20
+#
+structure mirror left
+#
+structure outfile=anopex13_0.str
+#
+# Run the imaging module for a 1.0 micrometer feature
+#
+illumination i.line 
+#
+illum.filter clear.fil circle sigma=0.3
+#
+projection na=.35 flare=2
+#
+pupil.filter clear.fil circle
+#
+layout lay.clear x.lo=-0.5 z.lo=-2 x.hi=0.5 z.hi=2
+#
+image clear win.x.l=-3 win.z.l=0 win.x.h=3 win.z.h=0 x.p=31 z.p=3 one.d
+#
+structure outfile=anopex13_1.str intensity 
+#
+# Resist exposure, post exposure bake, and development
+#
+expose dose=250 
+#
+structure outfile=anopex13_2.str
+#
+bake time=60 seconds temp=125
+#
+develop kim time=100 steps=5 
+#
+structure outfile=anopex13_3.str
+#
+tonyplot anopex13_2.str anopex13_3.str -set anopex13.set
+#
+quit

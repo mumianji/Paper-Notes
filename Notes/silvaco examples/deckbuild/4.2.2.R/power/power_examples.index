@@ -1,0 +1,1618 @@
+
+{section} POWER : Power Device Application Examples
+
+
+
+
+{subsection} powerex01.in : Reverse Recovery of a Power Diode 
+
+Requires: S-Pisces/MixedMode
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates the reverse recovery of a silicon power diode.  It shows:
+
+{bullet} Structure definition using Atlas 
+{newline}
+{bullet} The SPICE-like command syntax for simulating MixedMode circuits
+{newline} 
+{bullet} Steady state and transient analysis of a power diode
+
+The structure consists of a rectangular silicon power diode.  Atlas is used to define the power 
+diode structure including mesh, materials, electrodes, and doping.  The
+{bold} mesh rect 
+statement defines a rectangular mesh with grid lines at the locations specified by the 
+{bold} x.m 
+and 
+{bold} y.m 
+statements.  The entire mesh is defined as one silicon region using the 
+{bold} region 
+statement.  Electrodes are defined on top and bottom and the 
+{bold} doping 
+statement is used to define a uniform background concentration and gaussian n-type and p-type regions.
+This structure is saved and will be used as a device by MixedMode.
+
+In this simulation, the MixedMode circuit simulator uses Atlas to calculate the electrical characteristics of the 
+power diode under the specified circuit conditions.  First, a steady-state simulation of the power diode circuit 
+is performed.  
+
+The 
+{bold} .begin 
+and 
+{bold} .end 
+statements indicate the beginning and end of the MixedMode syntax.  The MixedMode commands are similar to those 
+used in SmartSpice.  Circuit components, topology, and analysis are defined within.
+In general, the circuit component definition consists of three parts: the type of component, the lead or terminal 
+node assignments, and the component value or model name.  For example, the  first component definition in this 
+simulation is a dc voltage source.  
+{bold} v1 
+defines the component as voltage source number one, 
+{bold} 1 
+and 
+{bold} 0 
+are the two circuit nodes for this component, and 
+{bold} 1000 
+indicates that the voltage source value is 1000 volts.  The remaining circuit components are resistors 
+{bold} r1 r2
+, inductor 
+{bold} l1 
+and independent current source 
+{bold} i1
+. The 
+{bold} adiode 
+statement specifies a device to be analyzed by Atlas.  The 
+{bold} a 
+part of the adiode
+command specifies that this is a device statement.  The 
+{bold} diode 
+portion simply defines the device name.  The option 
+{bold} infile= 
+indicates which device structure file is to be used.  The
+{bold} .nodeset 
+statement defines the initial values for node voltages and the 
+{bold} .save outfile= 
+statement saves the result to the indicated file.  Since this is the steady state solution, no output log data file 
+is needed.  Additionally, the 
+{bold} .options 
+command sets the solution method to a modified two-level Newton using the 
+{bold} m2ln 
+parameter.  Other command line options exist.  Please refer to the MixedMode 
+section of the Atlas user's manual for a complete list.
+
+To completely specify the simulation, the physical models used by Atlas must be specified.  The 
+{bold} model 
+statement is used to turn on the appropriate transport models.  This set includes conmob: the concentration 
+dependent mobility model, fldmob: the lateral electric field-dependent mobility model, consrh: Shockley-Read-Hall 
+recombination using concentration dependent lifetimes, auger: recombination accounting for high level injection
+effects, and bgn: band gap narrowing.  
+Refer to the Atlas user's manual for a description of these models.  The 
+{bold} material 
+statement is used to override default material parameters.  In this case, the carrier recombination fixed 
+lifetimes are set.  Finally, an impact ionization model is enabled using the 
+{bold} impact 
+statement with the
+{bold} selb 
+option.  This specifies that the Selberherr impact ionization model is to be used.
+
+The next step is the transient analysis which is specified in a similar manner.  The reverse recovery of the diode 
+is simulated by dropping the value of output resistor r2 over a small increment of time.  The 
+{bold} r2 
+statement contains additional syntax to perform this task.  Here, the resistor is 
+treated as a source whose resistance decreases exponentially from 1 MOhm to 1 
+mOhm over the specified time step.  This action essentially shorts out the 
+parallel current source i1 which is also 
+connected to the base of the diode.  The 
+{bold} .trans 
+statement is used to specify the time stepping parameters for the transient analysis.  In addition, the 
+{bold} .log 
+statement saves the diode output characteristics over the time interval specified.  TonyPlot plots the transient
+reverse recovery of the power diode.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+{subsection} powerex02.in : Vertical DMOS Turn-on Characteristics
+
+Requires: SSuprem 4/S-Pisces/Giga
+{newline}
+Minimum Versions: Athena 5.22.3.R, Atlas 5.26.1.R
+
+This example demonstrates fabrication and electrical analysis of a
+vertical DMOS structure.  It shows:
+
+{bullet} DMOS process flow to generate the device structure using Athena
+{newline}
+{bullet} Model setup for non-isothermal device simulation using Giga
+{newline}
+{bullet} Atlas methodology for simulating the DMOS device gate characteristics
+
+The structure generated by Athena is a silicon vertical DMOS device.  A phosphorus doped silicon substrate 
+and underlying mesh are defined.  A lightly phosphorous doped silicon epitaxial layer is then grown using the  
+{bold} epitaxy 
+command.  The gate material is deposited, patterned and etched.  Boron is implanted and diffused to form the right 
+edge of channel region under the gate.  The source region arsenic implant is performed and diffused to complete the 
+channel definition.  Aluminum is deposited and etched to form the source contact.  The source, drain and gate electrodes 
+are defined by using the 
+{bold} electrode 
+statement and by including the name and location of the contact on the command line.  Notice that the drain electrode 
+location is defined by the 'electrode' command line option 
+{bold} backside
+.  Now that the structure has been completed, the Atlas device test can be performed.
+
+In this simulation, the structure created by Athena will be automatically loaded into Atlas when the command 
+{bold} go atlas 
+is reached.  The 
+{bold} contact 
+statement sets the workfunction for the gate to that of degenerately doped n-type polysilicon.  Next, the 
+{bold} models 
+statement sets the physical transport and associated models to be used, in this case, conmob: concentration dependent 
+mobility, fldmob: lateral electric field dependent mobility, srh: Shockly-Read-Hall recombination, and most importantly 
+for power devices, lat.temp:  non-isothermal transport using Giga.  The thermal boundary condition for the source contact 
+is defined by the 
+{bold} thermcontact 
+statement.  
+
+The gate characteristics of this DMOS device are calculated by solving the transport and thermal equations at the 
+bias specified in the 
+{bold} solve 
+statements.  Here, the drain bias is stepped to 20 volts.  Next, an output logfile is opened using the 
+{bold} log 
+command, and the gate contact is ramped from 0.25 volts to 20 volts in two stages.  It is advisable to use smaller bias 
+steps initially.  Larger bias steps can then be used for the remaining bias range.
+TonyPlot plots the gate characteristics from the log file.  To plot the structure and solution at the final bias point, 
+highlight the name 'powerex02_2.str' on the 
+{bold} save 
+command line and click left 'Tools' at the top right of the DeckBuild window.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+
+{subsection} powerex03.in : IGBT Transient Latch-up with Lattice Heating
+
+Requires: S-Pisces/Giga
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+In this example the non-isothermal latchup of an IGBT device is simulated.  
+The latchup is produced in the transient or switching mode. The currents
+during latchup in this device are high and significant local heating occurs.  
+Therefore, the solution of lattice temperature and heat flow must be included.  
+This example shows:
+
+{bullet} The definition of the IGBT structure using Atlas
+{newline}
+{bullet} How to enable Giga non-isothermal simulation
+{newline}
+{bullet} IGBT collector steady state solution at 300V
+{newline}
+{bullet} Transient gate voltage ramp to produce latchup
+
+The Atlas simulation begins with the definition of the IGBT structure.  
+A fine rectangular mesh is first defined.  Next, the materials are assigned to specific regions using the 
+{bold} region 
+command.  The electrodes and doping profiles are then defined.  Additionally, specific characteristics of these materials, their electrodes and the charge carriers within can be modified.  The 
+{bold} material 
+statement is
+used to define the electron and hole recombination lifetimes in the semiconductor.  The 
+{bold} contact 
+statement defines the workfunction of the polysilicon electrode, in this case, that of degenerately doped n-type polysilicon.   This completes the IGBT structure definition.
+
+For any Atlas device simulation, the physical transport models must be enabled using the 
+{bold} model 
+statement.  In this case, they reflect the different physical effects important to the IGBT device.  
+They are analytic: analytic concentration dependent mobility, fldmob: lateral electric field dependent mobility, surfmob: surface mobility degradation, srh: 
+Shockley-Read-Hall recombination, and auger:  recombination accounting for high level injection
+effects.   
+
+The steady-state characteristics of the IGBT are now solved.
+As with most Atlas simulations, an initial solution is performed at zero bias using the statement 
+{bold} solve init
+. This gives the Atlas solvers a good starting point.  The subsequent 
+{bold} solve 
+statements ramp the IGBT collector up to 300V in several stages .  Each additional stage uses the previous 
+solution as an initial guess.  Other initial guess strategies are available however.  
+Consult the Atlas User's manual for more details.  If an electrode bias is not specified, it remains at its 
+previous value, in this case, zero volts.  After the solution is obtained at 300V, the solution is saved.  It will
+ be used as the initial solution in the transient mode latchup simulation which follows.
+
+Three additional items are added for the IGBT transient mode simulation: thermal contacts, heat flow, and impact 
+ionization.  Thermal boundary conditions are a very important part of any non-isothermal simulation and must be 
+specified.  For the IGBT, a constant temperature along the collector contact is  specified in the 
+{bold} thermcontact 
+statement.  All other contacts and surfaces are assumed to be in thermal isolation.  The 
+{bold} lat.temp 
+lattice temperature model is added to the 
+{bold} model 
+statement to include heat flow.  This means that the heat
+flow equation is solved in addition to the semiconductor equations and
+all physical parameters become temperature dependent.  In addition to heat flow, impact ionization plays an 
+important role in IGBT transient mode latchup.  The Selberherr impact ionization model is added using the 
+{bold} impact 
+statement with the 
+{bold} selb 
+option.  
+
+An IGBT gate transient is now simulated.    The previous solution at the collector 
+bias of 300V is loaded and used as an initial guess for the latchup simulation.  The
+{bold} output 
+statement is used to add additional solution quantities to the standard output variables.  
+The gate voltage is ramped from 0  to 10 V in 100 nano seconds to cause the IGBT latchup.   
+The gate will then be held at the 10 V level until the time reaches 1 micro second.  These conditions are set on the 
+{bold} solve 
+statement.  The output results are saved in the log file.  Using
+TonyPlot, it is possible to observe the latchup by plotting the
+collector current and maximum temperature in the device versus time.
+The structure and solution at the final time point is saved 
+and all output variables can be observed using TonyPlot.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+{subsection} powerex04.in : IGBT Ic/Vce Characteristics
+
+Requires: S-Pisces
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+
+The Ic / Vce characteristics of an Insulated Gate Bipolar
+Transistor (IGBT) are simulated.  This example shows:
+
+{bullet} Creating the IGBT structure using Atlas
+{newline}
+{bullet} Ic / Vce test definition
+{newline}
+{bullet} IGBT Ic versus Vce characteristics
+
+The Atlas simulation begins with the definition of the IGBT structure.  
+Atlas is used to define the IGBT structure including mesh, materials, electrodes, and doping.
+A fine rectangular mesh is first defined.  Next the materials are assigned to specific regions using the 
+{bold} region 
+command.  The electrodes and doping profiles are then defined.  Additionally, specific characteristics of these materials, their electrodes and the charge carriers within can be modified.  The 
+{bold} material 
+statement is
+used to define the electron and hole recombination lifetimes in the semiconductor.  The 
+{bold} contact 
+statement defines the workfunction of the polysilicon electrode, in this case, that of degenerately doped n-type polysilicon.   This completes the IGBT structure definition.
+
+For any Atlas device simulation, the physical transport models must be enabled using the 
+{bold} model 
+statement.  In this case, they reflect the different physical effects important to the IGBT device.  
+They are analytic: analytic concentration dependent mobility, fldmob: lateral electric field dependent mobility, surfmob: surface mobility degradation, srh: 
+Shockley-Read-Hall recombination, and auger:  recombination accounting for high level injection
+effects.   
+
+IGBT output characteristics are simulated by sweeping the collector contact voltage for several discrete values 
+of gate voltage.  In this example, the collector voltage will be swept from 0 to 20 V for gate voltages of 5 
+and 10 V.  This is accomplished by first obtaining a solution at each gate bias of interest with all other 
+electrodes set to 0V.  Next, each gate solution is used as the initial solution for a collector sweep.  
+Output log files are saved for each gate-collector sweep combination.  TonyPlot displays the IGBT Ic / Vce 
+family of curves by overlaying all output curves on one plot.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+{subsection} powerex05.in : Guard Ring Breakdown Analysis
+
+Requires: SSuprem 4/S-Pisces
+{newline}
+Minimum Versions: Athena 5.22.3.R, Atlas 5.26.1.R
+
+
+This example demonstrates the fabrication and electrical 
+analysis of a protection structure using guard rings.  It shows:
+
+{bullet} Protection device with guard rings process simulation using Athena
+{newline}
+{bullet} Proper guard ring contact definition for breakdown analysis using Atlas
+{newline} 
+{bullet} Transport model definition including impact ionization
+{newline}
+{bullet} Breakdown test definition
+
+The breakdown structure considered here consists of a series of four guard rings sandwiched between cathode and 
+anode electrodes.  The Athena simulation begins by defining a phosphorous doped silicon substrate and its 
+associated mesh.  Silicon dioxide is then deposited and etched to expose silicon for guard ring and anode 
+implantation.  Boron is implanted and diffused to define the guard ring and anode junction depth.  Boron 
+doped polysilicon is then deposited and etched to form the guard ring plate electrodes.  Aluminum is deposited 
+and etched to create the anode and cathode electrodes.  These electrodes are specified using the 
+{bold} electrode 
+statement.  This includes the name and position.  Notice that a substrate electrode is added by specifying the 
+{bold} backside 
+option.  The completed structure is saved and plotted using TonyPlot.
+
+The Atlas breakdown simulation is now described.  In this simulation, the structure created by Athena will be 
+automatically 
+loaded into Atlas when the command 
+{bold} go atlas 
+is reached.  For this breakdown simulation including guard rings, the guard ring contact must be allowed to float.  The 
+{bold} contact 
+statement specifies that a 1E20 ohm series resistor be added to each contact.  This allows each guard ring 
+contact to float and ensures that there is no appreciable current flow.  The 
+{bold} bipolar 
+option to the 
+{bold} models 
+statement selects a default set of transport models for bipolar devices.  The default bipolar models are 
+conmob: concentration dependent mobility, fldmob: lateral electric field dependent mobility, bgn: band gap 
+narrowing effects, consrh: concentration dependent Shockley-Read-Hall recombination lifetimes, and 
+auger: recombination accounting for high level injection effects.  Since breakdown in semiconductor devices can 
+occur in the presence of impact ionization, this model should be enabled.  In this case, the 
+{bold} impact selb 
+statement enables the Selberherr impact ionization model.  Please refer to the Atlas user's manual for a 
+detailed description of these and other models.
+
+When simulating devices with external components like the guard ring  plate resistors, the 
+{bold} newton 
+solution method is required.  When using large bias steps, or when operating a device near breakdown,  it is 
+advised to specify the 
+{bold} trap 
+option to the 
+{bold} method 
+statement.  With this option enabled, Atlas automatically reduces the applied bias when convergence is not 
+achieved.  The simulation then continues at this new bias point.  If convergence is achieved, Atlas tries the 
+original bias point again.  If not, the applied bias is reduced again.  This will  continue until convergence 
+is achieved or until a maximum number of reductions takes place.  Once convergence occurs, Atlas will 
+automatically work its way back to the original bias point where the initial reduction occurred.  
+
+The Atlas 
+{bold} solve 
+statement is now used to construct the breakdown test.  As in most cases, an initial zero bias solution is 
+performed by selecting the 
+{bold} init 
+option of the 
+{bold} solve 
+statement.  This gives Atlas an initial guess for subsequent simulations.  An output log file is opened and will 
+contain terminal characteristics for each bias point selected for test or until another output log file is opened.  
+For this breakdown test, the anode voltage is stepped from -1V to -900V in three stages: -1V to -5V, 
+-5V to -25V, and -25V to -900V.  This arrangement is designed to provide good convergence while minimizing total 
+simulation time.  
+
+The solution at the final bias point is saved as a structure file and TonyPlot is invoked to plot the results.  
+Anode, cathode and substrate currents can be plotted to identify the voltage where breakdown occurs.  Various 
+contour quantities such as electric field, potential, and impact generation rate can be displayed from the 
+structure plot.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+{subsection} powerex06.in : GTO Turn-off Transient
+
+
+Requires: S-Pisces/MixedMode
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+
+This example illustrates the simulation of a Gate Turn-Off Thyristor
+(GTO).  The device is embedded in a realistic power device circuit. The interaction between the circuit elements 
+and the active device is important in accurately simulating GTO behavior.  The steady state behavior is simulated 
+first.  This is used as the initial condition for the transient analysis.  This example shows:  
+
+{bullet} GTO structure definition with Atlas
+{newline}
+{bullet} The SPICE-like command syntax for MixedMode circuit simulation
+{newline}
+{bullet} GTO steady state solution
+{newline}
+{bullet} GTO transient turn-off process
+
+Atlas is used to define the GTO structure including mesh, materials, electrodes, and doping.  
+The
+{bold} mesh rect 
+statement defines a rectangular mesh with grid lines at the locations specified by the 
+{bold} x.m 
+and 
+{bold} y.m 
+statements.  Using the 
+{bold} region 
+statement, the mesh is divided into three regions:  two silicon and one insulator.  The 
+{bold} electrode 
+statement defines the cathode, anode and gate electrodes.  The 
+{bold} doping 
+statements define the doping profiles.  Note the definition of implant type, junction position and characteristic 
+length.  The net profile is n+ p n p+ from the cathode on top to anode on the bottom.  The gate is contacted to 
+the p region.  This structure is saved and will be used as a device by MixedMode.
+
+In this simulation, the MixedMode circuit simulator uses Atlas to calculate the transient  characteristics of a 
+GTO under the specified circuit conditions.  First, a steady-state simulation of the GTO circuit is performed.  
+The 
+{bold} .begin 
+and 
+{bold} .end 
+statements indicate the beginning and end of the MixedMode syntax.  The MixedMode commands are similar to those 
+used in SmartSpice.   Circuit components, topology, and analysis are defined here.
+In general, the circuit component definition consists of three parts: the type of component, the lead or terminal 
+node assignments, and the component value or model name.  For example, the first component definition in this 
+simulation is a dc current source.  
+{bold} i1 
+defines the component as current source number one, 
+{bold} 0 
+and 
+{bold} 1 
+are the two circuit nodes for this component and 
+{bold} 400 
+indicates that the current source value is 400 amps.  
+
+This circuit can be divided in two parts: input, and output.  
+The input circuit connects to the cathode and anode of the GTO.  It includes current source 
+{bold} i1
+, voltage source 
+{bold} v1
+, resistors 
+{bold} r1 r2 r3
+, diodes 
+{bold} d1 d2 d3
+, inductors 
+{bold} l1 l2 l3
+, and capacitor 
+{bold} c1.  
+The output or switching circuit connects to the GTO gate and anode and includes voltage sources 
+{bold} v1 v2 v3
+, diode 
+{bold} d4
+, resistors 
+{bold} r2 r4
+, and inductor 
+{bold} l4
+. The GTO component itself is specified by the 
+{bold} agto 
+statement.  This statement specifies a device to be analyzed by Atlas.  The 
+{bold} a 
+part of the 
+{bold} agto 
+command specifies that this is a device statement.  The 
+{bold} gto 
+portion simply defines the device name.  The option 
+{bold} infile= 
+indicates which device structure file is to be used.  Other command line options exist.  Please refer to the 
+MixedMode section of the Atlas user's manual for a complete list.  
+
+The
+{bold} .nodeset 
+statement defines the initial values for node voltages and the 
+{bold} .save outfile= 
+statement saves the result to the indicated file.  Since this is the steady state solution, no output log data 
+file is needed.  Since standard diode parts are used in this circuit, the 
+{bold} .model dd 
+statement is used to specify additional characteristics.  Note that 
+{bold} dd 
+was the model name given in the diode component definition statement.  Additionally, the 
+{bold} .options 
+command sets the solution method to a modified two-level Newton using the 
+{bold} m2ln 
+parameter.  
+
+To completely specify the simulation, the physical models used by Atlas must be specified.  The 
+{bold} model 
+statement is used to turn on the appropriate transport models.  This set includes analytic: the analytic 
+concentration dependent mobility model, fldmob: the lateral electric field-dependent mobility model, consrh: 
+Shockley-Read-Hall recombination using concentration dependent lifetimes, auger: recombination accounting for high level injection 
+effects, and bgn: 
+band gap narrowing.  The 
+{bold} material 
+statement is used to override default material parameters.  In this case, the carrier recombination fixed 
+lifetimes are set and for region three, the permittivity is set to that of air (1).  Finally, an impact ionization 
+model is enabled using the 
+{bold} impact 
+statement with the
+{bold} selb 
+option.  This specifies that the Selberherr impact ionization model is to be used.  Note that for each of these 
+commands, the device name and region can be specified.  
+
+The final part of this example is the transient simulation of the gate turn-off. The description of the circuit 
+is similar to the steady state part. The gate turn-off is simulated by pulsing the GTO gate output 
+resistance r4 
+from 1 mega-ohm to 1 micro-ohm over 100 ns.  This is defined by the additional command line options on the 
+{bold} r4 
+command line.  The result of the essentially shorted resistor r4 is that a 
+negative pulse is applied to the gate which initiates the GTO
+turn-off process. The 
+{bold} .tran 
+statement controls the overall transient simulation time.
+
+Terminal characteristics of the GTO, circuit node voltages and circuit
+element currents are are saved in the 
+{bold} .log 
+ file and can be observed with TonyPlot.  The turnoff speed is seen by plotting the GTO anode and
+gate current.  
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+
+{subsection} powerex07.in : LDMOS Breakdown
+
+Requires: SSuprem 4/S-Pisces
+{newline}
+Minimum Versions: Athena 5.22.3.R, Atlas 5.26.1.R
+
+This example simulates the fabrication process and breakdown analysis of a Lateral DMOS
+device (LDMOS). The example shows:
+
+{bullet} Process simulation of the LDMOS structure using Athena
+{newline}
+{bullet} Measurement of layer thickness, 1D Vt and BVdss using EXTRACT
+{newline}  
+{bullet} Auto interface from Athena to Atlas
+{newline}
+{bullet} Atlas simulation of the breakdown voltage BVdss
+
+
+The device simulated is an asymmetric LDMOS power device
+structure with a 4 micron gate length.  Athena simulation starts by defining an 
+asymmetric grid with finer grid in the drift region. In preparation for the gate oxide growth, a sacrificial 
+oxide layer is grown and etched away.  A gate oxide 
+of 570 Angstroms is then grown.  To ensure adequate grid spacing in the growing oxide, the 
+{bold} method grid.ox 
+statement sets the grid to 100 Angstroms.  After the oxide growth, the 
+{bold} extract 
+statement is used to measure the gate oxide thickness.  The results of the EXTRACT can be found in the DeckBuild 
+output window and in the file 'results.final'.  Check for this file in the directory in which  DeckBuild was 
+started.  The next step is a low-energy and low-dose boron Vt-adjust
+implant.   Poly deposition, poly-gate definition and drift
+region implant are then performed. The drift region is masked and n+
+phosphorus is implanted into the opened source and drain areas.
+
+After the final anneal at 1000 degrees the contact holes are opened,
+metal is deposited and patterned. The four electrodes are then 
+specified. 
+
+A useful parameter to measure at this stage is the threshold voltage of a 1D 
+slice through the center of the gate. This is performed via the 
+{bold} extract 
+statement. Since the channel length is fairly long and the channel
+doping is uniform laterally, this is a fairly good approximation to the 2D 
+threshold voltage that Atlas would give.  This ends the LDMOS process simulation.  
+The resultant structure file is saved and plotted.  
+
+The structure created by Athena will be automatically loaded into Atlas when the command 
+{bold} go atlas 
+is reached.  The Atlas portion of this example begins by specifying the physical models to be used.  For this 
+example, they 
+are cvt:  for transverse field dependent mobility, and srh: Shockley-Read-Hall recombination.  
+{bold} carriers=2 
+indicates that both holes and electrons will be simulated.  The Selberherr impact ionization model is enabled 
+using the 
+{bold} impact selb 
+statement.  The 
+{bold} contact 
+statement sets the gate workfunction to that of degenerately doped n-type polysilicon.
+Additionally, the 
+{bold} interface 
+statement sets the silicon-silicon dioxide interface charge to 3E10.  
+
+The 
+{bold} method 
+statement has many purposes.  First, it sets the type of solution methodology, as in this case with the 
+{bold} newton 
+option.  The 
+{bold} trap 
+option enables the reduction in applied bias when convergence is not achieved.  This is an 
+important feature for large bias steps and simulations near breakdown.  The option  
+{bold} climit=1e-4 
+improves convergence for breakdown simulation when the pre-breakdown
+current is very low. It is recommended for most power device breakdown calculations.  Many other options are 
+available.  Please consult the Atlas user's manual for additional information.
+
+The sequence of 
+{bold} solve 
+statements ramp the drain voltage from zero to 100V.  For this
+particular device, the breakdown voltage is about 50V.  At biases
+higher than this, the simulation will fail to converge.  With the
+{bold} trap 
+option enabled, Atlas will automatically reduce the applied bias until
+the convergence criteria is met or until the maximum number of
+reductions is reached.
+The final 
+{bold} extract 
+statement reads the maximum drain voltage solved from the output log file.
+A plot of the Id versus Vds curve in TonyPlot clearly shows the breakdown characteristics. A more
+sophisticated technique using the curve tracing algorithm in Atlas is
+also possible. This technique is demonstrated in the Advanced MOS
+examples section for simulating snapback. Another technique using
+compliance limits is described in the MOS examples section under the
+NMOS breakdown.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+{subsection} powerex08.in : LDMOS Breakdown using Ionization Integrals
+
+Requires: SSuprem 4/S-Pisces
+{newline}
+Minimum Versions: Athena 5.22.3.R, Atlas 5.26.1.R
+
+This examples demonstrates a technique used to quickly estimate the
+breakdown voltage of any device. It uses the same LDMOS power device
+process simulation and structure as in the previous example.
+
+Rather than perform a full breakdown analysis by solving for impact
+ionization using a two carrier approach, this example uses ionization
+integrals. Ionization integrals are based solely on the electric field
+strength so zero carrier solutions can be done. The zero carrier option
+is specified using
+{bold} carriers=0
+. Although impact ionization is not solved directly, the impact model
+is used in the postprocessing analysis. For this it is necessary to
+specify 
+{bold} impact selb
+. 
+
+The ionization integrals are calculated along electric field lines. 
+Electric field lines are specified during the solution by parameters on the 
+{bold} solve
+statement. The parameter 
+{bold} deltav 
+specifies an offset between the applied voltage and the voltage at
+which the electric field lines will start. The lines should not start
+exactly at a contact since the electric field is often zero at the contact.
+The 
+{bold} lratio 
+parameter specifies the ratio of spacing between adjacent field lines. A
+value less than unity means the lines occur more the left, greater than
+unity they occur more to the right. In this example the drain is on the
+right of the structure. So the lines should be more towards the high
+field area on the left side of the drain. Hence lratio is less than
+one.
+The locations of the electric field lines can be saved into the solution files.
+However the 
+{bold} output 
+statement must be used to specify the electric field line parameters as
+in the solve statement. The final plot shows the electric field and the
+electric field lines at the breakdown point.
+
+The solve sequence in this example uses assigned variables from the 
+{bold} extract 
+statement to closely define the breakdown. The first solve statement ramps the 
+drain voltage in 5V steps until the ionization integrals exceed one. This means
+the breakdown is between this voltage and 5V less than this voltage. The extract
+sequence steps the voltage back 5V. The 1V steps are taken until the breakdown
+condition is reached and the analysis is repeated. After this, 0.1V steps are used 
+to give a breakdown number to within 0.1V. 
+
+Users should note that using this method to extract the breakdown
+voltage is only approximate. The algorithm does not consider any
+current and hence usually overestimates the actual breakdown voltage.
+The advantage over the method in the previous example is speed.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+
+{subsection} powerex09.in : Anisotropic Mobility Characteristics of a SiC T-MOSFET
+
+Requires: DevEdit/Blaze
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates the simulation of the forward characteristics of a trench gated MOS power transistor. 
+Three simulations are performed to show the effect of the crystallographic plane mobility modeling on the device characteristics.
+
+This device is created entirely within DevEdit and is composed of SiC, silicon dioxide, aluminum and polysilicon within a simulation domain of 6um x 16um. 
+The MOSFET has been created with a gate oxide of 800A and an N-type polysilicon gate. 
+
+The device simulations consist of the ID-VD characteristics at a gate voltage of 20V. Three characteristics were then obtained for different mobility models.
+
+First, the standard 
+{bold} isotropic mobility model 
+was used where the SiC mobility coefficients were defined for the 
+{bold} <1100> plane 
+which is the 
+{bold} high 
+mobility plane.
+
+Secondly, the standard 
+{bold} isotropic mobility model 
+was used where the SiC mobility coefficients were defined for the 
+{bold} <1000> plane 
+which is the 
+{bold} low 
+mobility plane.
+
+Thirdly, an 
+{bold} anisotropic mobility model 
+was used where the SiC mobility coefficients were defined for 
+{bold} both the <1100> and <1000> planes
+.
+
+The anisotropic model is applied by specifying a default set of mobility coefficients which apply everywhere. Then on the second 
+{bold} mobility
+ statement the 
+{bold} n.angle
+ parameter specifies the mobility at 90 degrees to the horizontal. This switches on the anisotropic mobility model.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+{subsection} powerex10.in : Anisotropic Mobility Characteristics of a SiC DMOS Device
+
+Requires: DevEdit/Blaze
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates the simulation of the forward characteristics of a doubly diffused, or implanted, MOS power transistor. 
+
+Three simulations are performed to show the effect of the
+ crystallographic plane mobility modeling on the device characteristics.
+
+This device is created entirely within DevEdit and is composed of SiC, silicon dioxide and aluminum within a simulation domain of 7.5um x 15um. 
+The MOSFET has been created with a gate oxide of 800A and an aluminum gate. 
+
+The device simulations consist of the ID-VD characteristics at a gate voltage of 20V. 
+Three characteristics were then obtained for different mobility models.
+
+First, the standard 
+{bold} isotropic mobility model 
+was used where the SiC mobility coefficients were defined for the 
+{bold} <1100> plane 
+which is the 
+{bold} high 
+mobility plane.
+
+Secondly, the standard 
+{bold} isotropic mobility model 
+was used where the SiC mobility coefficients were defined for the 
+{bold} <1000> plane 
+which is the 
+{bold} low 
+mobility plane.
+
+Thirdly, an 
+{bold} anisotropic mobility model 
+was used where the SiC mobility coefficients were defined for 
+{bold} both the <1100> and <1000> planes
+.
+
+The anisotropic model is applied by specifying a default set of mobility coefficients which apply everywhere. Then on the second 
+{bold} mobility
+ statement the 
+{bold} n.angle
+ parameter specifies the mobility at 90 degrees to the horizontal. This switches on the anisotropic mobility model.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+
+{subsection} powerex11.in : Vertical DMOS Gate Charging Simulation
+
+Requires: SSuprem 4/DevEdit/MixedMode
+{newline}
+Minimum Versions: Athena 5.22.3.R, Victory Device 1.12.1.R  or  Atlas 5.26.1.R
+
+In modern power devices the total power loss comprises both a conductance power loss 
+component and a capacitive loss component. As the cell pitch decreases, the conduction 
+loss will decrease while the capacitive loss will increase. Therefore for small cell 
+pitch the capacitive power loss may be the dominant component in the total power loss 
+in the device. The need is now clear for a method that will allow analysis of the 
+capacitive component of the power loss. One technique for doing this in a DMOS device is 
+to analyze the gate charging time. This example illustrates a technique whereby the 
+gate charging time for a vertical DMOS structure may be simulated, and the gate charge (Qg) required for switching the MOSFET can be determined.
+
+The example contains the following parts:
+
+{bullet} Process simulation to create the vertical DMOS
+{newline}
+{bullet} The SPICE-like command syntax for simulating MixedMode circuits
+{newline} 
+{bullet} Steady state analysis that defines the DC operating point
+{newline} 
+{bullet} Time domain analysis that illustrates gate charging
+
+The Device/MixedMode simulation in this example (the last three bullets above) can be run by either Victory Device or Atlas simulator, just by changing the solver name in the command  
+{bold} go victorydevice 
+into
+{bold} go atlas
+. It shows that both Victory Device and Atlas device simulators can be fully compatible in terms of input commands, producing same results, and allowing easy transition between Atlas and Victory Device.
+
+The first section uses Athena/SSuprem 4 to build a vertical DMOS power device. This section is identical to that used in the example powerex02.in which is described earlier in this power device section. For information on the process description please refer to this prior example.
+
+After the process simulation, the structure is remeshed with DevEdit using the command
+{bold} go devedit
+.
+
+At this point the solution only contains quantities from the process simulator, so only impurity values are available as remeshing criteria. These are selected with the commands:
+
+{bold} imp.refine imp="Net Doping" scale=log transition=1e+10 sensitivity=2
+{bold} imp.refine  min.spacing=0.2
+
+In addition to the doping profile, DevEdit is used to obtain a denser mesh within the channel region underneath the gate. This is performed in two stages with the commands:
+
+{bold} constr.mesh id=1 x1=2.5 y1=0 x2=1e+06 y2=0.5 default max.height=0.1 max.width=2
+
+{bold} constr.mesh id=2 x1=2 y1=0 x2=4.5 y2=0.5 default max.height=0.1 max.width=0.2
+
+The mesh is then created using the DevEdit command
+
+{bold} Mesh Mode=MeshBuild
+
+Once the mesh has been designed for the electrical analysis it is passed on to the device simulator. This analysis is conducted using the mixed device and circuit simulator MixedMode. First, a steady-state simulation of the power circuit is performed.  
+
+The 
+{bold} .begin 
+and 
+{bold} .end 
+statements indicate the beginning and end of the MixedMode syntax.  The MixedMode commands are similar to those used in SmartSpice.  Circuit components, topology, and analysis are defined within these statements. In general, the circuit component definition consists of three parts: the type of component, the lead or terminal node assignments, and the component value or model name.
+
+For example, the  first component definition in this simulation is an independent current source defined by
+{bold} iin 
+between the circuit nodes
+{bold} 0 
+and 
+{bold} GG
+.  The final value of 
+{bold} 0 
+indicates that the initial current source value is 0 Amps. The remaining circuit components are a resistor
+{bold} Rg
+, another independent current source 
+{bold} iout 
+a compact diode model
+{bold} dout 
+and a voltage source 
+{bold} vdd
+.
+
+The 
+{bold} amos 
+statement specifies a device to be analyzed by Atlas. 
+ The 
+{bold} a 
+part of the amos 
+command specifies that this is a TCAD device statement.  The 
+{bold} mos 
+portion simply defines the device name.  The option 
+{bold} infile= 
+indicates which device structure file is to be used.  The
+{bold} .nodeset 
+statement defines the initial values for node voltages. The 
+{bold} .dc 
+statement indicates that a dc ramp is applied to the source 
+{bold} iout
+. Additionally, the 
+{bold} .options 
+command specifies the numerical method used in the simulation. The  
+{bold} .save outfile= 
+statement saves the final solution to the indicated file, once the .dc ramp is complete.
+
+Other command line options exist.  Please refer to the MixedMode section of the Atlas or Victory Device user's manual for a complete list.
+
+To completely specify the simulation, the physical models used by Atlas/Victory Device must be specified.  The 
+{bold} models 
+statement is used to turn on the appropriate transport models.  This set includes: cvt - mobility model for MOSFETs, srh - Shockley-Read-Hall recombination, auger - recombination accounting for high level injection effects, and bgn - band gap narrowing. Refer to the user's manual for a description of these models.  Finally, an impact ionization model is enabled using the 
+{bold} impact 
+statement with the
+{bold} selb 
+option.  This specifies that the Selberherr impact ionization model is to be used.
+
+The next step is the transient MixedMode analysis, which is specified in a similar manner as the steady-state MixedMode simulation described above.  The charging effect of the gate is simulated by applying a long current pulse of constant value to the gate, by the independent current source
+{bold} iin
+. The  
+{bold} .tran 
+statement is used to specify the initial time step and total duration of the transient analysis.  In addition, the 
+{bold} .log 
+statement saves all the transient simulation results over the time interval specified. 
+
+{bold} TonyPlot 
+is used to plot the transient response of the device and circuit. The Gate Charge, Qg (in Coulombs) 
+can be calculated and plotted in TonyPlot using 
+{bold} Display > Functions... 
+feature. 
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+{subsection} powerex12.in : modeling Low-Voltage Power MOSFET 
+
+Requires: SSuprem 4/DevEdit/S-Pisces
+{newline}
+Minimum Versions: Athena 5.22.3.R, Atlas 5.26.1.R
+
+This example demonstrates modeling of Low-Voltage Power MOSFET
+based on the following reference:
+
+K.Shenai, C.Cavallaro, S.Musumeci, R. Pagano, A.Raciti
+"Modeling Low-Voltage Power MOSFETs as Synchronous rectifiers in Buck Converter
+Applications", Industry Applications Conference, 2003. 38th IAS Annual Meeting 
+pp. 1794- 1801 vol.3.
+
+It shows:
+
+{bullet} Structure definition using Athena 
+{newline}
+{bullet} Remeshing using DevEdit
+{newline} 
+{bullet} Transfer and Breakdown Voltage Characteristics using Atlas
+{newline} 
+{bullet} Output and AC small signal Characteristics using Atlas
+{newline} 
+
+
+The file starts with the definition of the process flow for a low
+voltage MOSFET transistor in Athena. Often a mesh that is used for 
+process simulation, is not optimal for use with device simulation. 
+In this example, the mesh generation tool
+{bold} DevEdit 
+is used to recreate a mesh that has zero obtuse triangles in the
+semiconductor region. It is then refined as a function of a number
+of solution quantities on the mesh (eg: Nte Doping).
+
+Popup windows under the DeckBuild Command window can be used to create
+this set of commands to control DevEdit. The DevEdit GUI can be used as
+well by loading the structure file from Athena, remeshing it using DevEdit
+GUI and saving a DevEdit command file. The mesh syntax from this file can
+then be copied and pasted into deckbuild. 
+
+In Atlas the transfer characteristic is simulated by setting the Drain 
+Voltage to 25V and ramping the Gate Voltage to 4V. The Threshold Voltage
+is adjusted using the 
+{bold} workf 
+parameter from the contact statement.
+
+In order to simulate the Breakdown Voltage, the initial Athena structure
+has been modified by providing the body region with a contact, thus, ensuring
+a short with the source region. This is done directly in Atlas by adding a 
+body contact using the 
+{bold} electrode name=body x.min=0 x.max=0 y.min=0.3 y.max=0.6 
+statement. The breakdown Voltage can be adjusted using the parameter
+{bold} AN2 
+from the impact statement. To simulate the breakdown curve, the drain
+electrode is ramped until the current reaches a specified compliance value.
+
+{bold} solve vstep=1 vfinal=30 name=drain cname=drain compliance=1 
+
+The output characteristic is obtained by ramping the Gate Voltage
+to the desired value and then ramping the drain voltage from 0V
+to 5V. The 
+{bold} log off 
+statement allows us to save multiple log files.
+
+The body-drain diode behavior has also been simulated. The forward 
+characteristic is dependent on the drain and dource contacts 
+resistance as well as the epi-layer resistance. A drain contact
+resistance is added using the statement
+{bold} contact name=drain resist=5e03
+.
+
+The capacitances are collected by applying a bias ramp on the
+drain electrode up to 15V.  The parameter
+{bold} ac 
+on the solve statement sets the ac analysis on. The frequency of this
+signal is set to 1MHz. 
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+{subsection} powerex13.in : Merged PiN Schottky Power Diode 
+
+Requires: SSuprem 4/S-Pisces
+{newline}
+Minimum Versions: Athena 5.22.3.R, Atlas 5.26.1.R
+
+This example demonstrates modeling of a combination PiN and Schottky Power Diode device based on the paper:
+
+S.Musumeci et. al. "Modeling and Characterization of a Merged PiN Schottky Diode with Doping Compensation of the Drift Region", 
+Industry Application Conference, 2004. 39th IAS Annual Meeting.  Publication date: 3-7 Oct.2004  Volume 2, pp. 1244-1251
+
+It shows:
+
+{bullet} Structure definition using Athena 
+{newline}
+{bullet} Forward and Reverse Voltage Characteristics using Atlas
+{newline} 
+
+The device is first constructed in the process simulator, Athena (SSuprem 4), using three stages of epitaxial growth with masked boron implants prior to each stage.  
+A long, high temperature anneal then diffuses these implanted regions together to create a deep p-doped region to help spread the electric field at high reverse bias.  
+
+Once constructed, the device forward and reverse characteristics are then simulated in Atlas (SPISCES), using the "
+{bold}Universal Schottky Tunneling
+" 
+{bold}model (UST)  
+and the final results are plotted using the same X and Y axes as in the paper for a direct comparison with measured results. 
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+{subsection} powerex14.in : CoolMOS 
+
+Requires: SSuprem 4/S-Pisces
+{newline}
+Minimum Versions: Athena 5.22.3.R, Atlas 5.26.1.R
+
+This example demonstrates modeling of a CoolMOS power device based on the paper:
+
+P. N. Kondekar et al. "Study of the Degradation of the Breakdown Voltage of a Super-Junction Power MOSFET due to Charge Imbalance", 
+J. Korean Phys. Soc., Vol.48, (2006) pp.624.
+
+It shows:
+
+{bullet} Structure definition using Athena 
+{newline}
+{bullet} Reverse Voltage Characteristics using Atlas
+{newline} 
+
+The CoolMOS is a novel power Device. In the CoolMOS device, the drift region of a conventional power 
+MOSFET is replaced by a superjunction (i.e. a combination on N- and P- strips in parallel). When the 
+device is on, the N- strip conducts the drain current. When the device is off and a drain voltage 
+is applied, it appears as a reverse bias between the N- and P- strips. A depletion region forms and 
+a relatively small value of Vd fully depletes the drift region. Subsequently the drift region behavior
+is similar to that of an intrinsic region allowing higher breakdown voltage.
+
+Once constructed, the device reverse characteristics are then simulated in Atlas (SPISCES), and the 
+final results are plotted showing a breakdown voltage higher than 600V. 
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+
+{subsection} powerex15.in : SEU Induced Gate Rupture (SEGR) in a Power MOSFET
+
+Requires: SSuprem 4/S-Pisces
+{newline}
+Minimum Versions: Athena 5.22.3.R, Atlas 5.26.1.R
+
+
+This examples demonstrates how an SEU strike in a power MOSFET can create a 
+high transitory gate field sufficient to rupture the gate oxide.  Experimnets
+have shown that a transitory breakdown field across the gate oxide that only
+lasts for pico-second time scales, is sufficient to rupture the gate causing
+permanant damage to the device.
+
+A gate rupture event is dependent on both the device bias and the LET of the
+SEU strike.  The bias that creates the most sensitive conditions for a gate 
+rupture event occurs when the field across the gate oxide from the gate bias
+is in the same direction as the additional field from the induced charges from
+the SEU event.  When this condition occurs, the existing field across the 
+device from the gate bias is re-enforced by the additional field created by 
+the SEU induced charge track, thus minimizing the LET required from the SEU 
+strike to cause a gate rupture event.
+
+The example creates a power MOSFET structure using the Athena process 
+simulator.  Circular symmetry is then used for the device simulations, where
+the center of the cylindrical device is at X=0 (the left hand side of the 
+structure).
+
+An SEU strike with an LET of 37.2 (corresponding to a Bromine Ion), is 
+simulated, with the strike occuring at the center of the device (X=0).  At the 
+time of the SEU strike, a bias of -13.9 volts is applied to the gate and
+30 volts on the drain.  This bias condition creates a near critical condition
+close to that required for a gate rupture event to occur.
+
+The gate oxide field was probed near the strike, such that gate oxide field
+versus time could be plotted before, during and after the SEU strike.  After
+the SEU strike occurs, this critical reversed bias condition results in a
+peak gate oxide field that increases by over 3 times the field from just 
+the DC bias condition alone.
+
+The evolution of the hole concentration distribution was also monitored 
+at 5, 50 and 150 pico seconds after the strike. The drain current was 
+simulated over a longer time span.  Just for completeness sake the breakdown
+voltage and unsaturated threshold voltage (for Vd=0.1 volts) were also 
+simulated.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+{subsection} powerex16.in : 3D BiGT On-State Characteristics as a Function of the Anode Shorts Layout Design
+
+Requires: Victory Process/Victory Device
+{newline}
+Minimum Versions: Victory Process 7.22.3.R, Victory Mesh 1.2.4.R, Victory Device 1.12.2.R
+
+By default Victory Process and Device run on just one processor.
+To ensure better perfomance on your computer the following simulation condition
+{bold} simflags="-P all"
+could be specidied in the 
+{bold} go
+line starting Victory Process or Device. This means that all processors available will be used.
+If you want to use a smaller number of processors you can substitute "all" with a desired number, e.g.
+{bold} simflags="-P 4".
+
+This example compares the on-state IGBT mode performance of the Bi-mode Insulated Gate Transistor (BiGT) [1] with two different anode shorts stripe designs: parallel stripes 
+S1 and radial stripes S2. Both structures S1 and S2 have the same widths of the n+ shorts 
+and the p+ anode segments of 100 um and 400um, respectively. 
+
+The 3D BiGT structures are generated by Victory Process. The process simulation starts 
+with a 2.5um-thick anode/collector region (INIT SILICON DEPTH = 2.5) comprising an area 
+of 0.5mm by 4 mm  (FROM = "0, 0" TO = "4000, 500"), in which the total height of the final
+structure above the anode/collector region is assumed to 
+be less than or equal to 200 um. A SPECIFYMASKPOLY statement defines a polygonal mask that
+corresponds to each layout design, while a combination of the MASK and the DOPING 
+statement allows a uniform doping to be introduced directly into a particular portion of
+the device volume. Thus, the desired patterns can be produced in the anode/collector 
+region. For ease of simulation, a 1 µm-thick heavily doped n-type layer of silicon 
+(DEPOSIT SILICON THICKNESS = 1 PHOSPHORUS = 1E19) is put in place of MOS cells on the 
+emitter side of the BiGT to render the on-state IGBT mode of the BiGT.
+
+Victory Device performs 3D device simulations in transient mode to detect possible snapback
+effects in the BiGT on-state I-V characteristics. Parallel-electric-field, inversion-layer,
+temperature, and doping-dependent mobility models (CVT) as well as the Shockley-Read-Hall
+(SRH) recombination model are used during 3D simulation. The collector current is ramped up
+from 0 A to 30 A at a constant rate of 1 A/s, which can be done by first specifying the
+current boundary condition on the collector contact with the help of the CONTACT
+NAME=collector CURRENT command, and then giving a value to the ICOLLECTOR, RAMPTIME, TSTEP,
+and TSTOP parameters on the SOLVE statement. With the TOL.TIME=1 parameter on the METHOD
+statement, the tolerance for a local truncation error used by an adaptive time-stepping
+algorithm is set to 1 instead of the default value of 5 × 10-3. Simultaneously, by means of
+the NORM.SCALING.LOCAL and NEWTON parameters on the METHOD statement, the RHS norms and their
+tolerances are scaled locally and the Newton solver is resorted to for transient simulations,
+respectively. The ATRAP=0.1 parameter on the METHOD statement instructs Victory Device to
+multiply the time-step by a factor of 0.1 once the Newton solver fails to converge. During
+the transient ramp-up of collector current, the SAVE statement is repeatedly employed to 
+save carrier density data to structure files at various current values for visualization in
+Tonyplot. 
+
+I-V curve of design S1 differs from that of design S2 in the occurrence of a number of 
+voltage snapbacks. Furthermore, the S1 design exhibits a higher on-state voltage drop than 
+the S2 design. A glance at the electron distribution in a cut plane defined along the 
+z-axis at z = -40 um at three different values of collector current reveals smooth transition
+of the BiGT with design S2 into full conduction as a result of the spread of electrons 
+along the entire device length at a relatively low current. In the case of design S1, on 
+the contrary, electrons spread over the whole device in a step-like manner, causing th
+voltage to snapback at each progressive stage of the electron spread over the p+ anode
+segments. 
+
+To load and run this example, select the Load button in DeckBuild. This will copy the input file and any support files to your current working directory. Select the run button to execute the example.
+
+References:
+[1] L. Storasta, M. Rahimo, M. Bellini, A. Kopta, U. R. Vemulapati, and N. Kaminski,
+"The Radial Layout Design Concept for the Bi-mode Insulated Gate Transistor "
+Proc. ISPSD11, pp. 56-59, 2011.
+
+{subsection} powerex17.in : Wide Bandgap Ga2O3 MOSFET 
+
+Requires: ATLAS
+{newline}
+Minimum Versions: ATLAS 5.26.1.R
+
+
+Single-crystal gallium oxide (Ga2O3) has attracted increasing attention as a promising
+material for power device applications. It possesses excellent material properties and 
+has the potential for mass productivity of low-cost and high-quality bulk crystals by 
+using methods such as the edge-defined film-fed growth (EFG) method [1].
+
+The objective of this example is to demonstrate how to simulate this new wide bandgap
+oxide semiconductor material Ga2O3 and to reveal what kinds of physical models and 
+settings are needed in order to reproduce experimental I-V data. The experimental 
+data used in this benchmark were selected from a recently reported paper on the first
+demonstration of Ga2O3 MOSFET [2]. 
+
+The substrate is a semi-insulating single-crystal β-Ga2O3 and a 300 [nm] thick n-type 
+Ga2O3 channel layer was grown on it. The dopant concentration of the layer is 
+7e17 [1/cm3] and about half of this is considered to be activated. The source and drain 
+contact regions were formed by multiple Si implantations with 150 [nm] deep box profile
+whose concentration is 5e19 [1/cm3]. We assumed that 3e19 [1/cm3] were activated. The 
+distance between the source and the drain box regions is 20 [um] and a 20 [nm] thick 
+Al2O3 gate dielectric film was formed with a 2 [um] long Ti/Pt/Au metal gate on top.
+
+We selected simple device models as much as possible. Only the LAT.TEMP parameter was 
+set on the MODEL statement to solve the heat flow in the device and a constant 
+thermal conductivity model was used. 
+
+Simulated ID-VD curves and a ID-VG curve are shown in Fig.2 and Fig.3 with corresponding
+experimental data. Fairly good agreements with experimental data were obtained using 
+constant mobility model even without any defect trap and interface charge
+
+To load and run this example, select the Load button in DeckBuild. This will 
+copy the input file and any support files to your current working directory. Select 
+the run button to execute the example.
+
+References:
+
+1]. H. Aida, K. Nishiguchi, H. Takeda, N. Aota, K. Sunakawa and Y. Yaguchi,
+"Growth of B-Ga2O3 Single Crystals by the Edge-Defined, Film Fed Growth Method "
+Jpn. J. Appl. Phys. 47, 8506(2008).
+
+[2]. M.Higashiwaki, K. Sasaki, T. Kamimura, M. H. Wong, D. Krishnamurthy, A. Kuramata, T. Masui and S. Yamakoshi,
+"Depletion-mode Ga2O3 MOSFETs "
+71st Annual Device Research Conference (DRC), 10.1109/DRC.2013.6633890.
+
+{subsection} powerex18.in : Buffered Super Junction LDMOS
+
+Requires: Victory Process - Victory Device
+{newline}
+Minimum Versions: Victory Process 7.22.3.R, Victory Mesh 1.2.4.R, Victory Device 1.12.1.R
+
+By default Victory Process and Device run on just one processor.
+To ensure better perfomance on your computer the following simulation condition
+{bold} simflags="-P all"
+could be specidied in the 
+{bold} go
+line starting Victory Process or Device. This means that all processors available will be used.
+If you want to use a smaller number of processors you can substitute "all" with a desired number, e.g.
+{bold} simflags="-P 4".
+
+This example demonstrates the creation of a 
+{bold} buffered super junction LDMOS.
+
+{bold} Super junctions 
+are used in LDMOS structures to 
+{bold} greatly increase the breakdown voltage 
+of small geometry devices
+by allowing the drain depletion region to spread in two dimensions
+instead of one at higher drain voltages
+(the additional direction being laterally across the super junction).
+The nett result is that the drain voltage can now be spread across 
+a much greater total distance than would otherwise be the case,
+which greatly lowers the field at the drain 
+and therefore increases the breakdown voltage.
+
+Another advantage of super junction technology is that the n doped stripes 
+in the super junction can be doped to higher concentrations 
+because the important depletion distance is now the lateral distance
+between the super junction stripes (determined largely by the technology node)
+rather than the full depletion width of the drain.  
+Higher doping yields lower on resistance, increasing current drive
+over a standard construction design with a similar breakdown voltage.
+
+The 
+{bold} buffered 
+super junction device takes this technology one step further
+by including an additional n-doped buffer layer under the super junction,
+which increases the breakdown voltage to even higher values
+by expanding the depletion region in the remaining third dimension
+which is down into the depth of the substrate.
+This example demonstrates the effectiveness of this approach 
+as it has an electrical gate length of only 2.5um 
+but its breakdown voltage is 95 volts.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+{subsection} powerex19.in : Super-Junction "RESURF" LDMOS
+
+Requires Victory Process - Victory Device
+{newline}
+Minimum Versions: Victory Process 7.22.3.R, Victory Mesh 1.2.4.R, Victory Device 1.12.1.R
+
+By default Victory Process and Device run on just one processor.
+To ensure better perfomance on your computer the following simulation condition
+{bold} simflags="-P all"
+could be specified in the 
+{bold} go
+statement starting Victory Process or Device. This means that all processors available will be used.
+If you want to use a smaller number of processors you can substitute "all" with a desired number, e.g.
+{bold} simflags="-P 4".
+
+This simulation is similar to the previous
+{bold} Buffered Superjunction LDMOS 
+but uses a low doped substrate and longer superjunctions to increase the
+off state breakdown voltage to approximately 500 volts.
+
+The structure is modelled after the one proposed by Ming Qiao et al. 
+in the "Proceedings of the 23rd International Symposium on Power Semiconductor
+Devices & IC's", May 23-26, 2011 SanDiego, CA, entitled: "A Noval Substrate-
+Assisted
+{bold} RESURF 
+Technology for Small Curvature Radius Junction".
+
+This simulation models the active region unit cell of the above device.
+By careful optimization of the superjunction widths and lengths together with
+the doping concentrations of these super-junctions and the related N-Well,
+a 500 volt breakdown device is realized when coupled with a high resistivity
+substrate.
+
+The 3D device is then passed to Victory Device to simulate the breakdown voltage
+and threshold voltage curves (IdVg)
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} powerex20.in : 3D Vertical LOCOS power MOSFET
+
+Requires Victory Process - Victory Device
+{newline}
+Minimum Versions: Victory Process 7.22.3.R, Victory Mesh 1.2.4.R, Victory Device 1.12.1.R
+
+This example is taken from the Silvaco Simulation Standard Article:
+"Vertical LOCOS Power Devices in Victory Process: From 3D Process and
+Electrical Optimisation to High Speed, Full Chip Process Emulation, Volume
+25, Number 2, April - May - June 2015"
+
+The example creates a simplified process flow in Victory Process for a
+curved corner vertical LOCOS MOS power device, the structure is then
+exported and passed into Victory Device for electrical simulation.
+
+The simulation is initialised with a heavily doped N+ layer, this forms the
+N+ Drain. Once the volume mesh is defined, a thick N-type layer is deposited
+with a doping of 8E15cm3 followed by a P-type layer of 1E17cm3 which form
+the N-drift and P-base (source) respectively.
+
+SPECIFYMASKPOLY is then used to define the masks for etching the trench. Two
+masks are defined to create the trench outline, they are then merged using a
+Boolean OR operation on them.
+
+Thin oxide and nitride layers are then deposited, the former for the thin
+gate oxide, the latter to stop oxide growth in subsequent thermal steps.
+
+As a short cut, the single mask set defined previously is used to etch away
+unnecessary parts of these layers and form the deep trench. The DELTACD
+parameter is used to shift the dimensions of the mask layer.
+
+Once the thick oxide is grown, polysilicon is used to fill the trench and
+defined as an electrode.
+
+Finally the device is exported using an unstructured delaunay mesh. The base
+mesh size is set at 0.2um. mesh refinement is then undertaken on distance to
+interface with polysilicon to provide drift region refinement along the edge
+of the thick oxide. Refinement is also undertaken on the P/N junction.
+Finally a refinement box is defined over the N-Drift/N+ Drain transition.
+
+The exported structure is then passed to Victory Device, a bias is applied
+to the device and ramped up. Complience is set such that the simulation
+stops when breakdown is achieved. The EXTRACT statement is used to print out
+the value of breakdown voltage.
+
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+{subsection} powerex21.in : 3D Mixed-Mode Simulation of Current Filaments in Multicell IGBT 
+
+Requires: VictoryProcess3D / VictoryDevice3D 
+{newline}
+Minimum Versions: Victory Process 7.2.3.R, Victory Mesh 1.2.4.R, Victory Device 1.12.1.R
+
+When an IGBT is turned on in the presence of a short-circuit in an output circuit for a period of time, it can dissipate power in the form of heat to such an extent that current filaments evolve in a localized area within the IGBT device. The heating effects of current filaments are destructive and thus should not be allowed to arise during a short-circuit operation of an IGBT.
+ 
+In this example, the 3D mixed-mode short-circuit simulation is performed on an IGBT composed of 8 cells to demonstrate the occurrence of current filaments in multicell IGBT. 
+
+The 8-cell IGBT structure is constructed in cell mode of Victory Process by joining 8 duplicates of the IGBT single cell together using the parameter
+{bold} mirror
+on the
+{bold} export
+statement. Each IGBT single cell has a width of 1um and features a 1.3 kV trench-gate design with a field-stop layer (n-buffer). 
+ 
+Short-circuit testing is conducted with a test circuit consisting of a 
+{bold} vc 
+600V DC power supply in series with a 10-mohm resistor 
+{bold} rs 
+and a 10-nH inductor 
+{bold} ls
+. A 
+{bold} vg 
+gate pulse generator in series with a 10-ohm resistor 
+{bold} rg
+generates a 15V pulse in 10 ns with a pulse length of 10 us. 
+
+It is assumed that the bottom collector electrode of the IGBT is maintained at an ambient temperature of 300 K via a thermal contact with a thermal resistance of 0.3 cm2.K/W (
+{bold} thermcontact name=collector ext.temp=300 alpha=1/0.3
+).
+
+As the mixed-mode simulation starts from an initial DC voltage supply of 600V, a Victory Device solution 
+{bold} powerex21_1.str 
+for the IGBT device 
+{bold} adevice
+at a collector-to-emitter voltage of 600V is first obtained from the stand-alone Victory Device simulation and then loaded into the mixed-mode part of the input deck
+with
+{bold} .options loadsolutions 
+for use as an initial guess.
+
+Victory Device utilizes a set of physical models for the non-isothermal (
+{bold} lat.temp
+self-heating) simulation including 
+{bold} klassen 
+low-field doping-dependent mobility ,
+{bold} fldmob
+lateral electric field-dependent mobility, 
+{bold} srh 
+Shockley-Read-Hall recombination, 
+{bold} hnsaug
+temperature and concentration dependence Auger recombination, and 
+{bold} selb
+impact ionization. The
+{bold} pas 
+MPI-based parallel direct solver specified in the Victory Device part of the mixed-mode input deck (
+{bold} method device=adevice pas
+) proves to greatly enhance Victor Device performance in terms of speed and robustness.
+
+The simulation results give the short-circuit waveforms up to destruction of the IGBT at time
+{bold} t=5.24 us 
+as evidenced by a sharp rising of temperature in conjunction with the establishment of current filaments. A 3D electron current density distribution at that device destruction time is captured and saved for visualization in TonyPlot with
+{bold} .save tsave="5.24us".
+
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+{subsection} powerex22.in : UMOS Device
+
+Requires: Victory Process - Victory Device
+{newline}
+Minimum Versions: Victory Process 7.22.3.R, Victory Mesh 1.2.4.R, Victory Device 1.12.1.R
+
+By default Victory Process and Device run on just one processor.
+To ensure better perfomance on your computer the following simulation condition
+{bold} simflags="-P all"
+could be specidied in the 
+{bold} go
+line starting Victory Process or Device. This means that all processors available will be used.
+If you want to use a smaller number of processors you can substitute "all" with a desired number, e.g.
+{bold} simflags="-P 4".
+
+This example demonstrates
+{bold} 2D 
+process simulation and basic device tests for a  U-shaped trench MOSFET or 
+{bold} UMOS
+.
+
+UMOS device belongs to family of Vertical MOSFET devices which differ from standard (horizontal) 
+MOSFETs by the fact that the gate is "vertical" and the drain is on the bottom
+of device. In UMOS, the vertical gate is formed by etching and oxidizing of a deep trench in silicon.
+The device uses two connections to the source which results in much larger area 
+through which the current can flow. This reduces the ON resistance of the device which 
+allow to handle higher powers than standard MOSFETs. The vertical nature of the UMOS
+structure allows to achieve good device characteristics with smaller "layout footprint"
+than conventional power MOSFETs.
+
+Since UMOS is a symmetrical device only half of the structure is simulated. The full structure is later generated using
+{bold} Mirror
+capability within 
+{bold} Victory Mesh
+. 
+
+Most of important geomentrical and process parameters of the UMOS structure are parametrized using
+{bold} set 
+capability of
+{bold} DeckBuild
+which allows easy process and device optimization using
+{bold} VWF.
+
+The key process step, the trench formation, is simulated by combination of
+ two etch models:
+{newline}
+{bullet} geometrical 
+{bold} angled dry 
+etch
+{newline}
+{bullet} geometrical
+{bold} wet 
+etch with the curvature of the trench bottom specified by 
+{bold} RADIUS
+{newline}
+
+This deck takes advantage of Victory Process capability of adjusting volume
+mesh for specific implant/diffusion steps. It starts with a very coarse volume mesh
+which allow to speed up epitaxy and trench formation steps. Then additional volume mesh 
+{bold} lines
+are placed in important areas around the trench as well as in implanted areas. Also, the fine
+grid initially required to capture a sharp peak of N+ Arsenic implant was later coarsened
+by using 
+{bold} Line remove
+capability of Victory Process. 
+
+In this example, in order to decrease simulation time the default analytical model is used 
+for all implant steps. The Monte Carlo implant model is recommended for most real device simulation.
+
+Several parameters of the device structure are extracted along the way and can be used
+for process optimization. 
+
+Finally, the full structure is "prepared" for device simulation using 
+{bold} Victory Mesh
+.
+First, the final status of Victory process simulation is loaded, then the structure is mirrored, and remeshhed and refined using 
+{bold} Delaunay
+mesh.  The finest refinement takes place along the gate to obtain reproducible Vt. The nesh is also refined at other interfaces and along the junction for accurate Breakdown Voltage simulation.
+
+In the end Victory Device is used to extract two basic device characteristics:
+
+{bullet}  Threshold voltage
+{bold} Vt
+{newline}
+{bullet} Breakdown voltage 
+{bold} BV
+.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+

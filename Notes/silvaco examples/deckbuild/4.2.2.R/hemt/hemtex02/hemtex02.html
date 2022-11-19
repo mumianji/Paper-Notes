@@ -1,0 +1,141 @@
+<html>
+  <head>
+    <title>Lattice Matched HEMT Breakdown Simulation</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Lattice Matched HEMT Breakdown Simulation</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Blaze</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="hemtex02_plot0.png" width="640" alt="hemtex02_plot0" />
+      <p/>
+      <img src="hemtex02_plot1.png" width="640" alt="hemtex02_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates simulation of avalanche breakdown in a single
+quantum-well lattice matched AlGaAs/GaAs HEMT. It shows:
+</p>
+<ul>
+  <li>
+ Construction of the heterojunction structure using Atlas syntax
+<br/>
+  </li>
+  <li>
+ Material and models parameter specification 
+<br/>
+  </li>
+  <li>
+ Simulation of Id-Vds and breakdown characteristic 
+<br/>
+  </li>
+  <li>
+ Display of the results in TonyPlot
+  </li>
+</ul>
+<p>
+The device under consideration consists of the highly doped (1.e18/cm3)
+AlGaAs layer with the Al composition fraction of 0.3, the GaAs channel
+layer 250 A thick with the donor concentration of 1.e15 /cm3, and
+AlGaAs buffer layer with the same doping. The parts of the channel
+under the source and drain are heavily doped, and source and drain
+electrodes are located vertically, touching the channel region. This technique
+accounts for the alloying of contact material and the tunneling of carriers
+through the heterojunction. The channel length is 0.5 micron.
+</p>
+<p>
+In the first part of the input file, the device is described using
+the Atlas structural syntax. The description includes the mesh, regions
+locations, electrodes locations, and doping distribution.
+The
+<b> region </b> statements are used to define the AlGaAs and GaAs regions. The Al
+composition fraction (x.composition=0.3) is defined here as well. Note
+that an artificial oxide layer (region num=4) is defined here providing
+the possibility to specify AlGaAs surface states using the
+<b> interface </b> statement.
+</p>
+<p>
+After the device description, the first
+<b> material </b> statement is used to specify the electron and hole SRH lifetimes
+applied to both GaAs and AlGaAs materials. In the second
+<b> material </b> statement the low field mobilities, electron affinity, and density of
+states in the conduction band Nc are defined for AlGaAs. In this
+example the band alignment is calculated  by using energy band gaps and
+electron affinities of the materials forming heterojunctions. If not
+explicitly specified in the
+<b> material</b> statements the default values of other material parameters are applied.
+</p>
+<p>
+The
+<b> models </b> statements are used to specify the following set of models : field
+dependent mobility, and SRH. The two carrier transport model is
+specified here as well (the default). In addition, the concentration dependent
+mobility model is activated.
+</p>
+<p>
+In order to simulate avalanche breakdown the impact ionization-generation model
+should be turned on. This is done using the
+<b> impact selb </b> statement in which the Selberherr impact ionization model is activated.
+All basic impact ionization parameters are user-accessible and can be
+modified by the user. As an example the appropriate set of parameters
+is defined in this statement. The parameters apply to both GaAs and
+AlGaAs materials.
+</p>
+<p>
+The gate electrode in HEMT structures is of Schottky type. To indicate this
+the
+<b> contact </b> statement is used to define the workfunction of the gate electrode,
+which gives the Schottky barrier height of approximately 0.9V.
+</p>
+<p>
+The initial solution is performed automatically if not specified.
+The gate voltage is set to zero, the structure under zero bias is
+displayed using TonyPlot, and the drain voltage is ramped up to 0.3V.
+The solutions are obtained using the combined Gummel-Newton algorithm
+specified in the statement
+<b>        method gummel newton.  </b> The algorithm implies that if the solution does not converge in the
+course of the decoupled Gummel iterations, the program will
+automatically switch over to the fully coupled Newton algorithm.
+</p>
+<p>
+Next the drain voltage is ramped until the drain current reaches the
+predefined value of 9.e-5 A/um well within the breakdown region,
+using the
+<b> compliance  </b> limits on the
+{solve}
+solve statement. These
+calculations are performed using the Newton method :
+<br/>
+<b>        method newton.  </b> <br/>
+The results of the simulation are saved in the log file and the Id-Vds
+breakdown characteristics are displayed using TonyPlot.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

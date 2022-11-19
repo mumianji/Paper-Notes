@@ -1,0 +1,65 @@
+<html>
+  <head>
+    <title>Creating the clex16 SRAM structure in Victory Process</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Creating the clex16 SRAM structure in Victory Process</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>CLEVER, VICTORYPROCESS</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Clever 3.10.13.A,  Victory Process 7.7.6.A</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="clex17_plot0.png" width="640" alt="clex17_plot0" />
+      <p/>
+    </div>
+    <div id="text" >
+<p>
+This example creates the same SRAM design as in clex16, but uses the Victory
+Process simulator to create a more realsitic structure.
+</p>
+<p>
+The more realistic structure is a result of three features in Victory Process:
+</p>
+<p>
+Fisrstly, an optical solver creates an optical intensity map during photoresist
+exposure from a user specifiable deep-UV light source, through a lens of user
+specifiable numerical aperture (0.5 in this particular case).  The mask can
+also be deliberately defocussed by a user specifyable distance in um, above or
+below the surface of the photoresist, using the
+<b> &quot;maskdefocus&quot;</b> parameter.
+</p>
+<p>
+Secondly, photoresist mask development profile is calculated from an intensity
+contour map specifyable by the user as developing somewhere between zero
+intensity, and full intensity represented by specifying the
+<b> &quot;criticalintensity&quot;</b> parameter.  A value of 0.5 was used in this example.
+</p>
+<p>
+Thirdly once the photoresist mask pattern has been simulated, a geometric etch
+feature is used to create sloped sidewalls of 87 degrees relative to horizontal.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

@@ -1,0 +1,123 @@
+<html>
+  <head>
+    <title>Negative Bias Temperature Instability of a Silicon pMOSFET</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Negative Bias Temperature Instability of a Silicon pMOSFET</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>SSuprem 4/S-Pisces</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R, Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="mos2ex18_plot0.png" width="640" alt="mos2ex18_plot0" />
+      <p/>
+      <img src="mos2ex18_plot1.png" width="640" alt="mos2ex18_plot1" />
+      <p/>
+      <img src="mos2ex18_plot2.png" width="640" alt="mos2ex18_plot2" />
+      <p/>
+      <img src="mos2ex18_plot3.png" width="640" alt="mos2ex18_plot3" />
+      <p/>
+      <img src="mos2ex18_plot4.png" width="640" alt="mos2ex18_plot4" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example creates a pMOSFET and models the degradation
+caused by stressing at negative gate bias and elevated
+temperature.  After relaxing the device the permanent
+component of the degradation is shown. The actual size
+of the degradation is enhanced compared to reality,
+for the purposes of illustration.  The example shows
+how to :
+<br/>
+</p>
+<ul>
+  <li>
+ Create a PMOS structure using Athena syntax
+<br/>
+  </li>
+  <li>
+ Set up the 2-stage Negative Bias Temperature Instability model
+<br/>
+  </li>
+  <li>
+ Do a transient simulation of stress and relaxation at elevated temperature.
+<br/>
+  </li>
+  <li>
+ Obtain Id-Vg curves using loaded structure files with saved trap state occupations.
+  </li>
+</ul>
+<p>
+The input file consists of four separate runs,  the first starts Athena
+<br/>
+<b> go athena</b> <br/>
+which uses commands similar to those in mos2ex12 to create an example
+pMOSFET structure.  The next section starts Atlas
+<br/>
+<b> go atlas </b> <br/>
+and sets up the interface traps at a density of 1e12 per c.c. on the
+<b> INTTRAP </b> statement.  The particular model used is the 4-state stochastic
+model GRA.4.STO. This is described in detail in the Atlas users manual.
+The traps at each interface point are divided into
+GRA.SAMPLES subtraps, and the parameters for each one are chosen from
+a random uniform distribution, determined from the specified mean value
+and variance parameters.  The set of
+<br/>
+<b> PROBE FT.MSC MSCSTATE=n [position]</b> <br/>
+statements cause the values of the trap occupation probabilities
+at the particular location on the interface be written to the log file.
+The location parameters must position the probe exactly on an interface to obtain
+correct values.
+The traps are initialised to all be in the
+precursor state, and then a transient simulation is done at negative
+gate bias with the device biased to conduct.  At various points the
+structure file is saved, the TRAPS parameter on the OUTPUT statement
+ensures that the current occupation probabilities of all the subtraps
+are saved to the file.  In the next section starting Atlas again
+<br/>
+ <b> go atlas </b> <br/>
+the structure file corresponding to the device after 100 s of stressing
+is read in.  On a transient ramp the
+the gate and drain bias are quickly reduced to zero and a transient
+simulation with the device in this relaxed state is run to 1000 seconds.
+The structure file is saved at the end of the run.  In the final section
+starting Atlas again
+<br/>
+<b> go atlas </b> <br/>
+the mesh is read in and the simulation flags set.  The deck then loops
+6 times between the statements
+<b> loop steps=6 </b> and
+<b> l.end </b> to read in a sequence of saved structure files and obtain the
+Id-Vg characteristics of the virgin device and the degraded devices.
+The degradation is partially recoverable,  after 1000 s of realxation
+the degradation is better than it is immediately after 100 s of
+stressing.  This is due to structural relaxation of some traps
+back to the precursor state, whilst some remain as charged interface
+(Pb) states.
+<br/>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

@@ -1,0 +1,121 @@
+<html>
+  <head>
+    <title>IBC-SHJ Optimization</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>IBC-SHJ Optimization</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Blaze/Luminous</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="solarex18_plot0.png" width="640" alt="solarex18_plot0" />
+      <p/>
+      <img src="solarex18_plot1.png" width="640" alt="solarex18_plot1" />
+      <p/>
+      <img src="solarex18_plot2.png" width="640" alt="solarex18_plot2" />
+      <p/>
+      <img src="solarex18_plot3.png" width="640" alt="solarex18_plot3" />
+      <p/>
+      <img src="solarex18_plot4.png" width="640" alt="solarex18_plot4" />
+      <p/>
+      <img src="solarex18_plot5.png" width="640" alt="solarex18_plot5" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+References:
+</p>
+<p>
+D.Munos et al. INES-CEA, &quot;Key features of highly efficient a-Si:Hc-Si
+heterojunction solar cells&quot; 7th Workshop on the future Direcftion of
+Photovoltaics )by JSPS 175th committee), march, 2011
+</p>
+<p>
+D. Diouf, J.-P. Kleider, and C. Longeaud, Two-Dimensional Simulations
+of interdigitated ack Contact Silicon Heterojunctions Solar Cells,
+Chapter 15 of the book Physics and Technology of Amorphous-Crystalline
+Silicon Heterostructure Solar Cells, Springer 2011.
+</p>
+<p>
+M.Lu et al &quot;Optimizationn of interdigital back contact silicon solar cells
+by two-dimensional numerical simulation&quot; IEEE 2009
+</p>
+<p>
+This example demonstrates 2D simulation and optimization of a n-type
+Interdigitated Back Contact Silicon Heterojunction (IBC-SHJ) solar cell.
+Combination of amorphous silicon/crystalline silicon heterojunction and
+interdigitated back contact are very promising for high efficiency one
+junction solar cell.
+</p>
+<p>
+The solar cell structure consists from top to bottom of a n-type c-Si
+substrate, an intrinsic a-Si buffer layer and interdigitated strips of
+p and n-type a-Si.
+</p>
+<p>
+For a-Si layers, critical parameters like band gap, doping and defect
+distribution are defined in the input deck.
+</p>
+<p>
+For c-Si/a-Si interfaces at the back surface a thermionic emission
+model was used. For even more realistic modeling of this interface
+we have introduced defect states at the hetero-interface by putting
+a very thin defective layer of c-Si.
+</p>
+<p>
+Fermi model, Recombination models (i.e srh, auger and surface recombination)
+Drift Diffusion model with quantum correction were used to simulate IV
+characteristic of the solar cell under front surface illumination.
+</p>
+<p>
+A complete parametrized input deck, including geometry and mesh, was created
+not only to optimize simulation time and accuracy but also for solar cell
+optimization purpose.
+</p>
+<p>
+In this example 4 different parameters were varied to optimize the
+solar cell efficiency. These parameters are intrinsic a-Si thickness,
+n-stripe and p-strip width and gap width.
+</p>
+<p>
+It was observed experimentally observed that an intrinsic a-Si layer increases
+Voc and Jsc but also decreases FF and leads to a &quot;S&quot; shape IV curve. Simulation
+results confirm the reduction of FF and &quot;S&quot; shape IV curve, as well as the
+increase of Voc when the thickness of the intrinsic a-Si layer increases,
+leading to an optimum efficiency of around 10nm for the intrinsic a-Si layer.
+</p>
+<p>
+n-stripe, p-stripe and gap width were also optimized. Simulation results
+show that Jsc decreases when n-stripe width and gap width increases. As
+a consequence n-stripe and gap width have to be choosen as narrow as possible.
+It is interesting to notice that Jsc increases and FF decreases when
+p-stripe increases. The different evolution of Jsc anf FF leads to an
+optimum for the efficiency of around 1mm for p-stripe width.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

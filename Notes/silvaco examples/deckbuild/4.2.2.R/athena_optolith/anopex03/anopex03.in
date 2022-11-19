@@ -1,0 +1,94 @@
+go athena 
+# 
+#                   ATHENA Input File: anopex03.in
+#                   ----------------------------
+# 
+#      Aerial Image and 2D Resist Development. 
+#
+#      Mask layout: 0.3 um contact hole and 0.3 contact hole
+#      with sub-imageable (0.1 um) 180 degree Phase Shifters (outriggers).
+#
+# Define the structure
+# 
+line x loc=-0.7 spac=0.1 
+line x loc=-0.15 spac=0.01
+line x loc=0 spac=0.1 
+line x loc=0.15 spac=0.01
+line x loc=0.7 spac=0.1
+# 
+line y loc=1.1 spac=1 
+line y loc=2.1 spac=1 
+# 
+init silicon
+#
+deposit nitride thick=0.035 div=1
+# 
+deposit name.resist=AZ1350J thick=.8 divisions=30
+#
+structure outfile=anopex03.str
+# 
+# Aerial image calculation
+# 
+illumination g.line 
+#
+illum.filter clear.fil circle sigma=0.38
+#
+projection na=.54
+#
+pupil.filter clear.fil circle
+#
+layout lay.clear x.lo=-0.15 z.lo=-0.15 x.hi=0.15 z.hi=0.15 phase=0. trans=1.
+layout x.lo=-0.45 z.lo=0.45 x.hi=0.45 z.hi=0.55 phase=180. trans=1.
+layout x.lo=-0.45 z.lo=-0.55 x.hi=0.45 z.hi=-0.45 phase=180. trans=1.
+layout x.lo=-0.55 z.lo=-0.45 x.hi=-0.45 z.hi=0.45 phase=180. trans=1.
+layout x.lo=0.45 z.lo=-0.45 x.hi=0.55 z.hi=0.45 phase=180. trans=1.
+#
+image win.x.lo=-0.7 win.x.hi=0.7 win.z.lo=0 win.z.hi=0 dx=0.01 n.pupil=2
+#
+structure outfile=anopex03_int1.str intensity mask
+#
+# Resist exposure
+#
+expose dose=150 num.refl=10
+#
+# Post exposure bake
+#
+bake time=45 seconds temp=115
+#
+# Resist Development
+#
+develop mack time=60 steps=4 substeps=30
+#
+structure outfile=anopex03_1.str
+#
+# Run image, exposure and development without phase shift outriggers 
+#
+initialize infile=anopex03.str
+#
+layout lay.clear x.lo=-0.15 z.lo=-0.15 x.hi=0.15 z.hi=0.15 phase=0. trans=1.
+#
+image win.x.lo=-0.7 win.x.hi=0.7 win.z.lo=0 win.z.hi=0 dx=0.01 n.pupil=2
+#
+structure outfile=anopex03_int2.str intensity mask
+#
+# Resist exposure
+#
+expose dose=150 num.refl=10
+#
+# Post exposure bake
+#
+bake time=45 seconds temp=115
+#
+# Resist Development
+#
+develop mack time=60 steps=4 substeps=30
+#
+structure outfile=anopex03_2.str
+#
+tonyplot anopex03_int1.str anopex03_int2.str  -set anopex03.set
+tonyplot  anopex03_1.str anopex03_2.str 
+
+#
+quit
+
+

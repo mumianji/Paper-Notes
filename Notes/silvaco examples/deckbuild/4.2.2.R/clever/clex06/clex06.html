@@ -1,0 +1,52 @@
+<html>
+  <head>
+    <title>EXNOR Cell with Manhattan Geometry</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>EXNOR Cell with Manhattan Geometry</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>CLEVER</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="clex06.str.png" width="640" alt="clex06.str" />
+      <p/>
+    </div>
+    <div id="text" >
+<p>
+This example is based upon an EXNOR custom cell layout and illustrates how CLEVER may be used to extract the full parasitic netlist from a complete cell.
+</p>
+<p>
+Beginning from the process description, a 3-dimensional structure is created from which the resistance and capacitance are extracted using a field solver. The
+<b> Adapt</b> parameter on the
+<b> Interconnect</b> statement is used to specify the accuracy required by the field solver. The values of 0.1 and 0.05 require an accuracy of +/- 10% and 5% respectively.
+</p>
+<p>
+Once the netlist is extracted it may be used in a SPICE input deck to anlayse the influence of cell parasitics on circuit performance.
+When this example is loaded support files that may be run in SmartSpice to show the circuit behaviour will also be loaded.
+</p>
+<p>
+This example has been described within the CLEVER tutorial in the manual. For further information on this example please read the CLEVER tutorial chapter.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

@@ -1,0 +1,146 @@
+# (c) Silvaco Inc., 2018
+go atlas
+mercury
+
+#######################################################################
+### ATLAS example mercuryex01
+#######################################################################
+### The simulation of a planar n-type MESFET.
+#######################################################################
+### Mercury is an ATLAS module designed for the fast simulation of
+### FETs.
+###
+### The command syntax used by the Mercury module is very similar to
+### the syntax used by ATLAS.  However, many of the ATLAS commands and
+### parameters are not pertinent to Mercury and so are unavailable.
+### Also there are a few commands that are specific to Mercury.
+###
+### The Mercury module can only simulate "epitaxial" FETs: devices
+### where the material and doping have no variation in the x-direction.
+#######################################################################
+### Initialization
+#######################################################################
+
+###--------------------------------------------------------------------
+### "network" is a command specific to the Mercury module.  Mercury
+### embeds the FET being simulated into an external network.  The
+### network is
+###      (input)--(input match)--(FET)--(output match)--(output)
+### The external circuit is necessary when simulating the large
+### signal behavior of the FET.
+### But, when simulating the DC or small-signal behavior the external
+### circuit can be removed.
+network clear
+
+###--------------------------------------------------------------------
+### Here the "mesh" command is used to define the z-dimension of the
+### device (in exactly the way ATLAS would).
+mesh width=100
+
+###--------------------------------------------------------------------
+### The Mercury module will parse the "x.mesh" and "y.mesh" commands
+### but doesn't directly use the information to generate a grid.
+### Mercury generates a box from the minimum and maximum x locations
+### and the minimum and maximum y locations.  This box is used to
+### set any x or y coordinates that are not explicitly mentioned on
+### subsequent commands.
+x.mesh location=0.0 spacing=0.1
+x.mesh location=2.5 spacing=0.1
+y.mesh location=0.0 spacing=0.02
+y.mesh location=3.0 spacing=0.02
+
+#######################################################################
+### Device Specification
+#######################################################################
+
+###--------------------------------------------------------------------
+### These region commands basically define the epistructure of the
+### device.
+region number=1 material=GaAs thickness=0.1 donor=1e17 acceptor=1e11
+region number=1 material=GaAs thickness=0.2 nd.top=1e17 nd.bottom=1e11 acceptor=1e11
+region number=1 material=GaAs thickness=2.7 donor=1e11 acceptor=1e11
+
+###--------------------------------------------------------------------
+### The x location of the gate must be specified.  The gate is
+### automatically placed on the top surface of the device.
+###
+### The source contact is automatically placed at the lowest x
+### coordinate and the drain contact is automatically place at the
+### highest x coordinate.
+electrode name=gate x.min=0.5 length=0.5
+
+###--------------------------------------------------------------------
+### "n_depletion" is a parameter specific to the Mercury module.  It
+### tells Mercury that this is an n-type depletion mode FET.  This
+### information is used by Mercury to optimize the simulation.
+models n_depletion fldmob print
+
+#######################################################################
+### Poisson solution.
+#######################################################################
+
+###--------------------------------------------------------------------
+### The initial part of a Mercury simulation is to calculate a Poisson
+### look-up table.  This is a set of results from the calculation of
+### Poisson's equation, in the y-direction, over a range of surface
+### conditions.
+###
+### The parameters "vg_min", "vg_max", "vd_min", and "vd_max" give
+### the are the range of gate and drain biases that will be simulated.
+### These are required to ensure the look-up table covers a
+### sufficiently large range of surface conditions.
+poisson look_up vg_min=-2.5 vg_max=0.0 vd_min=0.0 vd_max=0.8
+
+#######################################################################
+### DC-IV simulation
+#######################################################################
+
+###--------------------------------------------------------------------
+output all
+
+###--------------------------------------------------------------------
+### The "solve" and "log" commands are used in the same way they are
+### used in ATLAS.
+###
+### As in ATLAS, the "save" command saves a structure file of the
+### state of the device at the last bias solved.  But, in Mercury,
+### this is a 1D "cut-line" along the channel.
+solve initial
+log out.file=mercuryex01_1.log
+solve vgate=-0.0 vdrain=0.0 vstep=0.05 vfinal=0.8 name=drain
+save out.file=mercuryex01_2.str
+solve vgate=-0.5 vdrain=0.0 vstep=0.05 vfinal=0.8 name=drain
+save out.file=mercuryex01_3.str
+solve vgate=-1.0 vdrain=0.0 vstep=0.05 vfinal=0.8 name=drain
+solve vgate=-1.5 vdrain=0.0 vstep=0.05 vfinal=0.8 name=drain
+solve vgate=-2.0 vdrain=0.0 vstep=0.05 vfinal=0.8 name=drain
+solve vgate=-2.5 vdrain=0.0 vstep=0.05 vfinal=0.8 name=drain
+log off
+
+###--------------------------------------------------------------------
+tonyplot mercuryex01_1.log -set mercuryex01_1.set
+tonyplot mercuryex01_2.str -overlay mercuryex01_3.str -add mercuryex01_2.str -set mercuryex01_2.set
+
+#######################################################################
+### Small-signal AC simulation
+#######################################################################
+
+###--------------------------------------------------------------------
+### Mercury calculates the small-signal AC in essentially the same way
+### it is calculated in ATLAS.  However in the Mercury module the
+### gate is always port 1 and the drain is always port 2.
+solve initial
+solve vgate=-1.0 vdrain=0.0 vstep=0.05 vfinal=0.6 name=drain
+log s.param gains noise.v out.file=mercuryex01_4.log
+solve ac noise frequency=1.0e6 fstep=1.258925412 nfstep=40 mult.freq
+
+###--------------------------------------------------------------------
+tonyplot mercuryex01_4.log -add mercuryex01_4.log -add mercuryex01_4.log -add mercuryex01_4.log -set mercuryex01_4.set
+tonyplot mercuryex01_4.log -add mercuryex01_4.log -set mercuryex01_5.set
+
+#######################################################################
+### Exit the simulation
+#######################################################################
+
+###--------------------------------------------------------------------
+quit

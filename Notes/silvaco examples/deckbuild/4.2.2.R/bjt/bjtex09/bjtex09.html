@@ -1,0 +1,105 @@
+<html>
+  <head>
+    <title>Emitter-Coupled Logic Element Simulation</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Emitter-Coupled Logic Element Simulation</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>S-Pisces/MixedMode</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="bjtex09_plot0.png" width="640" alt="bjtex09_plot0" />
+      <p/>
+      <img src="bjtex09_plot1.png" width="640" alt="bjtex09_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This simulation shows a transient process of gate switching in an ECL
+circuit. A SPICE-like circuit description is used by Atlas/MIXEDMODE to
+specify two ECL inverters. Two NPN transistors modeled using device
+simulation are included in the circuit alongside two devices simulated
+using a simple SPICE model. This example shows:
+</p>
+<ul>
+  <li>
+ Specification of an NPN device using Atlas syntax
+<br/>
+  </li>
+  <li>
+ Specification of an ECL inverter circuit using MIXEDMODE netlist syntax.
+<br/>
+  </li>
+  <li>
+ Inclusion of two SPISCES devices within the SPICE circuit.
+<br/>
+  </li>
+  <li>
+ Specification of device simulation models and parameters in MIXEDMODE syntax
+<br/>
+  </li>
+  <li>
+ Simulation of the DC initial bias point
+<br/>
+  </li>
+  <li>
+ Simulation of transient switching characteristics
+  </li>
+</ul>
+<p>
+This example file consists of three runs. The first uses Atlas syntax
+to define the NPN device geometry, mesh and doping, the second sets up
+the MIXEDMODE circuit to simulate the initial DC bias point, the third
+performs the transient circuit simulation using Atlas/MIXEDMODE.
+</p>
+<p>
+The first run uses Atlas syntax to define the NPN structure. There are two identical NPN devices in the ECL circuit. Both devices can be loaded from a single mesh file
+<b> bjtex09_0.str</b> .
+</p>
+<p>
+The second run starts with a netlist description of the ECL circuit.
+For details of the syntax used in MIXEDMODE, see the MIXEDMODE
+section of Atlas  Manual. The key non-standard element in the circuit
+is the Atlas device. These are circuit elements where Atlas device
+simulation is used to give the terminal characteristics as opposed to
+a SPICE model equation. The primitives letter
+<b> a </b> is used to identify these devices. In this example there are two such
+primitives; ai and an. There are also two more NPN bipolar transistors
+simulated using the SPICE model modbjt. These are labeled qi and qn.
+</p>
+<p>
+After the
+<b> .end </b> statement, regular SPISCES syntax is used to define parameters for the device simulation.
+<b> models </b> is used to set the physical models to be used in each of the devices to
+be modeled by device simulation. Note the use of the
+<b> device=&lt;name&gt; </b> parameter. This is compulsory in MIXEDMODE simulation to identify the
+device to which these parameters are applied. This is true even if only
+one device simulation element exists in the circuit.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

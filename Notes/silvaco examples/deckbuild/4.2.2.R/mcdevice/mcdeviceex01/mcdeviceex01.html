@@ -1,0 +1,98 @@
+<html>
+  <head>
+    <title>Bulk n-type Silicon</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Bulk n-type Silicon</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>MC Device</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="mcdeviceex01_plot0.png" width="640" alt="mcdeviceex01_plot0" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates the simulation of electron transport
+in bulk n-type silicon with a single value
+of the doping and the electric field.
+</p>
+<p>
+This example shows how to set bulk material properties,
+the number of iterations, the MC time step, and the
+number of carriers (i.e., electrons).
+This example also shows
+how to obtain estimates of the bulk mobility.
+This example introduces the bulk mode of MCDEVICE and basic
+concepts of modeling charge transport in bulk semiconductors.
+</p>
+<p>
+The bulk material properties are set on the
+<b> BULK </b> statement. The
+<b> FIELD </b> parameter and the
+<b> DOPING </b> parameter are the most commonly used.
+In this case, a low field with no doping is chosen
+to model the behavior of mobile electrons in intrinsic silicon in the
+linear region of the velocity-field characteristic.
+</p>
+<p>
+The number of iterations and duration of the time step are
+set on the
+<b> ALGO </b> statement.
+The
+<b> ITER </b> parameter implies that mobility estimates
+in the mcdeviceex1_diff.log file are averaged over
+of TIME = (
+<b> ITER</b> -
+<b> TRANS</b> ) *
+<b> DT</b> = (10000-0)*(1e-15 s) = 10e-12 s = 10 ps.
+To improve the estimates, increase
+<b> TRANS</b> , which is the number of transient iterations performed before
+TIME=0 when MCDEVICE begins to collect data for the averages.
+The number of computational carriers used in the Monte Carlo model
+is determined by the
+<b> N </b> parameter on the
+<b> PARTICLE </b> statement.  For bulk simulations,
+<b> N </b> represents the
+ensemble size used to collect data.  The magnitude of
+the noise of the averages will be reduced both by increasing the
+size of the ensemble and by increasing the time during
+which data is collected, namely (
+<b> ITER</b> -
+<b> TRANS</b> ) *
+<b> DT</b> ).
+</p>
+<p>
+The mobility estimates along with other time-averaged quantities are
+written into the mcdeviceex01_diff.log file.  You can plot these
+with TonyPlot.  The best estimate for the mobililty
+is obtained when drift-derived and diffusion-derived
+estimates converge.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

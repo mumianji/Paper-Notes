@@ -1,0 +1,96 @@
+
+
+go athena
+# Gate length
+set gatelength=0.018
+# Half of gate length
+set hgl=$gatelength/2
+# Bured SiGe layer thickness
+set tsige=0.015
+# Epi-Si layer thickness
+set tsi=0.008
+# Poly-gate thickness
+set tpoly=0.02
+# Gate oxide thickness
+set gateox=0.002
+#spacer width
+set tspacer=0.02
+#S/D etching depth
+set tetch=0.06
+# Initial compressive stress in SIGe which approximately corresponds to Si_0.68Ge_0.32
+set IntStress_Mpa=-2200
+
+line x loc=-0.04   spac=0.003
+line x loc=-$hgl-$tspacer  spac=0.001
+line x loc=-$hgl  spac=0.001
+line x loc=0.0  spac=0.001 
+line x loc=$hgl  spac=0.001
+line x loc=$hgl+$tspacer  spac=0.001
+line x loc=0.04   spac=0.003
+
+line y loc=$tsige+$tsi    spac=0.002
+line y loc=$tsige+$tsi+0.08  spac=0.01
+
+init silicon orientation=100
+
+deposit sige thick=$tsige  divisions=15
+deposit silicon thick=$tsi divisions=12
+deposit oxide thick=$gateox divisions=2
+deposit poly thick=$tpoly div=10
+etch poly left p1.x=-$hgl
+etch poly right p1.x=$hgl
+deposit oxide thick=0.03 div=15
+etch oxide above p1.y=-($gateox+$tpoly)
+etch oxide left p1.x=-$hgl-$tspacer
+etch oxide right p1.x=$hgl+$tspacer
+
+# Note: the unit for stresses inside the stress module of ATHENA is dynes/cm^2
+material SiGe intrin.sig=1e7*$IntStress_MPa
+# Calculate stresses before etch
+
+stress temp1=20 temp2=20
+structure outfile=anstex02_0.str
+
+# Extract stress profile through center of gate after S/D etch
+extract name="BetchStr_MPa" curve(depth,1e-07*(impurity="Stress XX" \
+        material="All" x.val=0.0)) outfile="anstex02_0.dat"
+
+# Etch source/drain areas
+
+etch silicon thick=$tsi+0.001 dry
+etch sige thick=$tsige+0.001 dry
+etch silicon thick=$tetch-$tsi-$tsige dry
+
+#calculate stresses after the etch
+stress temp1=20 temp2=20
+
+structure outfile=anstex02_1.str
+
+# Extract stress profile through center of gate after S/D etch
+extract name="BAtchStr_MPa" curve(depth,1e-07*(impurity="Stress XX" \
+        material="All" x.val=0.0)) outfile="anstex02_1.dat"
+
+# Extract evarage stress in MPa at specified depth right under the gate
+set estimated_depth=0.0025
+#
+extract name="area1d" area from curve(depth,impurity="Stress XX" \
+        material="All" y.val=$estimated_depth) where x.min=$tspacer and \
+        x.max=$tspacer+$gatelength outfile="extract.dat"
+extract name="Sxx_ave1_MPa" 1e-07*$"area1d"/$gatelength
+
+# Estimate average stress in MPa in the box under the gate
+set box_depth=0.005
+#
+extract name="area2d" 2d.area x.step=0.10 impurity="Stress XX" y.min=0 \
+        y.max=$box_depth x.min=-$hgl x.max=$hgl 
+extract name="Sxx_ave2_MPa" 1e05*$"area2d"/$gatelength/$box_depth
+
+#extract stress transfer efficiency (STE)
+
+extract name="STE" abs($"Sxx_ave2_MPa"/$IntStress_MPa)
+
+tonyplot anstex02_1.str  -set anstex02_1.set
+
+tonyplot -overlay anstex02_0.dat anstex02_1.dat -set anstex02_2.set
+
+quit

@@ -1,0 +1,308 @@
+# (c) Silvaco Inc., 2018
+###################################################
+# GaAs Spectral Response
+###################################################
+
+go atlas 
+
+mesh auto
+
+x.m loc=0.0 s=0.5
+x.m loc=1.0 s=0.5
+
+region material=InAlGaP bot thick=0.0300 accept=2e18 ny=10 x.comp=0.371 y.comp=0.159
+region material=InGaP   bot thick=0.0500 accept=2e18 ny=10 x.comp=0.49
+region material=InGaP   bot thick=0.5500 donors=7e16 ny=10 x.comp=0.49
+region material=InAlGaP bot thick=0.0300 donors=2e18 ny=10 x.comp=0.371 y.comp=0.159
+
+region material=GaAs bot thick=0.0250 donors=5e19 ny=100 
+region material=GaAs bot thick=0.0250 accept=3e19 ny=100 
+
+region material=InGaP  bot thick=0.0400 accept=3e18 ny=10 x.comp=0.49
+region material=GaAs   bot thick=0.5000 accept=2e18 ny=10
+region material=GaAs   bot thick=2.00   donors=2e17 ny=10
+region material=AlGaAs bot thick=0.1000 donors=5e18 ny=10 x.comp=0.7
+region material=GaAs   bot thick=0.2000 donors=1e18 ny=20
+
+electrode name=anode   top
+electrode name=cathode bottom
+elec name=com y.min=0.66 y.max=0.71
+
+material mat=GaAs    sopra=Gaas.nk
+material mat=InAlGaP sopra=Againp7.nk
+material mat=AlGaAs  sopra=Algaas7.nk
+material mat=InGaP   index.file=solarex17.nk
+# set GaAs index of refration for conductor
+material mat=conductor sopra=Gaas.nk
+
+# Here we define the affinity for InGaP and AlGaAs to
+# set up the band alignment
+#
+material material=InGaP   affinity=4.08
+material material=AlGaAs  affinity=3.54
+
+models srh print
+contact num=3 resist=1e15  
+
+output band.temp 
+method itlimit=40 maxtraps=10
+
+beam num=1 \
+     angle=90 y.origin=-0.5 x.o=0.5 front.refl back.refl reflect=2
+    
+beam num=2 \
+     angle=90 y.origin=-0.5 x.o=0.5 wavelength=0.5 front.refl back.refl reflect=2
+ 
+output con.band val.band
+
+solve init
+
+solve b2=1e-02 
+solve b2=1e-01 
+log outf=tmp.log
+solve b2=1
+extract name="IanodeInGaP" max(abs(i."anode"))
+
+log off
+
+solve b1=1e-02
+log outf=solarex17_1.log
+solve b1=1e-01 beam=1 lambda=0.3 wstep=0.025 wfinal=0.95
+
+extract init inf="solarex17_1.log"
+extract name="EQE" curve(elect."optical wavelength (beam #1)", \
+        (-i."anode"-$IanodeInGaP)/(elect."source photo current (beam #1)")) outf="solarex17_1.dat"
+
+
+###################################################
+# InGaP Spectral Response
+###################################################
+
+go atlas 
+
+mesh auto
+ 
+x.m loc=0.0 s=0.5
+x.m loc=1.0 s=0.5
+
+region material=InAlGaP bot thick=0.0300 accept=2e18 ny=10 x.comp=0.371 y.comp=0.159
+region material=InGaP   bot thick=0.0500 accept=2e18 ny=10 x.comp=0.49
+region material=InGaP   bot thick=0.5500 donors=7e16 ny=10 x.comp=0.49
+region material=InAlGaP bot thick=0.0300 donors=2e18 ny=10 x.comp=0.371 y.comp=0.159
+
+# n+/p+ tunneling junction Locations = 0.66 -> 0.71
+region material=GaAs bot thick=0.0250 donors=2e19 ny=100
+region material=GaAs bot thick=0.0250 accept=2e19 ny=100
+
+region material=InGaP  bot thick=0.0400 accept=3e18 ny=10 x.comp=0.49
+region material=GaAs   bot thick=0.5000 accept=2e18 ny=10
+region material=GaAs   bot thick=2.00   donors=2e17 ny=10
+region material=AlGaAs bot thick=0.1000 donors=2e18 ny=10 x.comp=0.7
+region material=GaAs   bot thick=0.2000 donors=2e18 ny=20
+
+electrode name=anode   top
+electrode name=cathode bottom
+elec name=com y.min=0.66 y.max=0.71
+
+material mat=GaAs    sopra=Gaas.nk
+material mat=InAlGaP sopra=Againp7.nk
+material mat=AlGaAs  sopra=Algaas7.nk
+material mat=InGaP   index.file=solarex17.nk
+# set GaAs index of refration for conductor
+material mat=conductor sopra=Gaas.nk
+
+# Here we define the affinity for InGaP and AlGaAs to
+# set up the band alignment
+#
+material material=InGaP   affinity=4.08
+material material=AlGaAs  affinity=3.54
+
+models srh print
+contact num=3 resist=1e15
+
+output band.temp 
+method itlimit=40 maxtraps=10
+
+beam num=1 \
+     phi=90 y.origin=-0.5 x.o=0.5  front.refl back.refl reflect=2
+    
+beam num=2 \
+     phi=90 y.origin=-0.5 x.o=0.5  wavelength=0.808 front.refl back.refl reflect=2
+
+
+solve b2=1e-02 
+solve b2=1e-01 
+log outf=tmp.log
+solve b2=1
+extract name="IanodeGaAs" max(abs(i."anode"))
+
+log off
+
+solve b1=1e-02
+log outf=solarex17_2.log
+solve b1=1e-01 beam=1 lambda=0.3 wstep=0.025 wfinal=0.95
+
+
+extract init inf="solarex17_2.log"
+extract name="EQE" curve(elect."optical wavelength (beam #1)", \
+        (-i."anode"-$IanodeGaAs)/(elect."source photo current (beam #1)")) outf="solarex17_2.dat"
+
+
+###################################################
+# GaAs Spectral Response NLBBT
+###################################################
+
+go atlas simflags="-128"
+
+mesh auto
+
+x.m loc=0.0 s=0.5
+x.m loc=1.0 s=0.5
+
+qtx.m loc=0.0 s=0.25
+qtx.m loc=1.0 s=0.25
+
+qty.m l=0.67   s=0.0001
+qty.m l=0.685  s=0.00005
+qty.m l=0.7    s=0.0001
+
+
+region material=InAlGaP bot thick=0.0300 accept=2e18 ny=10 x.comp=0.371 y.comp=0.159
+region material=InGaP   bot thick=0.0500 accept=2e18 ny=10 x.comp=0.49
+region material=InGaP   bot thick=0.5500 donors=7e16 ny=10 x.comp=0.49
+region material=InAlGaP bot thick=0.0300 donors=2e18 ny=10 x.comp=0.371 y.comp=0.159
+
+region material=GaAs bot thick=0.0250 donors=5e19 ny=100 
+region material=GaAs bot thick=0.0250 accept=3e19 ny=100 
+
+region material=InGaP  bot thick=0.0400 accept=3e18 ny=10 x.comp=0.49
+region material=GaAs   bot thick=0.5000 accept=2e18 ny=10
+region material=GaAs   bot thick=2.00   donors=2e17 ny=10
+region material=AlGaAs bot thick=0.1000 donors=5e18 ny=10 x.comp=0.7
+region material=GaAs   bot thick=0.2000 donors=1e18 ny=20
+
+electrode name=anode   top
+electrode name=cathode bottom
+
+material mat=GaAs    sopra=Gaas.nk
+material mat=InAlGaP sopra=Againp7.nk
+material mat=AlGaAs  sopra=Algaas7.nk
+material mat=InGaP   index.file=solarex17.nk
+
+# Here we define the affinity for InGaP and AlGaAs to
+# set up the band alignment
+#
+material material=InGaP   affinity=4.08
+material material=AlGaAs  affinity=3.54
+
+models srh bbt.nonlocal bbt.nlderivs 
+
+output band.temp 
+method itlimit=40 maxtraps=10
+
+beam num=1 \
+     angle=90 y.origin=-0.5 x.o=0.5 front.refl back.refl reflect=2
+    
+beam num=2 \
+     angle=90 y.origin=-0.5 x.o=0.5 wavelength=0.5 front.refl back.refl reflect=2
+ 
+
+output con.band val.band
+
+solve init
+
+log outf=tmp1.log
+solve b2=1 
+extract name="IanodeInGaP" max(abs(i."anode"))
+
+log off
+
+log outf=solarex17_3.log
+solve b1=1e-01 beam=1 lambda=0.3 wstep=0.025 wfinal=0.95
+
+extract init inf="solarex17_3.log"
+extract name="EQE" curve(elect."optical wavelength (beam #1)", \
+        (-i."anode"-$IanodeInGaP)/(elect."source photo current (beam #1)")) outf="solarex17_3.dat"
+
+
+###################################################
+# InGaP Spectral Response NLBBT
+###################################################
+
+go atlas simflags="-80"
+
+mesh auto
+
+x.m loc=0.0 s=0.25
+x.m loc=1.0 s=0.25
+
+qtx.m loc=0.0 s=0.25
+qtx.m loc=1.0 s=0.25
+
+qty.m l=0.67   s=0.0001
+qty.m l=0.685  s=0.00005
+qty.m l=0.7    s=0.0001
+
+region material=InAlGaP bot thick=0.0300 accept=2e18 ny=10 x.comp=0.371 y.comp=0.159
+region material=InGaP   bot thick=0.0500 accept=2e18 ny=10 x.comp=0.49
+region material=InGaP   bot thick=0.5500 donors=7e16 ny=10 x.comp=0.49
+region material=InAlGaP bot thick=0.0300 donors=2e18 ny=10 x.comp=0.371 y.comp=0.159
+
+region material=GaAs bot thick=0.0250 donors=5e19 ny=100
+region material=GaAs bot thick=0.0250 accept=3e19 ny=100 
+
+region material=InGaP  bot thick=0.0400 accept=3e18 ny=10 x.comp=0.49
+region material=GaAs   bot thick=0.5000 accept=2e18 ny=10
+region material=GaAs   bot thick=2.00   donors=2e17 ny=10
+region material=AlGaAs bot thick=0.1000 donors=5e18 ny=10 x.comp=0.7
+region material=GaAs   bot thick=0.2000 donors=1e18 ny=20
+
+electrode name=anode   top
+electrode name=cathode bottom
+
+material mat=GaAs    sopra=Gaas.nk
+material mat=InAlGaP sopra=Againp7.nk
+material mat=AlGaAs  sopra=Algaas7.nk
+material mat=InGaP   index.file=solarex17.nk
+
+# Here we define the affinity for InGaP and AlGaAs to
+# set up the band alignment
+#
+material material=InGaP   affinity=4.08
+material material=AlGaAs  affinity=3.54
+
+models srh bbt.nonlocal bbt.nlderivs  
+
+output band.temp 
+method itlimit=40 maxtraps=10
+
+beam num=1 \
+     angle=90 y.origin=-0.5 \
+     back.refl front.refl x.o=0.5 max.win=0.5 reflects=2      
+beam num=2 \
+     angle=90 y.origin=-0.5 \
+     back.refl front.refl x.o=0.5 max.win=0.5 reflects=2  wavelength=0.808 
+
+
+solve b2=1e-02 
+solve b2=1e-01 
+log outf=tmp1.log
+solve b2=1
+extract name="IanodeGaAs" max(abs(i."anode"))
+
+log off
+
+log outf=solarex17_4.log
+solve b1=1e-01 beam=1 lambda=0.3 wstep=0.025 wfinal=0.95
+
+
+extract init inf="solarex17_4.log"
+extract name="EQE" curve(elect."optical wavelength (beam #1)", \
+        (-i."anode"-$IanodeGaAs)/(elect."source photo current (beam #1)")) outf="solarex17_4.dat"
+
+
+tonyplot -overlay solarex17_1.dat solarex17_2.dat solarex17_3.dat solarex17_4.dat -set solarex17_0.set
+ 
+
+ 
+

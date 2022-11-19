@@ -1,0 +1,64 @@
+# (c) Silvaco Inc., 2018
+go atlas
+mesh width=1.0e4
+x.m loc=0.0 spac=0.5
+x.m loc=1.0 spac=0.5
+
+y.m loc=-0.005 spac=0.0005 
+y.m loc=0.0    spac=0.0005
+y.m loc=0.01   spac=0.001
+y.m loc=0.1    spac=0.01
+y.m loc=1.0    spac=0.1
+
+region number=1 y.min=0.0 silicon
+region number=2 y.max=0.0 y.min=-0.005 oxide
+
+electrode name=gate top
+electrode name=substrate bottom
+
+doping region=1 uniform n.type conc=5.0e17
+
+# Set up traps for Trap Assisted Tunnelling using doping 
+# statement with tat.trap parameter.
+
+doping region=2 uniform tat.trap conc=1.0e19 acceptor sign=1.0e-13 sigp=1.0e-13  e.level=3.0
+
+contact name=gate n.poly
+
+material material=oxide mc=0.5 mv=0.5 affinity=1.07 
+
+material material=silicon nc300=2.73e19 nv300=1.02e19
+
+models srh fermi ni.fermi itat.sc.el tat.slicepts=51 
+#tat.nlderivs
+solve init 
+solve prev
+
+output con.band val.band traps.ft
+
+save outf=quantumex20_0.str
+
+log outf=quantumex20_0.log j.tun
+
+solve name=gate vstep=0.05 vfinal=2.0
+
+log off
+
+save outf=quantumex20_1.str
+
+method dt.max=1.0e-2
+
+log outf=quantumex20_1.log j.tun j.disp
+
+solve name=gate vgate=0.0 ramptime=1.0e-10 tstep=1.0e-11  tstop=1.0e-2
+
+log off
+
+save outf=quantumex20_2.str
+
+tonyplot quantumex20_0.log -set quantumex20_0.set
+
+tonyplot quantumex20_1.log -set quantumex20_1.set
+
+tonyplot -overlay quantumex20_0.str quantumex20_1.str quantumex20_2.str -set quantumex20_2.set
+

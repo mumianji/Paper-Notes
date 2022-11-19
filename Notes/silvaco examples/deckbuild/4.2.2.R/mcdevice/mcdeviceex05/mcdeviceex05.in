@@ -1,0 +1,36 @@
+# (c) Silvaco Inc., 2018
+go atlas
+mcdevice
+algo     mode=2 iter=2500 dt=0.1e-15
+import   mesh=true regions=true dop=true \
+         strfile="mcdeviceex05_atlas.str"
+particle n=40000
+region   name="source"    type=contact
+region   name="drain"     type=contact usefermi=1
+region   name="gate"      type=contact
+region   name="substrate" type=contact
+cregion  boundp=(0.0275,0.0675,0.0,0.08)
+cregion  boundp=(0.0325,0.0475,0.0,0.08)
+cregion  boundp=(0.0475,0.0625,0.0,0.08)
+output   tstep=500 \
+         currentlogfile    ="mcdeviceex05_current.log" \
+         currentramplogfile="mcdeviceex05_current_ramp.log" \
+         solstrfile        ="mcdeviceex05_sol.str" \
+         summaryoutfile    ="mcdeviceex05_summary.out"
+
+# Do a single solve at Vgate=vdrain=1.0 V.
+solve    vgate=1.0 vdrain=1.0
+tonyplot mcdeviceex05_current.log -set mcdeviceex05_current_log.set
+tonyplot mcdeviceex05_sol.str -set mcdeviceex05_sol_str.set
+
+# Do a 1-step voltage ramp from vdrain=1.0 V to vdrain=2.0 V.
+#solve   vgate=1.0 vdrain=1.0 name="drain" vfinal=2.0 vstep=1.0
+
+# Do a second solve at Vgate=Vdrain=2.0 V.
+#output   currentlogfile="mcdeviceex05_current2.log" \
+#         solstrfile    ="mcdeviceex05_sol2.str"
+#solve    vgate=2.0 vdrain=2.0
+#tonyplot mcdeviceex05_current2.log -set mcdeviceex05_current_log.set
+#tonyplot mcdeviceex05_sol2.str -set mcdeviceex05_sol_str.set
+
+quit

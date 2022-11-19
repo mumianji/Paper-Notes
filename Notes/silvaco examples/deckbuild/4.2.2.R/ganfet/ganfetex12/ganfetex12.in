@@ -1,0 +1,215 @@
+# (c) Silvaco Inc., 2018
+go atlas 
+
+mesh width=1000 space.mult=1.5
+
+x.mesh location=-2   spacing=0.5
+x.mesh location=-1   spacing=0.5
+x.mesh location=0    spacing=0.1
+x.mesh location=1  spacing=0.2
+x.mesh location=2  spacing=0.1
+x.mesh location=5.5  spacing=0.5
+x.mesh location=9.5  spacing=0.1
+x.mesh location=10.5  spacing=0.1
+
+y.mesh location=-0.31  spacing=0.05
+y.mesh location=-0.2  spacing=0.05
+y.mesh location=-0.05  spacing=0.01
+y.mesh location=0      spacing=0.0001
+y.mesh location=0.0125 spacing=0.0025
+y.mesh location=0.025  spacing=0.0001
+y.mesh location=2      spacing=0.25
+
+region number=1 material=GaN x.comp=0.05 y.min=0.025 substrate 
+region number=2 material=nitride y.max=0
+region number=3 material=AlGaN x.comp=0.15  y.min=0 y.max=0.025 
+region number=4 material=AlGaN x.comp=0.15 x.min=0 x.max=2 y.min=-0.2 y.max=0 
+
+electrode name=source x.min=-2 x.max=-1 y.min=-0.15 y.max=0.0
+electrode name=gate x.min=0 x.max=2 y.min=-0.31 y.max=-0.2
+electrode name=drain x.min=9.5 x.max=10.5 y.min=-0.15 y.max=0.0
+electrode name=substrate bottom
+
+doping region=4 concentration=4e18 p.type uniform
+
+doping  trap acceptor e.level=1.0 concentration=4e18 gaussian peak=1 \
+        characteristic=0.455 degen.fac=1 sign=1e-15 sigp=1e-15
+
+models srh auger fermi print temp=300
+models lat.temp ni.fermi
+mobility gansat.n albrct.n bn.albrct=5e-04 an.albrct=5e-04 
+mobility region=4 albrct.p bp.albrct=1e04 ap.albrct=1e04 
+model POLARIZATION psp.scale=0.6 piezo.scale=0.6 calc.strain 
+
+contact name=source workfunc=4.04
+contact name=drain  workfunc=4.04
+
+thermcontact num=1 name=substrate alpha=800
+
+method newton climit=1e-4 maxtraps=8 itlimit=30  
+
+output band.param con.band val.band charge polar.charge qss
+
+solve init
+solve previous
+save outfile=ganfetex12_0.str
+
+solve vdrain=0.1
+solve vdrain=0.5 vstep=0.5 vfinal=10 name=drain
+log outfile=ganfetex12_0.log
+solve previous
+solve vstep=0.1 vfinal=1 name=gate
+solve vstep=0.2 vfinal=2 name=gate
+save outf=ganfetex12_vg2v.str
+solve vstep=0.2 vfinal=4 name=gate
+save outf=ganfetex12_vg4v.str
+solve vstep=0.2 vfinal=6 name=gate
+save outf=ganfetex12_vg6v.str
+
+extract init inf="ganfetex12_0.log"
+extract name="max_dydx" deriv(v."gate",i."drain") outfile="ganfetex12_0.dat"
+
+log off
+
+solve init
+solve previous
+
+solve vgate=0.5 
+solve vgate=1
+save  outf=ganfetex12_vg1v.str
+solve vgate=2 
+save  outf=ganfetex12_vg2v.str
+solve vgate=3 
+save outf=ganfetex12_vg3v.str
+solve vgate=4 
+save  outf=ganfetex12_vg4v.str
+solve vgate=5 
+save outf=ganfetex12_vg5v.str
+
+load inf=ganfetex12_vg1v.str master
+log outf=ganfetex12_1.log
+solve vdrain=0
+solve vdrain=0.1
+solve vdrain=0.5
+solve vstep=0.5 vfinal=10 name=drain
+
+load inf=ganfetex12_vg2v.str master
+log outf=ganfetex12_2.log
+solve vdrain=0
+solve vdrain=0.1
+solve vdrain=0.5
+solve vstep=0.5 vfinal=10 name=drain
+
+load inf=ganfetex12_vg3v.str master
+log outf=ganfetex12_3.log
+solve vdrain=0
+solve vdrain=0.5
+solve vstep=0.5 vfinal=10 name=drain
+
+load inf=ganfetex12_vg4v.str master
+log outf=ganfetex12_4.log
+solve vdrain=0
+solve vdrain=0.1
+solve vdrain=0.5
+solve vstep=0.5 vfinal=10 name=drain
+
+
+load inf=ganfetex12_vg5v.str master
+log outf=ganfetex12_5.log
+solve vdrain=0
+solve vdrain=0.001
+solve vdrain=0.5
+solve vstep=0.5 vfinal=10 name=drain
+
+extract name="idsmaxmAcm2" max(abs(i."drain"))*1000
+
+
+go atlas simflags="-128"
+
+mesh width=1000 space.mult=1.5
+
+x.mesh location=-2   spacing=0.5
+x.mesh location=-1   spacing=0.5
+x.mesh location=0    spacing=0.1
+x.mesh location=1  spacing=0.2
+x.mesh location=2  spacing=0.1
+x.mesh location=5.5  spacing=0.5
+x.mesh location=9.5  spacing=0.1
+x.mesh location=10.5  spacing=0.1
+
+y.mesh location=-0.31  spacing=0.05
+y.mesh location=-0.2  spacing=0.05
+y.mesh location=-0.05  spacing=0.01
+y.mesh location=0      spacing=0.0001
+y.mesh location=0.0125 spacing=0.0025
+y.mesh location=0.025  spacing=0.0001
+y.mesh location=2      spacing=0.25
+
+region number=1 material=GaN x.comp=0.05 y.min=0.025 substrate 
+region number=2 material=nitride y.max=0
+region number=3 material=AlGaN x.comp=0.15  y.min=0 y.max=0.025 
+region number=4 material=AlGaN x.comp=0.15 x.min=0 x.max=2 y.min=-0.05 y.max=0 
+
+electrode name=source x.min=-2 x.max=-1 y.min=-0.11 y.max=0.0
+electrode name=gate x.min=0 x.max=2 y.min=-0.16 y.max=-0.05
+electrode name=drain x.min=9.5 x.max=10.5 y.min=-0.11 y.max=0.0
+electrode name=substrate bottom
+
+doping region=4 concentration=4e18 p.type uniform
+
+doping  trap acceptor e.level=1.0 concentration=4e18 gaussian peak=1 \
+        characteristic=0.455 degen.fac=1 sign=1e-15 sigp=1e-15
+
+models srh auger fermi print temp=300
+models lat.temp ni.fermi
+mobility gansat.n albrct.n bn.albrct=7e-04 an.albrct=7e-04 
+mobility region=4 albrct.p bp.albrct=1e04 ap.albrct=1e04 
+model POLARIZATION psp.scale=0.6 piezo.scale=0.6 calc.strain 
+
+contact name=source workfunc=4.04
+contact name=drain  workfunc=4.04
+
+thermcontact num=1 name=substrate alpha=800
+
+# from Oguzman paper.
+impact selb material=GaN an1=2.98e8*3.7 an2=2.98e8*3.7 bn1=3.44e7 bn2=3.44e7 \
+            ap1=2.23e7 ap2=2.23e7 bp1=2.7e8 bp2=2.7e8 
+
+contact name=source workfunc=4.04
+contact name=drain  workfunc=4.04
+
+method block climit=1e-10 maxtraps=8 itlimit=50 \
+		ir.tol=1.e-45 ix.tol=1.e-45 \
+		cx.tol=1.e-20 cr.tol=1.e-28 \
+		px.tol=1.e-20 pr.tol=1.e-35 
+
+output band.param con.band val.band charge polar.charge
+
+solve init
+solve previous
+solve vdrain=0.001
+log outfile=ganfetex12_6.log
+solve vdrain=0.01
+solve vdrain=0.1 
+solve vdrain=0.5
+solve vdrain=1
+solve vdrain=2
+solve vstep=2 vfinal=100 name=drain prev
+solve vstep=5 vfinal=630 name=drain prev
+solve vstep=1 vfinal=635 name=drain prev
+contact name=drain current
+solve istep=1.2 ifinal=5e-13 imult name=drain
+
+extract init inf="ganfetex12_6.log"
+extract name="bvdss" x.val from curve(abs(vint."drain"),abs(i."drain")) where y.val=5e-13
+
+tonyplot ganfetex12_0.str -set ganfetex12_0.set
+tonyplot ganfetex12_0.log
+tonyplot ganfetex12_0.log -set ganfetex12_1.set
+tonyplot ganfetex12_0.dat 
+tonyplot -overlay ganfetex12_1.log ganfetex12_2.log ganfetex12_3.log ganfetex12_4.log ganfetex12_5.log -set ganfetex12_2.set
+tonyplot ganfetex12_6.log -set ganfetex12_3.set
+tonyplot ganfetex12_vg2v.str ganfetex12_vg4v.str ganfetex12_vg6v.str -set ganfetex12_4.set
+tonyplot ganfetex12_vg2v.str ganfetex12_vg4v.str ganfetex12_vg6v.str -set ganfetex12_5.set
+
+quit

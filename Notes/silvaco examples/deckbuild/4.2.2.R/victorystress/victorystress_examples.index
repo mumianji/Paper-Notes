@@ -1,0 +1,561 @@
+{section} VICTORYSTRESS : 2D/3D Stress Simulation
+
+{subsection} vsex01.in : Stress in FinFET due to capping layer
+
+Requires: Victory Process, Victory Stress
+{newline}
+Minimum Versions:Victory Process 7.22.0.R, Victory Stress 2.14.0.R
+
+This example is executed in two steps:
+
+First, Victory Process is used to generate the FinFET structure out of specifications provided in a
+layout file. The 'line x|y|z..' statements are used to refine the mesh inside the FinFET structure 
+in the area of the gate and the fin. At the end of the Victory Process simulation run the structure
+is exported with a tetrahedral volume mesh and is saved to the file 
+'vsex01_fine_victory_conformal_ex.str' which can be visualized with 
+{bold} Tonyplot3d
+.
+
+In the second part of the simulation deck stress analysis is performed by Victory Stress. The
+statement 
+
+{bold} go victorystress
+
+starts the Victory Stress simulator. Than, the FinFET structure created in the first part of the
+simulation run is loaded with the
+{bold} Init
+statement. 
+
+The
+{bold} Material
+statement defines different elastic properties of the materials contained in the
+structure. Without those definitions, Victory Stress would load default values of these properties
+from an internal material database. The 
+{bold} Material 
+statement overrides those default values.
+
+The 
+{bold} Method
+statement chooses a particular linear equation system solver for solving the the system of elastic
+stress equations. In this case the solver called 'ams' is selected.
+
+The stress analysis itself is a one-step simulation and it is started by the
+{bold} Stress 
+statement. 
+Note : Since it is not specified explictly in this examples, the default crystal orientations are
+applied, which means that a (100) silicon wafer is used and the fin is oriented in the <100>
+direction.
+
+Once stress analysis simulation is complete the three-dimensional structure is saved with the 
+{bold} Save 
+statement and can be visualized using 
+{bold} Tonyplot3d
+.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+{subsection} vsex02.in : Effects of Stress/Strain on a 50 nm Silicon FinFET
+
+Requires: Victory Process, Victory Mesh, Victory Stress and Victory Device
+{newline}
+Minimum Versions: Victory Process 7.22.3.R, Victory Mesh 1.2.4.R, Victory Stress 2.14.3.R, Victory Device 1.12.1.R
+
+In modern semiconductor devices, the effects of physical lattice strain are 
+playing an increasingly important role. One reason for this is that as device
+dimensions have shrunk, strains due to lattice mismatch or differences in 
+thermal expansion have become more prevalent. Another is that strain has 
+become an important tool in modifying and enhancing the electrical properties 
+of the semiconductor materials. Large strain induced gains in both electron 
+and hole mobilities have been reported. 
+
+This example demonstrates how SILVACO tools can be used to simulate the 
+creation of a 3D FinFET using Victory Process, calculate the internal strains 
+using Victory Stress, and analyze its electrical characteristics using 
+Victory Device.
+
+Victory Process was used to generate the FinFET structure based on specifications
+provided in a mask layout file using the 
+{bold} Layout 
+statement. 
+Victory Process was used to build up a FinFET structure with a 50x50 nm fin, 1um 
+in length. The fin was deposited on a SiO2 substrate layer and a 2 nm gate 
+isolation layer separated it from the 50 nm polysilicon gate crossing it 
+at right angles. A 100 nm Si3N4 capping layer was deposited on top of the 
+structure.
+
+The structure created by Victory Process was imported into Victory Stress, which 
+was used to perform a stress analysis over the whole FinFET device structure.
+The Si3N4 capping layer was set to have uniform hydrostatic tensile stress of 
+1 GPa using the statement
+{bold} material nitride intrin.sig=1e10 
+The evaluation of mobility enhancement factors along the fin is based on a full 
+3D piezoresistive model.
+
+The structure, along with the stress/strain and mobility enhancement data, was 
+then loaded into Victory Device for electrical simulation and analysis. Source 
+and drain electrodes were defined at either end of the Silicon fin, the Polysilicon 
+region was defined to be the gate, and we put a substrate contact at the bottom 
+of the device. We also set the workfunction of the gate to 4.17 eV.
+
+Aside from the standard silicon models (cvt, consrh, etc), we used the strain 
+dependent mobility enhancement models 
+{bold} nhance 
+and
+{bold} phance 
+defined in the 
+{bold} mobility 
+statement for this simulation. The mobility enhancement models apply the second 
+order mobility enhancement tensor (calculated by Victory Stress) directly to the 
+low field mobility. This results in directionally dependent (anisotropic) electron 
+and hole mobilities.
+
+Electrical simulations show that the effect of stress/strain results in drive 
+current increase as expected.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+{subsection} vsex03.in : Stress simulation for a SoC Transistor TEG
+
+Requires: Victory Process and Victory Stress
+{newline}
+Minimum Versions: Victory Process 7.22.0.R, Victory Stress 2.14.0.R
+
+In recent years, it has become increasingly important to investigate the effects 
+of stress in MOS transistors for SoC (System on Chip) design because 
+stress/strain effects are now used to improve the performance of the 
+MOS transistors. 
+Particularly, SoC transistor TEGs have attracted considerable attention in 
+order to study the effects of stress liner films and the dependence on active 
+region length, trench width, and gate-pitch.  
+
+This example demonstrates a stress simulation for a SoC transistor TEG. 
+The 3D structure is created by about 30 command lines with three mask layers 
+(GATE, ACTIVE, and CONTACT) using Victory Process. A 3D mesh is created for the 
+stress calculation.
+ 
+Then the stress distribution is simulated by Victory Stress. First, the result 
+from Victory Process is loaded. The parameters of the materials such as young modulas, 
+poisson ratio, and intrinsic stress are set. Then the matrix calculation method 
+is set, and the stress is calculated. Finally, the structure, stress distribution 
+and the stress enhanced mobility factors for electrons/holes are saved.    
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+The image
+{pngview}  vsex03_0_vp_ex.png
+ shows the 3-D topography after trench etching using the mask of the active area.
+
+The image
+{pngview}  vsex03_1_vp_ex.png
+ shows the 3-D topography after poly-silicon gates are formed using the mask of the gate.
+
+The image
+{pngview}  vsex03_2_vp_conformal_ex.png
+ shows the 3-D topography after contacts are formed using the mask of the contact.
+
+The image
+{pngview}  vsex03_3_vp.png
+ shows the stress distribution (sigmaXX) for the final 3-D structure.
+
+The image
+{pngview}  vsex03_4_vp.png
+ shows the distribution of the enhanced factor for the electron's mobility.
+
+The file
+{txtview} vsex03.in
+is the input deck for Victory Process and Victory Stress.
+
+{subsection} vsex04.in : Stress simulation for a extremely thin SOI (ETSOI) CMOS
+
+Requires: Victory Process and Victory Stress
+{newline}
+Minimum Versions: Victory Process 7.22.0.R, Victory Stress 2.14.0.R
+
+Extremely thin SOI (ETSOI) devices are attractive for low power applications. The integration scheme
+of the ETSOI technology allows formation of  raised source/drain (RSD) extensions
+for both NFET and PFET by using a single mask. Another feature of ETSOI CMOS is the combination of
+two strain enhancement techniques, (1) Si:C RSD for NFET and SiGe RSD for PFET,
+and (2) stress liner effect coupled with faceted RSD.
+
+Details and features of the ETSOI CMOS can be found in [1], [2]. This example demonstrates stress
+simulation for ETSOI CMOS. Geometry parameters are taken from Figs.3 and 4, of Ref. [2]. 
+The nominal gate length for this simulation is 26nm. The stress simulation has been performed for a
+half of the device due to its symmetry.
+The following geometry parameters can be changed in this simulation in order to investigate
+the influence of the device geometry on stress distribution, and, therefore, on device performance:
+1) - the gate length; 2) - the gate height; 3) - the RSD height; 4) - the thickness of stress liner;
+5) -  the gate oxide thickness; 6) - the thickness of silicon on insulator (SOI); 
+7) - the thickness of bottom oxide; 8) - proximity of the bottom of RSD to the gate; 
+9) - proximity of the top of RSD to the gate (in case of faceted RSD); 
+10) - the width of simulation domain.  
+Also, the following 5 logical parameters can be used to vary simulation conditions: 
+
+{bold} flag_faceted_RSD 
+specifies that RSD has a slopped edge;
+
+{bold} flag_RSD 
+specifies that RSD serves as a stressor;
+
+{bold} flag_liner 
+specifies nitride stressor;
+
+{bold} flag_poly 
+specifies that poly serves as a stressor;
+
+{bold} mat_RSD 
+specifies that materials for RSD, mat_RSD=-1 corresponds to SiGe and mat_RSD=1 corresponds to Si:C. 
+
+All above parameters can be varied  or used in design of experiments. The nominal values of
+parameters are set to correspond to conditions presented in Figs. 3 and 4 of [2].
+
+The 2D structure is obtain by Victory Process running in 2D mode and is subsequently used in Victory
+Stress. The isotropic model for stress simulations is used in this simulation since 
+the structure is 2D. Thereofre, the elastic properties of Si, SiGe, and  Si:C 
+are considered to be the same as for polysilicon. All parameters mentioned 
+above could be changed. Each run of this example produces stress distributions 
+for three types of stressors: first is for RSD regions either of SiGe with 
+negative intrinsic stress or of Si:C with positive intrinsic stress; the 
+second is the stress-liner made of nitride; the third one is the stress 
+memorized in the gate. As a result of the simulations the four files will be 
+saved for two geometries of RSD (vertical and faceted) and for all three 
+stressor types. 
+
+In case of vertical RSD these four files are: vsex04_0.str 
+(initial structure), vsex04_2.str (RSD-stressor), vsex04_4.str 
+(stress-liner), and vsex04_6.str (poly gate stressor).
+
+In case of faceted RSD these four files are: vsex04_1.str 
+(initial structure), vsex04_3.str (RSD-stressor), vsex04_5.str 
+(stress-liner), and vsex04_7.str (poly gate stressor).
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+[1] K. Cheng, et al, Symp. VLSI Tech, 2009, p.212
+
+[2] K. Cheng, et al, IEDM 2009, p. 49
+{subsection} vsex05.in : Stress Effect on ETSOI IV characteristics
+
+Requires: Athena Victory Stress and Atlas 
+{newline}
+Minimum Versions: Athena 5.22.3.R, Victory Stress 2.14.0.R, Atlas 5.26.1.R
+
+Extremely thin SOI (ETSOI) devices are attractive for low power applications. The integration scheme
+of the ETSOI technology allows formation of  raised source/drain (RSD) extensions  
+for both NFET and PFET by using a single mask. Another feature of ETSOI CMOS is the combination of
+two strain enhancement techniques, (1) Si:C RSD for NFET and SiGe RSD for PFET,  
+and (2) stress liner effect coupled with faceted RSD.
+
+Details and features of the ETSOI CMOS can be found in [1], [2]. Please refer to vsex04.in 
+for a comprehensive description of the stress simulation.
+
+The 2D structure is created in Athena and subsequently used in Victory Stress. In this
+example we compare, IV characteristics obtained using Atlas, with stress-liner made 
+of nitride with two geometries of RSD (vertical and faceted). 
+
+Aside from the standard silicon models (cvt, srh, etc), we used the strain 
+dependent mobility enhancement models 
+{bold} nhance 
+and
+{bold} phance 
+defined in the 
+{bold} mobility 
+statement  for this simulation. The mobility enhancement models apply the second 
+order mobility enhancement tensor (calculated by Victory Stress) directly to the 
+low field mobility. This results in directionally dependent (anisotropic) electron 
+and hole mobilities. For the model to take effect the enhancement factors 
+must be included in the structure file simulated by Victory Stress. This is done by 
+setting 
+{bold} nhance 
+and
+{bold} phance 
+defined in the 
+{bold} mobility 
+statement of Victory Stress.
+
+Electrical simulations show that the effect of stress/strain results in drive 
+current increase and as shown in [2] higher increase with faceted RSD.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+[1] K. Cheng, et al, Symp. VLSI Tech, 2009, p.212
+
+[2] K. Cheng, et al, IEDM 2009, p. 49
+
+{subsection} vsex06.in : Stress Simulation in n-FinFET device
+
+Requires: Victory Process and Victory Stress
+{newline}
+Minimum Versions: Victory Process 7.22.0.R , Victory Stress 2.14.0.R
+
+The most common method of introducing desirable stresses into transistor channel region 
+is the deposition of high tensile or high compressive films of nitride type materials.
+
+A tensile film (when intrinsic stress value is positive) improves drive current in n-devices due 
+to enhancement of electron mobility whereas a compressive film (when intrinsic stress value is 
+negative) enhance the hole mobility for n-device.
+
+This example is the first of two examples devoted to simulation of stresses and mobilities in a 
+3D invertor cell. This example shows stress simulation in a single n-FinFET device while the 
+next example vsex07 deals with the cell consisted from several FinFETs. Detailed results of 
+these two examples are presented in the paper in Simulation Standard:
+
+www.silvaco.com/tech_lib_TCAD/simulationstandard/2012/jan_feb_mar/a1/a1.html
+
+The input deck consists of five Sections:
+ 
+{bullet} Definition of geometrical domain and region limits for subsequent consistent mesh formation
+{newline}
+{bullet} Victory Process process steps
+{newline}
+{bullet} Cartesian mesh formation and saving the structure for stress calculation
+{newline}
+{bullet} Stress calculation
+{newline}
+{bullet} Visualization and analysis of simulation results, extraction of average stresses and mobility enhancement factors
+{newline}
+
+
+All details of device structure, simulation mesh, material parameters, process flow,
+as well as visualization and  extraction procedures are described in comments within the input deck.  
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+{bold} Note: 
+To run this example you have to enable 
+{bold} System commands 
+in the
+{bold} Options 
+menu from
+{bold} DeckBuild: Main Control
+.
+
+{subsection} vsex07.in : Stress Simulation in Inverter Cell
+
+Requires: Victory Process and Victory Stress
+{newline}
+Minimum Versions: Victory Process 7.22.0.R, Victory Stress 2.14.0.R
+
+The most common method of introducing desirable stresses into transistor channel region 
+is the deposition of high tensile or high compressive films of nitride type materials.
+
+This example is the second of two examples devoted to simulation of stresses and mobilities in a 
+3D invertor cell. This example shows stress simulation in an inverter cell consisted of one n-type 
+FinFET and two p-type FinFETS located parallel to each other. The previous example vsex06 deals 
+with details of a separate n-FinFET. Detailed results of these two examples are presented in the 
+paper in Simulation Standard:
+
+www.silvaco.com/tech_lib_TCAD/simulationstandard/2012/jan_feb_mar/a1/a1.html
+
+The input deck consists of five Sections:
+ 
+{newline}
+{bullet} Definition of geometrical domain and region limits for subsequent consistent mesh formation
+{newline}
+{bullet} Victory Process process steps
+{newline}
+{bullet} Cartesian mesh formation and saving the structure for stress calculation
+{newline}
+{bullet} Stress calculation
+{newline}
+{bullet} Visualization and analysis of simulation results, extraction of average stresses and mobility enhancement factors
+{newline}
+
+
+All details of device structure, simulation mesh, material parameters, process flow,
+as well as visualization and  extraction procedures are described in comments within the input deck.  
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+{bold} Note: 
+To run this example you have to enable 
+{bold} System commands 
+in the
+{bold} Options 
+menu from
+{bold} DeckBuild: Main Control
+.
+
+{subsection} vsex08.in : Use of Stress Evolution Model for Thick Stress Deposition in 2D
+
+Requires: Athena and Victory Stress
+{newline}
+Minimum Versions: Athena 5.22.3.R , Victory Stress 2.14.0.R
+
+Most commercial process and stress simulators consider deposition not as a physical process governed
+by a time-dependent model, but rather as a mathematical abstraction in which a new layer just appears on
+the top of the structure.  
+In these simulators the stress equations are solved after a material layer or region has been
+already added to the structure and not during the physical process of deposition.
+This one-step approach couldn't accurately predict stresses built in the deposited layer and in
+adjacent areas. 
+
+In order to accurately predict stresses in  thick layers the process should be considered as a
+series of deposition and relaxation steps to emulate mechanical quasi-equilibrium during this
+physical deposition process. 
+This more accurate simulation could be achieved by using "stress evolution" or "stress history"
+model implemented in Victory Stress. 
+
+This example demonstrates how the stress evolution model can be applied to the simulation of
+stresses generated during thick layer deposition process and compare the results with standard
+one-step model. Detailed results of this example are presented in Simulation Standard paper
+"Simulation of Stress Evolution During Semiconductor Device Fabrication":
+
+http://www.silvaco.com/tech_lib_TCAD/simulationstandard/2012/jul_aug_sep/jul_aug_sep2012.pdf 
+
+The input deck consists of five sections:
+
+{newline} 
+{bullet} Formation of a test structure with one layer nitride stressor in Athena
+{newline}
+{bullet} Calculation of stresses in the test structure using the one-step model of Victory Stress
+{newline}
+{bullet} Formation of a test structure with multi-layer stressor in Athena 
+{newline}
+{bullet} Calculation of stresses using stress evolution model of Victory Stress and "looping" capability of DeckBuild
+{newline}
+{bullet} 2D visualization and average stress extraction for both models
+{newline}
+
+
+The stress evolution simulation uses the same structure  with 20 layers at each step while the effect
+of new sub-layer deposition is emulated by changing the status of this new sub-layer from
+"non-active" with properties inherited from "air" to "active" material region with properties
+inherited from nitride and the intrinsic stress of 1 GPa. Then Victory Stress recalculates stresses
+in the modified structure after each deposition step.
+
+The simulation results are shown in two plots which compare Sxx and Syy stresses for two models. In
+flat areas of deposited layer, both models produced similar and essentially uniform stress.
+In the single layer case non-uniform stress regions appear only near corners of spacer/nitride.
+However, in case of multi-layer stress history simulation a highly non-uniform stress field extends
+diagonally from the spacer/substrate corner to the top of the film.  
+In other words, stresses are significantly higher where the layers are sharply bent. 
+As the result the integrated stresses under the gate appear to be 1.4 - 2 times higher when the
+stress history method is used. The extracted averaged stresses are calculated and saved in
+vsex08_0.dat and vsex08_1.dat. 
+
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+{bold} Note: 
+To run this example you have to enable 
+{bold} System commands 
+in the
+{bold} Options 
+menu from
+{bold} DeckBuild: Main Control
+.
+
+{subsection} vsex09.in : Use of Stress Evolution Model for Thick Stress Deposition in 3D
+
+Requires: Victory Process and Victory Stress
+{newline}
+Minimum Versions: Victory Process 7.22.0.R , Victory Stress 2.14.0.R
+
+This example is essentially a 3D version of the example vsex08. 
+
+Most commercial process and stress simulators consider deposition not as a physical process governed  
+by a time-dependent model, but rather a mathematical abstraction in which a new layer just appears on
+the top of the structure. In these simulators the stress equations are solved after a material layer
+or region has been already added to the structure and not during the physical process of
+deposition. This one-step approach couldn't accurately predict stresses built in the deposited layer
+and in adjacent areas. 
+
+In order to accurately predict stresses in thick layers the process should be considered as a
+series of deposition and relaxation steps to emulate mechanical quasi-equilibrium during this
+physical deposition process. 
+
+This more accurate simulation could be achieved by using "stress evolution" or "stress history"
+model implemented in Victory Stress. 
+More details regarding differences of the two models can be found in the Simulation Standard paper
+"Simulation of Stress Evolution During Semiconductor Device Fabrication":
+
+http://www.silvaco.com/tech_lib_TCAD/simulationstandard/2012/jul_aug_sep/jul_aug_sep2012.pdf 
+
+
+This example demonstrates how the stress evolution model can be applied to simulation of stresses
+generated during thick layer deposition process and compare the results with standard one-step
+model. The test structure used in this example is a quarter of a a 40 nm MOS transistor. 
+
+The input deck consists of five sections:
+
+{newline} 
+{bullet} Formation of a test structure with one layer nitride stressor in Victory Process. The
+structure is shown in the first 3D plot. 
+{newline}
+{bullet} Calculation of stresses in the test structure using the one-step model of Victory Stress
+{newline}
+{bullet} Formation of a test structure with multi-layer stressor in Victory Stress. The structure is
+shown in the second 3D plot.
+{newline}
+{bullet} Calculation of stresses using stress evolution model of Victory Stress and "looping"
+capability of DeckBuild 
+{newline}
+{bullet} 3D and 2D visualization of simulation results for both models
+{newline}
+
+
+The stress evolution simulation uses the same structure with 20 layers at each step while effect
+of new sub-layer deposition is emulated by changing the status of this new sub-layer from
+"non-active" with properties inherited from "air" to "active" material region with properties
+inherited from nitride and the intrinsic stress of 1 GPa. Then Victory Stress recalculates stresses
+in the modified structure after each deposition step. 
+
+The simulation results are shown in two 3D plots which compare Sxx stresses for two models. The Sxx
+stresses are also compared in two cut planes: Y-Z (vertical plane which roughly corresponds to 2D
+simulation of example vsex08) and X-Y (horizontal plane just 1 nm under silicon surface). The
+first of 2D comparison plots is very similar to 2D simulation of example vsex08. It shows that
+the stress evolution model predicts higher stress level under the gate. This fact is even better
+illustrated in the second X-Y plane. The upper-left corner of this cut plane corresponds to the
+gate area.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+{bold} Note: 
+To run this example you have to enable 
+{bold} System commands 
+in the
+{bold} Options 
+ menu from
+{bold} DeckBuild: Main Control
+.
+

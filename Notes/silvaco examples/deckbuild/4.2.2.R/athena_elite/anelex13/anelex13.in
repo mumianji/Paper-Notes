@@ -1,0 +1,113 @@
+go athena
+
+line x loc=0.00 spac=0.10 
+line x loc=20.0 spac=0.10 
+#
+line y loc=0.00 spac=0.1 
+line y loc=1.   spac=1.0 
+# 
+init space.m=3
+#
+deposit oxide  thick=1.0 div=10
+# 
+deposit photoresist  thick=2.0 div=5
+
+etch    photo start x=4. y=-100
+etch     continue x=4. y=0
+etch     continue x=7. y=0 
+etch     done  x=7.    y=-100
+# 
+rate.etch machine=boe photoresist a.m  rie dir=40 iso=0.0
+rate.etch machine=boe oxide a.m  rie dir=800 iso=0.0
+# 
+etch machine=boe time=15 minutes 
+strip
+# 
+# remove excess surface grid
+relax surface dx.surf=0.1
+
+rate.depo machine=pe_tiw material=TiW a.m  sigma.dep=0.20 \
+          hemisphe dep.rate=200 angle1=70 angle2=-70
+deposit machine=pe_tiw time=5.0 minute divis=3
+
+rate.depo machine=PE4450 aluminum u.m  sigma.dep=0.65 hemisphe \
+          dep.rate=1.0 angle1=70 angle2=-70
+deposit machine=PE4450 time=1.5 minute divis=8
+
+deposit photoresist thick=1.9 div=8
+# 
+etch    photo start x=9 y=-100
+etch     continue x=9 y=0
+etch     continue x=12 y=0 
+etch     done  x=12 y=-100
+
+# run Aluminum etch
+rate.etch machine=dq1 aluminum u.m  rie isotropic=.06 dir=.6
+rate.etch machine=dq1 photoresist u.m  rie isotropic=.06 dir=.3
+rate.etch machine=dq1 material=TiW u.m  rie isotropic=.005 dir=.05
+rate.etch machine=dq1 oxide u.m  rie isotropic=.005 dir=.03
+rate.etch machine=dq1 silicon u.m  rie isotropic=.005 dir=.001
+etch machine=dq1 time=3. minute
+
+# run TiW Etch
+rate.etch machine=dq2 aluminum u.m  rie isotropic=.06 dir=.05
+rate.etch machine=dq2 photoresist u.m  rie isotropic=.06 dir=.3
+rate.etch machine=dq2 material=TiW u.m  rie isotropic=.045 dir=.18
+rate.etch machine=dq2 oxide u.m  rie isotropic=.05 dir=.1
+rate.etch machine=dq2 silicon u.m  rie isotropic=.005 dir=.001
+etch machine=dq2 time=35 sec
+ 
+strip photoresist
+
+# remove excess surface grid
+relax surface dx.surf=0.1
+
+rate.depo machine=ozone_teos oxide a.m cvd dep.rate=1000 step.cov=.7
+#
+deposit machine=ozone_teos time=12.5 minute divis=10
+
+deposit photoresist thick=1.9 div=10
+
+# VIA etch
+etch    photo start x=16.5 y=-100
+etch     continue x=16.5 y=0
+etch     continue x=19.5 y=0 
+etch     done  x=19.5 y=-100
+
+rate.etch machine=DRY-384 oxide u.m  rie isotropic=.1 dir=.9
+rate.etch machine=DRY-384 nitride u.m  rie isotropic=.1 dir=.9
+rate.etch machine=DRY-384 silicon u.m  rie isotropic=.02 dir=.02
+rate.etch machine=DRY-384 photoresist u.m  rie isotropic=.1 dir=.3
+
+etch machine=DRY-384 time=2 minute dx.mult=0.5
+
+strip photoresist
+
+# remove excess surface grid
+relax surface dx.surf=0.1
+
+# save structure file for use later
+structure outfile=anelex13_0.str
+
+#second Metal with surface diffusion
+rate.depo machine=varian aluminum u.m  sigma.dep=1.5 hemisphe \
+          dep.rate=1.0 angle1=70 angle2=-70
+deposit machine=varian time=3.0 minute divis=10
+
+structure outfile=anelex13_1.str
+
+tonyplot anelex13_1.str -ttitle "anelex13.in: Double Metal w/ Surface Diffusion"
+
+#second Metal without surface diffusion
+init infile=anelex13_0.str
+
+rate.depo machine=varian aluminum u.m  sigma.dep=0.1 hemisphe \
+          dep.rate=1.0 angle1=70 angle2=-70
+deposit machine=varian time=3.0 minute divis=10
+
+structure outfile=anelex13_2.str
+
+tonyplot anelex13_2.str -ttitle "anelex13.in: Double Metal w/ Low Surface Diffusion"
+
+
+quit

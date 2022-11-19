@@ -1,0 +1,55 @@
+<html>
+  <head>
+    <title>Tuning LOCOS Shapes using the COMPRESS Model</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Tuning LOCOS Shapes using the COMPRESS Model</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>SSuprem 4</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="ancaex04_plot0.png" width="640" alt="ancaex04_plot0" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example shows a simple way of tuning the LOCOS bird&apos;s beak shape.
+It is known that the length and thickness of a bird&apos;s beak during LOCOS
+oxidation decreases with an increase of nitride thickness. This happens
+because thicker nitride produces higher stresses which decrease
+oxidation rates.  A viscous stress-dependent oxidation model should be
+used to accurately predict this effect. However this model is
+very time consuming therefore one can use the
+<b> compress </b> model with
+higher Young&apos;s modulus for nitride in order to decrease bird&apos;s beak
+length. This example calculates LOCOS for two values of nitride Young
+modulus coefficient 3.89e12 dynes/cm^2  (default) and 3.89e14 dynes/cm^2.
+The values of Young&apos;s modulus are reverse proportional to the elastic constant s11.elast. Poisson&apos;s ratio stays unchanged because it is equal to -(s12.elast/s11.elast).
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

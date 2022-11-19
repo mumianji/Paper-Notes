@@ -1,0 +1,61 @@
+<html>
+  <head>
+    <title>Use of SIMS Profile Model</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Use of SIMS Profile Model</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>SSuprem 4, MC IMPLANT</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="aniiex19_plot0.png" width="640" alt="aniiex19_plot0" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates how to use the SIMS Profile Model.
+</p>
+<p>
+In many cases 1D profiles obtained from tabulated range moments are not
+accurate and it is preferable to use measured SIMS profile instead. The SIMS
+Profile Model provides this capability. Athena will use SIMS profile stored
+in a file specified by parameter
+<b> measured.sims </b> when
+<b> profile </b> parameter present in the implant statement.
+</p>
+<p>
+Another possibility is to generate SIMS-like profile using 1D Monte Carlo simulation
+and extract capability of DeckBuild. This capability is shown in the example.
+In the first part 1D profile of 200 keV boron profile is simulated using BCA
+Monte Carlo model and then extracted and saved in aniiex19.dat file. In the second part of the example,
+the 200 keV boron implantation through 1 micron mask window is simulated. The extracted profile aniiex19.dat is specified in the implant statement with parameter
+<b> extract.sims</b> .
+The final 2D distribution is not as accurate as the result of a full 2D Monte Carlo simulation but the SIMS Profile Model is obviously much faster.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

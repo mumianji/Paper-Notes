@@ -1,0 +1,238 @@
+go athena
+
+set x_gate=0.02
+set x_spacer=0.06
+set x_silicon=0.2
+set x_hor_sil=0.05
+
+set y_l=0.001
+set y_gate=0.06
+set y_vert_sil=0.1
+set y_hori_sil=-0.03
+set thick_sini=0.08
+set y_spacer_t=-0.065
+set y_spacer_b=0.005
+set y_silicon=0.1
+set min.sp=0.0001
+set th=0.008
+
+line x loc=0 spac=0.002
+line x loc=$x_gate spac=0.002
+line x loc=$x_silicon spac=0.004
+
+line y loc=0 spac=0.002
+line y loc=$y_silicon spac=0.002
+
+init silicon orientation=100
+
+deposit oxide thick=$y_l division=3
+
+# Gate
+
+deposit poly thick=$y_gate div=40
+
+
+deposit material=aluminum thick=0.04 div=40 dy=0.0002 ydy=0
+etch material=aluminum right p1.x=$x_gate
+etch poly righ p1.x=$x_gate
+
+# Spacer
+
+method etch.eps=1e-07
+deposit oxide thick=0.03 div=30
+etch oxide dry thick=0.05
+
+# Nitride one-layer stressor
+
+deposit nitride thick=$th*20 div=100 min.sp=$min.sp dy=0.001 ydy=0.005
+
+structure outfile=vsex08_thick.str
+
+
+go victorystress
+init structure="vsex08_thick.str"
+
+# One-step model simulation
+
+
+material nitride intrin.sig=1.0e10
+
+material silicon young.m=1.67e12
+material silicon poiss.r=0.28
+
+material poly young.m=1.67e12
+material poly poiss.r=0.28
+
+material oxide young.m=1.0e12
+material oxide poiss.r=0.25
+
+material aluminum young.m=0.715e12
+material aluminum poiss.r=0.35
+set depth=0.001
+
+stress exposed rebalance
+save structure="vsex08_0.str"
+
+set depth_val=0.0025
+
+extract init infile="vsex08_0.str"
+
+extract name="area1d" area from curve(depth,impurity="Stress XX" material="All" y.val=$depth_val) where x.min=0 and x.max=0.02
+extract name="Sxx_ave1_MPa" 1e-07*$"area1d"/0.02 datafile="vsex08_0.dat"
+
+extract name="area1d" area from curve(depth,impurity="Stress YY" material="All" y.val=$depth_val) where x.min=0 and x.max=0.02
+extract name="Syy_ave1_MPa" 1e-07*$"area1d"/0.02 datafile="vsex08_0.dat"
+
+### End of one-step model simulation
+
+
+go athena
+
+set x_gate=0.02
+set x_spacer=0.06
+set x_silicon=0.2
+set x_hor_sil=0.05
+
+set y_l=0.001
+set y_gate=0.06
+set y_vert_sil=0.1
+set y_hori_sil=-0.03
+set thick_sini=0.08
+set y_spacer_t=-0.065
+set y_spacer_b=0.005
+set y_silicon=0.1
+set min.sp=0.0001
+set th=0.008
+
+line x loc=0 spac=0.002
+line x loc=$x_gate spac=0.002
+line x loc=$x_silicon spac=0.004
+
+line y loc=0 spac=0.002
+line y loc=$y_silicon spac=0.002
+
+init silicon orientation=100
+
+deposit oxide thick=$y_l division=3
+
+# Gate
+
+deposit poly thick=$y_gate div=40
+
+
+
+deposit material=aluminum thick=0.04 div=40 dy=0.0002 ydy=0
+etch material=aluminum right p1.x=$x_gate
+etch poly righ p1.x=$x_gate
+
+#  Spacer 
+
+method etch.eps=1e-07
+deposit oxide thick=0.03 div=30
+etch oxide dry thick=0.05
+
+# Mauti-layer spacer
+
+set i_layer=1
+set mat1=user$i_layer
+deposit material=$mat1 thick=$th div=10  min.sp=$min.sp dy=0.0001 ydy=0.005
+
+loop steps=19
+set i_layer=$i_layer+1
+set mat1=user$i_layer
+deposit material=$mat1 thick=$th div=4   min.sp=$min.sp
+l.end
+
+structure outfile=vsex08_layers.str
+
+
+
+go victorystress
+
+# Stress evolution model simulation
+
+init structure="vsex08_layers.str"
+
+set i_end=20
+
+set i_layer=0
+set depth_val=0.0025
+
+#  Loop through 20 layers
+loop steps=20
+set i_layer=$i_layer+1
+
+# set all sub-layers up to the current one to inherit nitride properties
+# and keep stresses calculated during previous step
+
+if cond=($i_layer>1)
+set i_before=1
+loop steps=$i_layer-1
+set mat1=user$i_before
+material material("$mat1") inherit(nitride)
+material material("$mat1") intrin.sig=0
+set i_before=$i_before+1
+l.end
+if.end
+
+# set the new  sub-layer to inherit nitride properties
+# and to acquire intrinsic stress of 1 GPa
+
+set mat1=user$i_layer
+material material("$mat1") inherit(nitride)
+material material("$mat1") intrin.sig=1.0e10
+
+# Set all sub-layers "above" the current layer to inherit properties of "air" 
+
+set i_after=$i_layer+1
+if cond=($i_end > $i_layer)
+loop steps=$i_end-$i_layer
+set mat1=user$i_after
+material material("$mat1") inherit(air)
+material material("$mat1") intrin.sig=0
+set i_after=$i_after+1
+l.end
+if.end
+
+# set elastic properties of all other materials in the structure
+
+material silicon young.m=1.67e12
+material silicon poiss.r=0.28
+
+material poly young.m=1.67e12
+material poly poiss.r=0.28
+
+material oxide young.m=1.0e12
+material oxide poiss.r=0.25
+
+material aluminum young.m=0.715e12
+material aluminum poiss.r=0.35
+set depth=0.001
+
+# Calculate stresses in the structure 
+stress exposed rebalance
+
+# save "history" stresses in the currrent structure
+
+history structure="vsex08_hist.str"
+
+extract init infile="vsex08_hist.str"
+
+#  extract "averaged" stresses under the gate
+
+extract name="area1d" area from curve(depth,impurity="Stress XX" material="All" y.val=$depth_val) where x.min=0 and x.max=0.02
+extract name="Sxx_ave1_MPa" 1e-07*$"area1d"/0.02 datafile="vsex08_1.dat"
+
+extract name="area1d" area from curve(depth,impurity="Stress YY" material="All" y.val=$depth_val) where x.min=0 and x.max=0.02
+extract name="Syy_ave1_MPa" 1e-07*$"area1d"/0.02 datafile="vsex08_1.dat"
+
+l.end
+
+# end of the loop over sub-layers
+
+save structure="vsex08_1.str"
+
+tonyplot vsex08_1.str vsex08_0.str  -set vsex08_1.set 
+tonyplot vsex08_1.str vsex08_0.str  -set vsex08_2.set
+
+quit

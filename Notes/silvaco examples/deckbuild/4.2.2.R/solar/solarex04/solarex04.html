@@ -1,0 +1,83 @@
+<html>
+  <head>
+    <title>Germanium Cell</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Germanium Cell</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Blaze/Luminous</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="solarex04_plot0.png" width="640" alt="solarex04_plot0" />
+      <p/>
+      <img src="solarex04_plot1.png" width="640" alt="solarex04_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example is a simple demonstration of the application of
+the transfer matrix method to a simple germanium solar cell.
+</p>
+<p>
+The cell is a simple P-N germanium photo-diode capped with a
+InGaP window layer.  The simulation enables transfer matrix
+analysis using the
+<b> TR.MAT </b> parameter on the
+<b> BEAM </b> statement.
+</p>
+<p>
+The example uses the DeckBuild
+<b> LOOP </b> syntax to loop over wavelengths from 0.6 to 0.7 microns.
+</p>
+<p>
+This example is illustrative of some of the problems with interpretation
+of results when using the transfer matrix method on optically thick
+devices.
+</p>
+<p>
+If you look at the plot of the spectral response of the device plotted
+at the end of the simulation, you will see several peaks and valleys
+in the response.  This is a real effect of interference over the whole
+thickness of the device.  The thicker the device the more of these
+you will see.  If you also look at the structure cross-section you
+will see the intensity also includes numerous peaks and valleys.  Here
+however they appear as random noise.  In fact this is an effect of
+undersampling.  The actual result is continuous but the sampling
+is aliasing against the peaks and valleys to give the apparent noise.
+In other words the spatial domain is under-sampled.  Such noisy results
+in either the spectral response or the spatial cut plane in very thick
+devices are usually due to undersampling.
+</p>
+<p>
+To get rid of this problem you can add the
+<b> SUBSTRATE </b> parameter to the
+<b> BEAM </b> statement.  This will make the bottom layer &quot;appear&quot; as infinite
+to the transfer matrix algorithm.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

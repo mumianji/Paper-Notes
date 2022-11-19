@@ -1,0 +1,86 @@
+<html>
+  <head>
+    <title>Drain/Gate Overlap Capacitance</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Drain/Gate Overlap Capacitance</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>SSuprem 4/DevEdit/S-Pisces</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R, Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="mos2ex09_plot0.png" width="640" alt="mos2ex09_plot0" />
+      <p/>
+      <img src="mos2ex09_plot1.png" width="640" alt="mos2ex09_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates the extraction of the gate overlap capacitance
+for an LDD MOSFET structure. The example shows:
+</p>
+<ul>
+  <li>
+ Construction of an LDD MOSFET in Athena
+<br/>
+  </li>
+  <li>
+ Regrid of the structure in DEVEDIT
+<br/>
+  </li>
+  <li>
+ Gate/drain overlap capacitance extraction using AC analysis
+  </li>
+</ul>
+<p>
+A LDD NMOS  device is constructed, remeshed and loaded into Atlas.
+The process simulation, interface to DEVEDIT and initial setup in Atlas
+are described in the previous section under MOS examples.
+</p>
+<p>
+One requirement for AC simulation is that a two carrier solution must be specified.  This is set with
+<b> method carriers=2</b> .  After the initial
+solution, a solution at a gate bias of -2 volts is obtained using the
+local initial guess. The local method is convenient when taking large
+voltage steps, but it assumes no current flow.
+</p>
+<p>
+Next, the
+<b> log </b> statement is used to specify a file for saving the results of the
+gate ramp.  Then, the gate is swept from -2 volts to 2 volts in 0.2
+volt increments.  At each static solution of gate bias the small
+signal AC response is solved at a frequency of 1 MHz.  These results
+are saved in the log file.  Finally the overlap capacitance as a function
+of gate bias is plotted using TonyPlot. In the list of XY graph variables
+in the TonyPlot DISPLAY menu, the capacitances and conductances are listed as:
+<b> C electrode_name_1 &gt; electrode_name_2</b> . This means the capacitance between these two electrodes. A similar
+construction is used with &apos;G&apos; for conductance between two electrodes.
+When the two electrode names are the same, the magnitude of this value
+is the total capacitance on this electrode.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

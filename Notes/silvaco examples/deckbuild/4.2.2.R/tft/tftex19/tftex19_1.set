@@ -1,0 +1,85 @@
+# TPCS version: 8
+# various properties
+log label 0
+key opaque 0
+mark frequency 0
+mark overlay 0
+graph width 0 2
+graph width 1 1
+graph width 2 4
+graph width 3 1
+graph width 4 4
+graph width 5 1
+sequence size 3
+sequence width 2
+log zero 0
+sequence mark 0 0
+sequence mark 1 1
+sequence mark 2 2
+sequence mark 3 3
+sequence mark 4 4
+sequence mark 5 5
+# Functions
+function 1 "" ""
+function 2 "" ""
+function 3 "" ""
+function 4 "" ""
+select 1
+# xygraph flags
+show points on
+show lines on
+# xygraph types
+xygraph type 0 convert 0
+xygraph yaxis scale log
+# xygraph x-axis
+xygraph xaxis "gate bias" linear
+# xygraph y-axes
+xygraph yaxis none
+xygraph yaxis "drain current" log
+# xygraph group
+xygraph group "(unknown electricals)"
+# xygraph cie
+xygraph cie off
+# coordinate shift info
+# key positions
+key contours 1 at 2
+key contours 2 at 1
+key contours 3 at 6
+key electrical at 1
+key vectors at 6
+key overlay at 4
+key regions at 4
+key apply 
+# annotation, titles
+title main "tftex19: PBTS with hydrogen"
+title sub "initial IdVg@Vds=0.1V"
+# annotation, footers
+footer right none
+footer left none
+# annotation, show
+show xaxis on
+show yaxis on
+show grid on
+show label xaxis on
+show label yaxis on
+# annotation, axes
+range xaxis -20, 20 increment 5,1,0
+range yaxis -14, -4 increment 1,4,0
+label xaxis "Gate Voltage(V)"
+label yaxis "Drain Current(A)"
+# zoom
+zoom from 0, 0 scale 1, 1
+# user labels
+label "high hydrogen" from -10.7107, -7.97569 color 0 scale 2 to -11.3914, -7.62847
+label 0 at 2 2
+label "low hydrogen" from 5.22523, -8.87847 color 0 scale 2 to 3.66366, -8.79167
+label 1 at 2 2
+label "medium hydrogen" from -1.26126, -8.87847 color 0 scale 2 to 0.34034, -8.49653
+label 2 at 5 5
+# overlay level names
+label overlay 0 "low hydrogen (simulation)"
+label overlay 1 "low hydrogen (experiment)"
+label overlay 2 "medium hydrogen (simulation)"
+label overlay 3 "medium hydrogen (experiment)"
+label overlay 4 "high hydrogen (simulation)"
+label overlay 5 "high hydrogen (experiment)"

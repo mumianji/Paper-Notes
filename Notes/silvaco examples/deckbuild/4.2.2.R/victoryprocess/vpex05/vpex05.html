@@ -1,0 +1,294 @@
+<html>
+  <head>
+    <title>Ion Milling Patterning of Nanostructure</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Ion Milling Patterning of Nanostructure</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Victory Process : Core Simulator, 3D Physical Etch &amp; Deposit</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Victory Process 7.22.0.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="vpex05_1.png" width="640" alt="vpex05_1" />
+      <p/>
+      <img src="vpex05_2.png" width="640" alt="vpex05_2" />
+      <p/>
+      <img src="vpex05_yield.png" width="640" alt="vpex05_yield" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates simulation of ion milling pattering of magnetic nanostructures. The key capabilities of Ion Milling simulation are involved in this example:
+</p>
+<ul>
+  <li>
+ Ion beam rotation and beam divergence
+<br/>
+   </li>
+  <li>
+ Redeposition of sputtered material
+<br/>
+  </li>
+  <li>
+ Semi-empirical Yamamura model for etch rates 
+<br/>
+  </li>
+</ul>
+<p>
+Ion milling is an effective method for top-down nanoscale pattering of magnetic materials
+<b> [1]</b> . The successful use of ion milling requires considerable  etch rate  selectivity between mask and magnetic material. Ion Milling etch rate is proportional to sputtering yield, i.e. number of sputtered
+(removed) material atoms per incident ion. The sputtering yield depends on many factors: the milling ion and its energy,
+as well as on composition, density and other material characteristics  of the material.
+In this test example Chromium is used as a magnetic material and Carbon with diamond characteristics for mask material.
+</p>
+<p>
+The typical rate ratio between magnetic materials and hard mask should be around 3 to 5 to achieve required selectivity.
+It is known that higher selectivity could be achieved at lower energies of order of few hundreds eV. Such low energies are also preferable
+to avoid excessive damage inside material during ion bombardment.
+</p>
+<p>
+Predictive simulation of Ion Milling of nanostructures requires accurate data on of angular dependence of etch rate. The angles between material surface segments and incoming ions are constantly changing during the milling process because of the surface movement and changing visibility within mask opening.
+This angular dependency is impossible to predict from first principles. It was usually found in maskless experiments, so obtained measured dependency in a
+table form can be used through Victory Process open library interface.
+</p>
+<p>
+This approach is very reliable, but unfortunately it requires  new experiment for each ion, ion energy and material. This would make process optimization a very time consuming task.
+</p>
+<p>
+Victory Process provides an alternative approach in form of semi-empirical Yamamura model for ion milling etch rates.
+The model requires just one parameter to be calibrated using an experimental data for a typical ion energy and after
+that can be used for different energies in the energy range and different ion currents.The Yamamura model is used in this example.
+</p>
+<p>
+Another critical issue for ion milling of nanostructures is limitations due to effect that some sputtered atoms do not escape back to the
+process chamber through mask openings but collide with sidewalls and deposit there. This effect in case of magnetic nanostructure pattering was observed and discussed in
+<b> [2]</b> .
+This redeposition effect is taken into account in this example.
+</p>
+<p>
+Following is the brief description of key steps and parameters of the ion milling simulation. Note that some of simulation and geometrical parameters are specified in the
+<b> set </b> statements, so they can be used for process optimization or DOE.
+</p>
+<ul>
+  <li>
+ Base resolution set to 2 nm. Since by default mesh refinement depth set to 2 the minimum resolution will be 0.5 nm.
+<br/>
+   </li>
+</ul>
+<ul>
+  <li>
+ The simulation domain in XY-plane  will be a slice of 30 nm by 4 nm.
+<br/>
+   </li>
+</ul>
+<ul>
+  <li>
+ Both substrate thickness and mask thickness set to 20 nm
+<br/>
+  </li>
+</ul>
+<ul>
+  <li>
+ The mask opening
+<b>  CD </b> set to 10 nm
+<br/>
+  </li>
+</ul>
+<ul>
+  <li>
+ The 
+<b> Init </b> statement defines simulation volume and substrate material Chromium
+<br/>
+  </li>
+</ul>
+<ul>
+  <li>
+ The HARD mask is set using the
+<b> specifymaskpoly </b> statements.
+<br/>
+  </li>
+</ul>
+<ul>
+  <li>
+ The hard carbon (diamond) mask layer is deposited and then mask opening is etched.
+<br/>
+  </li>
+</ul>
+<ul>
+  <li>
+ The initial structure before Ion Milling is saved in the file vpex05_0.str
+<br/>
+  </li>
+</ul>
+<ul>
+  <li>
+ Redeposition efficiency set to 0.8, which means that 80% of sputtered particle will &quot;stick&quot; to the walls to form the redeposited layer.
+<br/>
+  </li>
+</ul>
+<ul>
+  <li>
+ The redeposition material is usually a complex mix of particles sputtered in all materials in the structure. In this specific case this material will obviously consists of Chromium atoms, 
+but its characteristics could differ from bulk Chromium. It is logical to estimate that its density will be lower then that of Chromium.
+<br/>
+  </li>
+</ul>
+<ul>
+  <li>
+ The
+<b> material </b> statement specifies that the &quot;alloy&quot; has the same ion milling characteristics as chromium with only lower mass density.
+<br/>
+  </li>
+</ul>
+<p>
+Now everything is ready for Ion Milling simulation.
+</p>
+<p>
+The
+<b> IonMill </b> statement specify all conditions and parameters of the simulation:
+</p>
+<ul>
+  <li>
+ Parameter 
+<b> beamangle </b> specifies that the angle between ion beam and surface normal will be 5 degrees
+<br/>
+  </li>
+</ul>
+<ul>
+  <li>
+ Parameter 
+<b> beamdivergence </b> specifies that directions of the ions will be distributed around beamangle according to Gaussian-like formula with the peak at &quot;beamangle&quot; degrees from normal.
+<br/>
+  </li>
+</ul>
+<ul>
+  <li>
+ The duration of the ion milling process will be 5 minutes.
+<br/>
+  </li>
+</ul>
+<ul>
+  <li>
+ Next two parameters specifies the solver and automatic mesh refinement
+<br/>
+  </li>
+</ul>
+<ul>
+  <li>
+ parameter 
+<b> rotation=on </b> means that ion beam will be continuously rotated around the wafer normal
+<br/>
+  </li>
+</ul>
+<ul>
+  <li>
+ Parameter
+<b> maxCFL  </b> controls simulation time steps. The values below 1 guarantees higher accuracy and &quot;smoother&quot; solution for redeposition layer.
+<br/>
+  </li>
+</ul>
+<ul>
+  <li>
+ Next 3 parameters specify physical characteristics of the ion beam. The 250 eV Argon ions with current density of 1.5 pA/(um^2) are used in this ion milling process.
+{Bold} Note:
+if at least one of these 3 parameters is not specified the experimental etch rate table must be provided.
+<br/>
+  </li>
+</ul>
+<p>
+The last 5 parameters of the
+<b> IonMill </b> statement specify and control simulation of redeposition effect:
+</p>
+<ul>
+  <li>
+ Parameter 
+<b> redepmaterial </b> specifies that &quot;new&quot; material alloy will be formed. Its ion milling parameters according to
+<b> material </b> statement above will be the same as those of Chromium with lower density.
+<br/>
+  </li>
+</ul>
+<ul>
+  <li>
+ Parameter 
+<b> secefficiency </b> specifies portion of sputtered particles which will participate in forming of the redeposited layer.
+<br/>
+  </li>
+</ul>
+<ul>
+  <li>
+ Parameter 
+<b> secLimit  </b> specifies accuracy of redeposition process. The higher accuracy of redeposition simulation is provided by taking into
+account of sputtered particles generated outside the simulation domain. This is achieved by virtual reflections of
+the simulation domain. The lower the secLimit parameter the higher accuracy can be achieved.
+<br/>
+  </li>
+</ul>
+<ul>
+  <li>
+ Parameters 
+<b> reflectX  </b> and
+<b> reflectY </b> define maximum number of reflections in X and Y direction correspondingly. In this specific case only particle
+generated within the forming trench in Y direction could reach the side walls within simulation domain. If
+these parameters were not specified the reflections would continue until the required accuracy is achieved.
+<br/>
+  </li>
+</ul>
+<p>
+The
+<b> export </b> statement saves the structure for visualization using
+<b> TonyPlot 3D </b> and parameter extraction.
+<br/>
+</p>
+<p>
+The next section of example demonstrates how to generate a 2D structure and use it for extraction of geometrical parameters after ion milling. The experimental of
+<b> [2] </b> show that the redeposition effect limits the etching depth and results in non-vertical sidewalls with slopes of around 60 - 70 degrees. The extracted parameters
+<b> &quot;d&quot; </b> in microns and
+<b> angle </b> in degrees could be used for calibration of this simulation process and/or optimization of process conditions.
+<br/>
+</p>
+<p>
+Several input parameters  including mask opening width
+<b> CD</b> , mask thickness
+<b> mask_thick </b> as well as ion energy
+<b> energy</b> , ion current density
+<b> currentdensity</b> , ion beam angle
+<b> beamAngle </b> could be used for process optimization. Also, parameters
+<b> seceff </b> and
+<b> alloy_density_coeff </b> could be used for simulation calibration.
+</p>
+<p>
+Finally, three files named &quot;ratetable_&lt;materialname&gt;_&lt;materialID&gt;.str  containing angle dependency of ion milling rates calculated according
+to semi-empirical Yamamura model were generated during the simulation. The final plot compares those rates.
+</p>
+<b> [1]</b> <p>
+D. Kercher, Pattering Magnetic Nanostructures with Ions, in Nanofabrication Handbook, editors S. Cabrini and S. Kawata, CRC Press, p. 421 (2012)
+</p>
+<b> [2] </b> <p>
+D.Kercher, Geometrical Limitations of Ar Ion Beam Etching, EIPBN-2010
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

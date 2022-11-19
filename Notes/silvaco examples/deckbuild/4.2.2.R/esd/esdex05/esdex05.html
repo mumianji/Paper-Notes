@@ -1,0 +1,128 @@
+<html>
+  <head>
+    <title>Second Breakdown of a MOSFET</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Second Breakdown of a MOSFET</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>SSuprem 4/S-Pisces/Giga</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R, Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="esdex05_plot0.png" width="640" alt="esdex05_plot0" />
+      <p/>
+      <img src="esdex05_plot1.png" width="640" alt="esdex05_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+In this example, the steady state second breakdown simulation of an NMOS
+transistor is performed.  Second breakdown analysis is an important
+figure of merit in the understanding of the resistance of devices to
+high current (voltage) stress caused by the ESD events. This example shows:
+</p>
+<ul>
+  <li>
+ Formation of a MOS structure in Athena
+<br/>
+  </li>
+  <li>
+ Interface to Atlas
+<br/>
+  </li>
+  <li>
+ Selection of lattice heat flow models 
+<br/>
+  </li>
+  <li>
+ Analysis of a non-isothermal IV curve 
+  </li>
+</ul>
+<p>
+The MOS structure is constructed using Athena process simulation. This
+structure is passed to Atlas for HBM test simulation.  The NMOS
+transistor is a 0.8um LDD device using oxide spacers. For a more
+complete description of the MOS process simulation, see the MOS examples.
+</p>
+<p>
+The Atlas syntax shows a simple and effective procedure for the
+tracing of the complicated S-shape I-V characteristics
+that could be used with any initial NMOS structure.
+</p>
+<p>
+The Atlas simulation begins with the definition of the models and material
+parameters of the device. The
+<b> contact </b> statement is used to define the
+workfunction of the polysilicon electrode. The
+<b> material </b> statement is
+used to define the electron and hole lifetimes in
+semiconductor.
+</p>
+<p>
+The physical models used in this simulation reflect the different
+physical effects important to electrothermal device simulation.  The
+mobility model CVT includes the concentration, electric field and
+temperature dependencies, as well as a surface mobility degradation
+effects.  In addition to the Shockley-Read-Hall recombination model
+(SRH), the recombination model AUGER is included to take into account
+the high injection level effects. Band gap narrowing is taken into
+account by means of the BGN parameter.  The continuity equations for
+both carriers are selected by default or by using parameter carriers=2
+in the METHOD statement.  Impact ionization is necessary for any
+breakdown simulation and it is also included here.
+</p>
+<p>
+A nonisothermal approach is used, which means that the heat flow equation
+is solved in addition to the semiconductor equations and all physical
+parameters become temperature dependent.  The syntax
+<b> models lat.temp </b> enables the solution of the heat flow equation.
+</p>
+<p>
+In all nonisothermal simulations, the definition of the thermal
+boundary conditions is very important.  Thermal boundary conditions are
+defined in the
+<b> thermcontact </b> statement.  A value of the thermal
+conductance determined from the heat conductivity of the substrate is
+specified at the thermocontact located along the substrate. Thermal
+isolation is assumed where no thermal contacts are specified. Here, thermal
+isolation conditions are assumed on the all other surfaces besides the
+bottom.
+</p>
+<p>
+To simulate the device second breakdown the curve tracing algorithm was
+used. For more details of this algorithm and its syntax see the
+snapback example in the Advanced MOS section.
+</p>
+<p>
+The steady state current/voltage characteristics are saved in a LOG
+file.  Using TonyPlot it is possible to observe the maximum
+temperature in the device versus current/voltage.
+The sharp decrease of the voltage on the nonisothermal I-V curve
+shows the onset of second breakdown.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

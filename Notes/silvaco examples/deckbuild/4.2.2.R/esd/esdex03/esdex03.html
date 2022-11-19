@@ -1,0 +1,155 @@
+<html>
+  <head>
+    <title>Human Body Model in a MOSFET</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Human Body Model in a MOSFET</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>SSuprem 4/S-Pisces/Giga</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R, Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="esdex03_plot0.png" width="640" alt="esdex03_plot0" />
+      <p/>
+      <img src="esdex03_plot1.png" width="640" alt="esdex03_plot1" />
+      <p/>
+      <img src="esdex03_plot2.png" width="640" alt="esdex03_plot2" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+In this example, transient simulation of Electrostatic Discharge (ESD)
+on an NMOS transistor using the Human Body Model (HBM) is performed.
+During the ESD event significant local heating is produced. The
+solution of local lattice temperature is included. This example shows:
+</p>
+<ul>
+  <li>
+ Formation of a MOS structure in Athena
+<br/>
+  </li>
+  <li>
+ Interface to Atlas
+<br/>
+  </li>
+  <li>
+ Selection of lattice heat flow models 
+<br/>
+  </li>
+  <li>
+ Use of current boundary conditions and non-linear transient pulse to simulate a HBM ESD event.
+<br/>
+  </li>
+  <li>
+ Analysis of both the temperature distribution in the device and non-isothermal IV curve.
+  </li>
+</ul>
+<p>
+The MOS structure is constructed using Athena process simulation. This
+structure is passed to Atlas for a HBM test simulation.  The NMOS
+transistor is a 0.8um LDD device using oxide spacers. For a more
+complete description of the MOS process simulation see the MOS examples.
+</p>
+<p>
+The Atlas syntax shows a simple and effective test procedure for
+HBM ESD simulation that may be used with any initial NMOS structure.
+</p>
+<p>
+The Atlas simulation begins with definition of the models and material
+parameters of the device. The
+<b> contact </b> statement is used to define the
+workfunction of the polysilicon electrode. The
+<b> material  </b> statement is
+used to define the capture times (electron and hole lifetimes) in
+the semiconductor.
+</p>
+<p>
+The physical models used in this simulation reflect the different
+physical effects important to ESD device simulation.  The mobility
+model &apos;analytic&apos; accounts for concentration and the temperature
+dependencies.
+</p>
+<p>
+The mobility model &apos;fldmob&apos; accounts for the electric field dependency. In addition to
+the Shockley-Read-Hall recombination model (SRH), the recombination
+model &apos;auger&apos; is included to take into account the high injection level
+effects. Band gap narrowing is taken into account by means of the bgn
+parameter.  The continuity equations for both carriers are selected
+by default. The impact
+ionization model is enabled using the
+<b> impact selb </b> statement.
+</p>
+<p>
+A nonisothermal approach is used, which means that the heat flow equation
+is solved in addition to the semiconductor equations and all physical
+parameters become temperature dependent.  The syntax
+<b> models lat.temp </b> enables the solution of the heat flow equation.
+</p>
+<p>
+The definition of the thermal boundary conditions is very important
+in all non-isothermal simulations.  Thermal boundary conditions are
+defined in the
+<b> thermcontact </b> statement.  A value of the thermal
+conductance determined from the heat conductivity of the substrate is
+specified at the thermocontact located along the substrate. Thermal
+isolation is assumed where no thermal contacts are specified. Here thermal
+isolation conditions are assumed on all other surfaces besides the
+bottom.
+</p>
+<p>
+To simulate the device interaction with the simplified HBM test circuit
+the current pulse is applied to the drain of the MOS structure in the
+reverse direction.  The current pulse risetime is 10ns and the
+exponential decay time is 150ns, which corresponds to the discharge of
+the 100pF capacitor through the 1500 Ohm resistor into the test device.
+These values are the definition of the Human Body Model.
+</p>
+<p>
+The transient current/voltage characteristics are saved in the LOG
+file.  Using TonyPlot it is possible to observe the maximum
+temperature in the device versus time. The temperature increases with
+time and peaks significantly after the peak current. The value of the
+maximum temperature can be extracted and used as a figure of merit for
+comparing the ESD protection capability of various device designs.
+</p>
+<p>
+The
+<b> probe </b> statement is used to define quantities to be measured at each bias step.
+The values from these quantities are saved in the log file and can be
+plotted versus time and bias. The first probe statement saves the
+<i> lattice temperature at the drain contact</i> and the second
+<i> electric field across the gate oxide.</i> The former can be used to determine the likelihood of metal melting and the
+latter to determine likelihood of gate dielectric breakdown.
+</p>
+<p>
+The solution at a time of 10ns and at the final stage are saved. All
+internal distributions can be observed using TonyPlot. Most
+interesting is that the temperature distribution in the MOSFET shows the
+location and value of the hot spot.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

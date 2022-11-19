@@ -1,0 +1,99 @@
+<html>
+  <head>
+    <title>3D comparison of DD_MS and NEGF_MS models for nanoscale  FinFET</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>3D comparison of DD_MS and NEGF_MS models for nanoscale  FinFET</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Device 3D/Quantum 3D</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="quantumex16_plot0.png" width="640" alt="quantumex16_plot0" />
+      <p/>
+      <img src="quantumex16_plot1.png" width="640" alt="quantumex16_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates:
+</p>
+<ul>
+  <li>
+ Comparison of quantum and classical transport models in 3D
+<br/>
+  </li>
+  <li>
+ Schrodinger-Poisson mesh
+<br/>
+  </li>
+  <li>
+ Fast product-space 2D SChrodinger solver 
+<br/>
+  </li>
+  <li>
+ Quantum confinement in a FinFET channel 
+<br/>
+  </li>
+</ul>
+<p>
+This example compares classical drift-diffusion (DD_MS) and quantum
+(NEGF_MS) transport models in a 6 by 7 nm thick Si FinFET with 30 nm gate length.
+Both solutions employ an uncoupled mode space approach, based on exactly the same
+Schrodinger and Poisson solvers and exactly the same material constants,
+thus allowing a one-to-one comparison.
+</p>
+<p>
+A 2D Schrodinger solution in each slice of the device is obtained with
+a fast product-space 2D Schrodinger solver by specifying the SP.FAST parameter
+on the MODELS statement. Transport solution (drift diffusion or NEGF) is performed
+in all uncoupled subbands.
+</p>
+<p>
+In order to decrease computational cost, we use a rough mesh in transport (X) direction for
+3D Poisson equation. On top of this mesh, we specify a finer Schrodinger-Poisson mesh
+to decrease a discretization error in mode space drift-diffusion equations, and to avoid
+insufficient bandwidth of discretized transport Hamiltonian in NEGF equations.
+The S-P mesh is specified similar to the original Atlas mesh by statements SPX.MESH,
+SPY.MESH and SPZ.MESH. To lower interpolation error and interpolation time, it is
+a good idea to have the S-P mesh  as similar as possible. Thus we keep
+SPY.MESH and SPZ.MESH the same as the original mesh and change only SPX.MESH.
+Note that due to the prismatic nature of the Atlas mesh, the
+SPZ.MESH statement is optional. If it is not specified, SPZ.MESH will
+be identical to the original mesh in the Z direction.
+</p>
+<p>
+S-P mesh can be specified on top of the Atlas mesh to refine the quantum solution,
+but it becomes especially useful when an external non Atlas mesh is loaded and
+a rectangular mesh is required by the Schrodinger solver.
+A rectangular mesh is required by the 2D Schrodinger
+solver with the SP.FAST option and by 1D solvers in X and Y directions. A general 2D
+Schrodinger solver and 1D Schrodinger in Z direction
+can work on a triangular mesh in the X-Y plane.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

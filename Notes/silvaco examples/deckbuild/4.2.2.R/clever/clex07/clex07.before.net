@@ -1,0 +1,10 @@
+M1 Y int1 int0 gnd N w=3u l=0.25u As=1.65p Ad=3.225p Ps=4.1u Pd=8.15u  geo=2
+M2 int2 A gnd gnd N w=1.5u l=0.25u As=1.275p Ad=0.5625p Ps=4.7u Pd=2.25u  geo=1
+M3 int2 B int1 gnd N w=1.5u l=0.25u As=1.6125p Ad=0.5625p Ps=5.15u Pd=2.25u  geo=1
+M4 gnd A int0 gnd N w=3u l=0.25u As=2.22p Ad=1.65p Ps=7.7u Pd=4.1u  geo=1
+M5 int0 B gnd gnd N w=3u l=0.25u As=1.65p Ad=1.65p Ps=4.1u Pd=4.1u  geo=3
+M6 Y int1 vdd vdd P w=3u l=0.25u As=2.25p Ad=1.95p Ps=7.5u Pd=4.73333u  geo=1
+M7 vdd A int1 vdd P w=1.5u l=0.25u As=0.65p Ad=1.125p Ps=2.5u Pd=4.5u  geo=2
+M8 vdd A int3 vdd P w=6u l=0.25u As=1.05p Ad=3.72222p Ps=6.35u Pd=10.3704u  geo=3
+M9 int3 B Y vdd P w=6u l=0.25u As=3.9p Ad=1.05p Ps=9.46667u Pd=6.35u  geo=3
+M10 vdd B int1 vdd P w=2.1u l=0.25u As=0.91p Ad=1.30278p Ps=3.5u Pd=3.62963u  geo=3

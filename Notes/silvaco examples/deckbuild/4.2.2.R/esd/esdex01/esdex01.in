@@ -1,0 +1,76 @@
+# (c) Silvaco Inc., 2018
+go atlas
+TITLE HBM  ESD simulation for PN diode 
+
+#
+mesh  space.mult=1.0
+# 
+x.mesh loc=0.00 spac=0.25
+x.mesh loc=2.00 spac=0.25
+#
+y.mesh loc=0.00 spac=0.02
+y.mesh loc=0.2 spac=0.002
+y.mesh loc=2 spac=0.2
+
+
+region num=1 silicon
+ 
+electrode num=1  top name=emitter
+electrode num=2  bottom name=base
+
+doping uniform conc=5e16 p.type 
+doping gauss n.type conc=1.e20 dir=y junction=0.2 peak=0 
+
+
+save outf=esdex01_0.str
+tonyplot esdex01_0.str -set esdex01_0.set
+
+
+go atlas
+
+.begin
+c1 1 0 100p
+r1 1 2 1500
+aesd 0=base 2=emitter width=10 infile=esdex01_0.str
+.nodeset v(1)=40  v(2)=0    
+
+.ic v(1)=40  v(2)=0  
+.numeric toldc=1.e-5 vchange=0.5 imaxdc=999
+.options m2ln debug print
+.save outfile=esdex01_dc
+.end
+
+thermcontact num=1 device=aesd y.min=2 y.max=2 ext.temp=300 alpha=1000
+models device=aesd region=1 conmob fermi fldmob srh auger bgn lat.temp 
+mater device=aesd  region=1 taup0=1e-7 taun0=1e-7
+impact device=aesd reg=1 selb
+
+
+go atlas
+
+.begin
+c1 1 0 150p
+r1 1 2 1.0e6 exp 1.0e6 1500 0. 1ps 10 10
+aesd 0=base 2=emitter width=10 infile=esdex01_0.str
+.numeric toltr=1.e-3 vchange=10. lte=0.1 dtmin=0.01ps
+ 
+.ic v(1)=40 v(2)=0
+.options  print relpot
+.tran 0.3ps  4.e-6
+ 
+.load  infile=esdex01_dc
+.log   outfile=esdex01
+.end
+
+thermcontact num=1 device=aesd y.min=2 y.max=2 ext.temp=300 alpha=1000
+models device=aesd region=1 conmob fldmob fermi srh auger bgn lat.temp 
+mater  device=aesd  region=1 taup0=1e-7 taun0=1e-7
+impact device=aesd reg=1 selb
+method climit=1000
+
+go atlas
+
+tonyplot esdex01_tr.log -set esdex01_log.set
+tonyplot esdex01_tr.log -set esdex01_2.set
+quit
+

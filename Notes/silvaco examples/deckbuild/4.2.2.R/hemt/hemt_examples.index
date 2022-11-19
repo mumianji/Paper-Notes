@@ -1,0 +1,583 @@
+
+
+{section} HEMT : HEMT Application Examples
+
+
+{subsection} hemtex01.in : User Model Development with the C-Interpreter
+
+
+Requires: Blaze/C-Interpreter
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates the use of the C-Interpreter to develop user
+defined material parameters and models for AlGaAs/GaAs HEMT simulation. 
+Here the interpreter is used to prototype a composition dependent electron
+mobility model for AlGaAs. The interpreted function in this case corresponds
+to the built-in model for AlGaAs. The two can be compared. The example
+consists of the following parts:
+
+{bullet} Construction of the device and the grid using Atlas syntax
+{newline}
+{bullet} Specification of material regions including a graded AlGaAs heterojunction
+{newline}
+{bullet} Definition of electrodes, doping, material and models parameters
+{newline}
+{bullet} Use of a C-Interpreter function for composition and doping dependent electron mobility 
+{newline}
+{bullet} Simulation of Id-Vds characteristic 
+{newline}
+{bullet} Display of the results in TonyPlot
+
+In the first part of the input file the device is described using Atlas
+syntax including mesh, regions and electrodes locations, and doping distribution.
+The
+{bold} region 
+statements are used to define AlGaAs and GaAs regions. The Al composition
+fraction (x.composition=0.3) and grading distance are defined here as well.
+
+After the device description, the
+{bold} material 
+statement is used to specify some of the material parameters different from
+the default values. These are electron and hole SRH lifetimes (capture
+times) which apply to both GaAs and AlGaAs material regions. In the same 
+statement we indicate that the low field electron mobility as a function of
+composition and doping will be calculated using the C-Interpreter. The name of
+the function and the name of the corresponding file in which this function is 
+described are specified as a parameter
+{bold} f.conmun=hemtex01_interp.lib 
+in the
+{bold} material 
+statement.  Additionally, the 
+{bold} alignment parameter is specified which defines the band offset between
+the conduction and valance bands.  The value of 0.6 sets 60% of the 
+step to the conduction band.
+
+The
+{bold} model 
+statement is used to specify the following set of models: band-gap narrowing,
+field dependent mobility, and Shockley-Read-Hall recombination. The two carrier
+transport model is specified here by the parameter
+{bold} carriers=2. 
+The
+{bold} contact 
+statement is used to set the workfunction at the Schottky gate electrode.
+
+The solution procedure begins from the initial solution at zero bias or
+thermodynamic equilibrium. The structure of the device at zero bias is
+displayed using TonyPlot. For the subsequent simulation, the combined
+Gummel-Newton iteration method is specified in the
+{bold} method 
+statement. The 
+{bold} output 
+statement is used to include additional parameters in the output structure file:
+conduction and valence band potentials, and electron and hole mobilities.
+The gate bias is then ramped to -0.6V. For this gate bias the Id-Vd
+characteristic is calculated by sweeping the drain voltage up to 5V. The results
+of simulation are saved in the log file and then displayed using TonyPlot.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+{subsection} hemtex02.in : Lattice Matched HEMT Breakdown Simulation
+
+Requires: Blaze
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates simulation of avalanche breakdown in a single
+quantum-well lattice matched AlGaAs/GaAs HEMT. It shows:
+
+{bullet} Construction of the heterojunction structure using Atlas syntax
+{newline}
+{bullet} Material and models parameter specification 
+{newline}
+{bullet} Simulation of Id-Vds and breakdown characteristic 
+{newline}
+{bullet} Display of the results in TonyPlot
+
+The device under consideration consists of the highly doped (1.e18/cm3)
+AlGaAs layer with the Al composition fraction of 0.3, the GaAs channel
+layer 250 A thick with the donor concentration of 1.e15 /cm3, and
+AlGaAs buffer layer with the same doping. The parts of the channel
+under the source and drain are heavily doped, and source and drain
+electrodes are located vertically, touching the channel region. This technique 
+accounts for the alloying of contact material and the tunneling of carriers 
+through the heterojunction. The channel length is 0.5 micron.  
+
+In the first part of the input file, the device is described using
+the Atlas structural syntax. The description includes the mesh, regions
+locations, electrodes locations, and doping distribution.
+The
+{bold} region 
+statements are used to define the AlGaAs and GaAs regions. The Al
+composition fraction (x.composition=0.3) is defined here as well. Note
+that an artificial oxide layer (region num=4) is defined here providing
+the possibility to specify AlGaAs surface states using the
+{bold} interface 
+statement.
+
+After the device description, the first
+{bold} material 
+statement is used to specify the electron and hole SRH lifetimes
+applied to both GaAs and AlGaAs materials. In the second
+{bold} material 
+statement the low field mobilities, electron affinity, and density of
+states in the conduction band Nc are defined for AlGaAs. In this
+example the band alignment is calculated  by using energy band gaps and
+electron affinities of the materials forming heterojunctions. If not
+explicitly specified in the
+{bold} material
+statements the default values of other material parameters are applied.
+
+The
+{bold} models 
+statements are used to specify the following set of models : field
+dependent mobility, and SRH. The two carrier transport model is
+specified here as well (the default). In addition, the concentration dependent
+mobility model is activated. 
+
+In order to simulate avalanche breakdown the impact ionization-generation model
+should be turned on. This is done using the 
+{bold} impact selb 
+statement in which the Selberherr impact ionization model is activated.
+All basic impact ionization parameters are user-accessible and can be
+modified by the user. As an example the appropriate set of parameters
+is defined in this statement. The parameters apply to both GaAs and
+AlGaAs materials.
+
+The gate electrode in HEMT structures is of Schottky type. To indicate this
+the 
+{bold} contact 
+statement is used to define the workfunction of the gate electrode,
+which gives the Schottky barrier height of approximately 0.9V.
+
+The initial solution is performed automatically if not specified.
+The gate voltage is set to zero, the structure under zero bias is
+displayed using TonyPlot, and the drain voltage is ramped up to 0.3V.
+The solutions are obtained using the combined Gummel-Newton algorithm
+specified in the statement
+{bold}        method gummel newton.  
+The algorithm implies that if the solution does not converge in the
+course of the decoupled Gummel iterations, the program will
+automatically switch over to the fully coupled Newton algorithm.
+
+Next the drain voltage is ramped until the drain current reaches the
+predefined value of 9.e-5 A/um well within the breakdown region,
+using the 
+{bold} compliance  
+limits on the 
+{solve} 
+solve statement. These
+calculations are performed using the Newton method :
+{newline}
+{bold}        method newton.  
+{newline}
+The results of the simulation are saved in the log file and the Id-Vds
+breakdown characteristics are displayed using TonyPlot.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+
+{subsection} hemtex03.in : AlGaAs/GaAs HEMT Id-Vgs and Id-Vds Characterization
+
+Requires: Blaze
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates Id-Vds and Id-Vgs calculations in a single quantum-well 
+AlGaAs/GaAs HEMT. It shows:
+
+{bullet} Construction of the heterojunction structure using Atlas syntax
+{newline}
+{bullet} Material and models parameter specification 
+{newline}
+{bullet} Simulation of Id/Vds and Id/Vgs characteristics 
+{newline}
+{bullet} Display of the results in TonyPlot
+
+The device under consideration is the same as in the previous example
+in this section. The device geometry, mesh, regions, electrodes and
+doping distribution
+are described with the same sequence of statements as in the example above.
+The same material parameters and physical models are applied except for the
+impact ionization-generation model. Since the breakdown analysis is not the
+goal of this example and the range of voltages applied are far away from
+the breakdown region where the impact ionization effects become essential, the 
+{bold} impact 
+statement is excluded and no impact ionization-generation considered.
+The contact and interface statements are a repeat of those from the previous example.
+
+
+After the initial solution is obtained, the gate voltage is set to 0,
+the structure under zero bias is displayed using TonyPlot, and the
+Id-Vds characteristic is calculated. As in the previous example the
+drain voltage is first ramped up to 0.3V. The solutions are obtained
+using the combined Gummel-Newton algorithm specified in the
+{bold} method gummel newton 
+statement. The algorithm implies that if the solution does not converge
+in the course of Gummel iterations, the program will automatically
+switch over to the Newton algorithm.
+
+Next the drain voltage is ramped up to 3V. This part of simulation is performed
+using the Newton method:
+{bold} method newton 
+The results of simulation are saved in the log file and displayed using TonyPlot.
+
+Simulation of the Id-Vgs characteristic is performed next. At the first stage the
+solution for Vgs=-0.9V and Vds=0.5V is obtained. Next, the gate voltage
+is ramped up to 0.6V with the step of 0.1V.
+
+The results of simulation are again saved in a separate log file and displayed using TonyPlot.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+
+{subsection} hemtex04.in : Energy Balance and Drift Diffusion Comparison
+
+Requires: Blaze
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates Id-Vds calculations in single quantum-well
+AlGaAs/GaAs HEMT using Energy Balance (EB) and Drift Diffusion (DD)
+Models. It includes
+
+{bullet} Construction of a heterojunction structure using Atlas syntax
+{newline}
+{bullet} Material parameter specification 
+{newline}
+{bullet} Physical model specification including the energy balance model
+{newline}
+{bullet} Simulation of Id-Vds characteristic with Vgs=0.0V 
+{newline}
+{bullet} Repeat simulation using drift-diffusion models for comparison
+{newline}
+{bullet} Display of combined results in TonyPlot
+
+The example file consists of two Atlas runs. Both use the same device
+structure defined in a similar manner to the previous two examples. The
+first run uses energy balance models to simulate Id-Vds characteristics
+and the second does the same electrical simulation using the classical
+drift-diffusion model. The aim of the example is to compare the effects
+of the different carrier transport models.
+
+Energy balance models provide a more accurate description of physical
+device effects, in particular the effects of velocity overshoot and
+non-local impact ionization. These are not handled by the classical
+drift-diffusion model. These two effects can be observed in sub-micron 
+HEMT simulation.  This example concentrates on the velocity overshoot
+effect in the GaAs-AlGaAs structure. Non-local impact ionization
+effects can be seen in breakdown simulations. Since velocity overshoot
+is not accounted for in the drift-diffusion model, the results from
+simulations with this model will underestimate the current. This
+discrepancy gets worse as the channel length decreases.
+
+The sequence of simulation syntax is similar to the previous example. For energy
+balance simulation, additional input parameters need to be defined in particular
+carrier energy and mobility relaxation times. In these examples the
+electron relaxation times taurel.el and taumob.el are defined in the
+two separate
+{bold} material
+statements for the GaAs and AlGaAs materials, overriding the default values.
+In the same statements the low field electron mobilities are specified for GaAs
+and AlGaAs. The saturation velocity is also explicitly defined here for GaAs.
+The
+{bold} material 
+statement for AlGaAs also contains the 
+{bold} align 
+parameter, which defines the portion of the energy band gap difference going
+to the conduction band (60% in this example) at the GaAs-AlGaAs
+heterojunction. If the
+{bold} align 
+parameter is present in the
+{bold} material 
+statement the energy band alignment is calculated
+based on the value of this parameter rather than using electron
+affinities of the materials forming the respective heterojunction.
+
+Since HEMTs are majority carrier devices and the impact-ionization and breakdown
+are not a subject of analysis here, the one carrier (electrons only)
+transport model is used in both continuity and energy balance
+equations. Thus the following three basic equations are solved in this
+example to simulate the device characteristics: Poisson, electron
+continuity and energy balance equations.
+  
+In the 
+{bold} model 
+statements the set of physical models used is specified: field
+dependent mobility, and the one carrier transport model (carriers=1 electron). 
+The solution of the energy balance equation for electrons is activated in
+this statement using the parameter hcte.el.
+
+The 
+{bold} contact 
+statement is used to specify the workfunction of the gate electrode, giving the 
+Schottky barrier height of approximately 0.8V.
+
+After the initial solution the gate voltage is set to 0, and the Id-Vds
+characteristic is calculated. First the drain voltage is ramped up to
+0.1V. The solutions are obtained using the combined Gummel-Newton block
+algorithm specified in the following statement:
+
+{bold}        method gummel block newton 
+
+The algorithm implies that, if the solution does not converge in the course of
+Gummel iterations, the program will automatically switch over to the
+block algorithm where the Poisson and electron continuity equations are
+solved by the  Newton algorithm with the frozen electron temperature,
+and then the electron continuity equation and energy balance equation
+are solved by the Newton algorithm. If the solution still does not
+converge, the program will switch over to the fully coupled Newton
+method.
+
+Next the drain voltage is ramped up to 3V. This part of simulation is performed
+using the Newton method:
+
+{bold}        method newton 
+
+The results of the simulation are saved in a log file to be displayed later
+with the results of the DD simulation.
+
+The second Atlas run repeats the first but uses the conventional one
+carrier Drift Diffusion Model: Poisson's equation and the electron
+continuity equation are solved self-consistently. The same set of
+physical models is used, except the energy balance
+equation. The latter is turned off by not indicating the hcte.el
+parameter in the
+{bold} models 
+statement. The resulting Id-Vds characteristic is saved in a log file.
+The statement
+{bold} output con.band val.band e.velocity 
+is used in both runs to save the conduction and valence band
+potentials and the electron velocity information to the solution files.
+Generating the solution files in the energy balance simulation and
+selecting to plot them will show the velocity overshoot effect.
+
+Results from two runs with the EB and DD models are compared by overlaying the two log files in TonyPlot.
+ 
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+{subsection} hemtex05.in : Recessed Gate Pseudomorphic HEMT DC Characterization
+
+Requires: DevEdit/Blaze
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+In this example a pseudomorphic HEMT structure based on the
+GaAs-AlGaAs-InGaAs-InP material system is constructed using DEVEDIT.
+The structure is then passed to Atlas for electrical testing. The input
+file consists of the following main portions:
+
+{bullet} Construction of the device in DEVEDIT
+{newline}
+{bullet} Electrical simulation of a family of Id/Vds curves
+{newline}
+{bullet} Simulation of Id/Vgs characteristics
+{newline}
+{bullet} Basic parameter extraction
+
+
+The first part of the input file constructs the HEMT geometry, material regions,
+doping profiles, and electrodes in DEVEDIT. The structure considered is non-
+planar with a non-rectangular recessed gate. This demonstrates the important
+capability of DEVEDIT to generate arbitrarily shaped geometries. The device is
+created in DEVEDIT by drawing the device regions in interactive mode and 
+specifying 2D doping distributions. The device is based on a GaAs substrate. 
+It employs a double channel HEMT concept where the InGaAs 
+channel is sandwiched between two AlGaAs regions. The structure also employs
+2 delta- (or pulse-) dopings above and below the channel in both AlGaAs regions.
+These are modeled by narrow, 10 angstrom thick layers. The delta-doping
+usually expressed in terms of planar concentration (cm-2)  must be 
+recalculated into bulk doping (cm-3) given the thickness of the layers.
+
+The delta-doped regions play an important role and are typical for
+modern HEMT technologies. They are used as additional carrier
+suppliers to the channel and for better control of the threshold
+voltage and other device parameters. The source and drain cap regions
+are made of GaAs. In practical applications the source and drain
+contact alloys often penetrate deep into the structure well below the
+channel. This is modeled by heavily doped areas under the source and
+drain in which the vertical doping distribution is assumed to be
+Gaussian, and the horizontal one is approximated by the complimentary
+error function. The means and the set of functions for specifying
+arbitrary 2D doping distributions are provided by the DEVEDIT. The
+composition fractions of AlGaAs (0.22 for Al) and InGaAs (0.78 for Ga)
+are specified in DEVEDIT as respective region attributes. The
+mesh was generated automatically by specifying basic mesh constraints
+and refining it along the x- and/or y-directions in the
+important areas of the device. 
+
+DEVEDIT then generates two types of files: a DEVEDIT input file and the
+structure file. The first can be run in DeckBuild to produce the
+corresponding structure file and is included here as the first part of
+the input file. The second can be read in directly by Atlas in the MESH
+statement. Note that the DEVEDIT input file can be edited as any other
+input file. It is straightforward to change the type and value of the
+doping associated with each region or resize regions.  More importantly,
+DEVEDIT input files can also be read directly into the graphical user
+interface of DEVEDIT to provide all the menu options used to construct
+the structure.
+
+The Atlas simulation begins from reading in the structure from
+DEVEDIT.  DeckBuild provides autointerface between DEVEDIT and Atlas so
+that the structure produced by DEVEDIT is transferred to Atlas without
+having to indicate the MESH statement (commented out in this example).
+Without the automatic DEVEDIT/Atlas interface under DeckBuild, the MESH
+statement is needed to load the structure and the mesh.
+
+The first active statements in the Atlas portion of the input file are
+the contact, material and model  definitions. The gate workfunction is set up
+in the 
+{bold} contact 
+statement. The material parameters and physical models are
+specified in the 
+{bold} material 
+and 
+{bold} models 
+statements respectively on material-by-
+material basis. Shockley-Read-Hall recombination and electric field
+dependent mobility models are applied to all the material/regions. For
+GaAs and AlGaAs regions doping dependent mobilities and recombination
+parameters (lifetimes) are also applied. Conversely for InGaAs regions
+low field mobilities and carrier lifetimes are explicitly specified in
+the material statement. The band alignment
+is defined here using the 
+{bold} align 
+parameter, which defines the portion of the energy
+band gap difference applied to the conduction band. This parameter is given in the
+{bold} material 
+statements.
+
+The simulation is first performed to obtain the condition of the structure
+for 3 different gate biases, Vgs=0, -0.2, and -0.4 V, with the source and drain
+grounded. The respective states of the structure are saved in three
+separate solution files. Then the family of three Id-Vds
+characteristics is calculated in three separate drain voltage sweeps
+from 0 up to 2 V. Each series of the drain biasing is performed after loading 
+the solutions with the respective gate bias.  The Id-Vds characteristics 
+are saved in three separate log files. The final conditions of the 
+structure with 2 V on the drain are also saved in separate solution files.
+The zero bias condition is loaded again and the Id-Vgs characteristic is calculated.
+
+At the end of simulation, parameter extraction statements are used to extract the
+following parameters using the 
+{bold} extract 
+feature of DeckBuild:
+
+{bullet} Threshold voltage
+{newline}
+{bullet} Maximum saturation current (Idss)
+{newline}
+{bullet} Gate voltage at Id=0.3*Idss 
+
+The results are also displayed using TonyPlot:
+
+{bullet} Id/Vds characteristics
+{newline}
+{bullet} Id/Vgs characteristic 
+{newline}
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+
+{subsection} hemtex06.in : PHEMT High Frequency Analysis
+
+Requires: DevEdit/Blaze
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+
+{bullet} AC parameters as a function of the gate bias
+{newline}
+{bullet} Frequency domain AC calculation
+{newline}
+{bullet} Calculation of s-parameters
+
+
+This example is based on the previous example (see that text for details on
+the structure).
+
+Once the structure is loaded into BLAZE, a small signal AC perturbation
+is applied at a frequency of 1 MHz to calculate the AC parameters
+(conductances and capacitances) as functions of Vgs. This also allows
+the user to obtain the cutoff frequency using the low frequency
+approximation using TonyPlot or using the extraction feature of
+DeckBuild. Currents, voltages, and AC parameters are saved in the log
+file, and internal structure information is saved  in a solution file
+for the final bias condition of Vgs=0V, Vds=2 V.
+
+The next step is a full frequency domain AC simulation when the Y parameter
+matrix (conductances and capacitances) are calculated as functions of frequency
+from 10 Hz up to 50 GHz. These results are stored in a log file. Additionally,
+with the specification of
+{bold} s.param 
+on the log statement, the s-parameters are stored to the file.
+
+At the end of simulation, parameter extraction statements are used to extract the
+following parameters using the 
+{bold} extract 
+feature of DeckBuild:
+
+{bullet} Maximum gate-source capacitance
+{newline}
+{bullet} Gate-source capacitance at Vgs=0
+{newline}
+{bullet} Maximum cutoff frequency
+{newline}
+{bullet} Cutoff frequency at Vgs=0
+{newline}
+{bullet} Maximum AC current gain f=1MHz
+{newline}
+{bullet} AC current gain at Vgs=0 f=1MHz
+{newline}
+
+The results are also displayed using TonyPlot:
+
+{bullet} Transconductance versus gate bias characteristic
+{newline}
+{bullet} s-parameters: S12 & S21 in polar coordinates
+{newline}
+{bullet} s-parameters: S11 & S22 on a Smith Chart
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+

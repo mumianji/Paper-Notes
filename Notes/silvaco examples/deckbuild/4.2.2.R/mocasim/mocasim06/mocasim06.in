@@ -1,0 +1,69 @@
+go mocasim
+
+####################################################################
+# (c) SILVACO International 2000-2009                              #
+# MOCASIM example 6: default GaAs input deck with user defined     #
+#                    scattering mechanism(s)                       #
+#                                                                  #
+# file: mocasim06.in                                               #
+####################################################################
+
+# Section 1
+# =========
+# Select the material.
+initialize material=GaAs
+
+# Section 2
+# =========
+# Assign the intra valley scattering mechanisms.
+defpot_acoustic_phonon E1=7.0
+polar_optical_phonon energy=0.0353355
+ionised_impurity
+
+# Assign some inter valley scattering mechanisms.
+intervalley_phonon LL energy=0.029 defpot=1e9 num_L_valleys=3
+intervalley_phonon XX energy=0.02995 defpot=7e8 num_X_valleys=2
+intervalley_phonon GX energy=0.02995 defpot=1e9 num_X_valleys=3
+intervalley_phonon LX energy=0.02934 defpot=5e8 num_L_valleys=4 num_X_valleys=3
+
+# Use the c-interpreter to define the G<->L scattering
+c_interpreter initial_valley=0 final_valley=1 rate=mocasim06_GLab_rate.c \
+                            scatter=mocasim06_GLab_event.c
+c_interpreter initial_valley=0 final_valley=1 rate=mocasim06_GLem_rate.c \
+                            scatter=mocasim06_GLem_event.c
+c_interpreter initial_valley=1 final_valley=0 rate=mocasim06_LGab_rate.c \
+                            scatter=mocasim06_LGab_event.c
+c_interpreter initial_valley=1 final_valley=0 rate=mocasim06_LGem_rate.c \
+                            scatter=mocasim06_LGem_event.c
+
+# Section 3
+# =========
+# Define the range over which to simulate the transport.
+field value=1000,2000,3000,4000,5000,6000
+field value=7000,8000,10000,12000,14000,16000
+field value=18000,20000,23000,26000,30000,40000
+field value=50000,60000,70000,80000,90000,100000
+temperature value=300
+doping value=1.0e14
+
+# Section 4
+# =========
+# Assign a backup file.
+log outfile=mocasim06_1.bak
+
+# Section 5
+# =========
+# Do the Monte Carlo simulation
+solve
+
+# Section 6
+# =========
+# Save the results.
+save outfile=mocasim06_2.dat
+
+# Tonyplot
+# ========
+# Plot the Monte Carlo data.
+tonyplot mocasim06_2.dat -add mocasim06_2.dat -add mocasim06_2.dat -add mocasim06_2.dat -set mocasim06_2.set
+
+quit

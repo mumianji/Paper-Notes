@@ -1,0 +1,171 @@
+<html>
+  <head>
+    <title>Amorphous IGZO TFT Degradation Simulation by PBTS(Positive Bias Temperature Stress)</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Amorphous IGZO TFT Degradation Simulation by PBTS(Positive Bias Temperature Stress)</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Victory Device</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Victory Device 1.12.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="tftex16_plot0.png" width="640" alt="tftex16_plot0" />
+      <p/>
+      <img src="tftex16_plot1.png" width="640" alt="tftex16_plot1" />
+      <p/>
+      <img src="tftex16_plot2.png" width="640" alt="tftex16_plot2" />
+      <p/>
+      <img src="tftex16_plot3.png" width="640" alt="tftex16_plot3" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<br/>
+<p>
+In this example, we demonstrate the Positive Bias Temperature Stress simulation due to electron trapping by oxygen related trap.
+In Victorydevice, we can make an electrochemical reaction formula for explaining the positive threshold voltage shift by electron trapping.
+This electron trapping state is idenfied as &quot;Oxygen interstitial&quot; which is acceptor-like state when empty.
+This can be formulated as &quot;O(neutral) + e &lt;=&gt; O-(single ionized negative charged state) or
+O2(neutral) + 2e- =&gt; O2-(double ionized charged state).
+In this example, we just demonstrate the single ionized charged state.
+In the other side, we can think of Vo2+ + 2e- &lt;=&gt; Vo reaction, but in this example we omit this electron trapping reaction.
+So, ionized oxygen vacancy(Vo2+) remains as donor-like trap(NGD).
+<br/>
+</p>
+<ul>
+  <li>
+ Structure formation using Victorydevice syntax
+<br/>
+  </li>
+  <li>
+ Initial doping concentration of each species for each neutral oxygen and ionized oxygen.
+<br/>
+  </li>
+  <li>
+ Material and model settings for bottom gate passivated IGZO TFT
+<br/>
+  </li>
+  <li>
+ Initial DOS(Density Of State) in a-IGZO bulk.
+<br/>
+  </li>
+  <li>
+  Reaction formula for electron trapping.
+<br/>
+   </li>
+  <li>
+ Initial threshold voltage extraction before applying PBTS.
+<br/>
+  </li>
+  <li>
+ Simulation of Equilibrium concentration.
+<br/>
+  </li>
+  <li>
+ Positive Bias Temperature Stress Simulation.
+<br/>
+  </li>
+  <li>
+ Final threshold voltage shift after applying PBTS.
+<br/>
+  </li>
+</ul>
+<p>
+The bottom gate oxide TFT is initialized by glass substrate thickness of 0.5um.
+The gate insulator is composed of 0.1um thick nitride(SiNx) and 0.15um thick oxide(SiOx).
+The IGZO channel thickness is 0.05um and then passivation layer(SiOx) is 0.3um.
+The gate length is 20um and the device width is 20um.
+<br/>
+</p>
+<p>
+After constructing bottom gate IGZO TFT structure, we define each ion using
+<b> &quot;species&quot; command.</b> <br/>
+<b> Species formula=&quot;In:Ga:Zn:O&quot; charge=0 name=&quot;O&quot;</b> <br/>
+<b> Species formula=&quot;In:Ga:Zn:O&quot; charge=-1 name=&quot;O-&quot;</b> <br/>
+</p>
+<p>
+The formula just define the element composition of IGZO material. In this simulation, each metal cation(In,Ga,Zn) is not reacted with
+other species. We will use &quot;name&quot; flag to distinguish each species.
+name=&quot;O&quot; define neutral trap state of InGaZnO configuration.
+The name=&quot;O-&quot; defines the ionized charged trap state after reaction.
+<br/>
+</p>
+<b> doping reg=4 species.name=&quot;O&quot;  uniform conc=1e17</b> <br/>
+<b> doping reg=4 species.name=&quot;O-&quot;  uniform conc=1e16</b> <br/>
+<p>
+which define the initial concentration of each ion species before applying PBTS.
+<br/>
+We also added the interface trap concentration using interface command.
+<br/>
+</p>
+<b> interface s.i  x.min=-$l/2-3 x.max=$l/2+3 y.min=-0.36 y.max=-0.34 species.name=&quot;O&quot;   concentration=2e11</b> <br/>
+<b> interface s.i  x.min=-$l/2-3 x.max=$l/2+3 y.min=-0.36 y.max=-0.34 species.name=&quot;O-&quot;   concentration=0.2e11</b> <br/>
+<p>
+For drift-diffusion simulation of ion during applied bias and temperature,
+we also need to define the diffusion coefficient as follows.
+<br/>
+<b></b> material material=IGZO species.name=&quot;O&quot; species.ea=1.14 species.af=1e7 species.hop=1e-6
+<br/>
+<b></b> material material=IGZO species.name=&quot;O-&quot; species.ea=1.14 species.af=1e7 species.hop=1e-6
+<br/>
+</p>
+<p>
+Next, we define the chemical reaction formula using &quot;reaction&quot; command.
+<br/>
+</p>
+<b> reaction formula=&quot;O + e- &lt;=&gt; O-&quot; forward.ea=0.83 forward.rate=1e-7 reverse.ea=0 reverse.rate=1e-7</b> <br/>
+<p>
+Probe statement measure the concentration of each ion and the occupation probability during stress time.
+<br/>
+</p>
+<b> probe x=0.0 y=-0.25 material=IGZO ft.species=&quot;O&quot; name=&quot;ft_O_front&quot;</b> <br/>
+<b> probe x=0.0 y=-0.25 material=IGZO species.name=&quot;O&quot; name=&quot;O_front&quot;</b> <br/>
+<b> probe x=0.0 y=-0.25 material=IGZO ft.species=&quot;O-&quot; name=&quot;ft_O-_front&quot;</b> <br/>
+<b> probe x=0.0 y=-0.25 material=IGZO species.name=&quot;O-&quot; name=&quot;O-_front&quot;</b> <br/>
+<p>
+To compare the threshold voltage shift by PBTS, we have simulated the initial threshold voltage curve.
+After obtaining initial threshold voltage curve, we performed the equlibrium state before actual PBTS.
+Now, we applied actual positive gate bias, and it continue up to 5e3 sec stress time.
+At each stress time, the solution structure is saved for later use in order to get final threshold voltage shift.
+<br/>
+</p>
+<p>
+After obtaining forward reaction simulation, we continue to get a backward reaction(reverse recovery)
+applying zero voltage at gate.
+<br/>
+</p>
+<p>
+To control the amount of vth shift and how fast ion react with stress time,
+user can fit the activation energy(forward.ea/reverse.ea)
+and reaction coefficient(forward.rate/reverse.rate) in the forward reaction and reverse reaction
+<br/>
+</p>
+<p>
+This example demonstrate the positive vth shift by forward reaction and negative shift
+from stressed voltage by reverse reaction.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

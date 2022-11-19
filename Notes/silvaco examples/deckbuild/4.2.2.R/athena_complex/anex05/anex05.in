@@ -1,0 +1,205 @@
+go athena
+
+line x loc=-12.0   spacing=0.5
+line x loc=-8.0   spacing=0.5
+line x loc=-7.1   spacing=0.1
+line x loc=0.0    spacing=0.1
+
+line y loc=0.0   spacing=0.03
+line y loc=2.0   spacing=0.5
+
+init space.m=2
+
+#deposit the gate oxide
+deposit oxide thick=0.025 div=1
+deposit nitride thick=0.25 div=1
+etch nitride left p1.x=-5.
+# 
+diff time=160 temp=965 wet
+
+etch nitride all
+
+#deposit the gate poly
+deposit poly thick=0.400 div=5
+
+etch poly left p1.x=-.5
+
+deposit oxide thick=.3 division=6
+#etch the spacer back
+etch dry oxide thick=0.33 
+
+#reflect the structure
+structure mirror right
+
+#deposit the BPSG intermetal dielectric
+rate.depo machine=bpsg_depo material=BPSG cvd dep.rate=1.6 u.m step.cov=.75 smooth.win=6 smooth.step=5
+deposit machine=bpsg_depo time=1 div=6
+# 
+deposit photores thick=1. div=5
+etch photores start x=-3.00 y=-10.00
+etch cont x=-3 y=10.00
+etch cont x=-2 y=10.00
+etch done x=-2 y=-10.00
+etch photores start x=3.00 y=-10.00
+etch cont x=3 y=10.00
+etch cont x=2 y=10.00
+etch done x=2 y=-10.00
+
+rate.etch machine=bpsg_etch material=BPSG rie directional=1.0 isotropic=.1 u.m
+etch machine=bpsg_etch time=2.0 minute dx.mult=.3
+# 
+etch photo all
+
+deposit material=TiN thick=0.250 divis=1
+#
+deposit tungsten thick=0.5 divisions=5
+rate.depo machine=tungsten_depo tungsten cvd dep.rate=.75 u.m step.cov=.75 smooth.win=1 smooth.step=2
+deposit machine=tungsten_depo time=.5 minute divisions=3
+# 
+deposit photores thick=.5 div=3
+
+etch photo right p1.x=8.5
+
+etch photo start x=6.1 y=-10
+etch cont x=7.1 y=-10
+etch cont x=7.1 y=10
+etch done x=6.1 y=10
+
+etch photo start x=3.8 y=-10
+etch cont x=4.8 y=-10
+etch cont x=4.8 y=10
+etch done x=3.8 y=10
+
+etch photo start x=-1.2 y=-10
+etch cont x=1.2 y=-10
+etch cont x=1.2 y=10
+etch done x=-1.2 y=10
+# 
+rate.etch machine=W_etch tungsten rie directional=1.0 isotropic=.1 u.m
+etch machine=W_etch time=1.4 minute dx.mult=.3
+strip
+
+deposit material=SOG thick=0.4 div=3
+# 
+rate.depo machine=HEMIS material=TEOS u.m  sigma.dep=0.20 smooth.win=3 smooth.step=1 dualdirec dep.rate=1.0 angle1=45.00 angle2=-45.00
+# 
+deposit machine=HEMIS time=0.8 minutes divis=4
+# 
+deposit photo thick=1 divis=5
+etch photo start x=-7.5 y=-10
+etch cont x=-7.5 y=10
+etch cont x=-6.5 y=10
+etch done x=-6.5 y=-10
+rate.etch machine=TEOS_etch material=TEOS rie directional=1.0 isotropic=0.1 u.m
+rate.etch machine=TEOS_etch material=SOG  rie directional=1.0 isotropic=0.1 u.m
+etch machine=TEOS_etch time=1.5 minutes 
+# 
+strip
+structure outfile=anex05_0.str
+
+deposit aluminum thick=.6 divis=6
+rate.depo machine=aluminum_depo aluminum cvd dep.rate=1. u.m step.cov=.75 smooth.win=5 smooth.step=4
+deposit machine=aluminum_depo time=.4 divisions=5
+# 
+etch aluminum thick=1.2
+
+deposit tungsten thick=.8 divisions=5
+# 
+deposit alumin thick=.8 divisions=3
+# 
+deposit tungsten thick=.1 div=1
+# 
+deposit material=TiN thick=.2 divisions=2
+deposit photores thick=1.0 divis=4
+# 
+etch photo left p1.x=-8
+
+etch photo start  x=-6 y=-10
+etch cont x=-6 y=10
+etch cont x=2.4 y=10
+etch done x=2.4 y=-10
+
+etch photo start  x=4.4 y=-10
+etch cont x=4.4 y=10
+etch cont x=5.7 y=10
+etch done x=5.7 y=-10
+
+etch photo right p1.x=7
+
+rate.etch machine=met_etch rie material=TiN direct=1.0 iso=.1 u.m
+rate.etch machine=met_etch rie tungsten     direct=1.0 iso=.2 u.m
+rate.etch machine=met_etch rie aluminum     direct=1.0 iso=.1 u.m
+etch machine=met_etch time=1.02 minute
+strip
+structure outfile=anex05_1.str
+
+deposit oxide thick=.4 divisions=4
+
+rate.depo machine=HEMIS material=TEOS u.m smooth.win=2 smooth.step=1 \
+      sigma.dep=0.30 dualdirec dep.rate=1.0 angle1=45.00 angle2=-45.00
+
+deposit machine=HEMIS time=0.8 minute divis=8
+
+rate.depo machine=HEMIS material=SOG u.s smooth.win=5 smooth.step=1 \
+     sigma.dep=0.20 dualdirec dep.rate=1.0 angle1=45.00 angle2=-45.00
+# 
+deposit machine=HEMIS time=0.5 seconds divis=4
+# 
+etch dry thick=0.2
+# 
+deposit oxide thick=1 divisions=5
+
+deposit photores thick=1. divis=3
+
+etch photo start x=2.8 y=-10.00
+etch cont x=2.8 y=10
+etch cont x=4 y=10
+etch done x=4 y=-10
+
+rate.etch machine=via_etch material=TEOS rie directional=1.0 isotropic=0.0 u.m
+rate.etch machine=via_etch material=SOG  rie directional=1.0 isotropic=0.0 u.m
+rate.etch machine=via_etch oxide         rie directional=1.0 isotropic=0.0 u.m
+etch machine=via_etch time=2. minutes
+
+strip
+structure outfile=anex05_2.str
+
+rate.depo machine=aluminum_depo aluminum cvd dep.rate=1. u.m step.cov=.75 smooth.win=1 smooth.step=4
+deposit machine=aluminum_depo time=.2 divisions=6
+deposit machine=aluminum_depo time=.8 divisions=10
+ 
+etch aluminum thick=1.01
+
+deposit material=AlCu thick=1.6 divis=10
+
+etch material=AlCu thick=0.8
+
+deposit tungsten thick=.1 div=1
+ 
+deposit material=TiN thick=.2 divisions=2
+
+deposit photo thick=.5 divis=3
+
+etch photo left p1.x=-4.4 
+etch photo start x=-2.4 y=-20
+etch cont x=-2.4 y=20
+etch cont x=2.4  y=20
+etch done x=2.4  y=-20
+etch photo right p1.x=4.4 
+# 
+rate.etch machine=metal_etch material=TiN  rie direction=1.0 isotropic=0.1 u.m
+rate.etch machine=metal_etch aluminum      rie direction=1.0 isotropic=0.1 u.m
+rate.etch machine=metal_etch material=AlCu rie direction=1.0 isotropic=0.1 u.m
+rate.etch machine=metal_etch tungsten      rie direction=1.0 isotropic=0.1 u.m
+etch machine=metal_etch time=2. minutes
+
+strip
+
+deposit nitride thick=1.5 divisions=5
+
+structure outfile=anex05_3.str
+
+tonyplot anex05_3.str
+
+quit
+

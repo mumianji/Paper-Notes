@@ -1,0 +1,157 @@
+<html>
+  <head>
+    <title>Luminous Efficiency of a III-V LED Device</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Luminous Efficiency of a III-V LED Device</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Blaze/LED</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="optoex06_plot0.png" width="640" alt="optoex06_plot0" />
+      <p/>
+      <img src="optoex06_plot1.png" width="640" alt="optoex06_plot1" />
+      <p/>
+      <img src="optoex06_plot2.png" width="640" alt="optoex06_plot2" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates how the radiative recombination models
+in Atlas can be used to analyze the luminous efficiency
+and of LED devices.
+</p>
+<p>
+The objective of this example is to forward bias the LED such that
+radiative recombination occurs in the active layer of the device.  Then
+by extracting the integrated radiative recombination rate and total
+integrated recombination rate, the luminous efficiency
+of the device can be measured.  Also, the integrated radiative recombination rate as a
+function of bias voltage can be extracted to estimate the luminous
+power versus bias voltage.
+</p>
+<b> Mesh Generation </b> <p>
+In the first section of the input file, a mesh
+covering an area of 4 microns by 4 microns is defined.  The mesh uses the
+&quot;diag.flip&quot; option since it is symmetric about the center in &quot;X&quot;.
+Mesh spacings are specified to try to resolve the heterojunctions
+in the &quot;Y&quot; direction and the doping profiles in the &quot;X&quot; direction.
+An eliminate statement is used to reduce the number of grid points
+used, in the direction of the substrate.  Also, the value of the
+&quot;space.mult&quot; parameter has been set to 2.0 to provide faster
+simulation.  For better accuracy (and longer simulation time)
+this value should be set to a smaller number.
+</p>
+<b> Region and Electrode Specification </b> <p>
+The device is composed of five regions: a GaAs &quot;p&quot; contact
+region, an AlGaAs cladding layer, the GaAs active
+region, a second AlGaAs cladding layer and an
+n-type GaAs substrate.  In this example the &quot;grad&quot; parameters
+were used to grade the heterojunctions between the first and
+second layers and the fourth and fifth layers.  The heterojunctions
+at both sides of the active layer are modeled as abrupt.
+</p>
+<p>
+A &quot;p&quot; contact electrode is defined at the center of the top of the
+device.  The &quot;p&quot; contact is narrower than the device to confine the
+photo-luminescence to a narrow region in the active layer.  The
+substrate electrode extends across the device at the bottom.
+</p>
+<b> Doping Profile Specification</b> <p>
+The doping profiles in the device are specified in the third section
+of the input file.  Here the first three layers are lightly doped
+&quot;P&quot; type, while the last two layers are heavily doped &quot;N&quot; type.
+In addition a &quot;P+&quot; type profile is defined around the &quot;p&quot; contact.
+</p>
+<b> Material Models</b> <p>
+In the fourth section of the file,  a set of material
+and model parameters is specified.  For analyzing luminous efficiency,
+all principal recombination mechanisms are selected.  In addition,
+a radiative recombination constant for all the
+materials is set.  In the solution part of the file
+the individual contributions of the various mechanisms to estimate
+luminous efficiency will be extracted.
+</p>
+<b> Output</b> <p>
+In the fifth section of the file, the various
+output parameters that will be written to the solution file during
+the solution process are chosen.  These parameters will allow the user to look
+at the conduction band edge energy, the valence band edge energy,
+the total recombination rate, the SRH recombination rate, the
+Auger recombination rate and the radiative recombination rate.
+</p>
+<b> Initial Solution</b> <p>
+In the sixth section of the file, an initial
+solution with no carriers is done.  This usually provides a good
+initial guess for the full, 2 carrier solutions to follow.
+</p>
+<b> Bias Ramp</b> <p>
+In the seventh section of the file the bias voltage
+across the LED is ramped from 0.0 V to 2.0 V in the forward bias direction.
+In this section a full two carriers solution  will be done so
+that recombination data can be observed.  In the first line
+of this section of the file, an output log file
+is specified. Current-voltage data will be written to this file. In the
+solve statement, a luminous wavelength
+<b> l.wave </b> is set so that luminous power can be extracted during the ramp.  In
+addition, the saving of an output file is set in the solve statement so
+that  snapshots of the device can be displayed at each step of the
+bias ramp.
+</p>
+<b> Extraction</b> <p>
+In the last section of the input file, the integrated
+total and radiative components of the recombination rate in the
+device are extracted.  The luminous efficiency can be estimated by the ratio
+of these values.
+</p>
+<b> Results</b> <p>
+From these  results,  the luminous efficiency can be calculated.
+The luminous efficiency is defined at the ratio of the radiative
+recombination rate to the total recombination rate.  The extracted
+values of these rates should be printed at the end of the run, giving
+a ratio a value of 70%.
+</p>
+<p>
+To view the results, first start up TonyPlot with the solution file .
+This file corresponds to the device structure after the completed
+voltage ramp. Once TonyPlot has started you should choose to display
+a contour plot of the radiative recombination rate.  In this plot
+we can see the relative luminescence in the active layer compared
+to other regions of the device.  In this case most of the radiative
+recombination should be confined to the active layer of the device.
+</p>
+<p>
+The log file contains all the terminal characteristics.  This file
+contains values of the calculated luminescent power as a function of
+device bias voltage.  Once the file is loaded into TonyPlot you should
+select to display &quot;anode bias&quot; along the x axis and &quot;Luminescent power&quot;
+along the y axis.  In this figure it is seen that the device &quot;turns-on&quot; at
+about 1.4 Volts.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

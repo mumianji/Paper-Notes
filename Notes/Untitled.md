@@ -65,30 +65,29 @@
 [column]
 [block]
 Content
-1. type
-1. sword
-1. ruthless
-1. intermittent
-1. specialize
-1. shelf
-1. burst
-1. cunning
-1. avail
-1. vicious
-1. dismiss
-1. accordance
-1. brake
-1. lord
-1. visa
-1. spiral
-1. shabby
-1. fabric
-1. evade
-1. ferry
-1. sponge
-1. climax
 
-
+1. sew
+1. remainder
+1. fabricate
+1. exploit
+1. president
+1. desirable
+1. pedal
+1. eminent
+1. chorus
+1. refuse
+1. balcony
+1. employer
+1. implication
+1. fling
+1. glance
+1. concerning
+1. pest
+1. muscular
+1. comment
+1. tribute
+1. hospitality
+1. worship
 
 
 

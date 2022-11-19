@@ -1,0 +1,78 @@
+# TPCS version: 8
+# various properties
+log label 0
+key opaque 0
+mark frequency 0
+mark overlay 0
+graph width 0 2
+graph width 1 1
+graph width 2 1
+graph width 3 1
+graph width 4 4
+graph width 5 1
+sequence size 2
+sequence width 2
+log zero -75
+sequence mark 0 0
+sequence mark 1 1
+sequence mark 2 2
+sequence mark 3 3
+sequence mark 4 4
+sequence mark 5 5
+# Functions
+function 1 "" ""
+function 2 "" ""
+function 3 "" ""
+function 4 "" ""
+select 1
+# xygraph flags
+show points on
+show lines on
+# xygraph types
+xygraph type 0 convert 0
+xygraph yaxis scale linear
+# xygraph x-axis
+xygraph xaxis "Drain Voltage" linear
+# xygraph y-axes
+xygraph yaxis none
+xygraph yaxis "Drain Current" linear
+# xygraph group
+xygraph group "(unknown electricals)"
+# key positions
+key contours 1 at 4
+key contours 2 at 0
+key contours 3 at 6
+key electrical at 0
+key vectors at 4
+key overlay at 4
+key regions at 3
+key apply 
+# annotation, titles
+title main auto
+title sub "IdVd characteristics from 2D and 3D simulations"
+# annotation, footers
+footer right none
+footer left none
+# annotation, show
+show xaxis on
+show yaxis on
+show grid off
+show label xaxis on
+show label yaxis on
+# annotation, axes
+range xaxis auto
+range yaxis auto
+label xaxis "Drain Voltage (V)"
+label yaxis "Drain Current (A)"
+# zoom
+zoom from 0, 0 scale 1, 1
+# user labels
+# overlay level names
+label overlay 0 "Vg = -3V (2D)"
+label overlay 1 "Vg = -2V (2D)"
+label overlay 2 "Vg = -1V (2D)"
+label overlay 3 "Vg =  0V (2D)"
+label overlay 4 "Vg = -3V (3D)"
+label overlay 5 "Vg = -2V (3D)"
+label overlay 6 "Vg = -1V (3D)"
+label overlay 7 "Vg =  0V (3D)"

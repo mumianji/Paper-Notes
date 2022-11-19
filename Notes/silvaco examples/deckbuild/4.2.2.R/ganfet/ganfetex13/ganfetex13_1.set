@@ -1,0 +1,142 @@
+#name of doping silvaco.file ASCII version=1.14.6 format=1
+name-of-doping ""
+
+#non-enable contour objects 
+number-of-non-enable-contour-objects 0
+
+#non-visible objects 
+number-of-non-visible-objects 0
+
+#Cut Plane Settings   
+point_1 0 0 0
+point_2 1 0 0
+point_3 0 0 1
+PAN 0
+PITCH 90
+ELEV 1
+#Cut Plane Axes Settings   
+X_REVERSE 0
+Y_REVERSE 0
+XY_SWAP 0
+
+#Define the scene matrix
+sm_00 0.87474958943561298
+sm_01 -0.10868091503867031
+sm_02 0.47223046755645087
+sm_03 -4.3228819449851814
+
+sm_10 -0.45616592331004502
+sm_11 -0.51346111342145184
+sm_12 0.72682207961419076
+sm_13 2.1239874658320015
+
+sm_20 0.16348029298028849
+sm_21 -0.85120276298327457
+sm_22 -0.4987264281113632
+sm_23 46.051521436516509
+
+sm_30 0
+sm_31 0
+sm_32 0
+sm_33 1
+
+#Define the camera matrix
+cm_00 1
+cm_01 0
+cm_02 0
+cm_03 0
+
+cm_10 0
+cm_11 1
+cm_12 0
+cm_13 0
+
+cm_20 0
+cm_21 0
+cm_22 1
+cm_23 -64.035952475497851
+
+cm_30 0
+cm_31 0
+cm_32 0
+cm_33 1
+
+#Define the scene scaling factors
+ss_xyz 1 1 1
+
+#Define 3D projection 
+proj_3d_aspect 1.5893416927899686
+proj_3d_z_near 12.054325935146728
+proj_3d_z_far 36.874751073510232
+proj_3d_height 25.464625299611175
+proj_3d_fovy 25
+proj_3d_type 0 #Global BBox Settings   
+global_bbox_min -0.88729927307532497 -3.1372992730753251 -0.88729927307532497
+global_bbox_max 10.330948909612989 19.330948909612989 2.3309489096129878
+proj_3d_depth_cue 2
+coord_selection 0
+coord_type 0
+modelview_x_scale 1
+modelview_y_scale 1
+modelview_z_scale 1
+#Define x-y-z Axis Visibility
+x_axis_visibility 1
+y_axis_visibility 1
+z_axis_visibility 1
+#Define Legend Visibility
+contour_legend 1
+region_legend 1
+#Define the DisplayMode
+display_mode_id 1
+#Define Show Cut Plane
+show_cut_plane 0
+#Define Show Cut Plane X Y Axes
+show_cut_plane_x_axis 1
+show_cut_plane_y_axis 1
+#Define the DrawMode
+draw_mode_id 0
+#Define the Region_Color_Type
+region_color_type 0
+
+#Define Title and Sub_Title
+title DEVEDIT3D
+sub_title "Data from ganfetex13_0_3D.str"
+mat_info "Silicon 7 1"
+#Define light0 and light1 information
+light0_enabled 1
+
+light0_color 255 255 255
+
+light0_intensity 0.53
+
+light0_latitude 30
+
+light0_longitude 0
+
+light1_enabled 1
+
+light1_color 255 255 255
+
+light1_intensity 0.53
+
+light1_latitude 0
+
+light1_longitude 270
+
+
+imp_menu_index 0
+#Define contours information
+limit_select_type 0
+
+auto_max_limit 1
+auto_min_limit 1
+contour_max_imp_value 0
+contour_min_imp_value 0
+legend_type 0
+legend_auto_mapping 1
+legend_mapping 0
+legend_palette 0
+legend_nbr_of_colors 5
+
+
+EOF 991924638

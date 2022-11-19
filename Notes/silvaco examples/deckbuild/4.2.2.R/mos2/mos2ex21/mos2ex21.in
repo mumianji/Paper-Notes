@@ -1,0 +1,235 @@
+# (c) Silvaco Inc., 2018
+
+go victoryprocess 
+
+init silicon layout=mos2ex21.lay depth=0.45 gasheight=1
+
+line x location=0
+line x location=0.0575
+line x location=0.0595
+line x location=0.05975
+line x location=0.06
+line x location=0.09
+line x location=0.09025
+line x location=0.0905
+line x location=0.0925
+line x location=0.15
+
+line y location=0
+line y location=0.02
+line y location=0.03
+line y location=0.038
+line y location=0.04
+line y location=0.05
+line y location=0.052
+line y location=0.06
+line y location=0.07
+line y location=0.09
+
+line z location=-1
+line z location=-0.0825
+line z location=-0.0525
+line z location=-0.0505
+line z location=-0.05025
+line z location=-0.05
+line z location=-0.0025
+line z location=-0.0005
+line z location=-0.00025
+line z location=0
+line z location=0.25
+line z location=0.4
+line z location=0.45
+
+
+# Create fin
+
+etch material=silicon angle=85 thickness=0.25 mask=ACTIVE min
+deposit oxide thick=0 max
+mask mask=ACTIVE reverse
+deposit material=silicon thickness=0.05 min
+strip resist
+
+# Create gate structure
+
+deposit material=oxynitride thick=0.0005 conformal
+deposit material=HfO2 thick=0.002 conformal
+deposit material=polysilicon thick=0.03 max
+etch material=polysilicon mask="POLY" thick=0.1 max 
+electrodes mask=ELECTRO material=polysilicon
+
+# Complete the remaining structure
+
+deposit material=oxide thick=0.01 conformal
+etch material=oxide thick=0.01  max
+etch material=oxide mask=SD_ETCH max
+etch material=HfO2  mask=SD_ETCH max
+etch material=oxynitride mask=SD_ETCH max
+
+mask mask=CONT reverse
+deposit material=polysilicon thick=0.06 min
+strip material=barrier
+    
+doping polysilicon arsenic=1e20
+doping silicon boron=5e14
+
+diffuse time=0.2 temp=1050
+
+electrodes mask=ELECTRO material=polysilicon
+
+save name=mos2ex21_vp_0
+
+
+go victorymesh
+
+load in=mos2ex21_vp_0
+
+remesh delaunay
+
+refine max.size=0.015
+refine max.interface.size=0.002 max.interface.distance=0.05
+refine max.junction.size=0.002 max.junction.distance=0.05
+
+save out=mos2ex21_0.str
+
+
+go victorydevice
+
+mesh infile=mos2ex21_0.str verbose=2
+
+electrode name=substrate x.min=0 x.max=0.15 y.min=0 y.max=0.09 \
+          z.min=0.4 z.max=0.5
+
+contact name=gate workfunc=4.65
+
+model consrh cvt fermi print 
+
+method pam.gmres maxtrap=6 itlimit=150 dvmax=1.0 carr=2 norm.scaling.local 
+ 
+solve init 
+solve prev
+
+solve vdrain=0.01
+solve vstep=0.01 vfinal=0.05 name=drain previous
+log outfile=mos2ex21_0.log
+solve vgate=0.01
+solve vgate=0.05 vstep=0.05 vfinal=1 name=gate previous
+log off
+
+solve init 
+solve prev
+solve vstep=0.05 vfinal=1 name=gate
+log outfile=mos2ex21_1.log
+solve vdrain=0.001
+solve vdrain=0.01
+solve vdrain=0.05
+solve vstep=0.05 vfinal=1 name=drain
+log off
+
+
+go victorydevice
+
+mesh infile=mos2ex21_0.str verbose=3
+
+electrode name=substrate x.min=0 x.max=0.15 y.min=0 y.max=0.09 \
+          z.min=0.4 z.max=0.5
+
+contact name=gate workfunc=4.65
+
+model consrh cvt fermi print
+model bqp.n  bqp.ngamma=1.4 bqp.nalpha=0.3 
+
+method pam.gmres maxtrap=6 itlimit=150 dvmax=1.0 carr=2 norm.scaling.local 
+ 
+solve init bqp.sc
+solve prev
+
+solve vdrain=0.01
+solve vstep=0.01 vfinal=0.05 name=drain previous
+log outfile=mos2ex21_2.log
+solve vgate=0.01
+solve vgate=0.05 vstep=0.05 vfinal=1 name=gate previous
+log off
+
+solve init bqp.sc
+solve prev
+solve vstep=0.05 vfinal=1 name=gate
+log outfile=mos2ex21_3.log
+solve vdrain=0.001
+solve vdrain=0.01
+solve vdrain=0.05
+solve vstep=0.05 vfinal=1 name=drain
+log off
+
+
+go victorydevice
+
+mesh infile=mos2ex21_0.str verbose=3
+
+electrode name=substrate x.min=0 x.max=0.15 y.min=0 y.max=0.09 \
+          z.min=0.4 z.max=0.5
+
+contact name=gate workfunc=4.65
+
+model consrh cvt fermi print
+model hcte.el
+method pam.gmres maxtrap=6 itlimit=150 dvmax=1.0 carr=2 norm.scaling.local 
+ 
+solve init 
+solve prev
+
+solve vdrain=0.01
+solve vstep=0.01 vfinal=0.05 name=drain previous
+log outfile=mos2ex21_4.log
+solve vgate=0.01
+solve vgate=0.05 vstep=0.05 vfinal=1 name=gate previous
+log off
+
+solve init 
+solve prev
+solve vstep=0.05 vfinal=1 name=gate
+log outfile=mos2ex21_5.log
+solve vdrain=0.001
+solve vdrain=0.01
+solve vdrain=0.05
+solve vstep=0.05 vfinal=1 name=drain
+log off
+
+
+go victorydevice
+
+mesh infile=mos2ex21_0.str verbose=3
+
+electrode name=substrate x.min=0 x.max=0.15 y.min=0 y.max=0.09 \
+          z.min=0.4 z.max=0.5
+
+contact name=gate workfunc=4.65
+
+model consrh cvt fermi print
+model bqp.n  bqp.ngamma=1.4 bqp.nalpha=0.3 
+model hcte.el
+
+method pam.gmres maxtrap=6 itlimit=150 dvmax=1.0 carr=2 norm.scaling.local 
+ 
+solve init bqp.sc
+solve prev
+
+solve vdrain=0.01
+solve vstep=0.01 vfinal=0.05 name=drain previous
+log outfile=mos2ex21_6.log
+solve vgate=0.01
+solve vgate=0.05 vstep=0.05 vfinal=1 name=gate previous
+log off
+
+solve init bqp.sc
+solve prev
+solve vstep=0.05 vfinal=1 name=gate
+log outfile=mos2ex21_7.log
+solve vdrain=0.001
+solve vdrain=0.01
+solve vdrain=0.05
+solve vstep=0.05 vfinal=1 name=drain
+log off
+
+tonyplot3d mos2ex21_0.str -set mos2ex21_0.set
+tonyplot -overlay mos2ex21_0.log mos2ex21_2.log mos2ex21_4.log mos2ex21_6.log -set mos2ex21_1.set
+tonyplot -overlay mos2ex21_1.log mos2ex21_3.log mos2ex21_5.log mos2ex21_7.log -set mos2ex21_2.set

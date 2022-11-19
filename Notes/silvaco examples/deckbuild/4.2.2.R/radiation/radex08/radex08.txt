@@ -1,0 +1,39 @@
+
+{subsection} radex08.in : Multiple SEU Strikes in a 6 Transistor 22nm SRAM
+
+Requires: VictoryProcess/VictoryDevice/SEE
+{newline}
+Minimum Versions: VictoryProcess 7.14.3.R, VictoryDevice 1.10.2.R
+
+This examples demonstrates Multiple Strike SEU Simulation in a 6 Transistor
+22nm SRAM Cell.
+
+VictoryProcess in Cell Mode is used to create the 6 transistor SRAM cell 
+structure.  The 4 layers of metal interconnect are left off in this example in
+an effort to speed up the device simulation.  A mixture of mask features and
+traditional "line" statements are used to create the structure mesh.  Monte-
+Carlo implant is used extensively in the process flow, so the process 
+simulation run time can be greatly reduced by taking advantage of the mult-
+threaded option on the "go victoryprocess" line.
+
+In the device simulation, a large number of "contact" statements are required
+to connect the various parts of the circuit, that would have been connected by
+the 4 layers of interconnect, that were omitted from the original design, in 
+the interests of device simuilation speed.  Also of note is the 
+{bold} "seu.integrate"
+parameter in the method statement that ensures correct total charge integration
+in the SEU charge track, reducing still further the required mesh count in the
+vacinity of the strike locations.
+
+The device simulation hits the nMOS devices in the main Flip-Flop of the SRAM
+with SEU strikes, staggered in time to allow for circuit recovery before the 
+next strike.  Striking each nMOS device in turn ensures that at least one of 
+the strikes will occur to an nMOS device in an "off state" ensuring that the
+SRAM will change state at least once as a result of the strikes.
+
+To load and run this example, select the
+{bold} Load example 
+button in DeckBuild. This will copy the input file and any support
+files to your current working directory. Select the
+{bold} run 
+button to execute the example.

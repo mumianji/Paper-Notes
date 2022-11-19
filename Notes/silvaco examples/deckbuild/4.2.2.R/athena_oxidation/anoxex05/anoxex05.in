@@ -1,0 +1,32 @@
+go athena
+
+#TITLE: Poly Buffered LOCOS Example
+#
+line x loc=-1.5 spac=0.1 
+line x loc=-0.4 spac=0.02
+line x loc=0.0  spac=0.02 
+line x loc=0.7  spac=0.2
+#
+line y loc=0    
+line y loc=0.2  spac=0.08
+line y loc=1    
+initialize orient=100
+oxide ori.dep=f
+#
+# Pad oxide and nitride mask
+deposit oxide   thick=0.02   div=1
+deposit poly    thick=0.1    div=4
+deposit nitride thick=0.15   div=3
+etch    nitride left p1.x=-0.4
+#
+tonyplot 
+#
+# Field oxidation
+method fermi compress  
+diffuse time=120 temp=1000 weto2
+#
+structure outfile=anoxex05.str
+#
+tonyplot anoxex05.str
+
+quit

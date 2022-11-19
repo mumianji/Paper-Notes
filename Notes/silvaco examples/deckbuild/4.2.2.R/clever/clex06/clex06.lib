@@ -1,0 +1,65 @@
+
+*                                                                               
+.LIB CMOS 
+*                                                                               
+.MODEL N NMOS (                                  LEVEL   = 8                  
++TNOM    = 27             TOX     = 8E-9           XJ      = 1.5E-7             
++NCH     = 1.7E17         NSUB    = 6E16           VTH0    = 0.4608699          
++K1      = 0.4818767      K2      = -0.028721      K3      = 44.8855329         
++K3B     = -1.5403759     W0      = 1E-5           NLX     = 1.544912E-7        
++DVT0W   = 0              DVT1W   = 0              DVT2W   = -0.032             
++DVT0    = 1.9610034      DVT1    = 0.5647729      DVT2    = -1.339812E-3       
++VBM     = -5             U0      = 486.2828408    UA      = 2.923176E-10       
++UB      = 1.650074E-18   UC      = 5.026457E-11   VSAT    = 1.055431E5         
++A0      = 1.1177771      AGS     = 0.3474197      B0      = 2.722399E-7        
++B1      = 1.006012E-6    KETA    = -0.0266868     A1      = 0                  
++A2      = 1              RDSW    = 913.4183577    PRWG    = 0.0234537          
++PRWB    = -5E-3          WR      = 1              WINT    = 1.343301E-7        
++LINT    = 3.966809E-8    DWG     = -5.223533E-9   DWB     = 1.036984E-8        
++VOFF    = -0.1222086     NFACTOR = 0.5035271      CIT     = 0                  
++CDSC    = 2.443604E-3    CDSCD   = 0              CDSCB   = 0                  
++ETA0    = 0              ETAB    = 0              DSUB    = 0.3866181          
++PCLM    = 1.1958704      PDIBLC1 = 0.0848571      PDIBLC2 = 3.436342E-3        
++PDIBLCB = 0              DROUT   = 0.3674126      PSCBE1  = 6.347064E8         
++PSCBE2  = 3.248271E-4    PVAG    = 0.4403431      DELTA   = 0.01               
++MOBMOD  = 1              PRT     = 0              UTE     = -1.5               
++KT1     = 0              KT1L    = 0              KT2     = 0                  
++UA1     = 4.31E-9        UB1     = -7.61E-18      UC1     = -5.6E-11           
++AT      = 3.3E4          NQSMOD  = 0              WL      = 0                  
++WLN     = 1              WW      = 0              WWN     = 1                  
++WWL     = -7.87359E-20   LL      = 0              LLN     = 1                  
++LW      = 0              LWN     = 1              LWL     = -3.8364E-20        
++CAPMOD  = 1              PRDSW   = -68.8127629    PVSAT   = -9.65591E3      )  
+*                                                                               
+.MODEL P PMOS (                                  LEVEL   = 8                  
++TNOM    = 27             TOX     = 8E-9           XJ      = 1.5E-7             
++NCH     = 1.7E17         NSUB    = 6E16           VTH0    = -0.6067793         
++K1      = 0.4959788      K2      = 0              K3      = 10.9524848         
++K3B     = 0.1244102      W0      = 1E-6           NLX     = 2.826335E-7        
++DVT0W   = 0              DVT1W   = 0              DVT2W   = -0.032             
++DVT0    = 0.8112768      DVT1    = 0.2801677      DVT2    = -0.1               
++VBM     = -5             U0      = 165.696697     UA      = 3.334242E-10       
++UB      = 1.611166E-18   UC      = -1.44921E-11   VSAT    = 1.471331E5         
++A0      = 0.7687114      AGS     = 0.1438305      B0      = 4.14889E-7         
++B1      = 2.688418E-6    KETA    = 0.0124364      A1      = 0                  
++A2      = 1              RDSW    = 1.199729E3     PRWG    = 0.1                
++PRWB    = -9E-3          WR      = 1              WINT    = 1.360286E-7        
++LINT    = 1.746003E-8    DWG     = -8.532494E-9   DWB     = 3.997662E-9        
++VOFF    = -0.19          NFACTOR = 1.7            CIT     = 0                  
++CDSC    = 1.257044E-4    CDSCD   = 0              CDSCB   = 0                  
++ETA0    = 0              ETAB    = 0              DSUB    = 0.2573881          
++PCLM    = 3.6590884      PDIBLC1 = 0.0426442      PDIBLC2 = 1E-5               
++PDIBLCB = 0              DROUT   = 0              PSCBE1  = 8E8                
++PSCBE2  = 5.009431E-5    PVAG    = 7.167513       DELTA   = 0.0451775          
++MOBMOD  = 1              PRT     = 0              UTE     = -1.5               
++KT1     = 0              KT1L    = 0              KT2     = 0                  
++UA1     = 4.31E-9        UB1     = -7.61E-18      UC1     = -5.6E-11           
++AT      = 3.3E4          NQSMOD  = 0              WL      = 0                  
++WLN     = 1              WW      = 0              WWN     = 1                  
++WWL     = -6.91911E-20   LL      = 0              LLN     = 1                  
++LW      = 0              LWN     = 1              LWL     = -4.28092E-20       
++CAPMOD  = 1              PRDSW   = -189.9523007   PVSAT   = 3.111434E4      )  
+*                                                                               
+.ENDL CMOS 
+
+

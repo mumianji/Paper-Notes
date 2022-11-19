@@ -1,0 +1,185 @@
+go quest 
+
+# Techno FILE
+
+layermapping layer.name = "MET1" gds.Number = 7 gds.Datatype = 0
+layermapping layer.name = "MET2" gds.Number = 9 gds.Datatype = 0
+layermapping layer.name = "MET3" gds.Number = 11 gds.Datatype = 0
+layermapping layer.name = "MET4" gds.Number = 13 gds.Datatype = 0
+layermapping layer.name = "MET5" gds.Number = 15 gds.Datatype = 0
+layermapping layer.name = "MET6" gds.Number = 17 gds.Datatype = 0
+layermapping layer.name = "VIA_M1_M2" gds.Number = 31 gds.Datatype = 0
+layermapping layer.name = "VIA_M2_M3" gds.Number = 33 gds.Datatype = 0
+layermapping layer.name = "VIA_M3_M4" gds.Number = 35 gds.Datatype = 0
+layermapping layer.name = "VIA_M4_M5" gds.Number = 37 gds.Datatype = 0
+layermapping layer.name = "VIA_M5_M6" gds.Number = 39 gds.Datatype = 0
+layermapping layer.name = "ELECTRODE" gds.Number = 70 gds.Datatype = 0
+layermapping layer.name = "ELECTRODE_T" gds.Number = 70 gds.Datatype = 1 isText
+
+attach electrode.layer = "ELECTRODE" metal.layer = "MET4"
+
+connection layer = "ELECTRODE" con.layer1 = "ELECTRODE_T"
+connection layer = "VIA_M1_M2" con.layer1 = "MET1" con.layer2 = "MET2"
+connection layer = "VIA_M2_M3" con.layer1 = "MET2" con.layer2 = "MET3"
+connection layer = "VIA_M3_M4" con.layer1 = "MET3" con.layer2 = "MET4"
+connection layer = "VIA_M4_M5" con.layer1 = "MET4" con.layer2 = "MET5"
+connection layer = "VIA_M5_M6" con.layer1 = "MET5" con.layer2 = "MET6"
+
+
+# PROCESS
+# Without frequency dependent permittivity
+material name = "aluminum" cond = 3.76676e+07 permittivity = 1 permeability = 1 losstangent = 0
+material name = "oxide" cond =  0 permittivity = 3.9 permeability = 1 losstangent = 0
+material name = "silicon" cond = 100 permittivity = 11.8 permeability = 1 losstangent = 0
+material name = "copper" cond = 5.88235e+07 permittivity = 1 permeability = 1 losstangent = 0
+material name = "air" cond =  0 permittivity = 1 permeability = 1 losstangent = 0
+
+
+
+deposit type = "substrate" layer.name = "SUBS" thick = 400 matName = "silicon"
+deposit type = "dielectric" layer.name = "PMD1" thick = 3 matName = "oxide"
+deposit type = "metal" layer.name = "MET1" thick = 0.5 matName = "aluminum" anglex = 0 angley = 0
+deposit type = "dielectric" layer.name = "PMD2" thick = 2 matName = "oxide"
+deposit type = "via" layer.name = "VIA_M1_M2" matName = "aluminum" from_layer ="MET1" to_layer="MET2" anglex = 0 angley = 0
+deposit type = "metal" layer.name = "MET2" thick = 0.5 matName = "aluminum" anglex = 0 angley = 0
+deposit type = "dielectric" layer.name = "PMD3" thick = 2 matName = "oxide"
+deposit type = "via" layer.name = "VIA_M2_M3" matName = "aluminum" from_layer ="MET2" to_layer="MET3" anglex = 0 angley = 0
+deposit type = "metal" layer.name = "MET3" thick = 0.8 matName = "aluminum" anglex = 0 angley = 0
+deposit type = "dielectric" layer.name = "PMD4" thick = 2 matName = "oxide"
+deposit type = "via" layer.name = "VIA_M3_M4" matName = "aluminum" from_layer ="MET3" to_layer="MET4" anglex = 0 angley = 0
+deposit type = "metal" layer.name = "MET4" thick = 0.8 matName = "copper" anglex = 0 angley = 0
+deposit type = "dielectric" layer.name = "PMD5" thick = 2 matName = "oxide"
+deposit type = "via" layer.name = "VIA_M4_M5" matName = "aluminum" from_layer ="MET4" to_layer="MET5" anglex = 0 angley = 0
+deposit type = "metal" layer.name = "MET5" thick = 1 matName = "copper" anglex = 0 angley = 0
+deposit type = "dielectric" layer.name = "PMD6" thick = 2 matName = "oxide"
+deposit type = "via" layer.name = "VIA_M5_M6" matName = "aluminum" from_layer ="MET5" to_layer="MET6" anglex = 0 angley = 0
+deposit type = "metal" layer.name = "MET6" thick = 1 matName = "copper" anglex = 0 angley = 0
+deposit type = "dielectric" layer.name = "PMD7" thick = 3 matName = "oxide"
+deposit type = "dielectric" layer.name = "AIR" thick = 50 matName = "air"
+
+
+# SOLVER
+
+Init simulation.type = "PORT" \
+	 impedance.residual = 0.01 impedance.iteration = 50	\
+	 capacitance.residual = 0.01 capacitance.iteration = 50 \
+	 domainbase = "Grounded"	Z0 = 50	add.resistance = 0	\
+	 dx = 5 dy = 5 dz = 1	\
+	 computation.domain = "Automatic"
+
+electrodes ports = "in", "subs_ground", "out", "subs_ground" 
+
+
+# To use for comparison purpose when using frequency dependent permittivity 
+# to match the number of frequencies defined in permitt_avec_pertes.txt
+Frequency type="List" frequency.list=10, 20, 40, 80, 100, 200, \
+        400, 800, 1000, 1500, 2000, 2500, 3000, 4000, 5000, 6000, 7000, \
+        8000, 10000
+
+# OUTPUT
+
+save	database.path = "questex17_db" \
+		 spice.file. = "questex17" tony.file= "questex17" \
+		 sparameter.file = "questex17" \
+                 3D.file = "questex17"   
+
+# RUN
+
+layout gdsfile = "questex17.gds" cell = "CELL"
+
+solve
+
+
+go quest 
+
+# Techno FILE
+
+layermapping layer.name = "MET1" gds.Number = 7 gds.Datatype = 0
+layermapping layer.name = "MET2" gds.Number = 9 gds.Datatype = 0
+layermapping layer.name = "MET3" gds.Number = 11 gds.Datatype = 0
+layermapping layer.name = "MET4" gds.Number = 13 gds.Datatype = 0
+layermapping layer.name = "MET5" gds.Number = 15 gds.Datatype = 0
+layermapping layer.name = "MET6" gds.Number = 17 gds.Datatype = 0
+layermapping layer.name = "VIA_M1_M2" gds.Number = 31 gds.Datatype = 0
+layermapping layer.name = "VIA_M2_M3" gds.Number = 33 gds.Datatype = 0
+layermapping layer.name = "VIA_M3_M4" gds.Number = 35 gds.Datatype = 0
+layermapping layer.name = "VIA_M4_M5" gds.Number = 37 gds.Datatype = 0
+layermapping layer.name = "VIA_M5_M6" gds.Number = 39 gds.Datatype = 0
+layermapping layer.name = "ELECTRODE" gds.Number = 70 gds.Datatype = 0
+layermapping layer.name = "ELECTRODE_T" gds.Number = 70 gds.Datatype = 1 isText
+
+attach electrode.layer = "ELECTRODE" metal.layer = "MET4"
+
+connection layer = "ELECTRODE" con.layer1 = "ELECTRODE_T"
+connection layer = "VIA_M1_M2" con.layer1 = "MET1" con.layer2 = "MET2"
+connection layer = "VIA_M2_M3" con.layer1 = "MET2" con.layer2 = "MET3"
+connection layer = "VIA_M3_M4" con.layer1 = "MET3" con.layer2 = "MET4"
+connection layer = "VIA_M4_M5" con.layer1 = "MET4" con.layer2 = "MET5"
+connection layer = "VIA_M5_M6" con.layer1 = "MET5" con.layer2 = "MET6"
+
+
+# PROCESS
+# With frequency dependent permittivity
+material name = "aluminum" cond = 3.76676e+07 permittivity = 1 permeability = 1 losstangent = 0
+material name = "oxide" cond = 0 permeability = 1 permit.file ="questex17_permittivity.txt" loss.file="questex17_losstangent.txt"
+material name = "silicon" cond = 100 permittivity = 11.8 permeability = 1 losstangent = 0
+material name = "copper" cond = 5.88235e+07 permittivity = 1 permeability = 1 losstangent = 0
+material name = "air" cond =  0 permittivity = 1 permeability = 1 losstangent = 0
+
+
+deposit type = "substrate" layer.name = "SUBS" thick = 400 matName = "silicon"
+deposit type = "dielectric" layer.name = "PMD1" thick = 3 matName = "oxide"
+deposit type = "metal" layer.name = "MET1" thick = 0.5 matName = "aluminum" anglex = 0 angley = 0
+deposit type = "dielectric" layer.name = "PMD2" thick = 2 matName = "oxide"
+deposit type = "via" layer.name = "VIA_M1_M2" matName = "aluminum" from_layer ="MET1" to_layer="MET2" anglex = 0 angley = 0
+deposit type = "metal" layer.name = "MET2" thick = 0.5 matName = "aluminum" anglex = 0 angley = 0
+deposit type = "dielectric" layer.name = "PMD3" thick = 2 matName = "oxide"
+deposit type = "via" layer.name = "VIA_M2_M3" matName = "aluminum" from_layer ="MET2" to_layer="MET3" anglex = 0 angley = 0
+deposit type = "metal" layer.name = "MET3" thick = 0.8 matName = "aluminum" anglex = 0 angley = 0
+deposit type = "dielectric" layer.name = "PMD4" thick = 2 matName = "oxide"
+deposit type = "via" layer.name = "VIA_M3_M4" matName = "aluminum" from_layer ="MET3" to_layer="MET4" anglex = 0 angley = 0
+deposit type = "metal" layer.name = "MET4" thick = 0.8 matName = "copper" anglex = 0 angley = 0
+deposit type = "dielectric" layer.name = "PMD5" thick = 2 matName = "oxide"
+deposit type = "via" layer.name = "VIA_M4_M5" matName = "aluminum" from_layer ="MET4" to_layer="MET5" anglex = 0 angley = 0
+deposit type = "metal" layer.name = "MET5" thick = 1 matName = "copper" anglex = 0 angley = 0
+deposit type = "dielectric" layer.name = "PMD6" thick = 2 matName = "oxide"
+deposit type = "via" layer.name = "VIA_M5_M6" matName = "aluminum" from_layer ="MET5" to_layer="MET6" anglex = 0 angley = 0
+deposit type = "metal" layer.name = "MET6" thick = 1 matName = "copper" anglex = 0 angley = 0
+deposit type = "dielectric" layer.name = "PMD7" thick = 3 matName = "oxide"
+deposit type = "dielectric" layer.name = "AIR" thick = 50 matName = "air"
+
+
+# SOLVER
+
+Init simulation.type = "PORT" \
+	 impedance.residual = 0.01 impedance.iteration = 50	\
+	 capacitance.residual = 0.01 capacitance.iteration = 50 \
+	 domainbase = "Grounded"	Z0 = 50	add.resistance = 0	\
+	 dx = 5 dy = 5 dz = 1	\
+	 computation.domain = "Automatic"
+
+electrodes ports = "in", "subs_ground", "out", "subs_ground"
+
+# To use when using frequency dependent permittivity to match the number of 
+# frequencies defined in permitt_avec_pertes.txt
+Frequency type="List" frequency.list=10, 20, 40, 80, 100, 200, \
+        400, 800, 1000, 1500, 2000, 2500, 3000, 4000, 5000, 6000, 7000, \
+        8000, 10000
+
+# OUTPUT
+
+save	database.path = "questex17_With_db" \
+		 spice.file. = "questex17" tony.file= "questex17" \
+		 sparameter.file = "questex17" \
+                 3D.file = "questex17"
+
+# RUN
+
+layout gdsfile = "questex17.gds" cell = "CELL"
+
+solve
+
+
+tonyplot -overlay questex17_db/questex17@@CELL/questex17_q.dat questex17_With_db/questex17@@CELL/questex17_q.dat
+
+quit

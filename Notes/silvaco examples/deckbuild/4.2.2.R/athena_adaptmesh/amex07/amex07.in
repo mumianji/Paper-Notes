@@ -1,0 +1,84 @@
+go athena
+#TITLE: EEPROM cell formation example
+#
+
+#line x loc=0.0  spac=0.1 
+#line x loc=0.6  spac=0.025
+#line x loc=0.9  spac=0.05
+#line x loc=1.5  spac=0.2
+#
+#line y loc=0.00 spac=0.01 
+#line y loc=0.3  spac=0.03
+#line y loc=2.0  spac=0.25
+
+grid.model template=EPROM
+
+#
+init c.boron=3e16 orientation=100 space.mult=2 width.str=1.5 depth.str=2.
+
+method adapt
+adapt.par i.arsenic silicon edge.min=2e-6
+
+#
+method compress fermi
+diffuse time=10 temp=950 dryo2
+#
+extract name="tunnelox" thickness oxide mat.occno=1 x.val=0
+#
+implant boron dose=1e12 energy=25 
+#
+deposit poly thick=.25 div=4
+#
+implant phos dose=6e14 energy=30 
+#
+diffuse time=5 temp=950 dryo2 
+#
+deposit nitride thick=.02 div=1
+#
+deposit oxide thick=.01 div=1
+#
+deposit poly thick=.25 div=4 c.phos=8e19
+# 
+etch poly    right p1.x=.6
+# 
+etch oxide   right p1.x=.6
+# 
+etch nitride right p1.x=.6
+#
+etch oxide   right p1.x=.6
+#
+etch poly    right p1.x=.6
+#
+etch oxide   right p1.x=.6
+#
+implant arsenic dose=1e15 energy=40 
+
+#
+diff time=50 temp=950
+deposit oxide thick=.03 div=2
+ 
+ 
+
+#
+structure mirror left
+#
+etch oxide left  p1.x=-0.8
+etch oxide right p1.x=0.8
+
+deposit alum th=.05 div=1
+#
+etch alum start x=0.9 y=-10.
+etch alum cont x=0.9 y=10.
+etch alum cont x=-.9 y=10.
+etch alum done x=-.9 y=-10.
+#
+# define electrode names
+electrode name=fgate x=0 y=-0.1
+electrode name=cgate x=0 y=-0.4
+electrode name=source x=-1.5 
+electrode name=drain x=1.5 
+electrode name=substrate backside
+# save the structure
+structure outfile=amex07.str
+tonyplot amex07.str -set amex07.set
+

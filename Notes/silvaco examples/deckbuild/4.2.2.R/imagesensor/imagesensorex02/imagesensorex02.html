@@ -1,0 +1,135 @@
+<html>
+  <head>
+    <title>Charge Integration Analysis</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Charge Integration Analysis</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>S-Pisces/Luminous</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="imagesensorex02_plot0.png" width="640" alt="imagesensorex02_plot0" />
+      <p/>
+      <img src="imagesensorex02_plot1.png" width="640" alt="imagesensorex02_plot1" />
+      <p/>
+      <img src="imagesensorex02_plot2.png" width="640" alt="imagesensorex02_plot2" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+In this example we examine the time integration of charge in the N well
+of the imaging device and look at crosstalk caused by charge blooming
+into an adjacent cell.  In this case we simulate two half cells representing
+adjacent red and green pixels.  This implies that we will implement color
+separation filtering and perform integration of charge during a time domain
+simulation.
+</p>
+<p>
+The simulation begins with a description of the device
+structure and mesh using the
+<b> MESH</b> ,
+<b> X.M</b> ,
+<b> Y.M</b> ,
+<b> REGION</b> ,
+<b> ELEC</b> , and
+<b> DOPING </b> statements.
+</p>
+<p>
+In this example we add a couple of extra oxide regions to represent the
+color filters for the adjacent pixels.  The optical characteristics of
+these regions will be modified to pass or not pass the source
+light.
+</p>
+<p>
+Next, we specify some material models and parameter defaults.  Of
+significance is the specification of the complex index of refraction
+of aluminum using the
+<b> REAL.INDEX</b> and
+<b> IMAG.INDEX</b> parameters
+of the
+<b> MATERIAL</b> statement.  In this case we set the imaginary
+index to a very high value.  This makes the aluminum blocking
+regions highly reflective/absorptive to light.
+</p>
+<p>
+Here we also specify the imaginary index of the red filter.  In this case
+the thickness of the filter was used to calculate an index that will absorb
+99% of the incident light.  We do not need to specify the index of the
+green filter since it is assumed to pass all of the incident light.
+</p>
+<p>
+Next we specify the optical source on the
+<b> BEAM</b> statement.  We
+specify the light with normal incidence from above with a wavelength
+of 0.5325 microns. This wavelength corresponds to the band pass of
+the green filter.  We also define the sampling in the FDTD mesh.
+This sampling should typically be a small fraction of the incident
+wavelength.  The
+<b> TD.WAVES</b> parameter specifies how many source
+wavelengths are propogated in this simulation.  Finally, we specify
+a file for capture of the structure as represented in the final
+FDTD mesh solution.  This is useful to examine the interference
+and diffraction patterns that might not be otherwise discernable in
+the standard finite-difference structure file.
+</p>
+<p>
+Next, we specify the lenslets above the two pixels.
+</p>
+<p>
+We add perfectly matched layers (PMLs) at the top and bottom of the FDTD domain
+to absorb reflected and transmitted light.  This is specified on the
+<b> PML</b> statements.
+</p>
+<p>
+After obtaining the initial solution, we define probes using the
+<b> PROBE</b> statement to allow us to measure the integrated electron concentration as
+a function of time for green and red pixel wells.
+</p>
+<p>
+Next we empty the well for the initial conditions.  To empty the well, we
+perform a zero carrier solution with the electron quasi-Fermi level set
+to a very high potential.  This insures that the electron concentration
+is negligible.
+</p>
+<p>
+Finally, we quickly ramp the beam up to an &apos;on&apos; state and continue to
+integrate the charge over 1 micro-second.
+</p>
+<p>
+At the end of the simulation we can plot the integrated charge in the
+two wells to see at what time a) the green well charge saturates and
+b) when the red well charge begins to increase due to charge blooming
+out of the green well.
+</p>
+<p>
+We then plot the electron concentration in the final structure.  This shows
+how the electrons have diffused out over the barrier between the two
+collection wells.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

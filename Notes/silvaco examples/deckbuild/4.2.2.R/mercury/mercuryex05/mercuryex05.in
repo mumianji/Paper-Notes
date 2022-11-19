@@ -1,0 +1,92 @@
+# (c) Silvaco Inc., 2018
+go atlas
+mercury
+
+#######################################################################
+### ATLAS example mercuryex05
+#######################################################################
+### Harmonic balance simulation of a recessed n-type MESFET.
+#######################################################################
+### 
+#######################################################################
+### Initialization
+#######################################################################
+
+###--------------------------------------------------------------------
+network clear
+
+###--------------------------------------------------------------------
+mesh width=100
+
+###--------------------------------------------------------------------
+x.mesh location=0.0 spacing=0.1
+x.mesh location=2.5 spacing=0.1
+y.mesh location=0.0 spacing=0.05
+y.mesh location=3.0 spacing=0.05
+
+#######################################################################
+### Device Specification
+#######################################################################
+
+###--------------------------------------------------------------------
+region number=1 material=GaAs thickness=0.2 donor=1e17 acceptor=1e11
+region number=1 material=GaAs thickness=0.2 nd.top=1e17 nd.bottom=1e11 acceptor=1e11
+region number=1 material=GaAs thickness=2.6 donor=1e11 acceptor=1e11
+
+###--------------------------------------------------------------------
+surface x=0.45 y=0.00
+surface x=0.50 y=0.10
+surface x=1.00 y=0.10
+surface x=1.05 y=0.00
+
+###--------------------------------------------------------------------
+electrode name=gate x.min=0.5 length=0.5
+
+###--------------------------------------------------------------------
+models n_depletion fldmob print
+
+###--------------------------------------------------------------------
+### A Harmonic Balance simulation is much slower than a DC or small-
+### signal RF mercury simulation, so there is no need to hide the
+### run-time output.
+options normal
+
+#######################################################################
+### Poisson solution.
+#######################################################################
+
+###--------------------------------------------------------------------
+poisson look_up vg_min=-2.5 vg_max=0.0 vd_min=0.0 vd_max=0.8
+
+#######################################################################
+### Harmonic Balance simulation
+#######################################################################
+
+###--------------------------------------------------------------------
+### Calculate the quiescent bias point for the HB simulation
+solve initial
+solve vgate=-1.0 vdrain=0.0 vstep=0.05 vfinal=0.5 name=drain
+
+###--------------------------------------------------------------------
+### The parameter "num.h" on the log command tells the log file how
+### many frequencies to store.  "num.h=3" means the file will contain
+### data from the fundamental and the first two harmonics.
+log num.h=3 out.file=mercuryex05_1.log
+
+###--------------------------------------------------------------------
+### The "hb" parameter is required to trigger a harmonic balance
+### simulation.  On the solve command the "num.h" parameter is used
+### to determine how many frequencies are used in the simulation.
+solve hb frequency=1e9 num.h=10 \
+      vinput=0.001 vfinal=0.1 nvstep=10 mult.v name=input
+log off
+
+###--------------------------------------------------------------------
+tonyplot mercuryex05_1.log -add mercuryex05_1.log -set mercuryex05_1.set
+
+#######################################################################
+### Exit the simulation
+#######################################################################
+
+###--------------------------------------------------------------------
+quit

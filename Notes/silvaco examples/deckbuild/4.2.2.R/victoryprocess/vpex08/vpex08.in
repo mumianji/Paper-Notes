@@ -1,0 +1,56 @@
+# Victory Process example 8
+# illustrating simulation of transient enhancement of dopant diffusion
+# due to interstitial supersaturation
+#
+# Silvaco 2014
+#
+
+go victoryprocess 
+# Define simulation domain, wafer material with arsenic doping 
+# and simulation mesh resolution. 
+
+Init material="silicon" dopant=arsenic dopingValue=1e16 depth=2 gasheight=0.5 \
+  resolution=0.02
+
+# Specify volume data mesh
+line z loc=0 spac=0.005
+line z loc=1 spac=0.01
+
+# Deposition with geometrical mode
+Deposit conformal material=oxide thick=0.01
+
+# Implantation with analytical mode
+Implant boron energy=20 dose=4e13 tilt=7 rotation=0 plus.one dam.fac=2
+#
+save name=temp
+
+go internal
+
+# Perform a sequence of annealing steps to analyze 
+#  the transient diffusion characteristic
+# ================================================
+
+# Number of anneal steps
+set steps=16
+# Initial step is 1 ms
+set t0=1e-3
+# Final step is 20 seconds
+set tfinal=20
+
+# The template file (input deck which perform one 
+# anneal step and parameter extraction
+load infile=vpex08_diff.in
+
+# This keeps the run-time output from the child simulations
+log outfile=crto 
+
+# Aneeal time step is calculated according to geometric progression
+sweep parameter=dt type=power range="$t0, $tfinal,$steps"
+
+save type=sdb outfile=vpex08.dat
+
+tonyplot vpex08.dat -set vpex08_plot0.set
+tonyplot -overlay vpex08_*.str -set vpex08_plot1.set
+tonyplot -overlay vpex08_*.str -set vpex08_plot2.set
+
+quit

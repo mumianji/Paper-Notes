@@ -1,0 +1,78 @@
+<html>
+  <head>
+    <title>Simulation of a Band-to-Band Tunneling Diode</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Simulation of a Band-to-Band Tunneling Diode</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Atlas</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="quantumex23_plot0.png" width="640" alt="quantumex23_plot0" />
+      <p/>
+      <img src="quantumex23_plot1.png" width="640" alt="quantumex23_plot1" />
+      <p/>
+      <img src="quantumex23_plot2.png" width="640" alt="quantumex23_plot2" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates the capability of a TCAD simulation for non-local band-to-band tunneling (BTBT) at low to ultra-low voltages.
+</p>
+<p>
+This example is related to the IEEE T-ED publication:
+T. A. Jokinen and S. McNamara, &quot;Band-to-Band Tunneling Diode for Ultralow-Voltage Applications,&quot; IEEE Transactions on Electron Devices, vol. 64, no. 6, pp. 2702-2706, June 2017,
+and to the Silvaco Simulation Standard 2017 article &quot;TCAD Simulations of TFET and Tunneling Diode&quot;.
+</p>
+<p>
+This gives an example of using the
+<b> BBT.NONLOCAL </b> and
+<b> QTREGION</b> model to study forward and reverse tunneling current in a degernerately-doped Silicon diode at room temperature (300K), and lowering the doping concentation so that the voltage hump (negative differential resistance) in forward bias is eliminated.
+</p>
+<p>
+The deck uses the
+<b> LOOP </b> statement to loop commands in
+<b> DeckBuild. </b> </p>
+<p>
+The
+<b> LOOP </b> is used to create three similar BTBT diodes with the only difference being the doping concentrations on each side of the junction. The BTBT diodes are designed with a fine mesh.  For tunneling to occur in the simulation, the junction is overlayed with a quantum region. This quantum region is defined by the statement:
+<b> QTREGION</b> . This creates quadrilateral that can be connected together to form a non-planar tunneling junction.
+</p>
+<p>
+The model
+<b> BBT.NONLOCAL  </b> is specified on the MODELS statement to use the non-local tunneling model.
+</p>
+<p>
+The simulation should be done using 80-bit precision, using the option:
+</p>
+<b>   simflags=&quot;-80&quot;</b> <p>
+The structure file of each device in equilibrium is saved, and can be viewed in
+<b> Tonyplot</b> . You can view the band diagrams and other information about the device.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

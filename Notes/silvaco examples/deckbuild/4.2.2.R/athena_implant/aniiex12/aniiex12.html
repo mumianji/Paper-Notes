@@ -1,0 +1,69 @@
+<html>
+  <head>
+    <title>Angled Monte Carlo Implant into a Trench</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Angled Monte Carlo Implant into a Trench</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>SSuprem 4, MC IMPLANT</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="aniiex12_plot0.png" width="640" alt="aniiex12_plot0" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example employs a Monte Carlo implant model to implant boron into
+the sidewall of a trench. The
+<b> RELAX </b> statement is also used to
+adapt the mesh after trench etching so that a fine mesh can be created
+at the surface where it is needed to resolve the implantation.
+</p>
+<p>
+For this example, ions are incident at an angle of 15 degrees from the
+direction of the y-axis.  Thus, the ions are incident directly only on
+the right side of the trench and at the top exposed surface.  The
+doping on the left side and bottom of the trench is due to reflected
+ions.  There is a visible reduction in the depth of the profile about 1
+micron from the bottom of the trench.  This corresponds to the point in
+the trench where ions are directly incident above this point and
+shadowed below it. The first TonyPlot shows the ion trajectories
+(including those of reflected ions). To facilitated the visualization
+select the LINE (the last icon in the
+<b> DISPLAY </b> menu) button.
+</p>
+<p>
+Following the implant calculation, a short diffusion is performed and
+the results are plotted using
+<b> TonyPlot</b> .
+The output shows 1D profiles
+from the surface of the unetched silicon and also from the implanted
+sidewall of the trench.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

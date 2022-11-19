@@ -1,0 +1,14 @@
+# (c) Silvaco Inc., 2018
+go internal 
+
+load infile=solarex16_aux.in 
+
+sweep parameter=Length_half_pyr type=list range="2,3,4,5,6,7"
+
+save sdb outfile=solarex16_0.dat
+
+tonyplot solarex16_1_2.str solarex16_1_3.str solarex16_1_4.str solarex16_1_5.str solarex16_1_6.str solarex16_1_7.str -set solarex16_0.set
+tonyplot solarex16_0.dat -set solarex16_1.set
+tonyplot -overlay solarex16_0_5.log solarex16_1_5.log
+quit
+

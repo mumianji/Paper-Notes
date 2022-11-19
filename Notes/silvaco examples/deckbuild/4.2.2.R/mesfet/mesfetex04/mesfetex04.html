@@ -1,0 +1,108 @@
+<html>
+  <head>
+    <title>Deep Level Bulk Traps (EL2) - DC Analysis</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Deep Level Bulk Traps (EL2) - DC Analysis</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>SSuprem 4/Blaze</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="mesfetex04_plot0.png" width="640" alt="mesfetex04_plot0" />
+      <p/>
+      <img src="mesfetex04_plot1.png" width="640" alt="mesfetex04_plot1" />
+      <p/>
+      <img src="mesfetex04_plot2.png" width="640" alt="mesfetex04_plot2" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This next three examples demonstrate the simulation of a MESFET structure with
+trap states. The example consists of several sections:
+</p>
+<ul>
+  <li>
+ Formation of a MESFET structure and doping using FLASH
+<br/>
+  </li>
+  <li>
+ DC simulation of Id/Vgs characteristics including traps
+<br/>
+  </li>
+  <li>
+- Transient simulation of gate turn off including traps
+<br/>
+  </li>
+  <li>
+- Frequency domain AC simulation including traps
+<br/>
+  </li>
+  <li>
+- S-parameter extraction including traps
+<br/>
+  </li>
+</ul>
+<p>
+This example will create the structure for subsequent use and perform the
+DC analysis.
+</p>
+<p>
+In the process simulation section, a simple planar MESFET is formed by
+implantation. The initial substrate is intrinsic GaAs. A low doping
+level of 1.0e11 is specified. An active layer of 0.1um of n-type GaAs
+is deposited. A nitride hard mask is used to pattern the source and
+drain regions. These regions are heavily doped using a silicon implant.
+Finally metal deposition and patterning is performed. The electrode names
+and positions are then defined at the final stage of Athena.
+</p>
+<p>
+Once in Atlas each run starts by setting the workfunction of the gate electrode.
+The models used in this simulation are electric field dependent mobility
+and SRH recombination. The lifetimes for the SRH recombination are set
+by the tau parameters on the MATERIAL statement. The vsat parameter sets
+the saturation velocity.
+</p>
+<p>
+The
+<b> trap </b> statement is used to set the parameter of the bulk trap
+states. Only one state is used here but several trap statements can be
+used in the same run to define multiple states. The trap type must be
+set as donor or acceptor. The energy level of the trap is set using
+&apos;e.level&apos;. The energy levels are referenced to the conduction or
+valence band edges. The sign and sigp parameters set the trapping cross
+sections for electrons and holes. An equivalent syntax setting
+lifetimes rather than cross sections is also available.
+</p>
+<p>
+The DC simulation consists of setting the drain voltage to 0.5V and
+stepping the gate from zero to -1.0V. Comparing the results of this
+simulation with and without traps shows that a shift to a more positive
+threshold voltage is caused by the presence of the donor traps.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

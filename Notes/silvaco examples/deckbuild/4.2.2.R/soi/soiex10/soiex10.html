@@ -1,0 +1,175 @@
+<html>
+  <head>
+    <title>Use of Body Contact to Suppress Kink Effect</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Use of Body Contact to Suppress Kink Effect</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Victory Process , Victory Device</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Victory Process 7.22.3.R, Victory Device 1.12.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="soiex10_plot0.png" width="640" alt="soiex10_plot0" />
+      <p/>
+      <img src="soiex10_plot1.png" width="640" alt="soiex10_plot1" />
+      <p/>
+      <img src="soiex10_plot2.png" width="640" alt="soiex10_plot2" />
+      <p/>
+      <img src="soiex10_plot3.png" width="640" alt="soiex10_plot3" />
+      <p/>
+      <img src="soiex10_plot4.png" width="640" alt="soiex10_plot4" />
+      <p/>
+      <img src="soiex10_plot5.png" width="640" alt="soiex10_plot5" />
+      <p/>
+      <img src="soiex10_plot6.png" width="640" alt="soiex10_plot6" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example shows how a body contact on
+an SOI NMOSFET can suppress a kink in the IdVd curve that is due to the
+effects of impact ionization. The effect of lattice heating is also shown.
+</p>
+<p>
+This example demonstrates:
+</p>
+<ul>
+  <li>
+ Definition of 3D SOI MOSFET structures using Victory Process
+<br/>
+  </li>
+  <li>
+ The use and effect of a body contact in a 3D MOSFET geometry
+<br/>
+  </li>
+  <li>
+ Calculation of lattice-heating effects
+<br/>
+  </li>
+  <li>
+ Simulation of impact ionization effects
+  </li>
+</ul>
+<p>
+The first Victory Process section in this example defines a basic SOI NMOSFET.
+Although the geometry of this device is essentially two-dimensional,
+it is here defined and simulated in 3D so that the results can be
+directly compared with those from a 3D MOSFET with a body contact.
+Using a tetrahedral mesh, the first MOSFET structure is saved to
+the file vdex02_0_0.str, from which it is imported into Victory Device.
+</p>
+<p>
+In Victory Device, the statement
+<b> ELECTRODE SUBSTRATE </b> ensures that the substrate of this device is recognized as an electrode,
+which will be held at ground potential. The succeeding
+<b> CONTACT </b> statement assigns to the gate the workfunction of n-type polysilicon.
+The
+<b> MODELS </b> statement is used to specify the particular models to be used during
+the simulation. In this example, they include:
+<br/>
+</p>
+<ul>
+  <li>
+ CVT: 
+A general purpose mobility model including concentration,
+temperature, parallel field and transverse field dependence.
+<br/>
+   </li>
+  <li>
+ SRH: 
+Shockley-Read-Hall recombination.
+<br/>
+  </li>
+  <li>
+ AUGER: 
+Auger recombination.
+<br/>
+  </li>
+  <li>
+ BGN: 
+Bandgap narrowing in the presence of heavy doping.
+  </li>
+</ul>
+<p>
+In addition to these models, the
+<b> IMPACT SELB </b> statement specifies that the Selberherr model for impact ionization
+will be used.
+</p>
+<p>
+Now some special steps must be taken, because the MOSFET used in this
+example is not especially stable.  That makes it difficult to obtain a
+consistently steady numerical solution. To facilitate this, we adjust
+some solver parameters by means of
+<b> METHOD </b> statements.
+</p>
+<p>
+Once the contacts, models, and methods have been specified, the simulation
+begins with a
+<b> SOLVE INIT </b> to initialize the solution at zero bias. Next a small initial bias is put
+upon the drain, and then the gate is brought up to its operating bias of 3 V.
+The bias on the drain is then ramped from 0.2 V up to 4 V, and the IdVd
+curve saved to the logfile vdex02_0_2.log.
+</p>
+<p>
+After this, the entire simulation is repeated for this structure, but this
+time considering lattice heating effects. The
+<b> CONTACT </b> and
+<b> MATERIAL </b> statements assign to the gate contact the workfunction, heat capacity,
+and thermal conductivity of n-type polysilicon. The
+<b> THERMCONTACT </b> statement here defines a thermal contact at the substrate, and specifies
+that it will be maintained at 300 K.
+</p>
+<p>
+Once the gate has been biased, lattice temperature
+simulation is activated by the statement
+<b> MODELS LAT.TEMP</b> . The drain is then biased as before, and the IdVd curve is
+saved to the logfile vdex02_0_4.log.
+</p>
+<p>
+The second Victory Process section defines a MOSFET with an additional body contact,
+beside the gate. The difference between this structure and the first one can
+be seen by comparing vdex02_1_0.str and vdex02_0_0.str in
+<b> TonyPlot3D</b> .
+</p>
+<p>
+As with the first structure, simulations are run with and without lattice
+heating effects. With the addition of the body contact (at 0 V), however,
+the device is much more stable. The IdVd curves are written to the log files
+vdex02_1_2.log and vdex02_1_4.log, and all four IdVd curves generated in
+this example are compared in
+<b> TonyPlot</b> . This comparison clearly shows that the addition of the body contact suppresses
+the kink in the curves, which is due to the effects of impact ionization.
+</p>
+<p>
+In
+<b> TonyPlot3D</b> , you can examine the structure files vdex02_0_1.str and vdex02_1_1.str to
+compare the impact ionization patterns for the two devices, and the
+structure files vdex02_0_2.str and vdex02_1_2.str to compare the heat fluxes
+as well as other lattice heating effects.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

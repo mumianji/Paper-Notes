@@ -1,0 +1,65 @@
+<html>
+  <head>
+    <title>EQE of III-V Tandem Cell</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>EQE of III-V Tandem Cell</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Blaze/Luminous</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="solarex17_plot0.png" width="640" alt="solarex17_plot0" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates the methodology to simulate EQE of
+a tandem cell. This example, based on solarex03, will also show
+that EQE can be simulated using a non-local band-to-band tunneling
+model to model the tunnel diode in the tandem cell. An alternative
+approach is also shown and consist to replace the tunnel junction
+by an electrode with a very high resistance so that the current can
+flow from the top cell to the bottom cell without limitation. The
+results of both approaches are very similar.
+</p>
+<p>
+In order to get EQE of the tandem cell special technique should be
+used. Indeed two cells are in series, thus the current is limited
+by the one that has the lowest current. The idea is to illuminate
+the one we do not want to characterize by applying a monochromatic
+beam with an intensity 10 times higher compared to cell under test.
+2 beams were used in this input deck, one with a fixed monochromatic
+wavelenght and one with a variable wavelenght to characterize the cell
+under test in the tandem cell. The current resulting from the illumination
+using the monochromatic beam is then substracted to the total current,
+to get the current of the cell under test. EQE is obtained by
+dividing the current of the cell under test by the source photo
+current.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

@@ -1,0 +1,11 @@
+<!DOCTYPE SetFile-2D>
+<setfile version="1" >
+ <properties key_opaque="false" mark_frequency="0" mark_overlay="0" graph_width_0="2" graph_width_1="1" graph_width_2="1" graph_width_3="1" graph_width_4="4" graph_width_5="1" sequence_size="2" sequence_width="2" log_zero="0" sequence_mark_0="0" sequence_mark_1="1" sequence_mark_2="2" sequence_mark_3="3" sequence_mark_4="4" sequence_mark_5="5" />
+ <functions impurity_1_name="" impurity_1_units="" impurity_2_name="" impurity_2_units="" graph_1_name="" graph_1_units="" graph_2_name="" graph_2_units="" />
+ <mesh2d show_contours="false" show_edges="true" show_electrodes="false" show_junctions="true" show_light="false" show_materials="true" show_mesh="false" show_threed="false" show_vectors="false" region_param="-101" >
+  <junctions junc_show="none" junc_show="junctions" junc_contours="0.5" />
+ </mesh2d>
+ <key cont_1_at="3" cont_2_at="1" cont_3_at="6" elec_at="6" vectors_at="6" overlay_at="2" regions_at="4" />
+ <annotation title_main="auto" title_sub="auto" footer_right="none" footer_left="none" show_xaxis="true" show_yaxis="true" show_grid="false" show_label_xaxis="true" show_label_yaxis="true" range_xaxis="auto" range_yaxis="auto" label_xaxis="Position X (~mm)" label_yaxis="Position Y (~mm)" />
+ <plot zoom_from_x="0" zoom_from_y="0" zoom_scale_x="1" zoom_scale_y="1" label_overlay="vpex03_2d.str" />
+</setfile>

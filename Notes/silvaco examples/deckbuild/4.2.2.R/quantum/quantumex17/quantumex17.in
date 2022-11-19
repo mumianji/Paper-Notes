@@ -1,0 +1,16 @@
+# (c) Silvaco Inc., 2018
+go internal
+
+load inf=quantumex17_aux.in
+
+sweep parameter=doping type=list data="5e18,8e18,1e19,2e19,5e19,8e19"
+
+save type=sdb outfile=quantumex17.dat
+
+tonyplot -overlay quantumex17_8e+19.log quantumex17_5e+19.log quantumex17_2e+19.log quantumex17_1e+19.log quantumex17_8e+18.log quantumex17_5e+18.log  -set quantumex17_0.set
+
+tonyplot quantumex17.dat -set quantumex17_1.set
+
+tonyplot quantumex17.dat -set quantumex17_2.set
+
+quit

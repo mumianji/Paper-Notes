@@ -1,0 +1,177 @@
+# (c) Silvaco Inc., 2018
+go atlas simflags="-80"
+
+mesh inf=ganfetex13_0.str
+
+region modify num=3 x.comp=0.3
+region modify material="GaN" num=2 substrate
+
+elec name=source x.min=0 x.max=0.5 y.min=-2 y.max=-1.5
+elec name=gate x.min=3.5 x.max=5.5 y.min=-2 y.max=-1.5
+elec name=drain x.min=8.5 x.max=9 y.min=-2 y.max=-1.5
+elec substrate
+
+contact name=gate work=5
+contact name=source work=4
+contact name=drain work=4
+
+models k.p print srh 
+mobility albrct.n 
+models POLARIZATION CALC.STRAIN TENSOR.SCALE=0 PSP.SCALE=0.75 PIEZO.SCALE=0.75
+
+output con.band val.band charge polar.charge band.par qss
+
+method trap maxtrap=20
+
+solve init
+save outf=ganfetex13_1.str
+
+solve vdrain=1
+solve name=gate vfinal=-8 vstep=-0.5
+log outf=ganfetex13_0.log
+solve name=gate vfinal=1.0 vstep=0.2
+log off
+
+go victorystress 
+
+init structure="ganfetex13_0.str" 
+
+material nitride intrin.sig=-5e9
+material nitride young.m=300e9
+material nitride poiss.r=0.24
+
+stress strain exposed rebalance
+
+save structure="ganfetex13_2.str"
+
+
+go atlas simflags="-80"
+
+mesh inf=ganfetex13_2.str
+
+region number=2 material=GaN substrate modify
+region number=3  material=AlGaN  x.comp=0.3  modify
+
+elec name=source x.min=0 x.max=0.5 y.min=-2 y.max=-1.5
+elec name=gate x.min=3.5 x.max=5.5 y.min=-2 y.max=-1.5
+elec name=drain x.min=8.5 x.max=9 y.min=-2 y.max=-1.5
+elec substrate
+
+contact name=gate work=5
+contact name=source work=4
+contact name=drain work=4
+
+models k.p print srh 
+mobility albrct.n 
+models POLARIZATION CALC.STRAIN TENSOR.SCALE=1 PSP.SCALE=0.75 PIEZO.SCALE=0.75
+
+output con.band val.band charge polar.charge band.par qss
+
+method  trap maxtrap=20
+
+solve init
+save outf=ganfetex13_3.str
+
+solve vdrain=1
+solve name=gate vfinal=-8 vstep=-0.5
+log outf=ganfetex13_1.log
+solve name=gate vfinal=1.0 vstep=0.2
+log off
+
+# create the 3D structure by extruding the 2d one in devedit3d
+go devedit simflags="-3d"
+
+init inf=ganfetex13_0.str z1=0 z2=1 mesh=true
+
+z.plane z=0 spacing=0.5
+z.plane z=1 spacing=0.5
+
+structure outf=ganfetex13_0_3D.str
+
+go atlas simflags="-80"
+
+mesh inf=ganfetex13_0_3D.str three.d
+
+region number=2 material=GaN substrate modify
+region number=3  material=AlGaN  x.comp=0.3  modify
+
+electrode num=1  name=source
+electrode num=2  name=gate
+electrode num=3  name=drain
+elec name=substrate x.min=0 x.max=9 y.min=18 y.max=18 z.min=0 z.max=1
+
+contact name=gate work=5
+contact name=source work=4
+contact name=drain work=4
+
+models k.p print srh 
+mobility albrct.n 
+models POLARIZATION CALC.STRAIN TENSOR.SCALE=0 PSP.SCALE=0.75 PIEZO.SCALE=0.75 
+
+output con.band val.band charge polar.charge band.par qss
+
+method bicgst trap maxtrap=20
+
+solve init
+save outf=ganfetex13_1_3D.str
+
+solve name=drain vfinal=1 vstep=0.1
+
+solve name=gate vfinal=-8 vstep=-0.5
+log outf=ganfetex13_0_3D.log
+solve name=gate vfinal=1.0 vstep=0.2
+
+go victorystress 
+
+init structure="ganfetex13_0_3D.str" 
+
+material nitride intrin.sig=-5e9
+material nitride young.m=300e9
+material nitride poiss.r=0.24
+
+stress strain exposed rebalance
+
+save structure="ganfetex13_2_3D.str"
+
+
+go atlas simflags="-80" 
+
+mesh inf=ganfetex13_2_3D.str three.d
+
+region number=2 material=GaN substrate modify
+region number=3  material=AlGaN  x.comp=0.3  modify
+
+electrode num=1  name=source
+electrode num=2  name=gate
+electrode num=3  name=drain
+elec name=substrate x.min=0 x.max=9 y.min=18 y.max=18 z.min=0 z.max=1
+
+contact name=gate work=5
+contact name=source work=4
+contact name=drain work=4
+
+models print srh 
+models k.p
+mobility albrct.n 
+models POLARIZATION CALC.STRAIN TENSOR.SCALE=1 PSP.SCALE=0.75 PIEZO.SCALE=0.75 
+
+output con.band val.band charge polar.charge band.par qss
+
+method bicgst trap maxtrap=20
+
+solve init
+save outf=ganfetex13_3_3D.str
+
+solve name=drain vfinal=1 vstep=0.1
+
+solve name=gate vfinal=-8 vstep=-0.5
+log outf=ganfetex13_1_3D.log
+solve name=gate vfinal=1.0 vstep=0.2
+
+
+tonyplot -overlay ganfetex13_0.log ganfetex13_0_3D.log ganfetex13_1.log ganfetex13_1_3D.log -set ganfetex13_0.set
+tonyplot3d ganfetex13_3_3D.str -set ganfetex13_2.set -cut ganfetex13_3.str
+tonyplot ganfetex13_3.str -set ganfetex13_3.set
+tonyplot3d ganfetex13_0_3D.str -set ganfetex13_1.set
+
+quit

@@ -1,0 +1,85 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include <ctype.h>
+#include <malloc.h>
+#include <string.h>
+#include <template.h>
+
+/*
+ * -----------------------------------------------------------------
+ * ATLAS Parser Function Template
+ * ATLAS Version 5.9.19.A
+ * c 1993 - 2006 SILVACO International. 
+ * All rights reserved.
+ * -----------------------------------------------------------------
+ */
+
+/* The SKR mobility functions are based on M. Sotoodeh, A. H. Khalid, and 
+ *  A. A. Rezazadeh, "Empirical low-field mobility model for III-V compounds applicable 
+ *  in device simulation codes", J. Appl. Phys. vol. 87, p. 2890.
+ */
+
+
+/*
+ * Composition, temperature and doping dependent electron mobility
+ * Statement: MATERIAL
+ * Parameter: F.CONMUN
+ * Arguments:
+ * xcomp      composition fraction x
+ * ycomp      composition fraction y
+ * temp       temperature (K)
+ * nd         net concentration of donors (per cc)
+ * na         net concentration of acceptors (per cc)
+ * x          location x (microns)
+ * y          location y (microns)
+ * taun       electron SRH lifetime (s)
+ * *mun       electron mobility
+ */
+int conmun(double xcomp,double ycomp,double temp,double nd,double na,double x,double y,double taun,double *mun)
+{
+	double mumax, mumin, Nref, lambda, theta1, theta2, Ntotal, t1, t2;
+	mumax = 5200;
+	mumin = 400;
+	Nref = 3.0e17;
+	lambda = 0.47;
+	theta1 = 2.0;
+	theta2 = 3.25;
+	Ntotal = nd + na;
+	t1 = pow(300/temp,theta1);
+	t2 = pow(temp/300,theta2);
+	*mun = mumin + (mumax*t1 - mumin)/(1 + pow(Ntotal/(Nref*t2),lambda));
+	return(0);                /* 0 - ok */
+}
+
+/*
+ * Composition, temperature and doping dependent hole mobility
+ * Statement: MATERIAL
+ * Parameter: F.CONMUP
+ * Arguments:
+ * xcomp      composition fraction x
+ * ycomp      composition fraction y
+ * temp       temperature (K)
+ * nd         net concentration of donors (per cc)
+ * na         net concentration of acceptors (per cc)
+ * x          location x (microns)
+ * y          location y (microns)
+ * taup       hole SRH lifetime (s)
+ * *mup       hole mobility
+ */
+int conmup(double xcomp,double ycomp,double temp,double nd,double na,double x,double y,double taup,double *mup)
+{
+	double mumax, mumin, Nref, lambda, theta1, theta2, Ntotal, t1, t2;
+	mumax = 170;
+	mumin = 10;
+	Nref = 4.87e17;
+	lambda = 0.62;
+	theta1 = 2.0;
+	theta2 = 3.0;
+	Ntotal = nd + na;
+	t1 = pow(300/temp,theta1);
+	t2 = pow(temp/300,theta2);
+	*mup = mumin + (mumax*t1 - mumin)/(1 + pow(Ntotal/(Nref*t2),lambda));
+	return(0);                /* 0 - ok */
+}
+

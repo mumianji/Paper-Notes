@@ -1,0 +1,16 @@
+<!DOCTYPE SetFile-2D>
+<setfile version="1" >
+ <properties key_opaque="false" mark_frequency="0" mark_overlay="0" graph_width_0="3" graph_width_1="1" graph_width_2="1" graph_width_3="1" graph_width_4="3" graph_width_5="1" sequence_size="2" sequence_width="2" log_zero="0" sequence_mark_0="0" sequence_mark_1="1" sequence_mark_2="2" sequence_mark_3="3" sequence_mark_4="4" sequence_mark_5="5" />
+ <functions impurity_1_name="" impurity_1_units="" impurity_2_name="" impurity_2_units="" graph_1_name="" graph_1_units="" graph_2_name="" graph_2_units="" />
+ <xygraph show_points="true" show_lines="true" xyg_type="0" xyg_convert="false" >
+  <cartesian xyg_yaxis_scale="linear" xyg_xaxis_lin="Anode Voltage" xyg_yaxis="none" xyg_yaxis_lin="Cathode Current" xyg_group="(unknown electricals)" xyg_cie="false" />
+ </xygraph>
+ <key cont_1_at="3" cont_2_at="1" cont_3_at="6" elec_at="6" vectors_at="6" overlay_at="2" regions_at="4" />
+ <annotation title_main="IV Characteristic" title_sub=" " footer_right="none" footer_left="none" show_xaxis="true" show_yaxis="true" show_grid="false" show_label_xaxis="true" show_label_yaxis="true" range_xaxis="auto" range_yaxis="auto" label_xaxis="Anode Voltage (V)" label_yaxis="Cathode Current (A)" />
+ <plot zoom_from_x="0" zoom_from_y="0.538268" zoom_scale_x="1.08279" zoom_scale_y="2.18427" label_overlay="solarex12_2.log" >
+  <label label_text="EFF=9.97%" label_from_x="0.126468" label_from_y="3.86429e-10" label_color="#000000" label_scale="2" label_align="7" />
+  <label label_text="FF=71.95" label_from_x="0.113337" label_from_y="4.49706e-10" label_color="#000000" label_scale="2" label_align="7" />
+  <label label_text="JSC=10.21mA/cm2" label_from_x="0.0509651" label_from_y="8.62385e-10" label_color="#000000" label_scale="2" label_align="2" label_to_x="-0.0114071" label_to_y="9.64179e-10" />
+  <label label_text="VOC=1.356V" label_from_x="1.17038" label_from_y="-5.37614e-11" label_color="#000000" label_scale="2" label_align="5" label_to_x="1.31154" label_to_y="1.22671e-11" />
+ </plot>
+</setfile>

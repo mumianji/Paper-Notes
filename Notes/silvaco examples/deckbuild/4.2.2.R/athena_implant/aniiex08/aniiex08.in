@@ -1,0 +1,35 @@
+go athena
+
+# Phosphorus Implant through Thick Nitride Layer
+
+#the x dimension definition
+line x loc = 0.0   spacing=0.25
+line x loc = 0.25  spacing=0.25
+
+#the vertical definition
+line y loc = 0     spacing = 0.005 
+line y loc = 0.3  spacing = 0.005
+
+
+init silicon
+
+deposit nitride thick=0.08 div=20
+struct outf=aniiex08.str
+
+# Use Monte Carlo
+implant phos energy=100 dose=1e14 amorph monte n.ion=5000  
+struct outf=aniiex08_01.str remove.gas
+
+init infile=aniiex08.str
+# Use default DOSE.MATCH method
+implant phos energy=100 dose=1e14 amorph
+struct outf=aniiex08_02.str
+# 
+init infile=aniiex08.str
+# Use MAX.SCALE method
+implant phos energy=100 dose=1e14 amorph max.scale
+struct outf=aniiex08_03.str       
+tonyplot -overlay aniiex08_*.str -set aniiex08.set
+quit
+
+

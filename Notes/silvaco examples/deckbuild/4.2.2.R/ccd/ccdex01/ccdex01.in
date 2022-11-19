@@ -1,0 +1,152 @@
+# (c) Silvaco Inc., 2018
+go athena
+
+line x loc= 0.00 spac=0.5
+line x loc= 3.00 spac=0.1
+line x loc= 3.20 spac=0.1
+line x loc= 4.70 spac=0.25
+line x loc= 6.20 spac=0.1
+line x loc= 7.00 spac=0.2
+
+line y loc=0.00  spac=0.05
+line y loc=0.6   spac=0.1
+line y loc=3.0   spac=0.5
+
+
+# Define material, orientation, initial doping
+init silicon c.boron=5e15 orientation=100 space.mult=2
+
+# form n- active layer at surface 
+implant phosphorus dose=8e11 energy=120
+
+# active layer diffusion
+diffuse time=60 temp=950 nitro
+
+# Deposit gate oxide
+
+deposit oxide thick=0.04 divisions=3
+ 
+ 
+# mask for the p- implant under transfer gate
+deposit photo thick=3.0 divisions=2
+ 
+etch photores start x=7 y=-10.0
+etch cont x=7 y=10.0
+etch cont x=3.5 y=10.0
+etch done x=3.5 y=-10.0
+ 
+
+relax y.min=1.0
+
+
+# Implant p- region   
+implant boron dose=1e11 energy=80
+ 
+etch photores all
+ 
+#drive diffusion : commented out for speed
+#method fermi compress
+#diffus time=220 temp=1000 nitro press=1.00
+
+deposit poly thick=0.12 div=1
+
+etch poly start x=3.0 y=-5
+etch cont x=3.0 y=5
+etch cont x=3.2 y=5
+etch done x=3.2 y=-5
+ 
+etch poly start x=6.2 y=-5
+etch cont x=6.2 y=5
+etch cont x=7.0 y=5
+etch done x=7.0 y=-5
+ 
+deposit photo thick=1.0 divisions=8
+ 
+etch photo right p1.x=6.2
+etch oxide right p1.x=6.2
+
+# Implant n+ drain region 
+implant arsenic dose=1e15 energy=50
+
+strip
+
+#drain anneal : commented out for speed
+#method fermi compress
+#diffus time=30 temp=900 nitro press=1.00
+
+deposit alum thick=0.1 div=2
+etch alum left p1.x=6.5
+
+electrode name=sto_gate x=0
+electrode name=tra_gate x=4
+electrode name=drain x=6.9
+electrode name=substrate backside
+
+# extract process parameters 
+# here active layer/substrate junction is SECOND from the surface
+extract name="storage_xj" xj material="Silicon" mat.occno=1 x.val=1 junc.occno=2
+extract name="transfer_xj" xj material="Silicon" mat.occno=1 x.val=5 junc.occno=2
+
+
+
+structure outf=ccdex01_0.str
+tonyplot ccdex01_0.str -set ccdex01_0.set
+
+
+go atlas
+
+contact name=sto_gate n.poly
+contact name=tra_gate n.poly
+
+material taun0=1e-7 taup0=1e-7
+models cvt consrh bgn auger print 
+interface qf=3e10
+
+beam num=1 wavelength=0.6 x.ori=0 y.ori=-1 max.win=2 angle=90
+solve init
+
+method newton climit=1e-4 
+
+solve v1=-6 v2=-6 
+solve vdrain=0.1
+solve vdrain=1 vstep=1 vfinal=15 name=drain 
+
+#save empty structure
+save outf=ccdex01_1.str
+tonyplot  ccdex01_1.str -set ccdex01_1.set
+
+
+
+
+
+#extract electron concentration in empty well (1.0e4 is to scale into I/cm^3)
+extract init inf="ccdex01_1.str"
+extract name="n_in_empty_well" 1.0e+4*area from curve(depth,n.conc material="Silicon" mat.occno=1 x.val=1.0) 
+
+# now turn on light beam in transient
+
+solve b1=1 ramp.lit ramptime=5e-9 dt=1e-11 tstop=20e-9 outf=light.str master onefile
+solve b1=0 ramp.lit ramptime=5e-9 dt=1e-10 tstop=50e-9
+
+#save charged structure
+save outf=ccdex01_2.str
+tonyplot  ccdex01_2.str -set ccdex01_2.set
+
+
+
+#extract electron concentration in full well (1.0e4 is to scale into I/cm^3)
+extract init inf="ccdex01_2.str"
+extract name="n_in_full_well" 1.0e+4*area from curve(depth,n.conc material="Silicon" mat.occno=1 x.val=1.0) 
+extract name="stored_n" $n_in_full_well - $n_in_empty_well
+
+
+# now do transfer
+# ramp transfer gate to +2V
+log outf=transfer.log
+solve v2=2 ramptime=1e-9 dt=1e-11 tstop=1e-6 outf=ccdex01_00 master
+
+
+tonyplot ccdex01_00 ccdex01_09 ccdex01_0G ccdex01_0N ccdex01_0U ccdex01_0c -set ccdex01_3.set
+
+quit
+ 

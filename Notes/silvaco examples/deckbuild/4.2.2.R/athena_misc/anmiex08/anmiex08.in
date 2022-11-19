@@ -1,0 +1,29 @@
+go athena
+
+#Title: Analytical etch of a trench with angled sidewalls and undercuts
+
+# 
+line x loc=0.00 spac=0.10
+line x loc=0.2 spac=0.005
+line x loc=1 spac=0.10
+#
+line y loc=0.00 spac=0.01
+line y loc=0.2 spac=0.02
+line y loc=2 spac=0.1
+# 
+init silicon c.boron=1.0e14 orientation=100
+
+deposit oxide thick=0.01 div=4
+deposit nitride thick=0.2 div=4
+
+etch nitride left p1.x=0.2
+etch oxide left p1.x=0.2
+struct mirror left
+
+# Etch an "angled" trench in silicon
+etch silicon thickness=0.7 undercut=0.1 angle=80
+structure outf=anmiex08.str
+
+tonyplot anmiex08.str
+
+quit

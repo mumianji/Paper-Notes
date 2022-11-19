@@ -1,0 +1,53 @@
+{subsection} radex02.in : Multiple Ion Tracks
+
+Requires: DevEdit 3D/Device 3D
+{newline}
+Minimum Versions: Atlas 5.20.2.R
+
+This examples demonstrates SEU simulation in a diode structure in three
+dimensions initiated by multiple tracks. Time dependence of the carrier
+generation  is also included in the specification of the second
+particle track. The input file consists of the following parts:
+
+{bullet} Construction of the 3D device in DevEdit 3D
+{newline}
+{bullet} Transfer of the structure to Atlas by DeckBuild autointerface feature
+{newline}
+{bullet} Physical models specification
+{newline}
+{bullet} SEU parameter specification
+{newline}
+{bullet} Simulation of the effects of SEU
+
+The diode structure under consideration is the same as in the previous
+example and is constructed with the same DevEdit 3D run. The structure is
+then passed to Atlas for electrical calculations using the
+autointerface feature in DevEdit 3D. The same set of physical models
+is applied.
+
+The two
+{bold} singleeventupset 
+statements are now used to specify entry and exit points, radius and
+density of generated electron-hole pairs due to  two alpha particle
+tracks. Different from the first track where the generation rate is
+position dependent, only the second track includes position and time
+dependent generation. Parameters tc and t0 in the second statement
+specify the characteristic time of the Gaussian time dependency, and
+the time instant of the peak of generation.
+
+The emitter voltage is ramped here again up to 3V in the DC mode, and then the transient analysis is performed to simulate charge collection in the device.
+The numerical algorithms that are used repeat those of the previous example.
+
+The results of the simulation are saved in the log file and then displayed using TonyPlot.
+
+To load and run this example, select the
+{bold} Load example 
+button in DeckBuild. This will copy the input file and any support
+files to your current working directory. Select the
+{bold} run 
+button to execute the example.
+
+
+
+
+

@@ -1,0 +1,66 @@
+# (c) Silvaco Inc., 2018
+go atlas
+mesh space.mult=1.0
+x.m l=0.0 s=0.05
+x.m l=0.1 s=0.05
+x.m l=0.3 s=0.02
+x.m l=0.8 s=0.02
+x.m l=1.0 s=0.05
+x.m l=1.1 s=0.05
+
+y.m l=0.0 s=0.025
+y.m l=0.01 s=0.004
+y.m l=0.11 s=0.0025
+y.m l=0.124 s=0.00025
+y.m l=0.125 s=0.00025
+y.m l=0.130 s=0.001
+y.m l=0.143 s=0.0025
+y.m l=0.600 s=0.025
+
+region num=1 material=GaAs y.max=0.01
+region num=1 material=GaAs y.max=0.11
+region num=2 material=AlGaAs y.min=0.11 y.max=0.124 x.comp=0.20
+region num=3 material=AlGaAs y.min=0.124 y.max=0.125 x.comp=0.20
+region num=4 material=AlGaAs y.min=0.125 y.max=0.130 x.comp=0.20
+region num=5 material=InGaAs y.min=0.130 y.max=0.145 x.comp=0.85
+region num=6 material=GaAs y.min=0.145 y.max=0.600
+region num=7 material=air y.max=0.1 x.min=0.1 x.max=0.9
+
+elec num=1 name=source y.min=0.0 y.max=0.0 x.min=0.0 x.max=0.1
+elec num=2 name=drain  y.min=0.0 y.max=0.0 x.min=1.0 x.max=1.1
+elec num=3 name=gate   y.min=0.0 y.max=0.1 x.min=0.3 x.max=0.80
+
+doping uniform n.type conc=1e14
+doping uniform n.type region=4 conc=3e19
+doping uniform n.type region=1 conc=2.0e18 
+
+contact name=gate workf=5.3
+material align=0.6
+model  fldmob conmob srh print quantum 
+
+output con.band val.band band.param t.quantum
+method maxtrap=8 carr=1 climit=1e-4
+solve qfactor=0.0
+solve qfactor=0.1
+solve qfactor=0.2
+solve qfactor=0.3
+solve qfactor=0.4
+solve qfactor=0.6
+solve qfactor=0.8
+solve qfactor=1.0
+
+
+log outf=quantumex03_1.log
+solve
+save outf=quantumex03_1.str master
+
+tonyplot quantumex03_1.str  -set quantumex03_1.set
+
+solve vdrain=0.01
+solve vdrain=0.05
+solve vdrain=0.1 vstep=0.1 vfinal=3.0 name=drain
+
+tonyplot quantumex03_1.log  -set quantumex03_2.set
+
+quit
+

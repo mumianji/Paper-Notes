@@ -1,0 +1,77 @@
+go athena
+
+# 2D Implant into Narrow Window
+
+#the x dimension definition
+line x loc = 0.0   spacing=0.25
+line x loc = 0.25  spacing=0.25
+
+#the vertical definition
+line y loc = 0     spacing = 0.01 
+line y loc = 0.8  spacing = 0.01
+
+
+#initialize the mesh
+set dose=1e13
+set energy=100
+set ion=boron
+set mat=silicon
+
+init $mat
+
+# First use MC method and save the structure and moments in it
+implant $ion dose=$dose energy=$energy monte n.ion=20000 tilt=0 amorph print.mom
+struct outf=aniiex09_01.str
+
+
+#the x dimension definition
+line x loc = 0.0   spacing=0.01
+line x loc = 0.1  spacing=0.01
+line x loc = 0.5  spacing=0.04
+
+#the vertical definition
+line y loc = 0     spacing = 0.01 
+line y loc = 0.8   spacing = 0.04
+
+
+#initialize the mesh
+init $mat c.boron=3e13
+deposit barrier thick=0.05 div=2 
+etch barrier left p1.x=0.1
+structure mirror left
+struct outf=aniiex09_02.str
+# Now extract the moments from the saved structure
+extract init infile="aniiex09_01.str"
+   extract name="rp" param="RP"
+   extract name="drp" param="DRP"
+   extract name="skew" param="SKEW"
+   extract name="kurt" param="KURT"
+   extract name="ldrp" param="LDRP"
+   extract name="skewxy" param="SKEWXY"
+   extract name="kurtxy" param="KURTXY"
+   extract name="kurtt" param="KURTT"
+
+
+# Use them in the moments statement
+moments $mat i.$ion dose=$dose energy=$energy rp=$rp drp=$drp \
+        skewn=$skew kurtos=$kurt ldrp=$ldrp
+
+# default 2d implant 
+
+implant $ion dose=$dose energy=$energy any.pearson=f print.mom
+struct outf=aniiex09_03.str
+
+init infile=aniiex09_02.str
+
+# Full.lat 2d implant
+moments $mat i.$ion dose=$dose energy=$energy rp=$rp drp=$drp \
+        skewn=$skew kurtos=$kurt ldrp=$ldrp \
+        skewxy=$skewxy kurtxy=$kurtxy kurtt=$"kurtt"-0.2 
+implant $ion dose=$dose energy=$energy full.lat any.pearson=f print.mom
+ 
+struct outf=aniiex09_04.str       
+tonyplot -overlay aniiex09_03.str aniiex09_04.str -set aniiex09.set
+
+quit
+
+

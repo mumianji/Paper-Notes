@@ -1,0 +1,139 @@
+<html>
+  <head>
+    <title>Breakdown in SOI MOSFETs - Effect of Lattice Heating</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Breakdown in SOI MOSFETs - Effect of Lattice Heating</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>S-Pisces/Giga</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="soiex06_plot0.png" width="640" alt="soiex06_plot0" />
+      <p/>
+      <img src="soiex06_plot1.png" width="640" alt="soiex06_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example compares Ids/Vds  analyses of a short channel
+ultra-thin SOI transistor with Energy Balance (EB) and Nonisothermal Energy
+Balance Models (NEB). It shows:
+</p>
+<ul>
+  <li>
+ SOI structure formation using Atlas syntax
+<br/>
+  </li>
+  <li>
+ Selection of energy balance and lattice heating models
+<br/>
+  </li>
+  <li>
+ Selection of numerical methods for coupled solution technique
+<br/>
+  </li>
+  <li>
+ Id/Vds simulation for Vgs=4.0V
+  </li>
+</ul>
+<p>
+The example file consists of two runs. The first simulates the device
+using energy balance models, the second using energy balance and
+lattice heating models combined.
+</p>
+<p>
+Submicron devices should be simulated using the Energy Balance Model due to
+velocity overshoot, and nonlocal impact ionization effects, which could
+substantially influence device characteristics.  For high current
+levels (high gate voltages) the thermal self-heating effects could also
+play an important role decreasing mobility and impact ionization rate.
+These effects are very pronounced in SOI transistors due to low heat
+conductivity of the oxide. This leads to the negative output
+conductance. This example demonstrates comparison of Ids/Vds curves
+obtained with Energy Balance and Nonisothermal Energy Balance Models.
+</p>
+<p>
+The first Atlas run uses the Energy Balance Model: Poisson&apos;s equation,
+carrier continuity equations, and the energy balance equation for electrons
+are solved self-consistently.
+</p>
+<p>
+The device is described in the first part of the input file. The SOI
+device is composed of a 0.05 micron layer of silicon on a 0.45 micron
+silicon dioxide substrate.  The device has a 12 nm thick gate oxide and
+a gate length of 0.8 microns. Effective channel length is 0.5
+microns.
+</p>
+<p>
+After the device description, the
+<b> material </b> statement is used to assign an energy relaxation time for electrons.
+The
+<b> models hcte.el </b> statement is used to set the solution for electron energy balance.
+Other parameters on the model statement select a set of physical models
+for this simulation.  In this case, these models are CONSRH and AUGER
+recombination, the conmob and fldmob mobility model and Band Gap Narrowing.
+The
+<b> impact length.rel lrel.el=0.02</b> statement is used to assign the energy relaxation length for Selberherr model.
+The
+<b> contact </b> statement is used to assign the work function on the polysilicon gate.
+</p>
+<p>
+The gate voltage is ramped to 4V. At this stage the combined algorithm is used:
+<b> method gummel newton carr=2</b> . Thus if convergence is not reached in decoupled mode (gummel)
+the simulator will automatically switch to coupled mode (newton).  Then
+the drain voltage is ramped. Again the combined algorithm is used for low
+drain biases and full newton scheme for higher drain biases.
+The method statement also defines that a two carrier solution is performed using
+<b> carr=2 </b> whereby Atlas will solve Poisson&apos;s equation for potential and the electron and hole continuity equations.
+</p>
+<p>
+The second Atlas run uses Nonisothermal Energy Balance Model: Poisson&apos;s
+equation, carrier continuity equations, energy balance equation for
+electrons, and a lattice energy balance equation are solved
+self-consistently.
+</p>
+<p>
+The same set of models is used, except that the solution of the  lattice energy
+balance equation is activated using lat.temp parameter in the
+<b> models </b> statement.
+</p>
+<p>
+In addition, thermal boundary conditions should be defined in this case.
+Thermal boundary conditions are defined in the
+<b> thermcontact </b> statement.  A 300K temperature is specified at the thermcontact located along the bottom
+of the device. Thermal isolation conditions are assumed on all other surfaces.
+</p>
+<p>
+Id/Vds curves from the two simulations can be compared in TonyPlot.
+Internal variables at the same bias point can also be compared using
+the saved solution files. Plots of impact ionization rate and electron
+temperature show the effect of the elevated temperature in the silicon
+film of these quantities.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

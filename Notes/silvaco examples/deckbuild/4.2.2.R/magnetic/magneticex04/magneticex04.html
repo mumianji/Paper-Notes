@@ -1,0 +1,75 @@
+<html>
+  <head>
+    <title>Extraction of Hall scattering factors</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Extraction of Hall scattering factors</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>S-Pisces/Magnetic</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="magneticex04_plot0.png" width="640" alt="magneticex04_plot0" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<ul>
+  <li>
+ Creating a 2d Hall cross structure
+<br/>
+  </li>
+  <li>
+ How to set Hall scattering factors
+<br/>
+  </li>
+  <li>
+ How to extract Hall scattering factors from simulation data
+  </li>
+</ul>
+<p>
+The Hall scattering factors, r_n and r_p, are theoretical constants
+which is put into MAGNETIC2D and affects the terms of the Magnetic
+matrix. For the limit n &gt;&gt; p we have a theoretical Hall coefficient
+of -r_n/n e and for p &gt;&gt; n we have a theoretical Hall coefficient of
+r_p/p e.  The Hall coefficients can also be calculated directly from
+the simulated  Hall voltage, current density and magnetic field as
+explained in the Atlas manual.
+</p>
+<p>
+The purpose of this deck is to obtain the Hall coefficients directly
+from the simulation results, and multiply by the relevant carrier
+density to extract values for the hall scattering factors over a range of
+biases.  These are then plotted to show that they agree closely with the
+values of Hall-scattering factor input on the MODELS statement.  This acts
+as one validation of the Magnetic module.
+</p>
+<p>
+Note: You should select anode bias as the
+X-quantity in the plot of the extracted data.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

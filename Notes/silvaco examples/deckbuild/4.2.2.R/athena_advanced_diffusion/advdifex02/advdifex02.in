@@ -1,0 +1,44 @@
+go athena
+
+line  x loc=0	spacing=0.2
+line  x loc=0.4	spacing=0.2
+line  y loc=0.0	spacing=0.002
+line  y loc=1.2	spacing=0.02
+line  y loc=5	spacing=0.5
+
+init silicon c.boron=1.0e6 orientation=100
+
+method pls ic
+
+etch silicon thick=1.086
+
+moment silicon i.boron dose=3e12 energy=1 range=0.2 std.dev=0.01 gamma=0.01 kurtosis=3.01 dratio=0.99
+implant boron dose=3e12 energy=1 rotation=0 crystal unit.damage dam.factor=0.00000001 print.mom
+
+moment silicon i.boron dose=2.5e11 energy=1 range=0.2 std.dev=0.04 gamma=0.01 kurtosis=3.01 dratio=0.99
+implant boron dose=2.5e11 energy=1 rotation=0 crystal unit.damage dam.factor=0.00000001 print.mom
+
+deposit silicon thick=0.384 c.boron=1.0e6 divisions=50
+
+moment silicon i.boron dose=3e12 energy=2 range=0.2 std.dev=0.01 gamma=0.01 kurtosis=3.01 dratio=0.99
+implant boron dose=3e12 energy=2 rotation=0 crystal unit.damage dam.factor=0.00000001 print.mom 
+
+moment silicon i.boron dose=3e11 energy=2 range=0.2 std.dev=0.04 gamma=0.01 kurtosis=3.01 dratio=0.99
+implant boron dose=2e11 energy=2 rotation=0 crystal unit.damage dam.factor=0.00 print.mom 
+
+deposit silicon thick=0.702 c.boron=1.0e6 divisions=50
+
+moment silicon i.boron dose=1e10 energy=3 range=5 std.dev=20 gamma=0.01 kurtosis=3.01 dratio=0.99
+implant boron dose=1e10 energy=3 rotation=0 crystal unit.damage dam.factor=0.00000001 print.mom
+
+profile infile=advdifex02.dat interst
+
+struct outfile=advdifex02_ini.str
+
+diffuse time=20 hour temp=700 tsave=5 tsave.mult=20 dump.prefix=advdifex02_
+
+struct outfile=advdifex02_end.str
+
+tonyplot -overlay advdifex02_ini.str advdifex02_5.str advdifex02_100.str advdifex02_2000.str advdifex02_4e+04.str advdifex02_end.str -set advdifex02.set
+
+quit

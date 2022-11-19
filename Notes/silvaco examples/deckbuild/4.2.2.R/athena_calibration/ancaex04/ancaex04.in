@@ -1,0 +1,33 @@
+go athena 
+
+#TITLE: LOCOS Shape Tuning in the COMPRESS Oxidation Model
+# Default elastic constants corresponding to default Young Modulus 3.89e12 and Poisson's ratio 0.3
+material   nitride s11.elast= 0.257e-12  s12.elast=-0.077e-12 s44.elast=0.668e-12
+
+line x loc = 0.0 spacing=.05
+line x loc = 2.0 spacing=.05
+
+line y loc=0     spacing = 0.04
+line y loc=0.4   spacing = 0.1
+init  silicon space.m=1
+
+deposit oxide thick=.01 div=1
+deposit  nitride thick=0.15 div=5
+etch     nitride right  p1.x=1.
+structure outfile=ancaex04.str
+
+method fermi compress grid.ox=0.05
+diffuse time=30 temp=1100 wet
+structure outfile=ancaex04_0.str
+
+init infile=ancaex04.str
+method fermi compress
+# Increase the Youngs modulus (reverse proportional to s11.elast) for nitride
+material   nitride s11.elast= 0.257e-14  s12.elast=-0.077e-14 s44.elast=0.668e-14
+diffuse time=30 temp=1100 wet
+structure outfile=ancaex04_1.str
+
+#plot the resulting structure
+tonyplot ancaex04_*.str -set ancaex04.set
+
+quit

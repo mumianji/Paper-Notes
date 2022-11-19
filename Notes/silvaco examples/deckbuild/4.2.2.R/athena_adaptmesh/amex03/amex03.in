@@ -1,0 +1,120 @@
+go athena
+
+#  Active Area Isolation Structure Punchthrough Extraction Test
+
+grid.model template=LOCOS
+
+method adapt
+
+#
+#line x loc=0 spac=0.1 tag=left
+#line x loc=0.5 spac=0.04
+#line x loc=0.7 spac=0.04
+#line x loc=1.5 spac=0.1 tag=right
+#
+#line y loc=0.00 spac=0.01 tag=top
+#line y loc=0.2 spac=0.01
+#line y loc=0.35 spac=0.04
+#line y loc=0.5 spac=0.04
+#line y loc=3 spac=0.3 tag=bottom
+#
+init orientation=100 c.phos=1e12 space.m=1 width.str=1.5 depth.str=3
+
+#pwell formation including masking off of the nwell
+#
+diffus time=30 temp=1000 dryo2 press=1.00 hcl=3
+#
+etch oxide thick=0.02
+#
+#P-well Implant
+# 
+implant boron dose=1e12 energy=100 pears
+#
+diffus temp=950 time=100 weto2 hcl=3
+#
+#N-well implant not shown -
+#
+# welldrive starts here
+diffus time=50 temp=1000 t.rate=4.000 dryo2 press=0.10 hcl=3
+#
+diffus time=220 temp=1200 nitro press=1
+#
+diffus time=90 temp=1200 t.rate=-4.444 nitro press=1
+#
+etch oxide all
+#
+#Create Active..
+deposit oxide thick=0.01 divi=1
+deposit nitride thick=0.3 divi=1
+deposit barrier thick=.01 divi=1
+#
+etch barrier left p1.x=0.5
+etch nitride thick=.35
+etch oxide thick=.02
+etch silicon dry thick=0.15
+#
+#Field Implant
+
+adapt.par accur.mult=0.2
+
+implant boron dose=1e12 energy=50 
+#
+strip
+#relax y.min=1
+#relax y.min=1.5
+#
+#Fieldox
+
+method grid.ox=0.07
+
+adapt.par accur.mult=0.08
+diffuse temp=950 time=180 weto2 hcl.pc=3 
+
+ 
+etch nitride all
+#
+etch oxide thick=0.02 dry
+#
+#sacrificial "cleaning" oxide
+diffus time=20 temp=1000 dryo2 press=1 hcl=3
+#
+etch oxide dry thick=0.02
+#
+#gate oxide grown here:-
+diffus time=11 temp=925 dryo2 press=1.00 hcl=3
+#
+# Extract the gate oxide thickness...
+extract name="gate ox" thickness oxide mat.occno=1 
+
+# Implant the VT adjust....
+#vt adjust implant 
+adapt.par accur.mult=1
+implant boron dose=1e12 energy=25 pearson 
+#
+#LDD Spacer formation
+depo oxide thick=0.120 divisions=8
+#
+etch oxide dry thick=0.140
+#
+implant arsenic dose=5.0e15 energy=50 pearson
+#
+method fermi compress
+adapt.par accur.mult=1 
+diffuse time=30 temp=900 nitro press=1.0 
+#
+
+# Make the metal contacts to be used as electrodes in Atlas...
+etch oxide right p1.x=1
+deposit alumin thick=0.03 divi=2
+etch alumin left p1.x=0.7
+structure mirror left
+# Name the electrodes.... 
+electrode name=source x=-1.2
+electrode name=drain x=1.2
+electrode name=substrate backside
+
+struct outf=amex03.str
+
+tonyplot  amex03.str -set amex03.set
+
+

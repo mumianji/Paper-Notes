@@ -1,0 +1,631 @@
+{section} SiC : SiC Application Examples
+
+{subsection} sicex01.in : SiC Extended Precision PiN Diode simulation
+
+Requires: Blaze
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates simulation of a reverse SiC PiN Diode characteristic
+versus different levels of arithmetic precision. 
+
+Simulation of wide band gap semiconductor devices is challenging mainly
+because the intrinsic carrier concentration is small. One solution to
+overcome this problem is to artificially increase the intrinsic carrier
+concentration. A more rogorous method consists of using different levels
+of arithmetic precision. 
+
+For well-converged solutions, run-time increases with precision. The 
+increase is especially significant at the highest precision levels.
+
+On the other hand, certain problems (e.g. SiC devices) that have difficulty 
+converging at the lower precision levels are likely to run faster if the
+precision level is increased. Accordingly, the optimum precision level for 
+a particular problem is likely to be the minimum level that yields good 
+convergence during the solution.
+
+The maximum precision that may be required for a well-converged solution can 
+be estimated from the semiconductor bandgap. However, it is often possible to 
+simulate a given device, under particular bias conditions, using a precision 
+less than this maximum. Conversely, we can say that a given precision level 
+is supportive of bandgaps up to a certain value, and convergence may be 
+difficult if materials with higher bandgaps are simulated. 
+
+SiC may need to be simulated using a nominal precision of 256-bits. 
+However in this example and as mentionned above 128 bits precision
+is enough in this case.
+
+In the first part of the input deck a simple SiC PiN diode is created.
+Then multiple breakdown voltage simulations are performed with different 
+levels of arithmetic precision. The level of arithmetic precision is set
+in Atlas using the 
+{bold} simflags="-128" 
+parameter in the 
+{bold} go atlas 
+statement for a 128 bits precision.
+
+All the simulation were performed with the
+{bold} SiC anisotropic Impact Ionization model 
+
+Simulation time are extracted for all simulations in deckbuild using
+{bold} extract name="t" clock.time 
+
+The results are plotted and overlayed in tonyplot showing that the
+Breakdown Voltage is independent of the precision used during the
+simulation. As mentionned above the 128 bits precision is enough to
+allow accurate simulation of the leakage current.
+
+It is also interesting to notice that the simulation time as a 
+function of precision exhibits a bell shape and confirm what we 
+mentioned above.  
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+{subsection} sicex02.in : Anisotropic Mobility Characteristics of a SiC T-MOSFET
+
+Requires: DevEdit, Blaze, SiC
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates the simulation of the forward characteristics of a trench gated MOS power transistor. 
+Three simulations are performed to show the effect of the crystallographic plane mobility modeling on the device characteristics.
+
+This device is created entirely within DevEdit and is composed of SiC, silicon dioxide, aluminum and polysilicon within a simulation domain of 6um x 16um. 
+The MOSFET has been created with a gate oxide of 800A and an N-type polysilicon gate. 
+
+The device simulations consist of the ID-VD characteristics at a gate voltage of 20V. Three characteristics were then obtained for different mobility models.
+
+First, the standard 
+{bold} isotropic mobility model 
+was used where the SiC mobility coefficients were defined for the 
+{bold} <1100> plane 
+which is the 
+{bold} high 
+mobility plane.
+
+Secondly, the standard 
+{bold} isotropic mobility model 
+was used where the SiC mobility coefficients were defined for the 
+{bold} <1000> plane 
+which is the 
+{bold} low 
+mobility plane.
+
+Thirdly, an 
+{bold} anisotropic mobility model 
+was used where the SiC mobility coefficients were defined for 
+{bold} both the <1100> and <1000> planes.
+
+The anisotropic model is applied by specifying a default set of mobility coefficients which apply everywhere. Then on the second 
+{bold} mobility
+ statement the 
+{bold} n.angle
+ parameter specifies the mobility at 90 degrees to the horizontal. This switches on the anisotropic mobility model.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} sicex03.in : Anisotropic Mobility Characteristics of a SiC DMOS Device
+
+Requires: DevEdit, Blaze, SiC
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates the simulation of the forward characteristics of a doubly diffused, or implanted, MOS power transistor. 
+
+Three simulations are performed to show the effect of the
+ crystallographic plane mobility modeling on the device characteristics.
+
+This device is created entirely within DevEdit and is composed of SiC, silicon dioxide and aluminum within a simulation domain of 7.5um x 15um. 
+The MOSFET has been created with a gate oxide of 800A and an aluminum gate. 
+
+The device simulations consist of the ID-VD characteristics at a gate voltage of 20V. 
+Three characteristics were then obtained for different mobility models.
+
+First, the standard 
+{bold} isotropic mobility model 
+was used where the SiC mobility coefficients were defined for the 
+{bold} <1100> plane 
+which is the 
+{bold} high 
+mobility plane.
+
+Secondly, the standard 
+{bold} isotropic mobility model 
+was used where the SiC mobility coefficients were defined for the 
+{bold} <1000> plane 
+which is the 
+{bold} low 
+mobility plane.
+
+Thirdly, an 
+{bold} anisotropic mobility model 
+was used where the SiC mobility coefficients were defined for 
+{bold} both the <1100> and <1000> planes.
+
+The anisotropic model is applied by specifying a default set of mobility coefficients which apply everywhere. Then on the second 
+{bold} mobility
+ statement the 
+{bold} n.angle
+ parameter specifies the mobility at 90 degrees to the horizontal. This switches on the anisotropic mobility model.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+{subsection} sicex04.in : Aluminum Implant into 6H-SiC.
+
+Requires: SSuprem 4, MC Implant
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This example compares Monte Carlo simulation with experimental profiles
+for wide energy range implants in 6H-SiC. The details of corresponding
+experimental conditions can be found in J.M. Hernandez-Mangas et.al.
+J. Appl. Phys, Vol. 91, pp.658-667, 2002 (see Fig.16). Note, that Athena
+simulation results have better agreement with experiments than the specialized
+simulator used in the paper above. 
+
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+{subsection} sicex05.in : Al implant in 4H-SiC in [0001] Crystallographic Direction.
+
+Requires: SSuprem 4, MC Implant
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This  example show very pronounced channeling effects 
+for on-axis implantation in 4H-SiC. The Al implant energy is 60 keV and
+implant direction condition corresponds to on-axis implantation in [0001]
+crystallographic direction. The experimental profiles are taken from Wong-Leung
+et al. J. Appl. Phys. vol.93, pp 8914-8916, 2003.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+{subsection} sicex06.in : Al implant in 4H-SiC in [11-23] Crystallographic Direction.
+
+Requires: SSuprem 4, MC Implant
+Minimum Versions: Athena 5.22.3.R
+
+This example shows very pronounced channeling effects 
+for on-axis implantation in 4H-SiC. The Al implant energy is 60 keV and
+implant direction condition corresponds to on-axis implantation in [11-23]
+crystallographic direction. Comparison with results of sicex06.in shows that 
+crystallographic orientation significantly affects the length of channeling tails. 
+Crystallographic analysis shows that channels in [11-23] direction are 
+"wider" than in [0001] direction which result in almost 2 times longer channeling 
+tails when implanting in [11-23] direction. The experimental profiles are taken from 
+Wong-Leung et al. J. Appl. Phys. vol.93, pp 8914-8916, 2003.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+{subsection} sicex07.in : Enhancement Mode IEMOSFET I-V and Breakdown Curves
+
+Required Blaze TFT
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example is based on the following paper submitted by 
+{bold} AIST 
+Japan:
+"4.3 m-ohm.cm2, 1100 V 4H-SiC Implantation and Epitaxial MOSFET",
+Shinsuke Harada et. al., Material Science Forum Vols. 527-529 (2006) 
+pp 1281-1284.
+
+The paper investigated the effect of a Nitrogen implant in the surface of the
+lightly doped drain region, that was the electrical N-type doping connection 
+to the main vertical drift region to the back of the device where the drain 
+contact resides.  In order to allow users to experiment with this n-type 
+doping concentration, this concentraion was defined as a variable called
+{bold} "CN" 
+near the begining of the input file.  In the example, this doping 
+concentration was set to the near optimal value of
+{bold} 1e17/cm3
+.
+
+For large band-gap semiconductors, it is necessary to use extended precision
+when simulating the device in the "off" condition, such as when simulating
+breakdown.  In this example,
+{bold} 160 bit precision 
+is used, which is defined in 
+the "go atlas" statement at the begining of the input file.  For the 
+simulation of the I-V curves, it is not strictly necessary however, but it is
+still used here for completeness.
+
+The "
+{bold}mesh
+" startement defines the width of the device.
+In order to convert the simulated currents into Amps/cm2 used in the paper,
+the 1.5um gate length device needs to be multiplied by 6.67e7 um.
+
+One of the features of SiC/oxide interface is the very high density of 
+{bold} interface states 
+under the gate, which dominate the determination of the 
+threshold voltage.  Most publications place the typical interface state 
+density as high as 1e14/cm2/eV at the band edges, dropping to a near constant
+value of 2e11/cm2/eV throughout the rest of the band gap that is more than 
+0.5eV away from each of the band edges.  These interface states are modelled
+using the "
+{bold}intdefects
+" statement.
+
+The high density of interface states, effectively turn off the channel,
+naturally creating a normally off (enhancement mode) device with a high
+threshold voltage.  In order to reduce the threshold voltage to the more 
+acceptable 3.4 volts required for this paper, an n-type channel implant is
+required, with a surface concentraion as high as 1.2e17/cm3 as specified in
+the paper.  Using this surface implant specified in the paper and the 
+distribution of interfaces states found in the open literature, the correct
+threshold voltage of 3.4 volts was obtained.
+
+Finally, very tight tollerances are applied to the solution using the "
+{bold}method
+" statement, which force the simulator to resolve currents down to 
+approximately 1e-30 amps, which is necessary to accurately account for 
+leakage currents.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+{subsection} sicex08.in : 3D SiC MOSFET 
+
+Required Device 3D
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates 3D SiC MOSFET simulation using DEVICED3D. 
+
+Since the 3D MOSFET in this example has a rectangular shape Device 3D can be used to both create 
+the 3D structure and perform the device simulation. Device simulation were performed using extended 
+precision arithmetic to be sure to resolve low intrinsic carrier concentration. 80 bits was used for IV curves 
+whereas 128 and 160 bits were used for breakdown Voltage simulation. The purpose of using two different
+precision arithmetic was to show that we can get the same Breakdown Voltage for both precision. However
+using 128bits(compare to 160 bits) reduces simulation time but prevent to captur very low leakage current.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+{subsection} sicex09.in : 3D Trench IGBT 
+
+Required Victory Process, Victory Mesh, Victory Device
+{newline}
+Minimum Versions: Victory Process 7.22.3.R, Victory Mesh 1.2.4.R, Victory Device 1.12.1.R
+
+By default Victory Process and Device run on just one processor.
+To ensure better perfomance on your computer the following simulation condition
+{bold} simflags="-P all"
+could be specidied in the 
+{bold} go
+line starting Victory Process or Device. This means that all processors available will be used.
+If you want to use a smaller number of processors you can substitute "all" with a desired number, e.g.
+{bold} simflags="-P 4".
+
+Silicon based power devices are still dominant today in power electronics. However, wide bandgap semiconductors like SiC are
+now more and more used for  high power, high-temperature applications because of superior thermal conductivity, lower intrinsic
+carrier concentration and better on-resistance compare to Silicon, which is a key figure of merit in power switching applications.
+
+Simulating SiC devices is however more challenging compare to Silicon. Indeed very low intrinsic concentration combined with
+high doping values is usually detrimental to convergence. Victory Device can handle this situation thanks to his
+built-in extended precision solvers. Indeed whereas normal 64bits version has a relative accuracy of around 1e-16, 80 bits version
+can increase the accurary up to 1e-19, 128bits to 1e-32 and 256bits to 1e-63.  We may however get some penalty in term of simulation 
+time especially for 128 and 256 bits version. SiC exhibits hexagonal crystal structures. As a consequence anisotropy features in many important physical parameters like impact ionization must be taken into account.
+ 
+The following example demonstrate 3D trench SiC IGBT simulation using Victory Cell and Victory Device.  
+
+The particularity of this device is to have low doping long drift region of about 160um. This will lead to high breakdown voltage.
+In this example we did not focus only on breakdown voltage simulation but we also wanted to perform IV simulation including
+IDVG and IDVD to illustrate a 3D specific effect. Indeed a "hump" effect was observed on the IDVG characteristic due to their
+non planar structure as reported in "Quantitative Analysis of Hump Effects of Gate-All_Around Metal_Oxide_Semiconductor Field_Effect
+Transistors" Woojun Lee,and Woo Young Choi Japanese Journal of Applied Physics 49 (2010) 04DC11. This "hump" effect is characterized in the IDVG curve as a parasitic transistor. This may be problematic in term of power consumption since it increases the off-current. In order to overcome this problem a non-Manhattan structure 
+(including rounded trench corner instead of 90 degree trench corner) was simulated. The "hump" effect is reduced and the
+ breakdown voltage improved.
+
+In order to create the 3D structure we used Victory Cell our 3D process simulator. Victory Cell is very suitable for 3D SiC
+power devices simulation since it is layout driven, accurate, fast and easy to use. The 3D structure creation takes only few
+minutes. After the process simulation is done a 3D structure is saved using a tetrahedron mesh to ensure that any shape created
+during 3D process simulation is well conserved and transferred to Victory Device for further device simulation. Device simulations
+were performed using extended precision arithmetic, 80 bits or 128-bit depending on the type of simulation done, to be sure to
+resolve low intrinsic carrier concentrations. 
+
+As mentioned above we can clearly see the effect of the trench corner on the IDVG and IDVD characteristics. 2D cut plane
+were also made on the diagonal of the device right at the trench corner where we can clearly see higher electron current
+density for the Manhattan compare to the case where the trench corner was rounded. Note that BV is also affected by this
+effect and BV of around 12KV is obtained when the trench edge is rounded. We can clearly see when we plot the 3D structure
+that the maximium of the Electric Field as well as the Impact Generation rate is located at the bottom of the trench. 
+
+
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+{subsection} sicex10.in : 3D Trench Shape Effect on IV and BV Characteristics  
+
+Required Victory Process, Victory Mesh, Victory Device
+{newline}
+Minimum Version Victory Process 7.22.3.R, Victory Mesh 1.2.4.R, Victory Device 1.12.1.R
+
+By default Victory Process and Device run on just one processor.
+To ensure better perfomance on your computer the following simulation condition
+{bold} simflags="-P all"
+could be specified in the 
+{bold} go
+statement starting Victory Process or Device. This means that all processors available will be used.
+If you want to use a smaller number of processors you can substitute "all" with a desired number, e.g.
+{bold} simflags="-P 4".
+
+The following example demonstrates the effect of the shape of a trench on IV and
+BV characteristics.
+
+The 3D layout-driven structure is created using Victory Process. 3D device simulation
+is done using Victory Device built-in extended precision numeric. 
+
+In this example we compare 3 different structures. One fully Manhattan (i.e right
+angle layout and trench) versus 2 structures one having rounded layout and another
+one having rounded layout and angled trench.
+
+Aluminum implantation is simulated in 1D (to save simulation time) in Athena using 
+Monte Carlo implantation before being imported in the 3D structure using the
+{bold} PROFILE 
+statement in Victory Process.
+
+The 3D structure is meshed to a full 3D Delaunay mesh using Victory Mesh.
+Different options are available in order to optimize the mesh under the gate
+and at the p/n junction. This 3D refinement is fully automatic.
+
+The 3D structure is then loaded in Victory Device. The default 3D Delaunay
+discretization method combined with a parallelized iterative solver set by
+{bold} PAM.MPI 
+statement in Victory Device allow good convergence, speed and accurate results.
+
+Victory Device automatically sets the optical axis downwards toward the SiC surface.
+This is important for anisotropic models such as anisotropic impact ionization, which
+treat one direction (downwards, along the optical axis in this case) differently than 
+the others.
+
+We can clearly see the effect of the trench shape on the IDVG and BV characteristics.
+Indeed a known "hump" effect is observed on the IDVG characteristic especially
+on the device with full Manhattan shape. However this parasitic effect is removed
+with the device using rounded layout and angled trench.
+
+BV simulation reveals that the breakdown voltage can be increased by 30% using
+rounded layout and angled trench due to impact ionization not occurring anymore
+only at the corner of the trench.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+{subsection} sicex11.in : Comparison Between 2D and 3D BV Simulation 
+
+Required Victory Process, Victory Mesh, Victory Device
+{newline}
+Minimum Version Victory Process 7.22.3.R, Victory Mesh 1.2.4.R, Victory Device 1.12.1.R
+
+By default Victory Process and Device run on just one processor.
+To ensure better perfomance on your computer the following simulation condition
+{bold} simflags="-P all"
+could be specidied in the 
+{bold} go
+statement starting Victory Process or Device. This means that all processors available will be used.
+If you want to use a smaller number of processors you can substitute "all" with a desired number, e.g.
+{bold} simflags="-P 4".
+
+The following example shows comparison between 2D and 3D breakdown voltage simulation of a vertical SiC MOSFET. 
+
+The 3D layout-driven structure is created using Victory Process. 3D device simulation
+is done using Victory Device built-in extended precision numeric. 
+
+Hatakeyama, et al. [1] have developed an anisotropic impact ionization model for materials with
+a hexagonal crystal structure, including 4H-SiC. The ionization coefficients in this model 
+depend on the strength of the electric field and on the orientation of the field with respect 
+to the optical axis of the crystal.
+
+You can specify the orientation of the optical axis of the crystal in Victory Device by supplying values for 
+{bold} ZETA 
+and
+{bold} THETA 
+parameters on a 
+{bold} MATERIAL 
+statement. ZETA defines the angle the optical axis makes with the downwards axis. THETA
+defines the angle that the projection of the optical axis onto the horizontal plane makes with
+respect to the right pointing axis (measured counter-clockwise). The defaults are zeta=0 degrees
+and theta=0 degrees, making the <0001> direction downward into the Substrate (which is
+usually what you want).
+
+As expected the breakdown voltage is the same in 2D and 3D for the same structure.
+
+[1] Hatakeyama, T., J. Nishio, C. Ota, and T. Shinohe, "Physical Modeling and Scaling Properties of 4H-SiC Power Devices," Proc. SISPAD, Tokyo (2005): 171-174.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} sicex12.in : 4H-SiC Schottky Diode DLTS simulation 
+
+Required S-Pisces 
+{newline}
+Minimum Version Atlas 5.26.1.R  
+
+
+Deep-level transient spectroscopy (DLTS) is an experimental tool for studying 
+electrically active defects (known as charge carrier traps) in semiconductors.
+DLTS establishes fundamental defect parameters and measures their concentration 
+in the material. 
+
+DLTS investigates defects present in a space charge (depletion) region of a 
+simple electronic device. The most commonly used are Schottky diodes or p-n junctions. 
+In the measurement process the steady-state diode reverse polarization voltage is 
+disturbed by a voltage pulse. This voltage pulse reduces the electric field in 
+the space charge region and allows free carriers from the semiconductor bulk to 
+penetrate this region and recharge the defects causing their non-equilibrium charge 
+state. After the pulse, when the voltage returns to its steady-state value, the defects 
+start to emit trapped carriers due to the thermal emission process. The technique 
+observes the device space charge region capacitance where the defect charge state 
+recovery causes the capacitance transient. The voltage pulse followed by the defect 
+charge state recovery are cycled allowing an application of different signal 
+processing methods for defect recharging process analysis. The emission rate is 
+temperature dependent and characteristic for each type of defect. From the temperature 
+dependence of the emission rate the activation energy of a deep level can be deduced.
+
+In this example we demonstrate how to simulate capacitance variation versus
+time and temperature on a 4H-SiC Schottky barrier Diode (SBD). To do so we used 
+the loop statement combined with the set statement to run multiple simulations 
+at different temperature and save files accordingly. 
+
+From the simulation results we also show how to simulate temperature dependence 
+of the capacitance difference (extracted at 2 different simulation time i.e 20ms 
+in that case). In this input deck carrier capture cross section
+{bold} SIGN 
+and
+{bold} SIGP 
+were set to 5.6e-15 but could easily be changed to verify emission rate is 
+temperature dependent
+
+Simulation results agree very well with DLTS theory. 
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+{subsection} sicex13.in : An alternative inversion layer mobility model for 4H-SiC
+
+Requires: Atlas 
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example introduces an alternative inversion layer mobility model for 4H-SiC. The model being a function of doping concentration and temperature takes into account bulk, surface roughness and surface phonon scattering, as well as Coulomb scattering at interface charges at 4H-SiC/dielectric interface, using Matthiessen's rule. To enable the model, specify the 
+{bold} ALTCVT.N 
+flag for electrons and/or the
+{bold} ALTCVT.P 
+flag for holes on the
+{bold} MOBILITY
+statement. 
+
+The bulk component combines contributions from ionized impurity scattering in the bulk with those from optical bulk-phonon scattering. It cannot be excluded from the model, but a proper choice of the model parameters will force it to be constant.
+
+The surface roughness contribution can be disabled by clearing the
+{bold} ALT.SR.N
+flag for electrons and/or the
+{bold} ALT.SR.P
+flag for holes on the
+{bold} MOBILITY
+statement.
+
+The surface phonon component can be disabled by clearing the
+{bold} ALT.SP.N
+flag for electrons and/or the
+{bold} ALT.SP.P
+flag for holes on the
+{bold} MOBILITY
+statement.
+
+The contribution from Coulomb scattering at interface charges can be disabled by clearing the
+{bold} COULOMB.N
+flag for electrons and/or the
+{bold} COULOMB.P
+flag for holes on the
+{bold} MOBILITY
+statement.
+
+An enhancement-mode n-channel 4H-SiC MOSFET with high density of interface traps at the 4H-SiC/SiO2 interface serves to demonstrate the influence of the mobility components on the total inversion layer mobility. The 2D net doping profile of the simulated 4H-SiC MOSFET is plotted along with the acceptor and donor interface state density distributions defined by the
+{bold} INTDEFECTS
+statement. From the simulated Id-Vg characteristics for various combinations of mobility components, the electron mobility and the perpendicular electric field are extracted at the 4H-SiC/SiO2 interface using the 
+{bold} PROBE
+statement and then plotted against each other to show the contributions of each of the scattering mechanisms to the total inversion layer mobility. The results clearly indicate that the Coulomb scattering at the interface charges significantly influences the total inversion layer mobility in the low electric field regime before losing out to the surface phonon scattering in the moderate electric field regime. At high electric fields the surface roughness scattering has the dominant influence on the total inversion layer mobility of electrons, as can be confirmed by a plot of electron mobility as a function of position along the channel depth at Vd=0.1V and Vg=10V. 
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+{subsection} sicex14.in : Reverse I-V of SiC Schottky and Junction Barrier Schottky (JBS) Diodes
+
+Requires: Victory Device  or  Atlas
+{newline}
+Minimum Versions: Victory Device 1.12.1.R  or  Atlas 5.26.1.R
+
+This example demonstrates simulation of Reverse I-V and Breakdown curves of two types of SiC devices: 
+- 4H-SiC Schottky Barrier Diode (SBD), and 
+- 4H-SiC Junction Barrier Schottky (JBS) diode,
+using an anisotropic impact ionization model specific for SiC.
+
+The input deck provided with this example can be run by either Victory Device or Atlas simulator, by changing the solver name in the command  
+{bold} go victorydevice 
+into
+{bold} go atlas
+. It shows that both device simulator frameworks can be fully compatible in terms of input commands, producing same results, and allowing easy transition between Atlas and Victory Device.
+
+Reference (with Experimental Data):
+
+[1]  L. Di Benedetto, G.D. Licciardo, T. Erlbacher, A. Bauer, and S. Bellone,
+      "Analytical Model and Design of 4H-SiC Planar and Trenched JBS Diodes",  
+      IEEE Transactions on Electron Devices, Vol. 63, No. 6, pp. 2474-2481, June 2016.
+
+Experimental data from [1] (Fig. 9) are provided with the example and plotted along with the TCAD simulation results, demonstrating a very good match with the measured reverse I-V and breakdown curves. 
+
+The simulation is run using 80-bit precision, by setting the option: 
+
+{bold}   simflags="-80"
+
+The structure files of each device, SBD and JBS, in equilibrium and in breakdown, are saved and can be viewed in 
+{bold} Tonyplot
+. You can view internal physical variables inside the devices, such as electric field, impact generation rates, current density distribution, etc. Overlaid I-V plots can be plotted by using 
+{bold} Overlay 
+feature in
+{bold} TonyPlot
+. 
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+

@@ -1,0 +1,79 @@
+# TPCS version: 8
+# various properties
+log label 0
+key opaque 0
+mark frequency 0
+mark overlay 0
+graph width 0 2
+graph width 1 1
+graph width 2 4
+graph width 3 1
+graph width 4 4
+graph width 5 1
+sequence size 3
+sequence width 2
+log zero 0
+sequence mark 0 4
+sequence mark 1 1
+sequence mark 2 2
+sequence mark 3 3
+sequence mark 4 4
+sequence mark 5 5
+# Functions
+function 1 "" ""
+function 2 "" ""
+function 3 "" ""
+function 4 "" ""
+select 1
+# xygraph flags
+show points on
+show lines on
+# xygraph types
+xygraph type 0 convert 0
+xygraph yaxis scale linear
+# xygraph x-axis
+xygraph xaxis "time" linear
+# xygraph y-axes
+xygraph yaxis none
+xygraph yaxis "delta vth" linear
+# xygraph group
+xygraph group "(unknown electricals)"
+# xygraph cie
+xygraph cie off
+# coordinate shift info
+# key positions
+key contours 1 at 3
+key contours 2 at 1
+key contours 3 at 6
+key electrical at 0
+key vectors at 6
+key overlay at user 0.4163, 0.585938
+key regions at 4
+key apply 
+# annotation, titles
+title main "tftex19: PBTS with hydrogen"
+title sub "Experiment v.s Simulation (Vth shift)"
+# annotation, footers
+footer right none
+footer left none
+# annotation, show
+show xaxis on
+show yaxis on
+show grid on
+show label xaxis on
+show label yaxis on
+# annotation, axes
+range xaxis 0, 7000 increment 1000,2,0
+range yaxis -0.3, 4 increment 1,2,0
+label xaxis "Stress Time(sec)"
+label yaxis "Vth shift(V)"
+# zoom
+zoom from 0, 0 scale 1, 1
+# user labels
+# overlay level names
+label overlay 0 "low hydrogen (simulation)"
+label overlay 1 "low hydrogen (experiment)"
+label overlay 2 "medium hydrogen (simulation)"
+label overlay 3 "medium hydrogen (experiment)"
+label overlay 4 "high hydrogen (simulation)"
+label overlay 5 "high hydrogen (experiment)"

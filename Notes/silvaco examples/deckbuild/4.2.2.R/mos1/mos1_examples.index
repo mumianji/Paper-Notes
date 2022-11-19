@@ -1,0 +1,1083 @@
+
+{section} MOS1 : MOS Application Examples
+ 
+{subsection} mos1ex01.in : NMOS : Id/Vgs and Threshold Voltage Extraction  
+
+
+Requires: SSuprem 4/S-Pisces
+{newline}
+Minimum Versions: Athena 5.22.3.R, Atlas 5.26.1.R
+
+Basic MOS Athena to Atlas interface example simulating an Id/Vgs curve
+and extracting threshold voltage and other SPICE parameters.  No
+advanced features are used in this example so as to demonstrate simple
+functionality. This example demonstrates:
+
+{bullet} Process simulation of a MOS transistor in Athena
+{newline}
+{bullet} Process parameter extraction (eg. oxide thicknesses)
+{newline}
+{bullet} Autointerface between Athena and Atlas
+{newline}
+{bullet} Aimple Id/Vgs curve generation with Vds=0.1V
+{newline}
+{bullet} Parameter extraction for Vt, linear gain (beta) and mobility
+rolloff (theta)
+
+The process simulation in SSuprem 4 follows a standard LDD MOS process.
+The process steps are simplified and default models are used to give a
+fast runtime. The polysilicon gate is formed by a simple geometrical
+etch. Before this point the simulation is essentially one dimensional
+and hence is run in Athena's 1D mode. After the poly etch, the structure
+converts to 2D.
+ 
+The grid used in this example is defined quite tightly. However the statement
+{bold} init ...  spac.mult=3 
+relaxes the mesh in X and Y directions by a factor of three. A more
+typical mesh for MOS simulation can be obtained by setting
+{bold} spac.mult=1
+.
+
+
+Using DeckBuild's auto-interface, the process simulation structure will
+be passed into Atlas automatically. This auto-interface therefore
+allows global optimization from process simulation to device simulation
+to SPICE model parameter extraction.
+
+The 
+{bold} extract 
+statement at the end of the file is used
+to calculate the oxide thickness at that point. The value returned here
+may be used as an optimization target for calibration. Refer to the
+{bold} Interactive Tools of the Virtual Wafer Fab 
+manual for instruction in the use of the
+{bold} Optimizer
+. This value will be appended to a file in the current working directory called 
+{bold} results.final. 
+When using the VWF automation tools,  
+{bold} extract 
+values are logged to the worksheet for RSM modeling.  Significant use of
+{bold} extract 
+statements is strongly recommended, especially at points where in-line
+Fab measurements are taken. 
+
+Electrodes are defined at the end of the process simulation. Metal is
+deposited and patterned. Then
+{bold} electrode 
+statements are used to define the metal regions plus the polysilicon as
+electrodes for use in Atlas.
+
+In Atlas the first task is to define the models and material parameters
+for the simulation. The 
+{bold} contact 
+statement is used to define the
+workfunction of the gate electrodes, while the 
+{bold} interface 
+statement defines the fixed charge at the silicon/oxide interface. 
+For simple MOS simulation the parameters CVT and SRH define the 
+recommended models.
+{bold} CVT 
+sets a
+general purpose mobility model including concentration, temperature,
+parallel field and transverse field dependence. For more complete MOS
+simulations of short channel lengths, energy balance simulation might
+be used.
+
+The statement
+{bold} solve init 
+is used to solve the thermal equilibrium case. After this the voltages
+can be ramped. It is recommended to use small steps at first when
+ramping voltages. Once two non-zero biases have been obtained, the
+program uses a projection as initial guesses to further bias points.
+The projection method allows larger voltage steps to be taken. The syntax
+{bold} method trap 
+enables Atlas to cut
+user-defined voltage steps in half if convergence is not obtained.
+This is a highly recommended option and is turned on by default.
+
+The unique feature of this example is the IV data simulated and the
+extraction syntax used. The model, interface and  contact 
+statements in
+Atlas are also as in the previous example.
+
+The sequence of 
+{bold} solve  
+statements is set to ramp the gate bias with the
+drain voltage at 0.1V. Solutions are obtained at 0.25V intervals up to
+3.0V. All terminal characteristics are saved to the file mos1ex02_1.log
+as specified in the 
+{bold} log 
+statement.
+
+The 
+{bold} extract 
+statements at the end of the file are used to measure the threshold
+voltage and other SPICE parameters. The results from the extract
+statements are printed in the run-time output, saved to a file called
+results.final and optionally used in the optimizer or VWF automation
+tools. The syntax used in these statements is freely composed of
+operators such as maximum value (max) and simulation results such as
+drain current (i."drain"). The
+{bold} name 
+parameter specifies only a user-defined label. The routines are not
+hard-coded to these names. Thus the first extraction statement reads:
+extract the value called nvt found by taking the x intercept of the
+maximum slope to the curve of drain voltage vs. drain current and
+subtracting half the drain voltage. This is just one possible definition of
+threshold voltage. Current search methods are also possible and are
+described under the DIBL example later in this section. The VWF
+interactive tools manual has details of the extract syntax.
+
+The second extract statement measures the gain (or Beta). This is
+defined as the value of the steepest slope to the Id/Vgs curve divided
+by the drain voltage. The final extraction is for the SPICE level 3
+mobility roll-off parameter (or Theta). This syntax shows the use of
+the syntax:
+{bold} $"nvt" 
+and
+{bold} $"nbeta"
+. This tells DeckBuild to substitute the previously extracted values of
+threshold and beta into this places in the equation.
+
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+
+{subsection} mos1ex02.in : NMOS : Family of Id/Vds Curves  
+
+
+Requires: SSuprem 4/S-Pisces
+{newline}
+Minimum Versions: Athena 5.22.3.R, Atlas 5.26.1.R
+
+Basic MOS Athena to Atlas interface example demonstrating the
+simulation of a family of Id/Vds curves. The maximum drive current and
+saturation slope are extracted.  No advanced features are used in this
+example so as to demonstrate simple functionality. This example
+demonstrates:
+
+{bullet} Process simulation of a MOS transistor in Athena
+{newline}
+{bullet} Process parameter extraction (eg. oxide thicknesses)
+{newline}
+{bullet} Autointerface between Athena and Atlas
+{newline}
+{bullet} Id/Vds curve generation with Vgs=1.1, 2.2 and 3.3V
+{newline}
+{bullet} IV Curve parameter extraction for Idmax and saturation slope
+
+The process simulation, process parameter extraction and electrode
+definition for this example are exactly as described in the first
+example in this section.
+
+A more advanced sequence of solve statements is used for this example.
+Three Id/Vds curves are required at different gate voltages. The first
+part of the solve sequence sets up the initial point of the three
+curves. For each of the the three gate voltages a solution with Vds=0.0
+is simulated and the results saved to a solution file. 
+
+Then each of these three solution files is loaded in turn into Atlas. A
+log file is opened and the ramp of Vds is set. When a file is loaded the 
+voltages in Atlas are reset to the values in the file. 
+
+At the end of the simulation, 
+{bold} extract 
+is used to measure the peak current and the saturation slope. From the
+shape of the Id/Vds curves the saturation slope is clearly the minimum
+value of the gradient along the curve. Finally the three Id/Vds curves
+are overlaid in TonyPlot.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+
+{subsection} mos1ex03.in : NMOS : Sub-Threshold Slope Extraction
+
+
+Requires: SSuprem 4/S-Pisces
+{newline}
+Minimum Versions: Athena 5.22.3.R, Atlas 5.26.1.R
+
+This is a basic MOS Athena to Atlas interface example simulating an Id/Vgs curve
+and extracting sub-threshold slope.  No advanced features are used in
+this example so as to demonstrate simple functionality. This example demonstrates:
+
+{bullet} Process simulation of a MOS transistor in Athena
+{newline}
+{bullet} Process parameter extraction (eg. oxide thicknesses)
+{newline}
+{bullet} Autointerface between Athena and Atlas
+{newline}
+{bullet} Simple Id/Vgs curve generation with Vds=0.1V
+{newline}
+{bullet} Parameter extraction for Sub-Threshold Slope
+
+The process simulation, process parameter extraction and electrode
+definition for this example are exactly as described in the first
+example in this section.
+
+In Atlas the same sequence of statements is used as in the first
+example in this section. The only difference is that the gate voltage is 
+ramped from zero to 1.0V only in 0.1V steps.
+
+The 
+{bold} extract 
+statement used in this example measures the sub-threshold slope of the
+MOSFET. The syntax uses the operators log10(), slope() and curve() to
+specify the reciprocal of the steepest slope to the curve of Vgs vs.
+log(Id). Note that the operator log10() is needed here. The operator
+log() specifies the function for natural logarithm.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} mos1ex04.in : NMOS : DIBL Extraction
+
+Requires: SSuprem 4/S-Pisces
+{newline}
+Minimum Versions: Athena 5.22.3.R, Atlas 5.26.1.R
+
+Basic MOS Athena to Atlas interface example simulating two Id/Vgs
+curves at different drain biases and extracting the drain-induced
+barrier lowering (DIBL) parameter. This example demonstrates:
+
+{bullet} Process simulation of a MOS transistor in Athena
+{newline}
+{bullet} Process parameter extraction (eg. oxide thicknesses)
+{newline}
+{bullet} Autointerface between Athena and Atlas
+{newline}
+{bullet} Simple Id/Vgs curve generation with Vds=0.1V
+{newline}
+{bullet} Ramp of drain voltage
+{newline}
+{bullet} Simple Id/Vgs curve generation with Vds=3.0V
+{newline}
+{bullet} Parameter extraction for the DIBL parameter
+
+The process simulation, process parameter extraction and electrode
+definition for this example are exactly as described in the first
+example in this section.
+
+In Atlas, the models, interface and contact statements are also the same
+as the first example. The extraction of the first Id/Vgs curve is very
+similar to the previous threshold voltage extraction example.
+
+One difference is the use of the syntax
+{bold} compl=1.1e-7 cname=drain
+. This sets a compliance limit on the drain current. Although the 
+SOLVE statement calls for a ramp in gate voltage from zero to 1.5V, 
+once the trigger current specified by 
+{bold} compl 
+is exceeded on the electrode specified by 
+{bold} cname 
+then the gate voltage ramp will stop and Atlas will execute the next
+line of syntax.  Compliances are more commonly used in breakdown
+simulations but can be used in this way to stop voltage ramps once the
+area of interest is passed.
+
+
+All results from the first Id/Vgs curve are saved to the file specified
+by the first log statement. In Atlas, the only way to stop the IV points
+being saved is either to specify another LOG statement or to use 
+{bold} log off 
+or exit the simulator. 
+Here, 
+{bold} log off 
+is used to stop the output from the drain voltage ramp being
+saved to the Id/Vgs logfile specified previously.
+
+The second 'solve init' statement resets all applied voltages to zero.
+Then the drain is ramped to 3.0V and the gate ramp with compliance is
+repeated.
+
+After each gate ramp the threshold voltage was extracted using a
+different syntax than the NMOS threshold voltage example described
+earlier in this section. In this example the threshold is determined by
+looking for the voltage where the drain current reaches a user-defined
+value. The syntax
+{bold} x.val from curve (x,y) where y.val=<number> 
+is used. At large drain biases this method is preferred for threshold
+extraction over the steepest slope approach. The search value of
+0.1uA/um of current is typical for channel lengths around 1um.
+These thresholds are
+stored as values nvt1 and nvt2 in DeckBuild. The final extract
+statement is used to obtain the DIBL parameter. It is the difference in
+threshold voltage divided by the difference in the drain bias.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+{subsection} mos1ex05.in : NMOS : Body Effect Extraction
+
+Requires: SSuprem 4/S-Pisces
+{newline}
+Minimum Versions: Athena 5.22.3.R, Atlas 5.26.1.R
+
+This is a basic MOS Athena to Atlas interface example simulating two Id/Vgs
+curves at different substrate biases and extracting the body effect
+(gamma) parameter. This example demonstrates:
+
+{bullet} Process simulation of a MOS transistor in Athena
+{newline}
+{bullet} Process parameter extraction (eg. oxide thicknesses)
+{newline}
+{bullet} Autointerface between Athena and Atlas
+{newline}
+{bullet} Simple Id/Vgs curve generation with Vbs=0.0V
+{newline}
+{bullet} Ramp of drain voltage
+{newline}
+{bullet} Simple Id/Vgs curve generation with Vbs=-1.0V
+{newline}
+{bullet} Parameter extraction for body effect
+
+The process simulation, process parameter extraction and electrode
+definition for this example are exactly as described in the first
+example in this section.
+
+In Atlas, the whole example is very similar in syntax to the DIBL
+parameter extraction example described previously in this section. The
+difference is that different
+substrate biases are used instead of different drain biases.
+
+Two threshold voltages are measured using the extract syntax described
+in the DIBL extraction example. The body effect parameter is derived
+from the threshold voltages using the standard formula assuming 0.6V for phi. 
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+{subsection} mos1ex06.in : NMOS : Substrate and Gate Current Extraction 
+
+Requires: SSuprem 4/DevEdit/S-Pisces
+{newline}
+Minimum Versions: Athena 5.22.3.R, Atlas 5.26.1.R
+
+This is a MOS Athena/DevEdit/Atlas interface example simulating substrate and
+gate current versus gate bias using energy balance and impact
+ionization models. This example demonstrates:
+
+{bullet} Process simulation of a MOS transistor in Athena
+{newline}
+{bullet} Process parameter extraction (eg. oxide thicknesses)
+{newline}
+{bullet} Autointerface between Athena and DevEdit
+{newline}
+{bullet} Remeshing using DevEdit
+{newline}
+{bullet} Autointerface between DevEdit and Atlas
+{newline}
+{bullet} Solution for a Vgs ramp with Vds=3.3V
+{newline}
+{bullet} Parameter extraction for maximum gate and substrate currents
+
+The process simulation, process parameter extraction and electrode
+definition for this example are exactly as described in the first
+example in this section.
+
+The grid requirements for Atlas simulation of impact ionization effects
+are more stringent than for the low electric field cases described
+earlier. 
+{bold} DevEdit 
+is used to remesh the Athena structure before proceeding to Atlas.
+DevEdit has two modes. The graphical mode allows users to draw and
+interactively edit regions and impurities. The batch mode used here
+executes structure and mesh commands similar to these. The syntax used
+by DevEdit is described in the DevEdit manual. It can be constructed
+from the DeckBuild Command menu, or most commonly mesh edits made during
+a graphical session can be saved as a 'command file' from the SAVE menu of
+DevEdit.
+
+The imp.refine commands specify regrids on impurities. Here a regrid on
+net doping is performed.  The constr.mesh command defines the base mesh. The
+refine commands specify mesh refinements inside boxes specified by the
+coordinates in each statement.
+
+The Atlas simulation contains similar syntax to the simple examples
+described earlier in this section. The solution of the energy balance
+equations for electrons is specified by the parameter
+{bold} hcte.el 
+The parameter 
+{bold} hei 
+specifies the hot carrier injection model, which gives the gate
+current.  The equivalent hcte.ho and hhi exist for holes but is not
+required in NMOS simulation.
+
+The impact ionization model is selected on the impact statement. The
+parameter lrel.el sets the relaxation time for electrons in this
+model.  Although the hei model is directly responsible for the gate
+current, there is no 'special' model required to simulate substrate
+current.  Running this sweep of gate voltage with a high drain bias and
+including impact ionization and energy balance supplies all the
+necessary physics. The substrate current can simply be plotted from the
+log file in a similar manner to the drain current. No special extraction of
+substrate current is needed.
+
+
+The 
+{bold} extract 
+statements used in this run extract the peak value and position of the
+substrate and gate currents. The value of the peak current is measured
+first. This result is then used in a current search to find the gate
+voltage where this current is measured.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+{subsection} mos1ex07.in : NMOS : Breakdown Voltage Extraction  
+
+Requires: SSuprem 4/DevEdit/S-Pisces
+{newline}
+Minimum Versions: Athena 5.22.3.R, Atlas 5.26.1.R
+
+This is an Athena/DevEdit/Atlas interface example simulating the breakdown
+voltage of an NMOS transistor. This example demonstrates:
+
+{bullet} Process simulation of a MOS transistor in Athena
+{newline}
+{bullet} Process parameter extraction (eg. oxide thicknesses)
+{newline}
+{bullet} Autointerface between Athena and DevEdit
+{newline}
+{bullet} Remeshing using DevEdit
+{newline}
+{bullet} Autointerface between DevEdit and Atlas
+{newline}
+{bullet} Solution for a Vds ramp with Vgs=0.0V to get breakdown
+
+The process simulation, process parameter extraction and electrode
+definition for this example are exactly as described in the first
+example in this section.
+
+The grid requirements for Atlas simulation of impact ionization effects
+are more stringent than for the low electric field cases described
+earlier. 
+{bold} DevEdit 
+is used to remesh the Athena structure before proceeding to Atlas.
+The remeshing commands are described in the previous example in this section.
+
+The Atlas simulation contains similar syntax to the simpler examples
+described earlier in this section. The models, contact and interface
+parameters are the same, except that the concentration dependent SRH
+model is used. This provides a more accurate simulation of the
+pre-breakdown leakage current. The Selberherr impact ionization model
+is also selected.
+
+On the method statement, two parameters are chosen to restrict the use
+of the current convergence criteria used in Atlas. Since the
+pre-breakdown leakage current is very low it is necessary to tighten
+the tolerances on current convergence. The parameter setting
+{bold} method climit=1e-4 
+is also recommended in cases where the mesh is not as tight as the one
+used here.
+
+The sequence of SOLVE statements shows a ramp in drain voltage. 
+Small steps are taken at first, but the main simulation is done in 0.5V
+steps. A compliance limit of 5.0e-8A/um is set on the drain. Compliance
+limits are useful in breakdown simulations to stop the simulation once
+the breakdown point is reached. 
+
+The value used here might seems rather low compared to typical values
+used in measurements. This is simply an issue of CPU time. Running the
+simulation up into microamp or milliamp ranges is possible, however the
+extra information gained is usually not worth the CPU time spent. 
+No solutions will be possible once the voltage exceeds the breakdown voltage.
+ Atlas will cut the voltage step and try again. It does this
+four times resulting in a minimum step of (0.5)^4 or 0.0625V. This is
+sufficient to resolve most breakdown voltages. It is possible for
+users to ramp using smaller voltage steps, to use current boundary
+conditions or curve tracing to further trace the IV curve to higher
+values of current. However, this is usually not needed. Much extra CPU
+time might be required and yet the value of breakdown voltage remains
+the same to within the accuracy expected by simulation. Examples
+demonstrating snapback and curve tracing are included in other
+sections.
+
+The 
+{bold} extract 
+syntax used to measure the breakdown voltage is of the current search
+type. This is preferred over the simple max(v."drain") syntax that could
+be used as it gives more consistent results.
+
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+ 
+
+{subsection} mos1ex08.in : PMOS : Id/Vgs and Threshold Voltage Extraction  
+
+
+Requires: SSuprem 4/S-Pisces
+{newline}
+Minimum Versions: Athena 5.22.3.R, Atlas 5.26.1.R
+
+This is a basic MOS Athena to Atlas interface example simulating an Id/Vgs curve
+and extracting threshold voltage and other SPICE parameters.  No
+advanced features are used in this example so as to demonstrate simple
+functionality. This example demonstrates:
+
+{bullet} Process simulation of a MOS transistor in Athena
+{newline}
+{bullet} Process parameter extraction (eg. oxide thicknesses)
+{newline}
+{bullet} Autointerface between Athena and Atlas
+{newline}
+{bullet} Simple Id/Vgs curve generation with Vds=-0.1V
+{newline}
+{bullet} IV Curve parameter extraction for Vt, Beta and Theta
+
+The process simulation, process parameter extraction and electrode
+definition for this example are exactly as described in the first
+example in this section.
+
+The unique feature of this example is the IV data simulated and the
+extraction syntax used. The 
+{bold} model, interface 
+and  
+{bold} contact
+statements in
+Atlas are also as in the previous example.
+
+The sequence of SOLVE statements is set to ramp the gate bias with the
+drain voltage at -0.1V. Solutions are obtained at -0.25V intervals up to
+-3.0V. All terminal characteristics are saved to the file mos1ex02_1.log
+as specified in the LOG statement.
+
+The 
+{bold} extract 
+statement at the end of the file are used to measure the threshold
+voltage and other SPICE parameters. The results from the extract
+statements are printed in the run-time output, saved to a file called
+results.final, and optionally used in the optimizer or VWF automation
+tools. The syntax used in these statements is freely composed of
+operators such as maximum value (max) and simulation results such as
+drain current (i."drain"). One operator of particular use in PMOS device extraction is 
+{bold} abs()
+. This takes the absolute value of a variable and can be used to
+make all PMOS and NMOS extractions equivalent.
+
+The
+{bold} name 
+parameter specifies a user-defined label. The routines are not
+hard-coded to these names. Thus the first extraction statement reads:
+extract the value called pvt found by taking the x intercept of the
+maximum slope to the curve of drain voltage vs. drain current and
+subtracting half the drain voltage. This is just one definition of
+threshold voltage. Current search methods are also possible and are
+described under the DIBL example later in this section. The VWF
+interactive tools manual has details of the EXTRACT syntax.
+
+The second extract statement measures the gain (or Beta). This is
+defined as the value of the steepest slope to the Id/Vgs curve divided
+by the drain voltage. The final extraction is for the SPICE level 3
+mobility roll-off parameter (or Theta). This syntax shows the use of
+the syntax:
+{bold} $"pvt" 
+and
+{bold} $"pbeta"
+. This tells DeckBuild to use the previously extracted values of
+threshold and beta in the equation.
+
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} mos1ex09.in : PMOS : Family of Id/Vds Curves  
+
+
+Requires: SSuprem 4/S-Pisces
+{newline}
+Minimum Versions: Athena 5.22.3.R, Atlas 5.26.1.R
+
+This is a basic MOS Athena to Atlas interface example demonstrating the
+simulation of a family of Id/Vds curves. The maximum drive current and
+saturation slope are extracted.  No advanced features are used in this
+example so as to demonstrate simple functionality. This example
+demonstrates:
+
+{bullet} Process simulation of a MOS transistor in Athena
+{newline}
+{bullet} Process parameter extraction (eg. oxide thicknesses)
+{newline}
+{bullet} Autointerface between Athena and Atlas
+{newline}
+{bullet} Id/Vds curve generation with Vgs=-1.1, -2.2 and -3.3V
+{newline}
+{bullet} IV Curve parameter extraction for Idmax and saturation slope
+
+The process simulation, process parameter extraction and electrode
+definition for this example are exactly as described in the first
+PMOS example in this section.
+
+A more advanced sequence of solve statements is used for this example.
+Three Id/Vds curves are required at different gate voltages. The first
+part of the solve sequence sets up the initial point of the three
+curves. For each of the three gate voltages a solution with Vds=0.0
+is simulated and the results saved to a solution file. 
+
+Each of these three solution files are then loaded in turn into Atlas. A
+log file is opened and the ramp of Vds is set. When a file is loaded the 
+voltages in Atlas are reset to the values in the file. 
+
+At the end of the simulation, 
+{bold} extract 
+is used to measure the peak current and the saturation slope. From the
+shape of the Id/Vds curves the saturation slope is clearly the minimum
+value of the gradient along the curve as long as the absolute values of
+current and voltage are taken. Finally the three Id/Vds curves are
+overlaid in TonyPlot.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+
+
+
+{subsection} mos1ex10.in : PMOS : Sub-Threshold Slope Extraction
+
+
+Requires: SSuprem 4/S-Pisces
+{newline}
+Minimum Versions: Athena 5.22.3.R, Atlas 5.26.1.R
+
+This is a basic MOS Athena to Atlas interface example simulating an Id/Vgs curve
+and extracting sub-threshold slope.  No advanced features are used in
+this example so as to demonstrate simple functionality. This example demonstrates:
+
+{bullet} Process simulation of a MOS transistor in Athena
+{newline}
+{bullet} Process parameter extraction (eg. oxide thicknesses)
+{newline}
+{bullet} Autointerface between Athena and Atlas
+{newline}
+{bullet} Simple Id/Vgs curve generation with Vds=-0.1V
+{newline}
+{bullet} Parameter extraction for Sub-Threshold Slope
+
+The process simulation, process parameter extraction and electrode
+definition for this example are exactly as described in the first
+example in this section.
+
+In Atlas the same sequence of statements is used as in the first
+example in this section. The only difference is that the gate voltage 
+is ramped from zero to -1.0V only in -0.1V steps.
+
+The 
+{bold} extract 
+statement used in this example measures the sub-threshold slope of the
+MOSFET. The syntax uses the operators log10(), slope() and curve() to
+specify the reciprocal of the steepest slope to the curve of Vgs vs.
+log(Id). Note that the operator log10() is needed here. The operator
+log() specifies the function for the natural logarithm. It is obviously
+necessary to take the absolute value of Id before the log10() operator
+is used.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} mos1ex11.in : PMOS : DIBL Extraction
+
+Requires: SSuprem 4/S-Pisces
+{newline}
+Minimum Versions: Athena 5.22.3.R, Atlas 5.26.1.R
+
+This is a basic MOS Athena to Atlas interface example simulating two Id/Vgs
+curves at different drain biases and extracting the drain-induced
+barrier lowering (DIBL) parameter. This example demonstrates:
+
+{bullet} Process simulation of a MOS transistor in Athena
+{newline}
+{bullet} Process parameter extraction (eg. oxide thicknesses)
+{newline}
+{bullet} Autointerface between Athena and Atlas
+{newline}
+{bullet} Simple Id/Vgs curve generation with Vds=-0.1V
+{newline}
+{bullet} Ramp of drain voltage
+{newline}
+{bullet} Simple Id/Vgs curve generation with Vds=-3.0V
+{newline}
+{bullet} Parameter extraction for the DIBL parameter
+
+The process simulation, process parameter extraction and electrode
+definition for this example are exactly as described in the first
+example in this section.
+
+In Atlas, the models, interface and contact statements are also the same
+as in the first example. The extraction of the first Id/Vgs curve is very
+similar to the previous threshold voltage extraction example.
+
+One difference is the use of the syntax
+{bold} compl=1.1e-7 cname=drain
+. This sets a compliance limit on the drain current.  Although the SOLVE
+statement calls for a ramp in gate voltage from zero to -1.5V, once the
+trigger current specified by
+{bold} compl 
+is exceeded on the electrode specified by 
+{bold} cname 
+then the gate voltage ramp will step and Atlas will execute the next
+line of syntax. Note that the compliance value does not need to be
+signed. A current more negative than -1.1e-7 will also trigger the
+compliance limit. Compliances are more commonly used in breakdown
+simulations but can be used in this way to stop voltage ramps once the
+area of interest is passed. 
+
+All results from the first Id/Vgs curve are saved to the file specified
+by the first log statement. 
+In Atlas the only way to stop the IV points
+being saved is either to specify another LOG statement or to use
+{bold} log off 
+or exit the simulator.
+Here, 
+{bold} log off 
+is used to stop the output from the drain voltage ramp being
+saved to the Id/Vgs logfile specified previously.
+
+The second 'solve init' statement resets all applied voltages to zero.
+Then the drain is ramped to -3.0V and the gate ramp with compliance is
+repeated.
+
+After each gate ramp, the threshold voltage was extracted using a
+different syntax than the PMOS threshold voltage example described
+earlier in this section. In this example the threshold is determined by
+looking for the voltage where the drain current reaches a user-defined
+value. The syntax
+{bold} x.val from curve (x,y) where y.val=<number> 
+is used. At large drain biases this method is preferred for threshold
+extraction over the steepest slope approach. The search value of
+0.1uA/um of current is typical for channel lengths around 1um.
+These thresholds are
+stored as values pvt1 and pvt2 in DeckBuild. The final extract
+statement is used to obtain the DIBL parameter. It is the difference in
+threshold voltage divided by the difference in the drain bias.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+{subsection} mos1ex12.in : PMOS : Body Effect Extraction
+
+Requires: SSuprem 4/S-Pisces
+{newline}
+Minimum Versions: Athena 5.22.3.R, Atlas 5.26.1.R
+
+This is a basic MOS Athena to Atlas interface example simulating two Id/Vgs
+curves at different substrate biases and extracting the body effect
+(gamma) parameter. This example demonstrates:
+
+{bullet} Process simulation of a MOS transistor in Athena
+{newline}
+{bullet} Process parameter extraction (eg. oxide thicknesses)
+{newline}
+{bullet} Autointerface between Athena and Atlas
+{newline}
+{bullet} Simple Id/Vgs curve generation with Vbs=0.0V
+{newline}
+{bullet} Ramp of drain voltage
+{newline}
+{bullet} Simple Id/Vgs curve generation with Vbs=1.0V
+{newline}
+{bullet} Parameter extraction for body effect
+
+The process simulation, process parameter extraction and electrode
+definition for this example are exactly as described in the first
+example in this section.
+
+In Atlas the whole example is very similar in syntax to the DIBL
+parameter extraction example described previously in this section. The
+difference is that different substrate biases are used instead of 
+different drain biases.
+
+Two threshold voltages are measured using the extract syntax described
+in the DIBL extraction example. The body effect parameter is derived
+from the threshold voltages using the standard formula assuming 0.6V for phi. 
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+{subsection} mos1ex13.in : PMOS : Substrate and Gate Current Extraction 
+
+Requires: SSuprem 4/DevEdit/S-Pisces
+{newline}
+Minimum Versions: Athena 5.22.3.R, Atlas 5.26.1.R
+
+This is a MOS Athena/DevEdit/Atlas interface example simulating substrate and
+gate current versus gate bias using energy balance and impact
+ionization models. This example demonstrates:
+
+{bullet} Process simulation of a MOS transistor in Athena
+{newline}
+{bullet} Process parameter extraction (eg. oxide thicknesses)
+{newline}
+{bullet} Autointerface between Athena and DevEdit
+{newline}
+{bullet} Remeshing using DevEdit
+{newline}
+{bullet} Autointerface between DevEdit and Atlas
+{newline}
+{bullet} Solution for a Vgs ramp with Vds=-3.3V
+{newline}
+{bullet} Parameter extraction for maximum gate and substrate currents
+
+The process simulation, process parameter extraction and electrode
+definition for this example are exactly as described in the first
+example in this section.
+
+The grid requirements for Atlas simulation of impact ionization effects
+are more stringent than for the low electric field cases described
+earlier. 
+{bold} DevEdit 
+is used to remesh the Athena structure before proceeding to Atlas.
+DevEdit has two modes. The graphical mode allows users to draw and
+interactively edit regions and impurities. The batch mode used here
+executes structure and mesh commands similar to these. The syntax used
+by DevEdit is described in the DevEdit manual. It can be constructed
+from the DeckBuild Command menu or most commonly mesh edits made during
+a graphical session can be saved as a 'command file' from the SAVE menu of
+DevEdit.
+
+The imp.refine commands specify regrids on impurities. Here a regrid on
+net doping is performed.  The constr.mesh command defines the base mesh. The
+refine commands specify mesh refinements inside boxes specified by the
+coordinates in each statement.
+
+The Atlas simulation contains similar syntax to the simple examples
+described earlier in this section. The solution of the energy balance
+equations for holes is specified by the parameter
+{bold} hcte.ho
+. The parameter 
+{bold} hhi 
+specifies the hot carrier injection model, which gives the gate
+current.  The equivalent hcte.el and hei exist for electrons but are not
+required in PMOS simulation.
+
+The impact ionization model is selected on the 
+{bold}impact 
+statement. The
+parameter lrel.ho sets the relaxation time for holes in this
+model.  Although the hhi model is directly responsible for the gate
+current, there is no 'special' model required to simulate substrate
+current.  Running this sweep of gate voltage with a high drain bias and
+including impact ionization and energy balance supplies all the
+necessary physics. The substrate current can simply be plotted from the
+log file in a similar manner to drain current. No special extraction of
+substrate current is needed.
+
+
+The 
+{bold} extract 
+statements used in this run extract the peak value and position of the
+substrate and gate currents. The value of the peak current is measured
+first. This result is then used in a current search to find the gate
+voltage where this current is measured.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+{subsection} mos1ex14.in : PMOS : Breakdown Voltage Extraction  
+
+Requires: SSuprem 4/DevEdit/S-Pisces
+{newline}
+Minimum Versions: Athena 5.22.3.R, Atlas 5.26.1.R
+
+This is an Athena/DevEdit/Atlas interface example simulating the breakdown
+voltage of a PMOS transistor. This example demonstrates:
+
+{bullet} Process simulation of a MOS transistor in Athena
+{newline}
+{bullet} Process parameter extraction (eg. oxide thicknesses)
+{newline}
+{bullet} Autointerface between Athena and DevEdit
+{newline}
+{bullet} Remeshing using DevEdit
+{newline}
+{bullet} Autointerface between DevEdit and Atlas
+{newline}
+{bullet} Solution for a Vds ramp with Vgs=0.0V to get breakdown
+
+The process simulation, process parameter extraction and electrode
+definition for this example are exactly as described in the first
+example in this section.
+
+The grid requirements for Atlas simulation of impact ionization effects
+are more stringent than for the low electric field cases described
+earlier. 
+{bold} DevEdit 
+is used to remesh the Athena structure before proceeding to Atlas.
+The remeshing commands are described in the previous example in this section.
+
+The Atlas simulation contains similar syntax to the simpler examples
+described earlier in this section. The models, contact and interface
+parameters are the same, except that the concentration dependent SRH
+model is used. This provides a more accurate simulation of the
+pre-breakdown leakage current. The Selberherr impact ionization model
+is also selected.
+
+On the method statement two parameters are chosen to restrict the use
+of the current convergence criteria used in Atlas. Since the
+pre-breakdown leakage current is very low, it is necessary to tighten
+the tolerances on current convergence. The parameter setting
+{bold} method climit=1e-4 
+is also recommended in cases where the mesh is not as tight as the one
+used here.
+
+The sequence of solve statements shows a ramp in drain voltage. 
+Small steps are taken at first, but the main simulation is performed in 0.5V
+steps. A compliance limit of 5.0e-8A/um is set on the drain. Compliance
+limits are useful in breakdown simulations to stop the simulation once
+the breakdown point is reached. 
+
+The value used here might seem rather low compared to typical values
+used in measurements. This is simply an issue of CPU time. Running the
+simulation up into microamp or milliamp ranges is possible, however the
+extra information gained is usually not worth the CPU time spent. Once
+the voltage exceeds the breakdown voltage no solutions will be
+possible. Atlas will cut the voltage step and try again. It does this
+four times resulting in a minimum step of (0.5)^4 or 0.0625V. This is
+sufficient to resolve most breakdown voltages.  It is possible for
+users to ramp using smaller voltage steps, to use current boundary
+conditions, or curve tracing to further trace the IV curve to higher
+values of current. However this is not usually needed. Much extra CPU
+time might be required and yet the value of breakdown voltage remains
+the same to within the accuracy expected by simulation. Examples
+demonstrating snapback and curve tracing are included in other
+sections.
+
+The 
+{bold} extract 
+syntax used to measure the breakdown voltage is of the current search
+type. This is preferred over the simple max(v."drain") syntax that could
+be used as it gives more consistent results.
+
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+
+
+
+{subsection} mos1ex15.in : NMOS : Gate Length Scaling  
+
+
+Requires: SSuprem 4/S-Pisces
+{newline}
+Minimum Versions: Athena 5.22.3.R, Atlas 5.26.1.R
+
+This is an Athena/Atlas interface example similar to the first example in this 
+section. It demonstrates the setting of gate length through parameter 
+substitution.
+
+In this example an NMOS transistors length is defined with a 
+{bold} set 
+statement around the poly etch stage in the simulation. The 
+{bold} set 
+statement defines a variable used in a subsequent 
+{bold} stretch 
+statement to define the half length of the transistor.
+
+Importantly, the variable $cd is also used to place the name of the
+drain electrode in the subsequent 
+{bold} electrode 
+statement. This simplifies the position definition of the drain electrode.
+
+Note the use of the 
+{bold} right 
+statement in the 
+{bold} stretch 
+command. This
+makes sure that the coordinate system of the stretched device remains
+unchanged from the original making sure that the left hand side of the
+structure is in the same place as before. Both 
+{bold} right|left 
+flags are available.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+

@@ -1,0 +1,66 @@
+<html>
+  <head>
+    <title>User-Defined MOMENTs with Parameters from MC Simulation</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>User-Defined MOMENTs with Parameters from MC Simulation</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>SSuprem 4, MC IMPLANT</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="aniiex07_plot0.png" width="640" alt="aniiex07_plot0" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example can be used as a template which allows us to estimate implant moments
+from Monte Carlo simulation and then use these moments in subsequent
+analytical implants. This approach is useful for those ion/material/energy combinations
+which are not included into look-up tables.
+</p>
+<p>
+In the first part of the example, the Monte Carlo method is used to calculate
+moments for 70 keV boron in titanium silicide. Parameter
+<b> PRINT.MOM </b> specified in the
+<b> IMPLANT </b> statement allows Athena to save the calculated moments in the standard structure
+file
+<b> aniiex07_01.str</b> .
+</p>
+<p>
+In the second part of the example, first the moments parameters
+for single Pearson distribution are extracted from the file. Then, the
+parameter substitution capability of
+<b> DeckBuild </b> is used to path these parameters to the
+<b> MOMENTS </b> statement. After that the moments set in the
+<b> MOMENTS </b> statement are used in the analytical implant. The parameter
+<b> ANY.PEARSON </b> is set to FALSE. This ensures that Pearson type-IV distribution will be used.
+Profiles obtained in Monte Carlo and analytical simulations
+are compared in TonyPlot.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

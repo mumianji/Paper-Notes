@@ -1,0 +1,24 @@
+
+.lib "clex06.lib" cmos
+
+.subckt exnor a b y
+.include "clex06.net"
+.ends exnor
+
+.param supply=3.3
+.global vdd gnd
+
+vdd vdd 0 'supply'
+va a gnd dc 0 pulse 0 'supply' 500p 250p 250p 2000p 5000p
+vb b gnd dc 0 pulse 0 'supply' 1625p 250p 250p 2000p 5000p
+
+xexnor a b y exnor
+
+.tran 0.1p 10000p
+
+*.save all
+.save v(b) v(a) v(y)
+ 
+.measure tran delay delay v(b) rise=1 val='supply/2' targ=v(y) rise=1 val='supply/2'
+
+.end

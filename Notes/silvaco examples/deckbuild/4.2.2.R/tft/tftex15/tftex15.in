@@ -1,0 +1,191 @@
+# (c) Silvaco Inc., 2018
+
+go victoryprocess 
+
+#  3D Process simulation of Bottom Gate Amorphous InGaZnO thin-film transistors 
+
+#initialize glass substrate with mask
+init oxide layout="tftex15.lay" depth=5 gasheight=2 from="1,0" to="11,5" 
+
+#default meshing from mask information
+cartesian mask="ACT" ondomain all.point spacing=0.5
+cartesian mask="SD" ondomain all.point spacing=0.5
+cartesian mask="GATE" ondomain all.point spacing=0.5
+
+#volume mesh generation
+line x loc=1 spac=0.5
+line x loc=11 spac=0.5
+
+line y loc=0 spac=0.5
+line y loc=5 spac=0.5
+
+line z loc=-1.15 spac=0.025
+line z loc=-1.0 spac=0.025
+line z loc=-0.95 spac=0.01
+line z loc=-0.9 spac=0.01
+line z loc=-0.5 spac=0.1
+line z loc=0 spac=0.1
+line z loc=5 spac=0.5
+
+#Gate metal
+deposit aluminum thick=0.5  max
+
+
+#Gate Pattern
+mask "GATE"
+etch aluminum thick=0.5 angle=45 max
+strip
+electrode "GATE" material="aluminum"
+
+
+#double Gate insulator depo with uniform deposition
+deposit material=Si3N4 thick=0.4 conformal
+deposit material=SiO2 thick=0.05 conformal
+
+# active a-IGZO : 50nm
+deposit material=silicon thick=0.05  conformal
+
+#active pattern
+mask "ACT" 
+etch material=silicon thick=0.05 min
+strip 
+
+# oxide Etch stopper 50nm
+deposit oxide thick=0.05 conformal
+
+# use source/drain mask for ES
+mask "SD" reverse
+etch oxide thick=0.051 dry 
+strip
+
+# S/D metal depo
+deposit aluminum thick=0.2 conformal
+
+# Source/Drain pattern
+mask "SD" 
+etch aluminum thick=0.2 min
+strip
+electrodes "SD" material=aluminum
+#
+
+#passivation
+deposit oxide thick=0.1 conformal
+deposit nitride thick=0.1  conformal
+
+save name=tftex15_vp_0
+
+
+#Export structure with global mesh refinement: maximum feature size 0.5um
+go victorymesh
+
+load in=tftex15_vp_0
+
+remesh delaunay
+
+refine max.size=0.5
+
+save out=tftex15_0.str
+
+
+tonyplot3d tftex15_0.str -set tftex15_0.set
+
+# Start VictoryDevice Simulation with all available CPUs: "-P all"
+go victorydevice simflags="-P all"
+
+#  
+title InGaZnO amorphous TFT device IDVG simulation
+
+
+#loading 3D process structure
+mesh infile=tftex15_0.str delaunay hybridx
+
+# modify IGZO to have a name "channel" and Gate insulator to GI & add n-type doping to IGZO channel
+
+region num=6 modify material=IGZO name=channel donor=2.5e16
+region num=3 modify material=oxide name=GI
+region num=2 modify material=oxide name=ES
+
+
+#finite insulator/IGZO fixed charge
+interface qf=3e10 s.i  
+
+#actual gate metal workfunction
+contact name=gate workf=4.53
+
+#S/D metal WF.
+contact name=source workf=4.16 + 0.36*0.5
+contact name=drain workf=4.16 + 0.36*0.5
+
+#S/D contact resistance
+contact name=source con.resist=2e-4
+contact name=drain con.resist=2e-4
+
+#GI and passivation insulator epsilon
+material material=Si3N4 permit=7
+material material=nitride permit=7
+material material=oxide permit=3.9
+
+#
+
+# a-IGZO bandgap, density of states, and affinity
+material material=IGZO nc300=5e18 nv300=4.5e21 eg300=3.0 affinity=4.16 mun=10 mup=0.1 mc=0.34
+
+#DOS in sub-band gap
+defect cont numa=24 numd=24 nta=5e18 wta=0.03 nga=0 wga=1.5 ega=3.0-3.0 tfile=tftex15_0.dat \
+	ntd=4.5e21 wtd=0.1 ngd=0 egd=1.0 wgd=0.1 \
+	sigtae=1e-14 sigtah=1e-14 sigtde=1e-14 sigtdh=1e-14 \  
+        siggae=1e-14 siggah=1e-14 siggde=1e-14 siggdh=1e-14  
+
+# shallow donor below Ec at equilibrium is lower than tails state of gA(E)
+defect cont numa=24 numd=24  nta=4e16 wta=1.5 ntd=0 nga=0 ngd=1e16 wgd=0.1 egd=2.9 tfile=tftex15_1.dat \
+		sigtae=1e-14 sigtah=1e-14 sigtde=1e-14 sigtdh=1e-14 \  
+        	siggae=1e-14 siggah=1e-14 siggde=1e-14 siggdh=1e-14  
+
+# between AOS(Amorphous Oxide Semiconductor) and gate insulator
+# nta deep state also effect on not only IDVG Vth shift but also SS 
+intdefect  r1name=channel r2name=GI  continuous tfile=tftex15_2.dat numa=24 numd=24  \
+  nta=2.38e12 ntd=2.25e16 wta=0.19 wtd=0.1 \
+  nga=0 ngd=0 ega=0.62 egd=0.78 wga=0.15 wgd=0.15 \
+  sigtae=5e-14 sigtah=5e-14 sigtde=5e-14 sigtdh=5e-14 \  
+  siggae=5e-14 siggah=5e-14 siggde=5e-14 siggdh=5e-14  
+
+# device models
+models fldmob temp=300 fermi
+
+#numeric options
+method maxtrap=10 norm.scaling.local pam.gmres climit=1e-6
+
+# save some additional quantities to structure during save statement
+output con.band val.band u.trap
+
+# low Vds
+solve vdrain=0.1
+save outfile=tftex15_1.str
+
+solve vdrain=10.1 
+save outfile=tftex15_2.str
+
+# IDVG at Vds=0.1
+load infile=tftex15_1.str master
+log outfile=tftex15_0.log
+solve vgate=0 vstep=0.25 vfinal=15 name=gate
+log off
+
+#extract threshold voltage at low vds and Subthreshold Swing parameter 
+extract init infile="tftex15_0.log"
+extract name="VT" xintercept(maxslope(curve(v."gate", i."drain"))) 
+extract name="SS" 1/slope(maxslope(curve(abs(v."gate"), log10(abs(i."drain"))))) 
+
+#
+# IDVG at Vds=10.1V
+load infile=tftex15_2.str master
+log outfile=tftex15_1.log
+solve vgate=0 vstep=0.5 vfinal=15 name=gate
+log off
+
+# plot the IDVG results
+tonyplot -overlay tftex15_0.log tftex15_1.log -set tftex15_1.set
+
+quit
+
+

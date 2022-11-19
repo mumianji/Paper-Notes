@@ -1,0 +1,41 @@
+# (c) Silvaco Inc., 2018
+go atlas
+Title PIN photodiode simulation example
+#
+# PIN device description and initial solution
+#
+# SECTION 1: Mesh Specification
+#
+mesh space.mult=4.0 
+#
+x.mesh loc=0.0  spacing=0.25
+x.mesh loc=10.0 spacing=0.25
+#
+y.mesh loc=0.0   spacing=0.05
+y.mesh loc=5.0   spacing=0.2
+y.mesh loc=10.0  spacing=0.05
+#
+# SECTION 2: Structure Specification
+#
+region num=1 material=Silicon
+#
+elec num=1 name=anode x.min=0.0 x.max=10.0 y.max=0.0
+elec num=2 name=cathode bottom
+#
+doping uniform conc=1e14 n.type
+doping gaus peak=0.0 char=0.1 conc=1e18 p.type dir=y
+doping gaus peak=10.0 char=0.1 conc=1e18 n.type dir=y
+#
+# SECTION 3: Material Model Specification
+#
+material taup0=2.e-6 taun0=2.e-6 
+models srh auger conmob fldmob  
+#
+# SECTION 4: Initial Solution
+#
+
+	
+solve    init outf=optoex01.str master
+
+tonyplot optoex01.str -set optoex01.set
+quit

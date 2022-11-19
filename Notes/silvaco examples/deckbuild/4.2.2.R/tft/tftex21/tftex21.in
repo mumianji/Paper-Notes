@@ -1,0 +1,106 @@
+# (c) Silvaco Inc., 2018
+# tftex21 : tempearture properties of a-IGZO TFT
+# IGZO.TOKYO mobility model with electron conconcentration and temperature.
+
+# Reference:
+# K. Abe et. al., "Mobility- and temperature-dependent device model for amorphous
+# In–Ga–Zn–O thin-film transistors," Thin Solid Films 559 (2014) 40-43
+
+# See also, "Temperature Properties of Amorphous In-Ga-Zn-O Thin-Film Transistors with a new Mobility Model"
+# Simulation Standard, December 2017, Silvaco Inc.
+
+go internal
+
+# input deck
+load infile=tftex21_aux.in
+
+# dos dependence
+sweep parameter=set_t type=list range="253, 273, 300, 313, 333, 358, 393"
+	
+# saving of "extract" values for each calculation 
+save type=sdb outfile=tftex21_temperature.dat
+
+
+# id-vg summary > tftex21_idvg_sim.dat
+# clear file
+system rm tftex21_idvg_sim.dat
+# prefix of data file with 0.25 V step from -5 V to 20 V
+system echo "ID-VG calculated with IGZO.TOKYO" >> tftex21_idvg_sim.dat
+system echo "101 8 8" >> tftex21_idvg_sim.dat
+system echo "gate bias" >> tftex21_idvg_sim.dat
+system echo "Drain_253K" >> tftex21_idvg_sim.dat
+system echo "Drain_273K" >> tftex21_idvg_sim.dat
+system echo "Drain_300K" >> tftex21_idvg_sim.dat
+system echo "Drain_313K" >> tftex21_idvg_sim.dat
+system echo "Drain_333K" >> tftex21_idvg_sim.dat
+system echo "Drain_358K" >> tftex21_idvg_sim.dat
+system echo "Drain_393K" >> tftex21_idvg_sim.dat
+
+# mob-vg summary > tftex21_mobility_sim.dat
+# clear file
+system rm  tftex21_mobility_sim*.dat
+# prefix of data file with 0.25 V step from -5 V to 20 V
+system echo "Mob-VG calculated with IGZO.TOKYO" >> tftex21_mobility_sim.dat
+system echo "101 8 8" >> tftex21_mobility_sim.dat
+system echo "gate bias" >> tftex21_mobility_sim.dat
+system echo "ulin_253K" >> tftex21_mobility_sim.dat
+system echo "ulin_273K" >> tftex21_mobility_sim.dat
+system echo "ulin_300K" >> tftex21_mobility_sim.dat
+system echo "ulin_313K" >> tftex21_mobility_sim.dat
+system echo "ulin_333K" >> tftex21_mobility_sim.dat
+system echo "ulin_358K" >> tftex21_mobility_sim.dat
+system echo "ulin_393K" >> tftex21_mobility_sim.dat
+
+set v_gate=-5
+
+loop steps=101
+
+# 253K
+extract init infile="tftex21_vd01_igzo-tokyo_253.log"
+extract name="id_253" y.val from curve(v."gate", i."drain") where x.val=$v_gate
+extract name="mb_253" y.val from deriv(v."gate", abs(i."drain")/(10*1.73e-8*(4.2/3.9)*0.1/40) ) where x.val=$v_gate
+# 273K
+extract init infile="tftex21_vd01_igzo-tokyo_273.log"
+extract name="id_273" y.val from curve(v."gate", i."drain") where x.val=$v_gate
+extract name="mb_273" y.val from deriv(v."gate", abs(i."drain")/(10*1.73e-8*(4.2/3.9)*0.1/40) ) where x.val=$v_gate
+# 300K
+extract init infile="tftex21_vd01_igzo-tokyo_300.log"
+extract name="id_300" y.val from curve(v."gate", i."drain") where x.val=$v_gate
+extract name="mb_300" y.val from deriv(v."gate", abs(i."drain")/(10*1.73e-8*(4.2/3.9)*0.1/40) ) where x.val=$v_gate
+# 313K
+extract init infile="tftex21_vd01_igzo-tokyo_313.log"
+extract name="id_313" y.val from curve(v."gate", i."drain") where x.val=$v_gate
+extract name="mb_313" y.val from deriv(v."gate", abs(i."drain")/(10*1.73e-8*(4.2/3.9)*0.1/40) ) where x.val=$v_gate
+# 333K
+extract init infile="tftex21_vd01_igzo-tokyo_333.log"
+extract name="id_333" y.val from curve(v."gate", i."drain") where x.val=$v_gate
+extract name="mb_333" y.val from deriv(v."gate", abs(i."drain")/(10*1.73e-8*(4.2/3.9)*0.1/40) ) where x.val=$v_gate
+# 358K
+extract init infile="tftex21_vd01_igzo-tokyo_358.log"
+extract name="id_358" y.val from curve(v."gate", i."drain") where x.val=$v_gate
+extract name="mb_358" y.val from deriv(v."gate", abs(i."drain")/(10*1.73e-8*(4.2/3.9)*0.1/40) ) where x.val=$v_gate
+# 393K
+extract init infile="tftex21_vd01_igzo-tokyo_393.log"
+extract name="id_393" y.val from curve(v."gate", i."drain") where x.val=$v_gate
+extract name="mb_393" y.val from deriv(v."gate", abs(i."drain")/(10*1.73e-8*(4.2/3.9)*0.1/40) ) where x.val=$v_gate
+
+# id-vg
+system echo "$'v_gate' $'id_253' $'id_273' $'id_300' $'id_313' $'id_333' $'id_358' $'id_393'" >> tftex21_idvg_sim.dat
+# mob-vg
+system echo "$'v_gate' $'mb_253' $'mb_273' $'mb_300' $'mb_313' $'mb_333' $'mb_358' $'mb_393'" >> tftex21_mobility_sim.dat
+
+set v_gate=$v_gate+0.25
+l.end
+
+# simulated structure
+tonyplot tftex21_init.str -set tftex21_str.set
+
+# ID and mobility comparison between measurements and calculations 
+tonyplot -overlay tftex21_idvg_meas.dat tftex21_idvg_sim.dat -set tftex21_idvg01.set
+tonyplot -overlay tftex21_mobility_meas.dat tftex21_mobility_sim.dat -set tftex21_mob01.set
+
+# temperature dependence of Vth
+tonyplot tftex21_temperature.dat -set tftex21_vt01.set
+
+
+quit

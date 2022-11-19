@@ -1,0 +1,180 @@
+#NOTE:  This example works only on UNIX/LINUX computers.
+
+go athena cutline=anex11_0.sec
+#
+# 
+init c.phos=1.0e14 orientation=100
+
+# Initial Oxide
+method fermi compress
+diffus time=30 temp=1000 dryo2 press=1.00 hcl.pc=3
+# Initial Nitride
+deposit nitride thick=0.15 divisions=2
+
+# Pwell photo
+mask name="WELL"
+# Pwell definition etch
+etch nitride dry thick=0.15
+# Oxide overetch
+etch oxide dry thick=0.015
+# pwell implant
+implant boron dose=1.0e13 energy=100 
+strip
+struct outfile=anex11_0.str
+
+# Nwell maox 
+method fermi compress
+diffus time=45 temp=950 weto2 press=1.00 hcl.pc=3
+struct outfile=anex11_1.str
+
+# strip init nit
+etch nitride all
+# oxide overetch			
+etch oxide dry thick=0.015
+# nwell implant
+implant phosphor dose=1.0e13 energy=60 
+
+# planarising oxide
+method fermi compress
+diffus  time=45 temp=800 t.final=1000 dryo2 press=0.05 hcl.pc=3
+diffus time=45 temp=1000 weto2 press=0.05 hcl.pc=3
+# well drive 
+method fermi compress
+diffus time=170 temp=1200 nitro press=0.05 hcl.pc=0
+structure outfile=anex11_2.str
+# wellox strip
+etch oxide all
+
+# Stress relief Oxide
+deposit oxide thick=0.035 divisions=1
+# Masking Nitride
+deposit nitride thick=0.15 divisions=1
+# Active Area Photo
+mask name="AAD"
+# AA Definition
+etch nitride dry thick=0.30
+# AA Definition
+etch oxide dry thick=0.10
+# AA Definition
+etch silicon dry thick=0.15
+struct outfile=anex11_3.str
+strip
+
+# Field Oxide growth
+method fermi compress
+diffus time=70 temp=1000 weto2 press=1.00 hcl.pc=3
+struct outfile=anex11_4.str
+#
+extract name="pwell_fieldox" thickness oxide mat.occno=1 region="pwell_fld"
+extract name="nwell_fieldox" thickness oxide mat.occno=1 region="nwell_fld"
+
+
+# AA stack strip
+etch nitride dry thick=0.25
+# AA stack strip
+etch oxide dry thick=0.07
+# AA stack strip
+etch nitride all
+#
+struct outfile=anex11_5.str
+# Sacox growth
+diffus time=25 temp=950 dryo2 press=1.00 hcl.pc=3
+# Sacox strip
+etch oxide dry thick=0.06
+
+#Gate oxide recipe for example msex03.in
+# push in boat, timed from after boat reaches the cold zone....
+diffuse temp=800  time=15 nitrogen
+#ramp up to temp in dilute o2 and tca
+diffuse temp=850 t.final=950 dryo2 hcl.pc=3 time=15 press=0.25
+#increase pp of o2 and stabilise
+diffuse temp=950 time=5 dryo2 hcl.pc=3 press=0.8
+#main growth step
+diffuse temp=950 dryo2 hcl.pc=3 time=15 press=0.8
+#anneal step
+diffuse temp=950 time=35 nitrogen
+# Ramp down
+diffuse temp=950 t.final=800 time=30 nitrogen
+# Pull out
+diffuse temp=800 time=15 nitrogen  
+struct outfile=anex11_6.str
+# Extract gate ox thickness. This is used as optimisation target and as a
+# VWF design variables....
+extract thickness oxide mat.occno=1 region="ngate" name="ngateox"
+extract thickness oxide mat.occno=1 region="pgate" name="pgateox"
+
+
+# Vt adjust Implant
+implant boron dose=1.5e12 energy=25 
+# Poly Dep
+deposit poly thick=0.30 divisions=5
+# Poly Photo
+mask name="POLY"
+# Poly etch
+etch poly dry thick=0.40
+#photostrip
+strip
+# Poly is bare here, so name the gate electrodes.....
+autoelectrode
+# Poly Reox
+method fermi compress
+diffus time=23 temp=900 dryo2 press=1.00 hcl.pc=3
+struct outfile=anex11_7.str 
+# Spacer Nitride Dep
+deposit nitride thick=0.20 divisions=4
+# Spacer etch
+etch nitride dry thick=0.20
+# SDN++
+mask name="WELL"
+# N++ Implant
+implant arsenic dose=4.5e15 energy=50 
+# Nitride spacer removal for the N's
+etch nitride dry thick=1
+# N-LDD Implant
+implant phosphor dose=3.5e13 energy=30 
+struct outfile=anex11_8.str
+strip
+# P++ photo
+mask name="WELL" reverse
+# P++ Implant
+implant boron dose=1.0e15 energy=25 
+# Nitride spacer removal for the P's
+etch nitride dry thick=1
+# P-LDD Implant
+implant bf2 dose=1.0e14 energy=40 
+struct outfile=anex11_9.str
+strip
+# Capping Nitride
+deposit nitride thick=0.05 divisions=1
+ 
+# BPSG Dense
+method fermi compress
+diffus time=20 temp=900 nitro press=1.00 hcl.pc=0
+struct outfile=anex11_10.str
+
+# Extract the two sd junction depths....
+extract name="p++ xj" xj silicon mat.occno=1 region="pmcc" junc.occno=1
+extract name="n++ xj" xj silicon mat.occno=1 region="nmcc" junc.occno=1
+
+# MCC
+mask name="VIA2"
+# MCC etch
+etch nitride dry thick=0.10
+# MCC etch
+etch oxide dry thick=0.10
+strip
+# Metal Depo
+deposit alumin thick=0.05 divisions=2
+# First Metal Defn
+mask name="MET1"
+# Metal1 etch
+etch aluminum dry thick=0.50
+strip
+# Aluminium is bare here, so place the electrodes.....
+autoelectrode
+electrode backside name=substrate
+structure outf=anex11_11.str
+
+tonyplot anex11_11.str
+
+quit

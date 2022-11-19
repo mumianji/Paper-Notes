@@ -1,0 +1,44 @@
+go athena
+#
+#                   OPTOLITH input file: anopex01.in
+#                   --------------------------------
+#
+#                Aerial image of a complex mask feature.
+#
+# The illumination wavelength
+#
+illumination g.line 
+#
+# The shape of the illuminating source
+#
+illum.filter clear.fil circle sigma=0.3
+#
+# The projection system numerical aperture
+#
+projection na=.43
+#
+# The shape of the pupil of the projection system
+#
+pupil.filter clear.fil circle
+#
+# Define the mask : two elbows and a contact hole (cd=1.0 um)
+#
+layout lay.clear x.low=-2.5 z.low=-2.5 x.high=-1.5 z.high=2.5
+layout x.low=-1.5 z.low=1.5 x.high=2.5 z.high=2.5
+layout x.low=-.5 z.low=-2.5 x.high=.5 z.high=.5
+layout x.low=.5 z.low=-.5 x.high=2.5 z.high=.5
+layout x.low=1.5 z.low=-2.5 x.high=2.5 z.high=-1.5
+#
+# Calculation of the aerial image
+#
+image win.x.lo=-3 win.z.lo=-3 win.x.hi=3 win.z.hi=3 dx=.2 opaque
+#
+# Store the aerial image in a structure file
+#
+structure outfile=anopex01.str intensity mask
+#
+# Plot the aerial image during the run
+#
+tonyplot anopex01.str -set anopex01.set
+#
+quit

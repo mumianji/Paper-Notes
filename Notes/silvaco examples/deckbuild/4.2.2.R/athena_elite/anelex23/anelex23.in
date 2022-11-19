@@ -1,0 +1,24 @@
+go athena
+# 
+line x loc=-0.5  spac=0.10
+line x loc=0.5   spac=0.10
+line y loc=0.00  spac=0.02
+line y loc=0.75  spac=0.5
+# 
+init silicon orientation=100 space.m=1
+# 
+etch silicon right p1.x=0.0 p1.y=0.5 p2.x=-0.5 p2.y=0.0
+
+structure outfile=anelex23_0.str
+
+rate.depo machine=Aldepo1 alumin a.m sigma.dep=0.0 monte2 dep.rate=1000.0 angle1=0.0
+deposit machine=Aldepo1 time=1 minutes divis=1 n.particle=10000 outfile=anelex23_1.str
+
+init infile=anelex23_0.str
+
+rate.depo machine=Aldepo1 alumin a.m sigma.dep=0.2 monte2 dep.rate=1000.0 angle1=0.0
+deposit machine=Aldepo1 time=1 minutes divis=1 n.particle=10000 outfile=anelex23_2.str
+
+tonyplot anelex23_1.str anelex23_2.str -set anelex23.set
+
+quit

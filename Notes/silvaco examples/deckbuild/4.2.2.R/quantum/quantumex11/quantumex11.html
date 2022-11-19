@@ -1,0 +1,84 @@
+<html>
+  <head>
+    <title>Quantum Tunnelling in a Silicon Structure with a non-linear junction profile.</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Quantum Tunnelling in a Silicon Structure with a non-linear junction profile.</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>S-Pisces</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="quantumex11_plot0.png" width="640" alt="quantumex11_plot0" />
+      <p/>
+      <img src="quantumex11_plot1.png" width="640" alt="quantumex11_plot1" />
+      <p/>
+      <img src="quantumex11_plot2.png" width="640" alt="quantumex11_plot2" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates:
+</p>
+<ul>
+  <li>
+ Example of a QTREGION statement applied to a non-linear junction profile.
+<br/>
+  </li>
+  <li>
+ Example of BBT.FORWARD and BBT.REVERSE parameters.
+<br/>
+  </li>
+</ul>
+<p>
+In this example the QTREGION statement is used to set up a mesh suitable
+for tunneling calculations. The device has two junctions, one which is
+a straight line and the other which is curved. Multiple QTREGION statements
+are used to create two QTREGIONs. The contour of the junction is approximately
+followed and the SNRM.BEG and SNRM.END parameters are used to match the
+QTREGION meshspacing with the device mesh spacing in the direction
+perpendicular to the tunneling direction
+is approximately normal to the junction.  An example of F.RESOLUTION is given
+in the QTREGION for the linear junction.  This takes the relative mesh
+spacing in the tunneling direction from a data file.
+</p>
+<p>
+The curved junction is forward biased,  the optional BBT.FORWARD parameter
+is used.  The linear junction is then reverse biased,  the BBT.FORWARD
+parameter is cleared and the optional BBT.REVERSE parameter is set.  These
+two parameters determine where the tunnel current is injected into the device.
+BBT.FORWARD injects at the edges of the QTREGIONS, and BBT.REVERSE averages
+over the junction itself.   These schemes can be more stable than the default
+option,  which injects the current at the position it actually occurs in the
+model.
+</p>
+<p>
+From the LOG files we see that there is a forward bias tunneling current,
+and from the Structure files we see exactly where the current is injected.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

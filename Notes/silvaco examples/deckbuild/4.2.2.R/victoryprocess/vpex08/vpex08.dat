@@ -1,0 +1,41 @@
+v DBInternal
+# silvaco.file ASCII version=1.14.23 format=1 contents=SDB,Tables=1
+
+Copyright "###################################################################"
+Copyright "#                    Copyright Silvaco Inc. (c)                   #"
+Copyright "#                            1992-2014                            #"
+Copyright "#                                                                 #"
+Copyright "# This file format and the following Key are copyright Silvaco    #"
+Copyright "# International. You may not use, this format or key without      #"
+Copyright "# reproducing this message in full and obtaining                  #"
+Copyright "# express written permission from Silvaco Inc.                    #"
+Copyright "#                                                                 #"
+Copyright "# To obtain such permission please contact: Silvaco Inc.          #"
+Copyright "#                                           support@silvaco.com   #"
+Copyright "#                                                                 #"
+Copyright "# KEY=SVC86hn7562asdx                       PROD=345              #"
+Copyright "###################################################################"
+#dbinternal 2.11.7.A (Thu Feb  8 16:02:37 GMT 2018)
+#libSDB 1.12.42 (Thu Oct 26 19:20:24 PDT 2017)
+p 4 10000 10001 10002 10003
+d 1 0.001 0.384458 0.001
+d 2 0.0019352422326956509 0.443915 0.00293524
+d 3 0.0037451624992088481 0.497634 0.00668039
+d 4 0.0072477966367769531 0.563212 0.0139282
+d 5 0.014026242145480259 0.64243 0.0279543
+d 6 0.027144176165949059 0.718838 0.0550984
+d 7 0.052530556088075352 0.768088 0.107629
+d 8 0.10165935064863101 0.782469 0.209287
+d 9 0.19673546872364681 0.785466 0.406021
+d 10 0.38073078774317548 0.788035 0.786748
+d 11 0.73680629972807687 0.791248 1.52355
+d 12 1.4258986685499839 0.795566 2.94943
+d 13 2.7594593229224289 0.801531 5.70885
+d 14 5.3402222211252308 0.809749 11.048999999999999
+d 15 10.33462357430132 0.821079 21.383400000000002
+d 16 19.999999999999989 0.836899 41.383099999999999
+Q 10000 1 ex_id
+Q 10001 1 dt
+Q 10002 1 xj
+Q 10003 1 time
+EOF 1981790147

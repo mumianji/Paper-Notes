@@ -1,0 +1,25 @@
+go athena
+#
+# Illumination system
+#
+illumination lambda=.193
+#
+illum.filter clear.fil circle sigma=0.3 
+#
+# Projection system
+#
+projection na=.52 
+#
+pupil.filter clear.fil circle
+#
+# Run the imaging module with a mask input file from Maskviews
+#
+layout lay.clear
+layout infile=anopex08.lay mask=LAYER1
+
+image dx=0.05 win.x.h=9 win.x.l=-1 win.z.h=9 win.z.l=-1
+#
+structure outfile=anopex08.str intensity mask
+tonyplot anopex08.str 
+#
+quit

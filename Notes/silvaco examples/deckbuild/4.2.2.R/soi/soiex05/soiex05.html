@@ -1,0 +1,129 @@
+<html>
+  <head>
+    <title>Negative Transconductance - Effect of Lattice Heating</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Negative Transconductance - Effect of Lattice Heating</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>S-Pisces/Giga</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="soiex05_plot0.png" width="640" alt="soiex05_plot0" />
+      <p/>
+      <img src="soiex05_plot1.png" width="640" alt="soiex05_plot1" />
+      <p/>
+      <img src="soiex05_plot2.png" width="640" alt="soiex05_plot2" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example compares the results of Ids/Vds curves for an SOI
+transistor using isothermal and non-isothermal approaches. The heating
+of the silicon film causes a negative saturation slope. The file shows:
+</p>
+<ul>
+  <li>
+ SOI structure formation using Atlas syntax
+<br/>
+  </li>
+  <li>
+ Selection of the lattice heating model
+<br/>
+  </li>
+  <li>
+ Selection of thermal boundary conditions
+<br/>
+  </li>
+  <li>
+ Id/Vds simulation for Vgs=10V
+<br/>
+  </li>
+  <li>
+ Repetition of the Ids/Vds curve excluding lattice heating for comparison
+  </li>
+</ul>
+<p>
+There are two Atlas runs in this example file. The first uses lattice
+heating and the second uses isothermal models.
+</p>
+<p>
+The initial phase of the input file constructs an SOI device using the Atlas syntax.
+<b> mesh, region </b> and
+<b> electrode </b> statements are used to define the geometry and mesh of the structure. The
+<b> doping </b> statement is used to define analytical doping profiles. A uniformly
+p-doped silicon film is used with heavy gaussian n+ source and drain
+regions.
+</p>
+<p>
+The heat flow equation is selected using
+<b> models lat.temp</b> . Other models such as
+<b> arora </b> are used to define a temperature dependent mobility model. Local
+lattice temperature is used in the documented mobility model
+equations. The thermal boundary conditions are crucial in simulations with
+lattice heating. The
+<b> thermcontact </b> statement defines the heat sink. The heat sink is on the bottom of the silicon substrate region. All other boundaries are presumed to be in thermal isolation.
+</p>
+<p>
+The choice of numerical method in SOI device simulation is also
+important. The standard newton method has some convergence problems in
+floating body devices. As impact ionization occurs the initial guess to
+the potential of the floating channel region becomes more difficult.
+The newton method, which relies on a good initial guess, can encounter
+convergence difficulties. These difficulties are generally not fatal to
+the simulation, but require small voltage steps to be used. This adds
+to the CPU time considerably. A more robust method available in Atlas
+is by choosing the combined gummel/newton algorithm.
+</p>
+<p>
+In addition, the solution of the heat flow equation must also be
+included. The most robust method, once the temperature rises above the
+heat sink level, is newton. However in the early stages of the solution
+the decoupled
+<b> block </b> method is better. Atlas can switch between these methods so all are included in the
+<b> method gummel block newton </b> statement.
+</p>
+<p>
+The electrical solutions for Ids/Vds is defined in a similar manner to
+the regular NMOS example described in the MOS examples section.
+</p>
+<p>
+The simulation with lattice heat is exactly analogous to the subsequent
+one using isothermal models. The run differs only in having no lat.temp
+or thermcontact definition.
+</p>
+<p>
+Id/Vds curves form the two runs can be overlaid in TonyPlot showing
+the effect of lattice heating on the device performance. The increased
+temperature causes the mobility to decrease as the drain bias rises
+leading to a negative saturation slope. Comparison of the physical
+variables at the same bias is also possible from the saved solution
+files. Plotting impact ionization in each case shows how the elevated
+lattice temperature reduces the impact ionization rate.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

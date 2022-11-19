@@ -1,0 +1,124 @@
+<html>
+  <head>
+    <title>Nitride charging dependence on capture cross-section</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Nitride charging dependence on capture cross-section</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>S-Pisces</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="sonosex01_plot0.png" width="640" alt="sonosex01_plot0" />
+      <p/>
+      <img src="sonosex01_plot1.png" width="640" alt="sonosex01_plot1" />
+      <p/>
+      <img src="sonosex01_plot2.png" width="640" alt="sonosex01_plot2" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+The example shows :
+</p>
+<ul>
+  <li>
+ How to create a simple SONOS structure.
+<br/>
+  </li>
+  <li>
+ How to activate and specify the parameters for the DYNASONOS model.
+<br/>
+  </li>
+  <li>
+ How to charge a SONOS structure.
+<br/>
+  </li>
+  <li>
+ How to specify and interpret the SONOS logfile output.
+  </li>
+</ul>
+<p>
+Typical Atlas meshing commands are used to set up a MOSFET-like
+structure. The main difference is the presence of a layer of Silicon
+Nitride in the gate stack.  The insulating layer between the Nitride and the
+channel is termed the tunnel oxide,  and the insulating layer between
+the Nitride and the contacts is called the blocking layer.  The Atlas
+SONOS model is invoked using the
+<b> INTERFACE N.I DYNASONOS </b> statement.  The value of DYNASONOS flag is enabed by default,  and so
+it is not necessary to specify this explicitly.
+</p>
+<p>
+To use the DYNASONOS model, the insulators in the gate stack must be changed
+to (wide-gap) semiconductors and given values for density of states, mobility
+and effective mass.  The effective mass values strongly affect the tunneling
+current through the gate stack.
+</p>
+<p>
+Additionally, one must use the NITRIDECHARGE statement to set up the parameters
+of the nitride traps.  The density of traps can be set with the parameters
+NT.N (acceptor-like traps) and NT.P (donor-like traps). In this deck we
+want to trap electrons and so specify a non-zero value for NT.N. The
+parameter SIGMAT.N gives the cross-section for trapping the electrons in the
+Nitride conduction band and is set to 4 different values within this deck.
+</p>
+<p>
+The parameter ELEC.DEPTH specifies the energy depth of the electron
+trap below the conduction band.  The parameter TAU.N gives the characteristic
+timescale for emission from the trap level to the conduction band.
+</p>
+<p>
+The parameter SIGMAN.P controls hole capture from the valence band and is
+set to zero with loss of generality.
+</p>
+<p>
+The Nitride traps are charged up by ramping the bias to 16 V over 1 nanosecond
+and then maintaining this for 1 millisecond.
+</p>
+<p>
+The stored charge as a function of time (nettcharge) is plotted for the four
+different values of SIGMAT.N.  The larger the cross-section then the
+more charge is stored.  The stored charge should be the integrated
+difference between the current entering the Nitride region from the
+channel and that leaving to the gate contact.  This can also be seen in the
+other plots, and by using the TonyPlot integrate tool you can obtain an
+estimate of the nett stored charge to compare (within truncation errors)
+with nett charge.
+</p>
+<p>
+As the trapping cross-section increases, less charge arrives at the interface
+with the blocking insulator and the out current decreases and is delayed,
+as can be seen in the plots of in and out current at the different values of
+capture cross-section.  In all cases a steady state is obtained where
+in and out current are matched and the nett charge is constant.
+</p>
+<p>
+The structure files of the charged device are plotted, the user can use the
+TonyPlot cutline tool to view the Trapped Insulator Charge, Electron Charging
+Rate and other relevant parameters
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

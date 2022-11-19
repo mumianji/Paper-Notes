@@ -1,0 +1,73 @@
+<html>
+  <head>
+    <title>3D FinFET Simulation</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>3D FinFET Simulation</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Victory Process, Victory Mesh, Victory Device</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Victory Process 7.22.3.R, Victory Mesh 1.2.4.R, Victory Device 1.12.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="mos2ex21_plot0.png" width="640" alt="mos2ex21_plot0" />
+      <p/>
+      <img src="mos2ex21_plot1.png" width="640" alt="mos2ex21_plot1" />
+      <p/>
+      <img src="mos2ex21_plot2.png" width="640" alt="mos2ex21_plot2" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+By default Victory Process and Device run on just one processor.
+To ensure better perfomance on your computer the following simulation condition
+<b> simflags=&quot;-P all&quot; </b> could be specidied in the
+<b> go </b> line starting Victory Process or Device. This means that all processors available will be used.
+If you want to use a smaller number of processors you can substitute &quot;all&quot; with a desired number, e.g.
+<b> simflags=&quot;-P 4&quot;.</b> </p>
+<p>
+In this example, a FinFET is created using the etch, deposit, diffusion and
+Monte-Carlo implantation modules of Victory Process.
+</p>
+<p>
+The structure created by Victory Process is then meshed in Victory Mesh using a full 3D Delaunay mesh and is then transferred to Victory Device for electrical analysis of the unsaturated Vt curves as well IdVd curves
+</p>
+<p>
+The device simulation uses the
+<b> energy balance model </b> to account for the effects of
+<b> ballistic carrier transport</b> , which significantly increases drain currents and is the cause of the decrease
+in the output impedance of the IdVd curves.
+</p>
+<p>
+It also uses the
+<b>  Bohm Quantum Potential (BQP)</b> model to take into account quantum
+confinement of carriers in 3 dimension which significantly decreases the drain currents.
+</p>
+<p>
+For comparison purpose Drift Diffusion are also included in the simulation
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

@@ -1,0 +1,42 @@
+# (c) Silvaco Inc., 2018
+go atlas
+mesh  three.d
+
+x.mesh l=0   spacing=0.1
+x.mesh l=1.5 spacing=0.1
+
+y.mesh l=0.0 spacing=0.02
+y.mesh l=1.0 spacing=0.1
+
+z.mesh l=0.0 spacing=0.1
+z.mesh l=1.5 spacing=0.1
+
+region num=1 silicon
+
+electrode num=1 name=anode   x.min=0.5 x.max=1.0 z.min=0.5 z.max=1.0
+electrode num=2 name=cathode bottom
+
+doping reg=1 uniform n.type conc=5e15 
+doping reg=1 gauss   n.type conc=1e18 peak=1.0 char=0.2
+doping reg=1 gauss   p.type conc=5e19 peak=0.0 junct=0.2 \
+       x.left=0.5 x.right=1.0 z.left=0.5 z.right=1.0
+
+
+log   outfile=diodeex06.log
+solve init
+
+method carrier=2
+solve      vanode=0.05  vstep=0.05  vfinal=1  name=anode
+
+tonyplot diodeex06.log -set diodeex06_0.set
+
+save outfile=diodeex06.str
+tonyplot3d diodeex06.str -set diodeex06_1.set
+
+
+
+quit
+
+
+
+

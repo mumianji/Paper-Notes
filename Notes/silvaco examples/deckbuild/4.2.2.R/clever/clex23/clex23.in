@@ -1,0 +1,143 @@
+# This example demonstrates the electrical and optical 
+# simulation on an in-plane switching (IPS) cell. 
+# The pixel layout consists of two zigzag electrodes.
+##
+
+go VictoryProcess
+
+init  material="oxide" GasHeight=5 Depth=1  from="0,0" to="10,30"
+
+# Create one mask with two electrodes.
+SpecifyMaskPoly maskname=ELEC p1="2.5,1" p2="0.5,15" p3="2.5,29" p4="4.5,29" p5="2.5,15" p6="4.5,1" electrode="Pix"
+SpecifyMaskPoly maskname=ELEC p1="7.5,1" p2="5.5,15" p3="7.5,29" p4="9.5,29" p5="7.5,15" p6="9.5,1" electrode="Com" add
+
+line x position=0 spac=0.25
+line x position=10 spac=0.25
+
+line y position=0 spac=0.25
+line y position=1 spac=0.5
+line y position=15 spac=0.5
+line y position=29 spac=0.5
+line y position=30 spac=0.25
+
+line z position=-5 spacing=1
+line z position=-3 spacing=0.1
+line z position=-1.5 spacing=0.1
+line z position=-0.05 spacing=0.025
+line z position=0 spacing=0.1
+line z position=1 spacing=1
+
+# Pattern electrodes.
+deposit material="ITO" thick=0.05 min
+mask "ELEC"
+etch material="ITO" thick=0.05 min
+strip
+electrode mask="ELEC" material="ITO"
+
+deposit material="LC" thick=3 min
+
+deposit oxide thick=1 min
+
+export clever(conformal) structure="ips_struc.str"
+
+
+# The electrical simulation is carried out in the following section. 
+
+go clever simflags="-P 8"
+
+init structure="ips_struc.str"
+
+material ITO conductivity=1000
+material oxide permittivity=3.9
+
+# Specify the anisotropic permittivity and the elastic constants of the LC.
+setLC epsParaDir=10.7 epsVertDir=3.7 splay=14.4e-12 twist=6.9e-12 bend=18.3e-12 cPenalty=1000
+
+# Specify the rubbing angle and the pre-tilt angle on the top and at the bottom of the LC region.
+LCbndaryB partition(0,10) rubAngle(90) tiltangle(1)
+LCbndaryT partition(0,10) rubAngle(90) tiltangle(1)    
+
+solver linearsolver=pam pamsolver=gmres ddprecond=RAS preconditioner=amp multilevel=0 fillratio=1.e-3 lsmaxiter=200 lstolerance=1.0e-10 nlsmaxiter=100 nlstolerance=1.0e-8
+
+option LSconvergeinfo=1 NLSconvergeinfo
+
+# Ramp the pixel voltage to 6V with a step of 0.5V.
+# Save the structure at each 0.5V interval from 0 to 6V.
+Interconnect Capacitance domainboundarycondition=cyclic vpix("Pix",6) initvstep=0.5 savestep=0.5 structure="ips" 
+
+# Save the parasitic capacitance netlist.
+save spice="ips.net"
+
+tonyplot3d ips.V6.str
+tonyplot ips.net
+
+
+# The optical simulation is carried out in the following section. 
+# The beam is set to propagate from the maximum z toward the minimum z. 
+
+# Crossed ideal polarizers
+go clever simflags="-P 8"
+
+# Loops are used to calculate the optical transmission at different bias voltages.
+# The wavelength and the incident angle of the monochramatic source beam
+# is defined as 0.55 microns and 0 (normal incidence), respectively. 
+# The transmittance and the reflectance can be read from the runtime output.
+set Volt=0
+loop steps=13
+optics structure="ips.V$'Volt'.str" indexfile="clex23_LC_index.txt" pixelvolt=$Volt \
+    wavelength=0.55 angle=0 lightorient=fromtop polanglestart=0 polangleend=90 \
+    dx=0.25 dy=0.5 dzmax=0.1 polindexstart=1.5 polindexend=1.5 \
+ topview="ips_V$'Volt'_top"
+set Volt=$Volt+0.5
+l.end 
+
+tonyplot ips_V1_top.str ips_V2_top.str ips_V3_top.str ips_V4_top.str ips_V5_top.str ips_V6_top.str -set clex23_topview.set
+
+# The wavelength scan starts from 0.39 microns and ends at 0.75 microns
+# with a wavelength step of 10nm.
+set Volt=4
+loop steps=5
+optics structure="ips.V$'Volt'.str" indexfile="clex23_LC_index.txt" pixelvolt=$Volt \
+    wlsweep(0.39,0.75,0.01) angle=0 lightorient=fromtop polanglestart=0 polangleend=90 \
+    dx=0.25 dy=0.5 dzmax=0.1 polindexstart=1.5 polindexend=1.5 \
+    outspec="ips_V$'Volt'_spec"
+set Volt=$Volt+0.5
+l.end 
+
+tonyplot -overlay ips_V4_spec.log ips_V4.5_spec.log ips_V5_spec.log ips_V5.5_spec.log ips_V6_spec.log -set clex23_spect.set
+
+# The full range of the polar and azimuthal angle is scanned in a 5-degree step. 
+set Volt=0
+loop steps=2
+optics structure="ips.V$'Volt'.str" indexfile="clex23_LC_index.txt" pixelvolt=$Volt \
+    wavelength=0.55 lightorient=fromtop polanglestart=0 polangleend=90 \
+    dx=0.25 dy=0.5 dzmax=0.1 polindexstart=1.5 polindexend=1.5 \
+    anglesweep(0,90,5) thetasweep(0,360,5) angleview="ips_V$'Volt'_angle"
+set Volt=$Volt+5
+l.end 
+
+tonyplot ips_V0_angle.str  -set clex23_angle.set
+tonyplot ips_V5_angle.str  -set clex23_angle.set
+
+# Crossed non-ideal polarizer
+go clever 
+
+# The ideal polarizers are disabled by setting their polarization angles to be 100.
+set Volt=0
+loop steps=13
+optics structure="ips.V$'Volt'.str" indexfile="clex23_LC_index.txt" pixelvolt=$Volt \
+    wavelength=0.55 angle=0 lightorient=fromtop polanglestart=100 polangleend=100 \
+    dx=0.25 dy=0.5 dzmax=0.1 \
+    StartEndLayers(180, 0, 1.5, 1.5, 2e-05, 0.002; 180, 90, 1.5, 1.5, 2e-05, 0.002) \
+  topview="ips_V$'Volt'_top_pol"
+set Volt=$Volt+0.5
+l.end 
+
+tonyplot ips_V1_top_pol.str ips_V2_top_pol.str ips_V3_top_pol.str \
+         ips_V4_top_pol.str ips_V5_top_pol.str ips_V6_top_pol.str -set clex23_topview.set
+
+
+quit
+
+
+

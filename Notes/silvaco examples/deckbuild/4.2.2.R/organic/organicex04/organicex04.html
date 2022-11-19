@@ -1,0 +1,88 @@
+<html>
+  <head>
+    <title>2 layers versus 3 layers OLED</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>2 layers versus 3 layers OLED</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Blaze/Organic Display</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="organicex04_plot0.png" width="640" alt="organicex04_plot0" />
+      <p/>
+      <img src="organicex04_plot1.png" width="640" alt="organicex04_plot1" />
+      <p/>
+      <img src="organicex04_plot2.png" width="640" alt="organicex04_plot2" />
+      <p/>
+      <img src="organicex04_plot3.png" width="640" alt="organicex04_plot3" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+A conventional 2 layer organic light emitting diode consists of a Hole
+Transport Layer (HTL) and an electron transport layer (ETL). A good OLED
+structure requires sufficient carrier injection so that large exciton density
+is generated when the carriers recombine. However, a 2-layer OLED structure
+has a low injection current due to the poor metal/organic material interface
+and therefore has a low device output efficiency. Commercial OLED structures
+are multi-layers and this example compare 2 layers versus 3-layers OLED.
+</p>
+<p>
+This example is based on the following reference:
+</p>
+<p>
+J.Staudigel et al, &quot;A quantitative numerical model of multilayer vapor-deposited
+organic light emitting diodes&quot; Journal of Applied Physics Vol. 86, Number 7
+October 1999
+</p>
+<p>
+In the first part on this example a hole-only unipolar organic device is simulated
+and simulation result is compared to measurement. Schottky contacts are defined
+for both anode and cathode electrodes and defect states are defined whithin the
+organic material using the
+<b> odefect </b> statement. A good fit is obtained between simulation and measurement.
+</p>
+<p>
+The second part of the deck compare a 2 layers OLED versus a 3 layers OLED.
+</p>
+<p>
+To demonstrate why the 3-layer OLED has a higher efficiency than a 2-layer device,
+we need to take into account interface defect between organic/organic material. To
+do so we have defined interface defect states using the
+<b> ointdefect </b> statement combined with interface thermionic emission model.
+The main effect of the organic/organic interface is to add trap states which reduces
+the energy barrier height and enhance carriers injection.
+</p>
+<p>
+Simulation results indeed show thatthe 3 layers OLED has a lower anode current
+as expected but a higher luminescent power due to higher Langevin recombination rate.
+The same simulations done without interface defect states show opposite behavior (i.e
+luminescent power is higher in 2 layers OLED).
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

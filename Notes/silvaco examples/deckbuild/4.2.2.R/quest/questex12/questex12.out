@@ -1,0 +1,1243 @@
+internal (2.3.1.A)
+INTERNAL> 
+INTERNAL> quit
+
+
+*** END ***
+
+Running 64-bit version
+SFLM: sflm servers=sflmhost:3162/ lic1000:3162/ licomni1000:3162/ boston:3162/
+SFLM Servers: sflmhost:3162/ lic1000:3162/ licomni1000:3162/ boston:3162/
+Current Server: sflmhost:3162/
+License server contacted.
+SFLM Servers: sflmhost:3162/ lic1000:3162/ licomni1000:3162/ boston:3162/
+Current Server: sflmhost:3162/
+Licenses obtained. Program running.
+
+** Running on 1 CPUs **
+
+
+                                   quest
+
+             Version:  quest 1.0.0.A 64-bit (Thu Jul 30 14:53:00 PDT 2009)
+
+                              Copyright (c) 2004 - 2008
+               Simucad Design Automation, Inc. All rights reserved
+
+                              Copyright (c) 1996 - 2004
+                 Silvaco Data Systems, Inc. All rights reserved
+
+              ======================================================
+
+                       Date : Mon Aug 17 13:53:55 2009
+
+                            Executing on host: rhel5-smp64a.Silvaco.COM
+
+quest> 
+quest> 
+quest> # Techno FILE
+quest> 
+quest> layermapping layer.name = "IN1_OUT1" gds.Number = 31 gds.Datatype = 0
+quest> layermapping layer.name = "Metalx" gds.Number = 32 gds.Datatype = 0
+quest> layermapping layer.name = "MIM1" gds.Number = 33 gds.Datatype = 0
+quest> layermapping layer.name = "MIM2" gds.Number = 34 gds.Datatype = 0
+quest> layermapping layer.name = "Metalxx" gds.Number = 35 gds.Datatype = 0
+quest> layermapping layer.name = "Metalxxx" gds.Number = 36 gds.Datatype = 0
+quest> layermapping layer.name = "GIN1_GOUT1" gds.Number = 52 gds.Datatype = 0
+quest> layermapping layer.name = "MIM3" gds.Number = 54 gds.Datatype = 0
+quest> layermapping layer.name = "IN2_OUT2" gds.Number = 55 gds.Datatype = 0
+quest> layermapping layer.name = "Alucap" gds.Number = 211 gds.Datatype = 6
+quest> layermapping layer.name = "Padopen" gds.Number = 211 gds.Datatype = 5
+quest> 
+quest> layermapping layer.name = "IN1_OUT1_t" gds.Number = 131 gds.Datatype = 0 isText
+quest> layermapping layer.name = "GIN1_GOUT1_t" gds.Number = 132 gds.Datatype = 0 isText
+quest> layermapping layer.name = "IN2_OUT2_t" gds.Number = 135 gds.Datatype = 0 isText
+quest> 
+quest> layermapping layer.name = "MIM3b" isDerived operation = "OR MIM2 MIM2"
+quest> 
+quest> attach electrode.layer = "GIN1_GOUT1" metal.layer = "Metalx"
+quest> attach electrode.layer = "IN1_OUT1" metal.layer = "Metalxx"
+quest> attach electrode.layer = "IN2_OUT2" metal.layer = "Alucap"
+quest> 
+quest> 
+quest> connection layer = "Alucap" con.layer1 = "Padopen"
+quest> connection layer = "GIN1_GOUT1" con.layer1 = "GIN1_GOUT1_t"
+quest> connection layer = "IN1_OUT1" con.layer1 = "IN1_OUT1_t"
+quest> connection layer = "IN2_OUT2" con.layer1 = "IN2_OUT2_t"
+quest> connection layer = "Metalxxx" con.layer1 = "MIM3" con.layer2 = "Padopen"
+quest> connection layer = "MIM1" con.layer1 = "Metalxx" con.layer2 = "MIM2"
+quest> connection layer = "MIM2" con.layer1 = "MIM3b" 
+quest> 
+quest> 
+quest> 
+quest> # PROCESS
+quest> 
+quest> material name = "aluminum" cond = 3.76676e+07 permittivity = 1 permeability = 1 losstangent = 0
+quest> material name = "oxide" cond =  0 permittivity = 3.9 permeability = 1 losstangent = 0
+quest> material name = "silicon" cond = 100 permittivity = 11.8 permeability = 1 losstangent = 0
+quest> material name = "copper" cond = 5.88235e+07 permittivity = 1 permeability = 1 losstangent = 0
+quest> material name = "air" cond =  0 permittivity = 1 permeability = 1 losstangent = 0
+quest> material name = "MIM3b_diel" cond =  0 permittivity = 3.9 permeability = 1 losstangent = 0
+quest> material name = "nitride" cond =  0 permittivity = 7.5 permeability = 1 losstangent = 0
+quest> 
+quest> 
+quest> deposit type = "substrate" layer.name = "Si" thick = 10 matName = "silicon"
+quest> deposit type = "dielectric" layer.name = "Nitride" thick = 0.15 matName = "nitride"
+quest> deposit type = "metal" layer.name = "Metalx" thick = 0.25 matName = "copper" anglex = 0 angley = 0
+quest> deposit type = "dielectric" layer.name = "Sio2_Metalx" thick = 1 matName = "oxide"
+quest> deposit type = "metal" layer.name = "Metalxx" thick = 0.4 matName = "copper" anglex = 0 angley = 0
+quest> deposit type = "dielectric" layer.name = "Sio2_Metalxx" thick = 0.4 matName = "oxide"
+quest> deposit type = "metal" layer.name = "MIM1" thick = 0.2 matName = "copper" anglex = 0 angley = 0
+quest> deposit type = "dielectric" layer.name = "Diel2" thick = 0.2 matName = "oxide"
+quest> deposit type = "metal" layer.name = "MIM2" thick = 0.05 matName = "copper" anglex = 0 angley = 0
+quest> deposit type = "dielectric" layer.name = "Sio2_MIM2" thick = 0.05 matName = "oxide"
+quest> deposit type = "metal" layer.name = "MIM3" thick = 0.35 matName = "copper" anglex = 0 angley = 0
+quest> deposit type = "metal" layer.name = "MIM3b" thick = 0.35 matName = "copper" anglex = 0 angley = 0
+quest> deposit type = "dielectric" layer.name = "MIM3b_diel" thick = 0.35 matName = "MIM3b_diel"
+quest> deposit type = "metal" layer.name = "Metalxxx" thick = 0.9 matName = "copper" anglex = 0 angley = 0
+quest> deposit type = "dielectric" layer.name = "Sio2_Metalxxx" thick = 0.9 matName = "oxide"
+quest> deposit type = "metal" layer.name = "Padopen" thick = 1 matName = "aluminum" anglex = 0 angley = 0
+quest> deposit type = "dielectric" layer.name = "SiN" thick = 0.1 matName = "nitride"
+quest> deposit type = "dielectric" layer.name = "passiv" thick = 0.4 matName = "oxide"
+quest> deposit type = "dielectric" layer.name = "passiv_b" thick = 0.5 matName = "nitride"
+quest> deposit type = "metal" layer.name = "Alucap" thick = 1 matName = "aluminum" anglex = 0 angley = 0
+quest> deposit type = "dielectric" layer.name = "AIR" thick = 10 matName = "air"
+quest> 
+quest> 
+quest> # SOLVER
+quest> 
+quest> Init simulation.type = "PORT" solvertype = "3D_Solver" \
+> impedance.residual = 0.01 impedance.iteration = 200	\
+> capacitance.residual = 0.01 capacitance.iteration = 200 \
+> domainbase = "Grounded"	Z0 = 50	add.resistance = 0	\
+> dx = 0.1 dy = 0.1 dz = 0.05	\
+> computation.domain = "Automatic"
+quest> 
+quest> # 4 ports simulation. All ports must be defined in one "electrodes" command. 
+quest> # !! port 1 (IN1) 2 (OUT1) 3(IN2) and 4(OUT2) in this order 
+quest> electrodes ports = "IN1", "GIN1", "OUT1", "GOUT1" ,"IN2", "GIN1", "OUT2", "GOUT1"
+quest> 
+quest> # keep port 1 and 4
+quest> transform ports = "IN1","GIN1","OUT2","GOUT1"
+quest> 
+quest> Frequency type = "Range" range = 40, 30000 nsteps = 10 range.variation = "Lin"
+quest> 
+quest> 
+quest> # OUTPUT
+quest> 
+quest> save	database.path = "questex12_db" \
+> spicefile.name = "questex12" tonyfile.name = "questex12" \
+> sparameterfile.name = "questex12"   
+quest> 
+quest> layout gdsfile = "MIM3D.gds" cell = "MIM3D"
+quest> 
+quest> # RUN
+quest> solve
+-------------------------------------------------------------
+                           RUN BUILDER
+-------------------------------------------------------------
+ 
+3D structure converted from HIPEX in: 0 seconds 
+
+***** Starting Build Process *****
+
+Processing 3D layer Si
+
+Processing 3D layer Nitride
+
+Processing 3D layer Metalx
+	--> Set electrode(s) associated to Metalx
+
+Processing 3D layer Sio2_Metalx
+
+Processing 3D layer Metalxx
+	--> Set electrode(s) associated to Metalxx
+
+Processing 3D layer Sio2_Metalxx
+
+Processing 3D layer MIM1
+
+Processing 3D layer Diel2
+
+Processing 3D layer MIM2
+
+Processing 3D layer Sio2_MIM2
+
+Processing 3D layer MIM3
+
+Processing 3D layer MIM3b
+
+Processing 3D layer MIM3b_diel
+
+Processing 3D layer Metalxxx
+
+Processing 3D layer Sio2_Metalxxx
+
+Processing 3D layer Padopen
+
+Processing 3D layer SiN
+
+Processing 3D layer passiv
+
+Processing 3D layer passiv_b
+
+Processing 3D layer Alucap
+	--> Set electrode(s) associated to Alucap
+
+Processing 3D layer AIR
+3D structure built in: 0 seconds 
+Builder done.
+
+-------------------------------------------------------------
+                           RUN SOLVER
+-------------------------------------------------------------
+Warning: The substrate layer is less than 100 microns, 
+         this may result in rounding errors.
+
+-------------------------------------------------------------
+Conductors and connected electrodes:
+
+ Conductor #0 : conductor name = "3", connected labels : "GIN1", "GOUT1"
+
+ Conductor #1 : conductor name = "2", connected labels : "IN1", "OUT1"
+
+ Conductor #2 : conductor name = "1", connected labels : "IN2", "OUT2"
+
+-------------------------------------------------------------
+
+Bounding Box: 
+ Xmin = -3     Xmax = 3
+ Ymin = -3     Ymax = 3
+ Zmin = 10.15     Zmax = 15.05
+
+Simulation Box: 
+ Xmin = -3.8     Xmax = 3.8
+ Ymin = -3.8     Ymax = 3.8
+ Zmin = 0     Zmax = 24.05
+Grid : Z Slices
+ Layer silicon, 21 slices, ratio 0.8333
+ Layer nitride, 4 slices, ratio 1
+ Layer oxide, 21 slices, ratio 1
+ Layer oxide, 9 slices, ratio 1
+ Layer oxide, 4 slices, ratio 1
+ Layer oxide, 2 slices, ratio 1
+ Layer MIM3b_diel, 7 slices, ratio 1
+ Layer oxide, 19 slices, ratio 1
+ Layer nitride, 2 slices, ratio 1
+ Layer oxide, 9 slices, ratio 1
+ Layer nitride, 11 slices, ratio 1
+ Layer air, 21 slices, ratio 1.2
+
+-------------------------------------------------------------
+    IMPEDANCE CALCULATION 
+-------------------------------------------------------------
+
+===================================================================
+Conductor #0 : "3"
+-------------------------------------------------------------
+Electrode[0] = "GIN1" , Frequency[0] = 4e+07
+( max_iteration, residue ) = ( 200 , 0.01 )
+Iteration #0 - Residue: 0.101566
+Iteration #1 - Residue: 0.00403135
+Iteration #2 - Residue: 0.000728838
+End of computation. Iteration # = 3 - Residue: 0.000114886
+-------------------------------------------------------------
+Electrode[0] = "GIN1" , Frequency[1] = 3.36889e+09
+( max_iteration, residue ) = ( 200 , 0.01 )
+Iteration #0 - Residue: 0.0142576
+Iteration #1 - Residue: 0.00426731
+Iteration #2 - Residue: 0.000212947
+End of computation. Iteration # = 3 - Residue: 0.000271292
+-------------------------------------------------------------
+Electrode[0] = "GIN1" , Frequency[2] = 6.69778e+09
+( max_iteration, residue ) = ( 200 , 0.01 )
+Iteration #0 - Residue: 0.013381
+Iteration #1 - Residue: 0.00300126
+Iteration #2 - Residue: 0.000708307
+End of computation. Iteration # = 3 - Residue: 0.000714927
+-------------------------------------------------------------
+Electrode[0] = "GIN1" , Frequency[3] = 1.00267e+10
+( max_iteration, residue ) = ( 200 , 0.01 )
+Iteration #0 - Residue: 0.0107184
+Iteration #1 - Residue: 0.0024302
+Iteration #2 - Residue: 0.00101953
+End of computation. Iteration # = 3 - Residue: 0.000232539
+-------------------------------------------------------------
+Electrode[0] = "GIN1" , Frequency[4] = 1.33556e+10
+( max_iteration, residue ) = ( 200 , 0.01 )
+Iteration #0 - Residue: 0.00898923
+Iteration #1 - Residue: 0.00240557
+Iteration #2 - Residue: 0.000888702
+End of computation. Iteration # = 3 - Residue: 0.000482534
+-------------------------------------------------------------
+Electrode[0] = "GIN1" , Frequency[5] = 1.66844e+10
+( max_iteration, residue ) = ( 200 , 0.01 )
+Iteration #0 - Residue: 0.00727452
+Iteration #1 - Residue: 0.00273202
+Iteration #2 - Residue: 0.000785334
+End of computation. Iteration # = 3 - Residue: 0.000993069
+-------------------------------------------------------------
+Electrode[0] = "GIN1" , Frequency[6] = 2.00133e+10
+( max_iteration, residue ) = ( 200 , 0.01 )
+Iteration #0 - Residue: 0.00541385
+Iteration #1 - Residue: 0.00315101
+Iteration #2 - Residue: 0.00134395
+End of computation. Iteration # = 3 - Residue: 0.00130882
+-------------------------------------------------------------
+Electrode[0] = "GIN1" , Frequency[7] = 2.33422e+10
+( max_iteration, residue ) = ( 200 , 0.01 )
+Iteration #0 - Residue: 0.00340149
+Iteration #1 - Residue: 0.00231809
+Iteration #2 - Residue: 0.00160067
+End of computation. Iteration # = 3 - Residue: 0.000674601
+-------------------------------------------------------------
+Electrode[0] = "GIN1" , Frequency[8] = 2.66711e+10
+( max_iteration, residue ) = ( 200 , 0.01 )
+Iteration #0 - Residue: 0.00469638
+Iteration #1 - Residue: 0.00258045
+Iteration #2 - Residue: 0.000971267
+End of computation. Iteration # = 3 - Residue: 0.00123253
+-------------------------------------------------------------
+Electrode[0] = "GIN1" , Frequency[9] = 3e+10
+( max_iteration, residue ) = ( 200 , 0.01 )
+Iteration #0 - Residue: 0.00384488
+Iteration #1 - Residue: 0.00317894
+Iteration #2 - Residue: 0.00138124
+End of computation. Iteration # = 3 - Residue: 0.00100818
+-------------------------------------------------------------
+Electrode[1] = "GOUT1" : No impedance computation
+
+===================================================================
+Conductor #1 : "2"
+-------------------------------------------------------------
+Electrode[2] = "IN1" , Frequency[0] = 4e+07
+( max_iteration, residue ) = ( 200 , 0.01 )
+Iteration #0 - Residue: 0.0986106
+Iteration #1 - Residue: 0.00419652
+Iteration #2 - Residue: 0.000764871
+End of computation. Iteration # = 3 - Residue: 0.000124545
+-------------------------------------------------------------
+Electrode[2] = "IN1" , Frequency[1] = 3.36889e+09
+( max_iteration, residue ) = ( 200 , 0.01 )
+Iteration #0 - Residue: 0.0164283
+Iteration #1 - Residue: 0.00471602
+Iteration #2 - Residue: 0.000372675
+End of computation. Iteration # = 3 - Residue: 0.000173335
+-------------------------------------------------------------
+Electrode[2] = "IN1" , Frequency[2] = 6.69778e+09
+( max_iteration, residue ) = ( 200 , 0.01 )
+Iteration #0 - Residue: 0.0154432
+Iteration #1 - Residue: 0.00355171
+Iteration #2 - Residue: 0.000740142
+End of computation. Iteration # = 3 - Residue: 0.000323668
+-------------------------------------------------------------
+Electrode[2] = "IN1" , Frequency[3] = 1.00267e+10
+( max_iteration, residue ) = ( 200 , 0.01 )
+Iteration #0 - Residue: 0.012603
+Iteration #1 - Residue: 0.00261522
+Iteration #2 - Residue: 0.00093103
+End of computation. Iteration # = 3 - Residue: 0.000351412
+-------------------------------------------------------------
+Electrode[2] = "IN1" , Frequency[4] = 1.33556e+10
+( max_iteration, residue ) = ( 200 , 0.01 )
+Iteration #0 - Residue: 0.0104201
+Iteration #1 - Residue: 0.00270129
+Iteration #2 - Residue: 0.00130273
+End of computation. Iteration # = 3 - Residue: 0.000828449
+-------------------------------------------------------------
+Electrode[2] = "IN1" , Frequency[5] = 1.66844e+10
+( max_iteration, residue ) = ( 200 , 0.01 )
+Iteration #0 - Residue: 0.00830421
+Iteration #1 - Residue: 0.00330255
+Iteration #2 - Residue: 0.00199317
+End of computation. Iteration # = 3 - Residue: 0.00212493
+-------------------------------------------------------------
+Electrode[2] = "IN1" , Frequency[6] = 2.00133e+10
+( max_iteration, residue ) = ( 200 , 0.01 )
+Iteration #0 - Residue: 0.00607983
+Iteration #1 - Residue: 0.00446106
+Iteration #2 - Residue: 0.00323504
+End of computation. Iteration # = 3 - Residue: 0.00223903
+-------------------------------------------------------------
+Electrode[2] = "IN1" , Frequency[7] = 2.33422e+10
+( max_iteration, residue ) = ( 200 , 0.01 )
+Iteration #0 - Residue: 0.00439485
+Iteration #1 - Residue: 0.0027808
+Iteration #2 - Residue: 0.00186836
+End of computation. Iteration # = 3 - Residue: 0.000515814
+-------------------------------------------------------------
+Electrode[2] = "IN1" , Frequency[8] = 2.66711e+10
+( max_iteration, residue ) = ( 200 , 0.01 )
+Iteration #0 - Residue: 0.00609413
+Iteration #1 - Residue: 0.00311282
+Iteration #2 - Residue: 0.0015819
+End of computation. Iteration # = 3 - Residue: 0.00157106
+-------------------------------------------------------------
+Electrode[2] = "IN1" , Frequency[9] = 3e+10
+( max_iteration, residue ) = ( 200 , 0.01 )
+Iteration #0 - Residue: 0.00586706
+Iteration #1 - Residue: 0.00388496
+Iteration #2 - Residue: 0.00146728
+End of computation. Iteration # = 3 - Residue: 0.001618
+-------------------------------------------------------------
+Electrode[3] = "OUT1" : No impedance computation
+
+===================================================================
+Conductor #2 : "1"
+-------------------------------------------------------------
+Electrode[4] = "IN2" , Frequency[0] = 4e+07
+( max_iteration, residue ) = ( 200 , 0.01 )
+Iteration #0 - Residue: 0.109459
+Iteration #1 - Residue: 0.00375571
+Iteration #2 - Residue: 0.000744597
+End of computation. Iteration # = 3 - Residue: 0.000108816
+-------------------------------------------------------------
+Electrode[4] = "IN2" , Frequency[1] = 3.36889e+09
+( max_iteration, residue ) = ( 200 , 0.01 )
+Iteration #0 - Residue: 0.0193203
+Iteration #1 - Residue: 0.00537992
+Iteration #2 - Residue: 0.00056003
+End of computation. Iteration # = 3 - Residue: 0.000160454
+-------------------------------------------------------------
+Electrode[4] = "IN2" , Frequency[2] = 6.69778e+09
+( max_iteration, residue ) = ( 200 , 0.01 )
+Iteration #0 - Residue: 0.0176547
+Iteration #1 - Residue: 0.00387456
+Iteration #2 - Residue: 0.000158151
+End of computation. Iteration # = 3 - Residue: 0.000485986
+-------------------------------------------------------------
+Electrode[4] = "IN2" , Frequency[3] = 1.00267e+10
+( max_iteration, residue ) = ( 200 , 0.01 )
+Iteration #0 - Residue: 0.014657
+Iteration #1 - Residue: 0.00232859
+Iteration #2 - Residue: 0.00080395
+End of computation. Iteration # = 3 - Residue: 0.000390397
+-------------------------------------------------------------
+Electrode[4] = "IN2" , Frequency[4] = 1.33556e+10
+( max_iteration, residue ) = ( 200 , 0.01 )
+Iteration #0 - Residue: 0.0116772
+Iteration #1 - Residue: 0.00324756
+Iteration #2 - Residue: 0.00210891
+End of computation. Iteration # = 3 - Residue: 0.00200509
+-------------------------------------------------------------
+Electrode[4] = "IN2" , Frequency[5] = 1.66844e+10
+( max_iteration, residue ) = ( 200 , 0.01 )
+Iteration #0 - Residue: 0.00802152
+Iteration #1 - Residue: 0.00459126
+Iteration #2 - Residue: 0.00672529
+End of computation. Iteration # = 3 - Residue: 0.000807281
+-------------------------------------------------------------
+Electrode[4] = "IN2" , Frequency[6] = 2.00133e+10
+( max_iteration, residue ) = ( 200 , 0.01 )
+Iteration #0 - Residue: 0.00840048
+Iteration #1 - Residue: 0.00262791
+Iteration #2 - Residue: 0.00263374
+End of computation. Iteration # = 3 - Residue: 0.000831983
+-------------------------------------------------------------
+Electrode[4] = "IN2" , Frequency[7] = 2.33422e+10
+( max_iteration, residue ) = ( 200 , 0.01 )
+Iteration #0 - Residue: 0.0079625
+Iteration #1 - Residue: 0.00383453
+Iteration #2 - Residue: 0.00374958
+End of computation. Iteration # = 3 - Residue: 0.00102214
+-------------------------------------------------------------
+Electrode[4] = "IN2" , Frequency[8] = 2.66711e+10
+( max_iteration, residue ) = ( 200 , 0.01 )
+Iteration #0 - Residue: 0.00742328
+Iteration #1 - Residue: 0.00389889
+Iteration #2 - Residue: 0.00286638
+End of computation. Iteration # = 3 - Residue: 0.00121806
+-------------------------------------------------------------
+Electrode[4] = "IN2" , Frequency[9] = 3e+10
+( max_iteration, residue ) = ( 200 , 0.01 )
+Iteration #0 - Residue: 0.00794065
+Iteration #1 - Residue: 0.00366234
+Iteration #2 - Residue: 0.0026497
+End of computation. Iteration # = 3 - Residue: 0.00120724
+-------------------------------------------------------------
+Electrode[5] = "OUT2" : No impedance computation
+
+-------------------------------------------------------------
+    CAPACITANCE CALCULATION 
+-------------------------------------------------------------
+
+===================================================================
+Conductor #0 : "3"
+-------------------------------------------------------------
+Electrode[0] = "GIN1" , Frequency[0] = 4e+07
+( max_iteration, residue ) = ( 200 , 0.01 )
+Iteration #0 - Residue: 1
+Iteration #1 - Residue: 0.874206
+Iteration #2 - Residue: 0.65991
+Iteration #3 - Residue: 0.452886
+Iteration #4 - Residue: 0.383259
+Iteration #5 - Residue: 0.323572
+Iteration #6 - Residue: 0.263339
+Iteration #7 - Residue: 0.206149
+Iteration #8 - Residue: 0.141481
+Iteration #9 - Residue: 0.0891108
+Iteration #10 - Residue: 0.0592244
+Iteration #11 - Residue: 0.04299
+Iteration #12 - Residue: 0.0353847
+Iteration #13 - Residue: 0.031516
+Iteration #14 - Residue: 0.0265942
+Iteration #15 - Residue: 0.0237903
+Iteration #16 - Residue: 0.0214991
+Iteration #17 - Residue: 0.0200146
+Iteration #18 - Residue: 0.0182932
+Iteration #19 - Residue: 0.0168051
+Iteration #20 - Residue: 0.0160555
+Iteration #21 - Residue: 0.0148064
+Iteration #22 - Residue: 0.0139718
+Iteration #23 - Residue: 0.0134524
+Iteration #24 - Residue: 0.0129782
+Iteration #25 - Residue: 0.0126191
+Iteration #26 - Residue: 0.0121136
+Iteration #27 - Residue: 0.0115572
+Iteration #28 - Residue: 0.010985
+Iteration #29 - Residue: 0.01058
+Iteration #30 - Residue: 0.0101448
+End of computation. Iteration # = 31 - Residue: 0.00974964
+-------------------------------------------------------------
+Electrode[0] = "GIN1" , Frequency[1] = 3.36889e+09
+( max_iteration, residue ) = ( 200 , 0.01 )
+Iteration #0 - Residue: 1.07965
+Iteration #1 - Residue: 0.587296
+Iteration #2 - Residue: 0.438199
+Iteration #3 - Residue: 0.279316
+Iteration #4 - Residue: 0.242149
+Iteration #5 - Residue: 0.186917
+Iteration #6 - Residue: 0.15235
+Iteration #7 - Residue: 0.105005
+Iteration #8 - Residue: 0.0846853
+Iteration #9 - Residue: 0.0455603
+Iteration #10 - Residue: 0.0247655
+Iteration #11 - Residue: 0.0151038
+Iteration #12 - Residue: 0.0104006
+End of computation. Iteration # = 13 - Residue: 0.00899979
+-------------------------------------------------------------
+Electrode[0] = "GIN1" , Frequency[2] = 6.69778e+09
+( max_iteration, residue ) = ( 200 , 0.01 )
+Iteration #0 - Residue: 0.891456
+Iteration #1 - Residue: 0.48255
+Iteration #2 - Residue: 0.355995
+Iteration #3 - Residue: 0.207645
+Iteration #4 - Residue: 0.176656
+Iteration #5 - Residue: 0.126591
+Iteration #6 - Residue: 0.101258
+Iteration #7 - Residue: 0.0652395
+Iteration #8 - Residue: 0.0516691
+Iteration #9 - Residue: 0.0270487
+Iteration #10 - Residue: 0.014672
+Iteration #11 - Residue: 0.0116999
+End of computation. Iteration # = 12 - Residue: 0.00816735
+-------------------------------------------------------------
+Electrode[0] = "GIN1" , Frequency[3] = 1.00267e+10
+( max_iteration, residue ) = ( 200 , 0.01 )
+Iteration #0 - Residue: 0.638763
+Iteration #1 - Residue: 0.342519
+Iteration #2 - Residue: 0.24715
+Iteration #3 - Residue: 0.126268
+Iteration #4 - Residue: 0.106293
+Iteration #5 - Residue: 0.0708156
+Iteration #6 - Residue: 0.0552818
+Iteration #7 - Residue: 0.0325256
+Iteration #8 - Residue: 0.0255478
+Iteration #9 - Residue: 0.0118404
+End of computation. Iteration # = 10 - Residue: 0.00731617
+-------------------------------------------------------------
+Electrode[0] = "GIN1" , Frequency[4] = 1.33556e+10
+( max_iteration, residue ) = ( 200 , 0.01 )
+Iteration #0 - Residue: 0.475392
+Iteration #1 - Residue: 0.251982
+Iteration #2 - Residue: 0.175861
+Iteration #3 - Residue: 0.0782567
+Iteration #4 - Residue: 0.0628208
+Iteration #5 - Residue: 0.0404051
+Iteration #6 - Residue: 0.0280413
+Iteration #7 - Residue: 0.0129109
+End of computation. Iteration # = 8 - Residue: 0.00889337
+-------------------------------------------------------------
+Electrode[0] = "GIN1" , Frequency[5] = 1.66844e+10
+( max_iteration, residue ) = ( 200 , 0.01 )
+Iteration #0 - Residue: 0.375087
+Iteration #1 - Residue: 0.196087
+Iteration #2 - Residue: 0.130955
+Iteration #3 - Residue: 0.0515748
+Iteration #4 - Residue: 0.0372599
+Iteration #5 - Residue: 0.0240227
+Iteration #6 - Residue: 0.0147634
+Iteration #7 - Residue: 0.0155727
+Iteration #8 - Residue: 0.0157779
+Iteration #9 - Residue: 0.0155631
+Iteration #10 - Residue: 0.0156549
+Iteration #11 - Residue: 0.016674
+Iteration #12 - Residue: 0.0194817
+End of computation. Iteration # = 13 - Residue: 0.00640398
+-------------------------------------------------------------
+Electrode[0] = "GIN1" , Frequency[6] = 2.00133e+10
+( max_iteration, residue ) = ( 200 , 0.01 )
+Iteration #0 - Residue: 0.304612
+Iteration #1 - Residue: 0.157031
+Iteration #2 - Residue: 0.0997115
+Iteration #3 - Residue: 0.034768
+Iteration #4 - Residue: 0.0224895
+Iteration #5 - Residue: 0.0128785
+End of computation. Iteration # = 6 - Residue: 0.00655539
+-------------------------------------------------------------
+Electrode[0] = "GIN1" , Frequency[7] = 2.33422e+10
+( max_iteration, residue ) = ( 200 , 0.01 )
+Iteration #0 - Residue: 0.259747
+Iteration #1 - Residue: 0.131987
+Iteration #2 - Residue: 0.0790205
+Iteration #3 - Residue: 0.0259411
+Iteration #4 - Residue: 0.0167672
+Iteration #5 - Residue: 0.0180865
+Iteration #6 - Residue: 0.0188145
+Iteration #7 - Residue: 0.0175192
+Iteration #8 - Residue: 0.0166329
+Iteration #9 - Residue: 0.0113353
+Iteration #10 - Residue: 0.0111743
+End of computation. Iteration # = 11 - Residue: 0.00329833
+-------------------------------------------------------------
+Electrode[0] = "GIN1" , Frequency[8] = 2.66711e+10
+( max_iteration, residue ) = ( 200 , 0.01 )
+Iteration #0 - Residue: 0.2208
+Iteration #1 - Residue: 0.110517
+Iteration #2 - Residue: 0.0629762
+Iteration #3 - Residue: 0.0198372
+Iteration #4 - Residue: 0.0133649
+Iteration #5 - Residue: 0.0130662
+Iteration #6 - Residue: 0.0130442
+End of computation. Iteration # = 7 - Residue: 0.00838362
+-------------------------------------------------------------
+Electrode[0] = "GIN1" , Frequency[9] = 3e+10
+( max_iteration, residue ) = ( 200 , 0.01 )
+Iteration #0 - Residue: 0.197276
+Iteration #1 - Residue: 0.0969903
+Iteration #2 - Residue: 0.0515951
+Iteration #3 - Residue: 0.0190378
+Iteration #4 - Residue: 0.0190388
+Iteration #5 - Residue: 0.0189578
+Iteration #6 - Residue: 0.0170106
+Iteration #7 - Residue: 0.0130915
+Iteration #8 - Residue: 0.0117668
+Iteration #9 - Residue: 0.0115376
+End of computation. Iteration # = 10 - Residue: 0.00617451
+-------------------------------------------------------------
+Electrode[1] = "GOUT1" , Frequency[0] = 4e+07
+( max_iteration, residue ) = ( 200 , 0.01 )
+Iteration #0 - Residue: 1
+Iteration #1 - Residue: 0.874729
+Iteration #2 - Residue: 0.660738
+Iteration #3 - Residue: 0.453425
+Iteration #4 - Residue: 0.383501
+Iteration #5 - Residue: 0.323532
+Iteration #6 - Residue: 0.263056
+Iteration #7 - Residue: 0.206068
+Iteration #8 - Residue: 0.141938
+Iteration #9 - Residue: 0.0898156
+Iteration #10 - Residue: 0.0599239
+Iteration #11 - Residue: 0.0434924
+Iteration #12 - Residue: 0.0356852
+Iteration #13 - Residue: 0.0317156
+Iteration #14 - Residue: 0.0266648
+Iteration #15 - Residue: 0.0238185
+Iteration #16 - Residue: 0.0215373
+Iteration #17 - Residue: 0.0200535
+Iteration #18 - Residue: 0.0183432
+Iteration #19 - Residue: 0.0169068
+Iteration #20 - Residue: 0.0161039
+Iteration #21 - Residue: 0.0148345
+Iteration #22 - Residue: 0.0139939
+Iteration #23 - Residue: 0.0134721
+Iteration #24 - Residue: 0.0129979
+Iteration #25 - Residue: 0.0126409
+Iteration #26 - Residue: 0.0121319
+Iteration #27 - Residue: 0.0115738
+Iteration #28 - Residue: 0.0109963
+Iteration #29 - Residue: 0.0105704
+Iteration #30 - Residue: 0.0101412
+End of computation. Iteration # = 31 - Residue: 0.0097431
+-------------------------------------------------------------
+Electrode[1] = "GOUT1" , Frequency[1] = 3.36889e+09
+( max_iteration, residue ) = ( 200 , 0.01 )
+Iteration #0 - Residue: 1.08118
+Iteration #1 - Residue: 0.588067
+Iteration #2 - Residue: 0.438804
+Iteration #3 - Residue: 0.279725
+Iteration #4 - Residue: 0.242477
+Iteration #5 - Residue: 0.187116
+Iteration #6 - Residue: 0.152481
+Iteration #7 - Residue: 0.105136
+Iteration #8 - Residue: 0.0848226
+Iteration #9 - Residue: 0.0456902
+Iteration #10 - Residue: 0.0248781
+Iteration #11 - Residue: 0.0152101
+Iteration #12 - Residue: 0.0105261
+End of computation. Iteration # = 13 - Residue: 0.00913257
+-------------------------------------------------------------
+Electrode[1] = "GOUT1" , Frequency[2] = 6.69778e+09
+( max_iteration, residue ) = ( 200 , 0.01 )
+Iteration #0 - Residue: 0.8927
+Iteration #1 - Residue: 0.483175
+Iteration #2 - Residue: 0.356481
+Iteration #3 - Residue: 0.207926
+Iteration #4 - Residue: 0.176878
+Iteration #5 - Residue: 0.126698
+Iteration #6 - Residue: 0.101355
+Iteration #7 - Residue: 0.065338
+Iteration #8 - Residue: 0.0517818
+Iteration #9 - Residue: 0.0271053
+Iteration #10 - Residue: 0.0146862
+Iteration #11 - Residue: 0.0116894
+End of computation. Iteration # = 12 - Residue: 0.00822092
+-------------------------------------------------------------
+Electrode[1] = "GOUT1" , Frequency[3] = 1.00267e+10
+( max_iteration, residue ) = ( 200 , 0.01 )
+Iteration #0 - Residue: 0.639636
+Iteration #1 - Residue: 0.342938
+Iteration #2 - Residue: 0.247467
+Iteration #3 - Residue: 0.126399
+Iteration #4 - Residue: 0.106411
+Iteration #5 - Residue: 0.0708319
+Iteration #6 - Residue: 0.0553339
+Iteration #7 - Residue: 0.0325604
+Iteration #8 - Residue: 0.0255645
+Iteration #9 - Residue: 0.0118601
+End of computation. Iteration # = 10 - Residue: 0.00741594
+-------------------------------------------------------------
+Electrode[1] = "GOUT1" , Frequency[4] = 1.33556e+10
+( max_iteration, residue ) = ( 200 , 0.01 )
+Iteration #0 - Residue: 0.47605
+Iteration #1 - Residue: 0.252286
+Iteration #2 - Residue: 0.176084
+Iteration #3 - Residue: 0.078324
+Iteration #4 - Residue: 0.0628745
+Iteration #5 - Residue: 0.040405
+Iteration #6 - Residue: 0.0280662
+Iteration #7 - Residue: 0.0129208
+End of computation. Iteration # = 8 - Residue: 0.00905957
+-------------------------------------------------------------
+Electrode[1] = "GOUT1" , Frequency[5] = 1.66844e+10
+( max_iteration, residue ) = ( 200 , 0.01 )
+Iteration #0 - Residue: 0.375657
+Iteration #1 - Residue: 0.196353
+Iteration #2 - Residue: 0.131156
+Iteration #3 - Residue: 0.0516255
+Iteration #4 - Residue: 0.0373034
+Iteration #5 - Residue: 0.024086
+Iteration #6 - Residue: 0.0148079
+Iteration #7 - Residue: 0.0157446
+Iteration #8 - Residue: 0.0157546
+Iteration #9 - Residue: 0.0155675
+Iteration #10 - Residue: 0.015766
+Iteration #11 - Residue: 0.0166672
+Iteration #12 - Residue: 0.0199674
+End of computation. Iteration # = 13 - Residue: 0.00651118
+-------------------------------------------------------------
+Electrode[1] = "GOUT1" , Frequency[6] = 2.00133e+10
+( max_iteration, residue ) = ( 200 , 0.01 )
+Iteration #0 - Residue: 0.305021
+Iteration #1 - Residue: 0.157197
+Iteration #2 - Residue: 0.099827
+Iteration #3 - Residue: 0.0347852
+Iteration #4 - Residue: 0.0224531
+Iteration #5 - Residue: 0.0128328
+End of computation. Iteration # = 6 - Residue: 0.0066215
+-------------------------------------------------------------
+Electrode[1] = "GOUT1" , Frequency[7] = 2.33422e+10
+( max_iteration, residue ) = ( 200 , 0.01 )
+Iteration #0 - Residue: 0.260072
+Iteration #1 - Residue: 0.132108
+Iteration #2 - Residue: 0.0790837
+Iteration #3 - Residue: 0.0259553
+Iteration #4 - Residue: 0.0168454
+Iteration #5 - Residue: 0.0181297
+Iteration #6 - Residue: 0.0188038
+Iteration #7 - Residue: 0.0174196
+Iteration #8 - Residue: 0.0161285
+Iteration #9 - Residue: 0.0111489
+Iteration #10 - Residue: 0.0112661
+End of computation. Iteration # = 11 - Residue: 0.00467047
+-------------------------------------------------------------
+Electrode[1] = "GOUT1" , Frequency[8] = 2.66711e+10
+( max_iteration, residue ) = ( 200 , 0.01 )
+Iteration #0 - Residue: 0.220957
+Iteration #1 - Residue: 0.110602
+Iteration #2 - Residue: 0.0630811
+Iteration #3 - Residue: 0.0202016
+Iteration #4 - Residue: 0.0137571
+Iteration #5 - Residue: 0.0132737
+Iteration #6 - Residue: 0.0132711
+End of computation. Iteration # = 7 - Residue: 0.0085028
+-------------------------------------------------------------
+Electrode[1] = "GOUT1" , Frequency[9] = 3e+10
+( max_iteration, residue ) = ( 200 , 0.01 )
+Iteration #0 - Residue: 0.198728
+Iteration #1 - Residue: 0.0970443
+Iteration #2 - Residue: 0.050978
+Iteration #3 - Residue: 0.0161328
+Iteration #4 - Residue: 0.0173692
+Iteration #5 - Residue: 0.0174179
+Iteration #6 - Residue: 0.0151071
+Iteration #7 - Residue: 0.0145135
+Iteration #8 - Residue: 0.0128935
+Iteration #9 - Residue: 0.0195107
+End of computation. Iteration # = 10 - Residue: 0.00745801
+
+===================================================================
+Conductor #1 : "2"
+-------------------------------------------------------------
+Electrode[2] = "IN1" , Frequency[0] = 4e+07
+( max_iteration, residue ) = ( 200 , 0.01 )
+Iteration #0 - Residue: 1
+Iteration #1 - Residue: 0.823766
+Iteration #2 - Residue: 0.617511
+Iteration #3 - Residue: 0.452414
+Iteration #4 - Residue: 0.395286
+Iteration #5 - Residue: 0.348528
+Iteration #6 - Residue: 0.300219
+Iteration #7 - Residue: 0.258318
+Iteration #8 - Residue: 0.236586
+Iteration #9 - Residue: 0.193413
+Iteration #10 - Residue: 0.147494
+Iteration #11 - Residue: 0.119604
+Iteration #12 - Residue: 0.106327
+Iteration #13 - Residue: 0.0996243
+Iteration #14 - Residue: 0.0898099
+Iteration #15 - Residue: 0.0759656
+Iteration #16 - Residue: 0.0675835
+Iteration #17 - Residue: 0.0623051
+Iteration #18 - Residue: 0.058135
+Iteration #19 - Residue: 0.0561159
+Iteration #20 - Residue: 0.0525563
+Iteration #21 - Residue: 0.0491929
+Iteration #22 - Residue: 0.0465822
+Iteration #23 - Residue: 0.0415652
+Iteration #24 - Residue: 0.0375933
+Iteration #25 - Residue: 0.0303419
+Iteration #26 - Residue: 0.0251304
+Iteration #27 - Residue: 0.0205404
+Iteration #28 - Residue: 0.017727
+Iteration #29 - Residue: 0.0159228
+Iteration #30 - Residue: 0.014051
+Iteration #31 - Residue: 0.0124225
+Iteration #32 - Residue: 0.0113538
+Iteration #33 - Residue: 0.0107623
+Iteration #34 - Residue: 0.0100493
+End of computation. Iteration # = 35 - Residue: 0.00956018
+-------------------------------------------------------------
+Electrode[2] = "IN1" , Frequency[1] = 3.36889e+09
+( max_iteration, residue ) = ( 200 , 0.01 )
+Iteration #0 - Residue: 0.0170901
+Iteration #1 - Residue: 0.00460727
+Iteration #2 - Residue: 0.00611999
+End of computation. Iteration # = 3 - Residue: 0.00814214
+-------------------------------------------------------------
+Electrode[2] = "IN1" , Frequency[2] = 6.69778e+09
+( max_iteration, residue ) = ( 200 , 0.01 )
+Iteration #0 - Residue: 0.0193454
+Iteration #1 - Residue: 0.0112811
+Iteration #2 - Residue: 0.0099444
+End of computation. Iteration # = 3 - Residue: 0.0095139
+-------------------------------------------------------------
+Electrode[2] = "IN1" , Frequency[3] = 1.00267e+10
+( max_iteration, residue ) = ( 200 , 0.01 )
+Iteration #0 - Residue: 0.0191925
+Iteration #1 - Residue: 0.013804
+Iteration #2 - Residue: 0.0128329
+Iteration #3 - Residue: 0.0111092
+End of computation. Iteration # = 4 - Residue: 0.00960572
+-------------------------------------------------------------
+Electrode[2] = "IN1" , Frequency[4] = 1.33556e+10
+( max_iteration, residue ) = ( 200 , 0.01 )
+Iteration #0 - Residue: 0.0140234
+Iteration #1 - Residue: 0.0110241
+Iteration #2 - Residue: 0.0104071
+End of computation. Iteration # = 3 - Residue: 0.00919827
+-------------------------------------------------------------
+Electrode[2] = "IN1" , Frequency[5] = 1.66844e+10
+( max_iteration, residue ) = ( 200 , 0.01 )
+Iteration #0 - Residue: 0.011597
+Iteration #1 - Residue: 0.00963599
+Iteration #2 - Residue: 0.00929215
+End of computation. Iteration # = 3 - Residue: 0.00905081
+-------------------------------------------------------------
+Electrode[2] = "IN1" , Frequency[6] = 2.00133e+10
+( max_iteration, residue ) = ( 200 , 0.01 )
+Iteration #0 - Residue: 0.0111913
+Iteration #1 - Residue: 0.00954772
+Iteration #2 - Residue: 0.00908164
+End of computation. Iteration # = 3 - Residue: 0.00874221
+-------------------------------------------------------------
+Electrode[2] = "IN1" , Frequency[7] = 2.33422e+10
+( max_iteration, residue ) = ( 200 , 0.01 )
+Iteration #0 - Residue: 0.0101896
+Iteration #1 - Residue: 0.00893743
+Iteration #2 - Residue: 0.00867965
+End of computation. Iteration # = 3 - Residue: 0.00857976
+-------------------------------------------------------------
+Electrode[2] = "IN1" , Frequency[8] = 2.66711e+10
+( max_iteration, residue ) = ( 200 , 0.01 )
+Iteration #0 - Residue: 0.0097466
+Iteration #1 - Residue: 0.00871128
+Iteration #2 - Residue: 0.00851758
+End of computation. Iteration # = 3 - Residue: 0.00851175
+-------------------------------------------------------------
+Electrode[2] = "IN1" , Frequency[9] = 3e+10
+( max_iteration, residue ) = ( 200 , 0.01 )
+Iteration #0 - Residue: 0.00955488
+Iteration #1 - Residue: 0.00864984
+Iteration #2 - Residue: 0.00848991
+End of computation. Iteration # = 3 - Residue: 0.00850182
+-------------------------------------------------------------
+Electrode[3] = "OUT1" , Frequency[0] = 4e+07
+( max_iteration, residue ) = ( 200 , 0.01 )
+Iteration #0 - Residue: 1
+Iteration #1 - Residue: 0.82376
+Iteration #2 - Residue: 0.61747
+Iteration #3 - Residue: 0.452351
+Iteration #4 - Residue: 0.395264
+Iteration #5 - Residue: 0.348582
+Iteration #6 - Residue: 0.300299
+Iteration #7 - Residue: 0.258263
+Iteration #8 - Residue: 0.236537
+Iteration #9 - Residue: 0.193594
+Iteration #10 - Residue: 0.147825
+Iteration #11 - Residue: 0.119775
+Iteration #12 - Residue: 0.106476
+Iteration #13 - Residue: 0.0996953
+Iteration #14 - Residue: 0.0898596
+Iteration #15 - Residue: 0.0760983
+Iteration #16 - Residue: 0.0677206
+Iteration #17 - Residue: 0.0624202
+Iteration #18 - Residue: 0.0583066
+Iteration #19 - Residue: 0.0563174
+Iteration #20 - Residue: 0.0526437
+Iteration #21 - Residue: 0.0493032
+Iteration #22 - Residue: 0.0467023
+Iteration #23 - Residue: 0.0417031
+Iteration #24 - Residue: 0.0377577
+Iteration #25 - Residue: 0.0305747
+Iteration #26 - Residue: 0.0253999
+Iteration #27 - Residue: 0.0207989
+Iteration #28 - Residue: 0.0177726
+Iteration #29 - Residue: 0.0158041
+Iteration #30 - Residue: 0.0143014
+Iteration #31 - Residue: 0.01277
+Iteration #32 - Residue: 0.011804
+Iteration #33 - Residue: 0.0111516
+Iteration #34 - Residue: 0.0103537
+End of computation. Iteration # = 35 - Residue: 0.00983828
+-------------------------------------------------------------
+Electrode[3] = "OUT1" , Frequency[1] = 3.36889e+09
+( max_iteration, residue ) = ( 200 , 0.01 )
+Iteration #0 - Residue: 0.0169412
+Iteration #1 - Residue: 0.00429551
+Iteration #2 - Residue: 0.0064937
+End of computation. Iteration # = 3 - Residue: 0.00842944
+-------------------------------------------------------------
+Electrode[3] = "OUT1" , Frequency[2] = 6.69778e+09
+( max_iteration, residue ) = ( 200 , 0.01 )
+Iteration #0 - Residue: 0.0192631
+Iteration #1 - Residue: 0.0112328
+Iteration #2 - Residue: 0.00999634
+End of computation. Iteration # = 3 - Residue: 0.00970893
+-------------------------------------------------------------
+Electrode[3] = "OUT1" , Frequency[3] = 1.00267e+10
+( max_iteration, residue ) = ( 200 , 0.01 )
+Iteration #0 - Residue: 0.0192045
+Iteration #1 - Residue: 0.0138931
+Iteration #2 - Residue: 0.0129592
+Iteration #3 - Residue: 0.0112892
+End of computation. Iteration # = 4 - Residue: 0.0098133
+-------------------------------------------------------------
+Electrode[3] = "OUT1" , Frequency[4] = 1.33556e+10
+( max_iteration, residue ) = ( 200 , 0.01 )
+Iteration #0 - Residue: 0.0141202
+Iteration #1 - Residue: 0.0111887
+Iteration #2 - Residue: 0.0105929
+End of computation. Iteration # = 3 - Residue: 0.00941368
+-------------------------------------------------------------
+Electrode[3] = "OUT1" , Frequency[5] = 1.66844e+10
+( max_iteration, residue ) = ( 200 , 0.01 )
+Iteration #0 - Residue: 0.0117369
+Iteration #1 - Residue: 0.0098283
+Iteration #2 - Residue: 0.00949858
+End of computation. Iteration # = 3 - Residue: 0.00927299
+-------------------------------------------------------------
+Electrode[3] = "OUT1" , Frequency[6] = 2.00133e+10
+( max_iteration, residue ) = ( 200 , 0.01 )
+Iteration #0 - Residue: 0.0113985
+Iteration #1 - Residue: 0.00978038
+Iteration #2 - Residue: 0.00931191
+End of computation. Iteration # = 3 - Residue: 0.00896185
+-------------------------------------------------------------
+Electrode[3] = "OUT1" , Frequency[7] = 2.33422e+10
+( max_iteration, residue ) = ( 200 , 0.01 )
+Iteration #0 - Residue: 0.0103758
+Iteration #1 - Residue: 0.00915115
+Iteration #2 - Residue: 0.00889829
+End of computation. Iteration # = 3 - Residue: 0.00879578
+-------------------------------------------------------------
+Electrode[3] = "OUT1" , Frequency[8] = 2.66711e+10
+( max_iteration, residue ) = ( 200 , 0.01 )
+Iteration #0 - Residue: 0.00992754
+Iteration #1 - Residue: 0.00891896
+Iteration #2 - Residue: 0.00873287
+End of computation. Iteration # = 3 - Residue: 0.00872635
+-------------------------------------------------------------
+Electrode[3] = "OUT1" , Frequency[9] = 3e+10
+( max_iteration, residue ) = ( 200 , 0.01 )
+Iteration #0 - Residue: 0.00974122
+Iteration #1 - Residue: 0.00885849
+Iteration #2 - Residue: 0.00870373
+End of computation. Iteration # = 3 - Residue: 0.00871467
+
+===================================================================
+Conductor #2 : "1"
+-------------------------------------------------------------
+Electrode[4] = "IN2" , Frequency[0] = 4e+07
+( max_iteration, residue ) = ( 200 , 0.01 )
+Iteration #0 - Residue: 1
+Iteration #1 - Residue: 0.478302
+Iteration #2 - Residue: 0.350267
+Iteration #3 - Residue: 0.279499
+Iteration #4 - Residue: 0.255124
+Iteration #5 - Residue: 0.23479
+Iteration #6 - Residue: 0.210609
+Iteration #7 - Residue: 0.172261
+Iteration #8 - Residue: 0.148312
+Iteration #9 - Residue: 0.124327
+Iteration #10 - Residue: 0.0979537
+Iteration #11 - Residue: 0.0844796
+Iteration #12 - Residue: 0.0769745
+Iteration #13 - Residue: 0.0658729
+Iteration #14 - Residue: 0.0582689
+Iteration #15 - Residue: 0.0505779
+Iteration #16 - Residue: 0.0457574
+Iteration #17 - Residue: 0.0434412
+Iteration #18 - Residue: 0.0408904
+Iteration #19 - Residue: 0.0392845
+Iteration #20 - Residue: 0.0365549
+Iteration #21 - Residue: 0.0343547
+Iteration #22 - Residue: 0.0319949
+Iteration #23 - Residue: 0.0272564
+Iteration #24 - Residue: 0.024137
+Iteration #25 - Residue: 0.020175
+Iteration #26 - Residue: 0.0168236
+Iteration #27 - Residue: 0.0141739
+Iteration #28 - Residue: 0.0124571
+Iteration #29 - Residue: 0.0110494
+End of computation. Iteration # = 30 - Residue: 0.0098368
+-------------------------------------------------------------
+Electrode[4] = "IN2" , Frequency[1] = 3.36889e+09
+( max_iteration, residue ) = ( 200 , 0.01 )
+Iteration #0 - Residue: 0.00979419
+Iteration #1 - Residue: 0.00979526
+Iteration #2 - Residue: 0.00915205
+End of computation. Iteration # = 3 - Residue: 0.00921563
+-------------------------------------------------------------
+Electrode[4] = "IN2" , Frequency[2] = 6.69778e+09
+( max_iteration, residue ) = ( 200 , 0.01 )
+Iteration #0 - Residue: 0.00925389
+Iteration #1 - Residue: 0.00929378
+Iteration #2 - Residue: 0.00929608
+End of computation. Iteration # = 3 - Residue: 0.00890972
+-------------------------------------------------------------
+Electrode[4] = "IN2" , Frequency[3] = 1.00267e+10
+( max_iteration, residue ) = ( 200 , 0.01 )
+Iteration #0 - Residue: 0.00885578
+Iteration #1 - Residue: 0.00886419
+Iteration #2 - Residue: 0.00883643
+End of computation. Iteration # = 3 - Residue: 0.00857239
+-------------------------------------------------------------
+Electrode[4] = "IN2" , Frequency[4] = 1.33556e+10
+( max_iteration, residue ) = ( 200 , 0.01 )
+Iteration #0 - Residue: 0.00863564
+Iteration #1 - Residue: 0.00857638
+Iteration #2 - Residue: 0.00840033
+End of computation. Iteration # = 3 - Residue: 0.00828884
+-------------------------------------------------------------
+Electrode[4] = "IN2" , Frequency[5] = 1.66844e+10
+( max_iteration, residue ) = ( 200 , 0.01 )
+Iteration #0 - Residue: 0.0083406
+Iteration #1 - Residue: 0.00826891
+Iteration #2 - Residue: 0.00819146
+End of computation. Iteration # = 3 - Residue: 0.00807142
+-------------------------------------------------------------
+Electrode[4] = "IN2" , Frequency[6] = 2.00133e+10
+( max_iteration, residue ) = ( 200 , 0.01 )
+Iteration #0 - Residue: 0.00806701
+Iteration #1 - Residue: 0.00802468
+Iteration #2 - Residue: 0.0079715
+End of computation. Iteration # = 3 - Residue: 0.00788378
+-------------------------------------------------------------
+Electrode[4] = "IN2" , Frequency[7] = 2.33422e+10
+( max_iteration, residue ) = ( 200 , 0.01 )
+Iteration #0 - Residue: 0.00788462
+Iteration #1 - Residue: 0.00783481
+Iteration #2 - Residue: 0.00778539
+End of computation. Iteration # = 3 - Residue: 0.00771476
+-------------------------------------------------------------
+Electrode[4] = "IN2" , Frequency[8] = 2.66711e+10
+( max_iteration, residue ) = ( 200 , 0.01 )
+Iteration #0 - Residue: 0.0077204
+Iteration #1 - Residue: 0.00769292
+Iteration #2 - Residue: 0.00764253
+End of computation. Iteration # = 3 - Residue: 0.00757461
+-------------------------------------------------------------
+Electrode[4] = "IN2" , Frequency[9] = 3e+10
+( max_iteration, residue ) = ( 200 , 0.01 )
+Iteration #0 - Residue: 0.00757317
+Iteration #1 - Residue: 0.00754281
+Iteration #2 - Residue: 0.00750171
+End of computation. Iteration # = 3 - Residue: 0.00744742
+-------------------------------------------------------------
+Electrode[5] = "OUT2" , Frequency[0] = 4e+07
+( max_iteration, residue ) = ( 200 , 0.01 )
+Iteration #0 - Residue: 1
+Iteration #1 - Residue: 0.478277
+Iteration #2 - Residue: 0.350273
+Iteration #3 - Residue: 0.279509
+Iteration #4 - Residue: 0.25514
+Iteration #5 - Residue: 0.234803
+Iteration #6 - Residue: 0.210623
+Iteration #7 - Residue: 0.172271
+Iteration #8 - Residue: 0.14832
+Iteration #9 - Residue: 0.124339
+Iteration #10 - Residue: 0.0979506
+Iteration #11 - Residue: 0.0844972
+Iteration #12 - Residue: 0.0769801
+Iteration #13 - Residue: 0.0658631
+Iteration #14 - Residue: 0.0582512
+Iteration #15 - Residue: 0.0505536
+Iteration #16 - Residue: 0.0456325
+Iteration #17 - Residue: 0.0434633
+Iteration #18 - Residue: 0.0408552
+Iteration #19 - Residue: 0.0391302
+Iteration #20 - Residue: 0.0365521
+Iteration #21 - Residue: 0.0343588
+Iteration #22 - Residue: 0.0319999
+Iteration #23 - Residue: 0.027265
+Iteration #24 - Residue: 0.0241496
+Iteration #25 - Residue: 0.0201844
+Iteration #26 - Residue: 0.0168363
+Iteration #27 - Residue: 0.0142049
+Iteration #28 - Residue: 0.0125047
+Iteration #29 - Residue: 0.0110665
+End of computation. Iteration # = 30 - Residue: 0.00985186
+-------------------------------------------------------------
+Electrode[5] = "OUT2" , Frequency[1] = 3.36889e+09
+( max_iteration, residue ) = ( 200 , 0.01 )
+Iteration #0 - Residue: 0.00980922
+Iteration #1 - Residue: 0.00981026
+Iteration #2 - Residue: 0.00916622
+End of computation. Iteration # = 3 - Residue: 0.00922581
+-------------------------------------------------------------
+Electrode[5] = "OUT2" , Frequency[2] = 6.69778e+09
+( max_iteration, residue ) = ( 200 , 0.01 )
+Iteration #0 - Residue: 0.00926232
+Iteration #1 - Residue: 0.00930033
+Iteration #2 - Residue: 0.00930356
+End of computation. Iteration # = 3 - Residue: 0.00891613
+-------------------------------------------------------------
+Electrode[5] = "OUT2" , Frequency[3] = 1.00267e+10
+( max_iteration, residue ) = ( 200 , 0.01 )
+Iteration #0 - Residue: 0.00886282
+Iteration #1 - Residue: 0.0088712
+Iteration #2 - Residue: 0.00884421
+End of computation. Iteration # = 3 - Residue: 0.00858066
+-------------------------------------------------------------
+Electrode[5] = "OUT2" , Frequency[4] = 1.33556e+10
+( max_iteration, residue ) = ( 200 , 0.01 )
+Iteration #0 - Residue: 0.00864347
+Iteration #1 - Residue: 0.00858482
+Iteration #2 - Residue: 0.00840951
+End of computation. Iteration # = 3 - Residue: 0.0082967
+-------------------------------------------------------------
+Electrode[5] = "OUT2" , Frequency[5] = 1.66844e+10
+( max_iteration, residue ) = ( 200 , 0.01 )
+Iteration #0 - Residue: 0.00834828
+Iteration #1 - Residue: 0.00827558
+Iteration #2 - Residue: 0.00819865
+End of computation. Iteration # = 3 - Residue: 0.00808088
+-------------------------------------------------------------
+Electrode[5] = "OUT2" , Frequency[6] = 2.00133e+10
+( max_iteration, residue ) = ( 200 , 0.01 )
+Iteration #0 - Residue: 0.00807607
+Iteration #1 - Residue: 0.00803475
+Iteration #2 - Residue: 0.00798215
+End of computation. Iteration # = 3 - Residue: 0.00789234
+-------------------------------------------------------------
+Electrode[5] = "OUT2" , Frequency[7] = 2.33422e+10
+( max_iteration, residue ) = ( 200 , 0.01 )
+Iteration #0 - Residue: 0.0078935
+Iteration #1 - Residue: 0.00784186
+Iteration #2 - Residue: 0.00779274
+End of computation. Iteration # = 3 - Residue: 0.00772508
+-------------------------------------------------------------
+Electrode[5] = "OUT2" , Frequency[8] = 2.66711e+10
+( max_iteration, residue ) = ( 200 , 0.01 )
+Iteration #0 - Residue: 0.00773061
+Iteration #1 - Residue: 0.00770757
+Iteration #2 - Residue: 0.00765555
+End of computation. Iteration # = 3 - Residue: 0.00758699
+-------------------------------------------------------------
+Electrode[5] = "OUT2" , Frequency[9] = 3e+10
+( max_iteration, residue ) = ( 200 , 0.01 )
+Iteration #0 - Residue: 0.00758586
+Iteration #1 - Residue: 0.00755387
+Iteration #2 - Residue: 0.0075138
+End of computation. Iteration # = 3 - Residue: 0.00746109
+
+!!! ********************************************************************!!! 
+!!! Reading Internal Save File : source_res_SAV_QUEST3D
+!!! ********************************************************************!!! 
+
+ Output Files :
+    questex12_y.dat
+    questex12_z.dat
+    questex12_q.dat
+    questex12_s.dat
+    questex12_s.out
+    questex12_s_transform.dat
+    questex12_s_transform.out
+    questex12_abcd_transform.dat
+    questex12_s_param.par
+    questex12_s_param_transform.par
+CPU Time (s) : 952.79
+quest> 
+quest> # ANALYSIS
+quest> 
+quest> 
+quest> runlisa filename = "analysis.lisa"
+Cannot open the specified input channel, file db_$MIM3_THICK/header
+Execution exception: NOT_FOUND
+Component "SIZE" not defined for Get for type Null
+  at line 6 of file analysis.lisa
+quest> 
+quest> # GDSII_NAME is a dummy we can use any names in the file table_fit.dat
+quest> 
+EXTRACT> init inf="table_fit.dat"
+EXTRACT> extract name="C" max(curve(da.value."GDSII_NAME", da.value."C"))
+C=1.95158e-14 
+EXTRACT> extract name="CfF" $C*1e15
+CfF=19.5158 
+EXTRACT> extract name="L" max(curve(da.value."GDSII_NAME", da.value."L"))
+L=2.06857e-12 
+EXTRACT> extract name="LpH" $L*1e12
+LpH=2.06857 
+EXTRACT> quit
+quest> quit
+
+Parse complete:
+	Error(s)   = 0
+	Warning(s) = 0
+
+Wait condition destroy failure: Device or resource busy
+Mutex destroy failure: Device or resource busy
+
+*** END ***
+

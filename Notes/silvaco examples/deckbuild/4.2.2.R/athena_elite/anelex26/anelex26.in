@@ -1,0 +1,211 @@
+go athena
+# 
+# 
+line x loc=50.000 tag=left
+line x loc=100.00 spac=0.5
+line x loc=300.000 spac=0.5
+line x loc=350.000 tag=right
+line y loc=1.00 spac=5.00 tag=top
+line y loc=5.00 spac=5.00 tag=bottom
+#
+init silicon
+#
+depo oxide thick=1.00 divis=20 
+#
+struct outfile=anelex26.str
+#
+etch oxide start x=-0.1 y=-1000
+etch cont x=-0.1 y=.400
+etch cont x=103.5 y=.400
+etch cont x=103.5 y=-1000
+etch cont x=108.5 y=-1000
+etch cont x=108.5 y=.400
+etch cont x=113.5 y=.400
+etch cont x=113.5 y=-1000
+etch cont x=118.5 y=-1000
+etch cont x=118.5 y=.400
+etch cont x=123.5 y=.400
+etch cont x=123.5 y=-1000
+etch cont x=128.5 y=-1000
+etch cont x=128.5 y=.400
+etch cont x=133.5 y=.400
+etch cont x=133.5 y=-1000
+etch cont x=138.5 y=-1000
+etch cont x=138.5 y=.400
+etch cont x=143.5 y=.400
+etch cont x=143.5 y=-1000
+etch cont x=148.5 y=-1000
+etch cont x=148.5 y=.400
+etch cont x=153.5 y=.400
+etch cont x=153.5 y=-1000
+etch cont x=158.5 y=-1000
+etch cont x=158.5 y=.400
+etch cont x=163.5 y=.400
+etch cont x=163.5 y=-1000
+etch cont x=168.5 y=-1000
+etch cont x=168.5 y=.400
+etch cont x=173.5 y=.400
+etch cont x=173.5 y=-1000
+etch cont x=178.5 y=-1000
+etch cont x=178.5 y=.400
+etch cont x=183.5 y=.400
+etch cont x=183.5 y=-1000
+etch cont x=188.5 y=-1000
+etch cont x=188.5 y=.400
+etch cont x=193.5 y=.400
+etch cont x=193.5 y=-1000
+etch cont x=198.5 y=-1000
+etch cont x=198.5 y=.400
+etch cont x=203.5 y=.400
+etch cont x=203.5 y=-1000
+etch cont x=208.5 y=-1000
+etch cont x=208.5 y=.400
+etch cont x=213.5 y=.400
+etch cont x=213.5 y=-1000
+etch cont x=218.5 y=-1000
+etch cont x=218.5 y=.400
+etch cont x=223.5 y=.400
+etch cont x=223.5 y=-1000
+etch cont x=228.5 y=-1000
+etch cont x=228.5 y=.400
+etch cont x=233.5 y=.400
+etch cont x=233.5 y=-1000
+etch cont x=238.5 y=-1000
+etch cont x=238.5 y=.400
+etch cont x=243.5 y=.400
+etch cont x=243.5 y=-1000
+etch cont x=248.5 y=-1000
+etch cont x=248.5 y=.400
+etch cont x=253.5 y=.400
+etch cont x=253.5 y=-1000
+etch cont x=258.5 y=-1000
+etch cont x=258.5 y=.400
+etch cont x=263.5 y=.400
+etch cont x=263.5 y=-1000
+etch cont x=268.5 y=-1000
+etch cont x=268.5 y=.400
+etch cont x=273.5 y=.400
+etch cont x=273.5 y=-1000
+etch cont x=278.5 y=-1000
+etch cont x=278.5 y=.400
+etch cont x=283.5 y=.400
+etch cont x=283.5 y=-1000
+etch cont x=288.5 y=-1000
+etch cont x=288.5 y=.400
+etch cont x=293.5 y=.400
+etch cont x=293.5 y=-1000
+etch cont x=298.5 y=-1000
+etch cont x=298.5 y=.400
+etch cont x=401.1 y=.400
+etch done x=401.1 y=-1000
+#
+struct outfile=anelex26_1.str
+#
+rate.polish oxide machine=polish n.m soft=25 height.fac=0.02 \
+	length.fac=4.2 kinetic.fac=10
+#
+polish machine=polish time=3 min dx.mult=2 dt.fact=0.002
+#
+struct outfile=anelex26_2.str
+#
+init   inf=anelex26_1.str
+polish machine=polish time=6 min dx.mult=2 dt.fact=0.002
+#
+struct outfile=anelex26_3.str
+#
+init infile=anelex26.str
+# 
+etch oxide start x=-0.1 y=-1000
+etch cont x=-0.1 y=.400
+etch cont x=116 y=.400
+etch cont x=116 y=-1000
+etch cont x=126 y=-1000
+etch cont x=126 y=.400
+etch cont x=136 y=.400
+etch cont x=136 y=-1000
+etch cont x=146 y=-1000
+etch cont x=146 y=.400
+etch cont x=156 y=.400
+etch cont x=156 y=-1000
+etch cont x=166 y=-1000
+etch cont x=166 y=.400
+etch cont x=176 y=.400
+etch cont x=176 y=-1000
+etch cont x=186 y=-1000
+etch cont x=186 y=.400
+etch cont x=196 y=.400
+etch cont x=196 y=-1000
+etch cont x=206 y=-1000
+etch cont x=206 y=.400
+etch cont x=216 y=.400
+etch cont x=216 y=-1000
+etch cont x=226 y=-1000
+etch cont x=226 y=.400
+etch cont x=236 y=.400
+etch cont x=236 y=-1000
+etch cont x=246 y=-1000
+etch cont x=246 y=.400
+etch cont x=256 y=.400
+etch cont x=256 y=-1000
+etch cont x=266 y=-1000
+etch cont x=266 y=.400
+etch cont x=276 y=.400
+etch cont x=276 y=-1000
+etch cont x=286 y=-1000
+etch cont x=286 y=.400
+etch cont x=401.1 y=.400
+etch done x=401.1 y=-1000
+#
+struct outfile=anelex26_4.str
+#
+polish machine=polish time=3 min dx.mult=2 dt.fact=0.002
+#
+struct outfile=anelex26_5.str
+init   inf=anelex26_4.str
+#
+polish machine=polish time=6 min dx.mult=2 dt.fact=0.002
+#
+struct outfile=anelex26_6.str
+#
+init infile=anelex26.str
+# 
+etch oxide start x=-0.1 y=-1000
+etch cont x=-0.1 y=.400
+etch cont x=131 y=.400
+etch cont x=131 y=-1000
+etch cont x=151 y=-1000
+etch cont x=151 y=.400
+etch cont x=171 y=.400
+etch cont x=171 y=-1000
+etch cont x=191 y=-1000
+etch cont x=191 y=.400
+etch cont x=211 y=.400
+etch cont x=211 y=-1000
+etch cont x=231 y=-1000
+etch cont x=231 y=.400
+etch cont x=251 y=.400
+etch cont x=251 y=-1000
+etch cont x=271 y=-1000
+etch cont x=271 y=.400
+etch cont x=401.1 y=.400
+etch done x=401.1 y=-1000
+#
+struct outfile=anelex26_7.str
+#
+polish machine=polish time=3 min dx.mult=2 dt.fact=0.002
+#
+struct outfile=anelex26_8.str
+
+init inf=anelex26_7.str
+#
+polish machine=polish time=6 min dx.mult=2 dt.fact=0.002
+#
+struct outfile=anelex26_9.str
+#
+tonyplot -overlay anelex26_1.str anelex26_2.str anelex26_3.str -set anelex26_1.set
+#
+tonyplot -overlay anelex26_4.str anelex26_5.str anelex26_6.str -set anelex26_2.set
+#
+tonyplot -overlay anelex26_7.str anelex26_8.str anelex26_9.str -set anelex26_3.set
+#
+quit

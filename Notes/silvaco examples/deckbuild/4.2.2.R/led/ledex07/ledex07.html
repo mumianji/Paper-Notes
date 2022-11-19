@@ -1,0 +1,148 @@
+<html>
+  <head>
+    <title>Optical Output Coupling Efficiency Using FDTD</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Optical Output Coupling Efficiency Using FDTD</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Blaze/LED</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="ledex07_plot0.png" width="640" alt="ledex07_plot0" />
+      <p/>
+      <img src="ledex07_plot1.png" width="640" alt="ledex07_plot1" />
+      <p/>
+      <img src="ledex07_plot2.png" width="640" alt="ledex07_plot2" />
+      <p/>
+      <img src="ledex07_plot3.png" width="640" alt="ledex07_plot3" />
+      <p/>
+    </div>
+    <div id="text" >
+<p>
+This example demonstrates how to extract the optical output coupling efficiency
+of an LED/OLED device by using finite-difference time-domain (FDTD).
+</p>
+<p>
+The finite-difference time-domain method works by direct solution of
+Maxwell&apos;s equations in the time domain and thus explicitly accounts for
+interference and diffraction in 1, 2 or 3 dimensions.
+</p>
+<p>
+FDTD uses the same method as reverse ray
+tracing in that the emission from a set of dipoles located at user
+specified locations is integrated/averaged over the device.
+</p>
+<p>
+The device in this case is very similar to the ones discussed in
+the other examples so far.  We have broadened it out in the
+X direction so we can analyze the effects of guided modes.  Guided
+modes are light trapped in the plane of the device by total internal
+reflection.  We make the device very long the make sure we can
+capture all the light except that which is definitely captured
+in the axial modes.
+</p>
+<p>
+In the next example we will analyze the effect of introduction
+of a photonic coupling structure on the top surface to extract light
+from the axial modes.  This demonstrates the advantage of FDTD analysis
+for photonic coupling.  This kind of analysis cannot be done with
+reverse ray trace or source term methods.
+</p>
+<p>
+The main difference from what we have seen so far in the other examples
+in the introduction of the
+<b> BEAM </b> statement.  In example ledex05.in
+we performed FDTD analysis without the use of the BEAM statement.
+In this case the
+<b> BEAM </b> statement is made automatically based on
+certain assumptions.
+</p>
+<p>
+Many of the functionalities available on the
+<b> BEAM </b> statement (including
+lenses) for FDTD
+analysis are not yet available on the
+<b> SAVE </b> or
+<b> LED </b> statements so
+the
+<b> BEAM </b> statement is used here as a convenience and to illustrate
+the full variety of control parameters available to FDTD analysis.
+</p>
+<p>
+In the
+<b> BEAM </b> statement you will first notice the specification of beam origin,
+direction of propogation and wavelength.  These specifications are largely
+supurfulous for LED analysis but need be specified in accordance
+with the syntactical rules set forth for photo detection in
+Luminous.  In future LED versions we hope to hide much of this.
+</p>
+<p>
+The important parameters for LED analysis are
+<b> FDTD </b> which enables FDTD analysis,
+<b> TD.SRATE </b> which specifies the number of samples per wavelength
+<b> PROP.LENG </b> which specifies the duration of the simulation in terms
+of optical propogation length,
+<b> BIG.INDEX </b> which enables examination of the largest index of refraction
+in each region to calculate the local mesh spacing relative
+to the local wavelength and
+<b> FD.AUTO </b> which enables automatic meshing.
+</p>
+<p>
+PMLs are absorbing boundary conditions for FDTD. They are needed at the
+TOP to characterize the amount of light exiting the top of the device
+(i.e. the light coupled out of the device).  PMLs are placed at the
+ends of the device to capture and characterize the axial modes.
+</p>
+<p>
+The PML at the bottom is optional and if left out the boundary is
+treated as a prefect mirror.
+</p>
+<p>
+Toward the end of the simulation the
+<b> SAVE </b> statement is used to initiate FDTD coupling analysis at the
+operating bias.
+</p>
+<p>
+The
+<b> REF.BEAM </b> parameter is used to specify the index of the
+<b> BEAM </b> in order to tie the LED analysis to the proper set of analysis conditions
+set up by the
+<b> BEAM </b> and
+<b> PML </b> statements.
+</p>
+<p>
+The
+<b> SPECTRUM </b> parameter specifies a file prefix for capturing the
+coupled output spectrum.
+</p>
+<p>
+The other parameters of the
+<b> SAVE </b> statement specify the user selected sampling in space and emission
+wavelength.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

@@ -1,0 +1,37 @@
+
+############################################################
+### Import the structure into VictoryStress, perform     ###
+### a stress/strain analysis, and calculate the mobility ###
+### enhancement.                                         ###
+############################################################
+
+go victorystress
+
+init structure="vsex02_atlas_regular_ex.str"
+
+material nitride intrin.sig=1e10
+
+material silicon model.iso=1
+
+
+# perform the stress analysis saving strain for subsequent n and p
+# mobility enhancements calculation
+
+stress exposed strain rebalance
+
+save structure="vsex02_stress.str"
+
+reset
+
+init structure="vsex02_stress.str"
+material silicon model.iso=1
+mobility nhance phance
+
+save structure="vsex02_mobility.str"
+
+# tonyplot3d is used to create a cutplane according to the set file
+tonyplot3d vsex02_mobility.str -set vsex02_1.set -cut vsex02_mobility_2d.str
+# plot of the cutplane
+tonyplot vsex02_mobility_2d.str -set vsex02_2.set
+
+quit

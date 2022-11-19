@@ -1,0 +1,251 @@
+go clever
+
+## Process Description ##
+
+Init Layout="clex11.lay" Depth=1.0 Map="clex11.lmp"
+Save Layout="clex11_1.lay"
+
+set poly_dist=0.30
+set poly_thick=0.25
+
+set barr_thick=0.06
+
+set arc1_thick=0.01
+set arc2_thick=0.04
+
+set diel1_thick=0.50
+set metal1_thick=0.58
+
+set diel2_thick=0.75
+set metal2_thick=0.8
+
+set diel3_thick=0.75
+set metal3_thick=0.8
+
+set diel4_thick=0.8
+set diel41_thick=0.2
+set metal4_thick=0.9
+
+set liner1_thick=0.04
+set liner2_thick=0.06
+
+set passiv_thick=3
+
+########################################################
+
+Deposit Oxide Thickness=$"poly_dist" max
+
+Deposit Material("poly") Thickness=$"poly_thick" max
+
+Deposit Resist Thickness=0.1 Max
+
+Mask "poly"
+
+Etch Material("poly")
+
+Strip Resist
+
+Electrodes "*GATE" material ("poly")
+
+Deposit Oxide Thickness=$"diel1_thick" Max
+
+## First contact level ##
+## Contact hole        ##
+
+Deposit Resist Thickness=0.1 Max
+
+Mask "cont" Reverse
+
+Etch oxide
+
+Strip Resist
+
+Electrodes "*CONT" Silicon
+
+## Contact filling and etch back  ##
+
+Deposit Material("barrier")  Uniform Thickness=$"barr_thick"
+
+Deposit Material("Tungsten") Thickness=0.0 Max
+
+Etch Thickness=$"barr_thick" Max
+
+Deposit Aluminum Thickness=$"metal1_thick" Max
+
+Deposit Material("ARC1") Thickness=$"arc1_thick" Max
+
+Deposit Material("ARC2") Thickness=$"arc2_thick" Max
+
+Deposit Resist Thickness=0.1 Max
+
+Mask "M1"
+
+Etch Material("ARC2")
+
+Etch Material("ARC1")
+
+Etch Aluminum
+
+Strip Resist
+
+Electrodes "M1" Material("ARC2")
+
+Deposit Oxide Thickness=$"diel2_thick" Max
+
+## First contact level ##
+## Contact hole        ##
+
+Deposit Resist Thickness=0.1 Max
+
+Mask "via1" Reverse
+
+Etch oxide
+
+Strip Resist
+
+## Contact filling and etch back ##
+
+Deposit Material("barrier")  Uniform Thickness=$"barr_thick"
+
+Deposit Material("Tungsten") Thickness=0.0 Max
+
+Etch Thickness=$"barr_thick" Max
+
+Deposit Aluminum Thickness=$"metal2_thick" Max
+
+Deposit Material("ARC1") Thickness=$"arc1_thick" Max
+
+Deposit Material("ARC2") Thickness=$"arc2_thick" Max
+
+Deposit Resist Thickness=0.1 Max
+
+Mask "M2"
+
+Etch Material("ARC2")
+
+Etch Material("ARC1")
+
+Etch Aluminum
+
+Strip Resist
+
+Electrodes "M2" Material("ARC2")
+
+Deposit Oxide Thickness=$"diel3_thick" Max
+
+## First contact level ##
+## Contact hole        ##
+
+Deposit Resist Thickness=0.1 Max
+
+Mask "via2"  Reverse
+
+Etch oxide
+
+Strip Resist
+
+## Contact filling and etch back ##
+
+Deposit Material("barrier")  Uniform Thickness=$"barr_thick"
+
+Deposit Material("Tungsten") Thickness=0.0 Max
+
+Etch Thickness=$"barr_thick" Max
+
+Deposit Aluminum Thickness=$"metal3_thick" Max
+
+Deposit Material("ARC1") Thickness=$"arc1_thick" Max
+
+Deposit Material("ARC2") Thickness=$"arc2_thick" Max
+
+Deposit Resist Thickness=0.1 Max
+
+Mask "M3"
+
+Etch Material("ARC2")
+
+Etch Material("ARC1")
+
+Etch Aluminum
+
+Strip Resist
+
+Electrodes "M3" Material("ARC2")
+
+Deposit oxide Thickness=$"diel4_thick" Max
+
+Deposit Nitride Thickness=$"diel41_thick" Max
+
+Deposit Resist Thickness=0.1 Max
+
+Mask "via3" Reverse
+
+Etch nitride
+
+Strip Resist
+
+Deposit oxide Thickness=$"metal4_thick" Max
+
+Mask "M4" Reverse
+
+Etch oxide
+
+Strip Resist
+
+Deposit Material("liner1") Uniform Thickness=$"liner1_thick"
+
+Deposit Material("liner2") Uniform Thickness=$"liner2_thick"
+
+Deposit Material("Copper") Thickness=0 Max
+
+########################################################
+
+set liner_thick = $"liner1_thick" + $"liner2_thick"
+
+########################################################
+
+Etch Thickness=$"liner_thick" Max
+
+Electrodes "M4" material("Copper")
+
+Electrodes "M4" material("liner1")
+
+Electrodes "M4" material("liner2")
+
+## Set material constants ##
+
+Material Material("poly") Conductivity=334000
+
+Material Aluminum Conductivity=334000
+
+Material Material("barrier") Conductivity=4000
+
+Material Material("Tungsten") Conductivity=187000
+
+Material Material("ARC1") Conductivity=16000
+
+Material Material("ARC2") Conductivity=4000
+
+Material Material("liner1") Conductivity=16000
+
+Material Material("liner2") Conductivity=4000
+
+Material Material("Copper") Conductivity=560000
+ 
+Material Oxide Permittivity=4
+
+Material Nitride Permittivity=7.2
+
+########################################################
+
+Save structure="clex11.str"
+
+## After creating the 3D structure   ##
+## Perform the Interconnect Analysis ##
+
+Interconnect capacitance AdaptC=0.05 capsolver=1
+Interconnect Resistance AdaptR=0.05 
+
+Save Spice="clex11.net"
+
+quit

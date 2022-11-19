@@ -1,0 +1,36 @@
+# (c) Silvaco Inc., 2018
+
+go victorydevice
+
+set FLUENCE=1e8
+
+mesh infile=radex12_0.str 
+
+radiation proton energy=1.8 fluence=$FLUENCE 
+material dam.proton=1e3 dam.niel=3.1
+
+defects fluence.model \
+  sigtae=1.e-17 sigtah=1.e-15 sigtde=1.e-15 sigtdh=1.e-17  
+
+models consrh cvt fermi
+  
+output band.param con.band val.band
+
+probe n.conc    x=4.25 y=3.25 z=1     name=cis_conc
+probe potential x=1    y=4.5  z=0.002 name=fd_potential
+probe potential x=4.25 y=3.25 z=1     name=cis_potential
+
+method pam.gmres norm.scaling.local
+
+solve init
+solve previous
+
+# Deplete the Image Sensor of Electrons
+log outfile=radex12_$'FLUENCE'.log
+solve Vcgate=3.3 ramptime=1e-6 dt=1e-8 tstop=1e-6
+solve tstop=2e-6 dt=1e-8
+
+# Dark Recovery Time
+solve tstop=0.1 dt=1e-7
+method constant.timestep
+solve tstop=1 dt=0.05e-1

@@ -1,0 +1,76 @@
+<html>
+  <head>
+    <title>User-defined material simulation</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>User-defined material simulation</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Mocasim, TonyPlot</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Mocasim 5.16.0.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="mocasim03_plot0.png" width="640" alt="mocasim03_plot0" />
+      <p/>
+    </div>
+    <div id="text" >
+<p>
+This example demonstrates how to override the default material
+and simulation parameters.
+</p>
+<p>
+The
+<b> material</b> command is used to override the default materials parameters.
+The
+<b> dc_dielectric</b> parameter is used to set the DC dielectric constant.  The
+<b> energy_gap</b> parameter is used to set the three energy gaps of the three-
+valley model.  The energy gaps must be defined in the order
+Gamma, L, and X.  So in this example the direct (Gamma) band
+gap is being set to 1.4 eV.
+</p>
+<p>
+On the
+<b> initialize</b> statement the
+<b> burn_in</b> parameter is used to set the number of time steps we run
+before we start calculating the transport parameters. This
+is so that the non-physical initial distribution of electrons
+does not affect the results. The
+<b> num_time_step</b> parameter is used to set the number of time steps we use
+to actually calculate the transport parameters. The more time
+steps are used, the more accurate the results will be, but
+the longer the simulation will take.
+</p>
+<p>
+The
+<b> print</b> statement is used to output the parameters used in the
+Monte Carlo simulation.  This file contains the &quot;internal&quot;
+parameters (such as number of time steps, the energy
+range over which the scattering is calculated), the &quot;material&quot;
+parameters (such as band-gaps, electron masses, dielectric
+constants), and the &quot;scattering&quot; parameters (such as
+phonon energies and deformation potentials).
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

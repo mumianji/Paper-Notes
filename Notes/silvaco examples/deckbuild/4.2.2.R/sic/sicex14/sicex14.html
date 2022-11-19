@@ -1,0 +1,74 @@
+<html>
+  <head>
+    <title>Reverse I-V of SiC Schottky and Junction Barrier Schottky (JBS) Diodes</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Reverse I-V of SiC Schottky and Junction Barrier Schottky (JBS) Diodes</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Victory Device  or  Atlas</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Victory Device 1.12.1.R  or  Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="sicex14_plot0.png" width="640" alt="sicex14_plot0" />
+      <p/>
+      <img src="sicex14_plot1.png" width="640" alt="sicex14_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates simulation of Reverse I-V and Breakdown curves of two types of SiC devices:
+- 4H-SiC Schottky Barrier Diode (SBD), and
+- 4H-SiC Junction Barrier Schottky (JBS) diode,
+using an anisotropic impact ionization model specific for SiC.
+</p>
+<p>
+The input deck provided with this example can be run by either Victory Device or Atlas simulator, by changing the solver name in the command
+<b> go victorydevice </b> into
+<b> go atlas</b> . It shows that both device simulator frameworks can be fully compatible in terms of input commands, producing same results, and allowing easy transition between Atlas and Victory Device.
+</p>
+<p>
+Reference (with Experimental Data):
+</p>
+<p>
+[1]  L. Di Benedetto, G.D. Licciardo, T. Erlbacher, A. Bauer, and S. Bellone,
+&quot;Analytical Model and Design of 4H-SiC Planar and Trenched JBS Diodes&quot;,
+IEEE Transactions on Electron Devices, Vol. 63, No. 6, pp. 2474-2481, June 2016.
+</p>
+<p>
+Experimental data from [1] (Fig. 9) are provided with the example and plotted along with the TCAD simulation results, demonstrating a very good match with the measured reverse I-V and breakdown curves.
+</p>
+<p>
+The simulation is run using 80-bit precision, by setting the option:
+</p>
+<b>   simflags=&quot;-80&quot;</b> <p>
+The structure files of each device, SBD and JBS, in equilibrium and in breakdown, are saved and can be viewed in
+<b> Tonyplot</b> . You can view internal physical variables inside the devices, such as electric field, impact generation rates, current density distribution, etc. Overlaid I-V plots can be plotted by using
+<b> Overlay </b> feature in
+<b> TonyPlot</b> .
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

@@ -1,0 +1,52 @@
+go athena
+
+#TITLE: A simple Poly Gate Etching and Spacer formation
+#   
+line x loc=0.00 spac=0.20 
+line x loc=1.5  spac=0.1 
+line x loc=2.5  spac=0.1
+line x loc=4.0  spac=0.20 
+#
+line y loc=0.00 spac=0.05 
+line y loc=2    spac=0.3
+init 
+#
+depo oxi thi=0.02 div=1
+depo poly thi=0.35 div=10
+depo photores thi=1 div=5
+etch photo left  p1.x=1.5 
+etch photo right p1.x=2.5 
+#
+structure outfile=anelex14_0.str
+#
+rate.etch mach=dr1 rie photo direct=0.02 isotropic=0.0 u.m 
+rate.etch mach=dr1 rie polysilicon  direct=1.0 isotropic=0.0 u.m 
+rate.etch mach=dr1 rie oxide direct=0.25 isotropic=0.25 u.m 
+#
+etch mach=dr1 time=60 second dx.mult=0.5
+#
+structure outfile=anelex14_1.str
+#
+strip photores
+#
+structure outfile=anelex14_2.str
+#
+rate.depo mach=de1 cvd oxide step.cov=0.7 dep.rate=0.1 u.m
+#
+deposit mach=de1 time=5 minute div=15
+#
+structure outfile=anelex14_3.str
+#
+rate.etch mach=dr2 rie photo dir=0.02 iso=0.0 u.m
+rate.etch mach=dr2 rie polysilicon  dir=0.1 iso=0.0 u.m
+rate.etch mach=dr2 rie oxide dir=0.55 iso=0.00 u.m
+#
+etch mach=dr2 time=30 second dx.mult=.5
+structure outfile=anelex14_4.str
+etch mach=dr2 time=30 second dx.mult=.5
+structure outfile=anelex14_5.str
+#
+tonyplot -ttitle anelex14.in anelex14_*.str
+#
+quit
+

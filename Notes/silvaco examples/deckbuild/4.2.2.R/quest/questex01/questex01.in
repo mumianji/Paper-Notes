@@ -1,0 +1,14 @@
+go quest
+
+# ADD GDS LABEL and PAD
+# As an example assume we have a gds with "in" label but not "out" label.
+
+addlabel in.gdsfile = "questex01.gds" cell = "CELL" \
+         out.gdsfile = "questex01_1.gds" \
+		gds.Number = 70 gds.Datatype = 1 \
+		labels = "out" xcoords = 190 ycoords = 0 savelog
+
+addpad  in.gdsfile = "questex01_1.gds" cell = "CELL" \
+        out.gdsfile = "questex01_2.gds" \
+		labels = "in","out" gds.Datatype = 0 pad.size = 20.00 savelog
+quit

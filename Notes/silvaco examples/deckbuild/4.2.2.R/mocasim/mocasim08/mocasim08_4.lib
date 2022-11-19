@@ -1,0 +1,58 @@
+#include <math.h>
+
+int
+munsat(double TL, double Na, double Nd, 
+       double Eparl, double v, double mu0, 
+       double* mun, double* dmde)
+{
+  /* magnitude and sign of the electric field */
+  double EF, EF_SI;
+  /* doping */
+  double D;
+  /* temperature */
+  double T;
+  /* Resultant mobility and differentials */
+  double MU=0.0, MU_DE=0.0, MU_DT=0.0;
+
+  /* Analytical low-field model parameters */
+  const double ALF_MU1 = 4.587493007117e+01;
+  const double ALF_MU2 = 8.417489503685e+03;
+  const double ALF_NCRIT = 1.535737331056e+17;
+  const double ALF_ALPHA = 0.000000000000e+00;
+  const double ALF_BETA = -2.300000000000e+00;
+  const double ALF_GAMMA = -3.800000000000e+00;
+  const double ALF_DELTA = 7.092412645704e-01;
+
+  EF = (Eparl/1.000000000000e+00);
+  EF_SI = (EF >= 0.0) ? +1.0 : -1.0;
+  if (EF_SI < 0.0) EF = -EF;
+  if (EF < 1.000000000000e-03) EF = 1.000000000000e-03;
+  D = ((fabs(Na)+fabs(Nd))/1.000000000000e+00);
+  if (D < 1.000000000000e+04) D = 1.000000000000e+04;
+  T = (TL/1.000000000000e+00);
+  if (T < 1.000000000000e-02) T = 1.000000000000e-02;
+
+  {
+    /* temporary variables */
+    double AL, ALDT, BE, BEDT, GA, GADT, DE;
+    double DT1, DT2, DT3;
+    AL = ALF_MU1 * pow(T/300.0, ALF_ALPHA);
+    ALDT = ALF_ALPHA*ALF_MU1*pow(T,ALF_ALPHA-1.0)/pow(300.0,ALF_ALPHA);
+    BE = ALF_MU2 * pow(T/300.0, ALF_BETA);
+    BEDT = ALF_BETA*ALF_MU2*pow(T,ALF_BETA-1.0)/pow(300.0,ALF_BETA);
+    GA = pow(T/300.0, ALF_GAMMA);
+    GADT = ALF_GAMMA*pow(T,ALF_GAMMA-1.0)/pow(300.0,ALF_GAMMA);
+    DE = pow(D/ALF_NCRIT, ALF_DELTA);
+    MU = AL + ((BE-AL) / (1.0 + GA*DE));
+    DT1 = (1.0+GA*DE)*(BEDT-ALDT);
+    DT2 = (BE-AL)*(DE*GADT);
+    DT3 = (1.0+GA*DE)*(1.0+GA*DE);
+    MU_DT = ALDT + ((DT1-DT2)/DT3);
+  }
+
+  *mun = MU;
+  *dmde = MU_DE;
+
+  return 0;
+}
+

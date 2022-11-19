@@ -1,0 +1,77 @@
+<html>
+  <head>
+    <title>An alternative inversion layer mobility model for 4H-SiC</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>An alternative inversion layer mobility model for 4H-SiC</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Atlas</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="sicex13_plot0.png" width="640" alt="sicex13_plot0" />
+      <p/>
+      <img src="sicex13_plot1.png" width="640" alt="sicex13_plot1" />
+      <p/>
+      <img src="sicex13_plot2.png" width="640" alt="sicex13_plot2" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example introduces an alternative inversion layer mobility model for 4H-SiC. The model being a function of doping concentration and temperature takes into account bulk, surface roughness and surface phonon scattering, as well as Coulomb scattering at interface charges at 4H-SiC/dielectric interface, using Matthiessen&apos;s rule. To enable the model, specify the
+<b> ALTCVT.N </b> flag for electrons and/or the
+<b> ALTCVT.P </b> flag for holes on the
+<b> MOBILITY</b> statement.
+</p>
+<p>
+The bulk component combines contributions from ionized impurity scattering in the bulk with those from optical bulk-phonon scattering. It cannot be excluded from the model, but a proper choice of the model parameters will force it to be constant.
+</p>
+<p>
+The surface roughness contribution can be disabled by clearing the
+<b> ALT.SR.N</b> flag for electrons and/or the
+<b> ALT.SR.P</b> flag for holes on the
+<b> MOBILITY</b> statement.
+</p>
+<p>
+The surface phonon component can be disabled by clearing the
+<b> ALT.SP.N</b> flag for electrons and/or the
+<b> ALT.SP.P</b> flag for holes on the
+<b> MOBILITY</b> statement.
+</p>
+<p>
+The contribution from Coulomb scattering at interface charges can be disabled by clearing the
+<b> COULOMB.N</b> flag for electrons and/or the
+<b> COULOMB.P</b> flag for holes on the
+<b> MOBILITY</b> statement.
+</p>
+<p>
+An enhancement-mode n-channel 4H-SiC MOSFET with high density of interface traps at the 4H-SiC/SiO2 interface serves to demonstrate the influence of the mobility components on the total inversion layer mobility. The 2D net doping profile of the simulated 4H-SiC MOSFET is plotted along with the acceptor and donor interface state density distributions defined by the
+<b> INTDEFECTS</b> statement. From the simulated Id-Vg characteristics for various combinations of mobility components, the electron mobility and the perpendicular electric field are extracted at the 4H-SiC/SiO2 interface using the
+<b> PROBE</b> statement and then plotted against each other to show the contributions of each of the scattering mechanisms to the total inversion layer mobility. The results clearly indicate that the Coulomb scattering at the interface charges significantly influences the total inversion layer mobility in the low electric field regime before losing out to the surface phonon scattering in the moderate electric field regime. At high electric fields the surface roughness scattering has the dominant influence on the total inversion layer mobility of electrons, as can be confirmed by a plot of electron mobility as a function of position along the channel depth at Vd=0.1V and Vg=10V.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

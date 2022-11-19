@@ -1,0 +1,185 @@
+# (c) Silvaco Inc., 2018
+
+go victoryprocess 
+
+init layout="radex08.lay" silicon depth=0.2 gasheight=1
+
+cart mask="ACTIVE" spac=0.0025 all.point 
+cart mask="POLY" spac=0.002 all.point 
+cart mask="LOCAL1" spac=0.005 all.point 
+cart mask="P_WELL" spac=0.0025 all.point ondomain
+
+line z location=-0.7
+line z location=-0.53325 spacing=0.025
+line z location=-0.48325 spacing=0.025
+line z location=-0.43325 spacing=0.025
+line z location=-0.38325 spacing=0.025
+line z location=-0.33325 spacing=0.025
+line z location=-0.28325 spacing=0.025
+line z location=-0.23325 spacing=0.025
+line z location=-0.18325 spacing=0.025
+line z location=-0.13325 spacing=0.025
+line z location=-0.08325 spacing=0.00625
+line z location=-0.07075 spacing=0.00625
+line z location=-0.05825 spacing=0.00625
+line z location=-0.052   spacing=0.00625
+line z location=-0.0145  spacing=0.00625
+line z location=-0.00825 spacing=0.003
+line z location=-0.002   spacing=0.001
+line z location=0        spacing=0.001
+line z location=0.1      spacing=0.025
+line z location=0.2      spacing=0.05
+
+# option run.geometry
+
+mask "ACTIVE"
+etch material=silicon thickness=0.1 max
+strip resist
+
+deposit oxide thickness=0.002 max
+mask "N_WELL"
+doping silicon boron=1e16
+implant boron dose=1.1e14 energy=10 tilt=0 rotation=0
+strip resist
+
+mask "P_WELL"
+implant phosphorus dose=1.9e14 energy=24 tilt=0 rotation=0
+strip resist
+
+# Expermental P+ Poly to Silicon Connector
+mask "P_ETCH" thickness=0.1 reverse
+implant bf2 dose=1e14 energy=24 tilt=7 rotation=27 bca n.ion=20000000
+implant bf2 dose=1e14 energy=24 tilt=7 rotation=207 bca n.ion=20000000
+etch oxide thick=0.003 max
+strip resist
+
+deposit polysilicon thickness=0.05 max
+mask "POLY"
+etch polysilicon thickness=0.06 max
+strip resist
+electrodes "POLY" material=polysilicon
+
+deposit oxide thick=0.003 min
+deposit nitride thick=0.00625 conformal
+mask "N_WELL" thickness=0.1
+implant arsenic dose=1e14 energy=13 tilt=7 rotation=27 bca n.ion=20000000
+implant arsenic dose=1e14 energy=13 tilt=7 rotation=207 bca n.ion=20000000
+strip resist
+
+Mask "P_WELL" thickness=0.1
+implant bf2 dose=1e14 energy=24 tilt=7 rotation=27 bca n.ion=20000000
+implant bf2 dose=1e14 energy=24 tilt=7 rotation=207 bca n.ion=20000000
+strip resist
+
+diffuse temperature=1050 time=0.05
+
+mask "L1_ETCH" reverse
+etch nitride thick=0.007 min
+etch oxide thick=0.005 min
+strip resist
+
+deposit material=TiSix thick=0.0145 min
+mask "LOCAL1"
+etch material=TiSix max
+strip resist
+electrodes "LOCAL1" material=TiSix
+
+mask "TiSi" reverse
+etch nitride thick=0.007 min
+etch oxide thick=0.005 min
+deposit material=TiSix thick=0.0145 min
+strip resist
+electrodes "TiSi" material=TiSix
+
+deposit BPSG thickness=0 max
+
+save name=radex08_vp_0
+
+
+go victorymesh
+
+load in=radex08_vp_0
+
+remesh conformal
+
+save out=radex08_0.str
+
+
+go victorydevice 
+ 
+mesh infile=radex08_0.str verbose=3 
+
+contact name=Q1     current
+contact name=Q2     current
+contact name=Q3     current
+contact name=Q1_Bar current
+contact name=Q2_Bar current
+contact name=Q3_Bar current
+
+contact name=Vdd2   common=Vdd    short
+contact name=Q3     common=Q2     short 
+contact name=Q3_Bar common=Q2_Bar short
+
+contact name=Q2 		n.poly
+contact name=Q2_bar 		n.poly
+contact name=word1 		n.poly
+contact name=word2		n.poly
+contact name=Q3                 p.poly
+contact name=Q3_Bar             p.poly
+
+models material=silicon consrh cvt fermi 
+
+
+set LET=1
+set density=0.01035*$LET
+
+
+singleeventupset entrypoint="0.025,0.1375,0" exitpoint="0.025,0.1375,0.2" \
+                 b.density=$density pcunits radius=0.025 t0=3e-9 tc=1e-12
+
+singleeventupset entrypoint="0.325,0.0625,0" exitpoint="0.325,0.0625,0.2" \
+                 b.density=$density pcunits radius=0.025 t0=5e-9 tc=1e-12
+
+method pas norm.scaling.local seu.integrate
+
+solve init
+solve previous
+
+# Ramp Up Power Supply Slowly to 0.8 Volts in 1ns and Let it Settle for 1ns
+log outfile=radex08_0.log
+
+solve vvdd=0.8 ramptime=1e-9 dt=1e-11 tstop=2e-9
+tonyplot radex08_0.log -set radex08_0.set
+
+log off
+
+# Advance to first SEU
+log outfile=radex08_1.log
+solve tstop=2.995e-9
+
+# Strike SRAM with SEU at time=3ns
+method constant.timestep
+solve tstop=3e-9     dt=5e-13
+save outfile=seu_strike_1.str
+solve tstop=3.005e-9 dt=5e-13
+method lte.timestep
+
+# Advance to second SEU
+solve tstop=4.995e-9 dt=5e-13
+
+# Strike SRAM with SEU at time=5ns
+method constant.timestep
+solve tstop=5e-9     dt=5e-13
+save outfile=seu_strike_2.str
+solve tstop=5.005e-9 dt=5e-13
+
+# Continue the post-strike transient
+method lte.timestep
+solve tstop=7e-9 dt=5e-13
+
+
+tonyplot radex08_1.log -set radex08_1.set
+tonyplot radex08_1.log -set radex08_2.set
+tonyplot3d radex08_0.str -set radex08_3.set
+
+

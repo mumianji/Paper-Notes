@@ -1,0 +1,89 @@
+go athena
+#
+#                   OPTOLITH input file: anopex02.in
+#                   --------------------------------
+#
+#           This example is a comparison between imaging using a SHRINC
+#           (quadruple) source with different orientation of square sources.
+#
+#	 _	  _		 _	
+#	|_|      |_|		|_|
+#
+#			    _         _
+#			   |_|       |_|
+#			   
+#	 _	  _		 _
+#	|_|      |_|     	|_|
+#	    (1)			    (2)
+#
+#
+# define projection system
+#
+projection na=.54
+#
+pupil.filter clear.fil circle
+#
+#
+layout lay.clear x.low=-0.15 z.low=-0.5 x.high=0.15 z.high=0.5
+#
+# define illumination system 
+#
+illumination i.line 
+#
+# The SHRINC type source with diagonal orientation
+#
+illum.filter clear.fil square sigma=0.17 radius=0.70711 angle=45
+illum.filter square sigma=0.17 radius=0.70711 angle=-45
+illum.filter square sigma=0.17 radius=0.70711 angle=135
+illum.filter square sigma=0.17 radius=0.70711 angle=-135
+#
+# Run the image module without defocus.
+#
+image win.x.lo=-1 win.z.lo=0 win.x.hi=1 win.z.hi=0 dx=0.02
+#
+
+structure outfile=anopex02_1.str intensity mask
+
+extract init infile="anopex02_1.str"
+extract name="max1" 2d.max.conc impurity="Norm Intensity"
+#
+
+go athena
+#
+# define projection system
+#
+projection na=.54
+#
+pupil.filter clear.fil circle
+#
+layout lay.clear x.low=-0.15 z.low=-0.5 x.high=0.15 z.high=0.5
+#
+# define illumination system 
+#
+illumination i.line 
+
+# The SHRINC type source with perpendicular orientation
+#
+illum.filter clear.fil square sigma=0.17 radius=0.5 angle=0
+illum.filter square sigma=0.17 radius=0.5 angle=90
+illum.filter square sigma=0.17 radius=0.5 angle=-90
+illum.filter square sigma=0.17 radius=0.5 angle=180
+
+# The following initialization of a dummy structure is required 
+# only when running this example on a Windows platform
+init infile=anopex02_dummy.str
+
+#
+# Run the image module without defocus.
+#
+image win.x.lo=-1 win.z.lo=0 win.x.hi=1 win.z.hi=0 dx=0.02 
+
+structure outfile=anopex02_2.str intensity mask
+
+extract init infile="anopex02_2.str"
+extract name="max2" 2d.max.conc impurity="Norm Intensity"
+
+#
+tonyplot -overlay anopex02_1.str anopex02_2.str -set anopex02.set
+#
+quit

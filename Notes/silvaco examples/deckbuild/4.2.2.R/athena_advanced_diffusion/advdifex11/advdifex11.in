@@ -1,0 +1,57 @@
+#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+#XXX       PMOS  with arsenic halo         XXXXXX
+#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+go athena
+
+#the x dimension definition
+line x loc = 0.0 spacing=0.01
+line x loc = 0.03 spacing=0.005
+line x loc = 0.05 spacing=0.005
+line x loc = 0.10 spacing=0.01
+
+#the vertical definition
+line y loc = 0 spacing = 0.002
+line y loc = 0.06 spacing = 0.005
+line y loc = 0.15 spacing = 0.010
+
+#initialize the mesh
+init silicon c.arsenic=1.0e17 c.boron=1e12 
+
+#deposition
+deposit oxide thick=0.005 divis=2
+deposit poly thick=0.05 divis=5
+
+#etch
+etch poly left p1.x=0.05
+etch oxide left p1.x=0.05
+
+method pls
+
+#perform arsenic implantation under the gate
+
+implant arsenic dose=2.0e13 energy=40 tilt=7 rotation=27 crystal unit.damage dam.factor=3.0
+
+# LDD implant with boron
+moment poly i.boron dose=2.0e13 energy=2 range=0.008 std.dev=0.005 gamma=0.01 kurtosis=3.45
+implant boron dose=2.0e13 energy=2 tilt=7 rotation=30 crystal unit.damage dam.factor=1.0 
+
+# spacer formation
+deposit nitride thick=0.02 divis=8
+etch nitride dry thick=0.02
+
+# second boron implantation
+moment poly i.boron dose=1.0e14 energy=4 range=0.0015 std.dev=0.01 gamma=0.01 kurtosis=3.45
+implant boron dose=1.0e14 energy=4 tilt=7 rotation=30 crystal unit.damage dam.factor=1.0 
+
+structure outfile=advdifex11_ini.str
+
+#perform diffusion
+
+diffuse time=10 sec temperature=1000
+
+structure outfile=advdifex11_end.str
+
+tonyplot advdifex11_end.str -set  advdifex11.set
+
+quit

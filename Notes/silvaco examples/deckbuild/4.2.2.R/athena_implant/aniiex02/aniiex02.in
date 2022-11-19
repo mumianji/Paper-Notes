@@ -1,0 +1,44 @@
+go athena
+# Tilt angle dependence using SVDP model
+line x loc = 0.0  spac=0.1
+line x loc = 1.0  spac=0.1
+line y loc = 0    spac=0.01
+line y loc = 0.7   spac=0.01
+init 
+
+implant boron energy=35 dose=1.e13 tilt=0 rotation=0 print.mom
+struct outfile=aniiex02_00.str
+
+line x loc = 0.0  spac=0.1
+line x loc = 1.0  spac=0.1
+line y loc = 0    spac=0.01
+line y loc = 0.7   spac=0.01
+init one.d
+implant boron energy=35 dose=1.e13 tilt=1 rotation=0 print.mom
+struct outfile=aniiex02_01.str 
+
+line x loc = 0.0  spac=0.1
+line x loc = 1.0  spac=0.1
+line y loc = 0    spac=0.01
+line y loc = 0.7   spac=0.01
+init 
+implant boron energy=35 dose=1.e13 tilt=2 rotation=0 print.mom
+struct outfile=aniiex02_02.str 
+
+line x loc = 0.0  spac=0.1
+line x loc = 1.0  spac=0.1
+line y loc = 0    spac=0.01
+line y loc = 0.7   spac=0.01
+init 
+implant boron energy=35 dose=1.e13 tilt=7 rotation=0 print.mom
+struct outfile=aniiex02_07.str 
+
+line x loc = 0.0  spac=0.1
+line x loc = 1.0  spac=0.1
+line y loc = 0    spac=0.01
+line y loc = 0.7   spac=0.01
+init 
+implant boron energy=35 dose=1.e13 tilt=10 rotation=0 print.mom
+struct outfile=aniiex02_10.str
+tonyplot -overlay  aniiex02_*.str -set aniiex02.set
+

@@ -1,0 +1,81 @@
+<html>
+  <head>
+    <title>Trench Etch Tuning using RIE Model</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Trench Etch Tuning using RIE Model</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Elite</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="anelex08_plot0.png" width="640" alt="anelex08_plot0" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates etching using the
+<b> RIE </b> etching model. The example illustrates the influence of the
+<b> DIVERGENCE </b> of the ion beam on the final profile obtained by the
+<b> DIRECTIONAL </b> etch mode.
+The angular distribution of the ions coming down to the wafer is assumed
+to be Gaussian. Parameter
+<b> DIVERGENCE </b> sets the standard deviation of the distribution function (in degrees).
+The input file consists of two major parts.
+</p>
+<p>
+The first part creates the initial
+multilayer structure using the
+<b> Athena INITIALIZE, DEPOSIT, </b> and
+<b> ETCH </b> statements. The
+<b> INITIALIZE </b> statement defines silicon as a substrate 1.0 micron thick and 2 microns wide.
+The second step is a simple vertical deposition of photoresist. The third step models lithography in a very simple manner.
+An opening with critical dimensions of 0.6 um and a sidewall slope of 87 degree is created with the
+<b> ETCH </b> statement.
+</p>
+<p>
+The second part of the input file demonstrates an example of
+<b> RIE </b> etching simulation using the parameters
+<b> DIRECTIONAL</b> ,
+<b> ISOTROPICAL</b> ,
+<b> CHEMICAL</b> ,
+and
+<b> DIVERGENCE</b> .
+<b> DIVERGENCE </b> determines the standard deviation of the ion&apos;s Gaussian angular distribution function for the
+<b> CHEMICAL </b> component of the
+<b> RIE </b> etch model.
+This example shows a number of simulations with a variation of the
+of the three etching components:
+<b> DIRECTIONAL</b> ,
+<b> ISOTROPICAL </b> and
+<b> CHEMICAL </b> etch rates.
+</p>
+<p>
+The simulation results appear on the joint plot at the very end of the simulation.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

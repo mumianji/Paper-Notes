@@ -1,0 +1,92 @@
+<html>
+  <head>
+    <title>Avalanche breakdown in Si diode at low/cryogenic temperatures down to 3 K</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Avalanche breakdown in Si diode at low/cryogenic temperatures down to 3 K</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Victory Device  or  Atlas</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Victory Device 1.12.1.R  or  Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="diodeex13_plot0.png" width="640" alt="diodeex13_plot0" />
+      <p/>
+      <img src="diodeex13_plot1.png" width="640" alt="diodeex13_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates the capability of a TCAD simulation of impact ionization in silicon devices at very low or cryogenic temperatures, down to 3 K (liquid helium temperature).
+</p>
+<p>
+This example is related to the Simulation Standard article:
+&quot;TCAD Simulation of Impact Ionization at Cryogenic Temperatures, down to 3 K&quot;, The Simulation Standard, Silvaco, Oct-Dec 2016.
+</p>
+<p>
+The input deck provided with this example can be run by either Victory Device or Atlas simulator, just by changing the solver name in the command
+<b> go victorydevice </b> into
+<b> go atlas</b> . It shows that both the Silvaco&apos;s major device simulators can be fully compatible in terms of input commands, producing same results, and allowing easy transition between Atlas and Victory Device.
+</p>
+<p>
+TCAD simulations of devices operating at very low temperatures, especially below 50 K, have always posed a challenge. Below 50 K, carrier and ionization statistics develop sharp transitions which cause slower convergence.  As the temperature (T) decreases, the intrinsic carrier concentration also decreases, and the computed carrier concentration can easily underflow.
+</p>
+<p>
+An additional challenge is modeling of impact ionization at very low or cryogenic temperatures. The general impact ionization generation process (described in the User&apos;s Manual) requires enough of free carriers (i.e. current density) to initiate the avalanche process. At very low temperatures, especially in the reverse-biased devices, the drift-diffusion current becomes so small that the simulated impact ionization generation rates remain so low that breakdown does not occur at the expected bias state.
+</p>
+<p>
+In reality, impact ionization is a non-local process and is caused by hot carriers in the non-Maxwellian tail of the energy distribution function. The standard drift-diffusion model fails to correctly model these effects, although you can simulate the impact ionization breakdown. This is done by putting a
+<b> minimum value on the current densities </b> used in the equation that calculates the impact generation rate (see User&apos;s Manual). You set a minimum current density by specifying the values of its directional components with the
+<b> JNX.MIN, JNY.MIN, JNZ.MIN, JPX.MIN, JPY.MIN, JPZ.MIN </b> parameters on the
+<b> IMPACT </b> statement.  This model is currently only available with the
+<b> E.SIDE </b> option activated on the
+<b> IMPACT </b> statement (see  &quot;Impact Ionization Models&quot; section in the device simulator User&apos;s Manual).
+</p>
+<p>
+In order to correctly simulate the impact ionization in silicon (Si) at cryogenic temperatures, a modified set of parameters for the Selberherr&apos;s Impact Ionization Model is needed. The low-temperature parameters, better suited for T &lt; 273 K , are activated by using the
+<b> SELB.SET2 </b> option on the
+<b> IMPACT </b> statement.
+</p>
+<p>
+The simulation capabilities and model accuracy have been enhanced specifically to address cryogenic devices down to liquid helium temperatures (4K ... 3K). For cryogenic simulations, 160-bit extended precision has been found to offer the best combination of accuracy and speed.  Very low temperature (T &lt; 50K) simulations should be done using 160-bit precision, using the option:
+</p>
+<b>   simflags=&quot;-160&quot;</b> <p>
+Additionally, to enable the robust numerical treatment for very low (cryogenic) temperature simulations, you should set MIN.TEMP to 2 K and MAX.TEMP to 1000 K on the METHOD statement, as in this example:
+</p>
+<p>
+method  MIN.TEMP=2 MAX.TEMP=1000 DVMAX=0.1  RHSNORM
+climit=1e-4  ir.tol=1e-40 ix.tol=1e-40 cr.tol=1e-20
+</p>
+<p>
+With such settings, breakdown IV curves of a reverse-biased silicon p-n diode have been successfully computed, by both Victory Device and Atlas, down to extremely low temperature of 3 K. Example results are shown in the enclosed plots.
+</p>
+<p>
+You can plot similar overlaid plots yourself if you use
+<b> Overlay </b> feature in
+<b> TonyPlot</b> .
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

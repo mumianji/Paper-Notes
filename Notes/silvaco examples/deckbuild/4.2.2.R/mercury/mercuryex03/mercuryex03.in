@@ -1,0 +1,115 @@
+# (c) Silvaco Inc., 2018
+go atlas
+mercury
+
+#######################################################################
+### ATLAS example mercuryex03
+#######################################################################
+### The simulation of a recessed p-type MESFET.
+#######################################################################
+### Initialization
+#######################################################################
+
+###--------------------------------------------------------------------
+network clear
+
+###--------------------------------------------------------------------
+mesh width=100
+
+###--------------------------------------------------------------------
+x.mesh location=0.0 spacing=0.1
+x.mesh location=2.5 spacing=0.1
+y.mesh location=0.0 spacing=0.05
+y.mesh location=3.0 spacing=0.05
+
+#######################################################################
+### Device Specification
+#######################################################################
+
+###--------------------------------------------------------------------
+region number=1 material=GaAs thickness=0.2 donor=1e11 acceptor=1e17
+region number=1 material=GaAs thickness=0.2 donor=1e11 na.top=1e17 na.bottom=1e11
+region number=1 material=GaAs thickness=2.6 donor=1e11 acceptor=1e11
+
+###--------------------------------------------------------------------
+surface x=0.45 y=0.00
+surface x=0.50 y=0.10
+surface x=1.00 y=0.10
+surface x=1.05 y=0.00
+
+###--------------------------------------------------------------------
+electrode name=gate x.min=0.5 length=0.5
+
+###--------------------------------------------------------------------
+### This is now a p-type depletion device so the parameter
+### "p_depletion" should be used.
+models p_depletion fldmob print
+
+###--------------------------------------------------------------------
+options quiet
+
+#######################################################################
+### Poisson solution.
+#######################################################################
+
+###--------------------------------------------------------------------
+output all
+
+###--------------------------------------------------------------------
+poisson cap recess=0.0 out.file=mercuryex03_1.str
+poisson cap recess=0.3 out.file=mercuryex03_2.str
+
+###--------------------------------------------------------------------
+tonyplot mercuryex03_1.str -add mercuryex03_1.str -set mercuryex03_1.set
+
+###--------------------------------------------------------------------
+poisson gate v.gate=-0.3 out.file=mercuryex03_3.str
+poisson gate v.gate=-0.0 out.file=mercuryex03_4.str
+poisson gate v.gate=+0.4 out.file=mercuryex03_5.str
+
+###--------------------------------------------------------------------
+tonyplot mercuryex03_3.str -overlay mercuryex03_4.str -overlay mercuryex03_5.str -add mercuryex03_4.str -set mercuryex03_3.set
+
+###--------------------------------------------------------------------
+poisson look_up vg_min=0.0 vg_max=2.0 vd_min=-3.5 vd_max=0.0 \
+    debug.cap=mercuryex03_6.str debug.gate=mercuryex03_7.str
+
+tonyplot mercuryex03_6.str -add mercuryex03_6.str -add mercuryex03_7.str -add mercuryex03_7.str -set mercuryex03_6.set
+
+#######################################################################
+### DC-IV simulation
+#######################################################################
+
+###--------------------------------------------------------------------
+solve initial
+log out.file=mercuryex03_8.log
+solve vgate=0.0 vdrain=0.0 vstep=0.05 vfinal=-3.5 name=drain
+solve vgate=0.4 vdrain=0.0 vstep=0.05 vfinal=-3.5 name=drain
+solve vgate=0.8 vdrain=0.0 vstep=0.05 vfinal=-3.5 name=drain
+solve vgate=1.2 vdrain=0.0 vstep=0.05 vfinal=-3.5 name=drain
+solve vgate=1.6 vdrain=0.0 vstep=0.05 vfinal=-3.5 name=drain
+solve vgate=2.0 vdrain=0.0 vstep=0.05 vfinal=-3.5 name=drain
+log off
+
+###--------------------------------------------------------------------
+tonyplot mercuryex03_8.log -set mercuryex03_8.set
+
+#######################################################################
+### Small-signal AC simulation
+#######################################################################
+
+###--------------------------------------------------------------------
+solve initial
+solve vgate=1.0 vdrain=0.0 vstep=0.05 vfinal=-0.6 name=drain
+log s.param gains noise.v out.file=mercuryex03_9.log
+solve ac noise frequency=1.0e6 fstep=1.258925412 nfstep=40 mult.freq
+
+###--------------------------------------------------------------------
+tonyplot mercuryex03_9.log -add mercuryex03_9.log -add mercuryex03_9.log -add mercuryex03_9.log -set mercuryex03_9.set
+
+#######################################################################
+### Exit the simulation
+#######################################################################
+
+###--------------------------------------------------------------------
+quit

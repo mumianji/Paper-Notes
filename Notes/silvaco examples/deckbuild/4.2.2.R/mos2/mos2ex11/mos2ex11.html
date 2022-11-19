@@ -1,0 +1,92 @@
+<html>
+  <head>
+    <title>Breakdown Voltage using Ionization Integrals</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Breakdown Voltage using Ionization Integrals</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>SSuprem 4/S-Pisces</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R, Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="mos2ex11_plot0.png" width="640" alt="mos2ex11_plot0" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This examples uses a standard NMOS structure similar to that used in
+the MOS1 section. In this example the Atlas simulation is performed using
+<b> zero carriers</b> . The breakdown voltage is extracted using
+<b> ionization integrals </b> or
+<b> electric field lines </b> </p>
+<p>
+The
+<b> solve </b> statement used to ramp the drain electrode has extra parameters for
+calculating the ionization integrals at each step. When using
+ionization integrals it is not necessary to solve for both carriers so
+simulations are very fast. However, the statement
+<b> impact selb </b> must be used to activate the ionization rate calculation.
+</p>
+<p>
+The syntax of the solve statement sets the number of ionization
+integrals, their position relative to the ramped contact (ie. drain),
+and the voltage drop from the contact to the start point of the
+electric field lines. Details of the syntax can be found in the Atlas
+User Manual.
+<b> deltav </b> controls the distance of the start of each electric field line from the
+ramped contact.
+<b> ionlines </b> controls the number of electric field lines calculated.
+<b> lratio </b> controls the spacing ratio between each line. Lratio &lt; 1.0 means more
+lines to the left of the contact. Lratio &gt; 1.0 means more lines to the
+right.
+</p>
+<p>
+The breakdown voltage is defined as the point at which the ionization integrals are equal to 1.0. Although the
+<b> solve</b> statement specifies a voltage ramp to 50V, the bias ramp will
+automatically  stop when the ionization integrals exceed 1.0. The
+parameter
+<b> ^ionstop </b> can be included to disable this feature. If the position of the electric
+field lines are chosen correctly the electron and hole ionization integrals
+should equal 1.0 at the same voltage. If this is not the case, users should
+check the position of the electric field lines.
+</p>
+<p>
+The
+<b> output </b> statement is used to specify the electric field line parameters for the
+saved solution file. Note that users must specify these parameters on
+the output as well as solve statements to save the electric field
+lines. The lines can be plotted in Tonyplot by selecting the LINES icon
+from the PLOT/DISPLAY menu.
+</p>
+<p>
+Following the simulation, the peak electric field is extracted from the
+solution file. The
+<b> extract </b> statement also reports the XY position of the peak. See the Simulation
+Standard Hints and Tips page for August 1996 for more details.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

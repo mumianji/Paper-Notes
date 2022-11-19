@@ -1,0 +1,79 @@
+# (c) Silvaco Inc., 2018
+go athena
+# 
+line x loc=0.00 spac=0.25
+line x loc=3.00 spac=0.10 
+line x loc=10.00 spac=1.0
+#
+line y loc=7.00 spac=0.5
+line y loc=8.00 spac=0.5
+# 
+init c.phosphor=1.0e18 orientation=100 space.mult=2
+# 
+epitaxy time=10 temp=1200 thickness=7 divisions=15 \
+        dy=0.10 ydy=0.00 c.phos=1.0e15
+
+deposit oxide thickness=0.06 div=1
+deposit poly thickness=0.35 div=3
+deposit oxide thickness=0.35 div=3
+deposit photores thickness=1 div=3
+
+
+etch photores p1.x=3 left
+etch oxide p1.x=3 left
+etch poly p1.x=3 left
+etch oxide p1.x=3 left
+
+implant boron dose=1e14 energy=80
+
+etch photores all
+
+diffuse time=100 temp=1100
+
+implant arsenic dose=3e15 energy=100
+diffuse time=20 temp=1100
+
+
+deposit oxide thickness=0.5 div=4
+etch oxide thickness=0.5 
+
+etch start x=0 y=-0.1 
+etch cont x=0 y=0.8 
+etch cont x=2.5 y=0.8 
+etch done x=2.5 y=-0.1
+
+diffuse time=1 temp=1100
+
+deposit alum thickness=1 div=8
+etch alum right p1.x=3.5
+
+electrode name=source x=0
+electrode name=gate x=5 y=-0.2
+electrode name=drain backside
+
+structure outfile=powerex02_0.str
+
+tonyplot  powerex02_0.str -set powerex02_0.set
+
+go atlas
+
+contact name=gate n.poly
+
+models conmob fldmob srh lat.temp  
+output flowlines
+
+thermcontact num=1 name=source temp=300
+
+solve init
+solve prev
+solve vstep=0.5 vfinal=5 name=drain 
+solve vstep=5 vfinal=20 name=drain 
+log outf=powerex02_1.log
+solve vstep=0.25 vfinal=2 name=gate 
+solve vstep=0.5 vfinal=5 name=gate
+solve vstep=1 vfinal=20 name=gate
+save outf=powerex02_2.str
+
+tonyplot powerex02_1.log -set powerex02_1.set
+
+quit

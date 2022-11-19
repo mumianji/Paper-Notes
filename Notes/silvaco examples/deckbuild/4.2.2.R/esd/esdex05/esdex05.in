@@ -1,0 +1,124 @@
+# (c) Silvaco Inc., 2018
+go athena
+#
+line x loc=0 spac=0.1 
+line x loc=0.7 spac=0.02
+line x loc=1 spac=0.05 
+#
+line y loc=0.00 spac=0.05
+line y loc=0.2 spac=0.02 
+line y loc=0.4 spac=0.02 
+line y loc=0.8 spac=0.1
+line y loc=1.5 spac=0.25 
+#
+init orientation=100 c.phos=1e14 space.mult=1
+# 
+#pwell formation including masking off of the nwell
+#
+diffus time=30 temp=1000 dryo2 press=1.00 hcl=3
+#
+etch oxide thick=0.02
+#
+#P-well Implant
+# 
+implant boron dose=5.0e12 energy=100 pears
+#
+diffus temp=950 time=100 weto2 hcl=3
+#
+#N-well implant not shown -
+#
+# welldrive 
+diffus time=220 temp=1200 nitro press=1
+#
+etch oxide all
+#
+#sacrificial "cleaning" oxide
+diffus time=20 temp=1000 dryo2 press=1 hcl=3
+#
+etch oxide all
+#
+#gate oxide grown here:-
+diffus time=13 temp=950 dryo2 press=1.00 hcl=3
+extract name="gate tox" thickness oxide mat.occno=1 x.val=1
+#
+#vt adjust implant 
+implant bf2 dose=1.3e12 energy=35 pearson
+#
+depo poly thick=0.20 div=3 
+#
+etch poly left p1.x=0.7
+#
+relax y.min=0.8
+method fermi compress
+diffuse time=5 temp=900 weto2 press=0.8
+extract name="sidewall tox" thickness oxide mat.occno=1 y.val=0.1
+#
+implant phosphor dose=3.0e13 energy=50 pearson
+#
+depo oxide thick=0.10 divisions=5
+#
+etch oxide dry thick=0.10
+#
+implant arsenic dose=5.0e15 energy=50 pearson
+#
+#
+method fermi compress
+diffuse time=5 temp=950 nitro press=1.0
+#
+structure outf=half.str
+
+# extract final S/D Xj
+extract name="s/d xj" xj silicon mat.occno=1 x.val=0.05 junc.occno=1
+extract name="s/d rho" sheet.res silicon mat.occno=1 x.val=0.05 region.occno=1
+extract name="1d vt" 1dvt vb=0.0 x.val=0.95
+
+#
+etch oxide left p1.x=0.3
+deposit alumin thick=0.03 div=2
+etch alumin right p1.x=0.25
+structure mirror right
+
+electrode name=gate x=1 y=0.1 
+electrode name=source x=0
+electrode name=drain x=2 y=0.2
+electrode name=substrate backside
+
+
+structure outfile=esdex05_0.str
+
+tonyplot  esdex05_0.str -set esdex05_0.set
+
+
+
+
+
+go atlas
+
+mater    region=1 taup0=1e-7 taun0=1e-7
+contact  num=1 n.poly
+#
+models  cvt srh auger bgn lat.temp 
+impact   selb
+# 
+# Thermal boundary conditions
+#
+thermcontact num=1  y.min=1.5  y.max=1.5  ext.temp=300 alpha=1000
+ 
+method  newton trap
+curvetrace end.val=1.2e-3 contr.name=drain curr.cont mincur=1e-13 \
+           nextst.ratio=1.5   step.init=0.05
+
+solve    init
+
+#ramp gate to 0.6V 
+solve    vgate=0.2 vstep=0.2 vfinal=0.6 name=gate
+
+#ramp drain
+
+log  outf=esdex05.log master
+
+solve curvetrace
+
+tonyplot  esdex05.log -set esdex05_log.set
+
+quit

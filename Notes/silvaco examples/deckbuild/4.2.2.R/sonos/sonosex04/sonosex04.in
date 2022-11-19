@@ -1,0 +1,101 @@
+# (c) Silvaco Inc., 2018
+go atlas 
+
+set vgate=18
+
+mesh auto width=0.25
+
+
+x.m  loc=0.0  spac=0.025
+x.m  loc=0.1  spac=0.005
+x.m  loc=0.2  spac=0.005
+x.m  loc=0.3  spac=0.025
+
+
+y.m  loc=-0.03   spac=0.01
+y.m  loc=-0.019  spac=0.001
+y.m  loc=-0.009  spac=0.0005
+y.m  loc=-0.004  spac=0.0005
+y.m  loc=0.0     spac=0.001
+y.m  loc=0.1     spac=0.01
+y.m  loc=1.0     spac=0.2
+
+region num=1 silicon y.min=0.0
+region num=2 oxide y.max=0.0
+region num=3 nitride y.min=-0.009 y.max=-0.004 x.min=0.1 x.max=0.2
+region num=4 material=Sapphire y.min=-0.019 y.max=-0.009 x.min=0.1 x.max=0.2
+
+electrode name=gate y.min=-0.03 y.max=-0.019 x.min=0.1 x.max=0.2
+electrode name=source y.min=0.0 y.max=0.0 x.max=0.05
+electrode name=drain  y.min=0.0 y.max=0.0 x.min=0.25
+electrode name=substrate bottom
+
+doping uniform conc=1e18 p.type region=1
+doping gauss   conc=1e20 n.type junc=0.05 x.right=0.1 ratio.lat=0.1 region=1
+doping gauss   conc=1e20 n.type junc=0.05 x.left=0.2  ratio.lat=0.1 region=1 
+
+interface n.i 
+
+material material=oxide semiconductor taun0=1.0 taup0=1.0 mc=0.2 mv=0.4
+material material=nitride semiconductor nc300=1e19 nv300=1e19 mun=1.0e-1 mup=1.0e-1 mc=0.4 mv=1.0 taun0=1.0 taup0=1.0
+material material=Sapphire semiconductor nc300=1e19 nv300=1e19 taun0=1.0 taup0=1.0 mc=0.2 mv=0.6 permitti=9.3 affinity=1.8
+
+contact name=gate n.poly 
+
+
+nitridecharge  nt.p=0.0 nt.n=5.0e19 tau.n=1.0e-4 tau.p=1.0e-4 elec.depth=1.3 hole.depth=1.3 sigmat.n=1.0e-15 \
+sigmat.p=1.0e-15 sigman.p=0.0 sigmap.n=0.0 pf.b=1.0e14
+
+models srh pf.nitride temperature=300
+
+method carriers=2 
+
+probe name=nettcharge charge integrate y.min=-0.009 y.max=-0.004 x.min=0.1 x.max=0.2
+
+log outfile=sonosex04_charging.log sonos.curr j.tun
+
+output sonos.rates val.band con.band band.temp
+
+solve vgate=$vgate ramptime=1e-9 tstep=1e-12 tfinal=1e-9  proj 
+method dt.min=1.0e-9
+solve tstop=1.0e-8 proj
+solve tstop=1.0e-7 proj
+method dt.min=1.0e-8
+solve tstop=1e-6 proj
+method dt.min=1.0e-7
+solve tstop=1e-5 proj
+method dt.min=1.0e-6
+solve tstop=1e-4 proj
+method dt.min=1.0e-6
+solve tstop=1e-3 proj
+
+save outf=sonosex04_charged.str
+
+log off
+
+# Do retention simulation by reducing all biases to zero
+# and running to a time of 10years.
+
+load inf=sonosex04_charged.str master
+
+models srh pf.nitride temperature=300
+
+solve init sonos
+
+solve prev
+
+method lte2step tol.time=1.0e-4 tstep.incr=1.1 dt.max=1.0e7
+
+log outfile=sonosex04_retention_300K.log sonos.curr j.tun
+
+solve tstep=1e-6 tfinal=3.0e8 proj
+
+log off
+
+save outf=sonosex04_10years_300K.str master
+
+tonyplot -overlay sonosex04_retention_300K.log -set sonosex04_0.set
+
+tonyplot -overlay sonosex04_charged.str sonosex04_10years_300K.str -set sonosex04_1.set
+
+quit

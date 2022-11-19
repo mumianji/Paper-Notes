@@ -1,0 +1,449 @@
+# (c) Silvaco Inc., 2018
+go atlas
+
+# Structure Generation
+
+mesh
+
+x.m l=0 s=2.5
+x.m l=10 s=2.5
+
+y.m l=-0.5 s=10
+y.m l=0 s=0.1
+y.m l=0.5 s=0.002
+y.m l=0.51 s=0.002
+y.m l=0.61 s=0.02
+y.m l=0.71 s=0.002
+y.m l=0.725 s=0.002
+y.m l=0.73 s=0.002
+y.m l=0.735 s=0.002
+y.m l=0.745 s=0.002
+y.m l=1.845 s=0.25
+y.m l=2.945 s=0.005
+y.m l=2.96 s=0.001
+y.m l=3.06 s=0.01
+y.m l=3.16 s=0.02
+y.m l=3.36 s=0.02
+
+region num=1 material=oxide y.min=-0.5 y.max=0
+
+#top cell: a-Si:H
+region num=2 silicon y.min=0.5 y.max=0.51 name=a-si
+region num=3 silicon y.min=0.51 y.max=0.71 name=a-si
+region num=4 silicon y.min=0.71 y.max=0.725 name=a-si
+
+#bottom cell: uc-Si
+region num=5 silicon y.min=0.725 y.max=0.745 name=uc-si
+region num=6 silicon y.min=0.745 y.max=2.945 name=uc-si
+region num=7 silicon y.min=2.945 y.max=2.96 name=uc-si
+region num=8 material=ZnO conductor y.min=2.96 y.max=3.06
+region num=9 material=Silver conductor y.min=3.06 y.max=3.16
+
+elec num=1 name=cathode y.min=3.16 y.max=3.36 mat=Aluminum
+elec num=2 name=anode y.min=0 y.max=0.5 mat=ZnO
+elec num=3 name=com y.min=0.725 y.max=0.735 mat=ITO
+
+doping region=2 uniform p.type conc=1e20
+doping region=4 uniform n.type conc=1e20
+doping region=5 uniform p.type conc=1e20
+doping region=7 uniform n.type conc=1e20
+
+# IV Simulation 
+
+interface optical diffusive dispersion=45 specular=1 scattered=44 \
+y.min=0.495 y.max=0.505 absorption=0 region=2
+
+interface s.s y.min=0.5 y.max=0.52 s.n=1e5  s.p=1e5
+
+contact name=com resist=1e16
+
+material region=8  resistivity=5e-4
+material region=9 resistivity=1e-5
+
+material material=Aluminum sopra=Al.nk
+material material=Silver sopra=Ag.nk
+ 
+#a-Si:H material, mobility and index of refraction definition
+
+material region=2 taun0=1e-6 taup0=1e-6 eg300=1.7 nv300=3e20 nc300=3e20
+material region=3 taun0=1e-6 taup0=1e-6 eg300=1.7 nv300=3e20 nc300=3e20
+material region=4 taun0=1e-6 taup0=1e-6 eg300=1.7 nv300=3e20 nc300=3e20
+
+mobility region=2 mun0=1 mup0=0.1
+mobility region=3 mun0=2 mup0=0.2
+mobility region=4 mun0=1 mup0=0.1
+
+material region=2  \
+TLU.A=200 TLU.E0=4.3 TLU.C=2.23 TLU.EG=1.7 TLU.EPS=0.22  TLU.EC=1.8 \
+LAM1=0.35 LAM2=1.0 NLAM=100 out.index=solarex12_p-Si-TLU.log
+
+material region=3  \
+TLU.A=186 TLU.E0=4.02 TLU.C=2.99 TLU.EG=1.7 TLU.EPS=0.22  TLU.EC=1.8 \
+LAM1=0.35 LAM2=1.0 NLAM=100 out.index=solarex12_i-Si-TLU.log
+
+material region=4  \
+TLU.A=200 TLU.E0=4.3 TLU.C=2.23 TLU.EG=1.7 TLU.EPS=0.22  TLU.EC=1.8 \
+LAM1=0.35 LAM2=1.0 NLAM=100 out.index=solarex12_n-Si-TLU.log 
+
+#uc-Si:H material and mobility 
+
+material region=5 taun0=1e-6 taup0=1e-6 eg300=1.16 nc300=3.5e20 nv300=3.5e20 
+material region=6 taun0=1e-6 taup0=1e-6 eg300=1.16 nc300=3.5e20 nv300=3.5e20
+material region=7 taun0=1e-6 taup0=1e-6 eg300=1.16 nc300=3.5e20 nv300=3.5e20
+
+mobility region=5 mun0=5 mup0=0.5
+mobility region=6 mun0=15 mup0=2
+mobility region=7 mun0=5 mup0=0.5
+
+
+# a-Si:H defect definition
+
+defect region=3 cont nta=2e20 ntd=2e20 wta=0.028 wtd=0.055 \
+    nga=0 ngd=0 ega=1.22 egd=1.22 wga=0.188 wgd=0.188 \
+    numa=50 numd=50 sigtae=1.e-16 sigtah=1.e-16 sigtde=1.e-16 sigtdh=1.e-16
+
+defects region=3 amphoteric cont signp=1e-14 sign0=5e-15 sigp0=5e-15 sigpn=1e-14 \
+hconc=2e21 nsisi=2e23 sigma=0.19 t0=500 ev0=0.045 eu=0.2 \
+ep.amp=1.22  num.amp=50 nv0.amp=1e20 
+
+# uc-Si:H defect definition
+ 
+defect region=6 cont nta=5e19 ntd=5e19 wta=0.01 wtd=0.02 \
+nga=0 ngd=0 ega=0.8 egd=0.8 wga=0.2 wgd=0.188 \
+numa=50 numd=50 sigtae=5e-16 sigtah=1e-15 sigtde=1e-15 sigtdh=1e-15
+
+models consrh print temp=300 
+
+model TLU.INDEX region=2 
+model TLU.INDEX region=3
+model TLU.INDEX region=4
+
+beam num=1 x.orig=5 y.orig=-10 angle=90 power.file=solarex12.spec verbose back.reflect reflect=2
+
+method maxtrap=10
+
+output opt.int band.temp
+
+solve init
+save outf=solarex12_0.str
+tonyplot solarex12_0.str  -set solarex12_0.set
+
+solve b1=1
+
+log outf=solarex12_0.log
+solve vanode=0.0 name=anode vstep=0.02 vfinal=1.45
+
+tonyplot solarex12_0.log -set solarex12_1.set
+
+extract init infile="solarex12_0.log"
+extract name="Jsc" y.val from curve(v."anode", i."anode") where x.val=0.0
+extract name="JscmAcm2" $Jsc*1e08*1e03/10
+extract name="Voc" x.val from curve(v."anode", i."anode") where y.val=0.0
+extract name="P" curve(v."anode", (v."anode" * i."anode")) outf="solarex12_P.dat" 
+extract name="Pm" min(curve(v."anode", (v."anode" * i."anode"))) 
+extract name="Vm" x.val from curve(v."anode", (v."anode"*i."anode") ) \
+	where y.val=$"Pm"
+extract name="Im" $"Pm"/$"Vm"
+extract name="FF" $"Pm"/($"Jsc"*$"Voc")*100
+extract name="Eff" (1e8*$Pm/(0.1*10))*100
+
+
+# EQE Top Cell simulation
+
+go atlas
+
+mesh
+
+x.m l=0 s=2.5
+x.m l=10 s=2.5
+
+y.m l=-0.5 s=10
+y.m l=0 s=0.1
+y.m l=0.5 s=0.002
+y.m l=0.51 s=0.002
+y.m l=0.61 s=0.02
+y.m l=0.71 s=0.002
+y.m l=0.725 s=0.002
+y.m l=0.73 s=0.002
+y.m l=0.735 s=0.002
+y.m l=0.745 s=0.002
+y.m l=1.845 s=0.25
+y.m l=2.945 s=0.005
+y.m l=2.96 s=0.001
+y.m l=3.06 s=0.01
+y.m l=3.16 s=0.02
+y.m l=3.36 s=0.02
+
+region num=1 material=oxide y.min=-0.5 y.max=0
+
+#top cell: a-Si:H
+region num=2 silicon y.min=0.5 y.max=0.51 name=a-si
+region num=3 silicon y.min=0.51 y.max=0.71 name=a-si
+region num=4 silicon y.min=0.71 y.max=0.725 name=a-si
+
+#bottom cell: uc-Si
+region num=5 silicon y.min=0.725 y.max=0.745 name=uc-si
+region num=6 silicon y.min=0.745 y.max=2.945 name=uc-si
+region num=7 silicon y.min=2.945 y.max=2.96 name=uc-si
+region num=8 material=ZnO conductor y.min=2.96 y.max=3.06
+region num=9 material=Silver conductor y.min=3.06 y.max=3.16
+
+elec num=1 name=cathode y.min=3.16 y.max=3.36 mat=Aluminum
+elec num=2 name=anode y.min=0 y.max=0.5 mat=ZnO
+elec num=3 name=com y.min=0.725 y.max=0.735 mat=ITO
+
+doping region=2 uniform p.type conc=1e20
+doping region=4 uniform n.type conc=1e20
+doping region=5 uniform p.type conc=1e20
+doping region=7 uniform n.type conc=1e20
+
+contact name=com resist=1e16
+
+interface optical diffusive dispersion=45 specular=1 scattered=44 \
+y.min=0.495 y.max=0.505 absorption=0 region=2
+
+interface s.s y.min=0.5 y.max=0.52 s.n=1e5  s.p=1e5
+
+material region=8  resistivity=5e-4
+material region=9 resistivity=1e-5
+
+material material=Aluminum sopra=Al.nk
+material material=Silver sopra=Ag.nk
+ 
+#a-Si:H material, mobility and index of refraction definition
+
+material region=2 taun0=1e-6 taup0=1e-6 eg300=1.7 nv300=3e20 nc300=3e20
+material region=3 taun0=1e-6 taup0=1e-6 eg300=1.7 nv300=3e20 nc300=3e20
+material region=4 taun0=1e-6 taup0=1e-6 eg300=1.7 nv300=3e20 nc300=3e20
+
+mobility region=2 mun0=1 mup0=0.1
+mobility region=3 mun0=2 mup0=0.2
+mobility region=4 mun0=1 mup0=0.1
+
+material region=2  \
+TLU.A=200 TLU.E0=4.3 TLU.C=2.23 TLU.EG=1.7 TLU.EPS=0.22  TLU.EC=1.8 \
+LAM1=0.35 LAM2=1.0 NLAM=100 
+
+material region=3  \
+TLU.A=186 TLU.E0=4.02 TLU.C=2.99 TLU.EG=1.7 TLU.EPS=0.22  TLU.EC=1.8 \
+LAM1=0.35 LAM2=1.0 NLAM=100 
+
+material region=4  \
+TLU.A=200 TLU.E0=4.3 TLU.C=2.23 TLU.EG=1.7 TLU.EPS=0.22  TLU.EC=1.8 \
+LAM1=0.35 LAM2=1.0 NLAM=100  
+
+#uc-Si:H material and mobility 
+
+material region=5 taun0=1e-6 taup0=1e-6 eg300=1.16 nc300=3.5e20 nv300=3.5e20 
+material region=6 taun0=1e-6 taup0=1e-6 eg300=1.16 nc300=3.5e20 nv300=3.5e20
+material region=7 taun0=1e-6 taup0=1e-6 eg300=1.16 nc300=3.5e20 nv300=3.5e20
+
+mobility region=5 mun0=5 mup0=0.5
+mobility region=6 mun0=15 mup0=2
+mobility region=7 mun0=5 mup0=0.5
+
+
+# a-Si:H defect definition
+
+defect region=3 cont nta=2e20 ntd=2e20 wta=0.028 wtd=0.055 \
+    nga=0 ngd=0 ega=1.22 egd=1.22 wga=0.188 wgd=0.188 \
+    numa=50 numd=50 sigtae=1.e-16 sigtah=1.e-16 sigtde=1.e-16 sigtdh=1.e-16
+
+defects region=3 amphoteric cont signp=1e-14 sign0=5e-15 sigp0=5e-15 sigpn=1e-14 \
+hconc=2e21 nsisi=2e23 sigma=0.19 t0=500 ev0=0.045 eu=0.2 \
+ep.amp=1.22  num.amp=50 nv0.amp=1e20 
+
+# uc-Si:H defect definition
+ 
+defect region=6 cont nta=5e19 ntd=5e19 wta=0.01 wtd=0.02 \
+nga=0 ngd=0 ega=0.8 egd=0.8 wga=0.2 wgd=0.188 \
+numa=50 numd=50 sigtae=5e-16 sigtah=1e-15 sigtde=1e-15 sigtdh=1e-15
+
+models consrh print temp=300 
+
+model TLU.INDEX region=2 
+model TLU.INDEX region=3
+model TLU.INDEX region=4
+
+beam num=1 x.orig=5 y.orig=-15 angle=90 \
+	  back.reflect reflect=2 
+
+beam num=2 x.orig=5 y.orig=-15 angle=90 \
+	wavelength=0.8 back.reflect reflect=2
+	
+method maxtrap=10
+
+output opt.int band.temp
+
+solve init
+
+log outf=solarex12_1.log
+solve b2=1e-9
+solve b2=1e-7
+solve b2=1e-5
+solve b2=1e-3
+solve b2=0.1
+solve b2=1
+extract name="residual_top_current" max(abs(i."anode"))
+extract name="source_top_current" max(abs(elect."source photo current"))
+log off
+
+log outf=solarex12_2.log
+solve b1=0.1 beam=1 lambda=0.36 wstep=0.02 wfinal=0.8
+extract init infile="solarex12_2.log"
+extract name="eqe_top" curve(elect."optical wavelength", \
+	(abs(i."anode")-$residual_top_current)/(elect."source photo current"-$source_top_current)) outfile="solarex12_top.dat"
+
+# EQE Bottom Cell simulation
+
+go atlas
+
+# Structure Generation
+
+mesh
+
+x.m l=0 s=2.5
+x.m l=10 s=2.5
+
+y.m l=-0.5 s=10
+y.m l=0 s=0.1
+y.m l=0.5 s=0.002
+y.m l=0.51 s=0.002
+y.m l=0.61 s=0.02
+y.m l=0.71 s=0.002
+y.m l=0.725 s=0.002
+y.m l=0.73 s=0.002
+y.m l=0.735 s=0.002
+y.m l=0.745 s=0.002
+y.m l=1.845 s=0.25
+y.m l=2.945 s=0.005
+y.m l=2.96 s=0.001
+y.m l=3.06 s=0.01
+y.m l=3.16 s=0.02
+y.m l=3.36 s=0.02
+
+region num=1 material=oxide y.min=-0.5 y.max=0
+
+#top cell: a-Si:H
+region num=2 silicon y.min=0.5 y.max=0.51 name=a-si
+region num=3 silicon y.min=0.51 y.max=0.71 name=a-si
+region num=4 silicon y.min=0.71 y.max=0.725 name=a-si
+
+#bottom cell: uc-Si
+region num=5 silicon y.min=0.725 y.max=0.745 name=uc-si
+region num=6 silicon y.min=0.745 y.max=2.945 name=uc-si
+region num=7 silicon y.min=2.945 y.max=2.96 name=uc-si
+region num=8 material=ZnO conductor y.min=2.96 y.max=3.06
+region num=9 material=Silver conductor y.min=3.06 y.max=3.16
+
+elec num=1 name=cathode y.min=3.16 y.max=3.36 mat=Aluminum
+elec num=2 name=anode y.min=0 y.max=0.5 mat=ZnO
+elec num=3 name=com y.min=0.725 y.max=0.735 mat=ITO
+
+doping region=2 uniform p.type conc=1e20
+doping region=4 uniform n.type conc=1e20
+doping region=5 uniform p.type conc=1e20
+doping region=7 uniform n.type conc=1e20
+
+
+# IV Simulation 
+
+interface optical diffusive dispersion=45 specular=1 scattered=44 \
+y.min=0.495 y.max=0.505 absorption=0 region=2
+
+interface s.s y.min=0.5 y.max=0.52 s.n=5e5  s.p=5e5
+
+contact name=com resist=1e16
+
+material region=8  resistivity=5e-4
+material region=9 resistivity=1e-5
+
+material material=Aluminum sopra=Al.nk
+material material=Silver sopra=Ag.nk
+ 
+#a-Si:H material, mobility and index of refraction definition
+
+material region=2 taun0=1e-6 taup0=1e-6 eg300=1.7 nv300=3e20 nc300=3e20
+material region=3 taun0=1e-6 taup0=1e-6 eg300=1.7 nv300=3e20 nc300=3e20
+material region=4 taun0=1e-6 taup0=1e-6 eg300=1.7 nv300=3e20 nc300=3e20
+
+mobility region=2 mun0=1 mup0=0.1
+mobility region=3 mun0=2 mup0=0.2
+mobility region=4 mun0=1 mup0=0.1
+
+material region=2  \
+TLU.A=200 TLU.E0=4.3 TLU.C=2.23 TLU.EG=1.7 TLU.EPS=0.22  TLU.EC=1.8 \
+LAM1=0.35 LAM2=1.0 NLAM=100 out.index=solarex12_p-Si-TLU.log
+
+material region=3  \
+TLU.A=186 TLU.E0=4.02 TLU.C=2.99 TLU.EG=1.7 TLU.EPS=0.22  TLU.EC=1.8 \
+LAM1=0.35 LAM2=1.0 NLAM=100 out.index=solarex12_i-Si-TLU.log
+
+material region=4  \
+TLU.A=200 TLU.E0=4.3 TLU.C=2.23 TLU.EG=1.7 TLU.EPS=0.22  TLU.EC=1.8 \
+LAM1=0.35 LAM2=1.0 NLAM=100 out.index=solarex12_n-Si-TLU.log 
+
+#uc-Si:H material and mobility 
+
+material region=5 taun0=1e-6 taup0=1e-6 eg300=1.16 nc300=3.5e20 nv300=3.5e20 
+material region=6 taun0=1e-6 taup0=1e-6 eg300=1.16 nc300=3.5e20 nv300=3.5e20
+material region=7 taun0=1e-6 taup0=1e-6 eg300=1.16 nc300=3.5e20 nv300=3.5e20
+
+mobility region=5 mun0=5 mup0=0.5
+mobility region=6 mun0=15 mup0=2
+mobility region=7 mun0=5 mup0=0.5
+
+material region=5 k.shift=-0.15  
+material region=6 k.shift=-0.15 
+material region=7 k.shift=-0.15 
+
+# a-Si:H defect definition
+
+defect region=3 cont nta=2e20 ntd=2e20 wta=0.028 wtd=0.055 \
+    nga=0 ngd=0 ega=1.22 egd=1.22 wga=0.188 wgd=0.188 \
+    numa=50 numd=50 sigtae=1.e-16 sigtah=1.e-16 sigtde=1.e-16 sigtdh=1.e-16
+
+defects region=3 amphoteric cont signp=1e-14 sign0=5e-15 sigp0=5e-15 sigpn=1e-14 \
+hconc=2e21 nsisi=2e23 sigma=0.19 t0=500 ev0=0.045 eu=0.2 \
+ep.amp=1.22  num.amp=50 nv0.amp=1e20 
+
+# uc-Si:H defect definition
+ 
+defect region=6 cont nta=5e19 ntd=5e19 wta=0.01 wtd=0.02 \
+nga=0 ngd=0 ega=0.8 egd=0.8 wga=0.2 wgd=0.188 \
+numa=50 numd=50 sigtae=5e-16 sigtah=1e-15 sigtde=1e-15 sigtdh=1e-15
+
+models consrh print temp=300 
+
+model TLU.INDEX region=2 
+model TLU.INDEX region=3
+model TLU.INDEX region=4
+beam num=1 x.orig=5 y.orig=-15 angle=90  back.reflect reflect=2 
+beam num=2 x.orig=5 y.orig=-15 angle=90 wavelength=0.5 back.reflect reflect=2
+
+method maxtrap=10
+
+output opt.int band.temp
+
+solve init
+
+log outf=solarex12_4.log
+solve b2=1e-9
+solve b2=1e-7
+solve b2=1e-5
+solve b2=1e-3
+solve b2=0.1
+solve b2=1
+extract name="residual_bottom_current" max(abs(i."cathode"))
+extract name="source_bottom_current" max(abs(elect."source photo current"))
+log off
+
+log outf=solarex12_5.log
+solve b1=0.1 beam=1 lambda=0.5 wstep=0.02 wfinal=1
+extract init infile="solarex12_5.log"
+extract name="eqe_top" curve(elect."optical wavelength", \
+	(abs(i."anode")-$residual_bottom_current)/(elect."source photo current"-$source_bottom_current)) outfile="solarex12_bottom.dat"
+
+tonyplot -overlay solarex12_bottom.dat solarex12_top.dat solarex12_top_exp.dat solarex12_bottom_exp.dat -set solarex12_2.set
+
+

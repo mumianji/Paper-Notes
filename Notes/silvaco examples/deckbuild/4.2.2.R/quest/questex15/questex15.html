@@ -1,0 +1,73 @@
+<html>
+  <head>
+    <title>User inductor spice model</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>User inductor spice model</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>QUEST</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>QUEST 2.0.2.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="questex15_plot0.png" width="640" alt="questex15_plot0" />
+      <p/>
+      <img src="questex15_plot1.png" width="640" alt="questex15_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<p>
+This example demonstrates how to create and extract user-defined
+inductor SPICE model parameters. Please refer to previous examples to learn
+how to create a QUEST input deck.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+<p>
+In this example the parameter
+<b> ut4.batchfile </b> is used in the save statement to save QUEST results (s-parameter)
+in UTMOST4 format (questex15_ind_model.uds)
+</p>
+<p>
+UTMOST4 will indeed be used to perform SPICE model parameter extraction.
+A project in UTMOST4 has to be created using the UTMOST4 GUI including both
+the user defined SPICE model as well as the extraction strategy
+(questex15.prj).
+</p>
+<p>
+A SPICE model extraction can be performed either using the UTMOST4 GUI
+or UTMOST under DeckBuild.
+</p>
+<p>
+To use the UTMOST GUI, open an existing database
+or create a new one (see UTMOST4 manual for details) and click on &apos;import
+dataset&apos; (select questex15_ind_model.uds) and &apos;import project&apos; (select
+questex15.prj). Double click on questex15 and the project will open.
+Click on &apos;run&apos;.
+</p>
+<p>
+To run UTMOSTIV under DeckBuild, just run UTMOSTIV
+at the end of the QUEST simulation.
+</p>
+  </div></body>
+</html>

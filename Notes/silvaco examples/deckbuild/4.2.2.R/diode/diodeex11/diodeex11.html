@@ -1,0 +1,82 @@
+<html>
+  <head>
+    <title>Effect of ionic species on small signal capacitance of MOS-C</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Effect of ionic species on small signal capacitance of MOS-C</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>S-Pisces</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="diodeex11_plot0.png" width="640" alt="diodeex11_plot0" />
+      <p/>
+      <img src="diodeex11_plot1.png" width="640" alt="diodeex11_plot1" />
+      <p/>
+      <img src="diodeex11_plot2.png" width="640" alt="diodeex11_plot2" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example shows how to include ionic species in the insulator of a MOS-C capacitor.
+The mobile species affect the small signal conductance and capacitance of the device
+as a function of bias and frequency.  The deck builds a basic MOS-C structure using
+Atlas commands.  Then an ionic species is added using the DOPING statement.
+<br/>
+<b> doping region=1 species1 gaussian conc=1e16 char=0.06 lat.char=0.15  peak=0.125</b> <br/>
+with the SPECIES1 parameter.  Another species is initialised using the same syntax, and
+both species have an initial gaussian distribution.  The PROBE statement is used to
+set up an integration of the species over the device. The generic ion transport model is
+selected on the MODELS statement
+<br/>
+<b> models srh nspecies=2 species1.z=2 species2.z=-1</b> <br/>
+where NSPECIES=2 indicates there are two species, and SPECIES1.Z=2 indicates that the first
+has a double positive charge and SPECIES2.Z=-1 indicates that the second has a single negative
+charge. The METHOD statement
+<br/>
+<b> method species.maxx=1.0e6 species.ins</b> <br/>
+ restricts the species to the insulator and sets the maximum permissible update vector to be
+a ratio of 1.0e6.
+</p>
+<p>
+The anode is biased to 1.0 V and the anode voltage is ramped to -2.0 V with the small signal
+parameters calculated at 100 Hz. This is then repeated with the small signal frequency being
+1 GHz. These curves are compared to the MOS-C without ions in the insulator.  In the latter
+case the Capacitance varies only slightly with the channel charge.  With ionic species present,
+and at 100 Hz, the movement of ionic charge by the test signal gives a large capacitance. At
+an anode voltage of 1 V the negative ions are near the anode and the positive ions are near
+the semiconductor/insulator interface.  As the anode bias changes to -2 V,  this situation
+reverses and when the centre of charge is near the centre of the insulator the small signal
+capacitance is a maximum.  With a test signal of 1 GHz the ionic species are not sufficently
+mobile to react and so the small signal capacitance is much reduced.  The species density
+profiles are shown in the cutline of the plot of the structure file at 1.o and -2.0 V anode bias.
+The PROBE statements can optionally  be selected in the first plot and show that the integrated density of each species is
+constant (because there are no reactions and the species are confined to the insulator).
+They also show the species concentration at the center of the insulating layer as a function of bias.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

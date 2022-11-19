@@ -1,0 +1,96 @@
+<html>
+  <head>
+    <title>Example of simplified SONOS model</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Example of simplified SONOS model</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>S-Pisces</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="sonosex05_plot0.png" width="640" alt="sonosex05_plot0" />
+      <p/>
+      <img src="sonosex05_plot1.png" width="640" alt="sonosex05_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+The example shows:
+</p>
+<ul>
+  <li>
+ How to use the simplified SONOS model
+<br/>
+  </li>
+  <li>
+ How to charge the device using hot carrier gate current
+<br/>
+  </li>
+  <li>
+ How to erase the device using tunnelling
+<br/>
+  </li>
+</ul>
+<p>
+The device is set up in a similar way to the DYNASONOS model.  The main
+difference is that the gate stack materials remain as insulators,
+they are not changed to wide bandgap semiconductors. The gate material
+parameters which will affect the simulation are the tunnel insulator
+effective masses, and the bandgap and affinity parameters.
+</p>
+<p>
+In this example case a device with a a 5/15/10 nm ONO gate stack is
+constructed.  It is still necessary to specify N.I on the INTERFACE
+statement,  but the DYNASONOS model must be explicitly cleared by
+using the syntax ^DYNASONOS.  The NITRIDECHARGE statement is not required.
+</p>
+<p>
+In this example the N.CONCANNON parameter on the MODELS statement is
+set, and this also has the effect of enabling the Hot Electron energy
+balance model. The gate is given a positive bias, in order to attract
+hot electrons leaving the channel.  The drain is then biased to half
+of the gate bias and the hot electrons follow field lines until they
+either leave the device or charge the traps at the edges of the Nitride
+region.
+</p>
+<p>
+After the device is charged the threshold voltage is obtained.  The structure
+field is also saved, enabling you to look at the trapped charge under
+the &quot;Insulator Charge&quot; field, in units of cm^2.
+</p>
+<p>
+The device is then erased by applying a negative bias to the gate, with
+drain and source grounded.  The structure file is saved and the threshold
+voltage measured.
+</p>
+<p>
+The Idrain versus Vgate plots are shown for the uncharged, charged and
+erased state of the device.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

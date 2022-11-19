@@ -1,0 +1,452 @@
+# (c) Silvaco Inc., 2018
+
+# CREATE A VICTORY PROCESS 2D STRUCTURE 
+# THEN EXTEND INTO 3D USING DEVEDIT 3D
+
+go victoryprocess
+
+Init meshdepth=2 material=silicon dopant=boron dopingvalue=1.34e15 \
+     orientation=100 from=-0.19 to=0.125 depth=1 gasheight=2.2025 \
+     resolution=0.007875,0.01575
+
+# DEFINE THE INITIAL 2D GRID
+
+Line x location=-0.19  spacing=0.01
+Line x location=-0.145 spacing=0.005
+Line x location=-0.125 spacing=0.005
+Line x location=-0.115 spacing=0.005
+Line x location=-0.07  spacing=0.005
+Line x location=-0.06  spacing=0.005
+Line x location=-0.03  spacing=0.005
+Line x location=0      spacing=0.01
+Line x location=0.03   spacing=0.005
+Line x location=0.06   spacing=0.005
+Line x location=0.07   spacing=0.005
+Line x location=0.125  spacing=0.01
+
+Line z location=0     spacing=0.0005
+Line z location=0.035 spacing=0.005
+Line z location=1     spacing=0.1
+
+method model=fermi
+
+Deposit material=oxide thick=0.0015 divisions=3 max
+Implant boron dose=9e13 energy=30 tilt=0 rotation=0  
+Implant boron dose=4.5e13 energy=7  tilt=0 rotation=0
+Diffuse time=0.1 temperature=950
+
+# Add Extra Lines When Needed
+Line x location=-0.1 spacing=0.005
+
+Deposit material=polysilicon thick=0.1 dopants=phosphorus dopingvalues=1e21 max
+Etch material=polysilicon left.to=-0.03 dry thickness=2.2025
+Etch material=polysilicon right.to=0.03 dry thickness=2.2025
+
+Implant arsenic dose=4.5e13 energy=5 tilt=0 rotation=0 bca n.ion=2000000
+Deposit material=nitride thick=0.03 conformal
+Diffuse time=0.1 temperature=950
+Etch    material=nitride dry thick=0.03
+
+Deposit material=barrier thick=0.03 conformal
+Etch material=barrier right.to=-0.125 dry thickness=2.2025
+Implant arsenic dose=2e14 energy=5 tilt=0 rotation=0 bca n.ion=2000000 
+Etch material=barrier dry
+Diffuse time=0.1 temperature=950
+
+Deposit material=barrier thick=0.03 conformal
+Etch material=barrier left.to=-0.125 dry thickness=2.2025
+Implant bf2 dose=2e14 energy=5 tilt=0 rotation=0  
+Etch material=barrier dry
+
+Diffuse time=0.1 temperature=1050
+Etch material=oxide dry thick=0.003
+
+Deposit material=aluminum thick=0.01 divisions=2 conformal
+Etch between=-0.145,-0.115 material=aluminum thickness=0.1 dry
+Etch between=-0.07,-0.03   material=aluminum thickness=0.2 dry
+Etch between= 0.03,0.07    material=aluminum thickness=0.2 dry
+
+# DEFINE STRUCTURE ELECTRODES
+Electrode name=source x=-0.1
+Electrode name=gate x=0
+Electrode name=drain x=0.1
+Electrode name=pwell x=-0.17
+
+save name=radex14_vp_0
+
+
+# EXPORT THE STRUCTURE AND THEN PLOT
+
+go victorymesh
+
+load in=radex14_vp_0
+
+remesh conformal
+refine max.obtuseness=1
+
+save out=radex14_0.str
+
+tonyplot radex14_0.str
+
+
+# USING THIS 2D STRUCTURE CREATED IN VICTORY MESH AND AND EXPORTED 
+# OUT OF VICTORY MESH
+# DEVEDIT CREATES A 3D STRUCTURE BY EXTENSION IN THE Y DIRECTION
+
+go devedit3d
+
+# IMPORT THE STRUCTURE FROM OUR FOLDER
+init infile=radex14_0.str z1=-0.10 z2=0.10
+
+# CENTER THE WIDTH AND SRETCH THE DECVICE SO THAT IT IS 200nm
+z.plane z=-0.1 spacing=0.02
+z.plane z=0    spacing=0.01 
+z.plane z=0.1  spacing=0.02
+
+structure outfile=radex14_1.str
+
+# DISPLAY THE NEW 3D STRUCTURE
+tonyplot3d radex14_1.str -set radex14_4.set
+
+
+# BEGIN THE DEVICE VERIFICATION PROCESS
+# INITIALIZE VICTORY DEVICE AND TO COMPARE TO PDK SPICE MODEL
+
+# Unsaturated Vt Simulation
+go victorydevice
+
+# LOAD STRUCTURE INTO VICTORY DEVICE
+mesh infile=radex14_0.str width=0.2
+
+mobility deln.cvt=1e16
+models material=polysilicon consrh
+models material=silicon consrh cvt
+
+method climit=1e-4
+solve init
+solve previous
+solve vdrain=0.01
+solve vdrain=0.05
+log outfile=radex14_0.log
+solve vgate=0.01
+solve vgate=0.05 vstep=0.05 vfinal=0.85 name=gate
+
+# USING THE EXTRACT FUNCTION CALCULATE THE UNSATURATED Vt
+extract name="vt_uns" (xintercept(maxslope(curve(abs(v."gate"), \
+        abs(i."drain")))) - abs(ave(v."drain"))/2.0)
+
+# CLOSE OUT CURRENT LOG FILE
+log off
+
+
+# Saturated Vt
+go victorydevice
+
+mesh infile=radex14_0.str width=0.2
+
+mobility deln.cvt=1e16
+models material=polysilicon consrh
+models material=silicon consrh cvt
+
+method climit=1e-4
+solve init
+solve previous
+solve vdrain=0.01
+solve vdrain=0.05 vstep=0.05 vfinal=0.85 name=drain
+
+log outfile=radex14_1.log
+solve vgate=0.01
+solve vgate=0.05 vstep=0.05 vfinal=0.85 name=gate
+extract init infile="radex14_1.log"
+extract name="vt_sat" \
+        (xintercept(maxslope(curve(abs(v."gate"),sqrt(i."drain")))))
+extract name="Ion (uA/um Width)"  5e6*max(i."drain")
+extract name="Ioff (uA/um Width)" 5e6*min(i."drain")
+log off
+
+save outfile=radex14_2.str
+tonyplot radex14_0.log -overlay radex14_1.log 
+
+
+# ID_VD CURVES
+go victorydevice
+
+mesh infile=radex14_0.str width=0.2
+
+mobility deln.cvt=1e16
+models material=polysilicon consrh
+models material=silicon consrh cvt
+
+method climit=1e-4
+solve init
+solve previous
+solve vgate=0.01
+solve vgate=0.05 vstep=0.05 vfinal=0.55 name=gate
+save outfile=radex14_3.str
+solve vstep=0.05 vfinal=0.65 name=gate
+save outfile=radex14_4.str
+solve vstep=0.05 vfinal=0.75 name=gate
+save outfile=radex14_5.str
+solve vstep=0.05 vfinal=0.85 name=gate
+save outfile=radex14_6.str
+
+load infile=radex14_3.str master
+log outfile=radex14_2.log
+solve vdrain=0.01
+solve vdrain=0.05 vstep=0.05 vfinal=0.85 name=drain
+log off
+
+load infile=radex14_4.str master
+log outfile=radex14_3.log
+solve vdrain=0.01
+solve vdrain=0.05 vstep=0.05 vfinal=0.85 name=drain
+log off
+
+load infile=radex14_5.str master
+log outfile=radex14_4.log
+solve vdrain=0.01
+solve vdrain=0.05 vstep=0.05 vfinal=0.85 name=drain
+log off
+
+load infile=radex14_6.str master
+log outfile=radex14_5.log
+solve vdrain=0.01
+solve vdrain=0.05 vstep=0.05 vfinal=0.85 name=drain
+log off
+
+tonyplot radex14_2.log -overlay radex14_3.log radex14_4.log radex14_5.log -set radex14_0.set 
+# END DEVIVCE IV VERIFICATION
+
+
+# BEGIN VICTORY DEVICE SEE ANALYSIS
+
+go victorydevice
+
+# SETTING UP THE STRIKE
+set LET=1
+set density=0.01035*$LET
+set strike=0.022
+# Defining  Strike Particle Exit Point
+set Xexit=$strike
+set Yexit=1
+set Zexit=0
+
+mesh infile=radex14_1.str three.d
+
+# Models Defined
+mobility deln.cvt=1e16
+models material=polysilicon consrh
+models material=silicon consrh cvt
+
+# USER DEFINED TRANSISTOR AVERAGE SRAM CAPACITANCE LOAD VALUES
+# contact name=drain capacitance=5e-15
+
+# Define the Single Event Particle Strike
+singleeventupset entrypoint="$strike,0,0" exitpoint="$Xexit,$Yexit,$Zexit" \
+                 b.density=$density pcunits radius=0.02 t0=5e-12 tc=2e-13
+
+# Methods Defined
+method bicgst seu.integrate climit=1e-4 dt.min=1e-17 maxtraps=10 
+
+solve init
+solve prev
+solve vdrain=0.001
+solve vdrain=0.01
+solve vdrain=0.05 vstep=0.025 vfinal=0.85 name=drain 
+
+log outfile=radex14_6.log
+solve tstop=4.8e-12 dt=1e-13 prev
+solve tstop=5e-12 dt=1e-13 prev
+save outfile=radex14_7.str
+solve tstop=1e-6 prev
+
+tonyplot radex14_6.log -set radex14_1.set
+
+# EXTRCT THE CURRENT VS. TIME FILE FOR IMPORTING INTO SPICE
+
+extract init infile="radex14_6.log"
+extract name="seu_pulse" curve(time,i."drain") \
+        outfile="radex14.dat" no.header
+
+
+# BEGIN SMARTSPICE ANALYSIS OF SEE
+go smartspice
+
+* Schematic name: 6T_SRAM_65nm
+CBLB BLB GND 10f
+CBL BL GND 10f
+M1 QBAR Q PWR PWR     PCH     L=90n  W=120n
+M2 Q QBAR PWR PWR     PCH     L=90n  W=120n
+M4 Q QBAR GND GND     NCH     L=90n  W=200n
+M3 QBAR Q GND GND     NCH     L=90n  W=200n
+M5 QBAR Write BLB GND NCH     L=100n W=125n
+M6 Q Write BL GND     NCH     L=100n W=125n
+VWRITE Write GND DC 0 PULSE(0 0 )
+VSUPPLY PWR GND DC 0.85
+
+* DECLARE GLOBAL GROUND 
+.GLOBAL GND
+
+* END NETLIST
+
+* SAVE VECTORS
+.SAVE V(Q) V(QBAR) @M3[iseu] ID(M3)
+
+*SET TRACK DEVELOPMENT TIME
+*.PARAM HIT_RISE=25p
+*SET DRAIN COLLECTION TIME
+*.PARAM COLLECTION_TIME =150p
+*SET THE PARTICLE LET
+*.PARAM DLET=1
+*SET FUNNEL LENGTH
+*.PARAM F_LENGTH=0.5u
+
+* DEFINE INITIAL CONDITIONS FOR MEMORY CELL
+.IC V(Q)=0 V(QBAR)=0.85 
+
+* TRANSIENT ANALYSIS
+.TRAN 1p 1u
+
+* RADIATION ANALYSIS
+.RAD SEE = 1
++ DEVICE = M3
++ SOURCE = VSEU
++ NODE = NDP
+* DEFINE SOURCE
+VSEU POS  0    PWLFILE radex14.dat TD=0.5u
+RSEU POS 0 1
+
+
+* 65NM NMOS SPICE MODEL CARD
+
+.MODEL  NCH  NMOS  LEVEL = 54
++VERSION = 4.0          BINUNIT = 1            PARAMCHK= 1            MOBMOD  = 0          
++CAPMOD  = 2            IGCMOD  = 1            IGBMOD  = 1            GEOMOD  = 1          
++DIOMOD  = 1            RDSMOD  = 0            RBODYMOD= 1            RGATEMOD= 1          
++PERMOD  = 1            ACNQSMOD= 0            TRNQSMOD= 0          
++TNOM    = 27           TOXE    = 1.85E-9      TOXP    = 1.2E-9       TOXM    = 1.85E-9   
++DTOX    = 0.65E-9      EPSROX  = 3.9          WINT    = 5E-009       LINT    = 5.25E-009   
++LL      = 0            WL      = 0            LLN     = 1            WLN     = 1          
++LW      = 0            WW      = 0            LWN     = 1            WWN     = 1          
++LWL     = 0            WWL     = 0            XPART   = 0            TOXREF  = 1.85E-9   
++XL      = -30E-9
++VTH0    = 0.423        K1      = 0.4          K2      = 0.01         K3      = 0          
++K3B     = 0            W0      = 2.5E-006     DVT0    = 1            DVT1    = 2       
++DVT2    = -0.032       DVT0W   = 0            DVT1W   = 0            DVT2W   = 0          
++DSUB    = 0.1          MINV    = 0.05         VOFFL   = 0            DVTP0   = 1.0E-009     
++DVTP1   = 0.1          LPE0    = 0            LPEB    = 0            XJ      = 1.96E-008   
++NGATE   = 2E+020       NDEP    = 2.54E+018    NSD     = 2E+020       PHIN    = 0          
++CDSC    = 0.000        CDSCB   = 0            CDSCD   = 0            CIT     = 0          
++VOFF    = -0.13        NFACTOR = 1.9          ETA0    = 0.0058       ETAB    = 0          
++VFB     = -0.55        U0      = 0.0491       UA      = 6E-010       UB      = 1.2E-018     
++UC      = 0            VSAT    = 124340       A0      = 1.0          AGS     = 1E-020     
++A1      = 0            A2      = 1.0          B0      = 0            B1      = 0          
++KETA    = 0.04         DWG     = 0            DWB     = 0            PCLM    = 0.04       
++PDIBLC1 = 0.001        PDIBLC2 = 0.001        PDIBLCB = -0.005       DROUT   = 0.5        
++PVAG    = 1E-020       DELTA   = 0.01         PSCBE1  = 8.14E+008    PSCBE2  = 1E-007     
++FPROUT  = 0.2          PDITS   = 0.08         PDITSD  = 0.23         PDITSL  = 2.3E+006   
++RSH     = 5            RDSW    = 165          RSW     = 85           RDW     = 85        
++RDSWMIN = 0            RDWMIN  = 0            RSWMIN  = 0            PRWG    = 0          
++PRWB    = 6.8E-011     WR      = 1            ALPHA0  = 0.074        ALPHA1  = 0.005      
++BETA0   = 30           AGIDL   = 0.0002       BGIDL   = 2.1E+009     CGIDL   = 0.0002     
++EGIDL   = 0.8          
++AIGBACC = 0.012        BIGBACC = 0.0028       CIGBACC = 0.002     
++NIGBACC = 1            AIGBINV = 0.014        BIGBINV = 0.004        CIGBINV = 0.004      
++EIGBINV = 1.1          NIGBINV = 3            AIGC    = 0.012        BIGC    = 0.0028     
++CIGC    = 0.002        AIGSD   = 0.012        BIGSD   = 0.0028       CIGSD   = 0.002     
++NIGC    = 1            POXEDGE = 1            PIGCD   = 1            NTOX    = 1          
++XRCRG1  = 12           XRCRG2  = 5          
++CGSO    = 1.5E-010     CGDO    = 1.5E-010     CGBO    = 2.56E-011    CGDL    = 2.653E-10     
++CGSL    = 2.653E-10    CKAPPAS = 0.03         CKAPPAD = 0.03         ACDE    = 1          
++MOIN    = 15           NOFF    = 0.9          VOFFCV  = 0.02       
++KT1     = -0.11        KT1L    = 0            KT2     = 0.022        UTE     = -1.5       
++UA1     = 4.31E-009    UB1     = 7.61E-018    UC1     = -5.6E-011    PRT     = 0          
++AT      = 33000      
++FNOIMOD = 1            TNOIMOD = 0          
++JSS     = 0.0001       JSWS    = 1E-011       JSWGS   = 1E-010       NJS     = 1          
++IJTHSFWD= 0.01         IJTHSREV= 0.001        BVS     = 10           XJBVS   = 1          
++JSD     = 0.0001       JSWD    = 1E-011       JSWGD   = 1E-010       NJD     = 1          
++IJTHDFWD= 0.01         IJTHDREV= 0.001        BVD     = 10           XJBVD   = 1          
++PBS     = 1            CJS     = 0.0005       MJS     = 0.5          PBSWS   = 1          
++CJSWS   = 5E-010       MJSWS   = 0.33         PBSWGS  = 1            CJSWGS  = 3E-010     
++MJSWGS  = 0.33         PBD     = 1            CJD     = 0.0005       MJD     = 0.5        
++PBSWD   = 1            CJSWD   = 5E-010       MJSWD   = 0.33         PBSWGD  = 1          
++CJSWGD  = 5E-010       MJSWGD  = 0.33         TPB     = 0.005        TCJ     = 0.001      
++TPBSW   = 0.005        TCJSW   = 0.001        TPBSWG  = 0.005        TCJSWG  = 0.001      
++XTIS    = 3            XTID    = 3          
++DMCG    = 0E-006       DMCI    = 0E-006       DMDG    = 0E-006       DMCGT   = 0E-007     
++DWJ     = 0.0E-008     XGW     = 0E-007       XGL     = 0E-008     
++RSHG    = 0.4          GBMIN   = 1E-010       RBPB    = 5            RBPD    = 15         
++RBPS    = 15           RBDB    = 15           RBSB    = 15           NGCON   = 1          
+
+
+* 65NM PMOS SPICE MODEL CARD
+.MODEL  PCH  PMOS  LEVEL = 54
++VERSION = 4.0          BINUNIT = 1            PARAMCHK= 1            MOBMOD  = 0          
++CAPMOD  = 2            IGCMOD  = 1            IGBMOD  = 1            GEOMOD  = 1          
++DIOMOD  = 1            RDSMOD  = 0            RBODYMOD= 1            RGATEMOD= 1          
++PERMOD  = 1            ACNQSMOD= 0            TRNQSMOD= 0          
++TNOM    = 27           TOXE    = 1.95E-009    TOXP    = 1.2E-009     TOXM    = 1.95E-009   
++DTOX    = 0.75E-9      EPSROX  = 3.9          WINT    = 5E-009       LINT    = 5.25E-009   
++LL      = 0            WL      = 0            LLN     = 1            WLN     = 1          
++LW      = 0            WW      = 0            LWN     = 1            WWN     = 1          
++LWL     = 0            WWL     = 0            XPART   = 0            TOXREF  = 1.95E-009   
++XL      = -30E-9
++VTH0    = -0.365       K1      = 0.4          K2      = -0.01        K3      = 0          
++K3B     = 0            W0      = 2.5E-006     DVT0    = 1            DVT1    = 2       
++DVT2    = -0.032       DVT0W   = 0            DVT1W   = 0            DVT2W   = 0          
++DSUB    = 0.1          MINV    = 0.05         VOFFL   = 0            DVTP0   = 1E-009     
++DVTP1   = 0.05         LPE0    = 0            LPEB    = 0            XJ      = 1.96E-008   
++NGATE   = 2E+020       NDEP    = 1.87E+018    NSD     = 2E+020       PHIN    = 0          
++CDSC    = 0.000        CDSCB   = 0            CDSCD   = 0            CIT     = 0          
++VOFF    = -0.126       NFACTOR = 1.9          ETA0    = 0.0058       ETAB    = 0          
++VFB     = 0.55         U0      = 0.00574      UA      = 2.0E-009     UB      = 0.5E-018     
++UC      = 0            VSAT    = 70000        A0      = 1.0          AGS     = 1E-020     
++A1      = 0            A2      = 1            B0      = -1E-020      B1      = 0          
++KETA    = -0.047       DWG     = 0            DWB     = 0            PCLM    = 0.12       
++PDIBLC1 = 0.001        PDIBLC2 = 0.001        PDIBLCB = 3.4E-008     DROUT   = 0.56       
++PVAG    = 1E-020       DELTA   = 0.01         PSCBE1  = 8.14E+008    PSCBE2  = 9.58E-007  
++FPROUT  = 0.2          PDITS   = 0.08         PDITSD  = 0.23         PDITSL  = 2.3E+006   
++RSH     = 5            RDSW    = 165          RSW     = 85           RDW     = 85        
++RDSWMIN = 0            RDWMIN  = 0            RSWMIN  = 0            PRWG    = 3.22E-008  
++PRWB    = 6.8E-011     WR      = 1            ALPHA0  = 0.074        ALPHA1  = 0.005      
++BETA0   = 30           AGIDL   = 0.0002       BGIDL   = 2.1E+009     CGIDL   = 0.0002     
++EGIDL   = 0.8          
++AIGBACC = 0.012        BIGBACC = 0.0028       CIGBACC = 0.002     
++NIGBACC = 1            AIGBINV = 0.014        BIGBINV = 0.004        CIGBINV = 0.004      
++EIGBINV = 1.1          NIGBINV = 3            AIGC    = 0.69         BIGC    = 0.0012     
++CIGC    = 0.0008       AIGSD   = 0.0087       BIGSD   = 0.0012       CIGSD   = 0.0008     
++NIGC    = 1            POXEDGE = 1            PIGCD   = 1            NTOX    = 1        
++XRCRG1  = 12           XRCRG2  = 5          
++CGSO    = 1.5E-010     CGDO    = 1.5E-010     CGBO    = 2.56E-011    CGDL    = 2.653E-10
++CGSL    = 2.653E-10    CKAPPAS = 0.03         CKAPPAD = 0.03         ACDE    = 1
++MOIN    = 15           NOFF    = 0.9          VOFFCV  = 0.02
++KT1     = -0.11        KT1L    = 0            KT2     = 0.022        UTE     = -1.5       
++UA1     = 4.31E-009    UB1     = 7.61E-018    UC1     = -5.6E-011    PRT     = 0          
++AT      = 33000      
++FNOIMOD = 1            TNOIMOD = 0          
++JSS     = 0.0001       JSWS    = 1E-011       JSWGS   = 1E-010       NJS     = 1          
++IJTHSFWD= 0.01         IJTHSREV= 0.001        BVS     = 10           XJBVS   = 1          
++JSD     = 0.0001       JSWD    = 1E-011       JSWGD   = 1E-010       NJD     = 1          
++IJTHDFWD= 0.01         IJTHDREV= 0.001        BVD     = 10           XJBVD   = 1          
++PBS     = 1            CJS     = 0.0005       MJS     = 0.5          PBSWS   = 1          
++CJSWS   = 5E-010       MJSWS   = 0.33         PBSWGS  = 1            CJSWGS  = 3E-010     
++MJSWGS  = 0.33         PBD     = 1            CJD     = 0.0005       MJD     = 0.5        
++PBSWD   = 1            CJSWD   = 5E-010       MJSWD   = 0.33         PBSWGD  = 1          
++CJSWGD  = 5E-010       MJSWGD  = 0.33         TPB     = 0.005        TCJ     = 0.001      
++TPBSW   = 0.005        TCJSW   = 0.001        TPBSWG  = 0.005        TCJSWG  = 0.001      
++XTIS    = 3            XTID    = 3          
++DMCG    = 0E-006       DMCI    = 0E-006       DMDG    = 0E-006       DMCGT   = 0E-007     
++DWJ     = 0.0E-008     XGW     = 0E-007       XGL     = 0E-008     
++RSHG    = 0.4          GBMIN   = 1E-010       RBPB    = 5            RBPD    = 15         
++RBPS    = 15           RBDB    = 15           RBSB    = 15           NGCON   = 1  
+
+.END
+* END SPICE
+
+solve  outfile=radex14_7.log
+tonyplot radex14_7.log -set radex14_2.set
+tonyplot radex14_7.log -set radex14_3.set
+
+quit
+

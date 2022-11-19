@@ -1,0 +1,27 @@
+M1 Out gate0 Vss Vss myNMOS w=3.5u l=0.21u As=2.5025p Ad=2.5025p Ps=8.43u Pd=8.43u Nrs=0.0757143 Nrd=0.0757143 geo=0
+M2 Vdd gate1 Out Vdd myPMOS w=7u l=0.21u As=5.005p Ad=5.005p Ps=15.43u Pd=15.43u Nrs=0.0378571 Nrd=0.0378571 geo=0
+R1   aux1   In     1.1625471
+R2   aux1   gate1  10.851407
+R3   aux1   gate0  11.897516
+C1   gate0  Vss    7.4561697e-17
+C2   gate0  Out    5.0953127e-16
+C3   gate0  Vdd    9.7996491e-17
+C4   gate0  substrate 1.2943479e-15
+C5   Vss    Out    9.4442744e-16
+C6   In     Vss    7.4561697e-17
+C7   gate1  Vss    7.4561697e-17
+C8   Vss    Vdd    1.2081118e-17
+C9   aux1   Vss    2.2368509e-16
+C10  Vss    substrate 1.8200143e-15
+C11  In     Out    5.0953127e-16
+C12  gate1  Out    5.0953127e-16
+C13  Out    Vdd    1.1221917e-15
+C14  aux1   Out    1.5285938e-15
+C15  Out    substrate 2.2381082e-15
+C16  In     Vdd    5.3939896e-16
+C17  In     substrate 1.2943479e-15
+C18  gate1  Vdd    9.7996491e-17
+C19  gate1  substrate 1.2943479e-15
+C20  aux1   Vdd    2.9398947e-16
+C21  Vdd    substrate 2.7734928e-15
+C22  aux1   substrate 3.8830438e-15

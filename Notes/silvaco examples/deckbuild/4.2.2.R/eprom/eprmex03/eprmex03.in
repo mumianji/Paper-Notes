@@ -1,0 +1,163 @@
+# (c) Silvaco Inc., 2018
+go athena
+#TITLE: EEPROM cell formation example
+#
+
+line x loc=0.0  spac=0.1 
+line x loc=0.6  spac=0.025
+line x loc=0.9  spac=0.05
+line x loc=1.5  spac=0.2
+#
+line y loc=0.00 spac=0.01 
+line y loc=0.3  spac=0.03
+line y loc=2.0  spac=0.25
+
+#
+init c.boron=3e16 orientation=100 space.mult=1
+
+#
+method compress fermi
+diffuse time=10 temp=950 dryo2
+#
+extract name="tunnelox" thickness oxide mat.occno=1 x.val=0
+#
+implant boron dose=1e12 energy=25 
+#
+deposit poly thick=.25 div=4
+#
+implant phos dose=6e14 energy=30 
+#
+diffuse time=5 temp=950 dryo2 
+#
+deposit nitride thick=0.02 div=1
+#
+deposit oxide thick=0.01 div=1
+#
+deposit poly thick=.25 div=4 c.phos=8e19
+# 
+etch poly    right p1.x=.6
+# 
+etch oxide   right p1.x=.6
+# 
+etch nitride right p1.x=.6
+#
+etch oxide   right p1.x=.6
+#
+etch poly    right p1.x=.6
+#
+etch oxide   right p1.x=.6
+#
+relax y.min=.3 dir.y=f
+#
+implant arsenic dose=1e15 energy=40 
+#
+diff time=50 temp=950
+deposit oxide thick=.03 div=2
+#
+structure mirror left
+#
+etch oxide left  p1.x=-0.8
+etch oxide right p1.x=0.8
+#
+deposit alum thick=0.05 div=1
+#
+etch alum start x=0.9 y=-10.
+etch alum cont x=0.9 y=10.
+etch alum cont x=-.9 y=10.
+etch alum done x=-.9 y=-10.
+#
+# define electrode names
+electrode name=fgate x=0 y=-0.1
+electrode name=cgate x=0 y=-0.4
+electrode name=source x=-1.5 
+electrode name=drain x=1.5 
+electrode name=substrate backside
+# save the structure
+structure outfile=eprmex03_0.str
+#
+# Switch to Devedit for remeshing...
+go devedit
+
+# Set Meshing Parameters
+#
+base.mesh height=0.4 width=0.4
+#
+# Make sure impurity gradiants have enough detail. (i.e. no triangle
+# spans more than 1 (sensitivity=1) power of 10)
+imp.refine imp="NetDoping" sensitivity=1
+imp.refine min.spacing=0.02
+#
+# Make sure channel has enough triangles.
+constr.mesh depth=0.25 under.material="PolySilicon" max.height=0.05 \
+	    max.width=0.05
+constr.mesh depth=0.05 under.material="PolySilicon" max.height=0.015
+#
+# Make sure contacts have enough connection points.
+constr.mesh depth=0.05 under.material="Aluminum" max.width=0.1
+
+# Create a mesh, using the parameters set above.
+mesh mode=meshbuild
+
+# save structure
+struct outfile=eprmex03_1.str
+tonyplot  eprmex03_1.str -set eprmex03_1.set
+
+
+# switch to Atlas for the Device Tests....
+
+go atlas
+mesh infile=eprmex03_1.str
+
+#
+# Set workfunction for the poly gates, 
+# 
+contact   name=fgate n.polysilicon floating
+contact   name=cgate n.polysilicon
+#
+#Define some Qss...
+interface qf=3e10
+models    srh cvt hei fnord print nearflg 
+impact    selb
+
+######### This is the Vt Test without additional coupling #############
+#######################################################################
+solve     init
+#
+method    newton trap maxtraps=8 autonr
+#
+log       outf=eprmex03_1.log
+solve     vdrain=0.1
+solve     vstep=0.2 vfinal=5 name=cgate comp=5.5e-5 cname=drain
+#
+# extract vt
+extract name="initial vt" ((xintercept(maxslope(curve(v."cgate",i."drain"))))-abs(ave(v."drain"))/2.0)
+#
+go atlas
+#mesh infile=eprmex03_1.str
+#
+# Set workfunction for the poly gates, 
+# 
+contact   name=fgate n.polysilicon floating ele.cap=2 fg.cap=1e-15
+contact   name=cgate n.polysilicon
+#
+#Define some Qss...
+interface qf=3e10
+models    srh cvt hei fnord print nearflg 
+impact    selb
+#
+######### This is the Vt Test with additional coupling #############
+####################################################################
+solve     init
+#
+method    newton trap maxtraps=8 autonr
+#
+log       outf=eprmex03_2.log
+solve     vdrain=0.1
+solve     vstep=0.2 vfinal=5 name=cgate comp=5.5e-5 cname=drain
+# plot idvg
+#
+tonyplot  -overlay eprmex03_1.log eprmex03_2.log -s eprmex03_2.set 
+# extract vt
+extract name="second vt" ((xintercept(maxslope(curve(v."cgate",i."drain"))))-abs(ave(v."drain"))/2.0)
+#
+quit

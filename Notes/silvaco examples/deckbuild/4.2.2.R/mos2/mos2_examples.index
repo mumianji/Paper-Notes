@@ -1,0 +1,1901 @@
+
+{section} MOS2 : Advanced MOS Application Examples
+
+
+{subsection} mos2ex01.in : Circuit Analysis of NMOS Inverters 
+
+Requires: S-Pisces/MixedMode
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example uses the MixedMode module in Atlas to simulate the circuit
+performance of two NMOS inverters in series. The first inverter is
+simulated using Atlas, the second inverter using SPICE level 1 models.
+This simulation shows how to:
+
+{bullet} Create an NMOS structure using Atlas syntax
+{newline}
+{bullet} Calculate the initial DC state in circuit mode
+{newline}
+{bullet} Simulate the DC transfer curve of the inverters.
+{newline}
+{bullet} Simulate the transient switching curve of the inverters.
+
+The input file consists of four separate runs, each starting with the statement 
+{bold} go atlas. 
+The first one uses the Atlas syntax to construct an NMOS transistor.
+The mesh, regions and electrodes are specified as coordinates in the
+syntax. It is compulsory to use electrode names (and not just numbers)
+when the structure is used in MixedMode. The doping distribution for
+the device is constructed from several gaussian and uniform analytical
+functions. The final structure is saved for later use.
+
+The second run calculates the initial operating point of the circuit.
+The syntax for this run is split into two parts. The first is a
+SPICE-like circuit description and control cards. This part is bounded by 
+{bold} .begin 
+and
+{bold} .end
+. The second is device
+parameter syntax. The circuit netlist is written using standard SPICE
+syntax. This example has two inverters composed of an NMOS transistor
+and resistor connected in series feeding into a capacitor.
+
+The two NMOS transistors are defined is different ways. The first labeled 
+{bold} an 
+is to be simulated in Atlas. The syntax specifies the structure file
+name from the previous run, and also connects the circuit nodes to
+electrode names. The other NMOS transistor labeled 'mn' is simulated
+using using SPICE level 1 model labeled 'simple'.
+
+After the .end statement the device parameter syntax is given. This
+sets the models, material and contact parameters for the Atlas device.
+
+The second run solves a single DC operating point as the initial guess
+to the third run. The third run uses the command
+{bold} .dc 
+to set a DC ramp of the input voltage 'vin' from zero to 5.0V in 0.25V
+steps. The currents and voltages for each node are stored in the file
+specified in the
+{bold} .log 
+statement.
+
+The final run uses the 
+{bold} .tran 
+statement combined with a time dependent definition of 'vin' using the
+PULSE parameter to set up a switching transient. The PULSE syntax
+specifies that the pulse of 'vin' has a peak value of 5.0V, a rise and
+fall time of 50ps, and a time at peak value of 1ns. On the .tran
+statement, 1ps specifies the initial timestep only. All other timesteps
+are automatically calculated by Atlas. This differs from the .tran card
+in standalone SPICE programs. The maximum simulation time is set to 3ns.
+
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} mos2ex02.in : Hot Electron Reliability 
+
+Requires: S-Pisces/C-Interpreter
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This is a demonstration of the hot carrier reliability feature of Atlas. A PMOS transistor is stressed at high voltages and a threshold voltage shift observed.
+The simulation shows:
+
+{bullet} Formation of PMOS transistor using Atlas syntax
+{newline}
+{bullet} Id/Vgs test 
+{newline}
+{bullet} High voltage stress for 1000 seconds
+{newline}
+{bullet} Id/Vgs tests of devices at various stress times.
+
+The example file consists of five separate Atlas runs each starting
+with the statement
+{bold} go atlas
+. The first run uses the Atlas syntax to construct the geometry, mesh
+and doping of a PMOS transistor. The doping is specified using gaussian
+functions. The mesh file saved by this run is loaded into the next run.
+
+The second Atlas run sets commands to perform an Id/Vgs simulation to
+observe the threshold voltage and gain. A more complete description of
+extracting PMOS threshold can be found in the MOS examples section.
+
+The device degradation modeling is performed in the third run. First, the
+structure is loaded and the correct workfunction and interface fixed
+charge are set. On the models statement, the standard mobility and
+recombination models are specified. The parameters
+{bold} hei devdeg.e 
+are also set. hei turns on the hot electron injection model for gate
+current. The devdeg.e parameter sets that the gate current is used to
+calculate device degradation. The
+{bold} degradation 
+parameter is used to specify the interface state density and the
+electron trapping cross section, sigmae. The density of interface
+states as a function of position is defined here using a C-INTERPRETER
+routine. The external file
+{bold} mos2ex02_devdeg.nta 
+is used in this example. This file will be copied to your current
+working directory if you press 'Load'. This file contains a C
+language description of the density of acceptor-like traps at the
+oxide/silicon interface. Use of the C-INTERPRETER allows complete
+flexibility in specifying the position of the traps.
+
+The stressing conditions are Vds=-6.0V and Vgs=-1.5V. The device is
+biased to these voltages in DC mode. Atlas is then switched to a
+transient solution. Since the time of this transient is very long
+compared with the transit time of carriers a faster transient solution
+method can be selected using
+{bold} method quasistatic
+. 
+
+The transient simulation is set to run for 1000s. At various intervals, data is
+saved to solution files whose prefix is set to 'mosex02.str'. The
+statement
+{bold} output devdeg 
+is required to save the interface trap occupancy to these solution
+files. These files will be the initial starting points of the
+subsequent Id/Vgs runs.
+
+The fourth and fifth runs are just repetitions of the second one. They
+perform the Id/Vgs test to observe threshold voltage and gain. However
+the important difference is the the file loaded in the
+{bold} mesh 
+statement is the output files saved during the transient stress.
+
+
+The Id/Vgs curves from the second, fourth and fifth runs can be
+overlaid in TonyPlot to show the threshold voltage shift caused by the
+hot carriers trapped at the interface.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+
+
+{subsection} mos2ex03.in : Gate Turn-on Transient  
+
+Requires: SSuprem 4/S-Pisces 
+{newline}
+Minimum Versions: Athena 5.22.3.R, Atlas 5.26.1.R
+
+This example demonstrates the transient simulation of a MOS transistor including:
+
+{bullet} Formation of a MOS structure in Athena
+{newline}
+{bullet} Interface from Athena to Atlas
+{newline}
+{bullet} Specification of external RC elements to make an NMOS inverter
+{newline}
+{bullet} Transient simulation of gate turn-on
+
+The process simulation follows a standard LDD MOS process. Further
+description of the MOS process simulation and the Athena to Atlas
+interface can be found in the description of the MOS examples.
+
+In Atlas the first task is setting the gate workfunction using the 
+{bold} contact 
+statement and interface charge using the 
+{bold} interface 
+statement.  The models used for this simulation are selected using the macro 
+{bold} mos
+. This model set uses the CVT mobility model and SRH recombination. A
+two-carrier solution is also specified on the models statement.
+Two-carrier solutions are necessary for transients and when external
+passive elements are used irrespective of the type of device being
+simulated.
+
+The second
+{bold} contact 
+statement is used to set the external resistance and capacitance on the
+drain electrode. A resistance of 1.0e5 ohms.um is used to correspond to
+a load resistor in a memory cell. A capacitance of 0.5pF/um is
+specified to emulate the gates and interconnect the drain must drive.
+These external elements emulate the formation of an NMOS inverter in
+SPISCES. This contrasts with the previously described example using
+MixedMode.
+
+The initial state of the device is set at 5.0V on the drain. The    
+{bold} local 
+initial guess method is used to allow large change in the drain bias in
+a single step. This local method will only converge if the change in
+current caused by the voltage step is small. This is true here 
+since the gate voltage is zero.
+
+The 
+{bold} solve 
+statement for the transient simulation contains the final gate voltage,
+the ramptime of the gate voltage, the initial timestep and the final
+simulation time. Only the initial timestep is specified in the solve
+statement. All other timestep sizes are calculated by Atlas based on
+the local truncation error in the solution.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+
+
+
+
+{subsection} mos2ex04.in : 3D Width Effect Simulation 
+
+Requires: SSuprem 4/DevEdit 3D/Device 3D 
+{newline}
+Minimum Versions: Athena 5.22.3.R, Atlas 5.26.1.R
+
+This example demonstrates Id/Vgs simulation of a narrow N-channel MOS
+structure in three dimensions.
+
+In this example a 2D width cross-section of a MOS transistor is
+constructed using SSuprem 4. The structure is then passed to DevEdit 3D
+for extending to 3D. Then the structure is interfaced to  Atlas for
+electrical testing. The input file consists of the following main
+portions:
+
+{bullet} Process simulation of field oxide bird's beak in Athena
+{newline}
+{bullet} Interface of the 2D structure from Athena to DevEdit 3D
+{newline}
+{bullet} Structure editing to create 3D MOSFET
+{newline}
+{bullet} Interface of the 3D structure from DevEdit 3D to Atlas
+{newline}
+{bullet} Simulation of the Id/Vgs characteristic in Atlas
+{newline}
+{bullet} Extraction of Vt and sub-threshold leakage parameters
+
+The first stage of the input file simulates width cross section on an
+NMOS device. The process sequence is for a LOCOS oxidation with a mask
+edge at X=0.0um. A channel stop implant is performed before the oxidation.
+Following the mask removal, a gate oxide is grown. Then a channel
+implant is done before poly deposition.
+
+The gate and substrate electrodes are defined at the end of the process sequence.
+Only these two electrodes are present in this 2D section.
+The source and drain will be added in DevEdit 3D.
+
+DevEdit 3D is used convert the 2D Athena result to a 2D structure. Each
+region from the 2D structure is given an extent in the Z direction.
+This example will be a 0.5 micron long transistor. Thus the polysilicon
+region extends only from 0.3 to 0.8 microns. The basic procedure in DevEdit 3D is:
+
+{bullet} Modify existing region extent in Z direction (eg. polysilicon)
+{newline}
+{bullet} Add new aluminum regions for source and drain contacts.
+Specify these as electrode regions.
+{newline}
+{bullet} Add N+ arsenic doping for source and drain. Be sure the Z
+extent of the doping includes a 0.1 micron spacer away from the gate
+edge. Specify y-rolloff (junction depth) and x and z rolloffs (lateral spread).
+{newline}
+{bullet} Define base level mesh (0.2x0.2 microns) and mesh the structure in X and Y.
+{newline}
+{bullet} Use REFINE to add mesh points in the channel region
+{newline}
+{bullet} Use the
+{bold} z.plane 
+statement to control the mesh in the Z direction. The Z direction mesh
+is made up of planes XY mesh leading to prismatic mesh elements.
+
+To generate DevEdit 3D syntax for a given set of structure editing and
+mesh operation, it is often best to do these same operations in the
+graphical mode of DevEdit 3D. DevEdit 3D allows users to save the
+commands used in the graphical mode to a command file. It is this
+command file that is used as the basis for the batch-mode DevEdit 3D
+used in this example.
+
+
+The Atlas simulation begins by reading in the structure from DevEdit 3D.
+DeckBuild provides an automatic interface between DevEdit 3D and Atlas so that the
+structure produced by DevEdit 3D is transferred to Atlas without having to
+indicate the mesh statement in Atlas
+
+The 
+{bold} contact 
+statement is used to set a work function on the polysilicon gate. The
+{bold} models 
+statement is used to select a set of physical models for this simulation.  In 
+this case, these models are SRH recombination, the CVT mobility model, 
+and one carrier model (carriers=1)
+
+The drain voltage is set to 0.1V, and gate voltage is ramped. The IV
+data is saved to a log file. This file is used as input to the EXTRACT
+routines for threshold voltage and sub-threshold leakage. This file can
+also be plotted in TonyPlot. The
+{bold} save 
+statement saves a 3D solution file. This can be plotted in 
+{bold} TonyPlot 3D 
+to see 3D distributions of potential and carriers.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} mos2ex05.in : Comparison of Id/Vds using EB and NEB models   
+
+Requires: SSuprem 4/S-Pisces/Giga
+{newline}
+Minimum Versions: Athena 5.22.3.R, Atlas 5.26.1.R
+
+This example demonstrates fabrication and Id/Vds analysis of a short
+channel structure with Energy Balance and Non-isothermal Energy Balance
+Models. The example shows:
+
+{bullet}  Creation of a  short channel MOSFET in Athena
+{newline}
+{bullet}  Regridding in DEVEDIT 
+{newline}
+{bullet}  Isothermal Id/Vds analysis in Atlas
+{newline}
+{bullet}  Non-isothermal Id/Vds analysis in Atlas
+
+
+Deep submicron devices should be simulated using the Energy Balance Model
+due to velocity overshoot and nonlocal impact ionization effects,
+which could substantially influence device characteristics. For high
+current levels (high gate voltages) the thermal self-heating effects
+can also play an important role by decreasing mobility and the impact
+ionization rate. This example demonstrates a comparison of Id/Vds curves
+obtained between the Energy Balance and Nonisothermal Energy Balance Models.
+
+The structure is formed using a standard LDD NMOS process and
+regridding is performed in DEVEDIT to refine the mesh in the areas
+where high electric fields will occur in Atlas. This procedure is
+described under the Substrate and Gate current example in the MOS
+example section.
+
+There are two Atlas runs in this example file.  The first Atlas run
+uses Energy Balance Model, and the second run uses both the energy
+balance and heat flow equations.
+
+In both runs the
+{bold} material 
+statement is used to assign an energy relaxation time for electrons.
+The
+{bold} models 
+statement is used to select a set of physical models for this simulation.  In this case,
+these models are CONSRH and AUGER recombination, the CVT mobility model, 
+Band Gap Narrowing, two carriers model (carriers=2), and the energy balance equation
+for electrons only (hcte.el).
+The 
+{bold} impact 
+statement is used to assign the energy relaxation length for the Selberherr model.
+The 
+{bold} contact 
+statement is used to assign the work function on the polysilicon gate.
+
+The gate voltage is ramped to 3V. At this stage, a combined algorithm is used by specifying
+{bold} method gummel newton
+. This means that if convergence is not reached in decoupled (or gummel)
+mode, the simulator will automatically switch to coupled (or newton)
+mode .  The the drain voltage is then ramped. The combined algorithm is
+typically used for low and moderate drain biases, and newton alone for high
+drain biases.
+
+The drain voltage is ramped to show the Id/Vds curves obtained up to
+8V. This demonstrates the convergence improvements possible by using a
+fully coupled solution for energy balance simulation. A decoupled
+solution generally would not converge at higher drain biases.
+
+In the second Atlas run, the same set of models is used, except that
+the solution of the  lattice energy balance equation is activated using
+{bold} models lat.temp
+.
+
+As with all lattice heat flow simulation, thermal boundary conditions must be defined.
+Thermal boundary conditions are defined in the 
+{bold} thermcontact 
+statement.  A value of the thermal conductance is specified at the
+thermal contact located along the substrate, whilst thermal isolation
+conditions are assumed on the all other surfaces.
+ 
+The final Id/Vds curves can be compared and overlaid using TonyPlot.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+
+
+{subsection} mos2ex06.in : BSIM3 SPICE Model Extraction (Salicide process)
+
+Requires: SSuprem 4/S-Pisces/Utmost
+{newline}
+Minimum Versions: Athena 5.22.3.R, Atlas 5.26.1.R
+
+This example demonstrates the extraction of a BSIM3 SPICE model from Atlas
+simulation data of an NMOS transistor. The example:
+
+{bullet} Forms a MOS device in Athena using a salicide process 
+{newline}
+{bullet} Uses assigned variables to parameterize the structure
+{newline}
+{bullet} Simulates Id/Vgs-Vbs curves in Atlas
+{newline}
+{bullet} Simulates Id/Vds-Vgs curves in Atlas
+{newline}
+{bullet} Interfaces to UTMOST for extraction of a BSIM3 parameter set.
+
+The process simulation used for this example is an NMOS process flow.
+Further description of MOS process simulation can be found in the MOS
+examples description.  As a more advanced technique, this flow has been
+parameterized in places using the
+{bold} set 
+statements. These are used to assign variables such as spacer width
+which are then used later in several locations in the input file.
+{bold} extract 
+statements are used throughout the process simulation to measure
+important process parameters. In terms of the SPICE model extraction, it
+is vital to extract the gate oxide thickness in metres for use in
+UTMOST.
+
+The salicide process to create self-aligned silicides on the source,
+drain and gate requires the use of the Athena/SILICIDES module. Users
+who do not have this option could replace the silicidation steps with
+metal deposition and patterning as used in the previous MOS examples.
+In this transistor, titanium silicide is used. A titanium layer is
+deposited and a short heat cycle applied. No special method parameters
+are needed to enable creation of the silicide layer during this
+diffusion. The remaining titanium is then stripped. These silicide
+regions are indicated in the 
+{bold} electrode 
+definition in Athena.
+
+
+The two Atlas runs in this example are also parameterized using the 
+{bold} set 
+statement. This enables easy conversion of the whole Id/Vgs and Id/Vds
+tests from, say, NMOS to PMOS or 5.0V supply to 3.3V.
+
+The first Atlas run simulates Id/Vgs curves at three substrate biases. The sequence of
+{bold} solve 
+statements is to first save three solutions at each back bias with Vds=0.1V and Vgs=0.0V. 
+Each of these three files is then loaded in turn using
+{bold} load 
+and the gate voltage ramped up to the supply voltage defined as 'vdsmax'.
+In this example all three curves are saved to a single log file.
+However it is more traditional to save the three curves in separate
+files. Either approach is possible.
+
+The second Atlas run simulates Id/Vds curves at three different gate
+voltages. A similar technique to the first run is used. Three solution
+files are saved at each gate bias with Vds=0.0V. These are then loaded
+in turn and the drain voltage ramped to 'vdsmax'. All the curves are
+saved to a single log file although separate ones could be used for
+each curve.
+
+The final stage of the example is to run UTMOST to extract the SPICE
+model. Important information about the structure such as gate oxide
+thickness and gate length is transferred to UTMOST using the results of
+{bold} extract 
+statements in the Athena simulation. The log files from Atlas are
+loaded and appended together. UTMOST then fits the SPICE model to the
+complete Id/Vgs-Vbs and Id/Vds-Vgs data sets. All the UTMOST parameters
+are stored to a file and then extract is used to print out the
+parameters of interest.
+
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} mos2ex07.in : NMOS Snapback 
+
+Requires: SSuprem 4/DevEdit/S-Pisces
+{newline}
+Minimum Versions: Athena 5.22.3.R, Atlas 5.26.1.R
+
+This example demonstrates the curve tracing algorithm in Atlas to
+simulate  the snapback of a MOSFET. The example shows:
+
+{bullet} Creation of a N-channel MOSFET in Athena
+{newline}
+{bullet} Remesh by DEVEDIT,
+{newline}
+{bullet} The Atlas curve tracing algorithm is used to trace MOS snapback.
+
+A standard NMOS device is constructed, remeshed and loaded into Atlas.
+The process simulation, interface to DEVEDIT and initial setup in Atlas
+are described in the previous section under MOS examples.  
+
+The initial syntax in Atlas sets all the required contact, interface
+and model setting used for MOS simulation. These settings are described
+in earlier example descriptions. Calculation of  impact ionization is 
+necessary for breakdown and snapback simulation. The
+{bold} impact 
+statement is used to activate the Selberherr impact ionization model.
+
+Curve tracing is an algorithm for choosing the boundary conditions for
+a simulation to trace out an IV curve. It is typically used on curves
+such as snapback or latchup with many turning points.
+
+For curve tracing simulations the key statement is : 
+{bold} curvetrace end.val=1.e-3 contr.name=drain curr.cont mincur=1e-10 nextst.ratio=1.3.
+It is used to initialize parameters for the curve tracing algorithm. The
+{bold}contr.name 
+parameter specifies the name of electrode for which the load line
+technique will be applied. Here this is the 'drain'. The 
+{bold}curr.cont 
+parameter sets
+that value of current will be monitored. The simulation will stop when
+the current exceeds the value specified by 
+{bold}end.val 
+parameter.
+The 
+{bold}mincur 
+parameter defines the minimum current value after which the load
+line technique will be actually be applied. Before that, pure voltage boundary
+conditions are used. The 
+{bold}nextst.ratio 
+parameter defines the factor which is 
+used to increase voltage step on parts of the IV curve away from the turning 
+points. The main place this is used is in the pre-breakdown voltage ramp.
+{bold} solve curvetrace 
+is used to activate the curve tracing algorithm. 
+
+The final snapback curve can be plotted using TonyPlot. To plot the drain 
+voltage actually applied to the device, the x-axis should be set to 
+{bold} drain int. bias
+and not drain bias. 'drain int. bias' is the voltage on the
+drain contact/semiconductor interface. The value of drain bias should be
+disregarded since it includes the effect of the load line algorithm
+used for the curve trace.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+
+
+{subsection} mos2ex08.in : NMOS Second Breakdown Simulation
+
+Requires: SSuprem 4/DevEdit/S-Pisces/Giga
+{newline}
+Minimum Versions: Athena 5.22.3.R, Atlas 5.26.1.R
+
+This example demonstrates fabrication and second breakdown analysis of
+a short channel structure with non-isothermal energy balance models.
+
+{bullet} A short channel MOSFET is created in Athena,
+{newline}
+{bullet} Regridding in DEVEDIT 
+{newline}
+{bullet}  Selection of the coupled solution of energy balance and lattice heating equations
+{newline}
+{bullet}  Electrical analysis using the curve tracer algorithm to trace the IV curve
+
+Deep submicron devices should be simulated using the Energy Balance Model
+due to velocity overshoot, and nonlocal impact ionization effects,
+which could substantially influence device characteristics.  For high
+current levels, the thermal self-heating effects can also play an
+important role by decreasing mobility and impact ionization rate. This
+example demonstrates second breakdown simulation with the non-isothermal
+energy balance model using curve tracing algorithm.
+
+A fully coupled approach is used to solve five equations in this
+device. This provides much improved convergence over decoupled
+techniques used in older Atlas versions.
+
+The workfunction, interface charge and MOS models are set using the syntax as described in earlier examples. The 
+energy balance equation for electrons and lattice energy balance
+equation  are set by 
+{bold} models hcte.el lat.temp
+. The 
+{bold} impact 
+statement is used to assign the energy relaxation length for Selberherr
+model.  Thermal boundary conditions are required with any
+non-isothermal simulation. These are defined in the
+{bold} thermcontact 
+statement.  A value of the thermal conductance is specified at the
+thermal contact located along the substrate. Thermal isolation
+conditions are assumed on the all other surfaces.
+
+The 
+{bold} curvetrace 
+statement is used to initialize parameters for curve tracing algorithm. A full description of the curve tracing syntax is included with the MOS snapback example. 
+The gate voltage is ramped to 1V, and then the
+{bold} solve curvetrace 
+statement is used to activate the curve tracing algorithm.
+
+Plotting the internal drain bias versus drain current in TonyPlot will
+display the second breakdown curve.  The resulting curve from Atlas
+shows several turning points. The second breakdown occurs at the final
+stage where the voltage drops sharply. At this point both the lattice
+and carrier temperatures are high.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+{subsection} mos2ex09.in :  Drain/Gate Overlap Capacitance 
+
+Requires: SSuprem 4/DevEdit/S-Pisces
+{newline}
+Minimum Versions: Athena 5.22.3.R, Atlas 5.26.1.R
+
+This example demonstrates the extraction of the gate overlap capacitance
+for an LDD MOSFET structure. The example shows:
+
+{bullet} Construction of an LDD MOSFET in Athena
+{newline}
+{bullet} Regrid of the structure in DEVEDIT
+{newline}
+{bullet} Gate/drain overlap capacitance extraction using AC analysis
+
+A LDD NMOS  device is constructed, remeshed and loaded into Atlas.
+The process simulation, interface to DEVEDIT and initial setup in Atlas
+are described in the previous section under MOS examples.  
+
+
+One requirement for AC simulation is that a two carrier solution must be specified.  This is set with 
+{bold} method carriers=2
+.  After the initial
+solution, a solution at a gate bias of -2 volts is obtained using the
+local initial guess. The local method is convenient when taking large
+voltage steps, but it assumes no current flow.   
+
+Next, the
+{bold} log 
+statement is used to specify a file for saving the results of the
+gate ramp.  Then, the gate is swept from -2 volts to 2 volts in 0.2
+volt increments.  At each static solution of gate bias the small
+signal AC response is solved at a frequency of 1 MHz.  These results
+are saved in the log file.  Finally the overlap capacitance as a function
+of gate bias is plotted using TonyPlot. In the list of XY graph variables 
+in the TonyPlot DISPLAY menu, the capacitances and conductances are listed as:
+{bold} C electrode_name_1 > electrode_name_2
+. This means the capacitance between these two electrodes. A similar
+construction is used with 'G' for conductance between two electrodes.
+ When the two electrode names are the same, the magnitude of this value
+is the total capacitance on this electrode.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} mos2ex10.in : 2D NMOS simulation from 1D Athena Doping 
+
+Requires: Athena/S-Pisces
+{newline}
+Minimum Versions: Athena 5.22.3.R, Atlas 5.26.1.R
+
+This example demonstrates the interface between Athena process simulation in 1D mode 
+and Atlas (2D device simulation). The main features are:
+
+{bullet} Run Athena simulation in 1D mode of NMOS source/drain doping 
+{newline}
+{bullet} Run Athena simulation in 1D mode of NMOS channel 
+{newline}
+{bullet} Combine two 1D doping files into a 2D structure in Atlas 
+{newline}
+{bullet} Regrid the structure based on net doping level
+
+The key syntax for reading the Athena data into Atlas are the
+{bold} doping 
+statements.  The parameters of the doping statement specify the input
+,filename, which dopant is to be used from the file and the 2D extent of
+the doping. The
+{bold} athena.1d 
+parameter must be used to specify the data format of the Athena
+1D profile.  
+
+The lateral spread of the dopant in each doping statement is controlled by the 
+{bold} ratio.lat 
+parameter. This is a multiplier to the vertical rolloff.
+
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+{subsection} mos2ex11.in : Breakdown Voltage using Ionization Integrals
+
+Requires: SSuprem 4/S-Pisces
+{newline}
+Minimum Versions: Athena 5.22.3.R, Atlas 5.26.1.R
+
+This examples uses a standard NMOS structure similar to that used in
+the MOS1 section. In this example the Atlas simulation is performed using
+{bold} zero carriers
+. The breakdown voltage is extracted using
+{bold} ionization integrals 
+or
+{bold} electric field lines 
+
+The 
+{bold} solve 
+statement used to ramp the drain electrode has extra parameters for
+calculating the ionization integrals at each step. When using
+ionization integrals it is not necessary to solve for both carriers so
+simulations are very fast. However, the statement
+{bold} impact selb 
+must be used to activate the ionization rate calculation.
+
+The syntax of the solve statement sets the number of ionization
+integrals, their position relative to the ramped contact (ie. drain),
+and the voltage drop from the contact to the start point of the
+electric field lines. Details of the syntax can be found in the Atlas
+User Manual.  
+{bold} deltav 
+controls the distance of the start of each electric field line from the
+ramped contact.
+{bold} ionlines 
+controls the number of electric field lines calculated.
+{bold} lratio 
+controls the spacing ratio between each line. Lratio < 1.0 means more
+lines to the left of the contact. Lratio > 1.0 means more lines to the
+right.
+
+The breakdown voltage is defined as the point at which the ionization integrals are equal to 1.0. Although the 
+{bold} solve
+statement specifies a voltage ramp to 50V, the bias ramp will
+automatically  stop when the ionization integrals exceed 1.0. The
+parameter
+{bold} ^ionstop 
+can be included to disable this feature. If the position of the electric 
+field lines are chosen correctly the electron and hole ionization integrals 
+should equal 1.0 at the same voltage. If this is not the case, users should 
+check the position of the electric field lines. 
+
+The 
+{bold} output 
+statement is used to specify the electric field line parameters for the
+saved solution file. Note that users must specify these parameters on
+the output as well as solve statements to save the electric field
+lines. The lines can be plotted in Tonyplot by selecting the LINES icon
+from the PLOT/DISPLAY menu.
+
+Following the simulation, the peak electric field is extracted from the
+solution file. The
+{bold} extract 
+statement also reports the XY position of the peak. See the Simulation
+Standard Hints and Tips page for August 1996 for more details.
+
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+
+{subsection} mos2ex12.in : SiGe PMOS Process and Device Simulation
+
+Requires: SSuprem 4/Elite/Blaze
+{newline}
+Minimum Versions: Athena 5.22.3.R, Atlas 5.26.1.R
+
+This example demonstrates the interface from process to device
+simulation for a SiGe PMOS structure. Physical deposition and etch
+models are used to provide realistic topography. It shows:
+
+{bullet} PMOS process simulation using Athena
+{newline}
+{bullet} Specification of Ge mole fraction in Athena
+{newline}
+{bullet} Use of ELITE deposition and etching for contact topography
+{newline}
+{bullet} Definition of SiGe dopants 
+{newline}
+{bullet} Interface to Atlas 
+{newline}
+{bullet} Saving and plotting of the band structure for the SiGe/Si heterojunction.
+{newline} 
+{bullet} Id/Vgs characteristic using Atlas
+
+In this example a SiGe MOSFET structure is formed using process
+simulation. This contrasts with the previous examples in this section.
+To repeat the electrical analysis of the previous examples using this
+structure the Atlas simulation of this example should be replaced with
+the Atlas syntax for parameter settings, model selection, numerical
+methods and solve sequences from the previous examples.
+
+The simulation of SiGe structures in Athena is similar to pure silicon
+MOSFET structures documented under the MOS examples section. The
+differences described here are limited to the special syntax needed for
+SiGe.
+
+The Ge mole fraction in the deposited SiGe film is set by the 
+{bold} c.frac 
+parameter on the deposit statement. 
+
+In FLASH it is necessary to define whether a dopant is donor or acceptor
+explicitly for each material. The command
+{bold} impurity i.boron acceptor sige 
+is used to set boron as a p-type dopant in SiGe. A similar command is
+used to define phosphorus as a  donor.
+
+The interface from Athena to Atlas is the simple
+{bold} go atlas 
+statement. It saves the structure from Athena and transfers it to Atlas. No 
+{bold} mesh 
+statement is needed at the start of the Atlas run. The 
+{bold} electrode 
+statement in Athena is required to identify which regions are defined
+as electrodes in Atlas.
+
+The Atlas run in this file is very simple. It solves only a single bias
+point with Vds=2.0V. To save the band structure the command
+{bold} output con.band val.band 
+is used. This tells Atlas to save the conduction and valence band edge
+energies to any solution files saved using 
+{bold} save
+. The final structure in Atlas is displayed using TonyPlot. The band
+diagram can be seen by taking a vertical 1D cross section in TonyPlot,
+selecting the 1D plot and changing the display variables from the
+scrolling list to be the two band edges.
+
+{italic} For details on more complex applications of SiGe MOSFETs, users
+{italic} should consult the other MOS examples. All SPISCES analysis
+{italic} in these sections can be applied under Blaze to SiGe MOSFETs.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+{subsection} mos2ex13.in : SiGe PMOS Id/Vds with NEB Model
+
+Requires: Blaze/Giga
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates a comparison of Id/Vds analyses including
+second breakdown of a short PMOS structure with a SiGe channel using
+the non-isothermal Energy Balance (NEB) models.
+It shows:
+
+{bullet} Specification of PMOS structure using Atlas syntax
+{newline}
+{bullet} Specification of abrupt SiGe heterojunctions
+{newline}
+{bullet} Selection of the energy balance model, lattice heat flow solution
+and coupled solver
+{newline}
+{bullet} Simulation of Id/Vds characteristic for Vgs=-1.0V
+
+
+Many of the models and methods required for Id/Vds and breakdown
+simulation are described in the snapback and second breakdown examples
+in the MOS examples section. Some tips in defining SiGe structures are
+also given in the HBT examples section. Users should consult both these
+sections for more details on these two areas.
+
+Submicron devices should be simulated using the energy balance model
+due to velocity overshoot, and nonlocal impact ionization effects,
+which could substantially influence device characteristics. For high
+current levels the thermal self-heating effects could also play an
+important role decreasing mobility and impact ionization rate. This
+example demonstrates comparison of Id/Vds curves obtained with energy
+balance and nonisothermal energy balance models. The curve tracing
+algorithm is used to obtain these curves.
+
+The example contains two Atlas runs. The first uses non-isothermal
+energy balance simulation of an Id/Vds curve and the second repeats
+this simulation without the lattice heating model.
+
+
+The device is described in the first part of the input file, including
+mesh, regions locations, electrodes locations, and doping distribution.
+The
+{bold} region 
+statements are used to define SiO2, Si and SiGe regions. The Ge
+composition fraction is defined  using
+{bold} x.composition=<num> 
+Since no grad.* parameters were used on the region statement the Ge
+composition fraction has an abrupt change from 0.25 to zero at the
+region boundary. This constitutes the abrupt heterojunction.
+Discontinuities in band potentials will be seen at the SiGe/Si region
+boundaries.
+
+
+After the device description the
+{bold} material 
+statements are used to specify the electron and hole lifetimes, hole
+energy relaxation times both in Si and SiGe, and Nc and Nv in SiGe.
+The
+{bold} model hcte.ho lat.temp 
+statement is used to specify solution of the hole energy balance and
+lattice heating equations respectively. Other carrier and lattice
+temperature physical models are also set on the same statement.
+The 
+{bold} impact 
+statement is used to assign the energy relaxation length for Selberherr model.
+
+Thermal boundary conditions are defined in the 
+{bold} thermcontact 
+statement.  A value of the thermal resistance is specified at the thermocontact 
+located along the substrate, and thermal isolation conditions are assumed on the 
+all other surfaces.
+
+Then the gate voltage is ramped to -2V, and then the curve tracing algorithm
+is used for ramping the drain voltage. The
+{bold} curvetrace 
+statement is used to initialize parameters for the curve tracing algorithm. The
+contr.name parameter specifies the name of the electrode for which the load line
+technique will be applied (drain in this case). The curr.cont parameter means
+that value of current will be monitored, and the simulation will be stopped when
+the current exceeds the value specified by end.val parameter.
+The mincur parameter defines the minimum current value after which the load
+line technique will actually be applied (before that voltage boundary
+conditions are used). The nextst.ratio parameter defines the factor which to 
+use to increase voltage step on the smooth parts of the IV  curve.
+The command
+{bold} solve curvetrace 
+is used to activate the curve tracing algorithm.
+
+The second Atlas run uses the same syntax, except that the solution of
+the  lattice energy balance equation is turned off in the
+{bold} models 
+statement. The Id/Vds curves from both runs can be overlaid using
+TonyPlot. In plotting the drain voltage the quantity:
+{bold} drain int. bias 
+should be used in TonyPlot. This is the value of the voltage on the
+metal/semiconductor interface at the drain as opposed to 'drain bias'
+which includes the load resistor used in the curve trace algorithm.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+ 
+{subsection} mos2ex14.in : Comparison of CVT, SHIRAHATA and WATT Mobility Models
+
+Requires: S-Pisces
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+THe example demonstrates a comparison between three different surface
+mobility models used in MOSFETs. THe example consists of four Atlas runs that:
+
+{bullet} Define optimum MOS mesh using a variable for surface mesh spacing
+{newline}
+{bullet} Select in turn one of three MOS Mobility Models
+{newline}
+{bullet} Run a Id/Vgs simulation at low Vds
+{newline}
+{bullet} Overlay of Id/Vgs curves and mobility in Tonyplot
+
+The mesh generation and structure deinfition part of this input file
+follows the standard syntax outlined in the Getting Started Chapter of
+the Atlas manual. A variable
+{bold} surf_a 
+is used to set the mesh spacing at the silicon surface. This mesh
+spacing is important in resolving the high electric field and carrier
+concentration gradients at the surface. The sensitivity of the mobility
+models to mesh variations can also be easily examined by re-running
+this example with different settings of surf_a.
+
+The three models compared in this example are 
+{italic} CVT, Shirahata 
+and
+{italic} Modified Watt
+. The CVT model is selectred simply with the syntax 
+{bold} models cvt 
+since it contains doping and parallel field dependence. The Shirahata
+model contains only a perpendicular field dependence. It must be
+combined with Klaassen's model and the standard field dependent
+mobility model using
+{bold} models kla shi fldmob
+.
+
+The modified Watt model also needs to be combined with other models. The syntax is:
+{newline}
+{bold} models conmob fldmob  
+{newline}
+{bold} mobility watt.n mod.watt.n 
+
+Extra parameters are also required to determine the range of the modified Watt model. These parameters are 
+{bold} ymaxn.watt 
+that specifies the depth of the Watt model and 
+{bold} min.surf 
+that specifies the lateral extent by restricting the model to minority
+regions. In this case this means the channel and not the LDD or source and
+drain regions.
+
+
+The Id/Vgs simulation is similar to that in the previous section. For the
+initial drain biasing, the syntax
+{bold} method gummel newton 
+is used. This provides better convergence at low biases. 
+The simulation reverts to
+{bold} method newton 
+once the drain is biased.
+Note that in this case only electrons are needed. The syntax
+{bold} method carriers=1 electrons 
+is used to specify that only electron continuity and poisson equations are to
+be solved.
+
+The 
+{bold} probe 
+statement is used to save the surface mobility and perpendicular field at the
+center of the channel. Values for both these parameters are saved to the 
+{italic} log 
+file. TonyPlot can be used to display graphs of mobility vs. field.
+Note that the probe statement reports the exact mobility used in Atlas
+calculations. The value is calculated at the centre of the side of each
+triangle. The nearest such point to the location of the probe is used.
+Values of mobility or field from the probe might differ from values saved
+in the 
+{italic} solution file
+. The solution file saves the average value of such quantities at a node
+point. With coarse or bad meshes, this may result in inaccurate plots.
+
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+{subsection} mos2ex15.in : Effect of Poly Depletion on C-V curves
+
+Requires: S-Pisces
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example shows how reduced poly doping can result in depletion occuring in
+the poly gate under bias.  This undesireable effect shows up in 
+Capacitance-Voltage (C-V) curves as anomolies in the shape of the plot.
+
+The effect of reduced poly doping in a MOSFET with a thin gate is to reduce
+drain current drive and increase the threshold voltage, since some of the
+voltage that should be dropped across the gate oxide is now dropped across the
+depletion region in the poly gate.
+
+The usual causes of reduced doping in the poly are counter doping process flows,
+insufficient source-drain implant dose, and evapouration of dopant during 
+thermal anneals due to the lack of a capping oxide.
+
+The example shows both the band diagram and Capacitance-Voltage curve of a P+
+poly gate doped to a concentration of 1e19/cm3.  The program then goes on to
+compare the same C-V plot and band diagram for the poly gate doped to 1e20/cm3
+and 1e21/cm3 by overlaying the three cases.
+
+It will be obseved that even for a poly gate doped to 1e20/cm3, depletion 
+occurs in the poly gate giving anomolous C-V characteristics.  This can have
+serious consequences if the maximum value from the C-V curve is used to measure
+the thickness of the gate oxide.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+{subsection} mos2ex16.in : Effect of Poly Doping on Threshold Voltage
+
+Requires: S-Pisces
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example shows the dramatic effect of depletion in the poly gate when the
+doping in the poly is reduced below its maximum level.  The I-V curves show
+that even a doping density of 1e20/cm3 in the poly is not sufficient to 
+prevent depletion, loss of current drive and a shift in the threshold voltage
+of the n-MOSFET.
+
+The first indication of poly depletion is non ideal C-V curves as shown in the
+previous "Poly Depletion" example.  Reduced doping in the poly gate can be a
+combination of insufficient implant dose, counter doping of P+ poly and dopant
+evapouration during uncapped anneals.
+
+The program runs three identical simulations the only difference being the
+doping in the poly gate.  Three doping levels are simulated, 1e19, 1e20 and
+1e21/cm3.  At the end of the three simulations, the I-V curves of the n-MOSFET
+in the region of the threshold voltage are plotted.  The effect of poly doping
+is demonstrated by the increased threshold voltage and reduced current drive
+with reduced poly doping. 
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+{subsection} mos2ex17.in : 20nm n-MOSFET created using 60nm lthography
+
+Requires: SSuprem 4/MC Implant/Elite/S-Pisces
+{newline}
+Minimum Versions: Athena 5.22.3.R, Atlas 5.26.1.R
+
+This examples demonstrates the creation of a self-aligned 20nm n-MOSFET using a
+60nm lithography node.  This Silvaco designed process has several advantages:
+
+{bullet} The channel implant does not penetrate the gate insulator
+{newline}
+{bullet} Transient enhanced diffusion effects in the silicon are avoided
+{newline}
+{bullet} Very low energy implants are avoided
+{newline}
+{bullet} 20nm gate length devices can be fabricated using 60nm litography
+
+Non penetration of the gate stack by the channel implants removes the damage
+that this implant usually causes.  The source/drain implants are also arranged
+in such a way that damage to the silicon is avoided. Transient enhanced
+diffusion in the silicon and other damage effects therefore do not occur.
+Implant energies of 10keV are used, allowing the use of standard implanters,
+and finally the 20nm device can be created with 60nm lithography technology,
+thus reducing the cost.
+
+The stress induced by the nitride spacers is calculated in Athena which is
+passed to the Atlas device simulator and converted into strain.  This strain
+is used to calculate the strain modified bandgaps and mobilities in the device.
+  
+In Atlas, the strain dependent bandgap model is invoked by the
+{bold} STRESS 
+parameter in the 
+{bold} models 
+statement and the strain dependent mobility models are
+invoked by the 
+{bold} EGLEY.N 
+and 
+{bold} EGLEY.P 
+parameters in the 
+{bold} mobility 
+statement.
+
+The output statement adds electron mobility and velocity to the saved structure
+files, from which it can be seen that most of the channel is velocity saturated,
+or close to it, as a result of the extreme dimensions of this device.  As a
+result of these dimensions, the device yields an output current density
+exceeding 2000uA/um for Vg=Vd=1.2V
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+{subsection} mos2ex18.in : Negative Bias Temperature Instability of a Silicon pMOSFET
+
+Requires: SSuprem 4/S-Pisces
+{newline}
+Minimum Versions: Athena 5.22.3.R, Atlas 5.26.1.R
+
+This example creates a pMOSFET and models the degradation
+caused by stressing at negative gate bias and elevated
+temperature.  After relaxing the device the permanent
+component of the degradation is shown. The actual size 
+of the degradation is enhanced compared to reality,
+for the purposes of illustration.  The example shows
+how to :
+{newline}
+{bullet} Create a PMOS structure using Athena syntax
+{newline}
+{bullet} Set up the 2-stage Negative Bias Temperature Instability model
+{newline}
+{bullet} Do a transient simulation of stress and relaxation at elevated temperature.
+{newline}
+{bullet} Obtain Id-Vg curves using loaded structure files with saved trap state occupations.
+
+The input file consists of four separate runs,  the first starts Athena
+{newline}
+{bold} go athena
+{newline}
+which uses commands similar to those in mos2ex12 to create an example
+ pMOSFET structure.  The next section starts Atlas
+{newline}
+{bold} go atlas 
+{newline}
+and sets up the interface traps at a density of 1e12 per c.c. on the 
+{bold} INTTRAP 
+statement.  The particular model used is the 4-state stochastic 
+model GRA.4.STO. This is described in detail in the Atlas users manual.
+The traps at each interface point are divided into 
+GRA.SAMPLES subtraps, and the parameters for each one are chosen from
+a random uniform distribution, determined from the specified mean value
+and variance parameters.  The set of 
+{newline}
+{bold} PROBE FT.MSC MSCSTATE=n [position]
+{newline}
+statements cause the values of the trap occupation probabilities
+at the particular location on the interface be written to the log file.
+The location parameters must position the probe exactly on an interface to obtain
+ correct values.
+The traps are initialised to all be in the
+precursor state, and then a transient simulation is done at negative 
+gate bias with the device biased to conduct.  At various points the 
+structure file is saved, the TRAPS parameter on the OUTPUT statement
+ensures that the current occupation probabilities of all the subtraps
+are saved to the file.  In the next section starting Atlas again 
+{newline} 
+{bold} go atlas 
+{newline}
+the structure file corresponding to the device after 100 s of stressing
+is read in.  On a transient ramp the
+the gate and drain bias are quickly reduced to zero and a transient 
+simulation with the device in this relaxed state is run to 1000 seconds.
+The structure file is saved at the end of the run.  In the final section 
+starting Atlas again
+{newline}
+{bold} go atlas 
+{newline}
+the mesh is read in and the simulation flags set.  The deck then loops
+6 times between the statements
+{bold} loop steps=6 
+and 
+{bold} l.end 
+to read in a sequence of saved structure files and obtain the
+Id-Vg characteristics of the virgin device and the degraded devices.
+The degradation is partially recoverable,  after 1000 s of realxation
+the degradation is better than it is immediately after 100 s of 
+stressing.  This is due to structural relaxation of some traps
+back to the precursor state, whilst some remain as charged interface 
+(Pb) states. 
+{newline}
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} mos2ex19.in : Threshold Voltage Hysteresis of a Silicon nMOSFET
+
+Requires: S-Pisces
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example shows how to simulate the finite charging and discharging times of
+interface traps without doing a transient simulation.
+The example demonstrates:
+
+{bullet} How to use the sweep and save parameters of dbinternal.
+{newline}
+{bullet} Set up a deck with interface traps extending into the oxide.
+{newline}
+{bullet} Do a steady-state voltage ramp while simulating the temporal response of traps.
+{newline}
+{bullet} Obtain and visualise the threshold voltage differences as a function of simulated ramp time.
+{newline}
+
+The file mos2ex19.in starts dbinternal and instructs it to
+use mos2ex19_aux.in.  The statement
+{newline}
+{bold} sweep parameter=measurementtime type=power range="1.0, 1.0e-4, 9" 
+{newline}
+causes the deck to be run 9 times in succession with the value of measurement time
+varying between 1.0 and 1.0e-4 in a semi-decade decrease each time.  The file
+mos2ex19_aux.in sets up a basic nMOSFET, and the statement
+{newline}
+{bold} inttrap e.level=0.6 acceptor density=1.0e12 s.i degen=4 sign=1.0e-13 sigp=1.0e-14 x.min=0.6 x.max=0.9 heiman depth=0.002 hpoints=20 
+{newline}
+sets up a uniform distribution of acceptor-like traps along part of the Si/SiO2 interface. The areal density is
+1e12 /cc and the depth is 0.6 eV below the Silicon conduction band.  The HEIMAN flag causes the traps
+to have a uniform distribution into the interface to a depth of 2 nanometres, covered by a vertical interpolation
+mesh of 20 points.  How this affects the capture and emission times of the carriers is explained in the 
+manual.
+The solve statement parameter 
+{bold} timespan 
+is assigned a value from the current value of measurementtime, and supplies the
+overall time for the ramp to the HEIMAN model. The drain is biased to conduct and then the
+gate voltage is ramped from 0V to 3V. The trap occupancy is then calculated
+at each bias step according to the bias value and the elapsed time.  At the end of the
+forward ramp, the gate voltage is ramped down to 0 V again, with the same value assigned
+to timespan. 
+
+The threshold voltages and their difference are calculated and are output to the file
+mos2ex19.dat in a format suitable for viewing by Tonyplot. This was specified in the 
+statement
+{newline}
+{bold} save type=sdb outfile=mos2ex19.dat
+{newline}
+in mos2ex19.in.  The log files for forward and reverse gate bias ramps are also
+output, and the ones plotted correspond to the last value of measurement time used
+(0.1 milliseconds).
+
+The traps are initially empty and as the bias increases they start to fill with electrons.
+For a short measurement time the traps occupation fraction is small when the threshold gate
+voltage is exceeded and so there is no significant effect on the threhold voltage.  At the 
+end of the ramp the trap occupation is higher.  A solve prev at this stage would cause the
+trap occupation probabilities to achieve their steady state values.  Instead, the gate voltage
+ramp is reversed and the traps continue to charge until the gate voltage is reduced enough
+that carrier emission starts to dominate.  The threshold voltage occurs while the traps still 
+have a high occupation probability and contibute a negative interface charge.  Consequently
+the threshold voltage is higher on the reverse ramp.  This difference is plotted as a
+function of measurement time, and is more pronounced for shorter simulated measurement
+times. For longer measurement times the traps have time to respond to the bias changes and
+no hysteresis effects are seen.  Typical Id-Vg curves and trap occupation probabilities versus Vg
+ curves are shown for a measurement time of 0.1 milliseconds. They clearly demonstrate the
+ hysteresis.  Actual Vt values can also be plotted from mos2ex19.dat.
+
+{newline}
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+{subsection} mos2ex20.in : Reaction-Diffusion degradation modelling of a Silicon pMOSFET
+
+Requires: S-Pisces
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example is similar to mosex18 but uses a different degradation model.
+It demonstrates :
+
+{bullet} Using Athena to set up a pMOSFET.
+{newline}
+{bullet} Setting up a deck with with the Reaction-Diffusion degradation model enabled.
+{newline}
+{bullet} Doing stressing and relaxation biasing transient simulations.
+{newline}
+{bullet} Using PROBE statement to get hydrogen densities.
+{newline}
+{bullet} Obtaining Id-Vg curves for degraded device structures.
+
+The first section beginning
+{newline}
+{bold} go athena
+{newline}
+is much the same as mos2ex18.  The next section starting
+{newline}
+{bold} go atlas
+{newline}
+enables the reaction-diffusion model using the DEVDEG.RD parameter
+{newline}
+{bold} model temp=300 mos hhi devdeg.rd devdeg.h
+{newline}
+and the parameter DEVDEG.H specifies that the traps created will become positively charged. 
+The hot hole model is also enabled.  Accompanying the models statement is 
+{newline}
+{bold} degradation rd.sihtot=1.0e12 rd.h.hccoef=1.0e8 rd.kf0=2.0e-4 rd.aevar=0.05 rd.kr0=1.0e-13 rd.invhcoef=0.01 rd.coupled
+{newline}
+which sets the density of passivated bonds on the interface using the RD.SIHTOT parameter.  The contribution of hot holes
+to the degradation is included by assigning a value to the RD.H.HCCOEF parameter.  The depassivation rate constant RD.KF0
+is set to 2.0e-4 /s and the repassivation rate constant to 1e-13 cc /s.  The default activation energy of 1.5 eV is
+used with a variance of 0.05 eV as specified by the RD.AEVAR parameter.  The RD.INVHCOEF parameter enables the inversion 
+hole contribution to depassivation rate, and the RD.COUPLED flag enables fully self-consistent coupling between the 
+hydrogen generation rates and the other equations.
+
+The PROBE statements probe the atomic hydrogen and molecular hydrogen compositions at various points near to the
+Si/SiO2 interface.
+
+The device is stressed to -2.0 V on the gate and 0.1 V on the drain and the simulation run
+for 100 s.  The DEVDEG parameter on the LOG statement means that the total interface charge due to
+degradation is stored in the log file.  The depassivation process creates atomic hydrogen which
+then diffuses and dimerises to molecular hydrogen.  The default values for diffusion and dimerisation
+have been used,  details are given in the manual.
+
+In the next section, starting
+{newline}
+{bold} go atlas
+{newline}
+the same models are set and the device structure degraded to 100 s is read in using the LOAD statement.
+The gate and drain biases are zeroed on a short ramp and the device is relaxed to 1000 s. The presence
+of atomic hydrogen which has not diffused away from the interface means that the repassivation rate is
+greater than the depassivation rate, most notably in the channel under the gate. This is seen in the 
+integrated degradation charge which is captured in the log file and is plotted at the end of the relaxation
+simulation.
+
+The structure files from this and the previous section are all saved with the DEVDEG parameter on the OUTPUT
+statement causing the degradation trap density to be output.  This is then used in the final section, starting
+{newline}
+{bold} go atlas
+{newline}
+where each of the saved structure files is read in turn during the loop statement, and the Id-Vg curves
+obtained. These are then plotted and you can see that the relaxed structure has retained a small shift in
+threshold voltage.  This is disproportionate to the overall reduction in interface charge density, and is
+due to the large repassivation occuring at the interface under the gate,  where the device is most sensitive
+to interface charge.  Over longer time periods the free hydrogen will diffuse away and repassivation will cease.
+
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+{subsection} mos2ex21.in : 3D FinFET Simulation
+
+Requires: Victory Process, Victory Mesh, Victory Device
+{newline}
+Minimum Versions: Victory Process 7.22.3.R, Victory Mesh 1.2.4.R, Victory Device 1.12.1.R
+
+By default Victory Process and Device run on just one processor.
+To ensure better perfomance on your computer the following simulation condition
+{bold} simflags="-P all" 
+could be specidied in the 
+{bold} go 
+line starting Victory Process or Device. This means that all processors available will be used.
+If you want to use a smaller number of processors you can substitute "all" with a desired number, e.g.
+{bold} simflags="-P 4".
+
+In this example, a FinFET is created using the etch, deposit, diffusion and 
+Monte-Carlo implantation modules of Victory Process.
+
+The structure created by Victory Process is then meshed in Victory Mesh using a full 3D Delaunay mesh and is then transferred to Victory Device for electrical analysis of the unsaturated Vt curves as well IdVd curves
+
+The device simulation uses the 
+{bold} energy balance model 
+to account for the effects of
+{bold} ballistic carrier transport
+, which significantly increases drain currents and is the cause of the decrease
+in the output impedance of the IdVd curves.
+
+It also uses the 
+{bold}  Bohm Quantum Potential (BQP)
+model to take into account quantum
+confinement of carriers in 3 dimension which significantly decreases the drain currents.
+
+For comparison purpose Drift Diffusion are also included in the simulation
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+{subsection} mos2ex22.in : Creating a Paper Spice Model Card from nMOS TCAD simulations
+
+Requires:  Victory Process / Victory Mesh / Victory Device / UTMOST-IV
+{newline}
+Minimum Versions: Victory Process 7.22.3.R / Victory Mesh 1.2.4.R, Victory Device 1.12.1.R / UTMOST-IV  2.1.1.R
+
+This example shows how to generate a 
+{bold} paper Spice model card, 
+from a device that has not yet been created, but has only been simulated in 
+TCAD.  Once the deckbuild input file has been created, the entire flow can be 
+run, without operator intervention, in the deckbuild environment.
+
+The example flow creates a 3D 65nm nMOS transistor using Victory Process, then 
+simulates unsaturated and saturated threshold voltage curves and an IdVd curve 
+set, using Victory Device.  These curves are then used as input to the Spice 
+Model extraction and optimization tool, called UTMOST-IV.
+
+The UTMOST-IV section begins with the 
+{bold} go utmost4
+line, and the entire script from the
+{bold} script begin
+line to the 
+{bold} script end
+line is passed to the UTMOST-IV simulator.  The
+{bold} run script
+line then informs UTMOST-IV to run the passed script.  Deckbuild will not 
+continue on to the next lines, until the script is completed by UTMOST-IV.
+
+The first few lines begining with
+{bold} var
+declares variables that will be modified later.  This variable declaration is
+not strictly necessary, but is good practice and is strongly advised. 
+
+The next two blocks of the input file load and format the unsaturated and
+saturated threshold voltage log files generated from the TCAD simulations.
+
+The third block of the input file creates a "for" loop to load in the four
+IdVd TACD log file curves.  The variable "i" is used to index the log file
+number included at the end of each of the separate TCAD log file base names.
+Once all these TCAD data quantity names and data formats have been defined, 
+the whole data set is saved using the
+{bold} saveDataSets
+parameter, which creates the 
+{bold} mos2ex22.uds
+file, which will be used as the curve reference data in the Spice model card
+optimization routine.
+
+Currently in UTMOST-IV, there is still one project file that needs to be 
+created in the UTMOST-IV interactive GUI, before UTMOST-IV input files can be
+run in the deckbuild run time environment.  This is the
+{bold} mos2ex22.prj
+file, which has already been created for you, so there is no need to open the
+UTMOST-IV GUI to run this example.  It is envisioned that in a future version
+of UTMOST-IV, it will be possible to also create this project file within the 
+deckbuild script, allowing complete optimization input files to be created 
+within the deckbuild environment.
+
+The optimization process involves loading a default Spice Model, setting some
+base device characteristics in the Spice model card, such as gate oxide 
+thickness, length and width etc., that match thre TCAD device, defining the 
+device test Spice netlist for running I-V curves, loading the reference TCAD
+I-V curves for optimization, and then running the optimization routine to 
+modify the Spice model card parameters, such that the generated Spice model
+then fits the characteristics of the TCAD simulations. 
+
+Once the model optimization and extraction is complete, the new Spice model
+generated curves are compared with the TCAD generated curves, so that the
+accuracy of the optimization can be visualized.  In the generated plots,  the
+filenames containing the letters "ut" are those generated by UTMOST which 
+created the new Spice model card device parameters.  The other curves are 
+generated from TCAD simulations.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} mos2ex23.in : Device Degradation due to Hole Trapping in a Silicon pMOSFET
+
+Requires: S-Pisces
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example shows the effects of device degradation caused by stressing a 
+transistor at a negative gate bias and an elevated temperature.  The used 
+model is based on hole trapping into the gate oxide but also accounts for 
+the permanent component by an interface reaction.  The example shows how to:
+{newline}
+{bullet} Create a PMOS structure using the Atlas syntax and refine 
+the simulation grid in the gate oxide.
+{newline}
+{bullet} Set up a deck with the four-state NMP model enabled.
+{newline}
+{bullet} Simulate the temporal response of oxide and interface traps 
+during a stress and a relaxation phase.
+{newline}
+{bullet} Visualize the local degradation using the hole occupancy of 
+the oxide traps.
+
+
+{newline}
+
+The input file consists of three separate runs, where each of them starts 
+with
+{bold} go atlas.
+In the first section, the geometry, the mesh, the electrodes, and the doping 
+of the simulated device are specified using the statements 
+{bold} mesh,
+{bold} region,
+{bold} electrodes, 
+and 
+{bold} doping,
+respectively.  Since the four-state NMP model requires a fine mesh in the 
+gate oxide region between the substrate and the gate, the mesh is refined 
+based on the potential using the statement
+{bold} regrid.
+The resulting structure is saved in an output file called mos2ex23_0.str.
+
+{newline}
+
+In the next section, ATLAS is restarted and the refined structure is read 
+in again.  Then the four-state NMP model is enabled by the parameter 
+{bold} nmp4.sto
+after the 
+{bold} trap 
+statement.  The oxide traps are placed into the material 
+{bold} sio2
+and confined to the region defined by coordinates
+{bold} x.min, 
+{bold} x.max, 
+{bold} y.min,
+and 
+{bold} y.max.
+Their oxide and interface state density are set to 1e20/cm3 and 1e11/cm2, 
+respectively.  The parameter 
+{bold} nmp4.sample 
+specifies the number of simulated traps at each gate oxide point.  In this 
+example, a small number of traps have been chosen in order to reduce the 
+computation time.  However, this number should be increased for more 
+realistic simulations, especially if one is interested in the degradation 
+of large-area devices.  The traps have distributed parameters, given by 
+their mean values and their variance.  The meaning of each of those 
+parameters is described in the ATLAS user manual.  Furthermore, the traps 
+are enabled to capture/emit charge carriers from/to the silicon substrate 
+by setting the parameter 
+{bold} subcontact 
+to the material 
+{bold} silicon.
+
+{newline}
+
+Next, the device is simulated for steady-state conditions using the 
+statements
+{bold} solve init
+and
+{bold} solve prev.
+The obtained oxide and interface trap charges correspond to their 
+respective pre-stress levels and are saved in the structure file 
+mos2ex23_1.str that will be used for the extraction of the threshold 
+voltages in the last section.  Note that the 
+{bold} output
+statement requires the flag 
+{bold} devdeg 
+for saving the trap charges in the output file mos2ex23_1.str.  The 
+stored charges are visualized using TONYPLOT.  The figure clearly shows 
+that the trapped charges are inhomogeneously distributed in the gate 
+oxide due to the assumed defect-to-defect variations in the amorphous SiO2 
+gate oxide.
+
+{newline}
+
+In the next step, the device is stressed by applying a gate bias of 
+-1.55 V for 1 s, including an initial ramptime of 1e-6 s.  The 
+temperature of this stress phase is set 100 C by
+{bold} model temp=373.
+The bias temperature stress leads to a device degradation, saved in the 
+output file mos2ex23_2.str. The gate oxide is found to have an increased 
+concentration of trapped holes compared to the pre-stress level.  The 
+stress period is followed by a relaxation phase of 1e3 s at 0 V, where 
+the degradation at the end of this phase is saved in the structure file 
+mos2ex23_3.str.  The TONYPLOT figure demonstrates that a substantial 
+fraction of the trapped charges has been removed during device recovery.
+
+{newline}
+
+For studying critical spots in the gate oxide, the local degradation may 
+be of interest.  Therefore, the corresponding 
+{bold} output 
+statements are followed by the flags 
+{bold} u.trantrap 
+and 
+{bold} traps 
+in order to write out the trap occupation probabilities at a specified 
+position within the gate oxide.  This position together with the requested 
+states 
+{bold} msc.state 
+must be set after the 
+{bold} probe 
+statement.  In this input deck, the stress and relaxation data are written 
+out into the log file mos2ex23_1.log and mos2ex23_2.log, respectively.  In 
+both phases, the plotted degradation curves show a behavior that is almost 
+logarithmic and therefore reminiscent of negative bias temperature 
+instability.
+
+{newline}
+
+In the following section, ATLAS is restarted.  In a loop, the trapped oxide 
+and interface charges of the unstressed, the stressed, and the relaxed 
+device are loaded and a gate bias sweep is performed.  The calculated output 
+characteristics are recorded in the log files mos2ex23_3.log, mos2ex23_4.log, 
+and mos2ex23_5.log, respectively.  The comparison of the Id(Vg) curves 
+demonstrates a pronounced shift of the threshold voltage due to hole 
+trapping at the end of the stress phase.  The following relaxation period 
+of 1e3 s leads to an incomplete recovery of the device degradation.
+
+{newline}
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+{subsection} mos2ex24.in : Edge Field Emitting Vacuum Triode
+
+Requires: Victory Process 3D Structure Editor, 3D Diffusion and Implantation
+          Victory Device 3D
+{newline}
+Minimum Versions: Victory Process 7.22.0.R  Victory Device 1.12.1.R
+
+It is well known that electric field enhancement occurs at the tip of a pointed
+structure.  Using this phenomenon, it is possible to create such high fields
+with only moderate voltages, that electrons can tunnel from the tip of the 
+pointed structure directly into the surrounding vacuum.  This process is 
+analagous to tunnelling through an interfacial energy barrier into a conduction
+band, except that the conduction band in this case, is the transmittance of an
+electron into the surrounding vacuum, where the path of the now free electron
+can then be influenced by any electric fields that exist in that vacuum region.
+
+The escape of electrons from a solid into the vacuum from a high field region,
+is exactly analagous to the escape of electrons from a solid heated wire.  It
+is therefore possible to create devices exactly analagous in operation, to 
+vacuum valves, only theses field devices can be created in tiny volumes on 
+silicon chips, rather than be encased in bulky evacuated glass tubes.  The 
+addition of a control gate and collector electrode to such a silicon device, 
+therefore allows the creation of silicon based vacuum triodes with useful gain
+at relatively low operating voltages.  An added bonus is a natural tolerance to
+radiation harsh environments, plus a very low off current, since no current is
+required to heat the emitter as occurs in a traditional heated emitter vacuum
+valve device.  There is also no reason not to create solid state silicon 
+versions of pentode valve equivilents etc. for RF applications because of the 
+analagous nature of the device operational physics.
+
+In this example, we demonstrate an edge shaped field emitter device together 
+with collector and current control gate electrodes, forming a vacuum triode.
+The off state leakage is plotted in mos2ex24_0.log and shows the unintentional
+field emission of electrons from the gate electrode to the collector, as the 
+collector voltage increases to the operating voltage of 20 volts.  However, the
+maximum off leakage is still very well controlled at 1e-15 Amps.
+
+Once at it's operating voltage, mos2ex24_1.log shows the gate control plot.
+The collected current of this triode can be changed by a minimum of 9 orders of
+magnitude, by the gate electrode voltage input, making it a very useful 
+amplifying device.  As can be seen from the plot, as the gate voltage is 
+increased, the field between gate and collector reduces, thus reducing this
+parasitic current path with increasing gate voltage.  After approximately 4 
+volts of gate bias, the collected current is mostly emitted from the emitter 
+electrode, rather than the gate electrode as "Substrate Current".
+
+This example makes use of the
+{bold} Zaidman model,
+which first calculates the field emission from a semiconductor, into the 
+vacuum, then the emitted electrons follow the vacuum field lines until they
+encounter a metallic electrode.  In this triode design, it is both possible for
+the gate electrode to receive electrons from the emitter, as well as emit 
+electrons to the collector.  So this electrode is made of two parts, one part
+metal electrode, to receive electrons from the emitter, and one part 
+semiconductor to enable transmission of electrons to the collector.  If 
+electrons in the vacuum encounter an insulator before a metallic electrode, the
+electrons travel along the insulator / vacuum boundary, until they encounter a 
+metallic electrode.
+
+{newline}
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+{subsection} mos2ex25.in : Point Field Emitting Vacuum Triode
+
+Requires: Victory Process 3D Structure Editor, 3D Diffusion and Implantation
+          Victory Device 3D
+{newline}
+Minimum Versions: Victory Process 7.22.0.R  Victory Device 1.12.1.R
+
+It is well known that electric field enhancement occurs at the tip of a pointed
+structure.  Using this phenomenon, it is possible to create such high fields
+with only moderate voltages, that electrons can tunnel from the tip of the 
+pointed structure directly into the surrounding vacuum.  This process is 
+analagous to tunnelling through an interfacial energy barrier into a conduction
+band, except that the conduction band in this case, is the transmittance of an
+electron into the surrounding vacuum, where the path of the now free electron
+can then be influenced by any electric fields that exist in that vacuum region.
+
+The escape of electrons from a solid into the vacuum from a high field region,
+is exactly analagous to the escape of electrons from a solid heated wire.  It
+is therefore possible to create devices exactly analagous in operation, to 
+vacuum valves, only theses field devices can be created in tiny volumes on 
+silicon chips, rather than be encased in bulky evacuated glass tubes.  The 
+addition of a control gate and collector electrode to such a silicon device, 
+therefore allows the creation of silicon based vacuum triodes with useful gain
+at relatively low operating voltages.  An added bonus is a natural tolerance to
+radiation harsh environments, plus a very low off current, since no current is
+required to heat the emitter as occurs in a traditional heated emitter vacuum
+valve device.  There is also no reason not to create solid state silicon 
+versions of pentode valve equivilents etc. for RF applications because of the 
+analagous nature of the device operational physics.
+
+In this example, we demonstrate a pointed field emitting device together 
+with collector and current control gate electrodes, forming a vacuum triode.
+The off state leakage is plotted in mos2ex25_0.log and shows the unintentional
+field emission of electrons from the gate electrode to the collector, as the 
+collector voltage increases to the operating voltage of 20 volts.  However, the
+maximum off leakage is still very well controlled at 1e-14 Amps.
+
+Once at it's operating voltage, mos2ex25_1.log shows the gate control plot.
+The collected current of this triode can be changed by a minimum of 9 orders of
+magnitude, by the gate electrode voltage input, making it a very useful 
+amplifying device.  As can be seen from the plot, as the gate voltage is 
+increased, the field between gate and collector reduces, thus reducing this
+parasitic current path with increasing gate voltage.  After approximately 2.8 
+volts of gate bias, the collected current is mostly emitted from the emitter 
+electrode, rather than the gate electrode.
+
+This example makes use of the
+{bold} Zaidman model,
+which first calculates the field emission from a semiconductor, into the 
+vacuum, then the emitted electrons follow the vacuum field lines until they
+encounter a metallic electrode.  In this triode design, it is both possible for
+the gate electrode to receive electrons from the emitter, as well as emit 
+electrons to the collector.  So this electrode is made of two parts, one part
+metal electrode, to receive electrons from the emitter, and one part 
+semiconductor to enable transmission of electrons to the collector.  If 
+electrons in the vacuum encounter an insulator before a metallic electrode, the
+electrons travel along the insulator / vacuum boundary, until they encounter a 
+metallic electrode.
+
+{newline}
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+{subsection} mos2ex26.in : 7nm pFinFET With SiGe Source-Drain Stressors
+
+Requires: Victory Process 3D Structure Editor, 3D Diffusion and Implantation
+          Victory Device 3D
+{newline}
+Minimum Versions: Victory Process 7.22.3.R, Victory Mesh 1.2.4.R, Victory Device 1.12.1.R
+
+For devices with a gate length of 28nm and below, it is possible to obtain
+significant mobile carrier mobility enhancement for most of the channel length,
+using remotely located epitaxial stressor material in the source drain regions.
+Using mobility enhancement techniques like this for p-channel devices can 
+reduce the need for wider gate widths to match complimentary n-channel current
+drives, allowing the possibility of truely symmetrical layouts for 
+complimentary MOS designs.
+
+In this example, we show the effects of mobility enhancement using epitaxially
+grown SiGe source-drain regions in a 7nm p-channel FinFET.  The stress 
+calculation is invoked during the process simulation with the
+{bold} Stress exposed
+statement line.  This calculates the stress induced by the SiGe epitaxial 
+source-drain regions.  At the end of the process simulation, any additional 
+stress induced by subsequent processing steps is adjusted for by the
+{bold} Stress exposed rebalance
+line.  The stress calculations are saved into the final structure file, which
+is then exported to Victory Device.  The strain induced mobility enhancement is
+calculated in the
+{bold} mobility material=silicon model.iso=1 nhance phance
+line.  These enhanced mobility values are then included into any subsequent
+mobility model.
+
+The first device simulation calculates the un-saturate IdVg curve without
+invoking the strain enhancement calculations, whilst the second device 
+simulation takes strain into account.  The difference due to the strain 
+enhanced mpobility is shown in the final plot.
+
+{newline}
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support 
+files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+

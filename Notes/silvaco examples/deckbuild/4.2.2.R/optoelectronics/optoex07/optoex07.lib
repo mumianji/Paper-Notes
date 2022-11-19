@@ -1,0 +1,36 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include <ctype.h>
+#include <malloc.h>
+#include <string.h>
+#include <template.h>
+
+/*
+ * -----------------------------------------------------------------
+ * ATLAS Parser Function Template
+ * ATLAS Version 5.2.0.R
+ * c 1993 - 2000 SILVACO International. 
+ * All rights reserved.
+ * -----------------------------------------------------------------
+ */
+
+/*
+ * Generation rate as a funcition of position
+ * Statement: BEAM
+ * Parameter: F.RADIATE
+ * Arguments:
+ * x          location x (microns)
+ * y          location y (microns)
+ * t          time (seconds )
+ * *rat       generation rate per cc per sec.
+ */
+int radiate(double x,double y,double z,double t,double *rat)
+{
+	double alpha, dum;
+	alpha = 5219.459468;
+	dum = 0.6019e-6/(3.0e8*6.626e-34)*alpha*exp(0.0-alpha*y*1e-4);
+	*rat = dum;
+	return(0);
+}
+	

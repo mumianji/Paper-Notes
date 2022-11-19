@@ -1,0 +1,198 @@
+# TPCS version: 8
+# various properties
+log label 0
+key opaque 0
+mark frequency 0
+mark overlay 0
+graph width 0 2
+graph width 1 1
+graph width 2 1
+graph width 3 1
+graph width 4 4
+graph width 5 1
+sequence size 2
+sequence width 2
+log zero 0
+sequence mark 0 0
+sequence mark 1 1
+sequence mark 2 2
+sequence mark 3 3
+sequence mark 4 4
+sequence mark 5 5
+# Functions
+function 1 "" ""
+function 2 "" ""
+function 3 "" ""
+function 4 "" ""
+select 1
+# plot flags, special
+show mesh off
+show edges on
+show materials on
+show contours off
+show light off
+show vectors off
+show junctions off
+show electrodes on
+show threed off
+# contour set 1
+contours 1 impurity "Electron Conc" "linear"
+contours 1 materials all
+contours 1 min auto
+contours 1 max auto
+contours 1 nsteps 33
+contours 1 type fill
+contours 1 outline off
+contours 1 color 0
+contours 1 apply
+# contour set 2
+contours 2 impurity "Hole Conc" "linear"
+contours 2 materials all
+contours 2 min auto
+contours 2 max auto
+contours 2 nsteps 33
+contours 2 type fill
+contours 2 outline off
+contours 2 color 0
+contours 2 apply
+draw 1
+cutline from 5, -0.04 to 5, 0.2 ; select 1
+cutline from 5, -0.04 to 5, 0.2 ; select 1
+region param -101
+# key positions
+key contours 1 at 3
+key contours 2 at 1
+key contours 3 at 6
+key electrical at 3
+key vectors at 6
+key overlay at 6
+key regions at 4
+key apply 
+# annotation, titles
+title main auto
+title sub auto
+# annotation, footers
+footer right none
+footer left none
+# annotation, show
+show xaxis on
+show yaxis on
+show grid off
+show label xaxis on
+show label yaxis on
+# annotation, axes
+range xaxis auto
+range yaxis -0.3, 1.05 increment 0.2,4
+label xaxis "Microns"
+label yaxis "Microns"
+# zoom
+zoom from 0, 0 scale 1, 1
+# user labels
+# overlay level names
+#
+#
+select 2
+# xsection flags
+show mesh off
+show edges on
+show materials off
+show points on
+show lines on
+# xsection impurities
+xsection impurity none
+xsection impurity "Conduction Band Energy"
+xsection impurity "Electron QFL"
+xsection impurity "Hole QFL"
+xsection impurity "Valence Band Energy"
+# key positions
+key contours 1 at 3
+key contours 2 at 1
+key contours 3 at 6
+key electrical at 6
+key vectors at 6
+key overlay at 6
+key regions at 4
+key apply 
+# annotation, titles
+title main "Section 1 from Super_0.str"
+title sub "(5.000 , -0.040) to (5.000 , 0.200)"
+# annotation, footers
+footer right none
+footer left none
+# annotation, show
+show xaxis on
+show yaxis on
+show grid off
+show label xaxis on
+show label yaxis on
+# annotation, axes
+range xaxis 0.0, 0.2 increment 0.04,4
+range yaxis -4.5, 4.0 increment 1.0,4
+label xaxis "Depth  (um)"
+label yaxis "Energy  (eV)"
+# zoom
+zoom from 0, 0 scale 1, 1
+# user labels
+label "AlGaN" from 0.0635, -4 color 0 scale 2
+label 0 at 7 7
+label "Ec" from 0.18, 0.7 color 0 scale 2
+label 1 at 7 7
+label "Ef" from 0.18, -0.15 color 0 scale 2
+label 2 at 7 7
+label "Ev" from 0.18, -2.75 color 0 scale 2
+label 3 at 7 7
+label "GaN" from 0.12, -4 color 0 scale 2
+label 4 at 7 7
+label "p-GaN" from 0.02, -4 color 0 scale 2
+label 5 at 7 7
+# overlay level names
+#
+select 3
+# xsection flags
+show mesh off
+show edges on
+show materials off
+show points on
+show lines on
+# xsection impurities
+xsection impurity none
+xsection impurity "Electron Conc"
+xsection impurity "Hole Conc"
+# key positions
+key contours 1 at 3
+key contours 2 at 1
+key contours 3 at 6
+key electrical at 6
+key vectors at 6
+key overlay at 6
+key regions at 4
+key apply 
+# annotation, titles
+title main "Section 1 from Super_0.str"
+title sub "(5.000 , -0.040) to (5.000 , 0.200)"
+# annotation, footers
+footer right none
+footer left none
+# annotation, show
+show xaxis on
+show yaxis on
+show grid off
+show label xaxis on
+show label yaxis on
+# annotation, axes
+range xaxis 0.0, 0.2 increment 0.04,4
+range yaxis -0.5e19, 3.0001e19 increment 0.5e19,5
+label xaxis "Depth  (um)"
+label yaxis "Carrier Concentration  (/cm3)"
+# zoom
+zoom from 0, 0 scale 1, 1
+# user labels
+label "AlGaN" from 0.0635, -3e18 color 0 scale 2
+label 0 at 7 7
+label "GaN" from 0.12, -3e18 color 0 scale 2
+label 1 at 7 7
+label "p-GaN" from 0.02, -3e18 color 0 scale 2
+label 2 at 7 7
+# overlay level names
+label overlay 0 "Super_0.str"
+select none

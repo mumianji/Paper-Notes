@@ -1,0 +1,141 @@
+<html>
+  <head>
+    <title>3D Textured Surface Solar Cell simulation</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>3D Textured Surface Solar Cell simulation</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Victory Mesh, Victory Process and Victory Device</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Victory Mesh 1.2.1.R Victory Process 7.22.0.R Victory Device 1.12.1.R</i></td>
+      </tr>
+    </table>
+    <div id="text" >
+<br/>
+<p>
+This example is a simple tutorial on creating a textured surface solar cell using Victory Mesh and Victory Process.
+</p>
+<p>
+This example demonstrates:
+</p>
+<ul>
+  <li>
+     Victory Mesh syntax to create 3D silicon cuboid and pyramid
+  </li>
+  <li>
+     Usage of Victory Process (Cell Mode) to diffuse dopants
+  </li>
+  <li>
+     3D Delaunay adapted mesh generation of the 3D Solar cell structure
+  </li>
+  <li>
+     3D device simulation of IV characteristics using Victory Device
+  </li>
+  <li>
+     Display the results in TonyPlot
+  </li>
+</ul>
+<p>
+The principle aim of this example is to demonstrate the Victory Mesh syntax to create 3D shapes quickly. This solar cell structure shows a pyramid with facets at an angle of 54.7 degrees to the surface of silicon to simulate a KOH etch in &lt;100&gt; silicon.
+</p>
+<p>
+The main feature of this solar cells is that the incoming light is captured in the textured surface through a series of refractions and internal reflections. This improve the overall cell absorption.
+</p>
+<p>
+Significant number of generated carriers reside inside the pyramid structures. This is not accounted for through the usage of lensing alone.
+</p>
+<p>
+The input deck has the following structure:
+</p>
+<ol>
+  <li>
+     The deck begins with the creation of a silicon cuboid
+  </li>
+  <li>
+     This is followed by the creation of a quarter pyramid
+  </li>
+  <li>
+     The pyramid is inverted to align the apex with the cuboid negative z axis direction
+  </li>
+  <li>
+     The pyramid boundary planes are sliced into the cuboid structure, separating regions
+  </li>
+  <li>
+     Tag command is used to convert the space above the pyramid to gas (ready to import the structure into Victory Process)
+  </li>
+  <li>
+     After moving to Victory Process (Cell Mode) perform dopant (Boron) diffusion
+  </li>
+  <li>
+     Back to Victory Mesh to copy the structure and translate it by 10nm and erase the gas region (exposes the silicon interface planes as boundary planes)
+  </li>
+  <li>
+     Tag the top area (gas) of the original pyramid to convert to oxide
+  </li>
+  <li>
+     Slice the new translated structure interface planes into the original structure (oxide region), separating regions
+  </li>
+  <li>
+     Tag the top of the final structure and convert remaining oxide back to gas
+  </li>
+  <li>
+     Mirror the structure in x and y to obtain a full pyramid
+  </li>
+  <li>
+     Create an aluminium contact region
+  </li>
+  <li>
+     Perform a Delaunay remesh
+  </li>
+  <li>
+     Mirror again in x and y to obtain a cell with four pyramids
+  </li>
+</ol>
+<p>
+The 3D structure is then passed to Victory Device where coupled optoelectronic simulations are performed.
+</p>
+<p>
+3D Ray-tracing is used during the simulation. This is a method by which beams of light are traced through a structure, taking into account reflection, refraction and attenuation. The calculated light intensities and absorptions are then used to calculate the photogeneration rates. Whenever a ray encounters a region interface, or the incident ray encounters a device boundary, the ray is split into a reflected and a transmitted beam. For complex structures (especially in 3D) this can result in a large number of rays. Fortunately, ray-tracing is fast, can fully take advantage of parallel processing, and only needs to be done once. The number of rays produced by this algorithm is automatic and is the minimal number of rays required to fully resolve a given structure.
+</p>
+<p>
+By default the beam will automatically be oriented and sized to illuminate the entire device from the top (i.e. straight down). It is extremely important to make sure that the origin window of the beam is outside of the structure. Otherwise, you get incorrect results.
+</p>
+<p>
+In order to obtain a realistic sample a larger area, the parameter periodic on the beam statement has been used. This generates a periodic optical ray tracing patterns.
+</p>
+<p>
+At the beginning of the raytracing calculation the runtime output of DeckBuild produces the following:
+</p>
+<p>
+Ray Tracing Beam 1: Origin(0.5,0.5,-1), Direction(0,0,1)
+</p>
+<p>
+which indicates a vertical illumination from above the solar cell.
+</p>
+<p>
+The optical and electrical simulations are done using an iterative multi-threading domain decomposition based solver called PAM.MPI . Combined with a multi-threading ray tracing algorithm.
+</p>
+<p>
+Two optical analysis are performed. The first is the spectral response of the structure between 0.3 and 1 micron wavelengths in 0.02 micron steps. The second part performs the IV response of the cell for a monochromatic light at 0.55 micron. This helps expedite the calculations. Full solar spectra AM1.5 and AM0 are supported and can be used here. However, these will increase the computational overhead.
+</p>
+<p>
+To load and run this example, select the examples option from the File drop down menu of DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the green arrow (Run/continue) button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

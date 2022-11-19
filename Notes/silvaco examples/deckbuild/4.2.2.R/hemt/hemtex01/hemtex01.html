@@ -1,0 +1,117 @@
+<html>
+  <head>
+    <title>User Model Development with the C-Interpreter</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>User Model Development with the C-Interpreter</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Blaze/C-Interpreter</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="hemtex01_plot0.png" width="640" alt="hemtex01_plot0" />
+      <p/>
+      <img src="hemtex01_plot1.png" width="640" alt="hemtex01_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates the use of the C-Interpreter to develop user
+defined material parameters and models for AlGaAs/GaAs HEMT simulation.
+Here the interpreter is used to prototype a composition dependent electron
+mobility model for AlGaAs. The interpreted function in this case corresponds
+to the built-in model for AlGaAs. The two can be compared. The example
+consists of the following parts:
+</p>
+<ul>
+  <li>
+ Construction of the device and the grid using Atlas syntax
+<br/>
+  </li>
+  <li>
+ Specification of material regions including a graded AlGaAs heterojunction
+<br/>
+  </li>
+  <li>
+ Definition of electrodes, doping, material and models parameters
+<br/>
+  </li>
+  <li>
+ Use of a C-Interpreter function for composition and doping dependent electron mobility 
+<br/>
+  </li>
+  <li>
+ Simulation of Id-Vds characteristic 
+<br/>
+  </li>
+  <li>
+ Display of the results in TonyPlot
+  </li>
+</ul>
+<p>
+In the first part of the input file the device is described using Atlas
+syntax including mesh, regions and electrodes locations, and doping distribution.
+The
+<b> region </b> statements are used to define AlGaAs and GaAs regions. The Al composition
+fraction (x.composition=0.3) and grading distance are defined here as well.
+</p>
+<p>
+After the device description, the
+<b> material </b> statement is used to specify some of the material parameters different from
+the default values. These are electron and hole SRH lifetimes (capture
+times) which apply to both GaAs and AlGaAs material regions. In the same
+statement we indicate that the low field electron mobility as a function of
+composition and doping will be calculated using the C-Interpreter. The name of
+the function and the name of the corresponding file in which this function is
+described are specified as a parameter
+<b> f.conmun=hemtex01_interp.lib </b> in the
+<b> material </b> statement.  Additionally, the
+<b> alignment parameter is specified which defines the band offset between</b> the conduction and valance bands.  The value of 0.6 sets 60% of the
+step to the conduction band.
+</p>
+<p>
+The
+<b> model </b> statement is used to specify the following set of models: band-gap narrowing,
+field dependent mobility, and Shockley-Read-Hall recombination. The two carrier
+transport model is specified here by the parameter
+<b> carriers=2. </b> The
+<b> contact </b> statement is used to set the workfunction at the Schottky gate electrode.
+</p>
+<p>
+The solution procedure begins from the initial solution at zero bias or
+thermodynamic equilibrium. The structure of the device at zero bias is
+displayed using TonyPlot. For the subsequent simulation, the combined
+Gummel-Newton iteration method is specified in the
+<b> method </b> statement. The
+<b> output </b> statement is used to include additional parameters in the output structure file:
+conduction and valence band potentials, and electron and hole mobilities.
+The gate bias is then ramped to -0.6V. For this gate bias the Id-Vd
+characteristic is calculated by sweeping the drain voltage up to 5V. The results
+of simulation are saved in the log file and then displayed using TonyPlot.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

@@ -1,0 +1,6 @@
+M1 int0 int1 gnd gnd myNMOS w=1u l=0.25u As=0.75p Ad=0.8125p Ps=3.5u Pd=3.5625u  geo=1
+M2 int1 int0 gnd gnd myNMOS w=1u l=0.25u As=0.75p Ad=0.8125p Ps=3.5u Pd=3.5625u  geo=1
+M3 int0 wlm bit gnd myNMOS w=0.6u l=0.25u As=0.45p Ad=0.4875p Ps=2.7u Pd=2.1375u  geo=1
+M4 int1 wlm bitbar gnd myNMOS w=0.6u l=0.25u As=0.45p Ad=0.4875p Ps=2.7u Pd=2.1375u  geo=1
+M5 vdd int1 int0 vdd myPMOS w=0.6u l=0.25u As=0.45p Ad=0.45p Ps=2.7u Pd=2.7u  geo=0
+M6 int1 int0 vdd vdd myPMOS w=0.6u l=0.25u As=0.45p Ad=0.45p Ps=2.7u Pd=2.7u  geo=0

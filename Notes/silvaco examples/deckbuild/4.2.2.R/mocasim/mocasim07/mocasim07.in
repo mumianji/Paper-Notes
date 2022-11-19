@@ -1,0 +1,68 @@
+go mocasim
+
+####################################################################
+# (c) SILVACO International 2009                                   #
+# MOCASIM example 7: temperature dependent Si input deck           #
+#                                                                  #
+# file: mocasim07.in                                               #
+####################################################################
+
+# Section 1
+# =========
+# Select the material.
+initialize material=Si burn_in=40000 num_time_step=80000
+
+# Section 2
+# =========
+# Assign the intra valley scattering mechanisms.
+defpot_acoustic_phonon E1=9.5
+ionised_impurity
+
+# Assign the inter valley scattering mechanisms.
+intervalley_phonon XX energy=0.01206 defpot=0.5e8  num_X_valleys=2
+intervalley_phonon XX energy=0.01810 defpot=0.8e8  num_X_valleys=2
+intervalley_phonon XX energy=0.06032 defpot=3.0e8  num_X_valleys=2
+intervalley_phonon XX energy=0.01810 defpot=0.15e8 num_X_valleys=2
+intervalley_phonon XX energy=0.04309 defpot=2.5e8  num_X_valleys=2
+intervalley_phonon XX energy=0.05429 defpot=4.0e8  num_X_valleys=2
+
+# Section 3
+# =========
+# Define the range over which to simulate the transport.
+# Here we keep field and doping constant and simulate over
+# a range of temperatures.
+field value=1000
+temperature value=250,275,300,325,350,375,400
+temperature value=425,450,475,500,525,550,575,600
+doping value=1.0e14
+
+# Section 4
+# =========
+# Assign a backup file.
+log outfile=mocasim07_1.bak
+
+# Section 5
+# =========
+# Do the Monte Carlo simulation.
+solve
+
+# Section 6
+# =========
+# Save the Monte Carlo results.
+save outfile=mocasim07_2.dat
+
+# Section 7
+# =========
+# Fit the basic ATLAS temperature dependent function
+#    mu=mu0*(T/300)^Tmu,
+# to the Monte Carlo data.
+#
+# Also generate a c-interpreter file of this model.
+fit lowfield lm compare=mocasim07_3.dat tofimun ci_file=mocasim07_4.lib
+
+# Tonyplot
+# ========
+tonyplot mocasim07_2.dat -set mocasim07_2.set
+tonyplot mocasim07_3.dat -set mocasim07_3.set
+
+quit

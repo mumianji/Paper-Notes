@@ -1,0 +1,33 @@
+{subsection} radex06.in : SEU in Memory Cell Transistor
+
+Requires: DevEdit 3D/Device 3D
+{newline}
+Minimum Versions: Atlas 5.20.2.R
+
+This example demonstrates SEU in a MOSFET with an external resistor and capacitor emulating a RAM cell.  The example shows:
+
+{bullet} Formation of structure in DevEdit 3D
+{newline}
+{bullet} Parameterized structural and doping parameters 
+{newline}
+{bullet} Automatic interface from DevEdit 3D to Device 3D
+{newline}
+{bullet} Setting of external resistor and capacitor on the 
+{bold} drain
+contact
+{newline}
+{bullet} Definition of the SEU pulse
+{newline}
+{bullet} DC simulation to bias MOSFET in initial cell condition
+{newline}
+{bullet} Transient simulation of SEU strike
+{newline}
+{bullet} Analysis of voltage drop at the drain contact
+
+To load and run this example, select the
+{bold} Load example 
+button in DeckBuild. This will copy the input file and any support
+files to your current working directory. Select the
+{bold} run 
+button to execute the example.
+

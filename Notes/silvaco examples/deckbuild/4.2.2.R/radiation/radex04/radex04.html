@@ -1,0 +1,55 @@
+<html>
+  <head>
+    <title>Arbitrary Charge Generation using C-Interpreter</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Arbitrary Charge Generation using C-Interpreter</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Device 3D/C-Interpreter</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="radex04_plot0.png" width="640" alt="radex04_plot0" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This examples demonstrates the use of the C interpreter function
+<b> F3.RADIATE.  </b> This function allows the user to specify arbitrary
+electron hole pair generation as a function of position and time.
+This example illustrates the functionality using a simple block
+function for the charge. Other template files are loaded along
+with the input file. These can be substituted in the line:
+</p>
+<b> beam num=1 f3.radiate=(filename)</b> <b> Note </b> <p>
+that a generation value calculated by the C function for each XYZ
+location in the device. This value is multiplied by the value of the
+<b> b1 </b> of the
+<b> solve </b> statement before being applied.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

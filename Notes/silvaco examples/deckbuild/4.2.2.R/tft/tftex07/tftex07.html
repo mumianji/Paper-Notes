@@ -1,0 +1,62 @@
+<html>
+  <head>
+    <title>Comparing a Discrete and Continuous Distribution of Traps</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Comparing a Discrete and Continuous Distribution of Traps</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>S-Pisces/TFT</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="tftex07_plot0.png" width="640" alt="tftex07_plot0" />
+      <p/>
+      <img src="tftex07_plot1.png" width="640" alt="tftex07_plot1" />
+      <p/>
+      <img src="tftex07_plot2.png" width="640" alt="tftex07_plot2" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+It is possible to specify an energy dependent distribution of traps in
+two ways using SPISCES/TFT. The original method assumed a discrete set
+of traps across the bandgap but now it is possible to use a
+mathematically continuous energy distribution of states.
+</p>
+<p>
+The syntax used in this example is identical to that in tftex03.in
+except that now two simulations are performed each with the density of
+states assumed to contain 24 energy levels across the bandgap. This is
+speciied using the
+<b> DEFECT</b> parameters
+<b> numa</b> and
+<b> numd</b> . The first simulation is otherwise identical to that described in tftex03.in. The second simulation uses the keyword
+<b> continuous</b> on the
+<b> DEFECTS</b> statement to define that the distribution is continuous. The simulation then compares the Id-Vg characteristics for the two simulations.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

@@ -1,0 +1,52 @@
+go athena
+
+#LDD Formation using LATID Full Rotation Implant
+#
+line x loc = 0.0  spac=0.1
+line x loc = 0.4  spac=0.02
+line x loc = 0.7  spac=0.05
+# 
+line y loc = 0    spac=0.02
+line y loc = 0.50 spac=0.04
+line y loc = 1.0  spac=0.1
+#  
+#calculate the mesh
+init c.boron=1.0e15
+#
+#grow gate oxide
+diffuse temp=950 time=15 dry
+#
+#implant threshold adjust
+implant boron dose=4e12 energy=20
+#
+#deposit gate poly and pattern
+deposit poly thick=0.4 div=8
+etch poly left p1.x=0.4
+#
+# remove excess grid in substrate
+relax dir.y=f y.min=.4
+#
+#perform gate reoxidation
+diffuse temp=950 time=10 dry
+#
+# mirror to form complete device
+structure mirror right
+# implant LDD using angled implant and full rotation
+# 48 degrees is selected to avoid channelling 
+implant phos  dose=5e13 energy=80 tilt=48 fullrotat
+#
+# implant source/drain vertically 
+# Use standard tables because SVDP tables are available only for
+# native oxide and would overestimate channelling for in this case
+moments std_tab
+implant arsen dose=5e15 energy=80 tilt=0
+#
+# activation diffusion
+diffuse time=10 temp=900
+#
+
+# 
+structure outfile=aniiex10.str
+tonyplot aniiex10.str -set aniiex10.set
+
+quit

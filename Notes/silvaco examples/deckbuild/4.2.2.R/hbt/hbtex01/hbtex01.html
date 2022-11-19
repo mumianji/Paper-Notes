@@ -1,0 +1,99 @@
+<html>
+  <head>
+    <title>Si/SiGe HBT Gummel Plot Simulation</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Si/SiGe HBT Gummel Plot Simulation</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Blaze</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="hbtex01_plot0.png" width="640" alt="hbtex01_plot0" />
+      <p/>
+      <img src="hbtex01_plot1.png" width="640" alt="hbtex01_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates the simulation of a SiGe HBT to extract Ic
+and Ib versus Vbe and plots the bipolar gain. It shows:
+</p>
+<ul>
+  <li>
+ Device formation using Atlas syntax
+<br/>
+  </li>
+  <li>
+ Specification of a graded SiGe composition fraction
+<br/>
+  </li>
+  <li>
+ Selection of models for SiGe
+<br/>
+  </li>
+  <li>
+ DC simulation for Ic and Ib versus Vbe 
+  </li>
+</ul>
+<p>
+The majority of this example is similar to the silicon bipolar Gummel
+plot example described in the BJT section. This description will focus
+on the specific SiGe syntax. More details on various types of bipolar
+simulation can be found in the BJT examples section.
+</p>
+<p>
+The
+<b> region</b> statement is used to define the SiGe region in the base of an NPN
+bipolar transistor. The argument of the &apos;material&apos; parameter is
+case-sensitive: SiGe is acceptable, but sige is not. The composition fraction
+of the area inside of x.min, x.max, y.min and y.max is defined by the
+<b> x.composition</b> parameter. Outside of this box the Ge composition fraction rolls of
+linearly to zero over the distance specified by the
+<b> grad.*</b> parameters. For more details on grad.* parameters, see the Blaze chapter
+of the manual.  For non-linear composition fraction variations, DEVEDIT
+is needed.
+</p>
+<p>
+The material parameters for SiGe are selected by
+<b> material material=SiGe ...</b> . Here the lifetime is set differently for SiGe and Si regions. In this
+example common models are used between Si and SiGe regions, but this is
+not compulsory. The material parameter of the models statement can be
+used to set separate models for each material.
+</p>
+<p>
+The electrical part of the example is the same as the silicon examples
+referenced above. The solution file stored at the final voltage can
+be used to examine the band diagram of the HBT. The statement
+<br/>
+<b> output con.band val.band</b> <br/>
+enables the conduction and valence band edge energies to be stored in
+the solution file. This command is recommended for all heterojunction
+simulations in Blaze.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

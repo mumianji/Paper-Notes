@@ -1,0 +1,106 @@
+<html>
+  <head>
+    <title>A Normally-on Vertical GaN FET (CAVET) I-V Characteristics</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>A Normally-on Vertical GaN FET (CAVET) I-V Characteristics</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Victory Device  or  Atlas</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Victory Device 1.12.1.R  or  Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="ganfetex20_plot0.png" width="640" alt="ganfetex20_plot0" />
+      <p/>
+      <img src="ganfetex20_plot1.png" width="640" alt="ganfetex20_plot1" />
+      <p/>
+      <img src="ganfetex20_plot2.png" width="640" alt="ganfetex20_plot2" />
+      <p/>
+      <img src="ganfetex20_plot3.png" width="640" alt="ganfetex20_plot3" />
+      <p/>
+      <img src="ganfetex20_plot4.png" width="640" alt="ganfetex20_plot4" />
+      <p/>
+      <img src="ganfetex20_plot5.png" width="640" alt="ganfetex20_plot5" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates TCAD computation of Id-Vd, Id-Vg, and transconductance gm-Vg characteristics of a gallium nitride (GaN) field-effect transistor (FET) called CAVET (Current Aperture Vertical Electron Transistor).
+</p>
+<p>
+This example is based on the following reference paper:
+</p>
+<p>
+[1] S. Chowdhury, M. H. Wong, B. L. Swenson, and U. K. Mishra, &quot;CAVET on bulk GaN substrates achieved with MBE-regrown AlGaN/GaN layers to suppress dispersion&quot;, IEEE Electron Device Letters, vol.33, Jan. 2012, pp.41-43.
+</p>
+<p>
+The input deck provided with this example can be run by either Victory Device or Atlas simulator, just by changing the solver name in the command
+<b> go victorydevice </b> into
+<b> go atlas</b> . It shows that both Victory Device and Atlas device simulators can be fully compatible in terms of input commands, producing same results, and allowing easy transition between Atlas and Victory Device.
+</p>
+<p>
+This example demonstrates:
+</p>
+<ul>
+  <li>
+ Construction of the Vertical GaN-FET structure using the device simulator syntax
+<br/>
+  </li>
+  <li>
+ Material and models parameter specification 
+<br/>
+  </li>
+  <li>
+ Simulation of Id-Vg, gm-Vg, and Id-Vd characteristics 
+<br/>
+  </li>
+  <li>
+ Display of the results in TonyPlot
+  </li>
+</ul>
+<p>
+The device under consideration is a normally-on Vertical AlGaN/GaN HEMT of type CAVET (Current Aperture Vertical Electron Transistor). The main concept here is that the polarization charge is calculated using the built-in models as specified by the
+<b> polarization </b> parameter on the
+<b> model </b> statement.
+</p>
+<p>
+First, the initial solution is obtained (for zero bias), which includes also calculation of the 2D Electron Gas (2DEG) sheet density.
+</p>
+<p>
+Then, the Id-Vg transfer characteristics are computed, for several selected Vds voltages, from which the transconductance gm-Vg characteristics are extracted. Next, the Id-Vd output characteristics are computed, for several selected Vgs voltages.
+</p>
+<p>
+The family of I-V curves is plotted using the TonyPlot tool. All the computed I-V curves compare quite well with the CAVET experimental curves published in the reference paper [1] (Fig. 2).
+</p>
+<p>
+You can plot similar overlaid plots yourself if you use
+<b> Overlay </b> feature in
+<b> TonyPlot</b> . The transconductance
+<b> gm (dId/dVg) </b> curve can be plotted using
+<b> Display &gt; Functions... </b> feature in TonyPlot.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

@@ -1,0 +1,78 @@
+go atlas
+mercury
+
+#######################################################################
+### These are the values set by dbinternal
+set doping=8e16
+set recess=0.1
+set gate_length=0.5
+
+#######################################################################
+### These are additional variables.  As the doe deck doesn't set the
+### values of these variable these lines will remain unchanged.
+set x2=0.5
+set x1=$x2-$recess
+set x3=$x1+$gate_length
+set x4=$x3+$recess
+
+#######################################################################
+### ATLAS example mercury08
+### (c) Silvaco Inc., 2018
+#######################################################################
+### Effect of manufacturing variation in a MESFET
+#######################################################################
+### template input deck
+#######################################################################
+
+###--------------------------------------------------------------------
+network clear
+
+###--------------------------------------------------------------------
+mesh width=100
+
+###--------------------------------------------------------------------
+x.mesh location=0.0 spacing=0.1
+x.mesh location=2.5 spacing=0.1
+y.mesh location=0.0 spacing=0.05
+y.mesh location=3.0 spacing=0.05
+
+###--------------------------------------------------------------------
+region number=1 material=GaAs thickness=0.2 donor=$doping acceptor=1e11
+region number=1 material=GaAs thickness=0.2 nd.top=$doping nd.bottom=1e11 acceptor=1e11
+region number=1 material=GaAs thickness=2.6 donor=1e11 acceptor=1e11
+
+###--------------------------------------------------------------------
+surface x=$x1 y=0.00
+surface x=$x2 y=$recess
+surface x=$x3 y=$recess
+surface x=$x4 y=0.00
+
+###--------------------------------------------------------------------
+electrode name=gate x.min=$x2 x.max=$x3
+
+###--------------------------------------------------------------------
+models n_depletion fldmob print
+options quiet
+
+###--------------------------------------------------------------------
+poisson look_up vg_min=-0.1 vg_max=0.1 vd_min=0.0 vd_max=0.7
+
+###--------------------------------------------------------------------
+output all
+
+###--------------------------------------------------------------------
+solve initial
+#solve vgate=0.0 vdrain=0.0 vstep=0.05 vfinal=0.6 name=drain
+#solve vgate=0.05
+log out.file=dc.log
+solve vdrain=0.6 vgate=0.05 vstep=0.01 vfinal=-0.05 name=gate
+log off
+
+###--------------------------------------------------------------------
+### These lines extract the values of interest from the output data.
+extract init infile="dc.log"
+extract name="id0" y.val from curve(v."input", i."output") where x.val=0.0
+extract name="gm" y.val from curve(v."input", dydx(v."input", i."output")) where x.val=-0.0
+
+###--------------------------------------------------------------------
+quit

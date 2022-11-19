@@ -1,0 +1,137 @@
+# (c) Silvaco Inc., 2018
+go atlas
+# VCSEL Example
+#
+# This device is based on:
+# Piprek, Joachim, "Modeling and optimization of 1.54um double-fused
+# VCSELs for cw operation above room temperature," SPIE Vol. 2693:
+# Physics and Simulation of Optoelectronic Devices IV, 1996.
+#
+# Define CYL on MESH statement for cylindrical symetry
+#
+options verbose
+mesh cyl auto
+#
+# X Mesh lines (Note Y lines defined by region statements)
+#
+x.mesh location=0 spacing=0.5
+x.mesh location=6 spacing=0.5
+#
+# Define top regions going up from y=0
+#
+# spacers
+#
+region material=GaAs thick=0.01 sy=0.005 accept=4e19 top
+region material=GaAs thick=0.02 sy=0.01  accept=4e17 top
+#
+# top DBR
+#
+dbr half.cyc=60 thick1=0.1157 thick2=0.1273 n1=3 n2=3 mat1=GaAs mat2=AlGaAs x2.comp=0.67 na1=4e17 na2=4e17 top
+#
+# top contact regions
+#
+region material=GaAs thick=0.184 sy=0.02 accept=4e17 top
+region material=GaAs thick=0.02  sy=0.01 accept=2e19 top
+#
+# active regions starting at y=0 down
+# (wells are defined later in MQW statement)
+#
+region material=InP  thick=0.178 sy=0.04 accept=1e18 bottom
+region material=InP  thick=0.1 sy=0.05   accept=1e16 bottom
+region material=InGaAsP thick=0.008 x.comp=0.52 y.comp=0.82 sy=0.001 bottom
+region material=InGaAsP  thick=0.0055 x.comp=0.24 y.comp=0.82 sy=0.001 bottom \
+ qwell well.nx=12 well.ny=99
+region material=InGaAsP thick=0.008 x.comp=0.52 y.comp=0.82 sy=0.001 bottom
+region material=InGaAsP  thick=0.0055 x.comp=0.24 y.comp=0.82 sy=0.001 bottom \
+ qwell well.nx=12 well.ny=99
+region material=InGaAsP thick=0.008 x.comp=0.52 y.comp=0.82 sy=0.001 bottom
+region material=InGaAsP  thick=0.0055 x.comp=0.24 y.comp=0.82 sy=0.001 bottom \
+ qwell well.nx=12 well.ny=99
+region material=InGaAsP thick=0.008 x.comp=0.52 y.comp=0.82 sy=0.001 bottom
+region material=InGaAsP  thick=0.0055 x.comp=0.24 y.comp=0.82 sy=0.001 bottom \
+ qwell well.nx=12 well.ny=99
+region material=InGaAsP thick=0.008 x.comp=0.52 y.comp=0.82 sy=0.001 bottom
+region material=InGaAsP  thick=0.0055 x.comp=0.24 y.comp=0.82 sy=0.001 bottom \
+ qwell well.nx=12 well.ny=99
+region material=InGaAsP thick=0.008 x.comp=0.52 y.comp=0.82 sy=0.001 bottom
+region material=InGaAsP  thick=0.0055 x.comp=0.24 y.comp=0.82 sy=0.001 bottom \
+ qwell well.nx=12 well.ny=99
+region material=InGaAsP thick=0.008 x.comp=0.52 y.comp=0.82 sy=0.001 bottom
+region material=InP  thick=0.258 sy=0.04 donor=5e18 bottom
+region material=GaAs thick=0.05 sy=0.025 donor=1e18 bottom
+#
+# bottom DBR
+#
+dbr half.cyc=56 thick1=0.1157 thick2=0.134 n1=3 n2=3 mat1=GaAs mat2=AlAs nd1=1e18 nd2=1e18 bottom
+#
+# bottom contact region
+#
+region material=GaAs thick=0.02 sy=0.005 donor=5e18 bottom
+#
+# optional air
+#
+#region material=air x.min=3 x.max=6 y.max=0
+#
+# Electrodes
+#
+electrode num=1 name=anode top x.max=6
+electrode num=2 name=cathode bottom
+#
+# Define some material parameters
+#
+# Here we smooth out the DBRs for better electrical convergence
+#
+material material=AlGaAs eg300=1.42 affin=4.07 nc300=4.35e17 nv300=8.16e18 permi=13.2
+material material=AlAs eg300=1.42 affin=4.07 nc300=4.35e17 nv300=8.16e18 permi=13.2
+material mater=InGaAsP  mun=1000 mup=500  copt=1e-15  epsinf=12.2500 alphaa=500.0 nc300=1e19 nv300=1e19
+material mater=AlGaAs  epsinf=9.2700
+material mater=GaAs    epsinf=11.2200   
+material mater=AlAs    epsinf=8.3500    
+material mater=InP     epsinf=9.9200 nc300=1e19 nv300=1e19
+material tc.a=-0.4665 tc.b=0.0092 tc.c=4e-7 \
+	hc.a=1.82476 hc.b=2.5004e-4 hc.c=0 hc.d=17024 
+#
+# Turn on some models
+#
+model srh fermi lat.temp li spont
+thermcontact num=1 elec.num=2 ext.temp=300
+thermcontact num=2 x.min=6 alpha=100 ext.temp=300
+thermcontact num=3 elec.num=1 alpha=100 ext.temp=300
+
+#
+# specify some outputs for the structures
+#
+output band.param con.band val.band u.auger u.radiative u.srh
+#
+# get an initial solution
+#
+solve init
+method block
+
+solve
+#
+# set up the laser models
+##############################
+vcsel vcsel.check vcsel.incidence=1 proj itmax=30 maxch=100.0 toler=0.010 photon.energy=0.8 einit=0.75  efinal=0.85 perturb
+#
+# turn on a log file to capture IV data
+#
+log outf=vcselex02.log
+#
+# solve over a voltage ramp
+#
+solve prev
+solve vstep=0.05 name=anode vfinal=0.9
+save outf=vcselex02_0.str
+solve vstep=0.05 name=anode vfinal=1.0
+save outf=vcselex02_1.str
+method ^las.proj block 
+vcsel tauss=0.01
+
+solve vstep=0.05 name=anode vfinal=1.2
+save outf=vcselex02_2.str
+solve vstep=0.05 name=anode vfinal=2.4
+save outf=vcselex02_3.str
+tonyplot vcselex02.log -set vcselex02_0.set
+tonyplot vcselex02_3.str -set vcselex02_1.set
+quit 

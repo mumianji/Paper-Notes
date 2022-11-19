@@ -1,0 +1,59 @@
+<html>
+  <head>
+    <title>EXNOR Cell with Physical Geometry</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>EXNOR Cell with Physical Geometry</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>CLEVER</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="clex07.str.png" width="640" alt="clex07.str" />
+      <p/>
+    </div>
+    <div id="text" >
+<p>
+This example is identical to example clex06.in except that the etching models
+have been upgraded to a more physical 87 degree side-wall.
+The same EXNOR custom cell layout is used and illustrates how CLEVER may be
+used to analyse the effect of the etching model on a complex custom cell.
+</p>
+<p>
+The extracted netlist may be used in a SmartSpice input deck to analyse the
+circuit performance which can then be compared to the previous example.
+</p>
+<p>
+When this example is loaded support files, that may be run in SmartSPice to
+show the circuit behaviour, will also be loaded.
+</p>
+<p>
+It should be noted that the high resolution geometries created by the realistic
+physical process models used in this example require a usable memory of
+approximately 300MB to run the parameter extraction programs due to the
+intricate mesh thus created.  The simulation can be run on machines with less
+memory but the program may take a significantly longer time to run due
+memory swapping between the RAM and hard disk.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

@@ -1,0 +1,51 @@
+go athena
+
+#TITLE: Transient activation model
+
+#the x dimension definition
+line x loc = 0.0  spacing=0.1
+line x loc = 0.1  spacing=0.1
+
+#the vertical definition
+line y loc = 0     spacing = 0.01 
+line y loc = 1.0   spacing = 0.02 
+
+#initialize the mesh
+init silicon c.phos=1.0e14
+
+#boron implant
+implant boron dose=2e14 energy=40
+
+method clust.trans
+
+struct outf=andfex14.str
+diffuse time=30 temperature=750 
+struct outf=andfex14_0.str
+#
+extract name="chem" area from curve(depth,impurity="Boron" material="Silicon" \
+        mat.occno=1 x.val=0) 
+extract name="act" area from curve(depth,impurity="Active Boron" material="Silicon" \
+        mat.occno=1 x.val=0) 
+extract name="activation ratio" $act/$chem
+
+init inf=andfex14.str
+diffuse time=30 temperature=850 
+struct outf=andfex14_1.str
+#
+extract name="chem" area from curve(depth,impurity="Boron" material="Silicon" \
+        mat.occno=1 x.val=0) 
+extract name="act" area from curve(depth,impurity="Active Boron" material="Silicon" \
+        mat.occno=1 x.val=0) 
+extract name="activation ratio" $act/$chem
+
+init inf=andfex14.str
+diffuse time=30 temperature=950 
+struct outf=andfex14_2.str
+#
+extract name="chem" area from curve(depth,impurity="Boron" material="Silicon" \
+        mat.occno=1 x.val=0) 
+extract name="act" area from curve(depth,impurity="Active Boron" material="Silicon" \
+        mat.occno=1 x.val=0) 
+extract name="activation ratio" $act/$chem
+tonyplot -overlay andfex14_*.str -set andfex14.set
+quit

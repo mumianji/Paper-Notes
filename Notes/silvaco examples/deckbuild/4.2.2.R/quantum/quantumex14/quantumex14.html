@@ -1,0 +1,84 @@
+<html>
+  <head>
+    <title>Comparison of DD_MS and NEGF_MS models for nanoscale  SOI FET</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Comparison of DD_MS and NEGF_MS models for nanoscale  SOI FET</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>S-Pisces/Quantum</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="quantumex14_plot0.png" width="640" alt="quantumex14_plot0" />
+      <p/>
+      <img src="quantumex14_plot1.png" width="640" alt="quantumex14_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates:
+</p>
+<ul>
+  <li>
+ Comparison of quantum and classical transport models
+<br/>
+  </li>
+  <li>
+ Quantum confinement  
+<br/>
+  </li>
+</ul>
+<p>
+This example compares classical drift-diffusion (DD_MS) and quantum
+(NEGF_MS) transport models in a 6nm thick Si SOI FET with 30 nm gate length.
+Both solutions employ uncoupled mode space approach, based on exactly the same
+Schrodinger and Poisson solvers and exactly the same material constants,
+and thus allowing a one-to-one comparison.
+</p>
+<p>
+While it is generally accepted that a quantum transport solution should
+give slightly higher current due to source-to-drain tunneling (absent in DD_MS),
+the detailed comparison shows that other factors are more important.
+A comparison of
+eigen energy (bound state energy) profiles shows that a potential drop in the
+source in DD_MS model gives rise to a lower source injection barrier and
+higher classical current.
+</p>
+<p>
+In addition, it is possible to look at the transmission function computed by
+NEGF and compare its steps with eigen energies at the source injection barrier.
+Once can see that transmission is non zero below the the maximum of eigen energy,
+which is due to source-to-drain tunneling. However, the magnitude of a single
+transmission step never reaches a value of one, which signals a strong
+reflection of electrons back into the source.
+</p>
+<p>
+Slightly higher energy barrier and strong reflection lead to decrease
+of quantum current as compared to classical solution.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

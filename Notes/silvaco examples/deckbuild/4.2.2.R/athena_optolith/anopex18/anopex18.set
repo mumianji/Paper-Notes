@@ -1,0 +1,74 @@
+go athena 
+# 
+#                   ATHENA Input File: anopex18.in
+#                   ----------------------------
+# 
+#      This example demonstrates multiple exposure of photoresist with
+#      different wavelengths. 
+#
+#
+# Define the structure
+# 
+line x loc=-0.80 spac=0.05
+line x loc=-0.4 spac=0.01
+line x loc=0 spac=0.05 
+line x loc=.4 spac=0.01 
+line x loc=0.80 spac=0.05
+# 
+line y loc=1.0 spac=1 
+line y loc=2.0 spac=1 
+# 
+init silicon
+# 
+deposit name.resist=KTI820 thick=1.0 divisions=40
+#
+# Mask layout
+#
+layout lay.clear x.lo=-.4 x.hi=.4 z.lo=-.4 z.hi=.4
+# 
+# Aerial image calculation
+# 
+illumination i.line 
+#
+illum.filter clear.fil circle sigma=0.38
+#
+projection na=.54
+#
+pupil.filter clear.fil circle
+#
+image win.x.lo=-0.8 win.x.hi=.8 win.z.lo=0 win.z.hi=0 dx=0.01  one.d
+#
+structure outfile=anopex18_1.str intensity mask
+tonyplot anopex18_1.str -set anopex18_1.set
+#
+# Resist exposure
+#
+expose dose=140 num.refl=10
+#
+illumination g.line 
+#
+image win.x.lo=-0.8 win.x.hi=.8 win.z.lo=0 win.z.hi=0 dx=0.01  one.d
+#
+structure outfile=anopex18_2.str intensity mask
+#
+tonyplot anopex18_2.str -set anopex18_1.set
+#
+expose mult.expose dose=140 num.refl=10
+#
+# Post exposure bake
+#
+bake time=45 seconds temp=115
+#
+structure outfile=anopex18_3.str
+#
+tonyplot anopex18_3.str -set anopex18_3.set
+#
+# Resist Development
+#
+develop kim time=40 steps=5 substeps=24
+#
+structure outfile=anopex18_4.str
+#
+tonyplot anopex18_4.str
+#
+quit

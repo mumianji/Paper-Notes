@@ -1,0 +1,92 @@
+<html>
+  <head>
+    <title>Pasveer Hopping Mobility Model and Gaussian DOS</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Pasveer Hopping Mobility Model and Gaussian DOS</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Blaze/Organic Display</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="organicex05_plot0.png" width="640" alt="organicex05_plot0" />
+      <p/>
+      <img src="organicex05_plot1.png" width="640" alt="organicex05_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example compares I-V curves generated using the Pasveer hopping mobility
+model [1] with using a constant mobility model when using a Gaussian energy
+distribution of band states.  It also shows the effects of electron
+concentration throughout the device for different structure bias.  An
+explanation of the Pasveer mobility model together with the gaussian energy
+density of states distribution and diffusion models is briefly described below.
+</p>
+<b> Gaussian Density of States Energy Band Structure</b> <p>
+It has been found that the band structure of organic materials is better
+represented by a gaussian energy distribution for the density of states rather
+than using the normal parabolic energy distribution of states used for
+crystalline semiconductor materials.  The average eneregy level cited for the
+equivilent &quot;valence&quot; and &quot;conduction&quot; bands in organic materials, is therefore
+in the middle of the gaussian energy distribution, rather than at the band
+edges of the distribution as in the case for ordered crystalline materials.
+</p>
+<p>
+A gaussian energy band distribution is specified on the material statement,
+where for the conduction band, the total density of states is specified by
+setting the
+<b> NtC.gauss </b> parameter and the width of the gaussian distribution is set by the
+<b> SigC.gauss </b> parameter.  Two analagous parameters are also avalable for the valence band.
+</p>
+<b> Pasveer Hopping Mobility Model [1]</b> <p>
+Also demonstrated in the example is the Pasveer hopping mobility model [1],
+which was developed to be used in conjuction with the Gaussian energy
+distribution of the density of states.  In an analagous way to mobility models
+in crystalline materials, the Pasveer model makes the mobility dependent on
+both the fraction of filled states (similar to the conmob model in silicon)
+and the electric field (similer to fldmob).
+</p>
+<p>
+To activate the Pasveer hopping mobility model for electrons, specify
+<b> Pasveer.N </b> on the mobility statement.  The parameter that determines the maximum carrier
+density used in the carrier dependent mobility model is specified using the
+<b> CCutoff.N </b> parameter, and the analagous maximum field used in the field dependent
+mobility model is specified using the
+<b> FCutoff.N </b> parameter.  Once again there are analagous parameters for the valence band.
+</p>
+<b> Diffusion Model </b> <p>
+The diffusion model resulting from a gaussian distribution of states
+necessitates a corrective term to the Einstein diffusion relationship which
+is also included in the models.
+</p>
+<p>
+[1] The Pasveer reference publication is as follows:
+W.F.Pasveer et al., Physics Review Letters, 94, 206601 (2005)
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

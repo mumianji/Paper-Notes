@@ -1,0 +1,65 @@
+go athena 
+
+#TITLE: Trench filling and etch-back planarization
+# 
+line x loc=0.00 spac=0.05 
+line x loc=1.2   spac=0.05 
+line x loc=1.8   spac=0.05 
+line x loc=3.00 spac=0.05 
+#
+line y loc=0.00 spac=.2 
+line y loc=3.00 spac=.2 
+line y loc=5.0   spac=.2 
+# 
+init orientation=100
+#
+# mask definition
+deposit photo thick=0.1 div=1
+#
+etch photo  start x=1.2  y=-1
+etch  cont  x=1.2 y=1.0
+etch  cont  x=1.8 y=1.0
+etch  done  x=1.8 y=-1.0
+#
+# trench etch with slopped walls and undercut
+etch silicon dry thick=3 undercut=0.1 angle=87
+#
+# mask removal
+strip
+structure outfile=anelex09_1.str
+
+# oxide deposition 
+deposit oxide thick=0.1 div=2
+#
+structure outfile=anelex09_2.str
+#
+deposit polysilicon thick=.2  divis=5
+deposit polysilicon thick=.15 divis=10
+deposit polysilicon thick=.1  divis=4
+structure outfile=anelex09_3.str
+#
+# planarization step
+#
+rate.depo machine=d3 hemis photoresist a.m \
+ angle1=90. angle2=-90. dep.rate=1000. sigma.dep=0.2 \
+ smooth.win=.25 smooth.step=3
+#
+deposit mach=d3 time=15.0 minutes divis=6
+#
+structure outfile=anelex09_4.str
+#
+# Define machine for etching of photoresist and poly
+rate.etch mach=ws rie silicon iso=1400.0 dir=0.0 a.m 
+rate.etch mach=ws rie photoresist iso=1400 dir=0.0 a.m 
+rate.etch mach=ws rie polysilicon iso=1400 dir=0.0 a.m 
+rate.etch mach=ws rie oxide iso=0 dir=14.0 a.m 
+#
+etch mach=ws time=10 minutes
+#
+structure outfile=anelex09_5.str
+etch mach=ws time=5 minutes
+#
+structure outfile=anelex09_6.str
+tonyplot -ttitle anelex09.in anelex09_*.str
+#
+quit

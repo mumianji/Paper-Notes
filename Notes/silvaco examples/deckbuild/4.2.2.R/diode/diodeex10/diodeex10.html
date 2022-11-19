@@ -1,0 +1,102 @@
+<html>
+  <head>
+    <title>GaN diode, Reverse-bias leakage current vs temperature</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>GaN diode, Reverse-bias leakage current vs temperature</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Blaze</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="diodeex10_plot0.png" width="640" alt="diodeex10_plot0" />
+      <p/>
+      <img src="diodeex10_plot1.png" width="640" alt="diodeex10_plot1" />
+      <p/>
+      <img src="diodeex10_plot2.png" width="640" alt="diodeex10_plot2" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates modeling of temperature dependence of reverse-bias leakage current
+in GaN Schottky diode as a consequence of phonon-assisted tunneling based on the reference below:
+</p>
+<p>
+Pipinys P., and V. Lapeika, &quot;Temperature dependence of reverse-bias leakage current in GaN Schottky
+diodes as a consequence of phonon-assisted tunneling&quot; J.Appl. Phys. 99 (2006): 093709.
+</p>
+<p>
+It shows:
+</p>
+<ul>
+  <li>
+ Structure definition using Atlas 
+<br/>
+  </li>
+  <li>
+ Temperature Tependence Reverse Voltage Characteristics using Atlas
+<br/>
+   </li>
+</ul>
+<p>
+It has been found that the reverse I-V characteristics of some Gallium Nitride (GaN) diodes can best be
+explained by using a phonon-assisted electron tunneling model. The electrons are assumed to be emitted from
+local levels in the metal-semiconductor interface.
+</p>
+<p>
+To enable the model, use the keyword
+<b> PIPINYS </b> on the
+<b> CONTACT </b> statement. The default value of
+<b> PIP.NT </b> is
+<b> 0 </b> and so you must set a finite value for this quantity in order for the model to have any effect. The other
+parameters may be specified on the MATERIAL statement. Although the model was developed specifically for
+reverse bias current in GaN, Atlas does not restrict use of the model to that material.
+<b> PIP.OMEGA </b> is the phonon energy,
+<b> PIP.ACC </b> is the electron-phonon interaction constant, and
+<b> PIP.ET </b> is the trap depth.
+</p>
+<p>
+Once constructed, the device reverse characteristics are then simulated in Atlas (SPISCES), using as
+well the
+<b> &quot;Universal Schottky Tunneling&quot; model (UST)  </b> </p>
+<p>
+The Experiment file starts with
+<b> go internal </b> command which transfers control from the current simulator (i.e. Atlas) to
+DBInternal. The
+<b> load </b> command specifies which template file should be used for multiple runs. The
+<b> sweep </b> command specifies how the variables set in the template file should be changed.
+The parameter specified by the
+<b> set </b> command in the template file is set to be changed; in this case the temperature.
+The
+<b> data </b> specifies values of the temperature.
+</p>
+<p>
+The final results are plotted using the same X and Y axes as in the paper for a direct comparison
+with measured results.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

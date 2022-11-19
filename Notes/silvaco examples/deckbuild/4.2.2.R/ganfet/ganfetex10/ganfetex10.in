@@ -1,0 +1,68 @@
+# (c) Silvaco Inc., 2018
+go atlas 
+
+mesh width=1000
+
+x.mesh location=-2.5  spacing=0.5
+x.mesh location=-1.2  spacing=0.1
+x.mesh location=-1    spacing=0.05
+x.mesh location=-0.5  spacing=0.1
+x.mesh location=0     spacing=0.02
+x.mesh location=0.25  spacing=0.01
+x.mesh location=1.5  spacing=0.2
+x.mesh location=3     spacing=0.05
+x.mesh location=3.2   spacing=0.1
+x.mesh location=4.5   spacing=0.5
+
+y.mesh location=-0.01  spacing=0.002
+y.mesh location=0      spacing=0.005
+y.mesh location=0.023  spacing=0.0002
+y.mesh location=1.923  spacing=0.5
+
+region number=1 material=oxide y.max=0.023
+region number=2 material=GaN y.min=0.023 substrate 
+region number=3 material=AlGaN x.min=-1 x.max=3 y.min=0 y.max=0.023 x.comp=0.28 
+
+electrode name=source x.min=-2.5 x.max=-1.2 y.min=-0.01 y.max=0.023
+electrode name=gate   x.min=0    x.max=0.25 y.min=-0.01 y.max=0
+electrode name=drain  x.min=3.2  x.max=4.5  y.min=-0.01 y.max=0.023
+
+doping  n.type gaussian conc=2.8e18 characteristic=0.01 lat.char=0.2 \ 
+        peak=0.023 x.min=-2.5 x.max=-0.8
+doping  n.type gaussian conc=2.8e18 characteristic=0.01 lat.char=0.2 \
+        peak=0.023 x.min=2.8 x.max=4.5
+
+doping  trap acceptor e.level=1.0 concentration=1e18 gaussian peak=1 \
+        characteristic=0.455 degen.fac=1 sign=1e-15 sigp=1e-15
+
+models srh print
+model calc.strain polarization
+mobility fmct.n gansat.n
+contact name=gate workfunc=5.15
+
+method climit=1e-4 ir.tol=1e-22 tol.time=1e9 dt.max=2e5
+output con.band charge
+
+solve init
+solve previous
+solve vdrain=1 vstep=1 vfinal=5 name=drain
+
+save outfile=ganfetex10_0.str
+
+log outfile=ganfetex10.log
+solve dt=1e-6 tfinal=0.001
+solve vdrain=25 ramptime=1e-8 dt=1e-10 tfinal=1e-8 relative
+solve vgate=-4 ramptime=1e-8 dt=1e-10 tfinal=0.002
+solve vdrain=5 ramptime=1e-8 dt=1e-10 tfinal=1e-8 relative
+solve vgate=0 ramptime=1e-8 dt=1e-10 tfinal=0.003
+
+save outfile=ganfetex10_1.str
+
+tonyplot ganfetex10_0.str ganfetex10_1.str -set ganfetex10_0.set
+tonyplot ganfetex10.log -set ganfetex10_1.set
+tonyplot ganfetex10.log -set ganfetex10_2.set
+solve tfinal=1e7
+tonyplot ganfetex10.log -set ganfetex10_3.set
+
+quit
+

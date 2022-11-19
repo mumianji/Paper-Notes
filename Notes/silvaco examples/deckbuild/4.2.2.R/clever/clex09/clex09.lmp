@@ -1,0 +1,35 @@
+
+Rename	 WELL	 NWELL
+
+Invert	 NWELL	 PWELL
+
+Connect  VIA2	 MET1
+Connect  MET1 	 VIA3
+Connect  VIA3 	 MET2
+
+And	 PWELL 	 AAD 	NACTIVE
+And	 PWELL 	 !AAD 	PCONT
+
+And	 NACTIVE POLY 	NMOS
+And	 NACTIVE !POLY 	NSD
+
+Connect  NMOS 	 POLY
+Connect  NSD 	 VIA2
+Connect  PWELL 	 PCONT
+Connect  PCONT 	 VIA2
+
+Element  MOS[N]	 NMOS 	NSD	PWELL	VIA2
+
+And 	 NWELL 	 AAD 	PACTIVE
+And 	 NWELL 	 !AAD	NCONT
+
+And 	 PACTIVE POLY 	PMOS
+And	 PACTIVE !POLY	PSD
+
+Connect  PMOS 	 POLY
+Connect  PSD 	 VIA2
+Connect  NWELL 	 NCONT
+Connect  NCONT 	 VIA2
+
+Element	 MOS[P]	 PMOS 	 PSD 	NWELL 	VIA2
+

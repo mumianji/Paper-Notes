@@ -1,0 +1,66 @@
+<html>
+  <head>
+    <title>Transient Activation Model</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Transient Activation Model</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>SSuprem 4</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="andfex14_plot0.png" width="640" alt="andfex14_plot0" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates the use of the transient activation model.
+This model simulates the activation of dopants after ion implantation.
+The model is invoked by the parameter
+</p>
+<b> CLUST.TRANS </b> <p>
+in the
+<b> METHOD </b> statement.
+</p>
+<p>
+Experiments show that only a small portion (~10-20%) of implanted atoms is activated immediately in the beginning of the annealing process. It takes some
+time for impurities to achieve equilibrium active concentration level which
+usually corresponds to solid solubility.  On the atomic level this process
+is described as dissolution of various types of impurity-defect clusters.
+Phenomenologically this process can be described by a transient equation with
+an Arrhenius type temperature dependent time constant.
+</p>
+<p>
+This example simulates Boron transient activation at 3 different temperatures.
+The implant dose of 2e14 ions/cm**2 leads to the maximum concentration below
+the solid solubility level. The 30 minute anneal results in incomplete
+activation. The &quot;activation ratio&quot; is calculated using EXTRACT capability of
+Deckbuild. The simulation results are in reasonable agreement with experimental
+data presented in X.-Y. Liu et.al. Appl. Phys. Lett., v.77, No.13, p.2019, 2000.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

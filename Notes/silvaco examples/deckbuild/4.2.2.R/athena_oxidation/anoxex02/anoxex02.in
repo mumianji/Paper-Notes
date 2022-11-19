@@ -1,0 +1,23 @@
+go athena
+
+#TITLE: Mixed Ambient Oxidation Example
+
+# This example demonstrates mixed ambient oxidation in 1D
+#
+foreach gas (2. to 8. step 2.)
+#
+line x loc=0.0 sp=1.0 
+line x loc=1.0 sp=1.0  
+line y loc=0.0 sp=0.05
+line y loc=1.0 sp=0.05
+
+initialize
+#
+diffuse time=60 temperature=1000 f.o2=gas f.h2=20.
+structure outfile=anoxex02_gas.str
+#
+end
+
+tonyplot anoxex02*.str
+
+quit

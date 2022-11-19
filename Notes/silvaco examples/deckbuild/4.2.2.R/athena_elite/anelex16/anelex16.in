@@ -1,0 +1,47 @@
+go athena
+
+#TITLE: Intermetal Dielectric Formation
+# anelex16.in
+line x loc = 0.0  spac=0.1
+line x loc = 1.5  spac=0.1
+line x loc = 2.5  spac=0.1
+line x loc = 6.0  spac=0.1
+#
+line y loc = 0    spac=0.1
+line y loc = 0.50 spac=0.1
+#
+init 
+#
+deposit poly thick=.5 div=10
+etch  poly   left  p1.x=1.5
+etch  poly   right p1.x=2.5
+#
+rate.depo mach=d1 oxide \
+hemispher angle1=90 angle2=-90 dep.rate =700.0 a.m \
+sigma.dep=0.33
+#
+deposit mach=d1 time=10. minutes divis=5
+#
+structure outfile=anelex16_0.str
+#
+deposit alumin thick=.5 divis=10
+#
+structure outfile=anelex16_1.str
+#
+etch aluminum left  p1.x=3.2 
+etch aluminum right p1.x=4.2 
+#
+structure outfile=anelex16_2.str
+#
+rate.depo mach=d2 material=BPSG \
+hemispher angle1=90 angle2=-90 dep.rate=700.0 a.m \
+sigma.dep=0.25
+#
+deposit mach=d2 time=11.2 minutes divis=10
+#
+structure outfile=anelex16_3.str
+tonyplot anelex16_*.str -ttitle anelex16.in
+#
+quit
+
+

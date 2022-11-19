@@ -1,0 +1,58 @@
+<html>
+  <head>
+    <title>SRAM Cell with Multiple Metals and Dielectrics</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>SRAM Cell with Multiple Metals and Dielectrics</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>CLEVER</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="clex11.str.png" width="640" alt="clex11.str" />
+      <p/>
+    </div>
+    <div id="text" >
+<p>
+Modern designs make use of mask layers which are not always at right angles to each other. The layout used in this example illustrates a 45 degree angle for certain mask layers.
+This would normally make the calculation of parasitic resistances very difficult, but with CLEVER this is handled easily.
+</p>
+<p>
+In many cases the back-end processing makes use of different non-standard materials for the insulators and the metal conductors.
+</p>
+<p>
+This example is based upon the simulation of an SRAM cell which consists of four different metal layers, plus polysilicon.
+</p>
+<p>
+The initial processing stages demonstrate how Clever allows deposition of user-defined materials. Once the structure has been created these new materials can then be displayed within TonyPlot3D.
+</p>
+<p>
+Before the parasitic extraction takes place using the
+<b> Interconnect</b> statement, the physical parameters of the new materials are defined using the
+<b> Material</b> statement.
+</p>
+<p>
+This example has been used in the CLEVER tutorial in the manual and further information may be obtained there.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

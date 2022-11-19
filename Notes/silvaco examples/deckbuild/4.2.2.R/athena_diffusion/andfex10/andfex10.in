@@ -1,0 +1,36 @@
+go athena
+
+line x loc=0.00 spac=0.05
+line x loc=0.1 spac=0.05
+line y loc=0.00 spac=0.002
+line y loc=1 spac=0.1
+
+init silicon orientation=100 c.boron=1e16
+
+# Implant phosphorus with a high dose
+implant phosph energy=30 dose=5e15
+struct outf=andfex10_0.str
+
+# First calculate diffusion and activation with 
+# default solid solubility model 
+impurity i.phos silicon sol.solub
+method full.cpl 
+diffuse time=20 temp=800 
+struct outf=andfex10_1.str
+
+# Switch on the clustering activation model for phosphorus
+# and define the static clustering coefficients
+
+impurity i.phos cluster.act silicon Ctn.0=5.19e-24 Ctn.E=0.60
+init inf=andfex10_0.str
+method full.cpl compress 
+
+
+diffuse time=20 temp=800
+struct outf=andfex10_2.str
+
+
+# Plot the profiles to compare...
+tonyplot -overlay andfex10_1.str andfex10_2.str -set andfex10.set
+
+quit

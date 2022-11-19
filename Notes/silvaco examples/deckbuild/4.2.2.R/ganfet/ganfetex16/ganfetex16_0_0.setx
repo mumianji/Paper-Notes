@@ -1,0 +1,16 @@
+<!DOCTYPE SetFile-2D>
+<setfile version="1" >
+ <properties key_opaque="false" mark_frequency="0" mark_overlay="0" graph_width_0="2" graph_width_1="1" graph_width_2="1" graph_width_3="1" graph_width_4="1" graph_width_5="1" sequence_size="1" sequence_width="0" log_zero="0" sequence_mark_0="0" sequence_mark_1="1" sequence_mark_2="2" sequence_mark_3="3" sequence_mark_4="4" sequence_mark_5="5" />
+ <functions impurity_1_name="" impurity_1_units="" impurity_2_name="" impurity_2_units="" graph_1_name="" graph_1_units="" graph_2_name="" graph_2_units="" />
+ <mesh2d show_contours="false" show_edges="true" show_electrodes="false" show_junctions="false" show_light="false" show_materials="true" show_mesh="false" show_threed="false" show_vectors="false" region_param="-101" >
+  <cutline cut_from_x="5" cut_from_y="-0.04" cut_to_x="5" cut_to_y="0.2" />
+ </mesh2d>
+ <key cont_1_at="3" cont_2_at="1" cont_3_at="6" elec_at="6" vectors_at="6" overlay_at="2" regions_at="4" />
+ <annotation title_main="auto" title_sub="auto" footer_right="none" footer_left="none" show_xaxis="true" show_yaxis="true" show_grid="false" show_label_xaxis="true" show_label_yaxis="true" range_xaxis="auto" range_yaxis_min="-0.3" range_yaxis_max="1.05" range_yaxis_div="0.2" range_yaxis_ticks="4" label_xaxis="Microns" label_yaxis="Microns" />
+ <plot zoom_from_x="0" zoom_from_y="0" zoom_scale_x="1" zoom_scale_y="1" label_overlay="ganfetex16_0.str" >
+  <label label_text="base" label_from_x="4.7931" label_from_y="-0.125899" label_color="#000000" label_scale="1" label_align="7" />
+  <label label_text="drain" label_from_x="12.9655" label_from_y="-0.0859408" label_color="#000000" label_scale="1" label_align="7" />
+  <label label_text="gate" label_from_x="1.32759" label_from_y="-0.125899" label_color="#000000" label_scale="1" label_align="7" />
+  <label label_text="source" label_from_x="-2.7069" label_from_y="-0.0773785" label_color="#000000" label_scale="1" label_align="7" />
+ </plot>
+</setfile>

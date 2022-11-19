@@ -1,0 +1,135 @@
+<html>
+  <head>
+    <title>Modelling for Deep Submicron  - Process to Device</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Modelling for Deep Submicron  - Process to Device</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>SSuprem 4/S-Pisces/Giga</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R, Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="soiex08_plot0.png" width="640" alt="soiex08_plot0" />
+      <p/>
+      <img src="soiex08_plot1.png" width="640" alt="soiex08_plot1" />
+      <p/>
+      <img src="soiex08_plot2.png" width="640" alt="soiex08_plot2" />
+      <p/>
+      <img src="soiex08_plot3.png" width="640" alt="soiex08_plot3" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example uses process simulation to construct a
+<b> SOI MOSFET</b> that has full dielectric isolation. Device simulations are then
+performed that use Non-isothermal Energy Balance (NEB) calculations
+to obtain Ids/Vds characteristics.
+It shows:
+</p>
+<ul>
+  <li>
+ SOI structure formation using SSuprem 4 process simulation
+<br/>
+  </li>
+  <li>
+ Partially depleted SOI design
+<br/>
+  </li>
+  <li>
+ Selection of energy balance and lattice heating models in Atlas
+<br/>
+  </li>
+  <li>
+ Selection of numerical methods for coupled solution technique
+<br/>
+  </li>
+  <li>
+ Id/Vds simulation for Vgs=1.0, 3.0 and 5.0 V
+  </li>
+</ul>
+<p>
+A silicon-oxide-silicon structure was formed in SSuprem 4 by use of the
+<b> region</b> statement of Athena. This structure was then subjected to a standard bulk
+MOSFET processing sequence, which has been described in mos1ex01.in.
+The structure in this example has been designed so that the SOI thickness
+is greater than the depth of the source and drain junctions.
+This ensures that the device will operate in a partially depleted mode of
+operation during later device simulations.
+</p>
+<p>
+One major modification made to the original processing sequence was to
+introduce a LOCOS isolation step. The result of this step was the creation
+of a fully oxide isolated island of silicon. The
+<b> COMPRESS </b> model for oxidation has been used in this example but more complex and
+accurate models may be used to study birds beak effects in SOI MOSFETs,
+as described in the Athena/SSuprem 4 section.
+</p>
+<p>
+The process simulation structure will be passed into Atlas automatically
+using DeckBuild&apos;s auto-interface. This auto-interface therefore
+allows global optimization from process simulation to device simulation
+to SPICE model parameter extraction.
+</p>
+<p>
+The
+<b> contact </b> statement is used in Atlas to define the workfunction of the gate electrode. The
+<b> interface  </b> command is used to define the the fixed charge at the oxide/silicon interfaces. The
+<b> models </b> statement defines a set of physical models for the simulation. CVT and SRH are
+standard models for MOSFET simulation. The energy balance equation for electrons
+is specified by
+<b> hcte.el </b> parameter and the lattice heat flow equation is solved with Giga by setting the parameter
+<b> lat.temp</b> . A thermal contact must also be defined when solving the heat flow equation with
+Giga and is defined using the
+<b> thermcontact </b> statement. In this example this thermal electrode is defined to be the same as
+contact number #4 which is the substrate electrode.
+</p>
+<p>
+The numerical algorithm chosen for this system of equations is the newton approach
+defined on the
+<b> method </b> statement. This statement is also used to define the semiconductor equations.
+<b> carr=2 </b> will solve for potential and the hole and electron continuity equations. The
+<b> trap </b> parameter allows the bias step to be reduced in cases of non-convergence for a total of
+<b> maxtrap</b> times.
+</p>
+<p>
+The solution begins by applying zero volts to all contacts and only solving for potential.
+A small voltage is then applied to the drain contact. This is normally advised in the
+case of SOI simulations due to the presence of a floating region of potential.
+As described in previous SOI examples, this floating region of potential can cause
+great numerical difficulties. However by solving for 5 equations, which couples
+the equations very tightly, and applying only small voltage steps the convergence
+in this example is excellent.
+</p>
+<p>
+The gate voltage is ramped to 1, 2 and 3 V and a solution saved at each of these
+bias conditions.  Each solution is then used as the initial starting point for
+simulating the Ids/Vds characteristics by using the
+<b> load</b> command. A logfile is then opened to store the terminal characteristics and a
+<b> solve </b> statement applies the drain bias sweep. This procedure is then repeated for each gate voltage.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

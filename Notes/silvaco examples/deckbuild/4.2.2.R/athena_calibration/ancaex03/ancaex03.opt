@@ -1,0 +1,8 @@
+# parameters
+1|oxide silicon weto2 orient=100 thinox.0 =6.57e6 thinox.e =2.32 thinox.l=0.078 thinox.p=1.0|16|oxide thinox.0|linear|---|6.57e6|3.285e+05|9.855e+07
+3|oxide silicon weto2 orient=100 thinox.0 =6.57e6 thinox.e =2.32 thinox.l=0.078 thinox.p=1.0|16|oxide thinox.l|linear|---|0.078|0.01|0.2
+# end
+# targets
+0|0|extract name="tox1" thickness material="SiO~2" mat.occno=1 x.val=0|20|tox1|linear|---|100|99.2936|-0.706351|1.0
+0|0|extract name="tox2" thickness material="SiO~2" mat.occno=1 x.val=0|24|tox2|linear|---|230|230.687|0.298522|1.0
+# end

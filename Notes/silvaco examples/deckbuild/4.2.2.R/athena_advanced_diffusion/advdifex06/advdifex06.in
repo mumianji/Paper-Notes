@@ -1,0 +1,46 @@
+
+go athena
+
+line  x loc=0         spacing=0.002
+line  x loc=0.2       spacing=0.002
+line  y loc=0.0       spacing=0.01
+line  y loc=2         spacing=0.1
+
+init silicon c.phos=1.0e12 orientation=100
+
+struct outfile=advdifex06_init.str
+
+method pls
+
+diffuse time=1 hour temp=900 c.phos=1.0e20
+
+struct outfile=advdifex06_a.str
+
+
+line  x loc=0         spacing=0.002
+line  x loc=0.2       spacing=0.002
+line  y loc=0.0       spacing=0.01
+line  y loc=2         spacing=0.1
+
+init silicon c.phos=1.0e12 orientation=100
+
+diffus time=1 hour temp=900 c.phos=6e19
+
+struct outfile=advdifex06_b.str
+
+
+line  x loc=0         spacing=0.002
+line  x loc=0.2       spacing=0.002
+line  y loc=0.0       spacing=0.01
+line  y loc=2         spacing=0.1
+
+init silicon c.phos=1.0e12 orientation=100
+
+
+diffus time=1 hour temp=900 c.phos=1.5e19
+
+struct outfile=advdifex06_c.str
+
+tonyplot -overlay advdifex06_a_exp.str advdifex06_a.str advdifex06_b_exp.str advdifex06_b.str advdifex06_c_exp.str  advdifex06_c.str -set advdifex06.set
+
+quit

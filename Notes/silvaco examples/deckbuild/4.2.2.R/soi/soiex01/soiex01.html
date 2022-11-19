@@ -1,0 +1,113 @@
+<html>
+  <head>
+    <title>Partially Depleted SOI - Vt and Subthreshold Slope</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Partially Depleted SOI - Vt and Subthreshold Slope</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>S-Pisces</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="soiex01_plot0.png" width="640" alt="soiex01_plot0" />
+      <p/>
+      <img src="soiex01_plot1.png" width="640" alt="soiex01_plot1" />
+      <p/>
+      <img src="soiex01_plot2.png" width="640" alt="soiex01_plot2" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example simulates the Ids/Vgs characteristics of a thick film SOI MOSFET and from these results extracts the threshold voltage and subthreshold slope. These are two key parameters involved in the design of any SOI MOSFET.  It demonstrates:
+</p>
+<ul>
+  <li>
+ Basic SOI structure definition using Atlas syntax
+<br/>
+  </li>
+  <li>
+ Setting transport models including impact ionization
+<br/>
+  </li>
+  <li>
+ Generating an Ids/Vgs curve with Vds=0.1V
+<br/>
+  </li>
+  <li>
+ Extracting threshold voltage and subthreshold slope from the results
+<br/>
+  </li>
+  <li>
+ Plotting output curves and structures.
+  </li>
+</ul>
+<p>
+The SOI device is a partially depleted device composed of a 0.2 micron
+layer of silicon on a 0.4 micron silicon dioxide substrate.  The
+device has a 17 nm thick gate oxide and a gate length of 1.0 microns.
+For simplicity there is no silicon below the back oxide. Other examples
+in this section do include a silicon substrate.
+</p>
+<p>
+The device mesh, region specification and electrode definition are performed using the
+<b> mesh, region </b> and
+<b> electrode </b> statements at the start of the input file. The doping is added as
+simple analytical functions. The channel doping in this simple example
+is presumed a constant. Gaussian source and drain profiles are used. No
+LDD or spacer is considered in this case.
+</p>
+<p>
+After the structure description, the
+<b> interface </b> statement is used to define fixed oxide charges on both silicon - silicon
+dioxide interfaces.  Next the
+<b> contact </b> statement is used to specify the workfunction on the poly-silicon gate.
+</p>
+<p>
+The
+<b> model </b> statement is used to specify a reasonable set of physical models for
+SOI simulation.  In this case, concentration dependent mobility,
+SRH recombination, Auger recombination, band-gap narrowing, and
+parallel electric field dependent mobility are specified.
+</p>
+<p>
+After the initial solution, a negative gate voltage is applied followed by solutions at drain biases
+of 0.05 and 0.1 volts are obtained. Next, the
+<b> log </b> statement is used to specify a file for collection of the Id/Vgs
+characteristics of the SOI device. These characteristics are captured
+with the following
+<b> solve </b> statement where the gate bias is ramped in 0.1 volt increments from
+-0.2 volts up to 1.5 volt.
+</p>
+<p>
+After the voltages have been solved
+<b> extract </b> statements are used to find the threshold voltage and the subthreshold slope of the SOI MOSFET.
+</p>
+<p>
+Finally, the resultant Id/Vgs curve is plotted using TonyPlot.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

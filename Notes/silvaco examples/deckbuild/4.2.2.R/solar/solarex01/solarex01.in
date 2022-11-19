@@ -1,0 +1,175 @@
+# (c) Silvaco Inc., 2018
+# CREATE SOLAR CELL IN ATHENA
+
+go athena
+
+line x loc=0.00 spac=1
+line x loc=10 spac=1
+
+line y loc=0.00 spac=0.05
+line y loc=0.25 spac=0.02
+line y loc=1 spac=0.1
+line y loc=50 spac=10
+
+init silicon c.boron=1.0e14 orientation=100
+
+# deposit oxide coating
+deposit oxide thickness=0.05  div=1
+
+# implant n+ layer
+implant phos dose=1e15 energy=30
+
+# drive-in
+diffuse time=10 temp=900
+
+# extract n layer junction depth
+extract name="junc_depth" xj material="Silicon" \
+        mat.occno=1 x.val=0.1 junc.occno=1
+
+# form contact
+etch oxide right p1.x=8
+deposit aluminum thickness=0.1 div=3
+etch aluminum left p1.x=8
+
+# Reflect to get complete structure
+structure mirror right
+
+# set electrodes for ATLAS
+electrode name=cathode x=10
+electrode name=anode backside
+
+structure outf=solarex01_0.str
+
+# FIRST ATLAS RUN TO FIND SHORT CIRCUIT CURRENT AND OPEN CIRCUIT VOLTAGE
+
+go atlas
+
+mesh infile=solarex01_0.str
+
+# set contact material to be opaque
+material material=Aluminum imag.index=1000
+
+material material=Silicon taun0=1e-6 taup0=1e-6
+
+# set light beam using solar spectrum from external file
+beam num=1 x.origin=10.0 y.origin=-2.0 angle=90.0 power.file=solarex01.spec
+
+# saves optical intensity to solution files
+output opt.int
+
+models conmob fldmob consrh print
+
+solve init
+solve previous
+
+# get short circuit current
+log outf=solarex01_0.log
+solve b1=1
+
+extract name="short_circuit_current" max(abs(i."cathode"))
+save outf=solarex01_1.str
+
+# get open circuit voltage
+solve init
+solve previous
+contact name=cathode current
+solve icathode=0 b1=1
+
+extract name="open_circuit_voltage" max(abs(vint."cathode"))
+save outf=solarex01_2.str
+tonyplot solarex01_2.str -set solarex01_2.set 
+
+# SECOND ATLAS RUN FOR SPECTRAL RESPONSE
+
+go atlas
+
+mesh infile=solarex01_0.str
+
+# set contact material to be opaque
+material material=Aluminum imag.index=1000
+
+material material=Silicon taun0=1e-6 taup0=1e-6
+
+# set monochromatic light beam for spectral analysis
+beam  num=1 x.origin=10.0 y.origin=-2.0 angle=90.0  
+
+# saves optical intensity to solution files
+output opt.int
+
+models conmob fldmob consrh print  
+
+# spectral response
+solve init
+solve previous
+solve previous b1=0
+log outf=solarex01_2.log
+solve b1=1 beam=1 lambda=0.3 wstep=0.025 wfinal=1.0
+
+tonyplot solarex01_2.log -set solarex01_3.set
+
+# The "Available photo current" accounts for absorption in semiconductor regions only. 
+# Users interested in the overall absorption need to calculate EQE as:
+# EQE=I anode / I Source Photo Current * Absorption
+
+extract init inf="solarex01_2.log" 
+extract name="IQE" curve(elect."optical wavelength", \
+        -(i."anode")/elect."available photo current") outf="IQE.dat"  
+extract name="EQE" curve(elect."optical wavelength", \
+        -(i."anode")/elect."source photo current") outf="EQE.dat"
+extract name="EQE2" curve(elect."optical wavelength", \
+        -(i."anode")/elect."source photo current"*elect."Absorption") outf="EQE2.dat" 
+
+tonyplot IQE.dat -overlay EQE2.dat  -set solarex01_1.set
+
+# THIRD RUN FOR I-V CHARACTERISTICS
+
+go atlas
+
+mesh infile=solarex01_0.str
+
+# set contact material to be opaque
+material material=Aluminum imag.index=1000
+
+material material=Silicon taun0=1e-6 taup0=1e-6
+
+# set light beam using solar spectrum from external file
+beam num=1 x.origin=10.0 y.origin=-2.0 angle=90.0 power.file=solarex01.spec
+
+# saves optical intensity to solution files
+output opt.int
+
+# saves beam intensity to the log files
+probe name=inten beam=1 intensity
+
+models conmob fldmob consrh
+
+solve init
+solve previous
+log outfile=solarex01_3.log
+solve vcathode=-0.01 vstep=-0.01 vfinal=-1*$open_circuit_voltage name=cathode
+log off
+
+solve init
+solve previous
+solve b1=1
+log outfile=solarex01_4.log
+solve vcathode=-0.01 vstep=-0.01 vfinal=-1*$open_circuit_voltage \
+      name=cathode b1=1
+log off
+
+tonyplot solarex01_3.log -overlay solarex01_4.log -set solarex01_4.set
+
+extract init infile="solarex01_4.log"
+extract name="Jsc (mA/cm2)" $short_circuit_current*1e08*1e03/20
+extract name="Power" curve(v."cathode", (v."cathode" * i."cathode" *(-1))) \
+        outf="P.dat" 
+extract name="Pmax" max(curve(v."cathode", (v."cathode" * i."cathode" *(-1)))) 
+extract name="V_Pmax" x.val from curve(v."cathode", (v."cathode"*i."cathode"))\
+	where y.val=(-1)*$"Pmax"
+extract name="Fill Factor" ($"Pmax"/($"short_circuit_current"*$"open_circuit_voltage"))
+extract name="intens" max(probe."inten")
+extract name="Eff" ($Pmax/($"intens"*20/1e8))
+
+tonyplot P.dat 
+
+quit

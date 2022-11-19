@@ -1,0 +1,110 @@
+# (c) Silvaco Inc., 2018
+go atlas
+
+# GaAs/AlGaAs Bulk LED with Self-Heating Effect
+#
+# Cylindrical Structure LED simulation
+#
+#====================================================
+#     Three Dimensional Cylindrical MESH 
+#====================================================
+mesh cylindrical three.d
+# 
+# for radius and space
+r.mesh l=0.0  spacing=0.5
+r.mesh l=1.5  spacing=0.2
+r.mesh l=2.5  spacing=0.2
+r.mesh l=4.0  spacing=0.5
+#
+# for angle and angle division
+a.m  l=0   spac=45
+a.m  l=180 spac=45
+#
+# for z-direction
+z.mesh l=-0.3 spacing=0.3
+z.mesh l=-0.1 spacing=0.3
+z.mesh l=0.0  spacing=0.1
+z.mesh l=0.5  spacing=0.01
+z.mesh l=0.75 spacing=0.05
+z.mesh l=1.0  spacing=0.01
+z.mesh l=1.1  spacing=0.01
+z.mesh l=1.35 spacing=0.05
+z.mesh l=1.6  spacing=0.01
+z.mesh l=2.0  spacing=0.1
+z.mesh l=3.0 spacing=0.2
+z.mesh l=4.0  spacing=0.3
+z.mesh l=4.3  spacing=0.3
+# 
+#====================================================
+#   Three Dimensional Cylidrical REGION & ELECTRODE
+#====================================================
+#
+# p-Contact region
+region num=1 material=GaAs a.min=0 a.max=180 z.min=0.0 z.max=0.5
+# p-Clad region
+region num=2 material=AlGaAs a.min=0 a.max=180 z.min=0.5 z.max=1.0 x.comp=0.35
+# i-Active region
+region num=3 material=GaAs a.min=0 a.max=180 z.min=1.0 z.max=1.1 name=act
+# n-Clad region
+region num=4 material=AlGaAs a.min=0 a.max=180 z.min=1.1 z.max=1.6 x.comp=0.35
+region num=5 material=GaAs a.min=0 a.max=180 z.min=1.6 z.max=4.0
+#
+region num=6 material=SiO2 a.min=0 a.max=180 z.min=-0.1 z.max=0.0 r.min=1.5 r.max=4.0
+
+# Electrodes
+electrode name=anode   material=Aluminum a.min=0 a.max=180 r.min=0  r.max=1.5 z.min=-0.3 z.max=0
+electrode name=cathode material=Aluminum a.min=0 a.max=180 r.min=3  r.max=4.0 z.min=4 z.max=4.3
+#
+doping region=1 uniform p.type conc=5e18
+doping region=2 uniform p.type conc=1e18
+#doping region=3 uniform p.type conc=1e18
+doping region=4 uniform n.type conc=1e18
+doping region=5 uniform n.type conc=1e18
+#
+save outf=ledex06_0.str
+#
+#====================================================
+#     Three Dimensional Cylindrical LED Simulation 
+#====================================================
+#
+# Model combination for the LED and GIGA
+models srh auger optr conmob fermi lat.temp joule.heat gr.heat print
+#
+material align=0.6
+#
+thermcontact num=1 elec=2 ext.temp=300 alpha=2000
+#
+method block bicgst climit=1e-5 maxtrap=10 
+#
+solve init
+solve prev
+#
+output con.band val.band band.param u.srh u.radiative u.auger \
+       e.mobility h.mobility
+#
+save outf=ledex06_1.str
+#
+probe name="Recombination" recombination integrate rname=act
+probe name="Radiative" radiative integrate rname=act
+probe name="Peak Energy" rname=act min band.gap
+#
+log outf=ledex06_0.log
+solve vstep=0.02 vfinal=2.0 name=anode
+log off
+#
+save outf=ledex06_2.str
+#
+# for IQE and Red Shift due to self-heating
+extract init infile="ledex06_0.log"
+extract name="IQE" curve(1e3*i."anode", 100*probe."Radiative"/probe."Recombination") outfile="ledex06_IQE.dat"
+extract name="PeakWave" curve(1e3*i."anode", 1e3*1.24/Probe."Peak Energy") outfile="ledex06_Wpeak.dat"
+#
+tonyplot3d ledex06_0.str -set ledex06_str_0.set
+tonyplot3d ledex06_1.str -set ledex06_str_1.set
+tonyplot3d ledex06_2.str -set ledex06_str_2.set
+
+tonyplot ledex06_IQE.dat -set ledex06_0.set
+tonyplot ledex06_Wpeak.dat -set ledex06_1.set
+tonyplot ledex06_0.log -set ledex06_2.set
+#
+quit

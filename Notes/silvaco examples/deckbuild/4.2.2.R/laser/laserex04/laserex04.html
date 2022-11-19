@@ -1,0 +1,99 @@
+<html>
+  <head>
+    <title>Using Reflect on a GaAs/AlGaAs Stripe Geometry Laser</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Using Reflect on a GaAs/AlGaAs Stripe Geometry Laser</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Blaze/Laser</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="laserex04_plot0.png" width="640" alt="laserex04_plot0" />
+      <p/>
+      <img src="laserex04_plot1.png" width="640" alt="laserex04_plot1" />
+      <p/>
+      <img src="laserex04_plot2.png" width="640" alt="laserex04_plot2" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates the use of a reflecting laser boundary condition for the simulation of a stripe geometry
+GaAs/AlGaAs laser diode . The example shows:
+</p>
+<ul>
+  <li>
+ Laser structure definition using Atlas syntax
+<br/>
+  </li>
+  <li>
+ Material parameters specification
+<br/>
+  </li>
+  <li>
+ Setting conventional physical models
+<br/>
+  </li>
+  <li>
+ Device initial biasing 
+<br/>
+  </li>
+  <li>
+ Activating LASER module of Atlas
+<br/>
+  </li>
+  <li>
+ Mesh definition for solving the Helmholtz wave equation
+<br/>
+  </li>
+  <li>
+ Definition of laser physical models and their parameters
+including a physically based frequency dependent optical
+gain model
+<br/>
+  </li>
+  <li>
+ Comparison between the full laser diode structure and simulation
+of only half the structure but with a reflecting laser boundary
+condition
+  </li>
+</ul>
+<p>
+The logistics of the structure, material parameters and physical models definition repeat that of the previous examples in this section. Refer to those examples for more detailed explanations.
+</p>
+<p>
+Two simulations are performed; the first simulation is of only half the structure by assuming reflection around the x=0 plane and the second simulation is of the entire device.
+</p>
+<p>
+To create the reflecting laser boundary condition, the
+<b> reflect </b> parameter of the
+<b> laser </b> statement should be specified. This automatically assumes that the device is reflected around the x=0 plane. Also, the device mesh should have the diagonal triangle flipping turned off by specifying the parameter
+<b> ^diag.flip </b> on the
+<b> mesh </b> statement.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

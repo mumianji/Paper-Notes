@@ -1,0 +1,101 @@
+<html>
+  <head>
+    <title>Amorphous IGZO TFT Simulation 2. Simulation v.s Experiment</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Amorphous IGZO TFT Simulation 2. Simulation v.s Experiment</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Athena/Blaze/TFT</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R / Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="tftex13_plot0.png" width="640" alt="tftex13_plot0" />
+      <p/>
+      <img src="tftex13_plot1.png" width="640" alt="tftex13_plot1" />
+      <p/>
+      <img src="tftex13_plot2.png" width="640" alt="tftex13_plot2" />
+      <p/>
+      <img src="tftex13_plot3.png" width="640" alt="tftex13_plot3" />
+      <p/>
+      <img src="tftex13_plot4.png" width="640" alt="tftex13_plot4" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<br/>
+<p>
+This example performs Id/Vgs, Id/Vd, and CV simulations of TFT device with material
+properties corresponding to amorphous IGZO (indium galium zinc oxide) material and show comparison with
+published experiment data. Measured a-IGZO material DOS(density-of-state) by CV analysis is inserted
+into simulation input and show almost the same transfer curve and output curve behaviour.
+<br/>
+</p>
+<p>
+Reference: Amorphous InGaZnO thin-film transistors - Part I: Complete Extracton of Density of States Over the Full Subband-Gap Energy Range, Yongsik Kim, et al., IEEE Transactions On Electron Devices Vol. 59, No. 10, Oct 2012
+<br/>
+The example shows:
+</p>
+<ul>
+  <li>
+ Structure formation using Athena syntax
+<br/>
+  </li>
+  <li>
+ Material and model settings for passivated IGZO
+<br/>
+  </li>
+  <li>
+ DOS(Density Of State) in a-IGZO bulk and at interface between IGZO and gate insulator
+<br/>
+  </li>
+  <li>
+ Forward Id/Vgs characteristics and comparison with experiment
+<br/>
+  </li>
+  <li>
+  Ouput Id/Vds characteristics and comparison with experiment
+<br/>
+  </li>
+  <li>
+ multi-frequency CV characteristics with extracted DOS(Density Of State)
+  </li>
+</ul>
+<p>
+The key command in a-IGZO:TFT simulation is the
+<b> Source/Drain Schottky barrier and height</b> This is done by proper workfunction of source/drain metal and activated by model UST(Universal Schottky Tunnling Model). gate metal and both S/D metal are the same workfunction=5.0 [eV]
+<br/>
+<b> DOS-defect/intdefect statement. </b> It is used to define a continuous density of trap states in
+the a-IGZO active channel and the relevant trapping cross-sections.Also bottom interface fixed charge.
+For this purpose, we used C-interpreter function to define DOS in IGZO active channel region.
+<br/>
+<b> IDVG/IDVD DC Analysis</b> The Id/Vgs and Id/Vd ramping is done in a similar manner to the threshold voltage
+tests for MOS devices described in the MOS examples.
+<b> CV-analysis</b> The Cgs and Cgd are simulated and compared to published data for each frequency.
+<br/>
+The measured data were taken from published paper with digitizer.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

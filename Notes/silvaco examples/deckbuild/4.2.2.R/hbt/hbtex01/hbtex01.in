@@ -1,0 +1,72 @@
+# (c) Silvaco Inc., 2018
+go atlas
+title SiGe HBT simulation
+#
+# SECTION 1: Mesh spectification
+#
+mesh space.mult=0.7 
+#
+x.m  loc=0.0   spacing=0.1
+x.m  loc=0.5   spacing=0.05
+x.m  loc=0.75  spacing=0.1
+x.m  loc=2.2   spacing=0.2
+#
+y.m  loc=0.0   spacing=0.02
+y.m  loc=0.10  spacing=0.01
+y.m  loc=0.125 spacing=0.01
+y.m  loc=0.2   spacing=0.01
+y.m  loc=0.23  spacing=0.01
+y.m  loc=0.8   spacing=0.1
+#
+# SECTION 2: Structure definition
+#
+region   num=1 material=Si   y.min=0.2  
+region   num=2 material=Si   y.max=0.1250
+region   num=3 material=SiGe y.min=0.1250 y.max=0.2 x.composition=0.2 grad.1=0.0250 grad.3=0.03
+#
+elec    name=emitter x.min=0.0 x.max=0.5 y.min=0.0 y.max=0.0
+elec    name=base    x.min=1.2 x.max=2.2 y.min=0.0 y.max=0.0
+elec    name=collector bot 
+#
+doping uniform  n.type conc=2.e16
+doping gauss    n.type conc=8.e19 peak=0.8  char=0.090
+doping gauss    p.type conc=3.e19 junc=0.200
+doping gauss    n.type conc=1.e20 junc=0.1  x.right=0.5 lat.char=0.05
+doping gauss    p.type conc=5.e19 peak=0.0  char=0.05  x.left=1.2  lat.char=0.2
+#
+# SECTION 3: Material model specification
+#
+material material=Si    taun0=1e-7 taup0=1e-7
+material material=SiGe  taun0=1.e-8 taup0=1.e-8
+model    bgn  srh  auger fldmob conmob  
+
+save outf=hbtex01_0.str
+
+#
+# SECTION 4: Initial solution
+#
+
+
+solve init 
+#
+
+method gummel newton trap autonr 
+solve prev 
+solve local vcollector=2.0 
+#
+# SECTION 5: Gummel plot
+#
+output con.band val.band 
+log outf=hbtex01.log master
+#
+
+method  newton  trap  
+solver vbase=0.01 
+solver vbase=0.05 
+solve vbase=0.1 vstep=0.1 name=base vfinal=0.9 
+
+save outf=hbtex01.str
+tonyplot  hbtex01.str -set hbtex01str.set
+tonyplot  hbtex01.log -set hbtex01gum.set
+
+quit

@@ -1,0 +1,170 @@
+# (c) Silvaco Inc., 2018
+go atlas
+Title Half Structure Laser Simulation
+#
+# SECTION 1: Mesh Specification
+#
+mesh  space.mult=1.0 ^diag.flip width=2
+# 
+x.mesh loc=0 spac=0.2
+x.mesh loc=2 spac=0.2
+x.mesh loc=4 spac=0.5
+x.mesh loc=6 spac=0.5
+#
+y.mesh loc=0.0 spac=0.1
+y.mesh loc=0.5 spac=0.1
+y.mesh loc=0.55 spac=0.025
+y.mesh loc=0.7 spac=0.015
+y.mesh loc=0.75 spac=0.0075
+y.mesh loc=0.85 spac=0.0075
+y.mesh loc=0.9 spac=0.015
+y.mesh loc=1.05 spac=0.025
+y.mesh loc=1.1 spac=0.1
+y.mesh loc=2.1 spac=0.2
+#
+# SECTION 2: Structure Specification
+#
+region     num=1  material=AlGaAs x.min=0 x.max=6.0 \
+ y.min=0.0 y.max=0.75 x.composition=0.5
+#
+region     num=2  material=GaAs x.min=0 x.max=6.0 \
+ y.min=0.75 y.max=0.85
+#
+region     num=3  material=AlGaAs x.min=0 x.max=6.0 \
+ y.min=0.85 y.max=2.1 x.composition=0.5
+#
+elec       num=1  name=anode     x.min=0.0 x.max=1.5 y.min=0.0 y.max=0.0
+elec       num=2  name=cathode   bottom
+#
+doping     uniform reg=1  p.type conc=1.e18
+doping     uniform reg=2  n.type conc=4.e15
+doping     uniform reg=3  n.type conc=4.e17
+#
+# SECTION 3: Material models
+#
+material material=GaAs   taun0=1.e-9 taup0=1.e-9 copt=1.5e-10 
+material material=AlGaAs taun0=1.e-9 taup0=1.e-9 copt=1.5e-10 align=0.6
+#
+model  
+model material=GaAs     fldmob srh optr
+model material=AlGaAs   fldmob srh optr
+#
+# SECTION 4: Ramp Up Near Lasing
+#
+solve init
+output con.band val.band
+#
+method newton autonr trap  maxtrap=6 climit=1e-6
+#
+solve vanode=0.1
+solve vanode=0.2
+solve vanode=0.4 vstep=0.4 name=anode vfinal=1.2
+#
+# SECTION 5: Laser Model
+#
+lx.m  n=1  x=0
+lx.m  n=37 x=5
+#
+ly.m  n=1  y=0.5
+ly.m  n=33 y=1.1
+#
+models material=GaAs fldmob  srh optr fermi print gainmod=1
+laser maxch=10 itmax=100 nmodes=1 reflect photon.energy=1.43 \
+ ^lmodes toler=0.01 sin=40000 tauss=0.05 cavity.length=100
+#
+method las.trap las.atrap=0.5 las.maxtraps=2
+#
+# SECTION 6: Laser Simulation
+#
+log outf=laserex04_0.log
+solve vanode=1.25 vstep=0.05 name=anode vfinal=2.05
+solve vanode=2.06 vstep=0.02 name=anode vfinal=2.2
+save outfile=laserex04_0.str
+#
+go atlas
+Title Full Structure Laser Simulation
+#
+# SECTION 1: Mesh Specification
+#
+mesh  space.mult=1.0 diag.flip width=1
+# 
+x.mesh loc=-6 spac=0.5
+x.mesh loc=-4 spac=0.5
+x.mesh loc=-2 spac=0.2
+x.mesh loc=0 spac=0.2
+x.mesh loc=2 spac=0.2
+x.mesh loc=4 spac=0.5
+x.mesh loc=6 spac=0.5
+#
+y.mesh loc=0.0 spac=0.1
+y.mesh loc=0.5 spac=0.1
+y.mesh loc=0.55 spac=0.025
+y.mesh loc=0.7 spac=0.015
+y.mesh loc=0.75 spac=0.0075
+y.mesh loc=0.85 spac=0.0075
+y.mesh loc=0.9 spac=0.015
+y.mesh loc=1.05 spac=0.025
+y.mesh loc=1.1 spac=0.1
+y.mesh loc=2.1 spac=0.2
+#
+# SECTION 2: Structure Specification
+#
+region     num=1  material=AlGaAs x.min=-6.0 x.max=6.0 \
+ y.min=0.0 y.max=0.75 x.composition=0.5
+#
+region     num=2  material=GaAs x.min=-6.0 x.max=6.0 \
+ y.min=0.75 y.max=0.85
+#
+region     num=3  material=AlGaAs x.min=-6.0 x.max=6.0 \
+ y.min=0.85 y.max=2.1 x.composition=0.5
+#
+elec       num=1  name=anode     x.min=-1.5 x.max=1.5 y.min=0.0 y.max=0.0
+elec       num=2  name=cathode   bottom
+#
+doping     uniform reg=1  p.type conc=1.e18
+doping     uniform reg=2  n.type conc=4.e15
+doping     uniform reg=3  n.type conc=4.e17
+#
+# SECTION 3: Material models
+#
+material material=GaAs   taun0=1.e-9 taup0=1.e-9 copt=1.5e-10 
+material material=AlGaAs taun0=1.e-9 taup0=1.e-9 copt=1.5e-10 align=0.6
+#
+model  
+model material=GaAs     fldmob srh optr
+model material=AlGaAs   fldmob srh optr
+#
+solve init
+output con.band val.band
+#
+method newton autonr trap  maxtrap=6 climit=1e-6
+#
+solve vanode=0.1
+solve vanode=0.2
+solve vanode=0.4 vstep=0.4 name=anode vfinal=1.2
+#
+# SECTION 5: Laser Model
+#
+lx.m  n=1  x=-5
+lx.m  n=37 x=5
+#
+ly.m  n=1  y=0.5
+ly.m  n=33 y=1.1
+#
+models material=GaAs fldmob  srh optr fermi print gainmod=1
+laser maxch=10 itmax=100 nmodes=1 photon.energy=1.43 \
+ ^lmodes toler=0.01 sin=40000 tauss=0.05 cavity.length=100
+#
+method las.trap las.atrap=0.5 las.maxtraps=2
+#
+# SECTION 6: Laser Simulation
+#
+log outf=laserex04_1.log
+solve vanode=1.25 vstep=0.05 name=anode vfinal=2.05
+solve vanode=2.06 vstep=0.02 name=anode vfinal=2.2
+#
+save outfile=laserex04_1.str
+tonyplot laserex04_1.log -set laserex04_log.set
+tonyplot laserex04_0.str -set laserex04_0.set
+tonyplot laserex04_1.str -set laserex04_1.set
+quit

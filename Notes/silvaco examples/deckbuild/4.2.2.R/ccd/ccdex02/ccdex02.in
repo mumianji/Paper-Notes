@@ -1,0 +1,151 @@
+# (c) Silvaco Inc., 2018
+go athena
+# CCD  structure simulation
+# 
+line x loc= 0.00 spac=0.2
+line x loc= 0.45 spac=0.25
+line x loc= 2.35 spac=1.2
+line x loc= 4.25 spac=0.25
+line x loc= 4.50 spac=0.1
+line x loc= 4.70 spac=0.1
+line x loc= 4.95 spac=0.25
+line x loc= 6.85 spac=1.2
+line x loc= 8.75 spac=0.25
+line x loc= 9.00 spac=0.25
+#
+line y loc=0.00 spac=0.04
+line y loc=0.85 spac=0.125
+line y loc=2.0   spac=0.5
+line y loc=5.0   spac=1.2
+# 
+# Define material, orientation, initial doping
+init silicon c.boron=5e14 orientation=100
+#
+# Deposit oxide
+# 
+deposit oxide thick=0.05 divisions=3
+#
+# deposit nitride
+deposit nitride thick=0.05 divisions=3
+#
+# Implant phosphorus - n-well formation 
+implant phosphorus dose=1.4e12 energy=180
+#
+# Perform diffusion
+#
+method fermi compress
+diffus time=320 temp=1000 nitro press=1.00
+#
+deposit poly thick=0.1 div=1
+# 
+etch poly start x=4.5 y=-0.5
+etch cont x=4.5 y=0.5
+etch cont x=4.7 y=0.5
+etch done x=4.7 y=-0.5
+# 
+electrode name=gate1  x=0.0
+electrode name=gate2  x=8.0
+electrode name=substrate backside
+#
+extract name="junc_depth" xj silicon junc.occno=1 x.val=8
+
+relax silicon y.min=2.0 dir.y=false
+
+structure outf=ccdex02_0.str
+tonyplot  ccdex02_0.str -set ccdex02_0.set
+#
+# Transfer the structure and start device simulation
+#
+go atlas
+#
+#
+# SECTION 1: Mesh and structure definition
+#
+# Read the structure generated in athena/ssuprem4
+#
+# (If run through the deckbuild beginning from process simulation
+#  the structure is transfered automatically into device simulator:
+#  no mesh statement is needed - commented out)
+#
+# mesh   inf=ccdex02_0.str master.in 
+# 
+# SECTION 2: Contacts
+#
+contact name=gate1 n.polysilicon 
+contact name=gate2 n.polysilicon 
+contact name=substrate 
+#
+# SECTION 3: Material & Models
+#
+models   conmob fldmob srh print  
+#
+# SECTION 4: Initial solution
+#
+method newton itlimit=60 trap carriers=0
+solve init 
+#
+# Stepping the gate1 simultaneously down to -8V:
+#
+solve vstep=-2 name=gate1 vfinal=-8
+save outf=ccdx_gate1.str
+#
+# Stepping gate2 up to 12V
+solve vstep=2 name=gate2 vfinal=12 
+save outf=ccdx_gate2.str
+#
+# Set up depleted well
+# 
+solve n.bias=1
+solve n.bias=2
+solve n.bias=3
+solve n.bias=4
+solve n.bias=5
+solve n.bias=6
+solve n.bias=7
+solve n.bias=8
+solve n.bias=9
+solve n.bias=10
+solve n.bias=12
+solve n.bias=14
+solve n.bias=16
+solve n.bias=18
+solve n.bias=20 
+#
+# Use LUMINOUS for carrier generation under light exposure
+#
+beam num=1 x.o=6.85 y.o=-1.0 min.w=-2.0 max.w=2.0 wavelength=0.8 angle=90.0
+material material=Silicon real.index=1.45 imag.index=0.005
+
+models   conmob fldmob srh print  
+method newton autonr trap itlimit=30 carriers=2
+
+# short transient to see empty well
+solve b1=0 tstep=1e-12 tstop=1e-12
+#save empty structure
+
+save outf=ccdex02_1.str
+tonyplot  ccdex02_1.str -set ccdex02_1.set
+
+# extract electron concentration in empty well (1.0e4 is to scale into I/cm^3)
+extract init inf="ccdex02_1.str"
+extract name="initial_n_at_x8" 1.0e+4*area from curve(depth,n.conc material="Silicon" mat.occno=1 x.val=8.0) 
+
+
+# shine light
+solve b1=1.0 ramp.lit tstep=1e-9 tstop=1e-8 ramptime=1.e-8
+save outf=ccd21e-8.str  
+solve b1=1.0 tstep=1e-8 tstop=1e-7 
+save outf=ccd21e-7.str  
+solve b1=1.0 tstep=1e-7 tstop=1e-6
+
+save outf=ccdex02_2.str
+tonyplot ccdex02_2.str -set ccdex02_2.set
+
+  
+ 
+# extract electron concentration in storage well (1.0e4 is to scale into I/cm^3)
+extract init inf="ccdex02_2.str"
+extract name="final_n_at_x8" 1.0e+4*area from curve(depth,n.conc material="Silicon" mat.occno=1 x.val=8.0) 
+extract name="stored_n" $final_n_at_x8 - $initial_n_at_x8
+
+quit

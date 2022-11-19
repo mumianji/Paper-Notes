@@ -1,0 +1,80 @@
+<html>
+  <head>
+    <title>Anisotropic Mobility Characteristics of a SiC DMOS Device</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Anisotropic Mobility Characteristics of a SiC DMOS Device</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>DevEdit/Blaze</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="powerex10_plot0.png" width="640" alt="powerex10_plot0" />
+      <p/>
+      <img src="powerex10_plot1.png" width="640" alt="powerex10_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates the simulation of the forward characteristics of a doubly diffused, or implanted, MOS power transistor.
+</p>
+<p>
+Three simulations are performed to show the effect of the
+crystallographic plane mobility modeling on the device characteristics.
+</p>
+<p>
+This device is created entirely within DevEdit and is composed of SiC, silicon dioxide and aluminum within a simulation domain of 7.5um x 15um.
+The MOSFET has been created with a gate oxide of 800A and an aluminum gate.
+</p>
+<p>
+The device simulations consist of the ID-VD characteristics at a gate voltage of 20V.
+Three characteristics were then obtained for different mobility models.
+</p>
+<p>
+First, the standard
+<b> isotropic mobility model </b> was used where the SiC mobility coefficients were defined for the
+<b> &lt;1100&gt; plane </b> which is the
+<b> high </b> mobility plane.
+</p>
+<p>
+Secondly, the standard
+<b> isotropic mobility model </b> was used where the SiC mobility coefficients were defined for the
+<b> &lt;1000&gt; plane </b> which is the
+<b> low </b> mobility plane.
+</p>
+<p>
+Thirdly, an
+<b> anisotropic mobility model </b> was used where the SiC mobility coefficients were defined for
+<b> both the &lt;1100&gt; and &lt;1000&gt; planes</b> .
+</p>
+<p>
+The anisotropic model is applied by specifying a default set of mobility coefficients which apply everywhere. Then on the second
+<b> mobility</b> statement the
+<b> n.angle</b> parameter specifies the mobility at 90 degrees to the horizontal. This switches on the anisotropic mobility model.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

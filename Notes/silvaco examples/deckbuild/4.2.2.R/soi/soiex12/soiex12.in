@@ -1,0 +1,218 @@
+# (c) Silvaco Inc., 2018
+
+go victoryprocess 
+
+init layout=soiex12.lay material=silicon depth=0.06 \
+     gasheight=2 resolution=0.0015 meshdepth=3 \
+     from=0.0 to=0.12 at=0.02 flow.dim=2d_xz
+
+line x location=0.01 spacing=0.002
+line x location=0.03 spacing=0.002
+line x location=0.05 spacing=0.001
+line x location=0.07 spacing=0.001
+line x location=0.09 spacing=0.002
+line x location=0.11 spacing=0.002
+
+line z location=-0.037 spacing=0.001
+line z location=-0.027 spacing=0.005
+line z location=-0.017 spacing=0.001
+line z location=-0.015 spacing=0.00025
+line z location=-0.01  spacing=0.001
+line z location=0      spacing=0.002
+line z location=0.02   spacing=0.005
+line z location=0.04   spacing=0.001
+
+# SOI Waffer
+deposit material=oxide       thick=0.01 max
+deposit material=silicon     thick=0.005 max
+
+# Trench
+etch dry thick=0.052 mask=TRENCH reverse angle=86 deltacd=-0.003
+etch wet thick=0.003 mask=TRENCH reverse
+material material=oxynitride inherit=oxide
+deposit material=oxynitride thick=0 max
+
+# Gate Stack
+deposit material=oxide       thick=0.002 max
+deposit material=polysilicon thick=0.02 max
+
+# Gate
+etch material=polysilicon thick=0.021 mask=GATE max
+etch material=oxide thick=0.003 dry
+
+# Spacer
+deposit material=nitride thick=0 max
+etch material=nitride dry angle=82 thick=0.022 mask=GATE 
+deposit material=nitride thick=0.002 conformal curved
+etch material=nitride dry thickness=0.0023
+
+doping arsenic=1e15 silicon
+mask mask=ACTIVE reverse
+implant arsenic energy=1 dose=1e13 tilt=7 rotation=27
+strip barrier
+
+deposit material=aluminum thick=0.002 min
+etch material=aluminum dry thick=0.003 mask=SD
+
+electrodes mask=GATE material=polysilicon
+electrodes mask=SD   material=aluminum
+electrodes substrate
+
+save name=soiex12_vp
+
+
+go victorymesh
+
+load in=soiex12_vp
+
+remesh conformal
+refine max.obtuseness=0.1
+
+save out=soiex12_0.str
+
+
+# Drift-Diffusion
+go victorydevice  
+
+mesh infile=soiex12_0.str width=0.04
+
+interf qf=3e10 z.max=-0.0125
+interf qf=1e11 z.min=-0.0125
+
+contact name=gate workfunc=4.5
+
+models cvt srh auger bgn print 
+impact selb
+
+method direct norm.scaling.local dvmax=1.0 climit=1.0e-4
+
+solve init
+solve previous
+
+solve vdrain=0.01
+solve vdrain=0.05
+solve vdrain=0.10
+
+log outfile=soiex12_1_1.log
+solve vgate=0.0 vstep=0.05 vfinal=1 name=gate
+log off
+
+solve vstep=-0.025 vfinal=0 name=drain
+
+log outfile=soiex12_1_2.log
+solve vdrain=0.0 vstep=0.05 vfinal=1 name=drain prev
+log off
+
+
+# Energy Balance
+go victorydevice  
+
+mesh infile=soiex12_0.str width=0.04
+
+interf qf=3e10 z.max=-0.0125
+interf qf=1e11 z.min=-0.0125
+
+contact name=gate workfunc=4.5
+
+models cvt srh auger bgn hcte.el evsatmod=0 print
+impact selb
+
+method direct block meinr norm.scaling.local dvmax=1.0 climit=1.0e-4 
+
+solve init 
+solve previous
+
+solve vdrain=0.01
+solve vdrain=0.05
+solve vdrain=0.10
+
+log outfile=soiex12_2_1.log
+solve vgate=0.0 vstep=0.05 vfinal=1 name=gate
+log off
+
+solve vstep=-0.025 vfinal=0 name=drain
+
+log outfile=soiex12_2_2.log
+solve vdrain=0.0 vstep=0.05 vfinal=1 name=drain prev
+log off
+
+
+# Energy Balance and Bohm Quantum Potential
+go victorydevice 
+
+mesh infile=soiex12_0.str width=0.04
+
+interf qf=3e10 z.max=-0.0125
+interf qf=1e11 z.min=-0.0125
+
+contact name=gate workfunc=4.5
+
+models cvt srh auger bgn hcte.el evsatmod=0 print 
+models bqp.n bqp.qdir=z 
+impact selb
+
+method direct block meinr norm.scaling.local dvmax=1.0 climit=1.0e-4 
+
+solve init bqp.sc
+solve previous
+
+solve vdrain=0.01
+solve vdrain=0.05
+solve vdrain=0.10
+
+log outfile=soiex12_3_1.log
+solve vgate=0.0 vstep=0.05 vfinal=1 name=gate previous
+log off
+
+solve vstep=-0.025 vfinal=0 name=drain
+
+log outfile=soiex12_3_2.log
+solve vdrain=0.0 vstep=0.0025 vfinal=0.01 name=drain
+solve vstep=0.01 vfinal=0.05 name=drain
+solve vstep=0.05 vfinal=1 name=drain prev
+log off
+
+
+# Energy Balance, Bohm Quantum Potential and Lattice Heating
+go victorydevice  
+
+mesh infile=soiex12_0.str width=0.04
+
+interf qf=3e10 z.max=-0.0125
+interf qf=1e11 z.min=-0.0125
+
+contact name=gate workfunc=4.5
+
+models cvt srh auger bgn hcte.el evsatmod=0 print 
+models bqp.n bqp.qdir=z 
+models lat.temp
+impact selb
+
+thermcontact name=substrate ext.temp=300 alpha=1000
+
+method direct block meinr norm.scaling.local dvmax=1.0 climit=1.0e-4 
+
+solve init bqp.sc
+solve previous
+
+solve vdrain=0.01
+solve vdrain=0.05
+solve vdrain=0.10
+
+log outfile=soiex12_4_1.log
+solve vgate=0.0 vstep=0.05 vfinal=1 name=gate previous
+log off
+
+solve vstep=-0.025 vfinal=0 name=drain
+
+log outfile=soiex12_4_2.log
+solve vdrain=0.0 vstep=0.0025 vfinal=0.01 name=drain
+solve vstep=0.01 vfinal=0.05 name=drain
+solve vstep=0.025 vfinal=1 name=drain prev
+log off
+
+tonyplot soiex12_0.str -set soiex12_1.set
+tonyplot soiex12_1_1.log -overlay soiex12_2_1.log soiex12_3_1.log soiex12_4_1.log -set soiex12_2.set
+tonyplot soiex12_1_2.log -overlay soiex12_2_2.log soiex12_3_2.log soiex12_4_2.log -set soiex12_3.set
+
+quit

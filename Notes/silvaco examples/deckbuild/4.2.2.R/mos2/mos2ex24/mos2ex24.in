@@ -1,0 +1,73 @@
+
+go victoryprocess
+
+init material=silicon depth=0.2 gasheight=0.5 layout=mos2ex24.lay \
+     dopants=phosphorus dopingvalue=1e20
+
+line x location=0    spacing=0.01
+line x location=0.05 spacing=0.0005
+line x location=0.1  spacing=0.02
+line x location=0.15 spacing=0.0005
+line x location=0.2  spacing=0.01
+
+line y location=0    spacing=0.01
+line y location=0.05 spacing=0.0005
+line y location=0.1  spacing=0.01
+
+line z location=-0.5
+line z location=-0.035
+line z location=-0.025
+line z location=-0.005 spacing=0.0005
+line z location=-0.002
+line z location=0      spacing=0.0005
+line z location=0.015  spacing=0.005
+line z location=0.02
+line z location=0.2
+
+# Define Photolithography
+Lithography mask=hole wavelength=0.01 maskaperture=0.5 resultimage=mos2ex24.dat
+
+# Emitter
+etch material=silicon thick=0.02 mask=HOLE_LITHO max angle=60 deltacd=-0.009
+
+# Device Material Stack
+deposit material=oxide    thick=0     max
+deposit material=aluminum thick=0.002 max
+electrode mask=GATE material=aluminum
+deposit material=silicon  thick=0.003 max dopants=phosphorus dopingvalue=1e20
+deposit material=oxide    thick=0.02 max
+
+# Etch Stack
+etch    material=oxide    thick=0.021 max mask=HOLE_LITHO reverse
+etch    material=silicon  thick=0.024 max mask=HOLE_LITHO reverse
+etch    material=aluminum thick=0.026 max mask=HOLE_LITHO reverse
+etch    material=oxide    thick=0.015 dry mask=HOLE_LITHO reverse
+
+# Gate Electrode
+deposit material=vacuum   thick=0    max
+deposit material=aluminum thick=0.01 max
+electrode mask=COL material=aluminum
+electrode material=silicon substrate
+
+export victory(conformal) structure=mos2ex24_0.str
+
+
+go victorydevice simflags="-128"
+
+mesh infile=mos2ex24_0.str
+
+material material=vacuum affinity=0 permittivity=1.0
+models sc.zaidman srh 
+method climit=1e-6 cx.tol=1e-20 px.tol=1e-20 cr.tol=1e-30 pr.tol=1e-40
+
+solve init
+solve previous
+log outfile=mos2ex24_0.log
+solve vstep=0.5 vfinal=20 name=collector
+log off
+# save outfile=Vc_20V_Vg_0V_sc.str
+tonyplot mos2ex24_0.log -set mos2ex24_0.set
+log outfile=mos2ex24_1.log
+solve vgate=0 vstep=0.5 vfinal=19.5 name=gate
+save outfile=mos2ex24_1.str
+tonyplot mos2ex24_1.log -set mos2ex24_1.set

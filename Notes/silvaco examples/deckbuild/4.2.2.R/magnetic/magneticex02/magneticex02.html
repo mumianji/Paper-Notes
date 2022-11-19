@@ -1,0 +1,61 @@
+<html>
+  <head>
+    <title>Current based Magnetic field detector</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Current based Magnetic field detector</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>S-Pisces/Magnetic</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="magneticex02_plot0.png" width="640" alt="magneticex02_plot0" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+The example shows :
+</p>
+<ul>
+  <li>
+ A dual collector bipolar structure made using Atlas syntax
+<br/>
+  </li>
+  <li>
+ Bifurcation of the collector currents due to Magnetic field
+<br/>
+  </li>
+</ul>
+<p>
+Without the field, the collector currents are identical,  applying the
+magnetic field breaks the symmetry causing more current to flow to one of
+the collectors.  The difference in collector currents allows the magnetic
+field to be measured.  This structure is not strictly speaking a
+magneto-transistor as the base thickness is zero in some directions.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

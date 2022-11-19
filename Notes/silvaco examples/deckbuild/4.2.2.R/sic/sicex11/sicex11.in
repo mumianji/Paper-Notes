@@ -1,0 +1,186 @@
+# (c) Silvaco Inc., 2018
+
+go victoryprocess 
+
+init layout="sicex11.lay" depth=1 gasheight=165 \
+      padding=0 SiC4h from="0., 0." to="3., 0.5" 
+
+set scale=1.5
+
+line x loc=0 spac=0.25*$scale
+line x loc=1 spac=0.02*$scale
+line x loc=2.1 spac=0.025*$scale
+line x loc=3 spac=0.1*$scale
+
+line y loc=0 spac=0.25
+line y loc=1 spac=0.25
+
+line z location=-11.5 spac=0.1
+line z location=-11 spac=0.1
+line z location=-10.5 spac=0.2
+line z location=-9.5 spac=0.025
+line z location=-9.25 spac=0.075
+line z location=-9 spac=0.05
+line z location=-4.5 spac=0.75    
+line z location=0  spac=0.25    
+line z location=1  spac=0.5
+
+
+doping  SiC4h arsenic=1e20
+doping SiC4h phosphorus=1e12
+doping SiC4h boron=1e12
+
+deposit SiC4h thick=9.5 max phosphorus=1e16
+deposit SiC4h thick=0.5 max phosphorus=1e17
+
+MASK "PG"
+doping  SiC4h boron=1e18 min=0 max=1
+strip material=barrier
+
+
+deposit SiC4h thick=1 max boron=1e18
+deposit SiC4h thick=1 max
+deposit oxide thick=0.1 Max
+ 
+Etch oxide thick=1 MASK="PN" max
+ 
+Deposit barrier thick=0 max
+strip oxide
+doping SiC4h min=0 max=1 boron=1e20
+strip material=barrier
+
+deposit oxide thick=0.1 Max
+Etch oxide thick=1 MASK="PN" Reverse max
+
+deposit barrier thick=0 max
+strip oxide
+doping SiC4h min=0 max=1 phosphorus=1e20
+strip material=barrier
+
+etch SiC4h thickness=0.5 max
+
+deposit oxide thick=0.1 Max
+Etch oxide thick=1 MASK="TR"  max
+etch SiC4h MASK="TR" thickness=1.9 min 
+etch SiC4h MASK="TR" thick=0.1 min round
+strip oxide
+
+deposit oxide thick=0 max
+deposit oxynitride thick=0.1 max
+etch oxynitride thickness=1 mask="GT" max
+etch oxide mask="GT" thickness=1.83 min
+etch oxide mask="GT" thickness=0.1 min round
+strip oxynitride
+
+deposit poly thick=0 max
+electrodes mask="PG" material="polysilicon"
+
+deposit aluminum thick=0.5 max
+etch aluminum thickness=0.5 mask="PN" DeltaCD=0.2 max
+electrodes mask="PN" material="aluminum"
+
+save name="sicex11_vp"
+
+
+go victorymesh 
+
+load in=sicex11_vp
+remesh conformal
+
+save out=sicex11_0
+
+
+go victorydevice simflags="-128"
+
+mesh infile=sicex11_0.str hybridx prism verbose=3
+
+electrode name=drain  z.min=1 z.max=1 x.min=0 x.max=3 y.min=0 y.max=3
+
+contact name=gate n.poly
+
+material material=4H-SiC permitti=9.64 eg300=3.26 \
+			edb=0.1 gcb=2 eab=0.2 gvb=4 \
+			nsrhn=3e17 nsrhp=3e17 taun0=5e-10 taup0=1e-10 \
+			tc.a=100 THETA=0 ZETA=0
+models srh
+
+impact aniso e.side  
+
+method direct norm.scaling.local itlimit=35 climit=1e-8 ix.tol=1e-40 ir.tol=1e-40 \
+   px.tol=1.e-17 pr.tol=1.e-32 \
+   cx.tol=1.e-17 cr.tol=1.e-27 
+
+solve init
+solve previous
+
+log outfile=sicex11_3D.log
+
+solve vdrain=0.001 previous
+solve vdrain=0.005 previous
+solve vdrain=0.01 previous
+solve vdrain=0.1 previous
+solve vdrain=0.5 previous
+solve vdrain=1  previous
+solve vdrain=2 vstep=2 vfinal=10 name=drain  previous
+solve vstep=10 vfinal=1500 name=drain  previous cname=drain compliance=5e-25
+contact name=drain current
+solve istep=1.3 ifinal=5e-25 imult name=drain
+save outfile=sicex11_1.str
+
+go victorymesh 
+
+load in=sicex11_vp
+
+cutplane axis="y" offset="0.05" out="cut_y"
+
+remesh conformal
+
+save out=sicex11_0_2D
+
+# 2D SIMULATION 
+
+go victorydevice simflags="-128"
+
+mesh infile=sicex11_0_2D.str width=0.5 verbose=2 
+
+electrode name=drain bottom
+
+contact name=gate n.poly
+
+material material=4H-SiC permitti=9.64 eg300=3.26 \
+			edb=0.1 gcb=2 eab=0.2 gvb=4 \
+			nsrhn=3e17 nsrhp=3e17 taun0=5e-10 taup0=1e-10 \
+			tc.a=100 
+models srh
+
+impact aniso sic4h0001 e.side
+
+method direct norm.scaling.local itlimit=100 climit=1e-4 ix.tol=1e-35 ir.tol=1e-35 \
+   px.tol=1.e-15 pr.tol=1.e-30 \
+   cx.tol=1.e-15 cr.tol=1.e-25  
+
+solve init
+solve previous
+
+log outfile=sicex11_2D.log
+
+solve vdrain=0.001 previous
+solve vdrain=0.005 previous
+solve vdrain=0.01 previous
+solve vdrain=0.1 previous
+solve vdrain=0.5 previous
+solve vdrain=1  previous
+solve vdrain=2 vstep=2 vfinal=10 name=drain  previous
+solve vstep=5 vfinal=50 name=drain  previous
+solve vstep=10 vfinal=400 name=drain  previous
+solve vstep=20 vfinal=1340 name=drain compliance=5e-25 cname=drain previous
+solve vstep=2 vfinal=2000 name=drain compliance=5e-25 cname=drain previous
+
+save outfile=sicex11_2.str
+
+
+tonyplot -overlay sicex11_2D.log sicex11_3D.log -set sicex11_1.set
+tonyplot3d sicex11_1.str -set sicex11_0.set -cut sicex11_1_2D.str
+tonyplot sicex11_2.str sicex11_1_2D.str  -set sicex11_2.set
+tonyplot3d sicex11_1.str -set sicex11_3.set
+

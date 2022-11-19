@@ -1,0 +1,132 @@
+<html>
+  <head>
+    <title>LDMOS Breakdown</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>LDMOS Breakdown</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>SSuprem 4/S-Pisces</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R, Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="powerex07_plot0.png" width="640" alt="powerex07_plot0" />
+      <p/>
+      <img src="powerex07_plot1.png" width="640" alt="powerex07_plot1" />
+      <p/>
+      <img src="powerex07_plot2.png" width="640" alt="powerex07_plot2" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example simulates the fabrication process and breakdown analysis of a Lateral DMOS
+device (LDMOS). The example shows:
+</p>
+<ul>
+  <li>
+ Process simulation of the LDMOS structure using Athena
+<br/>
+  </li>
+  <li>
+ Measurement of layer thickness, 1D Vt and BVdss using EXTRACT
+<br/>
+    </li>
+  <li>
+ Auto interface from Athena to Atlas
+<br/>
+  </li>
+  <li>
+ Atlas simulation of the breakdown voltage BVdss
+  </li>
+</ul>
+<p>
+The device simulated is an asymmetric LDMOS power device
+structure with a 4 micron gate length.  Athena simulation starts by defining an
+asymmetric grid with finer grid in the drift region. In preparation for the gate oxide growth, a sacrificial
+oxide layer is grown and etched away.  A gate oxide
+of 570 Angstroms is then grown.  To ensure adequate grid spacing in the growing oxide, the
+<b> method grid.ox </b> statement sets the grid to 100 Angstroms.  After the oxide growth, the
+<b> extract </b> statement is used to measure the gate oxide thickness.  The results of the EXTRACT can be found in the DeckBuild
+output window and in the file &apos;results.final&apos;.  Check for this file in the directory in which  DeckBuild was
+started.  The next step is a low-energy and low-dose boron Vt-adjust
+implant.   Poly deposition, poly-gate definition and drift
+region implant are then performed. The drift region is masked and n+
+phosphorus is implanted into the opened source and drain areas.
+</p>
+<p>
+After the final anneal at 1000 degrees the contact holes are opened,
+metal is deposited and patterned. The four electrodes are then
+specified.
+</p>
+<p>
+A useful parameter to measure at this stage is the threshold voltage of a 1D
+slice through the center of the gate. This is performed via the
+<b> extract </b> statement. Since the channel length is fairly long and the channel
+doping is uniform laterally, this is a fairly good approximation to the 2D
+threshold voltage that Atlas would give.  This ends the LDMOS process simulation.
+The resultant structure file is saved and plotted.
+</p>
+<p>
+The structure created by Athena will be automatically loaded into Atlas when the command
+<b> go atlas </b> is reached.  The Atlas portion of this example begins by specifying the physical models to be used.  For this
+example, they
+are cvt:  for transverse field dependent mobility, and srh: Shockley-Read-Hall recombination.
+<b> carriers=2 </b> indicates that both holes and electrons will be simulated.  The Selberherr impact ionization model is enabled
+using the
+<b> impact selb </b> statement.  The
+<b> contact </b> statement sets the gate workfunction to that of degenerately doped n-type polysilicon.
+Additionally, the
+<b> interface </b> statement sets the silicon-silicon dioxide interface charge to 3E10.
+</p>
+<p>
+The
+<b> method </b> statement has many purposes.  First, it sets the type of solution methodology, as in this case with the
+<b> newton </b> option.  The
+<b> trap </b> option enables the reduction in applied bias when convergence is not achieved.  This is an
+important feature for large bias steps and simulations near breakdown.  The option
+<b> climit=1e-4 </b> improves convergence for breakdown simulation when the pre-breakdown
+current is very low. It is recommended for most power device breakdown calculations.  Many other options are
+available.  Please consult the Atlas user&apos;s manual for additional information.
+</p>
+<p>
+The sequence of
+<b> solve </b> statements ramp the drain voltage from zero to 100V.  For this
+particular device, the breakdown voltage is about 50V.  At biases
+higher than this, the simulation will fail to converge.  With the
+<b> trap </b> option enabled, Atlas will automatically reduce the applied bias until
+the convergence criteria is met or until the maximum number of
+reductions is reached.
+The final
+<b> extract </b> statement reads the maximum drain voltage solved from the output log file.
+A plot of the Id versus Vds curve in TonyPlot clearly shows the breakdown characteristics. A more
+sophisticated technique using the curve tracing algorithm in Atlas is
+also possible. This technique is demonstrated in the Advanced MOS
+examples section for simulating snapback. Another technique using
+compliance limits is described in the MOS examples section under the
+NMOS breakdown.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

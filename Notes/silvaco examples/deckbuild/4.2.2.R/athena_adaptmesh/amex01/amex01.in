@@ -1,0 +1,92 @@
+go athena   
+
+#TITLE: Trench isolation
+
+#grid.model template=TRENCH
+base.par oxide        grad.space= 3   ratio.box=5
+base.par silicon      grad.space= 3   ratio.box=1.8
+base.par polysilicon  grad.space= 3   ratio.box=5
+base.par nitride      grad.space= 3   ratio.box=5
+base.par photo        grad.space= 3   ratio.box=5
+
+base.mesh  surf.ly=0.0 surf.dy=0.1\
+	   active.ly=1.0 active.dy=0.5 epi.ly=2.0 epi.dy=1.0\
+	   sub.ly=10.0 sub.dy=10.0 back.ly=500 back.dy=100
+
+
+init silicon c.boron=1.0e15 orientation=100 width.str=3.0 depth.str=2.5
+
+diffuse temp=900 time=25 dryo2 %hcl=3
+deposit nitride thick=0.4 div=1
+
+deposit photo thick=1. div=10
+#
+etch   photo 	  start x=1.2 y=-10
+etch   photo      cont  x=1.2 y=10
+etch   photo      cont  x=1.8 y=10
+etch   photo      done  x=1.8 y=-10
+
+etch nitride thick=0.5
+
+strip photo
+
+etch oxide thick=0.1 
+
+
+# Setup a silicon trench etching machine.....
+rate.etch machine=trench_etch rie silicon iso=0.1 dir=0.9 u.m
+rate.etch machine=trench_etch rie oxide iso=0.1 dir=0.9 u.m
+
+
+etch machine=trench_etch time=0.5 minute dx.mult=0.5
+
+method adapt
+
+# Oxidize the trench....
+method grid.ox=0.03
+diffuse temp=925 time=10 weto2 
+
+# Implant the trench
+implant boron energy=35 dose=1.2e12
+
+
+# Strip off all the nitride
+strip nitride
+
+# Dip off the oxide
+etch oxide all
+
+# deposit a new oxide layer to fill the trench, with CVD TEOS
+
+# First define the TEOS machine.....
+rate.depo machine=teos oxide u.m cvd dep.rate=1.0 step.cov=0.9
+
+# Now employ it....
+deposit machine=teos time=55 seconds divisions=8
+
+etch oxide left p1.x=0.6
+etch oxide right p1.x=2.4
+
+# S/D Implant....
+implant arsenic energy=85 dose=2e15
+
+# Final anneal...
+diffuse temp=925 time=25 nitrogen 
+
+# now make electrode contacts and move it into device simulation.....
+deposit alumin thick=0.1 div=1
+etch alumin start x=0.35 y=-10
+etch alumin cont  x=0.35 y=10
+etch alumin cont  x=2.65 y=10
+etch alumin done  x=2.65 y=-10
+
+electrode name=source x=0.1
+electrode name=drain x=2.9
+
+
+structure outf=amex01.str
+
+tonyplot amex01.str -set amex01.set
+
+
+

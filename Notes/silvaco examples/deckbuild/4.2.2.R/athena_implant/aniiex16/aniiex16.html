@@ -1,0 +1,74 @@
+<html>
+  <head>
+    <title>Use of C-Interpreter for Control of Damage Models.</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Use of C-Interpreter for Control of Damage Models.</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>SSuprem 4</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="aniiex16_plot0.png" width="640" alt="aniiex16_plot0" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example shows how C-Interpreter can be used for control of
+PLUS.ONE (or UNIT.DAMAGE)  and &lt;311&gt; Cluster formation models. Both
+models estimate distributions of point defect and &lt;311&gt; clusters by
+scaling implant profile using factors DAM.F and CLUSTER.F,
+correspondingly. Also, in the case of &lt;311&gt;, the user specifies the
+concentration limits within which the clusters can be formed.
+</p>
+<p>
+These methods of damage model control are very limited and sometimes
+could not represent physical reality. For example, it is observed that
+clusters are not formed near silicon surface, but it cannot be
+specified within model limitations.
+</p>
+<p>
+The first part of this example, and corresponding Figure on the left, shows that two &lt;311&gt; cluster bands are
+formed. This situation is even more pronounced in 2D since the &lt;311&gt;
+cluster band could propagate laterally and end up at the surface. This
+means that if the model is applied to S/D or LDD implant of a
+MOS device, the &lt;311&gt; would &quot;appear&quot; under the gate which is incorrect.
+</p>
+<p>
+Use of C-interpreter allows us to modify the models. In this case the C-interpreter
+file
+<b> aniiex16.lib </b> allows the cluster to be formed only at depths &gt; 0.15 microns. Also, C-interpreter
+allows us to modify the PLUS.ONE model. In this example,  C-interpreter specifies that the PLUS.ONE model is
+to be applied to concentrations only above level of 3e15 /cm^3.
+</p>
+<p>
+The C-interpreter file is specified by the
+<b> DAM.MOD </b> parameter in the
+<b> IMPLANT </b> statement.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

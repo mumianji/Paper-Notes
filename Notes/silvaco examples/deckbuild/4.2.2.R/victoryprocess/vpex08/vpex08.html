@@ -1,0 +1,98 @@
+<html>
+  <head>
+    <title>Simulation of diffusion enhancement due to interstitial supersaturation</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Simulation of diffusion enhancement due to interstitial supersaturation</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Victory Process : Core Simulator, 2D Diffusion &amp; Implantation</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Version:</b></td><td><i>Victory Process 7.22.0.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="vpex08_dat.png" width="640" alt="vpex08_dat" />
+      <p/>
+      <img src="vpex08_plot0.png" width="640" alt="vpex08_plot0" />
+      <p/>
+      <img src="vpex08_plot1.png" width="640" alt="vpex08_plot1" />
+      <p/>
+      <img src="vpex08_plot2.png" width="640" alt="vpex08_plot2" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates implantation induced interstitial supersaturation and
+the application of advanced diffusion models for the simulation of transient
+dopant diffusion enhancement.
+</p>
+<p>
+Moreover the junction extraction capability of Victory Process is
+demonstrated extensively as well as the capability to export 1D
+cross-sections.
+</p>
+<p>
+List of key syntax:
+</p>
+<b> Init: </b> <p>
+Defines simulation volume, meshing resolution and number of
+Adaptive Mesh Refinement
+<b> (AMR) </b> levels
+</p>
+<b> Line:  </b> <p>
+Adjusts volume data mesh (for diffusion simulation)
+</p>
+<b> Deposit: </b> <p>
+Deposition with geometrical mode
+</p>
+<b> Implant: </b> <p>
+Ion implantation
+</p>
+<b> Diffuse: </b> <p>
+Performs dopant activation and dopant diffusion
+</p>
+<b> Extract XJ: </b> <p>
+Extracts the position of the junction along a 1D cut-line
+</p>
+<b> Export 1D: </b> <p>
+Exports a 1D cut-line for visualization in tonyplot
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+<p>
+The following plots demonstrate:
+</p>
+<p>
+{pngview}  vpex08_01.png
+shows the implanted boron profile and the implantation induced interstitial profile.
+</p>
+<p>
+{pngview}  vpex08_02.png
+shows the boron, interstitial and boron-interstitial pair profiles after 1ms of annealing..
+</p>
+<p>
+{pngview} vpex08_plot0.png
+shows the position of the junction over time while the annealing progresses.
+</p>
+  </div></body>
+</html>

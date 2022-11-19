@@ -1,0 +1,96 @@
+go quest
+
+Init simulation.type = "PORT" solvertype = "3D_Solver" \
+	 impedance.residual = 0.01 impedance.iteration = 50	\
+	 capacitance.residual = 0.01 capacitance.iteration = 50 \
+	 domainbase = "Grounded"	Z0 = 50	add.resistance = 0	\
+	 dx = 5 dy = 5 dz = 1	\
+	 computation.domain = "Automatic"
+
+electrodes ports = "IN", "subs_ground", "OUT", "subs_ground" 
+
+set nsteps=20
+set freqfinal=20000
+
+Frequency type = "Range" range = 1, $freqfinal nsteps = $nsteps range.variation = "Lin"
+
+
+set wire_width = 10
+set space = 8
+set nb_coils = 4
+set radius = 40
+
+# square or oct or cross
+set script=oct
+
+creategds script = "questex14_ind_$"script".xis" outgdsfile = "questex14_width=$"wire_width"space=$"space"nb=$"nb_coils"radius$"radius"_$"script".gds" \
+		  argumentnames = "wire_width","space","nb_coils","radius"	\
+		  arguments = $"wire_width",$"space",$"nb_coils",$"radius"
+
+layout gdsfile = "questex14_width=$"wire_width"space=$"space"nb=$"nb_coils"radius$"radius"_$"script".gds" cell = "CELL"
+
+save	database.path = "questex14_db$"script""	\
+		spice.file = "questex14" 	tony.file = "questex14" \
+		sparameter.file = "questex14"
+
+
+layermapping layername = "M1" gdsNumber = 1 gdsDatatype = 0
+layermapping layername = "VIA1" gdsNumber = 3 gdsDatatype = 0
+layermapping layername = "M2" gdsNumber = 2 gdsDatatype = 0
+layermapping layername = "electrode_m1" gdsNumber = 100 gdsDatatype = 0
+layermapping layername = "electrode_m1_t" gdsNumber = 100 gdsDatatype = 0 isText
+layermapping layername = "electrode_m2" gdsNumber = 101 gdsDatatype = 0 
+layermapping layername = "electrode_m2_t" gdsNumber = 101 gdsDatatype = 0 isText
+
+attach electrode_layername = "electrode_m1" metal_layername = "M1"
+attach electrode_layername = "electrode_m2" metal_layername = "M2"
+
+connection layername = "VIA1" con_layername1 = "M1" con_layername2 = "M2"
+connection layername = "electrode_m1" con_layername1 = "electrode_m1_t"
+connection layername = "electrode_m2" con_layername1 = "electrode_m2_t"
+
+material name = "subs_cust" cond = 0 permittivity = 5.85 permeability = 1 losstangent = 0
+material name = "m1" cond = 3.57e+07 permittivity = 1 permeability = 1 losstangent = 0
+material name = "m2" cond = 5.26e+07 permittivity = 1 permeability = 1 losstangent = 0
+material name = "via1" cond = 5.26e+07 permittivity = 1 permeability = 1 losstangent = 0
+material name = "BCB" cond =  0 permittivity = 2.7 permeability = 1 losstangent = 0
+material name = "aluminum" cond = 3.76676e+07 permittivity = 1 permeability = 1 losstangent = 0
+material name = "oxide" cond =  0 permittivity = 3.9 permeability = 1 losstangent = 0
+material name = "silicon" cond = 100 permittivity = 11.8 permeability = 1 losstangent = 0
+material name = "copper" cond = 5.88235e+07 permittivity = 1 permeability = 1 losstangent = 0
+material name = "air" cond =  0 permittivity = 1 permeability = 1 losstangent = 0
+
+deposit type = "substrate" layername = "substrate1" thick =15  matName = "subs_cust"
+deposit type = "dielectric" layername = "dielec0" thick = 1.5 matName = "oxide"
+deposit type = "metal" layername = "M1" thick = 0.5 matName = "m1" anglex = 0 angley = 0
+deposit type = "dielectric" layername = "dielec1" thick = 2 matName = "BCB"
+deposit type = "via" layername = "VIA1" matName = "via1" from_layer ="M1" to_layer="M2" anglex = 0 angley = 0
+deposit type = "metal" layername = "M2" thick = 0.5 matName = "m2" anglex = 0 angley = 0
+deposit type = "dielectric" layername = "dielec2" thick = 2 matName = "BCB"
+deposit type = "dielectric" layername = "air" thick = 10 matName = "air"
+
+solve
+
+
+#tonyplot questex14_db$"script"/questex14_width=$"wire_width"space=$"space"nb=$"nb_coils"radius$"radius"_$"script"@@CELL/questex14_q.dat
+tonyplot questex14_dboct/questex14_width=10space=8nb=4radius40_oct@@CELL/questex14_q.dat
+
+set freq=4e+09
+extract init inf="questex14_db$'script'/questex14_width=$'wire_width'space=$'space'nb=$'nb_coils'radius$'radius'_$'script'@@CELL/questex14_q.dat"
+extract name="Q_max" max(curve(da.value."Frequency", da.value."Q_1"))
+extract name="Q_max(4Ghz-6Ghz)" max(curve(da.value."Frequency", da.value."Q_1", x.min=4e+09 x.max=6e+09))
+extract name="Q_at_4Ghz" y.val from \
+        curve(da.value."Frequency", da.value."Q_1") where x.val=$"freq"
+extract name="Freq_at_Qmax" x.val from \
+        curve(da.value."Frequency", da.value."Q_1") where y.val=$"Q_max"
+
+extract init inf="questex14_db$'script'/questex14_width=$'wire_width'space=$'space'nb=$'nb_coils'radius$'radius'_$'script'@@CELL/questex14_rlgc.dat"
+extract name="L_at_Qmax" y.val from \
+        curve(da.value."Frequency", da.value."L") where x.val=$"Freq_at_Qmax"
+extract name="L_at_Qmax_nH" $L_at_Qmax*1e9
+
+extract init inf="questex14_db$'script'/questex14_width=$'wire_width'space=$'space'nb=$'nb_coils'radius$'radius'_$'script'@@CELL/questex14_s.dat"
+extract name="Real_S_max" max(curve(da.value."Frequency", da.value."S_1_1_R"))
+extract name="Imag_S_max" max(curve(da.value."Frequency", da.value."S_1_1_I"))
+
+

@@ -1,0 +1,34 @@
+go athena
+
+#TITLE: Emitter push effect example
+#
+line x loc=0.0  spac=0.2 
+line x loc=2.5  spac=0.8
+line x loc=3.0  spac=0.2
+#
+line y loc=0.00 spac=0.04 
+line y loc=0.3  spac=0.06
+line y loc=2.0  spac=0.8
+line y loc=10.0 spac=2.0
+#
+init c.phos=1e15
+#
+implant boron dose=1e13 energy=40
+#
+deposit nitride thick=.2 div=4
+#
+etch right nitride p1.x=2.5
+relax y.min=1.5
+#
+implant phosphor dose=1e16 energy=30
+#
+etch nitride all
+#
+method compress full.cpl
+diffuse time=30 temp=1000
+#
+structure outfile=andfex07.str
+#
+tonyplot andfex07.str -set andfex07.set
+
+quit

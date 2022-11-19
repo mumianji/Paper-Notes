@@ -1,0 +1,106 @@
+<html>
+  <head>
+    <title>Spotscan with a 2D Gaussian Beam Using DOE</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Spotscan with a 2D Gaussian Beam Using DOE</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>S-Pisces/Luminous or Victory Device 2D/Victory Device_2D_Luminous</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R or Victory Device 1.12.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="optoex20.png" width="640" alt="optoex20" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates:
+<br/>
+ </p>
+<ul>
+  <li>
+ How to simulate a spotscan with a 2D Gaussian intensity profile beam
+  </li>
+</ul>
+<p>
+This example shows how to use Batch DOE to perform a spotscan with a Gaussian beam.  The beam is defined with a set-variable as the location of the mean value of the Gaussian source in the beam coordinate system.  DOE requires a target deck in which variables are defined and used, and the results of interest are extracted.
+</p>
+<p>
+The target deck, optoex20_target.in, is based on optoex10, but with a wider Gaussian, so the definition of the beam is becomes:
+</p>
+<p>
+beam num=1 x.origin=2.5 y.origin=-5.0 angle=90 wavelength=0.623 rays=101 gaussian x.mean=$xm xsigma=5
+</p>
+<p>
+where the set-variable is defined earlier in the deck with
+</p>
+<p>
+set xm=-7.5
+</p>
+<b>Note that the value of  xsigma is 5, so the full width of the beam is twice the width of the detector.</b> <p>
+After biasing the detector, a solution is found with the beam on and the result is extracted from the log file with the following syntax:
+</p>
+<p>
+extract name=&quot;photocurrent&quot; max(curve(v.&quot;substrate&quot;,i.&quot;substrate&quot;))
+</p>
+<p>
+The DOE file, optoex20.in, starts with the
+<b> go internal </b> command which transfers control from the current simulator (i.e. Atlas) to
+DBInternal. The DOE file consists of the following sections:
+</p>
+<ul>
+  <li>
+The    
+<b> load </b> command specifies which target file should be used for multiple runs.
+  </li>
+</ul>
+<ul>
+  <li>
+The
+<b> sweep </b> command specifies how the variable parameter xm in the target file should be changed.
+In this example the mean location of the Gaussian beam varies from -10 to 10. The number of simulations
+is set to 21.
+  </li>
+</ul>
+<ul>
+  <li>
+The 
+<b> save </b> command tells DBInternal to collate the data
+generated in the extract command into the file &quot;optoex20.dat&quot;.
+  </li>
+</ul>
+<p>
+After all simulations are complete, the resulting photocurrent vs x.mean is plotted in TonyPlot.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in Deckbuild -&gt; Examples. This action will copy all associated files to your
+current working directory. Select the
+<b> run </b> button in Deckbuild to execute the example.
+</p>
+<p>
+The input deck provided with this example can be run by either Victory Device or Atlas, just by changing the simulator name
+in the go command from
+<b> go victorydevice </b> to
+<b> go atlas</b> </p>
+  </div></body>
+</html>

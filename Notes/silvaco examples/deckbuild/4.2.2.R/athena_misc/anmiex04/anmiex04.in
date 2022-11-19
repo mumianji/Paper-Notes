@@ -1,0 +1,34 @@
+go athena
+
+#TITLE: Substrate Shear Stress Example
+#
+#  This example shows a calculation of shear stress
+#  for nitride deposited on silicon. 
+#initialize the simulation regime with varying width
+line x loc=-2.5
+line x loc=-2 spac=0.3
+line x loc= 0 spac=0.1
+line x loc= 2 spac=0.3
+line x loc=2.5
+
+line y loc=0 spac=0.1 
+line y loc=2 spac=0.3
+line y loc=5
+
+initial orient=111
+
+# deposit and pattern nitride stripe
+deposit    nitride thick=0.1 div=2
+etch       nitride left       p1.x=0
+
+# set the value of the intrinsic stress... 
+material   nitride intrin.sig=1.4e10 
+
+# perform the stress analysis 
+stress  temp1=1000 temp2=1000
+structure outfile=anmiex04.str
+tonyplot anmiex04.str -set anmiex04.set
+
+
+
+quit

@@ -1,0 +1,52 @@
+go athena
+
+#TITLE: Selective vs non-selective Si deposition
+
+# Substrate mesh definition
+line y loc=0    spac=0.05
+line y loc=0.6  spac=0.2
+line y loc=1       
+
+line x loc=-1   spac=0.2
+line x loc=-0.2 spac=0.05
+line x loc=0    spac=0.05
+line x loc=1    spac=0.2
+
+init orient=100
+
+# 
+etch    silicon left p1.x=-0.218 p1.y=0.3 p2.x=0 p2.y=0
+
+# Pad oxide and nitride mask
+deposit oxide thick=0.02 div=1
+deposit nitride thick=0.1 div=1
+etch    nitride left p1.x=0
+etch    oxide   left p1.x=0
+
+# Field oxidation 
+diffuse tim=90 tem=1000 weto2
+etch nitride all
+etch oxide thick=0.03
+struct mirror right 
+struct outf=anmiex07_0.str
+
+# Perform non-selective Si deposition which results in 
+# crystalline Si growth everywhere
+
+init inf=anmiex07_0.str
+deposit silicon thick=0.2 div=10 
+struct outfile=anmiex07_1.str
+
+# Perform selective Si deposition which results in Poly layers 
+# realistically grown over the all materials other than cristalline Si 
+
+init inf=anmiex07_0.str
+deposit silicon thick=0.2 div=10 si_to_poly
+struct outfile=anmiex07_2.str 
+
+# Compare final structures in TonyPlot
+
+tonyplot anmiex07_1.str anmiex07_2.str -set anmiex07.set
+
+quit
+ 

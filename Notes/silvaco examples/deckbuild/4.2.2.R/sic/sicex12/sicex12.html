@@ -1,0 +1,82 @@
+<html>
+  <head>
+    <title>4H-SiC Schottky Diode DLTS simulation</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>4H-SiC Schottky Diode DLTS simulation</H1>
+    <table id="text">
+      <tr>
+        <td><b>Required:</b></td><td><i>S-Pisces</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Version:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="sicex12_plot0.png" width="640" alt="sicex12_plot0" />
+      <p/>
+      <img src="sicex12_plot1.png" width="640" alt="sicex12_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+Deep-level transient spectroscopy (DLTS) is an experimental tool for studying
+electrically active defects (known as charge carrier traps) in semiconductors.
+DLTS establishes fundamental defect parameters and measures their concentration
+in the material.
+</p>
+<p>
+DLTS investigates defects present in a space charge (depletion) region of a
+simple electronic device. The most commonly used are Schottky diodes or p-n junctions.
+In the measurement process the steady-state diode reverse polarization voltage is
+disturbed by a voltage pulse. This voltage pulse reduces the electric field in
+the space charge region and allows free carriers from the semiconductor bulk to
+penetrate this region and recharge the defects causing their non-equilibrium charge
+state. After the pulse, when the voltage returns to its steady-state value, the defects
+start to emit trapped carriers due to the thermal emission process. The technique
+observes the device space charge region capacitance where the defect charge state
+recovery causes the capacitance transient. The voltage pulse followed by the defect
+charge state recovery are cycled allowing an application of different signal
+processing methods for defect recharging process analysis. The emission rate is
+temperature dependent and characteristic for each type of defect. From the temperature
+dependence of the emission rate the activation energy of a deep level can be deduced.
+</p>
+<p>
+In this example we demonstrate how to simulate capacitance variation versus
+time and temperature on a 4H-SiC Schottky barrier Diode (SBD). To do so we used
+the loop statement combined with the set statement to run multiple simulations
+at different temperature and save files accordingly.
+</p>
+<p>
+From the simulation results we also show how to simulate temperature dependence
+of the capacitance difference (extracted at 2 different simulation time i.e 20ms
+in that case). In this input deck carrier capture cross section
+<b> SIGN </b> and
+<b> SIGP </b> were set to 5.6e-15 but could easily be changed to verify emission rate is
+temperature dependent
+</p>
+<p>
+Simulation results agree very well with DLTS theory.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

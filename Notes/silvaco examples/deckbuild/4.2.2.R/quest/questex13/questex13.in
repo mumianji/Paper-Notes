@@ -1,0 +1,84 @@
+go quest
+
+# Techno FILE
+
+
+layermapping layer.name = "M1" gds.Number = 31 gds.Datatype = 0
+layermapping layer.name = "M2" gds.Number = 32 gds.Datatype = 0
+layermapping layer.name = "ELECTRODE_M1" gds.Number = 131 gds.Datatype = 0
+layermapping layer.name = "ELECTRODE_M1_T" gds.Number = 131 gds.Datatype = 0 isText
+layermapping layer.name = "ELECTRODE_M2" gds.Number = 132 gds.Datatype = 0
+layermapping layer.name = "ELECTRODE_M2_T" gds.Number = 132 gds.Datatype = 0 isText
+
+attach electrode.layer = "ELECTRODE_M1" metal.layer = "M1"
+attach electrode.layer = "ELECTRODE_M2" metal.layer = "M2"
+
+connection layer = "ELECTRODE_M1" con.layer1 = "ELECTRODE_M1_T"
+connection layer = "ELECTRODE_M2" con.layer1 = "ELECTRODE_M2_T"
+
+# PROCESS
+
+material name = "ME1" cond = 4.8e+07 permittivity = 1 permeability = 1 losstangent = 0
+material name = "IMD0" cond =  0 permittivity = 4.2 permeability = 1 losstangent = 0
+material name = "IMD1" cond =  0 permittivity = 2.7 permeability = 1 losstangent = 0
+material name = "silicon" cond = 10000 permittivity = 11.8 permeability = 1 losstangent = 0
+material name = "ME2" cond = 4.8e+07 permittivity = 1 permeability = 1 losstangent = 0
+material name = "air" cond =  0 permittivity = 1 permeability = 1 losstangent = 0
+
+deposit type = "substrate"  layername = "SUBS" thick = 800 matName = "silicon"
+deposit type = "dielectric" layername = "Dielec2" thick = 2 matName = "IMD0"
+deposit type = "metal"      layername = "M1" thick = 0.5 matName = "ME1" anglex = 0 angley = 0
+deposit type = "dielectric" layername = "SILK" thick = 0.5 matName = "IMD1"
+deposit type = "dielectric" layername = "dielectric6" thick = 0.5 matName = "IMD1"
+deposit type = "metal"      layername = "M2" thick = 0.6 matName = "ME2" anglex = 0 angley = 0
+deposit type = "dielectric" layername = "Dielec1" thick = 0.6 matName = "IMD0"
+deposit type = "dielectric" layername = "PASSIV" thick = 0.5 matName = "IMD0"
+deposit type = "dielectric" layername = "AIR" thick = 300 matName = "air"
+
+
+# SOLVER
+
+Init simulation.type = "PORT" solvertype = "3D_Solver" \
+	 impedance.residual = 0.01 impedance.iteration = 50	\
+	 capacitance.residual = 0.01 capacitance.iteration = 50 \
+	 domainbase = "Grounded"	Z0 = 50	add.resistance = 0	\
+	 dx = 10 dy = 2 dz = 0.1	\
+	 computation.domain = "Automatic"
+
+electrodes ports = "Line_M2_IN", "GND1", "Line_M2_OUT", "GND2" 
+
+Frequency type = "Range" range = 800, 20000 nsteps = 25 range.variation = "Lin"
+
+
+# OUTPUT
+
+save	database.path = "questex13_db" \
+		 spice.file. = "questex13" tony.file= "questex13" \
+		 sparameter.file = "questex13" \
+                 3D.file = "questex13"   
+
+# RUN
+
+layout gdsfile = "questex13.gds" cell = "200M2"
+
+solve
+
+# ANALYSIS
+
+# Create a file containing simulated S-parameter  
+runjavascript filename = "questex13_S_simu.js"
+
+# Calculate Y11 using QUEST script complex number calculation feature 
+runjavascript filename = "questex13_Y11.js"
+
+# Use build in QUEST script for S to Y conversion
+runjavascript filename = "questex13_Y.js"
+
+# compare Y11 from Y11.lisa and Y.lisa
+tonyplot questex13_complex_table_Y11.dat questex13_S_to_Y_table.dat -set questex13_1.set
+
+# Calculate L and Q using script complex number calculation feature
+runjavascript filename = "questex13_L_Q.js"
+
+# compare L and Q  from L_Q.lisa and Quest internal calculation
+tonyplot questex13_complex_table_Q.dat questex13_complex_table_L.dat ./questex13_db/questex13@@200M2/questex13_q.dat ./questex13_db/questex13@@200M2/questex13_rlgc.dat -set questex13_2.set

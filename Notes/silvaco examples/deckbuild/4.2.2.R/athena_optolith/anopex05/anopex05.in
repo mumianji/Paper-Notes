@@ -1,0 +1,54 @@
+go athena
+#
+#                   OPTOLITH input file: anopex05.in
+#                   --------------------------------
+#
+#               Simulation of spatial filtering techniques
+#
+illumination duv.line
+#
+illum.filter clear.fil circle sigma=0.5
+#
+#
+# WITHOUT SPATIAL FILTER
+#
+#
+projection na=.42 
+#
+pupil.filter clear.fil circle
+#
+# Define mask 
+#
+layout lay.clear x.low=-2.0 z.low=-4.0 x.high=-1.0 z.high=4.0
+layout x.low=0.0 z.low=-4.0 x.high=0.5 z.high=4.0
+layout x.low=1.5 z.low=-4.0 x.high=1.8 z.high=4.0
+layout x.low=2.8 z.low=-4.0 x.high=3.05 z.high=4.0
+#
+image win.x.lo=-3.4 win.z.lo=-.1 win.x.hi=3.4 win.z.hi=.1 x.p=100 z.p=2  
+#
+structure outfile=anopex05_1.str intensity mask
+#
+#
+# WITH SPATIAL FILTER
+#
+#
+# Set intensity to approx. 2.0 to compensate for intensity loss
+# caused by spatial filtering
+#
+illumination duv.line intensity=2 
+#
+# Define the annular filters
+#
+pupil.filter clear.fil circle
+pupil.filter circle in.rad=0.2  out.rad=0.5  trans=0.36
+pupil.filter circle in.rad=0.5  out.rad=0.6  trans=0.49 
+pupil.filter circle in.rad=0.7  out.rad=0.8  trans=0.81  
+pupil.filter circle in.rad=0.0  out.rad=0.2  trans=0.25
+pupil.filter circle in.rad=0.6  out.rad=0.7  trans=0.64
+#
+image win.x.lo=-3.4 win.z.lo=-.1 win.x.hi=3.4 win.z.hi=.1 x.p=100 z.p=2  
+#
+structure outfile=anopex05_2.str intensity mask
+tonyplot anopex05_1.str anopex05_2.str -set anopex05.set
+#
+quit

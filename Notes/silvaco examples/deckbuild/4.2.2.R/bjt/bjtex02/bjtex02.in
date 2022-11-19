@@ -1,0 +1,132 @@
+# (c) Silvaco Inc., 2018
+go devedit 
+
+DevEdit version="2.0" library="1.14"
+
+work.area left=0 top=-0.5 right=5 bottom=1.6
+
+# SILVACO Library V1.14
+
+region reg=1 name=Silicon mat=Silicon color=0xffc000 pattern=0x3 Z1=0 Z2=5 \
+	points="0,0 1.5,0 3.5,0 5,0 5,1.5 0,1.5 0,0"
+#
+impurity id=1 region.id=1 imp=Phosphorus color=0x906000 \
+	x1=0 x2=0 y1=0 y2=0 \
+	peak.value=1e+16 ref.value=0 z1=0 z2=0 comb.func=Multiply \
+	rolloff.y=both conc.func.y=Constant \
+	rolloff.x=both conc.func.x=Constant \
+	rolloff.z=both conc.func.z=Constant
+#
+constr.mesh region=1 default
+
+region reg=2 name=Emitter mat=Aluminum elec.id=1 work.func=4.1 color=0xffc8c8 pattern=0x6 Z1=0 Z2=1.5 \
+	points="0,0 0,-0.15 1.5,-0.15 1.5,0 0,0"
+#
+constr.mesh region=2 default
+
+region reg=3 name=Base mat=Aluminum elec.id=2 work.func=4.1 color=0xffc0c0 pattern=0x6 Z1=0 Z2=5 \
+	points="3.5,0 3.5,-0.15 5,-0.15 5,0 3.5,0"
+#
+constr.mesh region=3 default
+
+region reg=4 name=substrate mat=Aluminum elec.id=3 work.func=0 color=0xffc8c8 pattern=0x6 Z1=0 Z2=5 \
+	points="0,1.5 5,1.5 5,1.6 0,1.6 0,1.5"
+#
+constr.mesh region=4 default
+
+
+impurity id=1 imp=Boron color=0x906000 \
+	x1=0 x2=5 y1=0 y2=0 \
+	peak.value=5e+18 ref.value=0 z1=0 z2=5 comb.func=Multiply \
+	rolloff.y=both conc.func.y=Gaussian conc.param.y=0.16 \
+	rolloff.x=both conc.func.x=Gaussian conc.param.x=0.25 \
+	rolloff.z=both conc.func.z=Gaussian conc.param.z=0.25
+impurity id=2 imp=Arsenic color=0x906000 \
+	x1=0 x2=5 y1=1.5 y2=1.5 \
+	peak.value=4e+19 ref.value=0 z1=0 z2=5 comb.func=Multiply \
+	rolloff.y=both conc.func.y=Gaussian conc.param.y=0.1 \
+	rolloff.x=both conc.func.x=Gaussian conc.param.x=0.25 \
+	rolloff.z=both conc.func.z=Gaussian conc.param.z=0.25
+impurity id=3 imp=Arsenic color=0x906000 \
+	x1=0 x2=1.5 y1=0 y2=0 \
+	peak.value=1e+20 ref.value=0 z1=0 z2=1.5 comb.func=Multiply \
+	rolloff.y=both conc.func.y=Gaussian conc.param.y=0.1 \
+	rolloff.x=both conc.func.x=Gaussian conc.param.x=0.1 \
+	rolloff.z=both conc.func.z=Gaussian conc.param.z=0.1
+
+# Set Meshing Parameters
+#
+base.mesh height=1000000 width=1000000
+#
+bound.cond !apply max.slope=28 max.ratio=300 rnd.unit=0.001 line.straightening=1 align.points when=automatic
+#
+imp.refine imp="NetDoping" sensitivity=0.25
+imp.refine min.spacing=0.05 z=0
+#
+constr.mesh max.angle=90 max.ratio=300 max.height=1 \
+	max.width=1 min.height=0.0001 min.width=0.0001
+#
+constr.mesh type=Semiconductor default
+#
+constr.mesh type=Insulator default
+#
+constr.mesh type=Metal default
+#
+constr.mesh type=Other default
+#
+constr.mesh region=1 default
+#
+constr.mesh region=2 default
+#
+constr.mesh region=3 default
+#
+constr.mesh region=4 default
+#
+# Perform mesh operations
+#
+Mesh Mode=MeshBuild
+
+imp.refine imp="NetDoping" sensitivity=0.25
+imp.refine min.spacing=0.05 z=0
+
+constr.mesh max.angle=90 max.ratio=300 max.height=1 \
+	max.width=1 min.height=0.0001 min.width=0.0001
+#
+constr.mesh type=Semiconductor default
+#
+constr.mesh type=Insulator default
+#
+constr.mesh type=Metal default
+#
+constr.mesh type=Other default
+
+z.plane z=0 spacing=1.5
+#
+z.plane z=1.55 spacing=0.05
+#
+z.plane z=2 spacing=1
+#
+z.plane max.spacing=1000000 max.ratio=1.5
+
+base.mesh height=1000000 width=1000000
+
+bound.cond !apply max.slope=28 max.ratio=300 rnd.unit=0.001 line.straightening=1 align.Points when=automatic
+
+structure outfile=bjtex02_0.str
+
+go atlas
+#
+models   srh auger bgn conmob fldmob
+#
+solve init
+#
+solve prev
+#
+log outfile=bjtex02_0.log
+solve v1=-0.3 vstep=-0.05 nstep=10 elec=1 v3=1 outf=bjtex02_1.str onefile
+#
+tonyplot  bjtex02_0.log -set bjtex02_0.set
+tonyplot3d bjtex02_0.str -set bjtex02_1.set
+tonyplot3d bjtex02_1.str -set bjtex02_2.set
+#
+quit

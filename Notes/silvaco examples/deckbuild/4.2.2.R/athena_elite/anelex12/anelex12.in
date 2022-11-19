@@ -1,0 +1,40 @@
+go athena
+
+#TITLE: Resist etching using rie model
+line x loc = 0.0  spac=0.05
+line x loc = 2.0  spac=0.05
+#
+line y loc = 0    spac=1
+line y loc = 1.0  spac=1
+#
+#calculate the mesh
+init
+#
+deposit material=polyimide thick=1.1 div=22
+#
+deposit oxide thick=.1 div=2
+etch  oxide start    x=0.86 y=-5
+etch          cont     x=0.86 y=5
+etch          cont     x=1.14 y=5
+etch          done     x=1.14 y=-5
+#
+structure outfile=anelex12_0.str
+#
+rate.etch machine=det rie material=polyimide n.m isotropic=50.0 \
+	chemical=100.0 divergence=30 
+#
+etch mach=det time=8.0 minutes 
+#dx.mult=.5
+#
+structure outfile=anelex12_1.str
+#
+rate.etch machine=det rie material=polyimide n.m isotropic=5.0 \
+	chemical=85.0 divergence=3 
+#
+etch mach=det time=5.0 minutes
+#
+structure outfile=anelex12_2.str
+tonyplot anelex12_*.str -ttitle anelex12.in
+#
+
+quit

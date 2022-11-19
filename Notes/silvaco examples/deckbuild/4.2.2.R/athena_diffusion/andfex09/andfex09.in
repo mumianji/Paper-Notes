@@ -1,0 +1,20 @@
+go athena
+
+# This input deck illustrates the activation model of ATHENA
+line x loc=0.00 spac=0.10
+line x loc=0.10 spac=0.10
+#
+line y loc=0.00 spac=0.01
+line y loc=2    spac=0.2
+# 
+init silicon orientation=100
+implant arsenic dose=3.0e15 energy=40
+
+diffus time=30 temp=800 
+struct outfile=andfex09_0.str
+
+diffus time=10/60 temp=1000 
+struct outfile=andfex09_1.str
+tonyplot -overlay andfex09_0.str andfex09_1.str -set andfex09.set
+
+

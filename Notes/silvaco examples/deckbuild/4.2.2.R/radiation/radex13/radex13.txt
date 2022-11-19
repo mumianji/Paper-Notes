@@ -1,0 +1,35 @@
+
+{subsection} radex13.in : High Dose Rate Radiation Detector Circuit
+
+Requires: VictoryProcess/VictoryDevice/MixedMode/REM
+{newline}
+Minimum Versions: Victory Process 7.14.3.R, Victory Mesh 1.0.4.R, Victory Device 1.10.2.R
+
+This examples demonstrates High Dose Rate Effects and uses MixedMode to 
+Demonstrate Operation of a Radiation Detector Circuit.  The active device used
+as the radiation detector is a PiN diode incorporating a field reducing edge 
+termination contact which is created in VictoryProcess in 2D mode.  The PiN 
+diode exhibits
+{bold} circular symmetry, 
+so full 3D effects can be simulated using a 2D structure with cylindrical 
+symmetry corrections.
+
+Once the PiN diode was created, the structure is loaded into the device 
+simulator, and  SPICE circuit is included using
+{bold} MIXEDMODE
+syntax.  Two greatly differing prompt dose rates of 1e8 and 1e12 Rads/second
+were simulated to test the versitility of the radiation detector circuit.  The
+timing of the radiation bursts is determined by the
+{bold} .RAD
+statement in the MixedMode SPICE like syntax.
+
+It is found that the radiation detector circuit gives a consistent detection 
+output pulse for these two widely differing does rates and therefore total 
+doses, validating the circuit design.
+
+To load and run this example, select the
+{bold} Load example 
+button in DeckBuild. This will copy the input file and any support
+files to your current working directory. Select the
+{bold} run 
+button to execute the example.

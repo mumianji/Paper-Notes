@@ -1,0 +1,57 @@
+go athena
+
+#TITLE: Comparison of Gauss, Pearson and SVDP method
+
+
+line x loc = 0.0   spacing=0.25
+line x loc = 0.25  spacing=0.25
+line y loc = 0     spacing = 0.01 
+line y loc = 0.50  spacing = 0.01
+
+
+#initialize the mesh
+init silicon 
+
+#Gauss (symmetrical) implant (parameters are in std_tables)
+moments std_tables
+implant phos dose=1e14 energy=40 gauss 
+
+struct outf=aniiex01_0.str
+
+
+line x loc = 0.0   spacing=0.25
+line x loc = 0.25  spacing=0.25
+line y loc = 0     spacing = 0.01 
+line y loc = 0.50  spacing = 0.01
+
+
+#initialize the mesh
+init silicon 
+
+#Use single Pearson (parameters are in std_tables)
+moments std_tables
+implant phos dose=1e14 energy=40 pearson print.mom
+
+struct outf=aniiex01_1.str
+
+
+line x loc = 0.0   spacing=0.25
+line x loc = 0.25  spacing=0.25
+line y loc = 0     spacing = 0.01 
+line y loc = 0.50  spacing = 0.01
+
+
+#initialize the mesh
+init silicon 
+
+#Use SVDP method (default)
+moments svdp_tables 
+implant phos dose=1e14 energy=40 print.mom
+
+struct outf=aniiex01_2.str
+
+tonyplot -overlay aniiex01_*.str -set aniiex01.set
+
+quit
+
+

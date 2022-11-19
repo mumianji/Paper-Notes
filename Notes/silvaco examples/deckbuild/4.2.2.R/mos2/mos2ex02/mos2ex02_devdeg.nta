@@ -1,0 +1,78 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include <ctype.h>
+#include <malloc.h>
+#include <string.h>
+
+/*
+ * -----------------------------------------------------------------
+ * ATLAS Parser Function Template
+ * ATLAS Version 5.2.0.R
+ * c 1993 - 2000 SILVACO International. 
+ * All rights reserved.
+ * -----------------------------------------------------------------
+ */
+
+/*
+ * Interface acceptor trap density as a function of location
+ * Statement: DEGREDATIONPARAM
+ * Parameter: F.NTA
+ * Arguments:
+ * x          location x (microns)
+ * y          location y (microns)
+ * *nta       interface acceptor trap density per sqcm
+ */
+int devdeg_nta(double x, double y, double *nta)
+{
+	int	constant;
+	int	x_direction;
+	int	y_direction;
+	int	where_ever;
+	double	a;
+	double	ax;
+	double	lx;
+	double	ay;
+	double	ly;
+	double	fx;
+	double	fy;
+	double	x0;
+	double	y0;
+
+	constant = 1;
+	x_direction = 0;
+	y_direction = 0;
+	where_ever = 0;
+	a = 5.0e12;
+	ax = 5.0e12;
+	lx = 0.1;
+	ay = 1.0e12;
+	ly = 0.2;
+	x0 = 0.9; 	/* mk */
+	y0 = 0.0;
+
+	if( constant )
+	{
+		*(nta) = a;
+		printf("f= %lgcm-2\n",*(nta));
+	}
+	else if( x_direction )
+	{
+		*(nta) = (ax * exp( -(x-x0)*(x-x0)/lx/lx ));
+		printf(" x= %lgmicron f =%lgcm-2\n",x,*(nta));
+	}
+	else if( y_direction )
+	{	
+		*(nta) = (ay * exp( -(y-y0)*(y-y0)/ly/ly ));
+		printf("y= %lgmicron f =%lgcm-2\n",y,*(nta));
+	}
+	else if( where_ever )
+	{
+	
+		fx = (ax * exp( -(x-x0)*(x-x0)/lx/lx ));
+		fy = (ay * exp( -(y-y0)*(y-y0)/ly/ly ));
+
+		*(nta) = fx * fy;
+		printf("x= %lgmicron y= %lgmicron fx = %lgcm-2 fy= %lgcm-2 f =%lg\n",x,y,fx,fy,*(nta));
+	}
+}

@@ -1,0 +1,478 @@
+
+go victoryprocess
+
+# Single n-FinFet with liner stressors
+
+# Section 1. Definition of geometrical domain and region limits for subsequent
+#            consistent mesh formation
+
+# The folowing SET statements define geometrical parameters of n-FinFET. 
+# All lengths and widths correspond to the layout used in this example vsex06_0.lay
+# The variables with "_height" or "_thick" in their names define the thicknesses of deposited material layers. 
+
+# Modification of some of length and/or width parameters would require modification of layout as well as 
+# corresponding simulation mesh in x- and y- directions (see "line x" and "line y" statements).
+
+# It is possible to change height or thickness of some layers. 
+# For example, the thickness of the stress liner can substantially alter the stress distribution. 
+# In this case the mesh in z direction should be modified (see "line z" statements). 
+# If the thickness of the gate is change the corressponding mesh modification will be required
+# in both z and y direction since the gate deposition is "conformal".
+
+# set the gate length
+set gate_length=0.06
+
+# set gate height
+set gate_height=0.05
+
+# The thickness of the stress liner over the gate is very important. 
+# It can be changed to modify the stress distribution inside the fin,
+# therefore the total structure height will be changed too.
+set stress_liner_height=0.05
+
+# set fin width
+set fin_width=0.03
+
+# set fin height
+set fin_height=0.06
+
+# set fin_length
+set fin_length=0.8+$gate_length
+
+# Another method of stress engineering is introduction of  so-called Source/Drain stressors (SiGe or SiC). 
+# The structure of this example allows to have such stressor called nstressor (see "ns_str" and "nd_str" masks)
+# The FinFET contains the vias which are placed over the metal contacts (aluminum). 
+# For simplicity the length of each via (for Source and for Drain)
+# was choosen the same as the length of stressors (0.3um). 
+# Vias are located at the some distance from the gate;
+# They were obtained by etching of stressed n-liner and oxide top layer with subsequent filling of aluminum into the holes.
+# These holes in the stress liner and oxide layer could affect the stress under the gate.
+
+# the length of the "S/D" regions is calculated by use of the total length of the fin 
+set sd_length=($fin_length-$gate_length)/2 
+
+# The length of the horisontal metal contacts cont_length (see the mask "met1" from the layout) 
+# and the length of stressed S/D regions stress_length (see masks "ns_str" and "nd_str") 
+# are set to 0.75*sd_length.
+
+set cont_length=0.75*$sd_length
+set stress_length=0.75*$sd_length
+
+# Set the simulation domain in x direction
+# This domain includes all parts of n-FinFET
+# By decreasing this domain you can analize the influence of peripheral portions 
+# of device/cell
+set start_x=0
+set end_x=1.66 
+
+# set the thickness of oxide box where the fin is placed
+set oxide_box_height=0.6
+
+# set  the thickness of covering oxide layer   
+set oxide_top_height=0.15
+
+# set the thickness of oxide spacer (see the mask "oxide")
+set spacer_thick=0.005
+
+# set the height of metal contact 
+set met_height=0.005
+
+# Set the width of via (or contact) equal to 0.11
+# It is effectively equal to the sum of two fin widths and gate height because 
+# the gate is "conformally" deposited over the fin
+set via_width=2*$fin_width+$gate_height
+
+# Set simulation domain in y direction
+set start_y=0.08
+set end_y=0.35
+
+# The center of the via in y-direction should coincide with the center of simulation domain
+# therefore y-coordinates of for contact could be calculated as follows
+
+set center_y=0.5*($end_y-$start_y)
+set contact_start_y=$center_y-0.5*$via_width
+set contact_end_y=$center_y+0.5*$via_width
+
+# Section 2. VictoryCell process steps
+
+#init Layout="vsex06_0.lay" Depth=$oxide_box_height material("box") Gasheight=20 box=($start_x,$start_y,$end_x,$end_y)
+init Layout="vsex06_0.lay" Depth=$oxide_box_height material=box Gasheight=20 from="$start_x, $start_y" to="$end_x, $end_y"
+
+
+# Section 3. Cartesian mesh formation and saving the structure for stress calculation
+
+# Mesh in x direction
+
+# Two considerations should be taken into account to form an optimal mesh for Manhattan-type structures:
+# a. A reasonable number of mesh points (spacings) should be generated across areas of interest. 
+#    In this case these areas are gate and fin
+# b. It is preferable that in each direction a mesh line coincides with material region boundary.
+
+# For meshing in x-direction the reasonable number of divisions under the gate is 10.
+set div_x=10
+# Corresponding minimum spacing will be:
+set minsp_x=$gate_length/$div_x
+
+# In areas far from the gate the spacing could be 10 times larger
+set maxsp_x=10*$minsp_x
+
+
+# Calculate the position of material region boundaries in x direction
+
+# The left boundary of the source region (which also corresponds to fin and metal contact)
+set left_source_x=$start_x+0.5*($end_x-$gate_length)-$sd_length
+
+# The left boundary of nstressor on the source side 
+set left_nstr_x=$left_source_x+$sd_length-$stress_length
+
+# The right boundary of the metal contact (or via) on the source region
+set right_via_source_x=$left_source_x+$cont_length
+
+# The left boundary of the gate (the right boundary of the nstressor on the source side)
+set left_gate_x=$left_nstr_x+$stress_length
+
+# The right boundary of the gate (or the left boundary of the nstressor on the drain side)
+set right_gate_x=$left_gate_x+$gate_length
+
+# The left boundary of the metal contact (or via) on the drain region
+set left_via_drain_x=$right_gate_x+$sd_length-$cont_length
+
+# The left boundary of the nstressor from the drain
+set right_nstr_x=$right_gate_x+$stress_length
+
+# The right boundary of drain region (also, fin and metal contact - see the layout)
+set right_drain_x=$right_gate_x+$sd_length
+
+# The following statement activates VictoryCell mesh specification sequence
+
+# The mesh specification in x-direction
+ 
+line x loc=$start_x spac=$maxsp_x
+line x loc=$left_source_x spac=$maxsp_x
+line x loc=$right_via_source_x spac=$maxsp_x
+line x loc=$left_gate_x spac=$minsp_x
+line x loc=$right_gate_x spac=$minsp_x
+line x loc=$left_via_drain_x spac=$maxsp_x
+line x loc=$right_nstr_x spac=$maxsp_x
+line x loc=$right_drain_x spac=$maxsp_x
+line x loc=$end_x spac=$maxsp_x
+
+# Calculate spacings and y coordinates of all material region boundaries
+
+# Calculate coordinates of material region boundaries starting from the center point in y direction: 
+# "left" means "below" the center point, "right"  means above the center point
+# The center of nFinFET in y-direction
+set center_y=($start_y+$end_y)/2
+
+
+
+# For the fin:
+set left_fin_y=$center_y-$fin_width/2
+set right_fin_y=$left_fin_y+$fin_width
+
+# For the oxide spacer, or for contact metal:
+set left_spacer_y=$left_fin_y-$spacer_thick
+set right_spacer_y=$right_fin_y+$spacer_thick
+
+# For metal contact/via:
+set left_contact_y=$center_y-$via_width/2
+set right_contact_y=$left_contact_y+$via_width
+
+# For the gate
+set left_gate_y=$left_spacer_y-$gate_height
+set right_gate_y=$right_spacer_y+$gate_height
+
+# The spacer (also, metal contact) width is very small, however it should be at least two divisions in this material
+set div_spacer=2
+set min_spac_oxide=$spacer_thick/$div_spacer
+
+# The fin width is small, so it will be good enough to have the same spacing as in oxide/spacer wall
+
+# Set the spacing in y-direction based on the gate height and the same number of divisions as for the gate length
+set div_gate=10
+set spac_gate=$gate_height/$div_gate
+
+# For outside areas of the structure the spacing could be  at least twice larger:
+set spac_ends=2*$spac_gate 
+
+line y loc=$start_y spac=$spac_ends
+line y loc=$left_gate_y spac=$spac_gate
+line y loc=$left_contact_y spac=$spac_gate
+line y loc=$left_spacer_y spac=$min_spac_oxide
+line y loc=$left_fin_y spac=$min_spac_oxide
+line y loc=$right_fin_y spac=$min_spac_oxide
+line y loc=$right_spacer_y spac=$min_spac_oxide
+line y loc=$right_contact_y spac=$spac_gate
+line y loc=$right_gate_y spac=$spac_gate
+line y loc=$end_y spac=$spac_ends
+
+# For mesh in z-direction it is necessary consistently to use material boundaries as mesh lines.
+# Let us start from the top of the box (z=0) and go up to the top of the structure
+
+# The first material boundary above the top of the box will be the gate 
+set gate_on_box_z=-$gate_height
+
+# The second material on the top of the box will be the fin
+set fin_on_box_z=-$fin_height
+
+# There is the oxide spacer on the top of the fin
+set spacer_z=$fin_on_box_z-$spacer_thick
+
+# The next is the boundary between the spacer and gate
+set gate_on_spacer_z=$spacer_z-$gate_height
+
+# The z-coordinate of the boundary between the gate and the stress liner
+set stress_liner_z=$gate_on_spacer_z-$stress_liner_height
+
+# The top of the structure
+set top_z=$stress_liner_z-$oxide_top_height 
+
+# Mesh in z-direction
+
+# As in y direction we need at least 2 divisions inside the oxide spacer, i.e. min_spac_oxide
+# Six divisions on z direction in the gate
+set div_gate_z=6
+set spac_gate_z=$gate_height/$div_gate_z
+
+# Above the top of the gate over the fin the spacing could be increased
+set spac_stress_liner=3*$spac_gate_z
+
+# Spacing in the oxide layer on the top of the step could be further incerased 
+set spac_oxide_top=2*$spac_stress_liner
+
+line z loc=$top_z spac=$spac_oxide_top
+line z loc=$stress_liner_z spac=$spac_stress_liner
+line z loc=$gate_on_spacer_z spac=$spac_gate_z
+line z loc=$spacer_z spac=$min_spac_oxide
+line z loc=$fin_on_box_z spac=$min_spac_oxide
+line z loc=0 spac=$spac_gate_z
+
+# In the box the spacing could be increased
+line z loc=$fin_height/2 spac=$spac_stress_liner
+
+# On the top of the box the spacing could be up to times larger than in the gate
+set spac_box=10*$spac_gate_z
+line z loc=$oxide_box_height spac=$spac_box
+
+# The process steps for creation of FinFET structure
+
+# 1. Formation of the fin
+deposit material=nfin thick=$fin_height min
+mask "nfin"
+etch material=nfin max
+strip resist
+
+# Parts of the fin could serve as a local stressors (i.e. compositional Si:Ge)
+# 2. Source side local stressor 
+mask "ns_str" reverse
+etch material=nfin max
+deposit material=nstressor thick=$fin_height min
+strip resist
+
+# 3. Drain side local stressor
+mask "nd_str" reverse
+etch material=nfin max
+deposit material=nstressor thick=$fin_height min
+strip resist
+
+# 4. Oxide spacer deposition
+deposit material=oxide thick=$spacer_thick conformal
+mask "oxide"
+etch material=oxide max
+strip resist
+
+# 5. Gate formation
+deposit poly thick=$gate_height conformal
+mask "gate"
+etch poly max
+strip resist
+
+# 6. Deposition of metal contact thin layer
+deposit material=metal thick=$met_height conformal
+mask "met1" 
+etch material=metal max
+strip resist
+
+# 7. Deposition of stress liner
+deposit material=nliner thick=$stress_liner_height max
+strip resist
+
+# 8. Deposition of the top oxide layer
+deposit material=oxide thick=$oxide_top_height min
+
+# 9. Etching of top oxide and stress liner for the further via formation
+mask "met1" reverse
+
+etch material=oxide max
+etch material=nliner max
+strip resist
+
+# 10. Deposition of metal (here aluminum) for formation of via 
+deposit aluminum thick=0 max
+
+doping phosphorus=1e12 material=box
+
+# As spacings are set up the structure can be saved for subsequent Victory Stress Simulation
+export atlas(conformal) structure="vsex06_1_vp_conformal.str"
+
+# Section 4. Stress calculations
+
+go victorystress
+
+init structure="vsex06_1_vp_conformal.str"
+
+# By default the absolute value of the initial intrinsic stress is 1GPa;
+# for the n-Fet it is positive; for the p-case it is negative:
+
+set stress_value=1.0e10
+
+material material("nliner") intrin.sig=$stress_value
+
+# The following  material property parameters are used for 
+# user-defined materials in the structure: 
+
+material material("nliner") young.m=3.89e12
+material material("nliner") poiss.r=0.3
+
+material material("box") young.m=6.6e11
+material material("box") poiss.r=0.2
+
+material material("nfin") young.m=1.67e12
+material material("nfin") poiss.r=0.28
+
+material material("nstressor") young.m=1.67e12
+material material("nstressor") poiss.r=0.28
+
+material material("metal") inherit(aluminum)
+
+stress exposed rebalance
+
+save structure="vsex06_2_vp_conformal.str"
+tonyplot3d vsex06_2_vp_conformal.str -set vsex06_0.set
+
+#Section 5. Visualization and analysis of simulation results, 
+#           extraction of average stresses and mobility enhancement factors
+
+# Since the simulation results are in 3D the only convenient way of analysing them is
+# to extract figures of merit inside representative cut planes within the 3D structure.
+# These 2D planes are generated using "-cut" option of Tonyplot3D.
+# The two planes selected are parallel to the fin length - one along sidewall of 
+# the fin and another along the top of the fin. 
+# The exact position of the cut could be set manually using Cutplane Setting in Cutplane
+# view menu of Tonyplot3D. The selected values for Pan and Pitch angles and Elevation are saved 
+# in 2 corrsponding .set files vsex06_1.set and vsex06_2.set. As the result of the following 
+# statements two 2D strcuture files  vsex06_3_vp_conformal.str and vsex06_4_vp_conformal.str will be generated
+
+# The sidewall cut plane
+tonyplot3d vsex06_2_vp_conformal.str -set vsex06_1.set -cut vsex06_3_vp_conformal.str
+
+# "The top of the fin" cut plane
+tonyplot3d vsex06_2_vp_conformal.str -set vsex06_2.set -cut vsex06_4_vp_conformal.str
+
+# The generated cut plane structures are shown using TonyPlot 
+# The "system" command guarantees that the 2D structures will be generated
+# before they are used in Tonyplot and subsequent extract commands
+
+tonyplot vsex06_3_vp_conformal.str -set vsex06_3.set
+tonyplot vsex06_4_vp_conformal.str -set vsex06_3.set
+
+#   Set the limits for integrations: (x,z) - for the sidewall cut plane 
+#   (x,y) - for the top cut.   
+ 
+set x_left=$left_gate_x+$minsp_x
+set x_right=$right_gate_x-$minsp_x
+
+set y_width1=$left_fin_y+$min_spac_oxide
+set y_width2=$right_fin_y-$min_spac_oxide
+
+set z_height2=0-$spac_gate_z
+set z_height1=$fin_on_box_z+$min_spac_oxide
+
+#  Average Stresses Calculations
+
+# "factor" is required  for obtaining inegrated stresses in GPa 
+
+set factor=100.
+
+
+# The side wall of the fin under the gate
+extract init infile="vsex06_3_vp_conformal.str" 
+
+# for the Sxx-component
+extract name="integral_2d" 2d.area x.step=0.005 impurity="Stress XX" x.min=$x_left x.max=$x_right y.min=$z_height1 y.max=$z_height2
+extract name="Sxx_side" $factor*$integral_2d/($z_height2-$z_height1)/($x_right-$x_left) datafile="vsex06_1.dat"
+
+# for the Syy-component  
+extract name="integral_2d" 2d.area x.step=0.005 impurity="Stress YY" x.min=$x_left x.max=$x_right y.min=$z_height1 y.max=$z_height2
+extract name="Syy_side" $factor*$integral_2d/($z_height2-$z_height1)/($x_right-$x_left) datafile="vsex06_1.dat"
+
+# for the Szz-component
+extract name="integral_2d" 2d.area x.step=0.005 impurity="Stress ZZ" x.min=$x_left x.max=$x_right y.min=$z_height1 y.max=$z_height2
+extract name="Szz_side" $factor*$integral_2d/($z_height2-$z_height1)/($x_right-$x_left) datafile="vsex06_1.dat"
+
+# The top wall of the fin under the gate
+extract init infile="vsex06_4_vp_conformal.str" 
+# for the Sxx-component
+extract name="integral_2d" 2d.area x.step=0.005 impurity="Stress XX" x.min=$x_left x.max=$x_right y.min=$y_width1 y.max=$y_width2
+extract name="Sxx_top" $factor*$integral_2d/($y_width2-$y_width1)/($x_right-$x_left) datafile="vsex06_1.dat"
+
+extract init infile="vsex06_4_vp_conformal.str" 
+# for the Syy-component  
+extract name="integral_2d" 2d.area x.step=0.005 impurity="Stress YY" x.min=$x_left x.max=$x_right y.min=$y_width1 y.max=$y_width2
+extract name="Syy_top" $factor*$integral_2d/($y_width2-$y_width1)/($x_right-$x_left) datafile="vsex06_1.dat"
+
+extract init infile="vsex06_4_vp_conformal.str" 
+# for the Szz-component
+extract name="integral_2d" 2d.area x.step=0.005 impurity="Stress ZZ" x.min=$x_left x.max=$x_right y.min=$y_width1 y.max=$y_width2
+extract name="Szz_top" $factor*$integral_2d/($y_width2-$y_width1)/($x_right-$x_left) datafile="vsex06_1.dat"
+
+# Mobility Enhancement Calculations
+
+# Piezorestivity coefficients for (100)/<100> n-Fin orientation (in cm^2/GPa)
+
+set nx1=-1.022
+set ny1=0.534
+set nz1=0.534
+
+# Piezorestivity coefficients for (110)/<100> n-Fin orientation (in cm^2/GPa)
+
+set nx2=-0.311
+set ny2=-0.175
+set nz2=0.534
+
+# Mobility Enhancements for n-FinFet with 2 fin orientations
+# Stresses weakly depend on fin orientation, so the enhancement factors are different because 
+# the piezorestivity coefficients are different
+
+# Calculations of mobility enhancement factors at the side wall and top of the Fin under the gate
+extract init infile="vsex06_3_vp_conformal.str" 
+extract name="n_factor_side_100" 1-($nx1*$Sxx_side+$ny1*$Syy_side+$nz1*$Szz_side) datafile="vsex06_1.dat"
+extract name="n_factor_top_100" 1-($nx1*$Sxx_top+$ny1*$Syy_top+$nz1*$Szz_top) datafile="vsex06_1.dat"
+
+extract name="n_factor_side_110" 1-($nx2*$Sxx_side+$ny2*$Syy_side+$nz2*$Szz_side) datafile="vsex06_1.dat"
+extract name="n_factor_top_110" 1-($nx2*$Sxx_top+$ny2*$Syy_top+$nz2*$Szz_top) datafile="vsex06_1.dat"
+
+
+# If a p_FinFet device has the same structure as n-FinFet in this examples the stresses will be the same
+# but different piezorestivity coefficients should be used
+
+# Piezorestivity coefficients for (100)/<100> p-Fin orientation (in cm2/GPa)
+
+set px1=0.066
+set py1=-0.011
+set pz1=-0.011
+
+# Piezorestivity coefficients for (110)/<100> p-Fin orientation (in cm2/GPa)
+
+set px2=0.718
+set py2=-0.663
+set pz2=-0.011
+
+extract init infile="vsex06_3_vp_conformal.str"
+extract name="p_factor_side_1" 1-($px1*(-$Sxx_side)+$py1*(-$Syy_side)+$pz1*(-$Szz_side)) datafile="vsex06_1.dat"
+extract name="p_factor_top_1" 1-($px1*(-$Sxx_top)+$py1*(-$Syy_top)+$pz1*(-$Szz_top)) datafile="vsex06_1.dat"
+
+extract name="p_factor_side_2" 1-($px2*(-$Sxx_side)+$py2*(-$Syy_side)+$pz2*(-$Szz_side)) datafile="vsex06_1.dat"
+extract name="p_factor_top_2" 1-($px2*(-$Sxx_top)+$py2*(-$Syy_top)+$pz2*(-$Szz_top)) datafile="vsex06_1.dat"
+
+quit

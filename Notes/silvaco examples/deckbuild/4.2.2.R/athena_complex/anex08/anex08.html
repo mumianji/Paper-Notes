@@ -1,0 +1,78 @@
+<html>
+  <head>
+    <title>DevEdit Mesh Adaptation with Elite and SSuprem 4</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>DevEdit Mesh Adaptation with Elite and SSuprem 4</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>SSuprem 4, Elite, and DEVEDIT</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="anex08_plot0.png" width="640" alt="anex08_plot0" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example shows the use of
+<b> DevEdit </b> in a mesh adaptation application. A trench is etched with an
+<b> Elite </b> etch machine. A highly doped oxide is
+then deposited inside the trench for sidewall doping.  Boron segregation
+and transport coefficients are defined. (These parameters may be used
+to calibrate the amount of out diffusion of boron.)
+</p>
+<p>
+A short heat cycle segregates out some of the boron from the oxide
+into the silicon trench sidewall.
+</p>
+<b> DevEdit </b> <p>
+is then invoked to regrid the structure based upon the
+concentration gradient of the boron and phosphorous. The weight for
+each impurity will determine the distance from the diffusion front that
+the grid is refined. These parameters should be used in relation to the
+estimated subsequent diffusion profile.
+</p>
+<b> DevEdit </b> <p>
+is invoked at a point where minimal material boundary points exist to minimize
+the mesh density. This is a preferred although not essential method of use.
+</p>
+<p>
+Next,
+<b> Athena </b> is re-invoked and again the segregation and transport
+coefficients are defined in the new
+<b> Athena </b> session.
+</p>
+<p>
+A second diffusion is started, and the boron diffusion front now moves
+within the refined mesh region.
+</p>
+<b> DevEdit </b> <p>
+may be used in this manner to refine at any stage during a process
+flow.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

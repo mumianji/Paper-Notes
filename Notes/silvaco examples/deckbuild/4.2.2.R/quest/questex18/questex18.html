@@ -1,0 +1,69 @@
+<html>
+  <head>
+    <title>multiple layouts simulation</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>multiple layouts simulation</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>QUEST</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>QUEST 2.0.2.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="questex18_plot0.png" width="640" alt="questex18_plot0" />
+      <p/>
+      <img src="questex18_plot1.png" width="640" alt="questex18_plot1" />
+      <p/>
+      <img src="questex18_plot2.png" width="640" alt="questex18_plot2" />
+      <p/>
+    </div>
+    <div id="text" >
+<p>
+This example demonstrates how to load and run multiple layouts.
+</p>
+<p>
+Introduction:
+</p>
+<p>
+This example is based on questex14.
+</p>
+<p>
+Running the Example
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+<p>
+In this example, two layouts are loaded using two consecutive layout gdsfile statements.
+These are
+<b> layout gdsfile = &quot;questex18_nb=4_oct.gds&quot; cell = &quot;CELL&quot;  </b> and
+<b> layout gdsfile = &quot;questex18_nb=5_oct.gds&quot; cell = &quot;CELL&quot; </b> </p>
+<p>
+Results analysis
+</p>
+<p>
+These two layouts differ from each other by the number of turns. Inductor performance
+are monitored using the TonyPlot  overlay feature as well as the extract capability
+in DeckBuild.
+</p>
+  </div></body>
+</html>

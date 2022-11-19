@@ -1,0 +1,148 @@
+<html>
+  <head>
+    <title>PNP Gummel Plot and Ic/Vce Characteristic</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>PNP Gummel Plot and Ic/Vce Characteristic</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>SSuprem 4/S-Pisces</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R, Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="bjtex08_plot0.png" width="640" alt="bjtex08_plot0" />
+      <p/>
+      <img src="bjtex08_plot1.png" width="640" alt="bjtex08_plot1" />
+      <p/>
+      <img src="bjtex08_plot2.png" width="640" alt="bjtex08_plot2" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates the formation and characterization of a PNP
+bipolar transistor. It consists of:
+</p>
+<ul>
+  <li>
+ Structure formation in Athena
+<br/>
+  </li>
+  <li>
+  Gummel plot simulation in Atlas
+<br/>
+  </li>
+  <li>
+  Ic/Vce simulation in Atlas
+  </li>
+</ul>
+<p>
+The first part of this input file uses Athena to construct the
+geometry and doping of the PNP transistor. The device is a polysilicon
+emitter PNP with an emitter length of 0.4um. Since the device is
+symmetrical through the center of the emitter, only half the device
+needs to be simulated. The resulting currents from Atlas can always be
+doubled to account for this reflection. The intrinsic base is formed by
+a 100keV  phosphorus implant at the start of the process. Extrinsic
+base is formed by spacers on the sidewall of the emitter polysilicon.
+The emitter area is formed by p+ doped polysilicon directly deposited
+onto the silicon.
+</p>
+<p>
+At the end of the process, metal contacts are patterned to give an
+emitter contact on top of the polysilicon and a base contact to the
+right. These metal regions are defined as electrodes in Athena to
+prepare the structure for Atlas.
+</p>
+<p>
+The final step in the process simulation is to extract some process
+parameters. The base width is extracted by measuring the base/collector
+and emitter/base junctions individually and subtracting the two
+results. Using the 1D Poisson solver in DeckBuild, the sheet resistances
+of the base and polysilicon emitter region are obtained.
+</p>
+<p>
+The first of the two Atlas runs in this file is to extract the Gummel
+plot characteristics. From this plot the gain and fT can be obtained. The
+material parameters for polysilicon and silicon regions are set in
+separate lines in the Atlas input file.
+</p>
+<p>
+The material parameters for polysilicon reflect the low mobility and
+short carrier lifetimes seen in this material. They also contribute to
+the reduction in base current and consequent increase in gain seen in
+polysilicon emitter bipolar transistors. The effect of the native oxide
+layer that exists between the polysilicon and silicon is emulated by
+these material parameters.  The effect of the native oxide is to force
+recombination of carriers at the polysilicon/silicon interface rather
+than the carriers diffusing further in to emitter region. The short
+lifetime and low mobility in the polysilicon accomplish the same
+effect and have been widely used in polysilicon emitter bipolar device
+simulation.
+</p>
+<p>
+The Gummel plot is simulated at Vce=-2.0V by ramping Vbe from -0.4 to
+-1.0V. In addition to the DC solution, a small AC signal is also
+applied. This enables fT vs. Ic to be extracted.  The AC signal is
+specified using the parameter AC on the
+<b> solve </b> statement. The frequency
+of this signal is 1MHz. At the end of the solve sequence several device
+parameters are extracted: peak gain, peak collector current and peak
+fT.
+</p>
+<p>
+The second Atlas run extracts a family of Ic/Vce curves for different
+base currents. For each curve it is necessary to force a constant
+current through the base electrode. This is done using the current
+boundary condition set by
+<b> contact name=base current</b> .
+</p>
+<p>
+Since the base currents used are quite high, it is easier to first ramp
+the base voltage up close to the initial current level required. In
+this case Vbe is ramped to -0.7V. Then the current boundary conditions
+are applied and solutions for base currents of 1uA/um to 5uA/um were
+obtained. At each step in Ib a solution file is stored for later use.
+</p>
+<p>
+During the ramp up and storing of files with different Ib the collector
+voltage is left at ground. Next a sequence of statements is used to
+LOAD the stored file for a particular Ib value, open a
+<b> log </b> file for the
+results, and
+<b> solve </b> a ramp of collector voltage to -5V. This sequence is
+repeated for each Ib considered. Separate results files for each Ib
+value are recommended for use in TonyPlot and for extracting parameters
+from the results. It is possible to store all IV data output for this
+simulation into one file. A full bipolar extraction for SPICE models
+can be done by interfacing these log files with UTMOST.
+</p>
+<p>
+Finally some extraction on the Ic/Vce data with Ib=5uA/um is done. The
+peak current in mA, the peak slope in the linear region and the slope
+of the saturation region can all be obtained using
+<b> extract.</b> </p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

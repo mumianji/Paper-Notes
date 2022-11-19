@@ -1,0 +1,46 @@
+go victoryprocess
+
+# Number of annealing steps
+set steps=16
+# Initial step is 1 ms
+set t0=1e-3
+# Final step is 20 seconds
+set tfinal=20
+# Scale factor of the geometric progression
+set r = exp (log($tfinal/$t0)/($steps-1))
+# Current time step
+set dt=0
+# DBInternal  will assign current "trial" index to
+# variable 'trial_id'
+set trial_id=1
+# Calculate total annealing time which will
+# be used for plotting Xj vs time curve
+set total_time=$t0*(1 - pow($r,$trial_id))/(1-$r)
+
+# load the status from the previous steps
+load name=temp
+
+# Assign the five_stream diffusion model to the material silicon
+# Note : In oxide the default model is used
+method material=silicon model=five_stream
+
+diffuse time=$dt temp=950
+
+# export a temporary file to perform junction depth extraction
+export struct=jncd.str
+extract init infile="jncd.str"
+extract name="xj" xj silicon mat.occno=1 x.val=0.1 junc.occno=1
+extract name="time" $total_time
+
+# Save sructure files for each trial 
+if cond=($trial_id < 10)
+export struct=vpex08_0$'trial_id'.str
+else
+export struct=vpex08_$'trial_id'.str
+if.end 
+
+# Save status for subsequent step
+save name=temp
+
+quit
+

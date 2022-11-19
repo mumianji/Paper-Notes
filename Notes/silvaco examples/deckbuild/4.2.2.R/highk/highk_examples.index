@@ -1,0 +1,62 @@
+
+{section} HIGHK : High-k Gate Dielectric Application Examples
+
+
+{subsection} highkex01.in : Simulation of Remote Phonon Scattering Mobility
+
+
+Requires: S-Pisces
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+
+This simulation demonstrates the effects or remote phonon scattering
+on the effective mobility in high-k gate dielectric MISFET devices.
+
+It demonstrates:
+
+{bullet} Basic structure definition using Atlas syntax
+{newline}
+{bullet} Application of high-k remote phonon scattering mobility model
+{newline}
+{bullet} Using probe to extract effective mobility versus perpenicular field
+{newline}
+{bullet} Plotting output curves and structures.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+
+{subsection} highkex02.in :  Simulation of Remote Coulomb Scattering Mobility
+
+
+Requires: S-Pisces
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This simulation demonstrates the effects or remote coulomb scattering
+on the effective mobility in high-k gate dielectric MISFET devices.
+
+
+{bullet} Basic structure definition using Atlas syntax
+{newline}
+{bullet} Application of high-k remote Coulomb scattering mobility model
+{newline}
+{bullet} Using probe to extract effective mobility versus perpenicular field
+{newline}
+{bullet} Plotting output curves and structures.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+

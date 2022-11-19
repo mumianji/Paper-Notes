@@ -1,0 +1,32 @@
+{subsection} radex05.in : Defining a Sphere of Charge using C-Interpreter
+
+Requires: Device 3D/Luminous 3D/C-Interpreter
+{newline}
+Minimum Versions: Atlas 5.20.2.R
+
+This examples demonstrates the f3.radiate function by generating a 
+sphere of charge inside a cube of semiconductor material.
+
+
+Note that a generation value calculated by the C function for each XYZ
+location in the device. This value is multiplied by the value of the
+{bold} b1 
+of the 
+{bold} solve 
+statement before being applied.
+
+To load and run this example, select the
+{bold} Load example 
+button in DeckBuild. This will copy the input file and any support
+files to your current working directory. Select the
+{bold} run 
+button to execute the example.
+
+
+
+  
+
+
+
+
+

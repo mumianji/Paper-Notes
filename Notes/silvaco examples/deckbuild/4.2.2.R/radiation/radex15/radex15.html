@@ -1,0 +1,108 @@
+<html>
+  <head>
+    <title>6T SRAM SEU Simulation using MixedMode3D</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>6T SRAM SEU Simulation using MixedMode3D</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Victory Process2D / DevEdit 3D / Victory Mesh / Victory Device3D / MixedMode3D</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Victory Process 7.22.3.R / Devedit 2.8.26.R /</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="radex15_plot0.png" width="640" alt="radex15_plot0" />
+      <p/>
+      <img src="radex15_plot1.png" width="640" alt="radex15_plot1" />
+      <p/>
+      <img src="radex15_plot2.png" width="640" alt="radex15_plot2" />
+      <p/>
+      <img src="radex15_plot3.png" width="640" alt="radex15_plot3" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+Victory Mesh 1.2.4.R / Victory Device 1.12.1.R
+</p>
+<p>
+This example is a variant of radex14, where instead of using pure Spice to
+simulate an SEU strike on a 65nm SRAM cell, the SEU simulation section uses
+MixedMode3D instead.
+</p>
+<p>
+The Mixedmode3D simulation uses the same 65nm nMOS TACD structure that was
+calibrated against a PDK Spice model in radex14, and wraps the rest of the SRAM
+circuit around this TCAD structure using Mixedmode3D&apos;s Spice syntax.
+The TCAD structure is struck with a 1 LET single event when it is in it&apos;s low
+power configuration with an applied supply voltage of 0.85 volts, which
+represents the state of highest sensitivity to being upset by a single event.
+</p>
+<p>
+The data flow in this particular example occurs in the following sequence:
+</p>
+<ul>
+  <li>
+ The calibrated 65nm nMOS TCAD structure is the same one used in 
+the previous radex14 example
+<br/>
+  </li>
+  <li>
+ The 65nm nMOS TCAD only structure is biased into it&apos;s high sensitivity,
+low power off state, with Vd=0.85 Volts and Vs,Vg=0 Volts.
+This TCAD only structure, in this biased state, is then saved.
+<br/>
+  </li>
+  <li>
+ A new device simulation, this time in MixedMode3D, which contains the
+rest of the SRAM circuit, is then specified, and the previously
+saved biased TCAD structure is loaded, and it&apos;s biased condition
+initializes the circuit state.  The line which loads the TCAD
+structure intial state is:
+<b> .OPTIONS loadsolutions</b> <br/>
+  </li>
+  <li>
+ After the MixedMode3D simulation is complete, the solutions are 
+plotted at the end.
+<br/>
+  </li>
+</ul>
+<p>
+The energy of the Single Event Strike is characterized by a parameter called
+the
+<b> &quot;Linear Energy Transfer&quot;,</b> or
+<b> LET.  </b> The higher the LET, the greater the energy of the incoming particle or photon.
+In this example, the LET value of the incoming strike is set up as a variable,
+by the line
+<b> &quot;set LET=1&quot;,</b> which creates a variable called
+<b> &quot;$LET&quot;</b> and assigns it a unity value.  In order to convert the units of LET into units
+of pico Coulombs/um of track charge density, the
+<b> LET value needs to be multiplied by 0.01035 for silicon material.</b> A second variable called
+<b> &quot;$density&quot; </b> is assigned this converted pico coulomb value.  Lastly, the units of the strike
+are specified to be these same pico coulomb units, by the parameter
+<b> &quot;pcunits&quot; </b> in the
+<b> &quot;singleeventupset&quot; </b> statement that describes the time and track positional properties of the strike.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

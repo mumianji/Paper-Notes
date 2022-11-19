@@ -1,0 +1,76 @@
+set measurementtime=0.001
+go atlas
+mesh    
+x.m loc=0.0   spacing=0.1
+x.m loc=0.5   spacing=0.1 
+x.m loc=0.65   spacing=0.025 
+x.m loc=0.75  spacing=0.025
+x.m loc=0.9   spacing=0.005
+x.m loc=1.2   spacing=0.1
+x.m loc=1.5   spacing=0.1
+
+y.m loc=-0.02 spacing=0.005
+y.m loc=0.0   spacing=0.001
+y.m loc=0.1  spacing=0.025
+y.m loc=0.2  spacing=0.05
+y.m loc=0.4   spacing=0.05
+y.m loc=1.0   spacing=0.2
+y.m loc=2.0   spacing=0.5
+
+# REGIONS AND ELECTRODES
+region num=1 y.min=0 silicon
+region num=2 y.max=0.0 oxide
+elect num=1 name=gate x.min=0.5 length=0.5 y.min=-0.02 y.max=-0.02
+elect num=2 name=source left    length=0.2 y.min=0.0 y.max=0.0
+elect num=3 name=drain  right   length=0.2 y.min=0.0 y.max=0.0
+elect num=4 name=substrate substrate
+# DEVICE DOPING
+doping uniform p.type conc=2.e16
+doping gauss p.type conc=1.e17 char=0.1
+doping gauss n.type conc=1.e20 x.right=0.5 junc=0.2 ratio=0.6
+doping gauss n.type conc=1.e20 x.left=1.0 junc=0.2 ratio=0.6
+
+contact num=1 n.polysilicon
+
+inttrap e.level=0.6 acceptor density=1.0e12 s.i degen=4 sign=1.0e-13 sigp=1.0e-14 x.min=0.6 x.max=0.9 heiman depth=0.002 hpoints=20
+
+probe name=acc_ft1 ftacc.inttrap x=0.6 y=0.0
+probe name=acc_ft2 ftacc.inttrap x=0.65 y=0.0
+probe name=acc_ft3 ftacc.inttrap x=0.7 y=0.0
+probe name=acc_ft4 ftacc.inttrap x=0.75 y=0.0
+probe name=acc_ft5 ftacc.inttrap x=0.8 y=0.0
+probe name=acc_ft6 ftacc.inttrap x=0.85 y=0.0
+probe name=acc_ft7 ftacc.inttrap x=0.9 y=0.0
+probe name=pconc p.conc x=0.75 y=0.0001
+models temp=300 mos
+
+# SOLUTIONS
+solve init 
+
+solve prev
+solve vdrain=0.01
+solve vdrain=0.025
+solve vdrain=0.05
+solve vdrain=0.1
+solve vdrain=0.2
+solve vdrain=0.5
+
+log outf=mos2ex19_0.log
+solve vstep=0.1 name=gate vfinal=3.0 timespan=$measurementtime
+
+extract name="vt_abs_fwd" x.val from curve(v."gate",i."drain") where y.val=1.0e-5 \
+
+log off
+
+# This solve prev would set the trap occupations probabilities to 
+# steady state values
+#solve prev
+
+log outf=mos2ex19_1.log
+solve vgate=3.0 vstep=-0.1 name=gate vfinal=0.0 timespan=$measurementtime
+
+extract name="vt_abs_bwd" x.val from curve(v."gate",i."drain") where y.val=1.0e-5 \
+
+extract name="Threshold Voltage Difference" ($"vt_abs_bwd" - $"vt_abs_fwd")
+
+log off

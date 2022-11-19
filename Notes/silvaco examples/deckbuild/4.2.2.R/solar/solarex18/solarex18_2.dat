@@ -1,0 +1,37 @@
+v DBInternal
+# silvaco.file ASCII version=1.14.23 format=1 contents=SDB,Tables=1
+
+Copyright "###################################################################"
+Copyright "#                    Copyright Silvaco Inc. (c)                   #"
+Copyright "#                            1992-2014                            #"
+Copyright "#                                                                 #"
+Copyright "# This file format and the following Key are copyright Silvaco    #"
+Copyright "# International. You may not use, this format or key without      #"
+Copyright "# reproducing this message in full and obtaining                  #"
+Copyright "# express written permission from Silvaco Inc.                    #"
+Copyright "#                                                                 #"
+Copyright "# To obtain such permission please contact: Silvaco Inc.          #"
+Copyright "#                                           support@silvaco.com   #"
+Copyright "#                                                                 #"
+Copyright "# KEY=SVC86hn7562asdx                       PROD=345              #"
+Copyright "###################################################################"
+#dbinternal 2.11.7.R (Thu Feb  8 16:02:37 GMT 2018)
+#libSDB 1.12.42 (Thu Oct 26 19:20:24 PDT 2017)
+p 11 10000 10001 10002 10003 10004 10005 10006 10007 10008 10009 10010
+d 1 50 37.320399999999999 0.700509 3.5711299999999998e-07 0.599994 5.9519399999999998e-07 6.5310700000000003e-07 78.056200000000004 0.0998997 20.4269
+d 2 100 37.176900000000003 0.700532 3.6553999999999998e-07 0.6 6.0923299999999999e-07 6.6918399999999997e-07 77.976100000000002 0.0998997 20.328199999999999
+d 3 200 36.860500000000002 0.700571 3.8183199999999997e-07 0.6 6.3638700000000002e-07 7.0034899999999997e-07 77.822599999999994 0.0998997 20.116599999999998
+d 4 300 36.518900000000002 0.700622 3.9739599999999999e-07 0.599994 6.6233299999999995e-07 7.3037799999999995e-07 77.659000000000006 0.0998997 19.889700000000001
+d 5 500 35.778199999999998 0.700711 4.2635600000000001e-07 0.599991 7.1060400000000003e-07 7.8711999999999997e-07 77.302300000000002 0.0998997 19.3993
+Q 10000 1 ex_id
+Q 10001 1 gap
+Q 10002 1 JscmAcm2
+Q 10003 1 Voc
+Q 10004 1 Pm
+Q 10005 1 Vm
+Q 10006 1 Im
+Q 10007 1 Jsc
+Q 10008 1 FF
+Q 10009 1 intens
+Q 10010 1 Eff
+EOF 657569429

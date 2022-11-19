@@ -1,0 +1,26 @@
+go athena
+
+#TITLE: Calibration of Thin WetO2 Oxidation
+
+#the x dimension definition
+line x loc = 0.0 
+line x loc = 0.25  spacing=0.25
+
+#the vertical definition
+line y loc = 0     spacing = 0.02 
+line y loc = 0.50  spacing = 0.02
+line y loc = 2.0   spacing = 0.25 
+
+#initialize the mesh
+init silicon c.phos=1.0e14
+oxide silicon weto2 orient=100 thinox.0 =6.57e6 thinox.e =2.32 thinox.l=0.078 thinox.p=1.0
+#perform diffusion
+diffuse time=30 temperature=820 wetO2 press=0.2
+#
+extract name="tox1" thickness material="SiO~2" mat.occno=1 x.val=0
+
+diffuse time=60 temperature=820 wetO2 press=0.2
+#
+extract name="tox2" thickness material="SiO~2" mat.occno=1 x.val=0
+
+quit

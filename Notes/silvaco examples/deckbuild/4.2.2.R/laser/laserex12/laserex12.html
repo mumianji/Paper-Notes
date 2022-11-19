@@ -1,0 +1,69 @@
+<html>
+  <head>
+    <title>Silicon p-i-n Waveguide Modulator</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Silicon p-i-n Waveguide Modulator</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Blaze/Quantum/Laser</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="laserex12_plot0.png" width="640" alt="laserex12_plot0" />
+      <p/>
+      <img src="laserex12_plot1.png" width="640" alt="laserex12_plot1" />
+      <p/>
+      <img src="laserex12_plot2.png" width="640" alt="laserex12_plot2" />
+      <p/>
+      <img src="laserex12_plot3.png" width="640" alt="laserex12_plot3" />
+      <p/>
+      <img src="laserex12_plot4.png" width="640" alt="laserex12_plot4" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demostrates a simulation of Si p-i-n  modulator using a WAVEGUIDE statement.
+The modulation mechanism is based on electroabsorption by free-carriers, which are injected into the waveguide.
+The free-carrier absorption model, specified by ABS.FCARRIER on the MODELS statement, can be modified
+n the MATERIAL statement using parameters FC.AN, FC.AP, FC.RN, FC.RP, etc.
+</p>
+<p>
+Local refractive index at a particular location can be stored into the IV log file  using PROBE statement.
+In addition, a dispersion of local refractive index can be stored in a separate file, using SAVE statement and REFR.SPEC parameter.
+</p>
+<p>
+The WAVEGUIDE statement can be used as a standlone optical eigen solver for a one-time solution. If TRACE parameter is added to the WAVEGUIDE statement, eigen modes are solved at each bias point as a post-processing.
+In such case, when WVGD.REFR is specified on the OUTPUT statement,  IV log file contains effective refractive index and absorption for each optical mode.
+</p>
+<p>
+The results show 2D plot of intensity  pattern for the fundamental mode at light wavelength of 1.31 micron at zero bias.
+Dispersion of local refractive index is stored in laserex12_refrspec_v0.log.
+The IV log file contains indormation on  effective  refractive index and effective absorption for each transverse  mode and also local refractive index at p-,i- and n-type side of the device.
+Time dependent simulation shows how effective refractive indexes are modulated with time and the coresponding eye diagram.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

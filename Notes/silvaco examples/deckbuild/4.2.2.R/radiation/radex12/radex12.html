@@ -1,0 +1,91 @@
+<html>
+  <head>
+    <title>Proton Irradiation Damage in a CMOS Image Sensor</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Proton Irradiation Damage in a CMOS Image Sensor</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Victory Process/Victory Mesh/Victory Device/REM</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Victory Process 7.22.3.R, Victory Mesh 1.2.4.R, Victory Device 1.12.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="radex12_plot0.png" width="640" alt="radex12_plot0" />
+      <p/>
+      <img src="radex12_plot1.png" width="640" alt="radex12_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This examples demonstrates Proton Irradiation Damage in a CMOS Image Sensor
+</p>
+<p>
+This example uses Victory Process Cell mode to create a CMOS image sensor (CIS)
+complete with two pass transistors.  The image sensor was then irradiated with
+a damaging fluence of protons in several stages, and the damage effects on the
+performance of the image sensor were monitored.
+</p>
+<p>
+In order to speed up the process simulation, initially 1D Monte-Carlo implant
+simulations were stored as data files and imported into Victory Process Cell
+mode using the
+<b> Profile</b> statement.  Other implants used the 3D Monte-Carlo BCA simulator in the normal
+way.
+</p>
+<p>
+During Device simulations, the level of electron depletion in the active
+section of the image sensor was monitored using the
+<b> Probe n.conc</b> statement.  Electrostatic potentials were also monitored using this method.
+</p>
+<p>
+The image sensor was pulsed into deep electron depletion, and then monitored
+with time, to see how long it took for thermal generation to re-fill the active
+region of the image sensor.   The longer the time for thermal generation to
+refill the depleted active region, the more versitile the image sensor will be.
+</p>
+<p>
+Once a baseline time was established for the un-damaged image sensor, the
+sensor was subject to proton fluxes of 1e10, 1e11 and 1e12 proton/cm2 and the
+dark recovery time was re-tested to observe the effects of the proton induced
+damage.  In this example, rather than use LOOP statements, the internal
+<b> Design of Experiments (DoE)</b> feature of deckbuild was used, using the
+<b> sweep</b> parameter to define the levels of proton irradiation per cm2.  It was found
+that the damage was slight but noticable for a flux of 1e10 protons/cm2 but the
+final proton flux of 1e12/cm2 was sufficient to render the image sensor non
+operational.  When viewing the electrical results, it must be bourne in mind
+that the proton damage also damages the pass transistors, which effects the
+whole operation of the sensor.
+</p>
+<p>
+The proton flux is set up using the
+<b> radiation proton energy=1.8 fluence=&lt;p/cm2&gt;</b> statement, with the total fluence being the variable in the Design of
+Experiments.  The damage rate and non ionizing energy loss are set on the
+<b> material dam.proton=1e3 dam.niel=3.1</b> statement.  The capture cross sections for the proton damage created defects is
+set using the
+<b> defects fluence.model</b> statement.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

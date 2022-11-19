@@ -1,0 +1,112 @@
+# TPCS version: 7
+# various properties
+log label 0
+key opaque 0
+mark frequency 0
+mark overlay 0
+graph width 0 1
+graph width 1 1
+graph width 2 1
+graph width 3 1
+graph width 4 3
+graph width 5 1
+sequence size 3
+sequence width 1
+log zero 0
+sequence mark 0 0
+sequence mark 1 1
+sequence mark 2 2
+sequence mark 3 3
+sequence mark 4 4
+sequence mark 5 5
+# Functions
+function 1 "" ""
+function 2 "" ""
+function 3 "" ""
+function 4 "" ""
+select 1
+# xsection flags
+show mesh off
+show edges on
+show materials off
+show points off
+show lines on
+# xsection impurities
+xsection impurity none
+xsection impurity "Conduction Band Energy"
+xsection impurity "Valence Band Energy"
+# key positions
+key contours 1 at 3
+key contours 2 at 1
+key contours 3 at 6
+key electrical at 1
+key vectors at 6
+key overlay at 4
+key regions at 0
+key apply 
+# annotation, titles
+title main "Band profile"
+title sub "for a gated slice"
+# annotation, footers
+footer right none
+footer left none
+# annotation, show
+show xaxis on
+show yaxis on
+show grid off
+show label xaxis on
+show label yaxis on
+# annotation, axes
+range xaxis 0.1, 0.51 increment 0.1,5
+range yaxis -1.5, 0.8 increment 0.4,4
+label xaxis "y [um]"
+label yaxis "Electron energy [eV]"
+# zoom
+zoom from 0, 0 scale 1, 1
+# user labels
+# overlay level names
+label overlay 0 "Vg=-0.3 V"
+label overlay 1 "Vg=0.0 V"
+label overlay 2 "Vg=+0.4 V"
+select 2
+# xsection flags
+show mesh off
+show edges on
+show materials off
+show points off
+show lines on
+# xsection impurities
+xsection impurity none
+xsection impurity "Donor Conc"
+xsection impurity "Electron Conc"
+# key positions
+key contours 1 at 3
+key contours 2 at 1
+key contours 3 at 6
+key electrical at 1
+key vectors at 6
+key overlay at 4
+key regions at 0
+key apply 
+# annotation, titles
+title main "Electron and donor concentration"
+title sub "for Vg=0.0 V"
+# annotation, footers
+footer right none
+footer left none
+# annotation, show
+show xaxis on
+show yaxis on
+show grid off
+show label xaxis on
+show label yaxis on
+# annotation, axes
+range xaxis 0.1, 0.81 increment 0.1,5
+range yaxis 10, 18 increment 1,8
+label xaxis "y [um]"
+label yaxis "log ( Concentrations [/cm3] )"
+# zoom
+zoom from 0, 0 scale 1, 1
+# user labels
+# overlay level names
+label overlay 0 "mercury02_4.str"

@@ -1,0 +1,22 @@
+go athena
+# Comparison of Well-Channeled Profiles with Experiments
+line x loc = 0.0  spac=0.1
+line x loc = 1.0  spac=0.1
+line y loc = 0    spac=0.01
+line y loc = 1.   spac=0.01
+init 
+implant boron energy=40 dose=1.e13 tilt=0 rotation=0 print.mom
+struct outfile=aniiex04_1.str
+extract name="b1" curve(depth,impurity="Boron" material="Silicon" mat.occno=1 \
+        x.val=-10) outfile="aniiex04_1.dat"
+line x loc = 0.0  spac=0.1
+line x loc = 1.0  spac=0.1
+line y loc = 0    spac=0.01
+line y loc = 1.   spac=0.01
+init one.d
+implant boron energy=80 dose=1.e13 tilt=0 rotation=0 print.mom
+struct outfile=aniiex04_2.str
+extract name="b2" curve(depth,impurity="Boron" material="Silicon" mat.occno=1 \
+        x.val=-10) outfile="aniiex04_2.dat"
+tonyplot -overlay aniiex04_1.dat aniiex04_2.dat aniiex04_1.exp  aniiex04_2.exp  -set aniiex04.set
+quit

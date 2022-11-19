@@ -1,0 +1,85 @@
+# TPCS version: 8
+# various properties
+log label 1
+key opaque 0
+mark frequency 0
+mark overlay 0
+graph width 0 2
+graph width 1 1
+graph width 2 1
+graph width 3 1
+graph width 4 3
+graph width 5 1
+sequence size 1
+sequence width 0
+log zero 0
+sequence mark 0 0
+sequence mark 1 1
+sequence mark 2 2
+sequence mark 3 3
+sequence mark 4 4
+sequence mark 5 5
+# Functions
+function 1 "" ""
+function 2 "" ""
+function 3 "" ""
+function 4 "" ""
+select 1
+# xygraph flags
+show points on
+show lines on
+# xygraph types
+xygraph type 0 convert 0
+xygraph yaxis scale log
+# xygraph x-axis
+xygraph xaxis "gate bias" linear
+# xygraph y-axes
+xygraph yaxis none
+xygraph yaxis "Drain_253K" log
+xygraph yaxis "Drain_273K" log
+xygraph yaxis "Drain_300K" log
+xygraph yaxis "Drain_313K" log
+xygraph yaxis "Drain_333K" log
+xygraph yaxis "Drain_358K" log
+xygraph yaxis "Drain_393K" log
+# xygraph group
+xygraph group "(unknown electricals)"
+# xygraph cie
+xygraph cie off
+# coordinate shift info
+# key positions
+key contours 1 at 3
+key contours 2 at 1
+key contours 3 at 6
+key electrical at 0
+key vectors at 6
+key overlay at 1
+key regions at 4
+key apply 
+# annotation, titles
+title main "Transfer cureves at VD=0.1 V (T=253, 273, 300, 313, 333, 358 and 393 K)"
+title sub "Comparison between measurement and calculation"
+# annotation, footers
+footer right none
+footer left none
+# annotation, show
+show xaxis on
+show yaxis on
+show grid off
+show label xaxis on
+show label yaxis on
+# annotation, axes
+range xaxis auto
+range yaxis -14, -6 increment 1,8,0
+label xaxis "Gate voltage [V]"
+label yaxis "Drain current [A]"
+# zoom
+zoom from 0, 0 scale 1, 1
+# user labels
+label "253 K" from 4.79201, -8.90909 color 0 scale 1
+label 0 at 7 7
+label "393 K" from 1.14053, -8.36991 color 0 scale 1
+label 1 at 7 7
+# overlay level names
+label overlay 0 "Measurement"
+label overlay 1 "Simulation"

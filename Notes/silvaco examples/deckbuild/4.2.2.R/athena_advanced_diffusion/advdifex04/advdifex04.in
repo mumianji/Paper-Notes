@@ -1,0 +1,23 @@
+go athena
+
+line  x loc=0	 spacing=0.2
+line  x loc=0.4	 spacing=0.2
+line  y loc=0.0	 spacing=0.002
+line  y loc=0.05 spacing=0.004
+line  y loc=2.0	 spacing=0.1
+
+init silicon c.boron=1.0e12 orientation=100
+
+method pls ic ddc
+
+implant boron dose=5.0e14 energy=20 rotation=27 crystal unit.dam dam.factor=1.0 
+
+struct outfile=advdifex04_ini.str
+
+diffuse time=35 min temp=800
+
+struct outfile=advdifex04_end.str
+
+tonyplot -overlay advdifex04_ini.str advdifex04_ini_exp.str advdifex04_end.str advdifex04_end_exp.str -set advdifex04.set
+
+quit

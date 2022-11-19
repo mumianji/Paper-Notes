@@ -1,0 +1,103 @@
+# First create New Logical combination mask set
+
+go clever
+
+Init Layout="clex17_0.lay" Depth=1.0 Silicon  Map="clex17.lmp"
+Save Layout="clex17_1.lay" Spice="clex17_0.net"
+
+
+# Now build the structure using VictoryProcess Cell Mode
+go victoryprocess
+
+Init Layout="clex17_1.lay" Depth=1 material=Silicon
+
+Electrodes Substrate
+
+set accuracy=0.0025
+
+# Trench Etch
+lithography mask=AA maskcriticalintensity=0.5 maskaperture=0.5 \
+            maskdefocus=0 wavelength=0.248
+Etch material=Silicon Thickness=0.5 angle=87 dry mask=AA_LITHO \
+     tolerance=$accuracy
+
+# Intrinsic gate oxide capacitance is already in Spice Model card, so
+# create a low permittivity active gate oxide layer to remove intrinsic Cox
+Deposit material=Oxide Thickness=0 Max
+Deposit Material=Gateox Thickness=0.01 Max
+Etch material=Gateox Thickness=0.1 max mask=*GATE reverse
+Deposit material=Oxide Thickness=0 Max
+
+# Poly Gate formation
+Deposit material=Poly Thickness=0.2 Max
+lithography mask=poly maskcriticalintensity=0.5 maskaperture=0.5 \
+            maskdefocus=0 wavelength=0.248
+Etch material=Polysilicon Thick=0.22 angle=87 dry mask=poly_LITHO \
+     tolerance=$accuracy
+Electrodes mask=*GATE material=Polysilicon
+
+# Contacts
+Deposit material=Oxide Thickness=0.4 Max
+lithography mask=cont reverse maskcriticalintensity=0.5 maskaperture=0.5 \
+            maskdefocus=0 wavelength=0.248
+Etch material=oxide Thick=0.66 angle=87 dry mask=cont_LITHO \
+     tolerance=$accuracy
+# Stop Source/Drain/Substrate Contacts Shorting to Substrate
+deposit material=Gateox thickness=-0.6 max
+electrodes mask=*CONT material=Gateox
+
+# Metal 1
+Deposit material=Aluminum Thickness=0.6 Max
+lithography mask=M1 maskcriticalintensity=0.5 maskaperture=0.5 \
+            maskdefocus=0 wavelength=0.248
+Etch material=aluminum Thick=0.66 angle=87 dry mask=M1_LITHO \
+     tolerance=$accuracy
+Electrodes mask=M1 material=Aluminum
+
+# M1 to M2 Vias
+deposit material=oxide thickness=1 max
+lithography mask=via1 reverse maskcriticalintensity=0.5 maskaperture=0.5 \
+            maskdefocus=0 wavelength=0.248
+Etch material=oxide Thick=1.1 angle=87 dry mask=via1_LITHO \
+     tolerance=$accuracy
+
+# Metal 2
+Deposit material=Aluminum Thickness=0.8 Max
+lithography mask=M2 maskcriticalintensity=0.5 maskaperture=0.5 \
+            maskdefocus=0 wavelength=0.248
+Etch material=aluminum Thick=0.88 angle=87 dry mask=M2_LITHO \
+     tolerance=$accuracy
+Electrodes mask=M2 material=aluminum
+
+# M1 to M2 Vias
+Deposit material=Oxide Thickness=0.6 Max
+lithography mask=via2 reverse maskcriticalintensity=0.5 maskaperture=0.5 \
+            maskdefocus=0 wavelength=0.248
+Etch material=oxide Thick=1.1 angle=87 dry mask=via2_LITHO \
+     tolerance=$accuracy
+
+# Metal 3
+Deposit material=Aluminum Thickness=1 Max
+lithography mask=M3 maskcriticalintensity=0.5 maskaperture=0.5 \
+            maskdefocus=0 wavelength=0.248
+Etch material=aluminum Thick=1.1 angle=87 dry mask=M3_LITHO \
+     tolerance=$accuracy
+Electrodes mask=M3 Aluminum
+
+# Passivation
+deposit material=oxide thick=1 max
+
+export clever(unstructured) structure=clex17.str
+
+
+go clever
+
+Init Layout="clex17_0.lay" Depth=1.0 Silicon Map="clex17.lmp" \
+     structure="clex17.str"
+
+Material Silicon Conductivity=1000
+Material Material("Gateox") Perm=0.01
+
+Interconnect AdaptC=0.05 AdaptR=0.05
+
+Save Spice="clex17_1.net" 

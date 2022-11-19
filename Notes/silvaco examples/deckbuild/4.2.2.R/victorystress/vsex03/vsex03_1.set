@@ -1,0 +1,220 @@
+silvaco.file ASCII version=1.14.13 format=1
+""
+#non-visible objects
+number-of-non-visible-objects 1
+non-visible-object "Material Gas"
+
+#non-enable-contour objects
+number-of-non-enable-contour-objects 0
+
+#Cut Plane Settings
+point_1 0 0 0
+point_2 1 0 0
+point_3 0 0 1
+three_points 0
+PAN 0
+PITCH 90
+ELEV 1
+
+#Cut Plane Axes Settings
+X_REVERSE 0
+Y_REVERSE 0
+XY_SWAP 0
+
+#Region Properties
+region "Region #1" 0 0 4
+region "Region #2" 0 0 4
+region "Region #3" 0 0 4
+region "Region #4" 0 0 4
+region "Region #5" 0 0 4
+region "Region #6" 0 0 4
+region "Region #7" 0 0 4
+region "Region #9" 0 0 4
+region "Region #10" 0 0 4
+region "Region #11" 0 0 4
+region "Region #12" 0 0 4
+region "Region #13" 0 0 4
+region "Region #14" 0 0 4
+region "Region #21" 0 0 4
+region "Region #27" 0 0 4
+region "Region #28" 0 0 4
+region "Region #29" 0 0 4
+region "Region #30" 0 0 4
+region "Region #31" 0 0 4
+region "Region #8" 0 0 4
+region "Region #15" 0 0 4
+region "Region #16" 0 0 4
+region "Region #17" 0 0 4
+region "Region #18" 0 0 4
+region "Region #19" 0 0 4
+region "Region #20" 0 0 4
+region "Region #22" 0 0 4
+region "Region #23" 0 0 4
+region "Region #24" 0 0 4
+region "Region #25" 0 0 4
+region "Region #26" 0 0 4
+
+#Region Labels
+region_label "Region #1" "Region #1" 1 0 0 0
+region_label "Region #2" "Region #2" 1 0 0 0
+region_label "Region #3" "Region #3" 1 0 0 0
+region_label "Region #4" "Region #4" 1 0 0 0
+region_label "Region #5" "Region #5" 1 0 0 0
+region_label "Region #6" "Region #6" 1 0 0 0
+region_label "Region #7" "Region #7" 1 0 0 0
+region_label "Region #9" "Region #9" 1 0 0 0
+region_label "Region #10" "Region #10" 1 0 0 0
+region_label "Region #11" "Region #11" 1 0 0 0
+region_label "Region #12" "Region #12" 1 0 0 0
+region_label "Region #13" "Region #13" 1 0 0 0
+region_label "Region #14" "Region #14" 1 0 0 0
+region_label "Region #21" "Region #21" 1 0 0 0
+region_label "Region #27" "Region #27" 1 0 0 0
+region_label "Region #28" "Region #28" 1 0 0 0
+region_label "Region #29" "Region #29" 1 0 0 0
+region_label "Region #30" "Region #30" 1 0 0 0
+region_label "Region #31" "Region #31" 1 0 0 0
+region_label "Region #8" "Region #8" 1 0 0 0
+region_label "Region #15" "Region #15" 1 0 0 0
+region_label "Region #16" "Region #16" 1 0 0 0
+region_label "Region #17" "Region #17" 1 0 0 0
+region_label "Region #18" "Region #18" 1 0 0 0
+region_label "Region #19" "Region #19" 1 0 0 0
+region_label "Region #20" "Region #20" 1 0 0 0
+region_label "Region #22" "Region #22" 1 0 0 0
+region_label "Region #23" "Region #23" 1 0 0 0
+region_label "Region #24" "Region #24" 1 0 0 0
+region_label "Region #25" "Region #25" 1 0 0 0
+region_label "Region #26" "Region #26" 1 0 0 0
+
+#Overlay Properties
+overlay_mode_active 0
+
+#Define the scene matrix
+sm_00 0.93719628817002254
+sm_01 -0.34877802435146721
+sm_02 0.0041239750021926395
+sm_03 -6.6572381836419936
+
+sm_10 0.1851115679176254
+sm_11 0.50736189109514118
+sm_12 0.84161607570639763
+sm_13 -4.0226572060748733
+
+sm_20 -0.29562953990325397
+sm_21 -0.7879960667375473
+sm_22 0.54006052803619986
+sm_23 22.497511278567117
+
+sm_30 0
+sm_31 0
+sm_32 0
+sm_33 1
+
+#Define the camera matrix
+cm_00 1
+cm_01 0
+cm_02 0
+cm_03 0
+
+cm_10 0
+cm_11 1
+cm_12 0
+cm_13 0
+
+cm_20 0
+cm_21 0
+cm_22 1
+cm_23 -56.694011595146002
+
+cm_30 0
+cm_31 0
+cm_32 0
+cm_33 1
+
+#Define the scene scaling factors
+ss_xyz 1 1 1
+
+#Define 3D projection
+proj_3d_aspect 1.097799511002445
+proj_3d_z_near 32.032323113730875
+proj_3d_z_far 49.963823559809619
+proj_3d_height 22.692490657698936
+proj_3d_fovy 25
+proj_3d_type 0
+proj_3d_depth_cue 2
+
+coord_selection 0
+coord_type 0
+
+modelview_x_scale 0
+modelview_y_scale 0
+modelview_z_scale 1
+
+#Global BBox Settings
+global_bbox_min -0.78033541916281113 -0.78033541916281113 -0.93233541916281126
+global_bbox_max 18.170503128744215 10.670503128744219 2.1705031287442162
+
+#Define x-y-z Axis Visibility
+x_axis_visibility 1
+y_axis_visibility 1
+z_axis_visibility 1
+
+#Define Legend Visibility
+contour_legend 1
+region_legend 1
+
+#Define the DisplayMode
+display_mode_id 1
+
+#Define Show Cut Plane
+show_cut_plane 0
+
+#Define Show Cut Plane X Y Axes
+show_cut_plane_x_axis 1
+show_cut_plane_y_axis 1
+
+#Define the DrawMode
+draw_mode_id 0
+
+#Define the Region_Color_Type
+region_color_type 0
+
+#Define Title and Subtitle
+title "Victory Process (cell mode) - Save"
+sub_title "Data from vsex03_1_vp_ex.str"
+user_title ""
+user_sub_title ""
+mat_info "Electrodes 0 1"
+mat_info "Tungsten 55 1"
+mat_info "nisi 4 1"
+mat_info "psg 12 1"
+
+#Define light0 and light1 information
+light0_enabled 1
+light0_color 255 255 255
+light0_intensity 0.53
+light0_latitude 30
+light0_longitude 0
+
+light1_enabled 1
+light1_color 255 255 255
+light1_intensity 0.53
+light1_latitude 0
+light1_longitude 270
+
+#Define contours information
+imp_menu_index 0
+name-of-doping ""
+limit_select_type 0
+auto_max_limit 1
+auto_min_limit 1
+contour_max_imp_value 0
+contour_min_imp_value 0
+legend_type 0
+legend_auto_mapping 1
+legend_mapping 0
+legend_palette 0
+legend_nbr_of_colors 5
+
+EOF 94969512

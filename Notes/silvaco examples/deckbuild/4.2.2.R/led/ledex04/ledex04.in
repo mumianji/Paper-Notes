@@ -1,0 +1,182 @@
+# (c) Silvaco Inc., 2018
+go atlas
+#
+# Rectangle Domain vs Cylindrical Domain
+#
+# Simulates a simple LED device
+#
+# Rectangle Domain
+#-------------------------------------------------------------
+# SECTION 1: MESH GENERATION
+#-------------------------------------------------------------
+# 4 um X 4 um
+#
+mesh space.mult=1.0 ^diag.flip width=12.566
+#
+x.mesh l=0.0  spacing=0.1
+x.mesh l=1.5  spacing=0.1
+x.mesh l=2.5  spacing=0.1
+x.mesh l=4.0  spacing=0.1
+#
+y.mesh l=0.0  spacing=0.1
+y.mesh l=0.5  spacing=0.002
+y.mesh l=0.75 spacing=0.05
+y.mesh l=1.0  spacing=0.002
+y.mesh l=1.1  spacing=0.002
+y.mesh l=1.35 spacing=0.05
+y.mesh l=1.6  spacing=0.002
+y.mesh l=2.0  spacing=0.1
+y.mesh l=3.0 spacing=0.2
+y.mesh l=4.0  spacing=0.1
+#
+#-------------------------------------------------------------
+# SECTION 2: REGIONS AND ELECTRODES
+#-------------------------------------------------------------
+# (graded heterojunctions outside of cladding layers)
+#
+region num=1 Material=GaAs   y.max=0.5
+region num=2 Material=AlGaAs y.min=0.5 y.max=1.0 x.comp=0.35
+# grad.12=0.1
+region num=3 Material=GaAs   y.min=1.0 y.max=1.1
+region num=4 Material=GaAs   y.min=1.6
+region num=5 Material=AlGaAs y.min=1.1 y.max=1.6 x.comp=0.35
+# grad.34=0.1
+#
+elec       num=1  name=anode   x.max=1.5 top
+elec       num=2  name=cathode x.min=3.0 bottom
+#
+#-------------------------------------------------------------
+# SECTION 3: DOPING PROFILES
+#-------------------------------------------------------------
+#
+doping uniform region=1 p.type conc=1.e18
+doping uniform region=2 p.type conc=1.e18
+doping uniform region=3 p.type conc=1.e15
+doping uniform region=4 n.type conc=2.e18
+doping uniform region=5 n.type conc=2.e18
+#
+save outf=ledex04_0.str
+#
+#---------------------------------------------------------------
+# SECTION 4: MATERIAL MODELS
+#---------------------------------------------------------------
+#
+# (radiative recombination constants same for AlGaAs and GaAs )
+#
+material copt=1.5e-10
+material material=GaAs   mun=6500 vsat=1.e7
+material material=AlGaAs mun=2000 align=0.6
+
+model fermi auger optr srh print
+#
+#----------------------------------------------------------------
+# SECTION 5: OUTPUT FLAGS
+#----------------------------------------------------------------
+#
+output con.band val.band band.param recomb u.srh u.aug u.rad flowlines
+#
+#----------------------------------------------------------------
+# SECTION 6: INITIAL SOLUTION
+#----------------------------------------------------------------
+#
+solve init
+solve prev
+#
+save outf=ledex04_1.str
+#
+#-----------------------------------------------------------------
+# SECTION 7: BIAS RAMP 
+#-----------------------------------------------------------------
+#
+probe name="Recombination" recombination integrate \
+      left=0 right=4 top=1.0 bottom=1.1
+probe name="Radiative" radiative integrate \
+      left=0 right=4 top=1.0 bottom=1.1
+# 0.0 to 2.0 V forward bias
+#
+method newton climit=1e-4 maxtrap=10
+
+log outf=ledex04_1.log master
+    solve  l.wave=0.8 vanode=0.0 vstep=0.05 vfinal=1.5 name=anode 
+    save outfile=ledex04_2.str
+    solve  l.wave=0.8 vstep=0.05 vfinal=2.0 name=anode 
+    save outfile=ledex04_3.str
+log off
+#
+go atlas
+#-------------------------------------------------------------
+# SECTION 1: MESH GENERATION
+#-------------------------------------------------------------
+# 4 um X 4 um
+#
+mesh inf=ledex04_0.str cylindrical
+#
+#---------------------------------------------------------------
+# SECTION 4: MATERIAL MODELS
+#---------------------------------------------------------------
+#
+# (radiative recombination constants same for AlGaAs and GaAs )
+#
+material copt=1.5e-10
+material material=GaAs   mun=6500 vsat=1.e7
+material material=AlGaAs mun=2000 align=0.6
+
+model fermi auger optr srh print
+#
+#----------------------------------------------------------------
+# SECTION 5: OUTPUT FLAGS
+#----------------------------------------------------------------
+#
+output con.band val.band band.param recomb u.srh u.aug u.rad flowlines
+#
+#----------------------------------------------------------------
+# SECTION 6: INITIAL SOLUTION
+#----------------------------------------------------------------
+#
+solve init
+solve prev
+#
+save outf=ledex04_4.str
+#
+#-----------------------------------------------------------------
+# SECTION 7: BIAS RAMP 
+#-----------------------------------------------------------------
+#
+probe name="Recombination" recombination integrate \
+      left=0 right=4 top=1.0 bottom=1.1
+probe name="Radiative" radiative integrate \
+      left=0 right=4 top=1.0 bottom=1.1
+# 0.0 to 2.0 V forward bias
+#
+method newton climit=1e-4 maxtrap=10
+#
+log outf=ledex04_2.log master
+    solve  l.wave=0.8 vanode=0.0 vstep=0.05 vfinal=1.5 name=anode 
+    save outfile=ledex04_5.str
+    solve  l.wave=0.8 vstep=0.05 vfinal=2.0 name=anode 
+    save outfile=ledex04_6.str
+log off
+#
+#------------------------------------------------------------------
+# SECTION 8: PLOTTING CURVES and Comparing
+#------------------------------------------------------------------
+
+# bias vs anode current
+tonyplot -overlay ledex04_1.log ledex04_2.log -set ledex04_1.set
+tonyplot -overlay ledex04_1.log ledex04_2.log -set ledex04_2.set
+
+# anode current vs luminous power
+extract init infile="ledex04_1.log"
+extract name="I-L" curve(1e3*i."anode", 1e3*elect."luminescent power") outfile="ledex04_1.dat"
+extract init infile="ledex04_2.log"
+extract name="I-L" curve(1e3*i."anode", 12.566*1e3*elect."luminescent power") outfile="ledex04_2.dat"
+
+tonyplot -overlay ledex04_1.dat ledex04_2.dat -set ledex04_3.set
+
+# structure plot
+# Current Flowlines
+tonyplot ledex04_2.str ledex04_5.str -set ledex04_4.set
+# radiative recombination rate and Current Flowlines contours
+tonyplot ledex04_3.str ledex04_6.str -set ledex04_5.set
+#
+quit

@@ -1,0 +1,150 @@
+<html>
+  <head>
+    <title>Emission Spectrum Analysis</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Emission Spectrum Analysis</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Blaze/Laser</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="laserex02_plot0.png" width="640" alt="laserex02_plot0" />
+      <p/>
+      <img src="laserex02_plot1.png" width="640" alt="laserex02_plot1" />
+      <p/>
+      <img src="laserex02_plot2.png" width="640" alt="laserex02_plot2" />
+      <p/>
+      <img src="laserex02_plot3.png" width="640" alt="laserex02_plot3" />
+      <p/>
+      <img src="laserex02_plot4.png" width="640" alt="laserex02_plot4" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates simulation of a buried heterostructure
+InP/InGaAsP laser diode. A physically based frequency dependent optical
+gain model is used in this example to calculate light emission
+spectrum. The example shows:
+</p>
+<ul>
+  <li>
+ Laser structure definition using Atlas syntax
+<br/>
+  </li>
+  <li>
+ Setting up the device models and initial biasing 
+<br/>
+  </li>
+  <li>
+ Activating LASER module of Atlas
+<br/>
+  </li>
+  <li>
+ Mesh definition for solving the Helmholtz wave equation
+<br/>
+  </li>
+  <li>
+ Definition of laser physical models and their parameters including the
+<b> frequency dependent optical gain model</b> <br/>
+  </li>
+  <li>
+ Calculation of laser electrical and optical characteristics
+  </li>
+</ul>
+<p>
+This example illustrates how Atlas can be used to simulate
+spectral characteristics. The spectral characteristics refer to the
+longitudinal laser spectrum since LASER takes into account only the
+fundamental transverse mode solution. It is known from the theory that
+the longitudinal laser spectrum depends on the optical gain,
+spontaneous emission spectrum, and the cavity length in the third
+dimension (or Z-direction). A shorter cavity length leads to a wider
+energy spacing
+between adjacent longitudinal modes, and so fewer longitudinal modes
+will be actually lasing. From the computational point of view the
+situation of the nearly single mode laser operation is very desirable
+because each lasing mode considered imposes an additional computational
+burden.
+</p>
+<p>
+For illustration purposes the structure under consideration is the same
+as in the previous example in this section. We refer to that example
+regarding the laser structure definition, mesh, material and physical
+models specification.
+</p>
+<p>
+The difference between this and the previous simulation is that
+physically based optical gain modes are activated in LASER simulation
+using the syntax
+<b> models lmodes gainmod=1 </b> . Gainmod=1 sets the frequency dependent model.
+The parameters
+<b> las_einit las_efinal </b> are used to specify the photon energy range for spectral analysis, and the
+<b> cavity_length </b> parameter is set to 50 microns. The latter value is rather small but it
+allows us to demonstrate the spectral analysis within a comparatively
+short run time.
+</p>
+<p>
+As in the previous example the additional variables specified in the
+<b> output </b> statement will be saved in the output structure file. These include the
+conduction and valence band potentials for analyzing the energy band
+diagram, total, SRH, Auger, and radiative recombination rates, and
+current flowlines.
+</p>
+<p>
+During simulation the IV data, light power, and total optical gain data is
+stored in the log file. The laser spectra (gain spectra and photon
+density spectra) are stored in separate log files for each bias
+condition. The name of the spectrum log file is specified using the
+parameter
+<b> spec.name </b> in the
+<b> models </b> statment in the LASER portion of the input file. The following results
+are displayed in TonyPlot:
+</p>
+<ul>
+  <li>
+ Total light output power versus current 
+<br/>
+  </li>
+  <li>
+ Gain spectra for different laser biases (currents) below and above lasing threshold  
+<br/>
+  </li>
+  <li>
+ Light output spectrum below and above lasing threshold
+  </li>
+</ul>
+<p>
+For comparison, the light output power vs diode current is shown along
+with the similar data obtained in the previous example. The gain
+saturation effect is
+clearly seen after laser threshold. Only a few of the longitudinal
+modes are actually lasing and the light output spectrum is practically
+the same after the lasing threshold.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

@@ -1,0 +1,132 @@
+<html>
+  <head>
+    <title>Use of Stress Evolution Model for Thick Stress Deposition in 3D</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Use of Stress Evolution Model for Thick Stress Deposition in 3D</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Victory Process and Victory Stress</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Victory Process 7.22.0.R , Victory Stress 2.14.0.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="vsex09_plot0.png" width="640" alt="vsex09_plot0" />
+      <p/>
+      <img src="vsex09_plot1.png" width="640" alt="vsex09_plot1" />
+      <p/>
+      <img src="vsex09_plot2.png" width="640" alt="vsex09_plot2" />
+      <p/>
+      <img src="vsex09_plot3.png" width="640" alt="vsex09_plot3" />
+      <p/>
+      <img src="vsex09_plot4.png" width="640" alt="vsex09_plot4" />
+      <p/>
+      <img src="vsex09_plot5.png" width="640" alt="vsex09_plot5" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example is essentially a 3D version of the example vsex08.
+</p>
+<p>
+Most commercial process and stress simulators consider deposition not as a physical process governed
+by a time-dependent model, but rather a mathematical abstraction in which a new layer just appears on
+the top of the structure. In these simulators the stress equations are solved after a material layer
+or region has been already added to the structure and not during the physical process of
+deposition. This one-step approach couldn&apos;t accurately predict stresses built in the deposited layer
+and in adjacent areas.
+</p>
+<p>
+In order to accurately predict stresses in thick layers the process should be considered as a
+series of deposition and relaxation steps to emulate mechanical quasi-equilibrium during this
+physical deposition process.
+</p>
+<p>
+This more accurate simulation could be achieved by using &quot;stress evolution&quot; or &quot;stress history&quot;
+model implemented in Victory Stress.
+More details regarding differences of the two models can be found in the Simulation Standard paper
+&quot;Simulation of Stress Evolution During Semiconductor Device Fabrication&quot;:
+</p>
+<p>
+http://www.silvaco.com/tech_lib_TCAD/simulationstandard/2012/jul_aug_sep/jul_aug_sep2012.pdf
+</p>
+<p>
+This example demonstrates how the stress evolution model can be applied to simulation of stresses
+generated during thick layer deposition process and compare the results with standard one-step
+model. The test structure used in this example is a quarter of a a 40 nm MOS transistor.
+</p>
+<p>
+The input deck consists of five sections:
+</p>
+<br/>
+ <ul>
+  <li>
+ Formation of a test structure with one layer nitride stressor in Victory Process. The
+structure is shown in the first 3D plot.
+<br/>
+  </li>
+  <li>
+ Calculation of stresses in the test structure using the one-step model of Victory Stress
+<br/>
+  </li>
+  <li>
+ Formation of a test structure with multi-layer stressor in Victory Stress. The structure is
+shown in the second 3D plot.
+<br/>
+  </li>
+  <li>
+ Calculation of stresses using stress evolution model of Victory Stress and &quot;looping&quot;
+capability of DeckBuild
+<br/>
+  </li>
+  <li>
+ 3D and 2D visualization of simulation results for both models
+<br/>
+  </li>
+</ul>
+<p>
+The stress evolution simulation uses the same structure with 20 layers at each step while effect
+of new sub-layer deposition is emulated by changing the status of this new sub-layer from
+&quot;non-active&quot; with properties inherited from &quot;air&quot; to &quot;active&quot; material region with properties
+inherited from nitride and the intrinsic stress of 1 GPa. Then Victory Stress recalculates stresses
+in the modified structure after each deposition step.
+</p>
+<p>
+The simulation results are shown in two 3D plots which compare Sxx stresses for two models. The Sxx
+stresses are also compared in two cut planes: Y-Z (vertical plane which roughly corresponds to 2D
+simulation of example vsex08) and X-Y (horizontal plane just 1 nm under silicon surface). The
+first of 2D comparison plots is very similar to 2D simulation of example vsex08. It shows that
+the stress evolution model predicts higher stress level under the gate. This fact is even better
+illustrated in the second X-Y plane. The upper-left corner of this cut plane corresponds to the
+gate area.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+<b> Note: </b> <p>
+To run this example you have to enable
+<b> System commands </b> in the
+<b> Options </b> menu from
+<b> DeckBuild: Main Control</b> .
+</p>
+  </div></body>
+</html>

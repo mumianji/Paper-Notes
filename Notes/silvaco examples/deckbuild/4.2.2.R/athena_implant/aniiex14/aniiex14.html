@@ -1,0 +1,66 @@
+<html>
+  <head>
+    <title>BCA Models for well channeled Boron Implant.</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>BCA Models for well channeled Boron Implant.</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>SSuprem 4, MC IMPLANT</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="aniiex14_plot0.png" width="640" alt="aniiex14_plot0" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates that 0-tilt implantation can be simulated using the
+Binary Collision Approximation (BCA) Model. In the BCA model the deflection
+of the moving particles is calculated in a strict binary way - between the
+moving ion and the closest atom in the lattice. The difference between
+the BCA model and earlier implemented Monte Carlo crystalline model is
+much more accurate determination of the closest atom and more accurate
+calculation of impact dependent inelastic energy losses. Therefore,
+BCA is capable of much more accurately predicting trajectories of
+well-channeled particles and therefore usually gives much better
+agreement with experiments in those cases where the channeling process
+is dominant, e.g. for 0 degrees implants.
+</p>
+<p>
+The simulated profile is compared with experiment (R.J. Shreutelkamp, et.al.,
+Nucl. Instr. &amp; Methods, v. B55, p. 615, 1991) and SVDP simulation which is
+also based on SIMS experiments. It should be stressed here that
+experimental results for well channeled implants are quite sensitive
+to many factors including surface conditions (thickness and uniformity
+of oxide surface layer) and precision of the ion beam orientation
+and beam width. Even 0.5 degree deviation in these parameters could
+result in considerable changes of measured implanted profiles.
+Therefore, agreement between these simulations and experiment should
+be considered as quite reasonable.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

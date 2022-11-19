@@ -1,0 +1,1192 @@
+{section} LED : LED Application Examples
+
+{subsection} ledex01.in :  Blue Single Quantum Well GaN LED
+
+Requires: Blaze/Quantum/LED
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates how the radiative recombination models in Atlas
+can be used to analyze the electro-luminescence spectrum.
+
+The objective of this example is to get the basic LED characteristics
+such as the I-V-L curve and EL spectrum. The input decks shows the 8 
+sections required to make a basic LED input file. These sections create 
+the structure, specify the model combination and biasing, and finally 
+plot the curves.
+
+{bold} Mesh Generation
+
+The first section of the input file defines the mesh and scales the WIDTH to be A/cm^2.
+
+{bold} Region and Electrode Specification
+
+To model the effects of strain and the piezo effect, the 
+{bold} CALC.STRAIN
+, 
+{bold} POLARIZATION  
+and 
+{bold} POLAR.SCALE 
+parameters of the 
+{bold} REGION 
+statement can be used. These parameters will be result in an interface charge 
+of ~1e13 cm-2, depending on the mole fraction of the active layer.
+
+To get the E.L. Spectrum, the parameters 
+{bold} QWELL 
+and 
+{bold} LED 
+should be specified on the quantum active layer 
+{bold} REGION 
+statement.
+
+The ANODE and CATHODE contacts are defined on the top and bottom of the device.
+
+{bold} Doping Profiles
+
+Layers 1 and 2 have a P-type doping of 1e19 cm-3. Layer 3 is the Single 
+Quantum Well (SQW) and is undoped. Layer 4 is doped at 1e18 cm-3 N-type. 
+All doping profiles have a uniform distribution.
+
+{bold} Material and Models
+
+There are three parts to this section. The first defines the 
+{bold} MATERIAL 
+parameters for the Recombination and Lorentz linewidth broadening factor 
+and for the incomplete ionization. The second part defines the 
+{bold} MODELS 
+for the GaN regions. The 
+{bold} K.P 
+model is used for the band parameters as well as the
+{bold} FERMI
+model. The other 
+{bold} MODELS 
+statement defines the Gain and EL spectrum models for the SQW region. The
+{bold} CHUANG 
+and 
+{bold} SPONTANEOUS 
+are specified along with 
+{bold} LORENTZ
+for linewidth broadening. The third part defines the mobility.
+
+{bold} Bias Ramp and Save Spectrum
+
+To obtain the EL spectrum, the 
+{bold} SPECTRUM 
+parameter and wavelength range 
+{bold} LMIN
+, 
+{bold} LMAX 
+and 
+{bold} NSAMP 
+are specified on the 
+{bold} SAVE 
+statement.
+
+{bold} Plotting Curves
+
+{bold} EXTRACT 
+was used to calculate the the electron and hole concentration as a 
+function of the bias. The I-V-L and EL spectrum as well as also plotted. 
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} ledex02.in :  UV 4 Multi Quantum Well GaN LED
+
+Requires: Blaze/Quantum/LED
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrate how the Atlas radiative recombination models 
+can be used to analyze the Electro-Luminous spectrum of an UV LED.
+
+The objective of this example is to get the basic LED characteristics
+such as the I-V-L curve and EL spectrum. The input decks shows the 8 
+sections required to make a basic LED input file. These sections create 
+the structure, specify the model combination and biasing, and finally 
+plot the curves.
+
+{bold} Mesh Generation
+
+The first section of the input file defines the mesh. The device diameter is 120um, 
+so 1.13e4 [um] is specified on 
+{bold} WIDTH 
+parameter of the 
+{bold} MESH 
+statement. 
+
+Region and Electrode Specification
+
+To model the effects of strain and the piezo effect, the 
+{bold} CALC.STRAIN
+, 
+{bold} POLARIZATION  
+and 
+{bold} POLAR.SCALE 
+parameters of the 
+{bold} REGION 
+statement can be used. 
+{bold} POLAR.SCALE 
+is set to -0.15 for the AlGaN materials. This parameter combination
+will be result in an interface charge of ~1e13 cm-2, depending on the
+mole fraction of the well/barrier Layer.
+
+To get the EL spectrum, the parameter 
+{bold} QWELL 
+and 
+{bold} LED 
+should be specified on the quantum active layer region.
+
+The ANODE and CATHODE contacts are defined on the top and bottom of the device.
+
+{bold} Doping Profiles
+
+Layers 1, 2 and 3 are P-type with a doping of 1e20 cm-3. Layers 4 to
+10 are the multi-quantum well regions and are undoped. Layers 11 and 12 
+are N-type with a doping of 2e18 cm-3. All doping profiles have a uniform 
+distribution.
+
+{bold} Material and Models
+
+There are three parts to this section. The first specifies the 
+{bold} MATERIAL 
+statement parameters for the recombination and linewidth broadening factor, 
+as well as enabling incomplete ionization. The second part specifies the 
+{bold} MODELS 
+statement for the GaN system. The other 
+{bold} MODELS 
+statement defines the Gain and EL spectrum models for the SQW region. The
+{bold} CHUANG 
+and 
+{bold} SPONTANEOUS 
+are specified along with 
+{bold} LORENTZ 
+for linewidth broadening. The third part defines the mobility.
+
+{bold} Bias Ramp and Save Spectrum
+
+To obtain the EL spectrum, the 
+{bold} SPECTRUM 
+parameter and wavelength range 
+{bold} LMIN
+, 
+{bold} LMAX 
+and 
+{bold} NSAMP 
+are specified on the 
+{bold} SAVE 
+statement.
+
+{bold} Plotting Curves
+
+{bold} EXTRACT 
+was used to calculate the the electron and hole concentration as a 
+function of the bias. The I-V-L and EL spectrum are also plotted. 
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+{subsection} ledex03.in :  Blue Single Quantum Well GaN LED 
+
+Requires: Blaze/Quantum/LED/DevEdit
+Minimum Versions: Atlas 5.26.1.R
+
+
+This example demonstrates how the Atlas radiative recombination models 
+can be used to analyze the Electro-Luminous spectrum for a BLUE LED.
+
+The objective of this example is to get the basic LED characteristics
+such as the I-V-L curve and EL spectrum. DEVEDIT was used to create 
+the structure. In DEVEDIT, x-direction was scaled down to 1/100, and 
+in Atlas the structure was scaled up to original structure size to 100 
+times in x-direction. 
+
+{bold} Structure Generation
+
+DEVEDIT is used to define the LED structure. Atlas then scales the x 
+dimension by 100. The device size is 350*350 um^2, so 477 [um] is used 
+to set the exact Anode Area by specifying 
+{bold} WIDTH=477.
+
+{bold} Region Specification
+
+To model the effects of strain and the piezo effect, the 
+{bold} CALC.STRAIN
+, 
+{bold} POLARIZATION  
+and 
+{bold} POLAR.SCALE 
+parameters of the 
+{bold} REGION 
+statement can be used. 
+{bold} POLAR.SCALE 
+is set to 1.0 for the InGaN materials. This parameter combination
+will be result in an interface charge of ~1e13 cm-2, depending on the
+mole fraction of the well/barrier Layer.
+
+To get the EL spectrum, the parameter 
+{bold} QWELL 
+and 
+{bold} LED 
+should be specified on the quantum active layer region.
+
+The ANODE and CATHODE contacts are defined on the top and bottom of the device.
+
+{bold} Material and Models
+
+There are three parts to this section. The first specifies the 
+{bold} MATERIAL 
+statement parameters for the recombination and linewidth broadening factor, 
+as well as enabling incomplete ionization. The second part specifies the 
+{bold} MODELS 
+statement for the GaN system. The other 
+{bold} MODELS 
+statement defines the Gain and EL spectrum models for the SQW region. The
+{bold} CHUANG 
+and 
+{bold} SPONTANEOUS 
+are specified along with 
+{bold} LORENTZ 
+for linewidth broadening. The third part defines the mobility. Finally, 
+the refractive index was difined with ADACHI model and the Nickel metal 
+given the refractive index of air so that it will be ignored in the reverse 
+raytrace.
+
+{bold} Bias Ramp and Save Spectrum
+
+To obtain the EL spectrum, the 
+{bold} SPECTRUM 
+parameter and wavelength range 
+{bold} LMIN
+, 
+{bold} LMAX 
+and 
+{bold} NSAMP 
+are specified on the 
+{bold} SAVE 
+statement.
+
+{bold} Plotting Curves
+
+To store the I-V-L and EL spectrum and the angluar power distribution,
+the 
+{bold} SAVE 
+statement was used. The 
+{bold} MIR.BOTTOM 
+parameter was used to define of the bottom mirror.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} ledex04.in : Retangular Domain vs. Cylindrical Domain of LED
+
+Requires: Blaze/LED
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrate how the radiative recombination models of LED
+in 2 dimensional Atlas can be used to analyze the electro-luminescence in
+rectangular vs. cylindrical domains.
+
+The objective of this example is to obtain and compare the basical LED
+characteristics such as the I-V-L curve depenenced on the simulation domain.
+The cylindrical domain characteristics are obtained in the same manner
+as in the rectangular except the 
+{bold} CYLINDRICAL 
+parameter should be set on the 
+{bold} MESH 
+statement.
+
+Also for cylindrical analysis only the right half of the X-Y plane
+should be defined.
+
+There are 7 sections to define the structure, material models,
+biasing conditions and data extraction of the operational characteristics.
+
+In this example there are two input decks.  The first deck specifies
+the 2D experiment.
+
+{bold} Mesh Generation
+
+In the first section of the input file, the unit of the rectangular
+domain is chosen as [A] with 
+{bold} WIDTH 
+parameter of 
+{bold} MESH 
+statement. Device
+size is 3.14*4^2 um2 as 8um diameter, so 12.566 [um]  to make the exact
+Anode Area on top view, set on 
+{bold} WIDTH 
+parameter.
+
+{bold} Region and Electrode Specification
+
+This section defines a 5 layer GaAs/AlGaAs diode with compositional grading
+in layers numbered 2 and 5.  In region 2 the composition fraction of Al 
+increases from 0.0 at the top to 0.35 at the bottom of the layer.  This 
+grading is specified using the 
+{bold} X.COMP 
+and 
+{bold} GRAD.12 
+parameters of the 
+{bold} REGION 
+statement.  Similar definitions are used in the 
+{bold} REGION statement for region number 5
+.
+
+The ANODE and CATHODE contacts are defined on the top and bottom of the device.
+
+{bold} Doping Profiles
+
+Layers 1 and 2 have a P-type doping of 1e18 cm-3. Layer 3 is P-type doped
+at 1e15 cm-3. Layers 4 and 5 are doped at 2e18 cm-3 N-type. 
+All doping profiles have a uniform distribution within the region.
+
+{bold} Material and Models
+
+The 
+{bold} MATERIAL
+statements in this section define parameters for the radiative recombination
+rate constant, 
+{bold} COPT
+, the low field mobilities, 
+{bold} MUN
+, the satruation velocity, 
+{bold} VSAT
+ and the conduction band alignment, 
+{bold} ALIGN
+.
+
+The
+{bold} MODELS 
+statement in this section selects models for Fermi-Dirac statistics, 
+{bold} FERM
+, Auger recombination,
+{bold} AUGER
+, radiative recombination,
+{bold} OPTR
+, and Shockley-Read-Hall recombination, 
+{bold} SRH
+.
+
+{bold} Outputs
+
+Many parameters are output to any generated structure files by default.
+The 
+{bold} OUTPUT 
+statement can be specified to include quantities that are not output
+by default.  In this case the conduction band edge energy, 
+{bold} CON.BAND
+, the valence band edge energy, 
+{bold} VAL.BAND
+, various band parameters (e.g. Eg, Nc, Nv etc.), 
+{bold} BAND.PARAM
+, various recombination rates, 
+{bold} RECOMB, U.SRH, U.AUG, U.RAD
+, and the current flowlines, 
+{bold} FLOWLINES
+.
+
+{bold} Initial Solution and Bias Ramp
+
+In these sections the bias conditions of the diode are set on various
+{bold} SOLVE 
+statements.  Structure files showing the internal conditions of the device
+are saved at various biases using 
+{bold} SAVE 
+statements.  The 
+{bold} LOG 
+statment is used to capture terminal conditions as well as the
+integrated radiative and total recombination rates using the 
+{bold} PROBE 
+statements.
+
+The second deck performs the cylindrical device analysis.  It is instructive
+to compare the two decks.  The second deck is identical to the first one
+except that the device is defined as a cylindrical device using the 
+{bold} CYLINDRICAL 
+parameter of the
+{bold} MESH 
+statement.
+
+{bold} Plotting Curves
+
+The I-V curve compared and I-L curve calculated using the 
+{bold} EXTRACT 
+statement.
+
+The current flowlines dependency on the device domain and bais point is also
+shown.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+{subsection} ledex05.in :  Optical Output Coupling Efficiency of a III-V LED Device  
+
+Requires: BLAZE/LED
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates how to extract the optical output coupling efficiency
+of an LED/OLED device by using various techniques including reverse ray-tracing,
+the source term method and finite-difference time-domain (FDTD). 
+
+Reverse ray-tracing is a technique that allows us to obtain optical output
+characteristics of an active optoelectronic device based on material
+properties and device geometry. Ray-tracing is most commonly used for the modeling
+of passive optoelectronic components such as photo-detectors. Rays originating  
+at the external light source are traced into the device and are absorbed to 
+form electron/hole pairs, which are subsequently detected.  Use of ray-tracing 
+method in LUMINOUS is shown in examples optoex08 - optoex15. 
+
+Contrary to 
+direct ray-tracing, the rays in the reverse method originate inside the active 
+region and are traced until they exit the device. One or multiple origin points 
+(user-specified) for rays are considered. Interference effects for rays originating 
+at the common source point can be taken into account. When interference is enabled,
+the spectral selectivity of the device structure can be analyzed by performing 
+ray-tracing at multiple wavelengths.
+
+The source term method works in a similar fashion but directly accounts
+for interference effects by applying an algorithm akin to the
+transfer matrix method which only applies to truely 1D devices.
+
+The finite-difference time-domain method works by direct solution of
+Maxwell's equations in the time domain and thus explicitly accounts for
+interference and diffraction in 1, 2 or 3 dimensions.
+
+Both the source term method and FDTD use the same method as for ray
+tracing in that the emission from a set of dipoles located at user
+specified locations is integrated/averaged over the device.
+
+The device structure and settings in this example are identical to those of 
+optoex06, where LED luminous efficiency calculation is demonstrated. See
+the description of example optoex06 for more detailed 
+information. 
+
+An additional functionality of LUMINOUS to assess light extraction 
+from the device is implemented in the 
+{bold} SAVE  
+statements (after biasing). Five different sets of parameters for reverse 
+ray-tracing are used in successive 
+{bold} SAVE 
+statements to demonstrate the features 
+available for the modeling of LEDs. The parameter sets are given in the order of 
+increasing complexity of simulation. Computation times also vary. It takes 
+approximately 200 times longer to run the last 
+{bold} SAVE 
+line compared to the first 
+one. 
+
+The parameter
+{bold} angpower
+should be set in the 
+{bold} SAVE 
+statement in order to start the reverse ray-tracing algorithm. The name of the 
+output file containing the angular power density vs. output angle dependence 
+is specified as a value of the
+{bold} angpower 
+parameter. The information in the angpower file includes the angular power density 
+for TE- and TM- polarized light, as well as total angular power density and total 
+flux angular density vs. output angle. 
+Note: In TonyPlot polar charts, the y-axis is directed upward (in the opposite 
+direction to the internal coordinate system used in Atlas). Therefore, the plots  
+appear to be flipped around the x-axis (top of the structure is at the bottom of the 
+chart). 
+ 
+The parameter 
+{bold} rayplot 
+specifies the name of the output file containing the information on each ray 
+exiting the device. This file is only created when a single origin for all rays 
+is assumed. The information includes ray output angle, relative ray power 
+(TE-, TM-polarization, and total), and initial internal angle at the origin 
+(only if the
+{bold} interfere 
+parameter is not specified). 0-degree angle corresponds to 
+the rays in the X axis direction, 90-degree angle corresponds to the rays in 
+the Y axis direction. 
+
+To start ray-tracing from one point of origin the user has to specify the 
+following parameters:
+coordinates of the origin of rays
+{bold} X 
+and 
+{bold} Y 
+and wavelength
+{bold} L.WAVE
+. It is important that the origin be chosen in the active region of the device.
+Rays are not traced if the radiative recombination is zero at the ray origin.
+All remaining parameters, outlined below, are optional and their default values 
+are assumed if the parameters are not specified.
+
+{bold} Reflects 
+specifies a number of reflections to be traced for each ray originating at the point 
+{bold} X 
+, 
+{bold} Y 
+(similar to 
+{bold} reflects 
+parameter in the 
+{bold} BEAM 
+statement). The default value (
+{bold} REFLECTS
+=0) provides for a quick estimate of the coupling efficiency. 
+{bold} REFLECTS
+>0 should be used to obtain a more accurate result, especially if 
+{bold} MIR.TOP 
+or 
+{bold} MIR.BOTTOM 
+are specified. The choice of this parameter is based on a compromise between 
+calculation time and accuracy. The maximum allowed value is 
+{bold} REFLECTS
+=10. the number of reflections set to 3 or 4 is often a good choice. The parameter 
+set #1 produces a simple ray-tracing analysis of an LED considered in this 
+example.    
+
+The 
+{bold} MIR.TOP 
+parameter specifies that the top surface of the device be treated as an ideal mirror.
+
+The 
+{bold} MIR.BOTTOM 
+parameter specifies that the bottom surface of the device be treated as an ideal 
+mirror.
+
+{bold} SIDE 
+specifies that the rays reaching the sides of the device are terminated 
+there and do not contribute to the total light output. This is often a good 
+assumption for realistic LEDs as these rays tend to be either absorbed internally 
+or blocked by the casing of the device. 
+
+{bold} TEMPER 
+is the temperature needed for using appropriate refractive indexes of the 
+materials. A default setting of 300 K will be used if not specified.
+
+{bold} POLAR 
+specifies polarization of the emitted photons in degrees (linearly polarized 
+light is assumed). Parallel (TM-mode, 
+{bold} POLAR
+=0.0) and perpendicular (TE-mode, 
+{bold} POLAR
+=90.0) polarizations result in significantly different output coupling values. 
+The default value (
+{bold} POLAR
+=45.0) should be used if there is no preferred direction of polarization of 
+emitted photons (unpolarized light emission).
+
+{bold} MIN.POWER 
+specifies the minimum relative power of a ray (similar to 
+{bold} min.power 
+parameter in the 
+{bold} BEAM 
+statement). The ray is not traced after its power falls below 
+{bold} min.power 
+value. This is useful for limiting the number of rays traced, and the default 
+value is 1e-4.
+
+{bold} NUMRAYS 
+is used to specify the number of rays starting from the origin. The default is 180,
+the acceptable range 36 - 3600.
+
+Parameter set #2 shows how some of the parameters described above are used for 
+modeling a realistic LED. The angular distribution of light power obtained 
+in optoex18ang_2.log exhibits a Lambertian pattern, which is what we expect for 
+a simple LED considered in this example. Note that the optical coupling coefficient 
+produced in this calculation reflects the 2D nature of the example (the light 
+origin is not a point but rather an infinite line in z-direction). Simultaneously,
+it is possible to calculate the optical coupling efficiency for an axially 
+symmetric 3D device (normally this is the value to be compared with experimental 
+results). This calculation is enabled if
+{bold} coupling3D 
+parameter is specified (while 
+{bold} side 
+is also set). For this calculation the light source is assumed to be 
+a point located on the axis of symmetry. 
+
+The rays are assummed to be incoherent by default. This is a good approximation 
+if the thickness of the active layer of the device is on the order of a 
+wavelength/index. For layer thicknesses << wavelength coherent effects might be
+important. When the 
+{bold} interfere 
+parameter is set, the rays originating at the common source point are taken to 
+be 100% coherent. In this case the phase information upon propagation is 
+preserved. Phase change upon reflection is also considered. Thus, interference 
+of rays exiting the device at the same angle is taken into account. The internal 
+angle information is not written to the output rayfile in this case. The parameter 
+set #3 takes interference into account. 
+
+Absorption of rays can be taken into account when the 
+{bold} absorb
+parameter is set. The absorption is assumed to be constant specified for each 
+material by the imaginary part of the refractive index. 
+Carrier density dependent absorption and photon-recycling are not considered
+at this point.
+
+Although ray-tracing from one point of origin can give a reasonable estimate 
+of optical output coupling and angular distribution of light power, it is often 
+desirable to consider multiple points within the active layer of the device to 
+obtain more accurate results. Multiple origin points can be set using the 
+following parameters:
+
+{bold} XMIN
+,
+{bold} XMAX
+,
+{bold} YMIN
+,
+{bold} YMAX 
+define a rectangular area containing all origin points. 
+{bold} XNUM 
+and 
+{bold} YNUM 
+specify the number of points along x- and y- axes within the rectangular area. 
+If 
+{bold} XNUM 
+is equal to 1, the x-coordinate of all origin points is set to 
+{bold} XMIN 
+so that the points are chosen along the line x = 
+{bold} XMIN
+. Similarly, points along the specific y-line can be chosen. 
+Ray-tracing from multiple origins is realized by repeating a single 
+origin algorithm for each point and by adding up the normalized angular power 
+density values thus obtained. The luminous power assigned to each source (origin) 
+is proportional to the radiative recombination at that point. Luminous power of 
+all sources adds up to the value obtained by integration of radiative recombination 
+over the entire device. Rays originating at different source points are completely 
+incoherent (even when
+{bold} interfere 
+is set), which is consistent with the spontanuous character of the radiation produced 
+by an LED. The rayplot file is not written for multiple origins (even if parameter 
+{bold} rayplot 
+is specified). The parameter set #4 shows how multiple origin simulation can be done.
+
+Spectral selectivity of optical output coupling for LEDs can also be taken into 
+account. Reverse ray-tracing at multiple wavelengths is
+considered if the 
+{bold} spectrum 
+parameter specifies a filename for spectral selectivity output, while the 
+{bold} angpower 
+parameter is also set. 
+{bold} EMIN 
+and 
+{bold} EMAX 
+, or 
+{bold} LMIN 
+and 
+{bold} LMAX
+ specify the energy or wavelength range respectively. 
+{bold} NSAMP 
+specifies the number of spectral components to be considered. It is suggested 
+that the 
+{bold} SPECTRUM 
+file is specified only when 
+{bold} interfere 
+is set (a warning is issued otherwise, while ray-tracing proceeds).  When 
+{bold} ANGPOWER 
+and 
+{bold} SPECTRUM 
+parameters are set in the 
+{bold} SAVE
+statement, the resulting optical output coupling is averaged over the
+entire energy (wavelength) range from 
+{bold} EMIN 
+to 
+{bold} EMAX 
+(from 
+{bold} LMIN 
+to 
+{bold} LMAX
+). The same applies to the quantities in the output angular distribution
+file. The spectrum file only shows how output coupling changes with wavelength.
+At the moment the shape of the gain curve is not taken into account (flat gain).
+The set of parameters #5 shows how multiple spectral components can be considered.
+The results obtained after averaging over spectral components and multiple origin 
+points while taking interference into account are remarkably similar to the single 
+point source model, where interference and multiple spectral content has been 
+ignored (parameter set #2). This demonstrates the applicability of a simpler model 
+in this case.    
+ 
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} ledex06.in : Effects of the Self-Heating on 3D Cylindrical LED Structure
+
+Requires: Device 3D/Giga 3D
+Minimum Versions: Atlas 5.26.1.R
+
+This example shows the effect of the self heating on 3D structure with
+cylindrical three dimensional mesh.
+
+The objective of this example is to obtain the lattice temperature
+distribution in the three dimensional structure at operating bias.
+
+This example has 3 parts.
+
+The first part demonstrates the cylindrical mesh generation method.  In
+this case only half the device is simulated to save simulation time.
+
+The 
+{bold} R.MESH 
+statement is used to specify radial locations and spacings.
+Similarly, the 
+{bold} A.MESH 
+statement is used to specify angular locations and spacings in degrees.
+Finally, the 
+{bold} Z.MESH 
+statement is used to specify the locations and spacings in the Z direction.
+
+For 3D cylindrical devices, the 
+{bold} REGION 
+statements define regions in cylindrical coordinates using the
+parameters
+{bold} A.MIN
+, 
+{bold} A.MAX 
+,
+{bold} R.MIN
+, 
+{bold} R.MAX and
+,
+{bold} Z.MIN 
+and 
+{bold} Z.MAX.
+
+Similarly, the 
+{bold} ELECTRODE
+statements can define an anode electrode as a ring on the top surface 
+and the cathode electrode as a plate on the bottom of the device.
+
+Next, 
+{bold} DOPING 
+statements are used to define uniform dopant concentrations in each region.
+
+Next, the 
+{bold} MODEL 
+statement is used to specify the models to be used in the example.  The
+recombination models are selected for Shockley-Read-Hall 
+{bold} (SRH), 
+Auger 
+{bold} (AUGER)
+, and radiative
+{bold} (OPTR) 
+recombination.
+
+Also, Fermi-Dirac statistics, 
+{bold} FERMI
+, and concentration dependent mobility, 
+{bold} CONMOB
+, are selected.
+
+Lattice temperature simulation, 
+{bold} LAT.TEMP
+, with Joule heat, 
+{bold} JOULE.HEAT
+, and generation recombination heat, 
+{bold} GR.HEAT 
+sources are selected.
+
+The 
+{bold} MATERIAL 
+statement is used to specify the alignment of the conduction band offsets
+using the 
+{bold} ALIGN 
+parameter.
+
+A thermal contact is specified using the 
+{bold} THERMCONTACT 
+statement.  Here a heat sink boundary is simulated using the sink temperature, 
+{bold} EXT.TEMP
+, and the thermal conductance,
+{bold} ALPHA
+, in W/(cm2*K).
+
+The 
+{bold} METHOD 
+statement is used to specify some specific numerical methods to be used
+to help obtain solutions for self-heating simulations.
+
+Next, after obtaining an initial zero bias solution.  The 
+{bold} PROBE, 
+{bold} LOG 
+and
+{bold} OUTPUT 
+statements are used to specify output characteristics to be collected
+that are of particular interest to this simulation.
+
+Next, a bias ramp is performed to place the LED at the operating bias.
+
+Finally, TonyPlot and the 
+{bold} EXTRACT 
+statement are used to present the simulation results.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+{subsection} ledex07.in :  Optical Output Coupling Efficiency Using FDTD  
+
+Requires: Blaze/LED
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates how to extract the optical output coupling efficiency
+of an LED/OLED device by using finite-difference time-domain (FDTD). 
+
+The finite-difference time-domain method works by direct solution of
+Maxwell's equations in the time domain and thus explicitly accounts for
+interference and diffraction in 1, 2 or 3 dimensions.
+
+FDTD uses the same method as reverse ray
+tracing in that the emission from a set of dipoles located at user
+specified locations is integrated/averaged over the device.
+
+The device in this case is very similar to the ones discussed in
+the other examples so far.  We have broadened it out in the
+X direction so we can analyze the effects of guided modes.  Guided
+modes are light trapped in the plane of the device by total internal
+reflection.  We make the device very long the make sure we can
+capture all the light except that which is definitely captured
+in the axial modes.
+
+In the next example we will analyze the effect of introduction
+of a photonic coupling structure on the top surface to extract light
+from the axial modes.  This demonstrates the advantage of FDTD analysis
+for photonic coupling.  This kind of analysis cannot be done with
+reverse ray trace or source term methods.
+
+The main difference from what we have seen so far in the other examples
+in the introduction of the 
+{bold} BEAM 
+statement.  In example ledex05.in
+we performed FDTD analysis without the use of the BEAM statement.
+In this case the 
+{bold} BEAM 
+statement is made automatically based on
+certain assumptions.
+
+Many of the functionalities available on the 
+{bold} BEAM 
+statement (including 
+lenses) for FDTD
+analysis are not yet available on the 
+{bold} SAVE 
+or 
+{bold} LED 
+statements so 
+the 
+{bold} BEAM 
+statement is used here as a convenience and to illustrate 
+the full variety of control parameters available to FDTD analysis.
+
+In the 
+{bold} BEAM 
+statement you will first notice the specification of beam origin,
+direction of propogation and wavelength.  These specifications are largely
+supurfulous for LED analysis but need be specified in accordance
+with the syntactical rules set forth for photo detection in
+Luminous.  In future LED versions we hope to hide much of this.
+
+The important parameters for LED analysis are 
+{bold} FDTD 
+which enables FDTD analysis, 
+{bold} TD.SRATE 
+which specifies the number of samples per wavelength 
+{bold} PROP.LENG 
+which specifies the duration of the simulation in terms
+of optical propogation length, 
+{bold} BIG.INDEX 
+which enables examination of the largest index of refraction
+in each region to calculate the local mesh spacing relative
+to the local wavelength and 
+{bold} FD.AUTO 
+which enables automatic meshing.
+
+PMLs are absorbing boundary conditions for FDTD. They are needed at the
+TOP to characterize the amount of light exiting the top of the device
+(i.e. the light coupled out of the device).  PMLs are placed at the 
+ends of the device to capture and characterize the axial modes.
+
+The PML at the bottom is optional and if left out the boundary is 
+treated as a prefect mirror.
+
+Toward the end of the simulation the 
+{bold} SAVE 
+statement is used to initiate FDTD coupling analysis at the
+operating bias.
+
+The 
+{bold} REF.BEAM 
+parameter is used to specify the index of the 
+{bold} BEAM 
+in order to tie the LED analysis to the proper set of analysis conditions
+set up by the 
+{bold} BEAM 
+and 
+{bold} PML 
+statements.
+
+The 
+{bold} SPECTRUM 
+parameter specifies a file prefix for capturing the 
+coupled output spectrum.
+
+The other parameters of the 
+{bold} SAVE 
+statement specify the user selected sampling in space and emission
+wavelength.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} ledex08.in :  Photonic Optical Output Coupling Efficiency Using FDTD  
+
+Requires: Blaze/LED
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates how to extract the optical output coupling 
+efficiency of an LED/OLED device with photonic crystaline enhancements
+by using finite-difference time-domain (FDTD). 
+
+The finite-difference time-domain method works by direct solution of
+Maxwell's equations in the time domain and thus explicitly accounts for
+interference and diffraction in 1, 2 or 3 dimensions.
+
+FDTD uses the same method as reverse ray
+tracing in that the emission from a set of dipoles located at user
+specified locations is integrated/averaged over the device.
+
+The device in this case is very similar to the ones discussed in
+the other examples so far.  We have broadened it out in the
+X direction so we can analyze the effects of guided modes.  Guided
+modes are light trapped in the plane of the device by total internal
+reflection.  We make the device very long the make sure we can
+capture all the light except that which is definitely captured
+in the axial modes.
+
+In the previous example we analyzed this same device without
+the photonic enhancements.
+
+In this example we analyze the effect of introduction
+of a photonic coupling structure on the top surface to extract light
+from the axial modes.  This demonstrates the advantage of FDTD analysis
+for photonic coupling.  This kind of analysis cannot be done with
+reverse ray trace or source term methods.
+
+The main difference from what we have seen so far in the other examples
+in the introduction of the 
+{bold} BEAM 
+statement.  In example ledex05.in
+we performed FDTD analysis without the use of the BEAM statement.
+In this case the 
+{bold} BEAM 
+statement is made automatically based on
+certain assumptions.
+
+Many of the functionalities available on the 
+{bold} BEAM 
+statement (including lenses) for FDTD 
+analysis are not yet available on the 
+{bold} SAVE 
+or 
+{bold} LED 
+statements so 
+the 
+{bold} BEAM 
+statement is used here as a convenience and to illustrate 
+the full variety of control parameters available to FDTD analysis.
+
+In the 
+{bold} BEAM 
+statement you will first notice the specification of beam origin,
+direction of propogation and wavelength.  These specifications are largely
+supurfulous for LED analysis but need be specified in accordance
+with the syntactical rules set forth for photo detection in
+Luminous.  In future LED versions we hope to hide much of this.
+
+The important parameters for LED analysis are 
+{bold} FDTD 
+which enables FDTD analysis, 
+{bold} TD.SRATE 
+which specifies the number of samples per wavelength 
+{bold} PROP.LENG 
+which specifies the duration of the simulation in terms
+of optical propogation length, 
+{bold} BIG.INDEX 
+which enables examination of the largest index of refraction
+in each region to calculate the local mesh spacing relative
+to the local wavelength and 
+{bold} FD.AUTO 
+which enables automatic meshing.
+
+PMLs are absorbing boundary conditions for FDTD. They are needed at the
+TOP to characterize the amount of light exiting the top of the device
+(i.e. the light coupled out of the device).  PMLs are placed at the 
+ends of the device to capture and characterize the axial modes.
+
+The PML at the bottom is optional and if left out the boundary is 
+treated as a prefect mirror.
+
+The photonic coupling is introduced using lenslets.  The lenslets
+are defined by 
+{bold} LENS 
+statements.
+
+The first 
+{bold} LENS 
+statement specifies a flat "lens" extending from Y=-1
+to the surface of the device.  This lens acts as the 
+fill in between the cylinders to come.  The index of
+the fill pattern is specified by the 
+{bold} INDEX 
+parameter.
+
+The second 
+{bold} LENS 
+statement specifies a set of cylinders with radius 0.175 microns
+starting at Y=0 to a height of 0.5 microns in the -Y direction.
+with an index of 1.9.
+
+The periodicity in the X direction is specified by the 
+{bold}PC.X0 
+parameter that specifies the center of the first duplicate
+and 
+{bold} PC.DX 
+which specifies the spacing in the X direction between duplicates.
+
+And that is it for the photonic crystal.  In 3D just 2 more parameters
+are introduced.
+
+Toward the end of the simulation the 
+{bold} SAVE 
+statement is used to initiate FDTD coupling analysis at the
+operating bias.
+
+The 
+{bold} REF.BEAM 
+parameter is used to specify the index of the 
+{bold} BEAM 
+in order to tie the LED analysis to the proper set of analysis conditions
+set up by the 
+{bold} BEAM 
+and 
+{bold} PML 
+statements.
+
+The 
+{bold} SPECTRUM 
+parameter specifies a file prefix for capturing the 
+coupled output spectrum.
+
+The other parameters of the 
+{bold} SAVE 
+statement specify the user selected sampling in space and emission
+wavelength.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+{subsection} ledex09.in :  Capture-escape model in 5 quantum well GaN LED
+
+Requires: Blaze/Quantum/LED
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates how to capture-escape model for quantum well LED. Capture-escape model allows to track dynamics 
+of bound carriers in quantum wells. It also allows to account for the effect of quantum charge by including it  
+self-consistently into Poisson equation.
+
+There are several model parameters that specify quantum well and capture-escape model.
+Quantum well regions are declared with 
+{bold} QWELL 
+parameter  in order to solve Schrodinger equation and 
+{bold} LED 
+parameter 
+in order to output luminous power for each well into the IV log file.
+Wurtzite 3-band k.p-based  band structure is specified by 
+{bold}  WZ.THREE 
+parameter. 
+{bold}  K.P 
+parameter forces drift-diffusion equation 
+to use k.p based band edges.
+Parameter  
+{bold} WELL.CAPT 
+launches capture-escape model and parameter 
+{bold}  WELL.INPLANE 
+allows 2D carriers to move along 
+the quantum well.  
+{bold} SPONTANEOUS 
+parameter in quantum well regions will launch calculation of spontaneous emission; 
+a simpler model for optical recombination is used in barriers, launched by 
+{bold} OPTR 
+parameter.  Everywhere in the device 
+Shockley-Read-Hall ( 
+{bold} SRH
+) and Auger ( 
+{bold} AUGER
+) recombination is calculated.  Finally, parameter 
+{bold}  WELL.SELFCON 
+forces
+two effects: 1) band edge for
+bulk carriers is modified in quantum well regions to remove wells. This effectively reduces bulk carrier density in these regions, 
+by allowing only bulk carrier with energies above the barrier; 2) quantum charge is added to the total carrier charge and 
+included into Poisson equation.  In order to include all quantum charge, the maximum allowed number of subbands  is increased
+by setting parameter  
+{bold} WELL.CNBS 
+and 
+{bold} WELL.VNBS
+.
+To improve convergence, predictor-corrector scheme 
+is used. 
+{bold}  WELL.NPRED 
+parameter specifies that there are seven 
+predictor iterations per one corrector iteration.
+ 
+
+To obtain the EL spectrum, the 
+{bold} SPECTRUM  
+parameter on the 
+{bold} SAVE  
+statement. The range of the spectrum is determined automatically.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+

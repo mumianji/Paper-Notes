@@ -1,0 +1,172 @@
+
+go atlas
+
+set hbar         = 6.582173483e-16
+set hc           = 1.2407
+set phote        = 1.4
+set lambda       = $"hc"/$"phote"
+set dbr_index1   = 3.70
+set dbr_index2   = 3.18
+set dbr_thick1   = 0.25*$"lambda"/$"dbr_index1"
+set dbr_thick2   = 0.25*$"lambda"/$"dbr_index2"
+set dbr_ncyc     = 40
+set cavity_start = 0.5*$"dbr_ncyc"*($"dbr_thick1"+$"dbr_thick2")
+
+# Location of front mirror
+set front_mirror = 100.6
+# Reflectivity of front mirror
+set rf           = 0.0
+# End of cavity
+set cavend       = 100.0
+
+#============================================================================
+Title Simulation of a Distributed Bragg Reflector Laser
+#============================================================================
+
+# SECTION 1: Mesh Specification 
+
+mesh auto
+x.mesh location=-0.10 s=0.05
+x.mesh location= 0.00 s=0.02
+x.mesh location= 0.45 s=0.005
+x.mesh location= 0.55 s=0.005
+x.mesh location= 0.90 s=0.02
+x.mesh location= 1.00 s=0.002
+x.mesh location= 1.02 s=3.0
+x.mesh location= 9.90 s=3.0
+x.mesh location= 10.0 s=0.05
+
+y.mesh location= 0    s=0.02
+y.mesh location= 4.0  s=0.02
+y.mesh location= 10   s=1
+y.mesh location= $"cavend"   s=1
+
+# SECTION 2: Region Specification 
+
+region num=1 name=barr material=AlGaAs x.comp=0.3 \
+       x.min=-0.10, x.max=0.45,  y.min=0 
+region num=2 name=well material=GaAs              \
+       x.min= 0.45, x.max=0.55   y.min=0
+region num=3 name=barr material=AlGaAs x.comp=0.3 \
+       x.min= 0.55, x.max=1.00,  y.min=0 
+region num=4 name=subs material=GaAs   \
+       x.min= 1.00, x.max=10.0,  y.min=0  
+
+dbr y.start=0 half.cyc=$"dbr_ncyc" thick1=$"dbr_thick1" thick2=$"dbr_thick2" \
+    n1=2 n2=2 na1=1e-11 na2=1e-11 mat1=GaAs mat2=AlGaAs x2.comp=0.6 \
+    name1=dbrname1 name2=dbrname2
+
+electrode num=1 name=anode ^HELM \
+          x.min=-0.1 x.max=0.00 y.min=0 y.max=$"cavend"
+electrode num=2 name=base ^HELM \
+          x.min=9.9 x.max=10.00 y.min=0 y.max=$"cavend" 
+
+doping uniform region=1 p.type conc=1.e18
+doping uniform region=3 n.type conc=1.e18
+doping uniform region=4 n.type conc=1.e20
+
+
+# SECTION 3: Material Specification
+
+# We start by setting all materials to be non-gain in order to confine the
+# gain to the well region
+material gain0=0 gain.broadening=0.005 imag.index=0 
+material fcn=1e-18 fcp=2e-18
+
+# Here we specify the real and imaginary index for the DBR
+
+material name=dbrname1 real.index=$"dbr_index1" imag.index=0
+material name=dbrname2 real.index=$"dbr_index2" imag.index=0
+
+# The barrier has a higher band gap than gain region, and the modes we are 
+# interested in. So we set its imag.index=0
+
+material name=barr  imag.index=0
+
+# Here we set the GAIN0 parameter for the standard gain model for GaAs well
+# We set imag.index=0.0 because frequencies are much higher than phonon 
+# contribution and the band-band transitions are taken care of by the gain 
+# calculation for this region.
+
+material name=well gain0=6000 imag.index=0.0 eg300=1.39
+
+# SECTION 4: Models Specification 
+
+models fermi spont srh auger 
+
+# SECTION 5: Laser Mesh Specification 
+
+lx.mesh l=0.0       s=0.05
+lx.mesh l=0.45      s=0.01
+lx.mesh l=0.55      s=0.01
+lx.mesh l=1.0       s=0.05
+ly.mesh l=0.00      s=0.5
+ly.mesh l=3.80      s=0.5
+ly.mesh l=10        s=4
+ly.mesh l=$"cavend" s=4
+
+laser hybrid tol=0.4  itmax=6 maxch=2.5 maxtrap=10 prt.eval \
+      cavity.start=$"cavity_start" hybrid.specres=0.5e-4 spec.name=comb \
+      gainmod=1 absorption fcarrier losses=0 loss.diffraction \
+      nmode=1 max.lmodes=12 ^helm.tm  \
+      photon.energy=1.385 e.init=1.384 e.final=1.415 nspec=200 \
+      rf=$"rf" rr=0.0 modal.reflectance frontmirror.loc=$"front_mirror"
+# helm.which="SM"
+
+# SECTION 6: Methods Specification 
+
+method newton itlimit=15 maxtraps=20 
+
+# SECTION 7: Output Specification
+
+output band.params ez.opt hz.opt las.loss las.longmodes \
+       las.modalrefl las.refr las.dbrspec las.gainspec las.asespec
+
+probe integrated name="ElecDen" n.conc \
+      x.min=0.45 x.max=0.55 y.min=$"cavity_start" y.max=$"cavend"
+probe integrated name="HoleDen" p.conc \
+      x.min=0.45 x.max=0.55 y.min=$"cavity_start" y.max=$"cavend"
+probe integrated name="gain" laser.gain \
+      x.min=0.45 x.max=0.55 y.min=$"cavity_start" y.max=$"cavend"
+probe integrated name="rcomb" radiative \
+      x.min=0.0 x.max=1.0 y.min=$"cavity_start" y.max=$"cavend"
+probe integrated name="auger" auger \
+      x.min=0.0 x.max=1.0 y.min=$"cavity_start" y.max=$"cavend"
+
+# SECTION 8: Solve Statements
+
+solve init
+solve prev
+
+solve name=anode vstep=0.5 vfinal=1.0
+solve name=anode vstep=0.1 vfinal=1.3
+
+log outf=laserex13.log
+solve name=anode vstep=0.1 vfinal=1.4
+save spectrum=s1
+
+contact name=anode current
+solve ianode=0.001
+
+solve name=anode istep=5e-5 ifinal=0.0011
+save spectrum=i1
+
+solve name=anode istep=5e-5 ifinal=0.0012
+save spectrum=i2
+
+solve name=anode istep=5e-5 ifinal=0.0013
+save spectrum=i3
+
+solve name=anode istep=5e-5 ifinal=0.0014
+save spectrum=i4
+
+solve name=anode istep=1e-4 ifinal=0.0016
+save spectrum=i5
+
+solve name=anode istep=1e-4 ifinal=0.0024
+save spectrum=laserex13 outf=laserex13.str
+
+tonyplot laserex13.str       -set laserex13_0.set
+tonyplot laserex13.spe       -set laserex13_1.set
+tonyplot laserex13_modal.log -set laserex13_2.set
+tonyplot laserex13.log       -set laserex13_3.set

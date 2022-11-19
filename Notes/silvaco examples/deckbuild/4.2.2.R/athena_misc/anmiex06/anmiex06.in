@@ -1,0 +1,37 @@
+go athena 
+
+#TITLE: Salicide Example
+
+line x loc=0.0 spac=0.2
+line x loc=0.9 spac=0.02 
+line x loc=1.4 spac=0.04 
+line x loc=2.0 spac=0.2
+
+line y loc=0 spac=0.01
+line y loc=1.0 spac=0.1 
+
+#10ohm-cm 100 n-type substrate
+init  c.phos=4.5e13
+
+deposit oxide thick=0.01 div=2
+deposit poly thick=0.25 div=10
+etch poly left p1.x=1.4
+etch oxide left p1.x=1.4
+implant phos dose=5e13 energy=35
+deposit oxide thick=.6 div=15
+etch oxide thick=.61
+implant arsenic dose=5e15 energy=50
+
+deposit titanium thick=0.1 div=5
+# 
+
+meth fermi grid.sil=0.005 init.time=1e-08 
+diffuse tim=1 tem=675  
+
+etch titanium all
+
+structure outfile=anmiex06.str 
+
+tonyplot anmiex06.str -set anmiex06.set
+
+quit

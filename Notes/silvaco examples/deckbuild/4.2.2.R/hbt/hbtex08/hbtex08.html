@@ -1,0 +1,127 @@
+<html>
+  <head>
+    <title>InP/InGaAs/InP Double HBT with varying doping profile</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>InP/InGaAs/InP Double HBT with varying doping profile</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Blaze</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="hbtex08_plot0.png" width="640" alt="hbtex08_plot0" />
+      <p/>
+      <img src="hbtex08_plot1.png" width="640" alt="hbtex08_plot1" />
+      <p/>
+      <img src="hbtex08_plot2.png" width="640" alt="hbtex08_plot2" />
+      <p/>
+      <img src="hbtex08_plot3.png" width="640" alt="hbtex08_plot3" />
+      <p/>
+      <img src="hbtex08_plot4.png" width="640" alt="hbtex08_plot4" />
+      <p/>
+      <img src="hbtex08_plot5.png" width="640" alt="hbtex08_plot5" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+In this example a DHBT structure based on the InP / InGaAs  material
+system is constructed using Atlas.  The DHBT is then electrically tested,
+and  properties  that  characterise  the  device&apos;s DC and high  frequency
+performance  are calculated and presented.  The DC performance  is shown
+through a gummel plot, and the DC current gain is calculated using the
+functions property in TonyPlot. The AC performance is evaluated via
+the cutoff frequency  ft, as well as the  maximum  oscillation  frequency
+fmax. The cutoff  frequency  is  defined  as the
+frequency  at  which  the  magnitude  of AC  current  gain ( i.e.  h21),
+decreases  to unity.  It is  important  to note that the  transistor  is
+connected in  common-emitter  configuration  for this  calculation.  The
+maximum  oscillation  frequency  fmax  is the  frequency  at  which  the
+unilateral power gain of the transistor  tends to unity.  The unilateral
+power gain  effectively  represents the maximum power gain achievable by
+the transistor. These properties can be improved though appropriate use
+of  heterostructures,  stoichiometry  and  doping  to  lower  collective
+resistance,  epitaxial  strain as well as several other properties, all
+of which are incorporated within HBTs and indeed DHBTs offering superior performance to BJTs.
+</p>
+<p>
+The superior performance encountered with HBTs and DHBTs is mainly due to
+the presence of a quantum well in the emitter / base junction arising through
+the use of two    materials   of    different    band   gap.   In   this
+example InP / In(0.53)Ga(0.47)As  have been used.  The  quantum  well
+stops  back  injection  of holes  from the base into the  emitter  which
+will reduce the base  current and  consequently  increase the
+current  gain.  The quantum  well will also permit the base doping to be
+increased  which will lower the resistance  encountered  within the base
+and reduce the transit time for electrons thus increasing
+frequency  performance.  By adding a second  heterostructure  within the
+collector   /   base   region   (i.e.  In(0.53)Ga(0.47)As / InP)   epitaxial
+relationships are improved throughout the structural growth with an
+overall improvement in device performance.
+</p>
+<p>
+Another technique to improve a device&apos;s performance is to use a graded doping
+profile.  This will aid in  controlling  electric  fields  concomitant  with
+depletion regions and will improve breakdown characteristics. This example
+demonstrates  this ability by  importing  doping  profiles  previously  specified  in an ASCII text
+editor.  These files are called upon during the  construction  stage and
+the doping profiles will be replicated accordingly.  In this example the
+files used are
+<b>  hbtex08_n.dat </b> and
+<b>  hbtex08_p.dat </b> for n and p type doping respectively.  The user can simply  create an ASCII text file  having two
+columns.  The left column  specifies  the depth  location  and the right
+column specifies the concentration at that location.
+</p>
+<p>
+An example would be:
+</p>
+<b> 0.0 1e16</b> <br/>
+<b> 1.0 1e20</b> <br/>
+<b> 1.001 0.0</b> <br/>
+<b> 2.0 0.0</b> <br/>
+<b>   ( Must put a carriage return here )</b> <br/>
+<p>
+As this is an ASCII file, a carriage  return  must be placed at the end of the
+file. To use this file would require the commands:
+</p>
+<p>
+doping (specify type) ascii infile=(filename)
+</p>
+<p>
+It is also noted that interpolation is used between specified locations.
+Consequently the doping profile must be set to zero through certain
+locations if so desired. Otherwise an interpolated value will be used
+until the end of the device is encountered. This is demonstated in the
+above example.
+</p>
+<p>
+The accuracy of the simulations is also improved by the use of Atlas-Interpreter
+mobility models for the materials.  The models are based on &quot;Empirical low-field mobility
+model for III-V compounds applicable in device simulation codes&quot;, M. Sotoodeh, A. H. Khalid,
+and A. A. Rezazadeh, J. Appl. Phys., 87, 2890 (2000).
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

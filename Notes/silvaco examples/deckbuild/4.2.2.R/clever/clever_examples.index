@@ -1,0 +1,837 @@
+{section} CLEVER : Cell Level Interconnect Parasitics 
+
+
+{subsection} clex01.in : Metal Elbows with Manhattan Geometry 
+
+Requires: CLEVER
+
+CLEVER is used in this example to simulate an "L" shaped metal region, often found in custom cells, which is insulated from the silicon substrate by a 
+0.5um oxide layer. The processing steps are very simple requiring only etching and deposition.
+
+As with any CLEVER simulation the process etching steps are driven from a layout file generated from MaskViews. This file will be included in the support files when this example is loaded.
+
+A basic etch and deposition model is used whereby a uniformly thick layer of metal is deposited and etched. This results in the classical "manhattan" 
+ geometry where the rectangular shaped structures have the appearance of a Manhattan skyline.
+
+Once the process simulation is complete the three-dimensional structure is saved with the 
+{bold} Save
+ statement and can be plotted using 
+{bold} TonyPlot3d.
+
+Finally the interconnect parasitic extraction is carried out using the 
+{bold} Interconnect
+ statement. Firstly, however, the material parameters of silicon are defined using the 
+{bold} Material
+ statement so that in this case silicon "inherits" the same material properties as silicon. In this example only the parasitic capacitance values are calculated
+ from the field solver. During this calculation automatic mesh adaption is performed with the 
+{bold} Adapt
+ parameter whereby the mesh is modified until the error in the capacitance extraction is reduced to the default maximum of 5% of the capacitance. The structure and the SPICE netlist are then saved.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+{subsection} clex02.in : Metal Elbows with Etch Models 
+
+Requires: CLEVER
+
+CLEVER is used in this example to simulate an "L" shaped metal region, often found in custom cells, which is insulated from the silicon substrate by a 
+0.5um oxide layer. The processing steps are very simple requiring only etching and deposition.
+
+As with any CLEVER simulation the process etching steps are driven from a layout file generated from MaskViews. This file will be included in the support files when this example is loaded.
+
+A more advanced etching model is used compared with the previous example. In this model etching is performed along a material boundary at a specified 
+{bold} Rate
+ and 
+{bold} Time
+. An 
+{bold} Isotropic
+ component is also specified so that etching is performed laterally as well as vertically. This results in the "non-manhattan" 
+ geometry where the sidewalls are no longer vertical but may have a "slope".
+
+Once the process simulation is complete, the three-dimensional structure is saved with the 
+{bold} Save
+ statement and can be plotted using 
+{bold} TonyPlot3d.
+
+Finally the interconnect parasitic extraction is carried out using the 
+{bold} Interconnect
+ statement. Firstly, however, the material parameters of silicon are defined using the 
+{bold} Material
+ statement so that in this case silicon "inherits" the same material properties as silicon. In this example only the parasitic capacitance values are calculated
+ from the field solver. During this calculation automatic mesh adaption is performed with the 
+{bold} Adapt
+ parameter whereby the mesh is modified until the error in the capacitance extraction is reduced to the default maximum of 5% of the capacitance. The structure and the SPICE netlist are then saved.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+{subsection} clex03.in : Metal Elbows with Lithography Models 
+
+Requires: CLEVER
+
+CLEVER is used in this example to simulate an "L" shaped metal region, often found in custom cells, which is insulated from the silicon substrate by a 
+0.5um oxide layer. The processing steps are very simple requiring only etching and deposition.
+
+As with any CLEVER simulation the process etching steps are driven from a layout file generated from MaskViews. This file will be included in the support files when this example is loaded.
+
+A more physical etch model is applied, compared with the previous example, where optical lithography is used. Now the wavelength of light is defined with the 
+{bold} Illumination
+ statement and optical lithography enabled with the 
+{bold} Litho
+ parameter of the 
+{bold} Mask
+ statement. This simulates the deposition of resist and its imaging through the
+ mask. The resultant resist shape therefore becomes much more physical so that when the subsequent etch is performed a much more realistic metal shape is produced compared to Example 1. The etching model in this example is the same as in Example clex01.in.
+
+Once the process simulation is complete the three-dimensional structure is saved with the 
+{bold} Save
+ statement and can be plotted using 
+{bold} TonyPlot3d.
+
+Finally the interconnect parasitic extraction is carried out using the 
+{bold} Interconnect
+ statement. Firstly, however, the material parameters of silicon are defined using the 
+{bold} Material
+ statement so that in this case silicon "inherits" the same material properties as silicon. In this example only the parasitic capacitance values are calculated
+ from the field solver. During this calculation automatic mesh adaption is performed with the 
+{bold} Adapt
+ parameter whereby the mesh is modified until the error in the capacitance extraction is reduced to the default maximum of 5% of the capacitance. The structure and the spice netlist are then saved.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+{subsection} clex04.in : Metal Elbows with Etch and Lithography Models 
+
+Requires: CLEVER,  VICTORY PROCESS 3D Structure Editor
+
+In this case we demonstrate how to use the Victory Process 3D Structure Editor
+to create the "L" shaped metal region, often found in custom cells, which is 
+insulated from the silicon substrate by a 0.5um oxide layer. The processing 
+steps are very simple requiring only etching and deposition.
+
+As is also the case with any CLEVER simulation the process etching steps are 
+driven from a layout file generated from MaskViews. This file is included in
+the support files when this example is loaded.
+
+The deposition model remains the relatively simple model used and described in
+example clex01.in.  However, for the etching process, this example has combined
+the non-manhattan angular etch model in example clex02.in with the physical 
+lithographic masking and imaging from example clex03.in.  The structure 
+produced from this combination of models should therefore simulate reality to
+a much greater extent than the previous examples.
+
+Once the process simulation is complete, the three-dimensional structure is
+saved with the 
+{bold} Export
+ statement and can be plotted using 
+{bold} TonyPlot3d.
+
+The structure created in the Victory Process 3D Structure Editor, is then 
+loaded into Clever and the interconnect parasitic extraction is carried out 
+using the 
+{bold} Interconnect statement. 
+Firstly, however, the material parameters of silicon are defined using the 
+{bold} Material statement
+so that in this case silicon "inherits" the same material properties as 
+oxide. In this example only the parasitic capacitance values are calculated
+from the field solver. During this calculation automatic mesh adaption is 
+performed with the 
+{bold} Adapt
+parameter whereby the mesh is modified until the error in the capacitance 
+extraction is reduced to the default maximum of 5% of the capacitance. The 
+structure and the SPICE netlist are then saved.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+{subsection} clex05.in : Resistance of Metal Fork 
+
+Requires: CLEVER
+
+CLEVER is used in this example to simulate a more complex interconnect metal path.
+ Such a complex shape adds additional problems to the extraction of the parasitics, especially the resistance along the metal lines.
+
+The metal regions defined in this example have a number of electrodes, specified within their boundaries.
+ As such it is clear that when the simulator extracts the resistance between electrodes certain regions along the metal path could be taken into account more than once.
+
+To overcome this problem Clever will automatically subdivide the metal line into individual electrodes so that no region is included more than once in the parasitic resistances.
+ These additional nodes are then back annotated onto the layout which is then re-saved at the end of the simulation.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+{subsection} clex06.in : EXNOR Cell with Manhattan Geometry
+
+Requires: CLEVER
+
+This example is based upon an EXNOR custom cell layout and illustrates how CLEVER may be used to extract the full parasitic netlist from a complete cell.
+
+Beginning from the process description, a 3-dimensional structure is created from which the resistance and capacitance are extracted using a field solver. The 
+{bold} Adapt
+ parameter on the 
+{bold} Interconnect
+ statement is used to specify the accuracy required by the field solver. The values of 0.1 and 0.05 require an accuracy of +/- 10% and 5% respectively.
+
+Once the netlist is extracted it may be used in a SPICE input deck to anlayse the influence of cell parasitics on circuit performance.
+ When this example is loaded support files that may be run in SmartSpice to show the circuit behaviour will also be loaded.  
+
+This example has been described within the CLEVER tutorial in the manual. For further information on this example please read the CLEVER tutorial chapter.
+
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+{subsection} clex07.in : EXNOR Cell with Physical Geometry 
+
+Requires: CLEVER
+
+This example is identical to example clex06.in except that the etching models 
+have been upgraded to a more physical 87 degree side-wall. 
+The same EXNOR custom cell layout is used and illustrates how CLEVER may be
+used to analyse the effect of the etching model on a complex custom cell.
+
+The extracted netlist may be used in a SmartSpice input deck to analyse the
+circuit performance which can then be compared to the previous example.
+
+When this example is loaded support files, that may be run in SmartSPice to
+show the circuit behaviour, will also be loaded.  
+
+It should be noted that the high resolution geometries created by the realistic
+physical process models used in this example require a usable memory of
+approximately 300MB to run the parameter extraction programs due to the
+intricate mesh thus created.  The simulation can be run on machines with less
+memory but the program may take a significantly longer time to run due 
+memory swapping between the RAM and hard disk.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+{subsection} clex08.in : Inverter Cell with Manhattan Geometry 
+
+Requires: CLEVER
+
+An inverter is one of the most common cells found in layouts. This example contains one inverter cell designed with 4 NMOS and 4 PMOS transistors. 
+It is an illustration of how Clever inserts auxilliary nodes, as in example clex05.in, where necessary into the layout. 
+The back-annotated layout may then be re-plotted in MaskViews. The etching process in this example is the simplest manhattan type.
+
+This example has been used in the CLEVER tutorial in the manual and more information on it can be found there.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} clex09.in : Inverter Cell with Physical Geometry 
+
+Requires: CLEVER
+
+An inverter is one of the most common cells found in layouts. This example 
+contains one inverter cell designed with 4 NMOS and 4 PMOS transistors. 
+It is an illustration of how Clever inserts auxilliary nodes, as in example 
+clex05.in, where necessary into the layout. 
+The back-annotated layout may then be re-plotted in Maskviews. 
+
+In this example, the etching process has the more physical 87 degree angled 
+side-wall, so the structure was created using VictoryPorcess in cell mode.
+
+This example has been used in the CLEVER Tutorial and more information on it 
+can be found there.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+{subsection} clex10.in : Inverter Cell with Lithographic Geometry 
+
+Requires: CLEVER
+
+An inverter is one of the most common cells found in layouts. This example 
+contains one inverter cell designed with 4 NMOS and 4 PMOS transistors. 
+It is an illustration of how Clever inserts auxilliary nodes, as in example 
+clex05.in, where necessary into the layout. 
+The back-annotated layout may then be re-plotted in Maskviews. 
+
+This example applies lithographic techniques to more accurately simulate the 
+non-uniform barrier layer, formed by the resist after the imaging 
+photolithographic stage.  Victory Process is called upon once again to simulate
+the non Manhatton structure creation.  The etching process also uses a more 
+physical 87 degree angled side-wall.
+
+This example has been used in the CLEVER Tutorial and more information on it 
+can be found there.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+{subsection} clex11.in : SRAM Cell with Multiple Metals and Dielectrics  
+
+Requires: CLEVER
+
+Modern designs make use of mask layers which are not always at right angles to each other. The layout used in this example illustrates a 45 degree angle for certain mask layers. 
+This would normally make the calculation of parasitic resistances very difficult, but with CLEVER this is handled easily.
+
+In many cases the back-end processing makes use of different non-standard materials for the insulators and the metal conductors.
+
+This example is based upon the simulation of an SRAM cell which consists of four different metal layers, plus polysilicon. 
+
+The initial processing stages demonstrate how Clever allows deposition of user-defined materials. Once the structure has been created these new materials can then be displayed within TonyPlot3D.
+
+Before the parasitic extraction takes place using the 
+{bold} Interconnect
+ statement, the physical parameters of the new materials are defined using the 
+{bold} Material
+ statement. 
+
+This example has been used in the CLEVER tutorial in the manual and further information may be obtained there.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+{subsection} clex12.in : Performing a 2D Interconnect Simulation in Clever
+
+Requires: CLEVER
+
+A useful option included within Clever is its ability to operate in 2D or 1D 
+mode.  This greatly reduces simulation time and allows the user to
+check that important aspects of the process are correctly implemented.
+
+This example consists of three layers of metal to illustrate the use of the
+{bold} Cut line 
+ feature in order to generate a 2D simulation.  The example then goes on to
+perform the full 3D simulation of the same structure.  It will be noted that
+the 3D simulation takes significantly longer to perform tasks such as the
+capcitance matrix calculation.
+
+This example also demonstrates the use of the
+{bold} box
+ command which forces Clever to increase the effective mask size by using the given
+coordinate around the edge of the masks leading to a 3D simulation. 
+This ensures that fringing capacitances are better accounted for by increasing
+the volume around the perimeter which is meshed therefore increasing the
+volume within which fringing field lines are solved.
+
+Comparison of the 3D and 2D capacitance matricies yields the expected result of
+larger capacitances for the 3D simulation.  This is because fringing
+capacitances in the 2D simulation in the Z direction are effectively eliminated.
+Notice the greatly reduced capacitance in the 2D calculation for non adjacent
+layers which are effectively shielded in the Z direction.  Compare these
+results with the full 3D simulation where significant fringing capacitance
+occurs along the length of the structures.
+
+Once the process simulation is complete the three-dimensional structure is
+saved with the 
+{bold} Save
+ statement and can be plotted using 
+{bold} TonyPlot3d.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} clex13.in : Local Interconnect - MOS Current Source
+
+Requires: CLEVER
+
+This example demonstrates the use of CLEVER to analyze non planerised structures
+such as local interconnects commonly used in current sources and in memory 
+cells.  To emphasise the true 3D capability CLEVER, a MOSFET with
+TiN (titanium nitride) local interconnect between drain and gate is
+implemented using a trench isolation structure together with realistic layer
+depositions.
+
+The 3D structure is created using the 3D process simulator Victory Process, 
+and is then loaded into Clever for the resiistance extraction.
+
+At the end of the 3D process simulation, a 2D cutline of the structure is
+plotted to show a representative cross sectional view of the created device.
+This 2D cross section may be plotted without running the simulation from the
+stored structure file called "clex13_2D.str" by using the standard
+{bold} tonyplot
+program.  The 3 dimensional structure file can be plotted using
+{bold} tonyplot3d.
+It should be noted that when using the 
+{bold} padding
+command to create a wider boarder around the masks in conjunction with the
+{bold} cut line
+statement, a warning in the runtime output will occur informing the user that
+the cutline defined is larger than the mask area.  This is to be expected since
+the padding command generates a larger simulation volume.  This warning can
+therefore be ignored.
+
+The resistance of the local interconnect is extracted using the
+{bold} Interconnect Resistance Adapt
+statement in the usual way after defining the conductivity of the TiN material.
+The value of the extracted resistance is stored in clex14.net.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} clex14.in : Non Planarized, Low k Dielectric Capacitance Analysis
+
+Requires: CLEVER
+
+This example demonstrates the ability of CLEVER
+ to deposit and field solve non planarised, multi-layer films for interconnect
+capacitance analysis using CLEVER.
+   The simulation is run in 2D
+ as there is little to be gained by running the demonstration in 3D.  The user
+may force the simulator to do the full 3D simulation by simply commenting
+out the
+{bold} cut line
+ statement, together with the TonyPlot statement (since in this case there will
+be no 2D structure for TonyPlot to plot).  As with example 14, the message:
+
+{italic} Warning: point is outside of layout domain
+
+ in the runtime output may be ignored since the program is merely informing the
+user that the cut line is bigger than the mask size due to the use of the
+{bold} padding
+ statement which creates a larger boarder volume in order to improve accuracy.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+{subsection} clex15.in : Local Oxidation (LOCOS)
+
+Requires: CLEVER
+
+This example demonstrates the analytical local oxidation model (LOCOS) included
+in CLEVER.  Oxidation can be included in the process flow to more accurately 
+model the geometry around the active device areas.
+
+The user can choose the resolution of the "birds beak" formed during the LOCOS
+process by stipulating the
+{bold} Resolution
+ parameter.  The resolution can be set to
+{bold} Resolution=low
+, 
+{bold} Resolution=medium
+ or
+{bold} Resolution=high
+.
+
+Once the process simulation is complete the three-dimensional structure is
+saved with the 
+{bold} Save
+ statement and can be plotted using 
+{bold} TonyPlot3d.
+ A two dimensional cross section of the structure is also plotted automatically,
+further demonstrating the 
+{bold} Cut Line
+ facility.
+
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+{subsection} clex16.in : SRAM Analysis for Back Annotation into SPICE model
+
+Requires: CLEVER
+
+This example is a six-transistor, three metal, single poly SRAM cell.
+The cell consists of four NMOS and two PMOS transistors.
+
+The layout file defines various layers up to metal 3.  The rule file
+exports six new masks, plus CLEVER defines another two masks -
+{bold} *GATE 
+ and 
+{bold} *CONT.  
+ These masks are gates and contacts, which are the NGATE and PGATE 
+regions, plus the two exported contacts.  The modified layout
+and a SPICE netlist of the devices are saved after the 
+original layout file is initialized in the command file
+and the rule file executed in the command file.
+
+The gate oxide is defined as a separate material, called 
+{bold} Gateox,
+ distinct from silicon oxide.  
+{bold} Gateox 
+ is given a very low (but non-zero) permittivity.  As a result, 
+the area calculation of
+capacitance (i.e. determined by the transistor gate area over the
+gate oxide and silicon) is very low.  This area capacitance of the 
+gate over silicon is accurately calculated in
+the SPICE model (since only the area and gate oxide thickness are
+necessary).  Since CLEVER calculates the total field solution, it does
+not distinguish the contribution of the capacitance due to the poly gate
+over the silicon from either the fringe effects or capacitance with
+other conducting lines.  This methodology of artificially lowering the
+area capacitance in CLEVER avoids calculating this value twice,
+once in CLEVER, and once again in the SPICE model.
+
+The geometry of the structure is the idealized Manhattan cross-sections.
+No advanced lithographic or etch models are used.
+
+This example is also discussed in the CLEVER tutorial in the manual.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} clex17.in : Creating the clex16 SRAM structure in Victory Process
+
+Requires: CLEVER, VICTORYPROCESS
+Minimum Versions: Clever 3.10.13.A,  Victory Process 7.7.6.A
+
+This example creates the same SRAM design as in clex16, but uses the Victory 
+Process simulator to create a more realsitic structure. 
+
+The more realistic structure is a result of three features in Victory Process:
+
+Fisrstly, an optical solver creates an optical intensity map during photoresist
+exposure from a user specifiable deep-UV light source, through a lens of user
+specifiable numerical aperture (0.5 in this particular case).  The mask can 
+also be deliberately defocussed by a user specifyable distance in um, above or
+below the surface of the photoresist, using the
+{bold} "maskdefocus"
+parameter.
+
+Secondly, photoresist mask development profile is calculated from an intensity 
+contour map specifyable by the user as developing somewhere between zero 
+intensity, and full intensity represented by specifying the 
+{bold} "criticalintensity"
+parameter.  A value of 0.5 was used in this example.
+
+Thirdly once the photoresist mask pattern has been simulated, a geometric etch
+feature is used to create sloped sidewalls of 87 degrees relative to horizontal.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} clex18.in : GDS2, netlist reduction and contact statement
+
+Requires: CLEVER
+
+We show in this example that CLEVER can be used with a gds2 layout format
+as input. The commands used are
+{bold} GDS2="layout.gds"
+ and
+{bold} cell="cell_number1" 
+ which allow the user to load a gds2file  and select a specific cell in the layout.
+
+Netlist reduction for capacitance and resistance extraction are also available
+in CLEVER. Since we perform the capacitance and resistance extraction with one
+Interconnect command, we need to define two different minvalues. Therefore
+the keywords 
+{bold} minRES
+ and 
+{bold} minCAP 
+ have to be set in the 
+{bold} Interconnect 
+ command like: 
+   
+Interconnect minRES = 0.001 minCAP=1.0e-18.
+     
+Finally we show in this example that the Interconnect statement was extended 
+by the option
+{bold} Contact = <string>.
+ This allows the user to specify one particular conductor for which
+CLEVER extracts the capacitance values with respect to all other
+conductors. If more than one interconnect statements are invoked during
+the course of the simulation, the last results of capacitance calculation
+will replace the previously calculated values that already exist in the
+netlist.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+{subsection} clex19.in : Mesh Refinement 
+
+Requires: CLEVER
+
+This example illustrates the adaptative meshing capability of CLEVER.
+You can see the evolution of the mesh refinement using the 
+ command:    
+{bold} interconnect capacitance AdaptC=0.04  structure="clex19".   
+ As a result you get the following output: clex19.CAP.0.str, clex19.CAP.1.str,
+clex19.CAP.2.str, ...... The numbers mean that if we specify 1 volt on conductor
+i and 0 volt on other conductors, the capacitance values are calculated between
+conductor i and other conductors. The file clex19.CAP.i.str is the final grid
+structure after this simulation step.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} clex20.in : Simulating Micro-Loading Effects using Advanced Etching
+
+Requires: CLEVER
+
+Micro-loading etching effects describe the phenomenon whereby the effective
+material etch rate depends on the hole size of the pattern masking layer.
+
+This can be simulated using the advanced etching module in Victory Process.
+Once the structure is created, it is loaded into Clever to simulate back end
+parasitics.
+
+The etch machine characteristics are described by the Fux, Topography and 
+EtchDepoProperties statements.  Once the etch machine has been described, the
+wafer is loaded into this virtual etch machine and is etched for 4 minutes.
+The created trench structures are then filled with aluminum.  
+
+For ease of observation of the micro-loading effects, a 2D cut line of the
+3D structure is created and plotted, where it can be clearly seen that the
+depth of each trench is dependent on the width of the trench.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+{subsection} clex21.in : Calculating Well Isolation and Source/Drain Capacitance
+
+Requires: CLEVER Version 3.6.10 or Later
+
+This example demonstrates how to:-
+
+{bullet} Include well isolation depletion capacitance in the calculation.
+{newline}
+{bullet} Include source/drain depletion capacitance in the calculation.
+{newline}
+{bullet} Specify cyclical cell boundary conditions for emulating cascaded cells.
+
+
+{bold} Including Well Capacitance in the Field Solver Parasitic Extraction
+
+Diode isolated wells can be treated as a separate volume of silicon that is 
+separated from the bulk wafer by a layer of insulator where the insulator 
+thickness is the silicon depletion width and the insulator has the same 
+permitivity as silicon.
+
+For a first order calculation, the depletion width of a diode separated well 
+or source/drain region increases with the square root of the doping 
+concentration of the lowest doped side of the junction.  If you don't 
+know the depletion width of the junctions, a good approximation can be 
+obtained from the following formula:
+
+Depletion Width (um) = SQRT ( 1e15 / Doping )
+
+where the Doping is the volume doping of the lightly doped side of the 
+junction in atoms/cm3.  So for 1e15/cm3 doping, use 1um, for 1e17/cm3, 
+use 0.1um and for 1e19/cm3 use 0.01um etc.
+
+In this example, the depletion region of the N-Well is simulated by first 
+etching the silicon to the depth of the N-Well in the masked N-Well regions,  
+and then by depositing a  0.1um thick film of a user defined material called 
+{bold} "Nwell_Depletion"
+ which is assigned a permittivity of 11.8 to match the permittivity of 
+silicon.  The presumption here is that the nwell is bounded by a volume 
+p-doping concentration of approximately 1e17/cm3.  Finally, the N-Well is 
+then filled with silicon to represent the neutral region of the N-Doped well.
+
+
+{bold} Including Well Capacitance in the Field Solver Parasitic Extraction
+
+Simulating the Source/Drain diodes is the same process as the N-Well 
+procedure described above, but with a thinner depletion insulating region 
+of 0.02um to represent the higher doping in these regions.  The depletion 
+capacitance of the source-drain diodes is simulated by using a user defined 
+material called 
+{bold} "SD_Depletion"
+ and assigning it a permittivity of 11.8.  If you wish to remove this 
+capacitance from the SPICE Netlist because it is decided to use the 
+source/drain capacitance assigned to the active device model, then  
+define the user defined material called "SD_Depletion", a permittivity value 
+of say 0.1 such that the capacitance calculated will add less than 1% error 
+to the SPICE Model Capacitance.  Do not assign any insulator a permittivity 
+of zero, as this will cause discontinuities in the field solver
+
+
+{bold} Specifying Cyclical Cell Boundary Conditions for Emulating Cascaded Cells
+
+The simulated Inverter Cell in this example is cascadable such that numerous 
+identical cells could be cascaded together to make a ring oscillator.  For 
+this application, it is more appropriate to specify 
+{bold} "CYCLIC"
+ boundary conditions rather that the default 
+{bold} "MIRROR"
+ boundary conditions.  To specify CYCLIC boundary conditions, on the 
+Interconnect Statement, specify:
+
+{bold}   DomainBoundaryCondition="CYCLIC"
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} clex22.in : Liquid Crystal (LCD) Field Dependent Capacitance
+
+Requires: CLEVER, VICTORYPROCESS
+
+This example illustrates using Clever to simulate the physics in Liquid Crystal
+films.  Liquid crystal films consist of long molecules, called 
+{bold} directors 
+which rotate in response to applied electric fields, that effectively supplies
+a rotational torque.  The permittivity and hence the capacitance of these LCD
+films, is highly directional and dependent on the the orientation of the long
+molecules (directors). When an electric field is applied which rotates these 
+molecules, the capacitance in the direction across the film, can change 
+dramatically.  Clever simulates this physics, in order to calculate the voltage
+(field) dependent capacitance of LCD layers.
+
+The directional permittivities of the LCD versus director angle are defined in
+the
+{bold} setLC 
+statement.
+
+The layers which interface the LCD film can anchor the LCD molecules in a fixed
+direction, regardless of applied field.  This creates an increasing angular 
+rotation of the LCD molecules with applied field, the further they are away 
+from these anchored interface regions.  These physical effects are also 
+included in the simulations.  Specifying these fixed interface angles for top
+and bottom interfaces is executed by the statements 
+{bold} LCbndaryT 
+and 
+{bold} LCbndaryB 
+
+Clearly, if an applied voltage changes the permittivity of a film, the stored
+charge and capacitance is also voltage dependent. Since Q=CxV, where Q is 
+stored charge, C is layer capacitance in a particular direction and V is 
+applied voltage, mathematical instability can result at certain applied 
+voltages due to the inter-dependence of all three parameters.  The purpose of
+the 
+{bold} cPenalty
+parameter, is to introduce a modicum of numerical damping, to calm these 
+numerical instabilities.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+{subsection} clex23.in : Optical Simulation of Liquid Crystal in the In-plane Switching (IPS) Mode 
+
+Requires: Victory Process / Clever
+{newline}
+Minimum Versions: Victory Process 7.22.0.R  / Clever 3.11.6.C or Later
+
+This example demonstrates the electrical and optical simulation of a liquid crystal (LC) cell in the in-plane switching (IPS) mode. On one hand, the LC director reorientation in the presence of external electric field is calculated by a finite element method. On the other hand, the optical transmission of a light beam traveling through the LC cell is calculated by the extended Jones matrix method. 
+
+This example is related to the 2017 Silvaco Simulation Standard article: 
+"Optical Simulation of Liquid Crystals in the In-plane Switching Mode".
+
+Everything about the optical part is specified in the 
+{bold} optics 
+statement. An existing structure file which is the output from an electrical simulation is necessary and can be imported via 
+{bold} structure. 
+The corresponding bias voltage is defined in 
+{bold} pixelvolt. 
+A tabular file with the dispersion relation of the complex refractive index of the LC is assigned to 
+{bold} indexfile. 
+The propagation direction of the light source is defined in 
+{bold} lightorient. 
+Appropriate optical grids need to be specified by 
+{bold} dx, dy,
+ and 
+{bold} dzmax. 
+
+There are two types of polarizers in the optical simulation. One type is the ideal polarizer whose physical thickness is zero. The optic axis in the beam-incident plane is defined in 
+{bold} polanglestart 
+and that in the beam-outgoing plane is defined in 
+{bold} polangleend. 
+The corresponding real part of the polarizer?s refractive index is specified in 
+{bold} polindexstart 
+and 
+{bold} polindexend. 
+Another type of polarizers is the non-ideal polarizer which is a birefringent optical layer. The ideal polarizer must be first disabled by setting its polarization angle out of the range between -90 and 90 degrees. The properties of the non-ideal polarizer is specified in 
+{bold} StartEndLayers(). 
+The first six variables of this function are the layer thickness, optic axis, no, ne, ko, and ke for the polarizer at the incident plane, while the last six are related parameters for the one at the emitting plane.
+
+The fixed beam wavelength is defined in 
+{bold} wavelength 
+and the fixed incident angle is defined in 
+{bold} angle. 
+The transmission pattern is saved to the file assigned to 
+{bold} topview. 
+The wavelength sweep simulation is trigged by specifying a wavelength range in 
+{bold} wlsweep(). 
+The output spectral file is specified in 
+{bold} outspec. 
+The angular sweep is done by specifying the scan range of the polar and the azimuthal angle in 
+{bold} anglesweep() 
+and 
+{bold} thetasweep()
+, respectively. The angular distribution of the transmission is saved to the file assigned to
+{bold} angleview.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any supporting files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+

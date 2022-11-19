@@ -1,0 +1,71 @@
+<html>
+  <head>
+    <title>Performing a 2D Interconnect Simulation in Clever</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Performing a 2D Interconnect Simulation in Clever</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>CLEVER</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="clex12_plot0.png" width="640" alt="clex12_plot0" />
+      <p/>
+    </div>
+    <div id="text" >
+<p>
+A useful option included within Clever is its ability to operate in 2D or 1D
+mode.  This greatly reduces simulation time and allows the user to
+check that important aspects of the process are correctly implemented.
+</p>
+<p>
+This example consists of three layers of metal to illustrate the use of the
+<b> Cut line </b> feature in order to generate a 2D simulation.  The example then goes on to
+perform the full 3D simulation of the same structure.  It will be noted that
+the 3D simulation takes significantly longer to perform tasks such as the
+capcitance matrix calculation.
+</p>
+<p>
+This example also demonstrates the use of the
+<b> box</b> command which forces Clever to increase the effective mask size by using the given
+coordinate around the edge of the masks leading to a 3D simulation.
+This ensures that fringing capacitances are better accounted for by increasing
+the volume around the perimeter which is meshed therefore increasing the
+volume within which fringing field lines are solved.
+</p>
+<p>
+Comparison of the 3D and 2D capacitance matricies yields the expected result of
+larger capacitances for the 3D simulation.  This is because fringing
+capacitances in the 2D simulation in the Z direction are effectively eliminated.
+Notice the greatly reduced capacitance in the 2D calculation for non adjacent
+layers which are effectively shielded in the Z direction.  Compare these
+results with the full 3D simulation where significant fringing capacitance
+occurs along the length of the structures.
+</p>
+<p>
+Once the process simulation is complete the three-dimensional structure is
+saved with the
+<b> Save</b> statement and can be plotted using
+<b> TonyPlot3d.</b> </p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

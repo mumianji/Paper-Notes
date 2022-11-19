@@ -1,0 +1,113 @@
+# (c) Silvaco Inc., 2018
+go athena
+#
+line x loc=0 spac=0.1 
+line x loc=0.35 spac=0.02
+line x loc=0.5 spac=0.1 
+#
+line y loc=0.00 spac=0.01 
+line y loc=0.2 spac=0.01 
+line y loc=0.5 spac=0.02
+line y loc=1.0 spac=0.2 
+#
+init orientation=100 c.phos=1e14 
+# 
+#pwell formation including masking off of the nwell
+#
+diffus time=30 temp=1000 dryo2 press=1.00 hcl=3
+#
+etch oxide thick=0.02
+#
+#P-well Implant
+# 
+implant boron dose=5.0e12 energy=100 pears
+#
+diffus temp=950 time=100 weto2 hcl=3
+#
+#N-well implant not shown -
+#
+# welldrive 
+diffus time=220 temp=1200 nitro press=1
+#
+etch oxide all
+#
+#sacrificial "cleaning" oxide
+diffus time=20 temp=1000 dryo2 press=1 hcl=3
+#
+etch oxide all
+#
+#gate oxide grown here:-
+diffus time=10 temp=950 dryo2 press=1.00 hcl=3
+#
+extract name="gateox" thickness oxide mat.occno=1 x.val=0
+#
+#vt adjust implant 
+implant bf2 dose=1.2e12 energy=35 pearson
+#
+depo poly thick=0.250 div=3 
+#
+etch poly left p1.x=0.35
+#
+relax y.min=0.5
+method fermi compress
+diffuse time=5 temp=900 weto2 press=0.8
+#
+implant phosphor dose=3.0e13 energy=50 pearson
+#
+depo oxide thick=0.150 divisions=5
+#
+etch oxide dry thick=0.155
+#
+implant arsenic dose=5.0e15 energy=50 pearson
+#
+#
+method fermi compress
+diffuse time=5 temp=900 nitro press=1.0
+#
+# extract final S/D Xj
+extract name="xj" xj silicon mat.occno=1 x.val=0.1 junc.occno=1
+#
+etch oxide left p1.x=0.15
+deposit alumin thick=0.03 div=2
+etch alumin right p1.x=0.16
+structure mirror right
+
+electrode name=gate x=0.5 y=0.1 
+electrode name=source x=0
+electrode name=drain x=0.9
+electrode name=substrate backside
+
+structure outfile=mos2ex03_0.str 
+
+tonyplot mos2ex03_0.str -set mos2ex03_0.set
+
+#############   LDD MOSFET Gate Turn-On Transient Test  ################
+go atlas
+
+models  mos  
+interf  qf=3E10
+
+# Set workfunction for poly gate and interface charge
+contact name=gate n.polysilicon 
+
+# Set drain capacitance to 0.5pF/um, the will mimik a Pchan in an inverter...
+contact name=drain cap=0.5e-12 resis=1.0e5
+
+method newton autonr trap
+
+solve init
+
+# Calculate  solution at VDS = 5.0V, BGS = 0.0V
+solve   prev
+solve   vdrain=5.0 local
+
+# Store transient results 
+log     outf=mos2ex03_1.log master
+
+# Apply Gate turn-on transient
+solve   vgate=5.0 ramptime=5e-09 dt=2e-11 tstop=50e-09
+
+extract max(curve(v."drain", i."drain")) name="Surge Current (Amps) "
+tonyplot  mos2ex03_1.log -set mos2ex03_1.set
+
+quit

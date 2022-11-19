@@ -1,0 +1,76 @@
+
+go  athena 
+   
+#TITLE:  Trench sidewall doping example using devedit to remesh the structure 
+#   
+line  x loc=0.00 spac=0.20 
+line  x loc=0.4 spac=0.05 
+line  x loc=0.6 spac=0.05 
+line  x loc=0.9 spac=0.05 
+line  x loc=1.2 spac=0.05 
+line  x loc=1.4 spac=0.05 
+line  x loc=1.8 spac=0.20 
+#   
+line  y loc=0.00 spac=0.02 
+line  y loc=1.1 spac=0.1 
+line  y loc=2 spac=0.5 
+initialize  c.phos=1e16 
+#   
+deposit  material=SPR500      thick=1. div=5 
+#   
+etch  material=SPR500 start x=0.6 y=-10 
+etch  cont  x=0.6 y=10 
+etch  cont  x=1.2 y=10 
+etch  done  x=1.2 y=-10 
+#   
+structure  outfile=anex08_0.str 
+   
+rate.etch  machine=m1 rie silicon iso=0.3 dir=0.8 u.m 
+#   
+etch  machine=m1 time=40.0 second dx.mult=0.25 
+   
+structure  outfile=anex08_1.str 
+   
+strip  material="SPR500" 
+   
+#   
+rate.depo  machine=dep1 oxide u.m  cvd dep.rate=1.0 step.cov=0.55 
+#   
+deposit  machine=dep1 time=0.1 minutes c.boron=1.0e21 divisions=3 
+#   
+#  Define the segregration/transport co-efficients for calibration..... 
+impurity  i.boron silicon /oxide Seg.0=1066.0 Trn.0=1.2e-7 
+   
+method  fermi compress 
+diffus  time=30 temp=900 nitro press=1.00 
+   
+etch  oxide all 
+   
+#  Save this structure for comparison... 
+struct  outf=anex08_2.str 
+   
+#  Now dip off the oxide to save boundary related mesh points, and remesh on 
+#  doping concentration gradients.... 
+go  devedit 
+base.mesh  height=0.2 width=0.2 
+bound.cond  apply=false max.ratio=300 
+imp.refine  min.spacing=0.05 
+imp.refine  imp="Phosphorus" sensitivity=1 
+imp.refine  imp="Boron" sensitivity=0.5 
+mesh   
+   
+go  athena 
+   
+#  Note: redefine all non-default models when moving back into Athena.... 
+impurity  i.boron silicon /oxide Seg.0=1066.0 Trn.0=1.2e-7 
+   
+structure  outf=anex08_3.str 
+   
+diffuse  temp=1000 time=10 nitr 
+   
+structure  outf=anex08_4.str 
+   
+#plot  the structures before and after devedit.... 
+tonyplot  anex08_*.str 
+   
+quit   

@@ -1,0 +1,217 @@
+
+
+{section} MERCURY : Examples of the Fast Simulation of FETs
+
+
+{subsection} mercuryex01.in : Planar N-Type MESFET  
+
+
+Requires: Mercury
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+
+This is a basic introduction to the Mercury module.  Mercury is
+optimized for the fast simulation of epitaxial FETs (that is FETs that
+have a constant epistructure and doping profile from the source to the
+drain).
+
+This example defines a simple, planar n-type MESFET and simulates the
+DC-IV curves and the small-signal AC characteristics.
+
+Most of the commands are familiar Atlas commands, however there are a
+few commands and parameters that are specific to the Mercury module.
+
+The
+{bold} network clear 
+command removes the external circuit that surrounds the FET.  As
+Mercury can do a large-signal harmonic balance simulation on the FET
+it needs to be able to solve the FET within an external circuit.  This
+circuit is not usually needed when simulating the DC or small-signal
+behavior.
+
+The
+{bold} models n_depletion 
+command tells Mercury that the device is an n-type depletion mode
+FET.  Mercury can use this information to optimize the simulation.
+
+The
+{bold} poisson 
+command is used to generate a look-up table that characterizes the
+channel as a function of surface condition.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} mercuryex02.in : Recessed N-Type MESFET
+
+
+Requires: Mercury
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+
+The Mercury module is optimized for simulating epitaxial FETs.  That
+is FETs where the material and doping are constant along the
+x-dimension of the device (from the source to the drain).  The only
+variation allowed in the x-direction is the position of the gate and
+the position/depth of a recess on the surface.
+
+This example defines a simple, recessed n-type MESFET and simulates the
+DC-IV curves and the small-signal AC characteristics.
+
+This example introduces the
+{bold} surface 
+command that is used to define the recess.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} mercuryex03.in : Recessed P-Type MESFET
+
+
+Requires: Mercury
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+
+This example defines a simple, recessed p-type MESFET and simulates the
+DC-IV curves and the small-signal AC characteristics.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} mercuryex04.in : Recessed P-Type HEMT
+
+
+Requires: Mercury
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+
+The Mercury module can model the band offsets associated with a
+multi-layer epistructure and so can generate the channel associated
+with a modulation doped structure (where the mobile carriers are
+physically removed from the doping that generates them).
+
+This example defines a modulation doped GaAs/InGaAs/GaAs HEMT and
+simulates the DC-IV curves and the small-signal AC characteristics.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} mercuryex05.in : Harmonic Balance
+
+
+Requires: Mercury
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+
+As the Mercury module uses a 1D simulation to calculate the transport,
+it uses a relatively small number of mesh points (compared to a 2D
+Atlas simulation of the same FET).  Therefore Mercury can use the
+Harmonic Balance method to simulate the large signal behavior of the
+FET.  The matrices used in the Harmonic Balance method are 25-100
+times bigger than the matrices used in a DC simulation of the same
+device.
+
+This example defines a simple, recessed, n-type MESFET and does a
+Harmonic Balance simulation at 100 MHz.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} mercuryex06.in : Gain Compression
+
+
+Requires: Mercury
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+
+This example defines a simple, recessed, n-type MESFET and does a
+Harmonic Balance simulation at 100 MHz and 1 GHz.
+
+This example goes to higher input power than the previous example and
+so displays the gain compression that occurs.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} mercuryex07.in : Trend Analysis
+
+
+Requires: DBInternal, Mercury
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+
+The speed of Mercury means it is well suited for trend analysis,
+investigating how changes in the structure of the device affect the
+output.
+
+This example shows how the doping in a device effects the current
+pinch off behavior.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} mercuryex08.in : Yield Analysis
+
+
+Requires: DBInternal, Mercury
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+
+The speed of Mercury means it is well suited for yield analysis,
+investigating how random variations in the construction of a device
+will affect the output.
+
+This example shows how changes in the doping, the recess, and the gate
+length affect the drain current and transconductance at some quiescent
+bias.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+

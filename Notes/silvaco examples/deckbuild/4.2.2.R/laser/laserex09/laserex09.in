@@ -1,0 +1,388 @@
+# (c) Silvaco Inc., 2018
+go atlas
+Title k.p Simulation of a Strained Multiple Quantum Well Tunnel Injection Laser 
+#
+# The example demonstrates the steady state simulation of a tunnel
+# injection laser with disk geometry. The active region consists of 3 InAsP
+# quantum wells separated by InGaAsP barriers, with the wells under compressive
+# strain of 2.08 %. Current is injected into the active region via a tunnel 
+# junction consisting of a InGaAsP pn junction. The fact that this is a tunnel
+# injection laser has an important modeling implication. Since hot carriers
+# are suppressed in the active region due to tunnel injection directly to low
+# energy bound states, the carrier density in active region can be assumed to 
+# be fully 2 dimensional. This allows us to side-step the use of capture-escape
+# model to dynamically obtain the bound state density in the active region. 
+#
+# The important modeling highlights are:
+#
+# 1. Gain and spontaneous emission in the active region is calculated using
+#    the band structure derived from the  Luttinger-Kohn k.p model. The
+#    band structure is computed with strain effects and full coupling to 
+#    the electrostatic potential at every bias step.
+#
+# 2. Laser modes calculated from a 2D vector Helmholtz solver in a disk 
+#    geometry. The laser modes fully account for the changes in the complex
+#    refractive index due to the gain computed from the k.p model, and 
+#    free-carrier absorption from the bulk carrier density in the device.
+#
+# 3. Tunnel injection modeled using a non-local tunneling junction.
+#  
+# 4. Electron and Hole Mobility with Field, Temperature and Concentration
+#    dependence.
+#
+# 5. Newton method to solve fully coupled system of drift diffusion and 
+#    photon rate equations.
+#
+# REFERENCES:
+#
+#	1. Yamamoto, M., N. Yamamoto, J. Nakano, IEEE Journal of Quantum 
+# 	   Electronics, 30, pg. 554, "MOVPE Growth of Strained InAsPDnGaAsP 
+# 	   Quantum-Well Structures for Low-Threshold 1.3-um Lasers" (1994)
+#
+#	2. Spuesens T, et al., Journal of Lightwave Technology, 30, pg. 1764,
+#	   "Compact Integration of Optical Sources and Detectors on SOI for 
+#	   Optical Interconnects Fabricated in a 200 mm CMOS Pilot Line", 2012
+#
+#	3.  M Sotoodeh, A H Khalid, A A Rezazadeh, Journal of Applied Physics,
+#	    87, pg. 2890, "Empirical low-field mobility model for III-V
+#	    compounds applicable in device simulation codes" (2000)
+
+#
+# SECTION 1: Mesh Specification
+#
+# A cylindrical mesh to model the disk structure
+#
+mesh  cylindrical
+x.mesh l=0.0  s=0.5
+x.mesh l=2.7  s=0.1
+x.mesh l=2.75 s=0.05
+x.mesh l=3.75 s=0.05
+x.mesh l=3.8  s=0.1
+x.mesh l=6    s=0.5
+x.mesh l=7    s=0.5
+x.mesh l=8.5  s=0.5
+x.mesh l=9    s=0.5
+y.mesh l=-0.5  s=0.1
+y.mesh l=0     s=0.01
+y.mesh l=0.08  s=0.001
+y.mesh l=0.1   s=0.001
+y.mesh l=0.12  s=0.001
+y.mesh l=0.255 s=0.01
+y.mesh l=0.28  s=0.001
+y.mesh l=0.295 s=0.001
+y.mesh l=0.301 s=0.001
+y.mesh l=0.316 s=0.001
+y.mesh l=0.322 s=0.001
+y.mesh l=0.337 s=0.001
+y.mesh l=0.343 s=0.001
+y.mesh l=0.358 s=0.001
+y.mesh l=0.368 s=0.005
+y.mesh l=0.488 s=0.005
+y.mesh l=0.583 s=0.05
+y.mesh l=0.78  s=0.05
+y.mesh l=3     s=0.1
+#
+# SECTION 2: Structure Specification
+#
+region num=1  material=sio2  name=oxide
+# Top contact 
+region num=2  material=InP                x.min=0 x.max=3.750 y.min=0.000 y.max=0.080 substrate
+#
+# Tunnel junction
+#
+region num=3  material=InGaAsP name=tj    x.min=0 x.max=3.750 y.min=0.080 y.max=0.100 x.comp=0.30 y.comp=0.65
+region num=4  material=InGaAsP name=tj    x.min=0 x.max=3.750 y.min=0.100 y.max=0.120 x.comp=0.30 y.comp=0.65
+#
+# p-type layer
+#
+region num=5  material=InP                x.min=0 x.max=3.750 y.min=0.120 y.max=0.255
+#
+# Top SCH layer. This layer extends into the top barrier of the active region below. 
+#
+region num=6  material=InGaAsP            x.min=0 x.max=3.750 y.min=0.255 y.max=0.280 x.comp=0.20 y.comp=0.44
+#
+# Active Region
+#
+region num=7  material=InGaAsP  name=barr x.min=0 x.max=3.750 y.min=0.280 y.max=0.295 x.comp=0.20 y.comp=0.44  strain=-0.0
+region num=8  material=InAsP    name=well x.min=0 x.max=3.750 y.min=0.295 y.max=0.301 y.comp=0.35              strain=-0.0208
+region num=9  material=InGaAsP  name=barr x.min=0 x.max=3.750 y.min=0.301 y.max=0.316 x.comp=0.20 y.comp=0.44  strain=-0.0
+region num=10 material=InAsP    name=well x.min=0 x.max=3.750 y.min=0.316 y.max=0.322 y.comp=0.35              strain=-0.0208
+region num=11 material=InGaAsP  name=barr x.min=0 x.max=3.750 y.min=0.322 y.max=0.337 x.comp=0.20 y.comp=0.44  strain=-0.0
+region num=12 material=InAsP    name=well x.min=0 x.max=3.750 y.min=0.337 y.max=0.343 y.comp=0.35              strain=-0.0208
+region num=13 material=InGaAsP  name=barr x.min=0 x.max=3.750 y.min=0.343 y.max=0.358 x.comp=0.20 y.comp=0.44  strain=-0.0
+#
+# Bottom SCH layer
+#
+region num=14 material=InGaAsP            x.min=0 x.max=3.75  y.min=0.358 y.max=0.368 x.comp =0.2 y.comp=0.44
+#
+# n-type layer
+#
+region num=15 material=InGaAsP            x.min=0 x.max=3.75  y.min=0.368 y.max=0.488 x.comp =0.2 y.comp=0.44
+#
+# Bottom Contact Layer
+#
+region num=16 material=InP x.min=0 x.max=9 y.min=0.488 y.max=0.583
+#
+# Oxide at the bottom of the device
+#
+region num=17 material=sio2 y.min=0.583
+#
+# Here we specify the electrodes. The anode sits on top of the top contact. 
+# The cathode is L-shaped with the bottom sitting on top of the bottom contact layer, 
+# and the vertical providing a contact at the top of the device along the outermost
+# part of the disk.
+#
+electrode num=1 name=anode   x.min=0 x.max=2.75 y.min=-0.500 y.max=0.000 ^helm
+electrode num=2 name=cathode x.min=6 x.max=9.00 y.min= 0.368 y.max=0.488 ^helm
+electrode num=3 name=cathode x.min=6 x.max=7.00 y.min=-0.500 y.max=0.368 ^helm
+#
+# Here we specify Doping
+#
+doping reg=2 uniform   n.type conc=5e18
+doping reg=3 uniform   n.type conc=1e19
+doping reg=4 uniform   p.type conc=2e19
+doping reg=5 uniform   p.type conc=1e18
+doping reg=15 uniform  n.type conc=1e18
+doping reg=16 uniform  n.type conc=5e18
+#
+# Here we specify the mobility models. The hole mobility is modeled as concentration
+# independent built-in mobility at 300 K. The electron mobility depends both on doping
+# and temperature according to Eq. 4 of Sotodeh et. al. [3]. The analytic model in Atlas
+# can mimic the model of Sotodeh by mapping the parameters of the analytic model to those
+# in [3]. For ternary compunds, the parameters of constituent binaries are interpolated.
+# For InGaAsP, we use a rough average of the two compositions used in the regions above.
+# The parameters for the two do not differ much in terms of percentage.
+#
+mobility fldmob.n fldmob.p analytic.n
+mobility name=tj ^fldmob.n ^fldmob.p 
+#
+# Here we specify the parameters for the mobility models. Mapping between Atlas parameters
+# and [3] is as follows:
+#
+#  Atlas	Value in terms of [3]
+#  mu1n.caug	mu_min
+#  mu2n.caug	mu_max
+#  alphan.caug	alpha
+#  betan.caug	-theta1
+#  deltan.caug	lambda
+#  gamman.caug	-lambda x theta2
+#  ncritn.caug	N_R
+#
+mobility material=InP     vsatp=0.9e7 vsatn=0.9e7 \
+mu1n.caug=400 mu2n.caug=5200 alphan.caug=0.0 betan.caug=-2.0 gamman.caug=-1.53 deltan.caug=0.47 ncritn.caug=3.0e17
+mobility material=InGaAsP vsatp=0.9e7 vsatn=0.9e7 \
+mu1n.caug=190 mu2n.caug=5500 alphan.caug=0.0 betan.caug=-1.34 gamman.caug=-1.58 deltan.caug=0.51 ncritn.caug=1.04e17
+mobility material=InAsP   vsatp=0.9e7 vsatn=0.9e7 \
+mu1n.caug=334 mu2n.caug=10114.2 alphan.caug=0.0 betan.caug=-1.4 gamman.caug=-1.15 deltan.caug=0.508 ncritn.caug=6.98e17
+#
+# SECTION 3: Material Specification
+#
+material region=1 real.index=1.54 imag.index=0
+material material=InP ndx.adachi
+material material=InAsP real.index=3.4 imag.index=0
+material material=InGaAsP real.index=3.32 imag.index=0
+material name=tj real.index=3.4 imag.index=0
+#
+# Auger recombination rates
+#
+material augn=1.0e-29 augp=1.0e-29
+#
+# SRH and free carrier abosrption parameters. The free carrier absorption by
+# electrons is known to unimportant for InGaAsP systems. The hole contribution
+# is on the order of 20e-18 cm^2 to 60e-18 cm^2. The model for FCA is simple:
+# FCA = fcn x (elec. density) + fcp x ( hole density)
+#
+material material=InP     taun0=1e-9 taup0=10e-9 copt=1e-10 fcn=1e-18 fcp=25e-18
+material material=InGaAsP taun0=1e-9 taup0=10e-9 copt=1e-10 fcn=1e-18 fcp=40e-18
+material material=InAsP   taun0=1e-9 taup0=10e-9 copt=1e-10 fcn=1e-18 fcp=40e-18
+#
+# The affinity and band gap are based on [1] with minor adjustments
+#
+material name=barr affinity=4.52
+material name=well affinity=4.82 well.gamma0=6.6e-3 eg300=0.63 egalpha=3.06e-4 egbeta=117
+#
+# SECTION 4: Tunneling Junction Mesh Specification
+#
+qtx.mesh loc=0.00 spac=0.5
+qtx.mesh loc=2.70 spac=0.1
+qtx.mesh loc=2.75 spac=0.05
+qtx.mesh loc=3.75 spac=0.05
+#
+# Use finer mesh near the junction
+#
+qty.mesh loc=0.08 spac=0.0001
+qty.mesh loc=0.10 spac=0.00005
+qty.mesh loc=0.12 spac=0.0001
+#
+# SECTION 5: Laser Mesh Specification
+#
+# The optical modes vary spatially on the scale of a wavelength or more. 
+# Thus our choice of mesh spacing is 10-20 nm. We ensure that mesh
+# lines go through each region, especially the quantum wells so that
+# the laser model can pick up the gain induced changes in refractive index.
+#
+lx.mesh l=1.5   s=0.02
+lx.mesh l=4.0   s=0.01
+lx.mesh l=4.5   s=0.1
+#
+ly.mesh l=-0.2     s=0.05
+ly.mesh l=-0.05    s=0.05
+ly.mesh l=0     s=0.01
+ly.mesh l=0.08  s=0.01
+ly.mesh l=0.1   s=0.01
+ly.mesh l=0.12  s=0.01
+ly.mesh l=0.270 s=0.01
+ly.mesh l=0.290 s=0.01
+ly.mesh l=0.300 s=0.01
+ly.mesh l=0.330 s=0.01
+ly.mesh l=0.360 s=0.01
+ly.mesh l=0.370 s=0.01
+ly.mesh l=0.400 s=0.01
+ly.mesh l=0.500 s=0.01
+ly.mesh l=0.8   s=0.05
+#
+# SECTION 6: Model Specification
+#
+# We enable Fermi statistics, SRH and Auger recombination and optical 
+# recombination for all layers. EVSATMOD=0 is default and enables the
+# Caughey-Thomas field-depdnent mobility model.
+#
+models fermi temperature=300 evsatmod=0 srh auger optr print
+#
+# Here we specify the non-local band-band tunneling model. 
+#
+models name=tj qtunn.dir=0 bbt.nonlocal bbt.nlderivs bbt.reverse
+#
+# Here we specify the k.p band structure model for the WELL and BARR named regions.
+# We use the SPONT model for optical recombination in these regions instead of
+# the default OPTR.
+#
+models name=well calc.fermi qwell  ^optr spont kp.cv2   well.ny=12
+models name=barr calc.fermi qwell  ^optr spont kp.cv2   well.ny=30
+# 
+# We use 2 slices since the light intensity varies from zero at the disk center
+# to maximum just outside the edge of the active region. Thus two slices
+# account for the corresponding changes in electronic states due to 
+# carrier densities near and above lasing/
+# 
+models well.nx=3 well.cnbs=3 well.vnbs=8  npred.negf=10 
+models kp.kmax=1.5  kp.adaptive kp.dostol=0.02 kp.solvertol=0.0001
+models kp.chibroad=0.01  kp.dosres=0.001 kp.chires=0.0005 kp.params.copy kp.print 
+#
+# We use Hermite polynomials to expand the electronic wavefunctions
+# on the finite element mesh. Ten slices are specified to probe the 
+# local density of states within the electron and hole bands
+#
+models kp.fem.hermite kp.cnldos=10 kp.vnldos=10 kp.chiemin=0.6 kp.avgslices
+#
+# SECTION 7: Electrode Specification
+#
+contact name=anode   con.resist=5e-5
+contact name=cathode con.resist=5e-5
+#
+# SECTION 8: Method Specification
+#
+# Near lasing threshold, small changes in density can result in large changes in
+# photon numbers. We use Bank-Rose damping to prevent the solution from 
+# diverging away and to prevent large number of bias cut backs as a result.
+#
+method newton maxtrap=100 itlimit=50 kp.sctol=1.0e-5
+#
+# SECTION 9: Laser Model Specification
+#
+# We perform a single model calculation. The transverse mode with angular 
+# momentum number = 40 has energy of about 0.78 eV and lies near the peak in
+# the gain spectrum. The disk laser does not have mirror losses as the 
+# light is extracted into the waveguide. Given the length of the active 
+# region, EXTRACTION=13 amounts to about 3% loss due to escape of photons.
+# LOSSES accounts for scattering losses that can range from 15-20 in these systems.
+# FCARRIER enables free carrier absorption in the frequency-dependent dielectric
+# function.
+#
+laser orbit.num=40 nmode=3 photon.energy=0.77 prt.eval v.helm neff=3.2 \
+rr=100 rf=100 absorption fcarrier extraction=13 losses=15  gainmod=5 \
+itmax=10 maxch=2.5 ^helm.tm toler=0.2  maxtrap=100 
+#
+# SECTION 10: Output Specification
+#
+output con.band val.band band.param traps u.rad u.srh u.auger flowlines qfn qfp \
+hx.opt hy.opt hz.opt ex.opt ey.opt ez.opt e.velocity h.velocity ey.velocity hy.velocity e.mobility h.mobility \
+las.wellcont las.gaincont las.refr las.loss las.diffgain las.realgain
+#
+# We integrate the carrier densities in the active region to obtain the
+# functional dependence of optical response and light output on average
+# electron and hole density.
+#
+probe integrated name="QElecDen" n.conc x.min=0.0 x.max=3.75 y.min=0.280 y.max=0.358
+probe integrated name="QHoleDen" p.conc x.min=0.0 x.max=3.75 y.min=0.280 y.max=0.358
+#
+# We integrate the current density on both sides outside the active region. Comparison
+# of the two densities yields a measure of the efficiency with which electrical
+# current is converted into light emission (spontaneous + stimulated) by this device.
+#
+probe integrated name="current above" j.conduction x.min=0.0 x.max=3.75 y.min=0.00 y.max=0.280
+probe integrated name="current below" j.conduction x.min=0.0 x.max=3.75 y.min=0.358 y.max=0.583
+#
+# We also probe the conduction band edges of the three wells to illustrate
+# the flattening of the band profile as threshold is approached
+#
+probe integrated name="Rad" radiative 
+#
+# SECTION 11: Solve Statements
+#
+solve init 
+
+save outf=laserex09_0.str
+
+log outf=laserex09.log
+#
+# Voltage ramp to just below threshold
+#
+solve vstep=0.2 vfinal=0.6 name=anode
+save outf=laserex09_1.str
+
+solve vstep=0.05 vfinal=0.8 name=anode
+save outf=laserex09_2.str
+
+solve vstep=0.05 vfinal=0.95 name=anode
+save outf=laserex09_3.str
+#
+# Lasing transition
+#
+solve vstep=0.025 vfinal=1.05 name=anode
+save outf=laserex09_4.str
+
+solve vstep=0.05 vfinal=1.1 name=anode
+save outf=laserex09_5.str
+#
+# SECTION 12: Visualization
+#
+# Plot the emitted power versus anode current
+tonyplot laserex09.log -set laserex09_power.set
+# Plot the modal gain and loss versus anode current for the lasing mode
+tonyplot laserex09.log -set laserex09_modalgainloss.set
+# Plot the IV curve for the device
+tonyplot laserex09.log -set laserex09_iv.set
+# Plot the gain confinement factors for the laser modes
+tonyplot laserex09.log -set laserex09_gainconf.set
+# Plot the photon densities of the laser modes
+tonyplot laserex09.log -set laserex09_modaldensity.set
+#
+# Plots at significant points of LI curve
+#
+# Band structure below threshold. The figure shows bands grouped in sets of 2-3
+# closely lying bands contributed by the three identical quantum wells but with
+# different electrostatic potential
+tonyplot -overlay laserex09_1_quantum_bands.log -set laserex09_vbands_subthresh.set
+
+# Band structure above threshold. The closely lying sets of bands almost merge
+# into each other as the electrostatic potential variations diminish above
+# threshold.
+tonyplot -overlay laserex09_4_quantum_bands.log -set laserex09_vbands.set
+
+# Gain spectra
+tonyplot -overlay laserex09_2_quantum.log laserex09_3_quantum.log laserex09_4_quantum.log -set laserex09_gainspec.set
+# Spontaneous emission spectra 
+tonyplot -overlay laserex09_2_quantum.log laserex09_3_quantum.log laserex09_4_quantum.log -set laserex09_rspspec.set
+# Band profiles 
+tonyplot -overlay laserex09_1.str laserex09_2.str laserex09_3.str laserex09_4.str -set laserex09_cbandprofile.set

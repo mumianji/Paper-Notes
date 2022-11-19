@@ -1,0 +1,87 @@
+<html>
+  <head>
+    <title>Stress Effect on ETSOI IV characteristics</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Stress Effect on ETSOI IV characteristics</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Athena Victory Stress and Atlas</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R, Victory Stress 2.14.0.R, Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="vsex05_plot0.png" width="640" alt="vsex05_plot0" />
+      <p/>
+      <img src="vsex05_plot1.png" width="640" alt="vsex05_plot1" />
+      <p/>
+      <img src="vsex05_plot2.png" width="640" alt="vsex05_plot2" />
+      <p/>
+    </div>
+    <div id="text" >
+</p>
+<br/>
+<p>
+Extremely thin SOI (ETSOI) devices are attractive for low power applications. The integration scheme
+of the ETSOI technology allows formation of  raised source/drain (RSD) extensions
+for both NFET and PFET by using a single mask. Another feature of ETSOI CMOS is the combination of
+two strain enhancement techniques, (1) Si:C RSD for NFET and SiGe RSD for PFET,
+and (2) stress liner effect coupled with faceted RSD.
+</p>
+<p>
+Details and features of the ETSOI CMOS can be found in [1], [2]. Please refer to vsex04.in
+for a comprehensive description of the stress simulation.
+</p>
+<p>
+The 2D structure is created in Athena and subsequently used in Victory Stress. In this
+example we compare, IV characteristics obtained using Atlas, with stress-liner made
+of nitride with two geometries of RSD (vertical and faceted).
+</p>
+<p>
+Aside from the standard silicon models (cvt, srh, etc), we used the strain
+dependent mobility enhancement models
+<b> nhance </b> and
+<b> phance </b> defined in the
+<b> mobility </b> statement  for this simulation. The mobility enhancement models apply the second
+order mobility enhancement tensor (calculated by Victory Stress) directly to the
+low field mobility. This results in directionally dependent (anisotropic) electron
+and hole mobilities. For the model to take effect the enhancement factors
+must be included in the structure file simulated by Victory Stress. This is done by
+setting
+<b> nhance </b> and
+<b> phance </b> defined in the
+<b> mobility </b> statement of Victory Stress.
+</p>
+<p>
+Electrical simulations show that the effect of stress/strain results in drive
+current increase and as shown in [2] higher increase with faceted RSD.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+<p>
+[1] K. Cheng, et al, Symp. VLSI Tech, 2009, p.212
+</p>
+<p>
+[2] K. Cheng, et al, IEDM 2009, p. 49
+</p>
+  </div></body>
+</html>

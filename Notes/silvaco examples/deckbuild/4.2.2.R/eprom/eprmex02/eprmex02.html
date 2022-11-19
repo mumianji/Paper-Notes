@@ -1,0 +1,122 @@
+<html>
+  <head>
+    <title>3D Flash EPROM Programming</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>3D Flash EPROM Programming</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>DevEdit 3D/Device 3D</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="eprmex02_plot0.png" width="640" alt="eprmex02_plot0" />
+      <p/>
+      <img src="eprmex02_plot1.png" width="640" alt="eprmex02_plot1" />
+      <p/>
+      <img src="eprmex02_plot2.png" width="640" alt="eprmex02_plot2" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This examples demonstrates steady-state and transient simulation of
+an Flash EPROM device in three dimensions.
+</p>
+<p>
+In this example an EPROM device is constructed using DevEdit 3D. The
+structure is then passed to Atlas for electrical testing. The input file
+consists of the following sections:
+</p>
+<ul>
+  <li>
+ Construction of the device in DevEdit 3D
+<br/>
+  </li>
+  <li>
+ Threshold voltage test before programming
+<br/>
+  </li>
+  <li>
+ Transient simulation of Flash EPROM programming
+<br/>
+  </li>
+  <li>
+ Threshold voltage test after programming
+  </li>
+</ul>
+<p>
+The first stage of the input constructs the EPROM geometry, material regions,
+doping profiles, and electrodes in DevEdit 3D. The structure was created in
+DevEdit 3D by drawing the device regions in interactive mode and specifying 3D
+doping distribution. Finally the mesh was generated automatically by specifying
+basic mesh constraints and refining in the important areas of the device.
+</p>
+<p>
+The Atlas simulation begins from reading in the structure from
+DevEdit 3D.  DeckBuild provides an automatic interface between DevEdit
+and Atlas so that the structure produced by DevEdit 3D is transferred
+to Atlas without having to use the mesh statement.
+</p>
+<p>
+In Atlas, the
+<b> contact </b> statements are used to assign the work function on the polysilicon
+gates and to specify the floating gate contact. The
+<b> interface </b> statement is used to assign a fixed interface charge under the floating gate.
+The
+<b> models </b> statement is used to select a set of physical models for programming
+simulation.  The  key model for programming is the hot carrier injection model
+to give the gate current. This is enabled by
+<b> models hei</b> .
+</p>
+<p>
+First the initial solution for zero biases is obtained.  Next, Id/Vgs
+calculations are performed with zero charge on the floating gate
+(before programming). The drain voltage is set to 0.5V, and the control
+gate voltage is ramped until the drain current reaches a compliance
+limit set with the &apos;compl&apos; parameter. At this stage the combined algorithm
+is specified using
+<b> method gummel newton</b> .
+It means that if convergence is not reached in decoupled mode (gummel) the
+simulator will automatically switch to coupled mode (newton).
+</p>
+<p>
+Next, the programming process is simulated. First of all, the control
+gate voltage is ramped to 10V. The combined algorithm is used for this
+stage, but the coupled Newton method is used for transient analysis
+calculations. In the transient analysis the drain voltage is ramped to
+5.5V in 1ns. Vds is kept constant while transient programming is
+performed until the time set by
+<b>tfinal </b> is reached.
+</p>
+<p>
+The final stage of the file re-simulates the Id/Vgs curve to obtain the
+threshold voltage after programming. The results of the two Id/Vgs curves can be overlaid using TonyPlot.
+<b> extract </b> statements can be used to measure the threshold according to
+user-defined rules. Details of the extract syntax for threshold voltage
+can be found under the MOS threshold voltage example. extract can also be used to measure the threshold voltage shift by subtracting the two previously extracted thresholds.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

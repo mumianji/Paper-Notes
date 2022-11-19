@@ -1,0 +1,26 @@
+go atlas
+set doping=1e14
+set example=doeex02
+
+mesh 
+x.mesh loc=0 spac=0.2
+x.mesh loc=1 spac=0.2
+y.mesh loc=0 spac=1
+y.mesh loc=10 spac=1
+region number=1 silicon
+electrode name=anode top
+electrode name=cathode bottom
+doping n.type uniform conc=$doping
+
+models analytic consrh
+solve init
+log outfile=temp_iv.log
+solve vanode=0 vstep=0.2 vfinal=2 name=anode
+
+go internal
+extract init infile="temp_iv.log"
+extract name="res" grad from curve(i."anode", v."anode") where y.val=1
+extract name="rho" $res/1e5
+extract name="mobility" 6.241447e23/($res*$doping)
+quit
+

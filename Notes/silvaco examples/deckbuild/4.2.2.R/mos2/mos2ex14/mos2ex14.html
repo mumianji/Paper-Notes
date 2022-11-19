@@ -1,0 +1,121 @@
+<html>
+  <head>
+    <title>Comparison of CVT, SHIRAHATA and WATT Mobility Models</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Comparison of CVT, SHIRAHATA and WATT Mobility Models</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>S-Pisces</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="mos2ex14_plot0.png" width="640" alt="mos2ex14_plot0" />
+      <p/>
+      <img src="mos2ex14_plot1.png" width="640" alt="mos2ex14_plot1" />
+      <p/>
+      <img src="mos2ex14_plot2.png" width="640" alt="mos2ex14_plot2" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+THe example demonstrates a comparison between three different surface
+mobility models used in MOSFETs. THe example consists of four Atlas runs that:
+</p>
+<ul>
+  <li>
+ Define optimum MOS mesh using a variable for surface mesh spacing
+<br/>
+  </li>
+  <li>
+ Select in turn one of three MOS Mobility Models
+<br/>
+  </li>
+  <li>
+ Run a Id/Vgs simulation at low Vds
+<br/>
+  </li>
+  <li>
+ Overlay of Id/Vgs curves and mobility in Tonyplot
+  </li>
+</ul>
+<p>
+The mesh generation and structure deinfition part of this input file
+follows the standard syntax outlined in the Getting Started Chapter of
+the Atlas manual. A variable
+<b> surf_a </b> is used to set the mesh spacing at the silicon surface. This mesh
+spacing is important in resolving the high electric field and carrier
+concentration gradients at the surface. The sensitivity of the mobility
+models to mesh variations can also be easily examined by re-running
+this example with different settings of surf_a.
+</p>
+<p>
+The three models compared in this example are
+<i> CVT, Shirahata </i> and
+<i> Modified Watt</i> . The CVT model is selectred simply with the syntax
+<b> models cvt </b> since it contains doping and parallel field dependence. The Shirahata
+model contains only a perpendicular field dependence. It must be
+combined with Klaassen&apos;s model and the standard field dependent
+mobility model using
+<b> models kla shi fldmob</b> .
+</p>
+<p>
+The modified Watt model also needs to be combined with other models. The syntax is:
+<br/>
+<b> models conmob fldmob  </b> <br/>
+<b> mobility watt.n mod.watt.n </b> </p>
+<p>
+Extra parameters are also required to determine the range of the modified Watt model. These parameters are
+<b> ymaxn.watt </b> that specifies the depth of the Watt model and
+<b> min.surf </b> that specifies the lateral extent by restricting the model to minority
+regions. In this case this means the channel and not the LDD or source and
+drain regions.
+</p>
+<p>
+The Id/Vgs simulation is similar to that in the previous section. For the
+initial drain biasing, the syntax
+<b> method gummel newton </b> is used. This provides better convergence at low biases.
+The simulation reverts to
+<b> method newton </b> once the drain is biased.
+Note that in this case only electrons are needed. The syntax
+<b> method carriers=1 electrons </b> is used to specify that only electron continuity and poisson equations are to
+be solved.
+</p>
+<p>
+The
+<b> probe </b> statement is used to save the surface mobility and perpendicular field at the
+center of the channel. Values for both these parameters are saved to the
+<i> log </i> file. TonyPlot can be used to display graphs of mobility vs. field.
+Note that the probe statement reports the exact mobility used in Atlas
+calculations. The value is calculated at the centre of the side of each
+triangle. The nearest such point to the location of the probe is used.
+Values of mobility or field from the probe might differ from values saved
+in the
+<i> solution file</i> . The solution file saves the average value of such quantities at a node
+point. With coarse or bad meshes, this may result in inaccurate plots.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

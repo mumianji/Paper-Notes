@@ -1,0 +1,292 @@
+
+go athena
+
+title  Amorphous InGaZnO thin-film transistors
+
+# reference: Amorphous InGaZnO thin-film transistors - Part I: Complete Extracton of Density of States Over the
+ Full Subband-Gap Energy Range, Yongsik Kim, et al., IEEE Transactions On Electron Devices Vol. 59, No. 10, Oct 2012
+
+# W/L=200um/100um
+# Lgs_overlap=10um
+
+# mesh initialize
+
+line x loc=-80 s=2
+line x loc=-60 s=0.25
+line x loc=-50 s=0.25
+line x loc=0 s=2
+line x loc=50 s=0.25
+line x loc=60 s=0.25
+line x loc=80 s=2
+
+line y loc=0 spac=0.5
+line y loc=5 spac=1
+
+# Glass 
+init material=oxide
+
+#Gate metal
+deposit aluminum thick=0.5 div=5
+
+# Gate metal pattern
+# Loverlap=10um
+deposit photo thick=1 div=10
+etch photo left p1.x=-50-10
+etch photo right p1.x=50+10
+etch aluminum thick=0.55 angle=40
+strip
+
+
+# double Gate ins depo
+deposit material=Si3N4 thick=0.4  div=8
+deposit material=SiO2 thick=0.05 div=4
+
+# active a-IGZO : 50nm
+deposit material=IGZO thick=0.05 div=10 ydy=0.05/2 dy=0.01
+
+# Etch stopper 50nm
+deposit oxide thick=0.05 div=4
+
+# active channel pattern
+deposit photo thick=1 div=10
+etch photo left p1.x=-50
+etch photo right p1.x=50
+etch oxide thick=0.1
+strip
+
+# S/D metal
+deposit aluminum thick=0.2 div=2
+
+# SD pattern
+deposit photo thick=1 div=10
+etch photo start x=-50 y=-10
+etch cont x=-50 y=1
+etch cont x=50 y=1
+etch done x=50 y=-10
+etch aluminum thick=0.55
+strip
+
+# passivation
+deposit oxide thick=0.1 div=2
+deposit nitride thick=0.1 div=2
+structure outfile=tftex13_0.str
+
+# S/D electrode definition 
+electrode name=gate x=0 y=0.2
+electrode name=source x=-70 
+electrode name=drain x=70
+
+structure outfile=tftex13_1.str
+
+go atlas simflags="-80"
+
+# load Athena 2D structure
+mesh infile=tftex13_1.str width=200
+
+# modify IGZO to have a name "channel" and GI
+region num=5 modify material=IGZO name=channel
+region num=4 modify material=oxide name=GI
+
+# some figure of merit from paper.
+# Ion=0.86 @ vgs=vds=10.1
+# Von=3.05= Vgs sharp increase
+# VT=5.3 = Vgs @Ids=1nA  -> simulated Vt=5.32V
+# SS=0.84 (V/dec)
+# Vgs-VT=15V
+# Ion/Ioff=1.7e6
+
+# bottom interface fixed charge
+interface qf=-2e11 intregion="GI/channel"
+
+# actual gate metal workfunction
+contact name=gate workf=5
+
+# S/D metal WF.
+contact name=source workf=5 surf.rec vsurfn=1.636e7*2 vsurfp=1.636e7*2
+contact name=drain workf=5 surf.rec vsurfn=1.636e7*2 vsurfp=1.636e7*2
+
+# GI and passivation insulator epsilon
+material material=Si3N4 permit=7
+material material=nitride permit=7
+material material=oxide permit=3.9
+
+mobility material=IGZO mun0=8.15 mup0=8.15/5 vsatn=1.636e7*2 vsatp=1.636e7*2
+material mun=8.15 mup=8.15
+
+# a-IGZO bandgap, density of states, and affinity
+material material=IGZO nc300=8e18 nv300=4.5e21 eg300=3.2 affinity=4.6
+
+# a-IGZO channel bulk DOS
+defects material=IGZO continuous tfile=tftex13_0.dat numa=24 numd=24  \
+     nga=0 ngd=0 nta=0 ntd=0 f.tftacc=tftex13_0.lib f.tftdon=tftex13_0.lib  \
+	sigtae=1.e-14 sigtah=1.e-14 sigtde=1.e-14 sigtdh=1.e-14 \  
+       siggae=1e-14 siggah=1e-14 siggde=1e-14 siggdh=1-14  
+
+# between AOS(Amorphous Oxide Semiconductor) and gate insulator
+intdefect s.i intregion="GI/channel" continuous tfile=tftex13_1.dat numa=24 numd=24  \
+  nta=2.38e12 ntd=2.25e16 wta=0.19 wtd=0.1 \
+  nga=0 ngd=0 ega=0.62 egd=0.78 wga=0.15 wgd=0.15 \
+  sigtae=1.e-14 sigtah=1.e-14 sigtde=1.e-14 sigtdh=1.e-14 \  
+  siggae=1.e-14 siggah=1.e-14 siggde=1.e-14 siggdh=1.e-14  
+
+material material=IGZO taun0=1e-8 taup0=1e-8 
+
+models fermi ust 
+
+material d.tunnel=1e-6 me.tunnel=0.2
+
+method newton autonr climit=1e-4 maxtrap=10 
+
+output con.band val.band u.trap
+
+solve init
+save outfile=tftex13_2.str
+
+############## IDVG ###################
+
+solve vdrain=0.1
+save outf=tftex13_3.str
+
+solve vdrain=1.1
+solve vdrain=4
+save outfile=tftex13_4.str
+solve vdrain=5.1
+solve vdrain=10.1
+save outfile=tftex13_5.str
+
+load infile=tftex13_3.str master
+solve prev
+log outfile=tftex13_0.log
+solve prev vgate=0 vstep=0.5 vfinal=15 name=gate
+log off
+
+extract init infile="tftex13_0.log"
+extract name="VT" x.val from curve(v."gate", i."drain") where y.val=1e-9
+extract name="idvg" curve(v."gate", i."drain") outfile="tftex13_2.dat"
+
+load infile=tftex13_5.str master
+solve prev
+log outfile=tftex13_1.log
+solve prev vgate=0 vstep=0.5 vfinal=15 name=gate
+log off
+
+extract init infile="tftex13_1.log"
+extract name="idvg" curve(v."gate", i."drain") outfile="tftex13_3.dat"
+
+tonyplot tftex13_0.dat -set tftex13_0.set
+
+tonyplot tftex13_1.dat -set tftex13_1.set
+
+
+tonyplot -overlay tftex13_4.dat tftex13_5.dat tftex13_2.dat tftex13_3.dat -set tftex13_2.set
+
+
+#################### IDVD #####################
+
+solve init
+
+solve vgate=1
+solve vgate=4 
+save outfile=tftex13_6.str
+
+solve vgate=6
+save outfile=tftex13_7.str
+
+solve vgate=8
+save outfile=tftex13_8.str
+
+solve vgate=10
+save outfile=tftex13_9.str
+
+solve vgate=12
+save outfile=tftex13_10.str
+
+load infile=tftex13_6.str master
+solve prev
+log outfile=tftex13_2.log
+solve vdrain=0 vstep=0.5 vfinal=10 name=drain
+log off
+
+load infile=tftex13_7.str master
+solve prev
+log outfile=tftex13_3.log
+solve vdrain=0 vstep=0.5 vfinal=10 name=drain
+log off
+
+load infile=tftex13_8.str master
+solve prev
+log outfile=tftex13_4.log
+solve vdrain=0 vstep=0.5 vfinal=10 name=drain
+log off
+
+load infile=tftex13_9.str master
+solve prev
+log outfile=tftex13_5.log
+solve vdrain=0 vstep=0.5 vfinal=10 name=drain
+log off
+
+load infile=tftex13_10.str master
+solve prev
+log outfile=tftex13_6.log
+solve vdrain=0 vstep=0.5 vfinal=10 name=drain
+log off
+
+
+extract init infile="tftex13_2.log"
+extract name="idvd1" curve(v."drain", i."drain") outfile="tftex13_9.dat"
+
+extract init infile="tftex13_3.log"
+extract name="idvd2" curve(v."drain", i."drain") outfile="tftex13_10.dat"
+
+extract init infile="tftex13_4.log"
+extract name="idvd3" curve(v."drain", i."drain") outfile="tftex13_11.dat"
+
+extract init infile="tftex13_5.log"
+extract name="idvd4" curve(v."drain", i."drain") outfile="tftex13_12.dat"
+
+extract init infile="tftex13_6.log"
+extract name="idvd5" curve(v."drain", i."drain") outfile="tftex13_13.dat"
+
+tonyplot -overlay tftex13_6.dat tftex13_7.dat tftex13_8.dat tftex13_11.dat tftex13_12.dat tftex13_13.dat -set tftex13_3.set
+
+
+
+################## CV #################
+
+# set area=200e-4*100e-4
+# set d=0.450e-4
+# set eps=8.854e-14 
+# set cox=3.9*$eps*$area/$d
+
+solve init
+
+log outfile=tftex13_7.log
+solve vgate=0 vstep=0.5 vfinal=20 name=gate ac freq=2e3*1
+log off
+
+extract init infile="tftex13_7.log"
+extract name="cv1" curve(v."gate", 2*c."gate""drain"/1e-12) outfile="tftex13_14.dat"
+
+
+solve init
+log outfile=tftex13_8.log
+solve vgate=0 vstep=0.5 vfinal=20 name=gate ac freq=100e3
+log off
+
+extract init infile="tftex13_8.log"
+extract name="cv2" curve(v."gate", 2*c."gate""drain"/1e-12) outfile="tftex13_15.dat"
+
+solve init
+
+log outfile=tftex13_9.log
+solve vgate=0 vstep=0.5 vfinal=20 name=gate ac freq=1e6
+log off
+
+extract init infile="tftex13_9.log"
+extract name="cv3" curve(v."gate", 2*c."gate""drain"/1e-12) outfile="tftex13_16.dat"
+
+
+tonyplot -overlay tftex13_14.dat tftex13_15.dat  tftex13_16.dat  -set tftex13_4.set
+
+
+quit

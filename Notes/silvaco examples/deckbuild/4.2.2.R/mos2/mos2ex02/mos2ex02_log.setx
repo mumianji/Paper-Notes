@@ -1,0 +1,18 @@
+<!DOCTYPE SetFile-2D>
+<setfile version="1" >
+ <properties key_opaque="false" mark_frequency="0" mark_overlay="1" graph_width_0="2" graph_width_1="1" graph_width_2="1" graph_width_3="0" graph_width_4="1" graph_width_5="0" sequence_size="1" sequence_width="0" log_zero="0" sequence_mark_0="0" sequence_mark_1="1" sequence_mark_2="2" sequence_mark_3="3" sequence_mark_4="4" sequence_mark_5="5" />
+ <functions impurity_1_name="" impurity_1_units="" impurity_2_name="" impurity_2_units="" graph_1_name="" graph_1_units="" graph_2_name="" graph_2_units="" />
+ <xygraph show_points="true" show_lines="true" xyg_type="0" xyg_convert="false" >
+  <cartesian xyg_yaxis_scale="linear" xyg_xaxis_lin="Gate Voltage" xyg_yaxis="none" xyg_yaxis_lin="Drain Current" xyg_group="(unknown electricals)" xyg_cie="false" />
+ </xygraph>
+ <key cont_1_at="3" cont_2_at="1" cont_3_at="6" elec_at="6" vectors_at="6" overlay_at="2" regions_at="4" />
+ <annotation title_main="auto" title_sub="auto" footer_right="none" footer_left="none" show_xaxis="true" show_yaxis="true" show_grid="false" show_label_xaxis="true" show_label_yaxis="true" range_xaxis="auto" range_yaxis="auto" label_xaxis="Gate Voltage (V)" label_yaxis="Drain Current (A)" />
+ <plot zoom_from_x="0" zoom_from_y="0" zoom_scale_x="1" zoom_scale_y="1" label_overlay="mos2ex02_10000s.log" label_overlay="mos2ex02_1000s.log" label_overlay="mos2ex02_1s.log" label_overlay="mos2ex02_0.1s.log" label_overlay="mos2ex02_0.01s.log" label_overlay="mos2ex02_2.log" >
+  <label label_text="0.01 sec" label_from_x="3.35887" label_from_y="3.50527e-05" label_color="#000000" label_scale="1" label_align="2" label_to_x="3.13618" label_to_y="3.66394e-05" />
+  <label label_text="0.1 sec" label_from_x="3.90703" label_from_y="2.56768e-05" label_color="#000000" label_scale="1" label_align="3" label_to_x="4.02694" label_to_y="2.33689e-05" />
+  <label label_text="1 sec" label_from_x="4.48945" label_from_y="1.29832e-05" label_color="#000000" label_scale="1" label_align="2" label_to_x="4.43806" label_to_y="1.58681e-05" />
+  <label label_text="1000 sec" label_from_x="5.83415" label_from_y="2.92829e-05" label_color="#000000" label_scale="1" label_align="2" label_to_x="5.50012" label_to_y="3.10138e-05" />
+  <label label_text="10000 sec" label_from_x="5.5772" label_from_y="1.86088e-05" label_color="#000000" label_scale="1" label_align="2" label_to_x="5.27743" label_to_y="1.96185e-05" />
+  <label label_text="dc" label_from_x="3.11143" label_from_y="5.35195e-05" label_color="#000000" label_scale="1" label_align="3" label_to_x="3.57888" label_to_y="4.84932e-05" />
+ </plot>
+</setfile>

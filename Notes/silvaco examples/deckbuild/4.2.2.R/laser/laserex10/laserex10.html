@@ -1,0 +1,75 @@
+<html>
+  <head>
+    <title>Stripe Laser using Effective Index Solver</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Stripe Laser using Effective Index Solver</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Blaze/Quantum/Laser/Led</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="laserex10_plot0.png" width="640" alt="laserex10_plot0" />
+      <p/>
+      <img src="laserex10_plot1.png" width="640" alt="laserex10_plot1" />
+      <p/>
+      <img src="laserex10_plot2.png" width="640" alt="laserex10_plot2" />
+      <p/>
+      <img src="laserex10_plot3.png" width="640" alt="laserex10_plot3" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates the simulation of
+GaAs/AlGaAs stripe laser diode.
+This deck employs an effective index (1.5D) scalar Helmholtz solver to find intensity and optical field distribution, which combines 1D solutions in in X and Y directions.
+Total number of transverse modes is set by NMODES parameter. To set the number of 1D modes in X direction, use EFFMODES parameter.   TM modes are blocked by switching off HELM.TM. Additionally, when REFLECT parameter is present, you may block either symmetric or anti-symmetric solutions, by swithcing off HELM.SYM or HELM.ASY.
+Perfect Electric Conductor  boundary conditions are used. Alternatively, Perfect Magnetic Conductor can be used by setting HELM.PMC instead of HELM.PEC.
+Default material refractive incexes are used. To remove   default material absorption, imaginary part of material dielectric constant is set to zero by EPSIM.ISO parameter.
+Instead, 3-band K.P gain/absorption  model for zincblende bulk and quantum wells, set by ZB.THREE on MODELS and GAINMOD=5 on LASER statements, is used everywhere in the device. To check the spectra of gain and spontaneous emission of a particular region, LED parameter is set on the REGION statement.
+</p>
+<p>
+The key points of this simulation are :
+</p>
+<ul>
+  <li>
+ Demonstration of 1.5D effective index Helmholtz solver
+<br/>
+  </li>
+  <li>
+ Demonstration of bulk multiband k.p gain model 
+<br/>
+  </li>
+</ul>
+<p>
+The results show 2D plots of total optical intensity  at anode bias of 3V.
+The IV log file contains information of the power, photon density modal gain, modal loss and modal refractive index for the fundamental transverse  mode.
+Spectrum log files contain information on gain and spontaneous emission spectra for the active region.
+Modal spectrum log files are stored when SPECTRUM is specified on the SAVE statement with &quot;modal_&quot; appended to the file name. Modal spectra contain modal gain, modal Rsp, modal photon density and modal lifetime for each mode.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

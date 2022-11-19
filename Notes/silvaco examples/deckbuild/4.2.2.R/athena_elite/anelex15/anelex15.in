@@ -1,0 +1,56 @@
+go athena
+
+#TITLE: Passivation oxide sputter on cold and hot substrate
+line x loc = 0.0  spac=0.05
+line x loc = 1.0  spac=0.05
+#
+line y loc = 0    spac=0.25
+line y loc = 0.5  spac=0.25
+#
+init 
+#
+# define non-planar top profile
+#
+deposit aluminum thick=.5 divis=8
+etch aluminum start  x=0.0 y=0.0
+etch          cont   x=0.5 y=0.0
+etch          cont   x=0.43 y=-.07
+etch          cont   x=0.45 y=-.1
+etch          cont   x=0.47 y=-.1
+etch          cont   x=0.52 y=-.45
+etch          cont   x=0.55 y=-.5
+etch          cont   x=0.55 y=-1
+etch          done   x=0.0  y=-1
+
+# mirror it!
+structure mirror right
+#
+# Save initial profile into the file anelex15_0.str
+structure outfile=anelex15_0.str
+#
+rate.depo  machine=depc hemis oxide u.m \
+angle1=75. angle2=-75. dep.rate=0.3 sigma.dep=0.00
+#
+# run deposition on cold substrate
+#
+deposit mach=depc time=1.0 minute divis=5
+#
+# Save the structure for plotting
+structure outfile=anelex15_1.str
+#
+initialize infile=anelex15_0.str
+#
+#
+rate.depo  machine=deph hemis oxide u.m \
+angle1=75. angle2=-75. dep.rate=0.3 sigma.dep=0.27
+#
+#run deposition on hot substrate
+#
+deposit mach=deph time=1.0 minute divis=5
+#
+# Save the structure for plotting
+structure outfile=anelex15_2.str
+tonyplot anelex15_*.str -ttitle "anelex15.in: Surface Diffusion Comparison"
+#
+quit
+

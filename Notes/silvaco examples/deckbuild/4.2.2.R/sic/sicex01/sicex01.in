@@ -1,0 +1,138 @@
+# (c) Silvaco Inc., 2018
+
+go atlas 
+
+mesh 
+
+x.mesh location=0 spacing=0.2
+x.mesh location=1 spacing=0.2
+
+y.mesh location=0   spacing=0.2
+y.mesh location=2   spacing=0.01
+y.mesh location=75  spacing=10
+y.mesh location=152 spacing=0.2
+
+region number=1 material=4H-SiC
+
+electrode name=anode top
+electrode name=cathode bottom
+
+doping conc=2e19 p.type uniform y.max=2
+doping conc=8e14 n.type uniform y.min=2 y.max=150
+doping conc=2e19 n.type uniform y.min=152
+
+save outf=sicex01_0.str
+
+extract name="t1" clock.time
+
+go atlas 
+
+mesh inf=sicex01_0.str
+
+material material=4H-SiC taun0=1e-6 taup0=1e-6 ni.min=1e6
+models srh
+impact aniso sic4h0001 e.side
+
+method zip.bicgst climit=1e-4 maxtraps=30 itlimit=30 \
+       ir.tol=1.e-30 ix.tol=1.e-30 
+
+solve init
+solve previous
+log outfile=sicex01_1.log
+solve vanode=-0.05 vstep=-0.05 vfinal=-0.5 name=anode
+solve vstep=-0.5 vfinal=-5 name=anode
+solve vstep=-5 vfinal=-50 name=anode
+solve vanode=-100
+solve vstep=-200 vfinal=-16300 name=anode
+solve vstep=-50 vfinal=-16400 name=anode
+solve vstep=-10 vfinal=-16450 name=anode 
+solve vstep=-1 vfinal=-16454 name=anode
+
+extract name="t2" clock.time
+
+go atlas simflags="-80"
+
+mesh inf=sicex01_0.str
+
+material material=4H-SiC taun0=1e-6 taup0=1e-6 ni.min=5e01
+models srh
+impact aniso sic4h0001 e.side
+
+method climit=1e-4 maxtraps=30 itlimit=30 \
+       ir.tol=1.e-35 ix.tol=1.e-35 
+      
+solve init
+solve previous
+log outfile=sicex01_2.log
+solve vanode=-0.05 vstep=-0.05 vfinal=-0.5 name=anode
+solve vstep=-0.5 vfinal=-5 name=anode
+solve vstep=-5 vfinal=-50 name=anode
+solve vanode=-100
+solve vstep=-200 vfinal=-16300 name=anode
+solve vstep=-50 vfinal=-16400 name=anode
+solve vstep=-10 vfinal=-16450 name=anode 
+solve vstep=-1 vfinal=-16454 name=anode
+
+extract name="t3" clock.time
+
+go atlas simflags="-128"
+
+mesh inf=sicex01_0.str
+
+material material=4H-SiC taun0=1e-6 taup0=1e-6 
+models srh
+impact aniso sic4h0001 e.side
+
+method climit=1e-4 maxtraps=30 itlimit=30 \
+       ir.tol=1.e-35 ix.tol=1.e-35 \
+       px.tol=1.e-22 pr.tol=1.e-43 \
+       cx.tol=1.e-22 cr.tol=1.e-35  
+
+solve init
+solve previous
+log outfile=sicex01_3.log
+solve vanode=-0.05 vstep=-0.05 vfinal=-0.5 name=anode
+solve vstep=-0.5 vfinal=-5 name=anode
+solve vstep=-5 vfinal=-50 name=anode
+solve vanode=-100
+solve vstep=-200 vfinal=-16300 name=anode
+solve vstep=-50 vfinal=-16400 name=anode
+solve vstep=-10 vfinal=-16450 name=anode 
+solve vstep=-1 vfinal=-16454 name=anode
+
+extract name="t4" clock.time
+
+go atlas simflags="-160"
+
+mesh inf=sicex01_0.str
+
+material material=4H-SiC taun0=1e-6 taup0=1e-6 
+models srh
+impact aniso sic4h0001 e.side
+
+method climit=1e-4 maxtraps=30 itlimit=30 \
+       ir.tol=1.e-35 ix.tol=1.e-35 \
+       px.tol=1.e-22 pr.tol=1.e-43 \
+       cx.tol=1.e-22 cr.tol=1.e-35  
+
+solve init
+solve previous
+log outfile=sicex01_4.log
+solve vanode=-0.05 vstep=-0.05 vfinal=-0.5 name=anode
+solve vstep=-0.5 vfinal=-5 name=anode
+solve vstep=-5 vfinal=-50 name=anode
+solve vanode=-100
+solve vstep=-200 vfinal=-16300 name=anode
+solve vstep=-50 vfinal=-16400 name=anode
+solve vstep=-10 vfinal=-16450 name=anode 
+solve vstep=-1 vfinal=-16454 name=anode
+
+extract name="t5" clock.time
+
+extract name="elapsed_time_64" $t2 - $t1 
+extract name="elapsed_time_80" $t3 - $t2 
+extract name="elapsed_time_128" $t4 - $t3 
+extract name="elapsed_time_160" $t5 - $t4 
+
+
+tonyplot -overlay sicex01_1.log sicex01_2.log sicex01_3.log sicex01_4.log -set sicex01_0.set

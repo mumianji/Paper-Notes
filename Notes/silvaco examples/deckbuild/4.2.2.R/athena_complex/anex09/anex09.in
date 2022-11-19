@@ -1,0 +1,38 @@
+go athena
+#
+# GaAs on Silicon example
+# 
+# Define the grid
+line x loc=0.0  spac=0.1
+line x loc=0.1  spac=0.1
+#
+line y loc=0.0  spac=0.005
+line y loc=0.5  spac=0.1
+
+# initialize but include silicon as an impurity in the silicon substrate
+init silicon c.silicon=5.0e22 orientation=100
+
+# Modify and add some impurity model parameters for silicon
+
+# original
+#impurity i.silicon donor silicon Dix.0=0.0 Dix.E=0.0 Dvx.0=0.0 Dvx.E=0.0
+#impurity i.silicon gaas ss.temp=700. ss.conc=1.000e+20 ss.clear
+#impurity i.silicon gaas ss.temp=1200. ss.conc=1.000e+20
+
+# modified
+impurity i.silicon silicon Dix.0=100.0 Dix.E=0.0 Dvx.0=100.0 Dvx.E=0.0
+impurity i.silicon silicon /gaas Seg.0=30.0 Seg.E=0.0 Trn.0=1.66e-7 Trn.E=0.0
+impurity i.silicon gaas ss.temp=700. ss.conc=1.000e+23 ss.clear
+impurity i.silicon gaas ss.temp=1200. ss.conc=1.000e+23
+
+
+# Deposit GaAs with background silicon doping
+deposit gaas thick=.25 divis=20 c.silicon=1e16
+
+diff time=200 temp=700
+
+structure outfile=anex09.str
+
+tonyplot anex09.str
+
+quit

@@ -1,0 +1,11 @@
+<!DOCTYPE SetFile-2D>
+<setfile version="1" >
+ <properties key_opaque="false" mark_frequency="0" mark_overlay="0" graph_width_0="1" graph_width_1="1" graph_width_2="1" graph_width_3="1" graph_width_4="3" graph_width_5="1" sequence_size="3" sequence_width="1" log_zero="0" sequence_mark_0="0" sequence_mark_1="1" sequence_mark_2="2" sequence_mark_3="3" sequence_mark_4="4" sequence_mark_5="5" />
+ <functions impurity_1_name="" impurity_1_units="" impurity_2_name="" impurity_2_units="" graph_1_name="" graph_1_units="" graph_2_name="" graph_2_units="" />
+ <xygraph show_points="false" show_lines="true" xyg_type="0" xyg_convert="false" >
+  <cartesian xyg_yaxis_scale="linear" xyg_xaxis_log="Frequency" xyg_yaxis="none" xyg_yaxis_lin="Current gain" xyg_yaxis_lin="Unilateral power gain" xyg_yaxis_lin="Max transducer power gain" xyg_yaxis_lin="Gms" xyg_group="(unknown electricals)" xyg_cie="false" />
+ </xygraph>
+ <key cont_1_at="3" cont_2_at="1" cont_3_at="6" elec_at="6" vectors_at="6" overlay_at="2" regions_at="4" />
+ <annotation title_main="Various gains" title_sub="as a function of frequency" footer_right="none" footer_left="none" show_xaxis="true" show_yaxis="true" show_grid="false" show_label_xaxis="true" show_label_yaxis="true" range_xaxis_min="6" range_xaxis_max="9.99" range_xaxis_div="1" range_xaxis_ticks="8" range_yaxis_min="0" range_yaxis_max="70" range_yaxis_div="10" range_yaxis_ticks="10" label_xaxis="log ( Frequency [Hz] )" label_yaxis="Gain [dB]" />
+ <plot zoom_from_x="0" zoom_from_y="0" zoom_scale_x="1" zoom_scale_y="1" label_overlay="mercury01_4.log" />
+</setfile>

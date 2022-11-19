@@ -1,0 +1,106 @@
+<html>
+  <head>
+    <title>Blue Single Quantum Well GaN LED</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Blue Single Quantum Well GaN LED</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Blaze/Quantum/LED</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="ledex01_plot0.png" width="640" alt="ledex01_plot0" />
+      <p/>
+      <img src="ledex01_plot1.png" width="640" alt="ledex01_plot1" />
+      <p/>
+      <img src="ledex01_plot2.png" width="640" alt="ledex01_plot2" />
+      <p/>
+      <img src="ledex01_plot3.png" width="640" alt="ledex01_plot3" />
+      <p/>
+    </div>
+    <div id="text" >
+<p>
+This example demonstrates how the radiative recombination models in Atlas
+can be used to analyze the electro-luminescence spectrum.
+</p>
+<p>
+The objective of this example is to get the basic LED characteristics
+such as the I-V-L curve and EL spectrum. The input decks shows the 8
+sections required to make a basic LED input file. These sections create
+the structure, specify the model combination and biasing, and finally
+plot the curves.
+</p>
+<b> Mesh Generation</b> <p>
+The first section of the input file defines the mesh and scales the WIDTH to be A/cm^2.
+</p>
+<b> Region and Electrode Specification</b> <p>
+To model the effects of strain and the piezo effect, the
+<b> CALC.STRAIN</b> ,
+<b> POLARIZATION  </b> and
+<b> POLAR.SCALE </b> parameters of the
+<b> REGION </b> statement can be used. These parameters will be result in an interface charge
+of ~1e13 cm-2, depending on the mole fraction of the active layer.
+</p>
+<p>
+To get the E.L. Spectrum, the parameters
+<b> QWELL </b> and
+<b> LED </b> should be specified on the quantum active layer
+<b> REGION </b> statement.
+</p>
+<p>
+The ANODE and CATHODE contacts are defined on the top and bottom of the device.
+</p>
+<b> Doping Profiles</b> <p>
+Layers 1 and 2 have a P-type doping of 1e19 cm-3. Layer 3 is the Single
+Quantum Well (SQW) and is undoped. Layer 4 is doped at 1e18 cm-3 N-type.
+All doping profiles have a uniform distribution.
+</p>
+<b> Material and Models</b> <p>
+There are three parts to this section. The first defines the
+<b> MATERIAL </b> parameters for the Recombination and Lorentz linewidth broadening factor
+and for the incomplete ionization. The second part defines the
+<b> MODELS </b> for the GaN regions. The
+<b> K.P </b> model is used for the band parameters as well as the
+<b> FERMI</b> model. The other
+<b> MODELS </b> statement defines the Gain and EL spectrum models for the SQW region. The
+<b> CHUANG </b> and
+<b> SPONTANEOUS </b> are specified along with
+<b> LORENTZ</b> for linewidth broadening. The third part defines the mobility.
+</p>
+<b> Bias Ramp and Save Spectrum</b> <p>
+To obtain the EL spectrum, the
+<b> SPECTRUM </b> parameter and wavelength range
+<b> LMIN</b> ,
+<b> LMAX </b> and
+<b> NSAMP </b> are specified on the
+<b> SAVE </b> statement.
+</p>
+<b> Plotting Curves</b> <b> EXTRACT </b> <p>
+was used to calculate the the electron and hole concentration as a
+function of the bias. The I-V-L and EL spectrum as well as also plotted.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

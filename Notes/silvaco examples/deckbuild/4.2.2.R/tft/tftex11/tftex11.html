@@ -1,0 +1,90 @@
+<html>
+  <head>
+    <title>3D Amorphous TFT simulation</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>3D Amorphous TFT simulation</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Victory Process/Victory Mesh/Victory Device</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Version:</b></td><td><i>Victory Process 7.22.3.R, Victory Mesh 1.2.4.R, Victory Device 1.12.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="tftex11_plot0.png" width="640" alt="tftex11_plot0" />
+      <p/>
+      <img src="tftex11_plot1.png" width="640" alt="tftex11_plot1" />
+      <p/>
+      <img src="tftex11_plot2.png" width="640" alt="tftex11_plot2" />
+      <p/>
+      <img src="tftex11_plot3.png" width="640" alt="tftex11_plot3" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+By default Victory Process and Device run on just one processor.
+To ensure better perfomance on your computer the following simulation condition
+<b> simflags=&quot;-P all&quot;</b> could be specidied in the
+<b> go</b> line starting Victory Process or Device. This means that all processors available will be used.
+If you want to use a smaller number of processors you can substitute &quot;all&quot; with a desired number, e.g.
+<b> simflags=&quot;-P 4&quot;.</b> </p>
+<p>
+Although various design and physical effects have been successfully analyzed in 2D, it becomes
+important to start to analyze and predict device performance dependent on layout effect with 3D
+simulations. We will show in the following example here that a complete 3D process and device
+simulation solution is available to address future challenges in TFT design.  Using SILVACO tools,
+designers  can accelerate and optimize the development of  for next generation display technologies.
+</p>
+<p>
+This example demonstrates 3D A-Si:H TFT simulation using  3D process simulation Victory Cell and 3D device simulation
+Victory Device.
+</p>
+<p>
+in order to create the 3D structure we used Victory Cell our 3D process simulator. Victory Cell is
+very suitable for 3D TFT devices simulation since it is layout driven, accurate, fast and easy to use.
+The 3D structure creation takes only few minutes. The particularity of the structure under test is that
+non 90 degree side-wall was used but 45 degree instead.  After the process simulation is done a 3D
+structure is saved using a tetrahedron mesh to ensure that any shape created during 3D process
+simulation is well conserved and transferred to Victory Device for further device simulation.
+</p>
+<p>
+Disordered materials contain a large number of defect states within the band gap of the material.
+To accurately model devices made of polycrystalline or amorphous materials, we need to take into
+account these defects. Victory Device can model interface states as well as defect states. Defect
+states is a combination of two exponentially decaying band tail states and two Gaussian distributions
+of mid-gap states. In addition to the defect models, band to band tunneling model was used to simulate
+accurately TFT devices in reverse. Device simulation were performed using 80 bits extended precision
+arithmetic to be sure to resolve accurately low current at low Vds. It is also very interesting to
+notice that due to the specific 3D effect the simulated IDVD curve when we reverse the source and
+the drain are different.
+</p>
+<p>
+The
+<b> e.field.derivs </b> parameter causes Victory Device to consider the partial derivatives of the field-dependent band
+to band tunneling model with respect to the gradient of the potential. Including these derivatives
+slows down the computation and is usually not necessary, but in this case it helps the convergence.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

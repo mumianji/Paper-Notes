@@ -1,0 +1,38 @@
+################################################################################
+# test of piezoelectric sheet charge calculation
+################################################################################
+go atlas 
+
+# switches for piezoelectric effect
+set pi1="polariz polar.scale=+1 calc.strain"
+set pi2="polariz polar.scale=+1"
+#
+set xc=0.50
+#
+mesh auto 
+x.m l=0.0 s=0.05
+x.m l=1.0 s=0.05
+#
+region thick=0.0100 sy=0.0100 bottom material=GaN      $pi2
+region thick=0.0100 sy=0.0005 bottom material=AlGaN    $pi1 x.comp=$xc 
+region thick=0.0100 sy=0.0100 bottom material=GaN      $pi2
+region thick=0.0100 sy=0.0005 bottom material=InGaN    $pi1 x.comp=$xc 
+region thick=0.0100 sy=0.0005 bottom material=GaN      $pi2 substrate
+#
+elec num=1 name=anode top
+elec num=2 name=cathode  substrate
+
+models print
+output polar.charge
+#
+solve 
+save outf=ganfetex04.str 
+tonyplot ganfetex04.str -set ganfetex04.set
+#
+extract init inf="ganfetex04.str"
+extract name="AlGaN_interface_charge" \
+     (1e-4/1.62019e-19) * area from curve(depth,impurity="polarization charge conc" material="All" x.val=0.5) where x.min=0.015 and x.max=0.025
+extract name="InGaN_interface_charge" \
+     (-1e-4/1.62019e-19) * area from curve(depth,impurity="polarization charge conc" material="All" x.val=0.5) where x.min=0.025 and x.max=0.035
+
+quit

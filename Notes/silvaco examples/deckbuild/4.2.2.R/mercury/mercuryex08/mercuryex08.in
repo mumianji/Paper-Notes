@@ -1,0 +1,42 @@
+# (c) Silvaco Inc., 2018
+go internal
+
+#######################################################################
+### ATLAS example mercuryex08
+#######################################################################
+### Expected yield of a MESFET
+#######################################################################
+### This example uses dbinternal to run a series of mercury
+### simulations to investigate the effect manufacturing variation on
+### a MESFET.
+#######################################################################
+
+###--------------------------------------------------------------------
+### This loads in a mercury deck which is used as the template for
+### this series of simulations.  The template deck must have at least
+### one "set" command (dbinternal can only control the values that
+### are assigned via a "set" command).
+###
+### This deck has the set-variables "doping", "recess", and
+### "gate_length".
+load infile=mercuryex08_template.in
+
+###--------------------------------------------------------------------
+### The template deck also has a couple of extract statements which
+### calculate the drain current and transconductance at a bias point
+### of interest.  The extract data from all simulations is stored
+### in this file.
+save type=sdb outfile=mercuryex08_1.dat
+
+###--------------------------------------------------------------------
+### This command runs a series of 360 simulations where random numbers
+### are assigned to the set-variables in the template deck.  The
+### values are assumed to vary with a normal (Gaussian) distribution.
+### The coefficients are the mean and standard deviation.
+monte_carlo number=128 parameter=doping type=normal coeff=8e16,0.5e16 \
+                       parameter=recess type=normal coeff=0.1,0.01 \
+                       parameter=gate_length type=normal coeff=0.5,0.05
+
+tonyplot mercuryex08_1.dat -set mercuryex08_1.set
+
+quit

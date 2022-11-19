@@ -1,0 +1,115 @@
+<html>
+  <head>
+    <title>NPN Gummel Plot and fT Extraction</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>NPN Gummel Plot and fT Extraction</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>SSuprem 4/DevEdit/S-Pisces</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R, Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="bjtex01_plot0.png" width="640" alt="bjtex01_plot0" />
+      <p/>
+      <img src="bjtex01_plot1.png" width="640" alt="bjtex01_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates the processing, remeshing and electrical test
+of a poly silicon emitter NPN bipolar transistor. Design parameters are
+finally extracted from the IV Curve, including fT and Gain. This
+example demonstrates the use of:
+</p>
+<ul>
+  <li>
+ Process simulation of a polysilicon emitter bipolar device
+<br/>
+  </li>
+  <li>
+ Re-meshing of the structure in DevEdit
+<br/>
+  </li>
+  <li>
+ DC ramp of Vbe with fixed Vce 
+<br/>
+  </li>
+  <li>
+ Simultaneous AC simulation during Vbe ramp
+<br/>
+  </li>
+  <li>
+ Extraction of peak gain and fT
+  </li>
+</ul>
+<p>
+The file starts with the definition of the process flow for an NPN
+bipolar transistor in Athena. The first boron implant forms the
+intrinsic base region. A second boron implant is self-aligned to the
+polysilicon emitter region to form a connection between the intrinsic
+base and p+ base contact regions. Spacer-like structures are used on
+the side of the poly emitter to space the p+ base contact and provide
+self-alignment. During the simulation, the
+<b> relax </b> statement is used to reduce the mesh density in the deep regions of the
+structure. Only half of the full device is simulated. Mirroring of this
+half device into a full structure is performed with
+<b> structure mirror left</b> . The final stage of the Athena syntax defines the electrode positions.
+In this example only one base contact is used. A subsequent example
+describes how two base contacts can be specified and linked together.
+</p>
+<p>
+Often a mesh that is used for process simulation is not optimal for
+use with device simulation. In this example, the mesh generation tool
+<b> DevEdit </b> is used to recreate a mesh that has zero obtuse triangles in the
+semiconductor region. It is then refined as a function of a number of
+solution quantities on the mesh (eg: boron conc).
+</p>
+<p>
+Popup windows under the DeckBuild Command window were used to create this
+set of commands to control DevEdit.  To switch to  DevEdit Commands,
+select the current simulator to DevEdit from the Main Control window.
+Further use of DevEdit in more advanced applications is shown in later
+examples.
+</p>
+<p>
+In Atlas the solution procedure starts with a solution for a collector bias
+of 2V. Next, the
+<b> log </b> statement is used to specify a file for collection of Gummel plot
+data.  The Gummel data is collected by applying a bias ramp on the
+base electrode up to 0.9.  The parameter
+<b> ac </b> on the solve statement sets the ac analysis on. The frequency of this
+signal is set to 1MHz. Once the bias ramp is completed the data is
+plotted using TonyPlot.
+</p>
+<p>
+Finally, the
+<b> extract </b> statement is used to extract the maximum gain, &quot;maxgain&quot;, and the maximum
+ft, &quot;maxft&quot;, for the BJT.  The extracted parameters may be used as
+optimization targets for simulator tuning.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

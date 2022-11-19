@@ -1,0 +1,72 @@
+# TPCS version: 8
+# various properties
+log label 0
+key opaque 0
+mark frequency 0
+mark overlay 0
+graph width 0 2
+graph width 1 1
+graph width 2 1
+graph width 3 1
+graph width 4 3
+graph width 5 1
+sequence size 2
+sequence width 1
+log zero 1
+sequence mark 0 0
+sequence mark 1 1
+sequence mark 2 2
+sequence mark 3 3
+sequence mark 4 4
+sequence mark 5 5
+# Functions
+function 1 "" ""
+function 2 "" ""
+function 3 "" ""
+function 4 "" ""
+select 1
+# xygraph flags
+show points on
+show lines on
+# xygraph types
+xygraph type 1 convert 1
+xygraph polar 0 "TE Radiant Intensity", "Angle"
+xygraph polar 1 "TM Radiant Intensity", "Angle"
+xygraph polar 2 "Total Radiant Intensity", "Angle"
+xygraph polar 3 "(unknown electricals)", "(unknown electricals)"
+xygraph polar show 3 angle 15
+# key positions
+key contours 1 at 3
+key contours 2 at 0
+key contours 3 at 0
+key electrical at 0
+key vectors at 0
+key overlay at 6
+key regions at 0
+key apply 
+# annotation, titles
+title main "ATLAS/BLAZE/QUANTUM/LED"
+title sub "Angular Power Pattern"
+# annotation, footers
+footer right none
+footer left none
+# annotation, show
+show xaxis on
+show yaxis on
+show grid off
+show label xaxis on
+show label yaxis on
+# annotation, axes
+range xaxis auto
+range yaxis auto
+# zoom
+zoom from 0, 0 scale 1, 1
+# user labels
+label "TE" from 2.4295e-09, -3.11923e-09 color 2 scale 1
+label 0 at 7 7
+label "TM" from 7.18556e-09, -7.53557e-09 color 49 scale 1
+label 1 at 7 7
+label "Total" from 1.26211e-08, -1.36505e-08 color 28 scale 1 to 1.26211e-08, -1.35373e-08
+label 2 at 8 8
+# overlay level names
+label overlay 0 "ledex03.ang.log"

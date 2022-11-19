@@ -1,0 +1,79 @@
+<html>
+  <head>
+    <title>Stanford High Dose Model</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Stanford High Dose Model</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>SSuprem 4</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="andfex06_plot0.png" width="640" alt="andfex06_plot0" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates the high dose extensions to the fully coupled
+diffusion model from Stanford.
+</p>
+<p>
+This model results from the work of Scott Crowder and Peter Griffin at
+Stanford and represents an extended fully coupled diffusion model
+accounting for dopant-defect coupling, seen at high concentrations.
+</p>
+<p>
+The model is invoked by selecting the following method flag:
+<b> method high.conc.</b> </p>
+<p>
+This model extends the previous fully coupled model (full.cpl) to
+include extra reactions terms related to the pairing of dopant and
+point defect states. Further, it includes extra reactions describing
+coupled recombination terms in both the bulk and at the surface.
+</p>
+<p>
+The parameter:
+</p>
+<b> ivfactor </b> <p>
+controls the relative rate of PD recombination based upon vacancy-dopant pairs recombining with free interstitials with respect to straight interstitial - vacancy recombination. This parameter may be physically considered as a capture cross section ratio.
+</p>
+<p>
+Similarly,
+<b> iifactor </b> controls the relative rate of PD recombination based upon interstitial-dopant pairs recombining with free vacancies with respect to straight interstitial - vacancy recombination. This parameter may be physically considered as a capture cross section ratio.
+</p>
+<p>
+Also related only to the surface,
+<b> Isurfact </b> is the ratio of the
+surface capture cross sections of V-PI surface recombination and I-V
+surface recombination.
+</p>
+<p>
+This model is thought to be significant when dealing with unclustered
+concentrations above 1e19 /cm^3.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

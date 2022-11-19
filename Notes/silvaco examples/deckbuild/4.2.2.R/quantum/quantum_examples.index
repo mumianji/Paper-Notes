@@ -1,0 +1,1172 @@
+
+{section} Quantum : Device Simulation with Quantum Mechanics 
+
+
+
+{subsection} quantumex01.in : CV Analysis Of Thin Gate Oxide PMOS Capacitor
+
+Requires: S-Pisces/Quantum
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates the CV characteristics of a N-type substrate
+MOS capacitor with a nominal 30A gate oxide. The example shows:
+
+{bullet} Calculation of CV curves using AC Analysis 
+{newline}
+{bullet} Use of the Quantum moments quantum model
+{newline}
+{bullet} Difference between classical and quantum gate thickness
+{newline}
+{bullet} Classical and Quantized electron density
+
+
+A simple 1D MOS capacitor is created in this example with a 30A gate
+oxide thickness.  An AC analysis is performed on the device firstly
+with the 
+{bold} classical 
+simulation and the with the 
+{bold} quantum 
+model swtiched on.
+
+The quantum model is activated by using the 
+{bold} quantum 
+switch in the models statement for electrons.  Note that this activates 
+a quantum moments model which uses a quantum temperature calculation.
+This quantum temperature can be viewed in the structure files.  Also,
+the cutline created in TonyPlot can be used to examine the classical
+and quantum electron concentration differences in the structure.
+
+In accumulation, the channel carrier concentration is changed by the
+addition of quantum mechanics. The peak is not so high and the electrons
+spread more deeply into the substrate. The difference in gate
+capacitance is noticable on the CV plot. Since gate oxide thickness is
+often measured using CV techniques, this leads to erroneous results if
+QM effects are not accounted for.
+{bold} extract 
+statements are used to show the calculated Tox from the classical and QM CV curves.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+{subsection} quantumex02.in : CV Analysis Of Thin Gate Oxide NMOS Capacitor
+
+Requires: S-Pisces/Quantum
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates the CV characteristics of a p-type substrate
+MOS capacitor with a nominal 30A gate oxide. The example shows:
+
+{bullet} Calculation of CV curves using ac Analysis 
+{newline}
+{bullet} Use of the Quantum moments quantum model for holes
+{newline}
+{bullet} Difference between classical and quantum gate thickness
+{newline}
+{bullet} Classical and Quantized electron density
+
+
+A simple 1D MOS capacitor is created in this example with a 30A gate
+oxide thickness.  An AC analysis is performed on the device firstly
+with the 
+{bold} classical 
+simulation and the with the 
+{bold} quantum 
+model swtiched on.
+
+The quantum model for holes is activated by using the 
+{bold} p.quantum 
+switch in the models statement for holes.  Note that this activates 
+a quantum moments model which uses a quantum temperature calculation.
+This quantum temperature can be viewed in the structure files.  Also,
+the cutline created in TonyPlot can be used to examine the classical
+and quantum hole concenration differences in the structure.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+{subsection} quantumex03.in : Channel Quantization in a PHEMT
+
+Requires: Blaze/Quantum
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates the behaviour of a Pseudomorphic HEMT structure
+using the quantum model.  The device is a standard AlGaAs / GaAs / InGaAs
+PHEMT with a delta doped layer.
+
+The structure is created within the Atlas syntax.  For more information
+on HEMT simulation see the HEMT Examples Section.
+
+Before any external biases are applied,  
+{bold} qfactor 
+is ramped from zero to unity -
+this allows the inclusion of the quantum moments function to be introduced 
+gradually into the equation set. A value of one represents a unity pre-multiplier
+on the quantum moments function. 
+
+With the Quantum model, the electron concentration will typically be quite 
+different to classical prediction. This presents some difficulty for the 
+program in terms of the initial estimate to the electron concentration. In 
+classical simulations a very good initial estimate to the carrier concentration 
+can be derived from the doping profile. However, with Quantum this is not 
+always the case. Thus the quantum moments effect can be turned on gradually 
+using the parameter
+{bold} qfactor
+.
+{bold} qfactor 
+might need to be ramped from very small values to unity to obtain
+convergence for difficult problems.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+
+
+{subsection} quantumex04.in : Heterojunction Diode Leakage
+
+Requires: Blaze/Quantum
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates the difference between an AlGaAs / GaAs
+heterojunction diode modeled with and without quantum physics.
+
+In the first half of the file, the example calculates the forward and
+reverse characteristics of a classically modeled diode.  In the second
+half of the example, the quantum model is switched on.  Note that, as
+in the previous example, the 
+{bold} qfactor 
+is used to ramp the level
+of quantum moments included in the example for zero to unity.
+
+The overlayed results show around an order of magnitude higher reverse
+leakage in the quantum case. This is due to the
+{italic} smearing
+ of the electron concentration across the heterojunction.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} quantumex05.in : Calibration of Electron Bohm Quantum Potential 
+
+Requires: S-Pisces/Quantum
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates:
+
+{bullet} Use of the BQP model and Schrodinger-Poisson model on same structure
+{newline}
+{bullet} Calculation of very low frequency C-V curves using QSCV  
+{newline}
+{bullet} Calibration process
+{newline}
+
+This example illustrates calibration of the Bohm Quantum Potential model against 
+the Schrodinger-Poisson model for an N-MOS capacitor being biased into
+inversion. Because the calibration takes place under conditions of negligible
+current flow, the CARRIERS=0 option may be specified on the METHOD statement.  
+The N-MOS has a nominal gate oxide thickness of 20 A. The quantity which was
+chosen to compare the results of the two models was the quasistatic 
+capacitance. The voltage range was 0V to 1V which includes the depletion 
+to inversion transition region.
+
+The first section calculates the Quasi-static C-V curves using the Schrodinger
+Poisson model.  Note the NUM.DIRECT = 3 specification on the MODELS statement.
+This ensures that the anisotropic conduction band structure of Silicon is
+accounted for.  Note also that NEW.EIG is also specified on the MODELS statement, this
+causes a more efficient method to be used to solve the Schrodinger-Poisson
+equation. QSCV is specified on the solve statement and a fine voltage increment
+is used in order to give accurate calculation of the Quasi-static Capacitance
+as a function of voltage.
+The next three sections calculate the C-V curves over the same voltage range
+and with the same voltage increment as for the S-P model.  Three different
+sets of BQP parameters are used,  the last set gives C-V curves with very good
+agreement with the S-P results.  It is possible that a different set will
+give even better results, but the ones shown give the same threshold voltage
+as for S-P and excellent agreement going into inversion.  It may take many
+attempts to obtain close calibration.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} quantumex06.in : Semi-classical versus BQP Quasistatic Capacitance for an N-MOS. 
+
+Requires: S-Pisces/Quantum
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates:
+
+{bullet} Use of the BQP model.
+{newline}
+{bullet} Calculation of very low frequency C-V curves using QSCV  
+{newline}
+{bullet} Effects of quantum mechanics on C-V characteristics of NMOS.
+{newline}
+
+In this example we illustrate the effects of quantum mechanics on the
+quasi-static (i.e. very low frequency) capacitance of an N-MOS capacitor
+as the gate bias varies, taking the device from being in accumulation
+through to strong inversion.  The main features are the shift in threshold
+voltage, equality of the capacitances near flat band and in depletion, and
+the different asymptotic capacitance as the gate voltage becomes large,
+both +ve and -ve.
+
+The first part invokes the BQP model for both electrons and holes. This
+is because quantum effects for both electrons and holes are important on
+the same bias sweep.  There is negligible current flow in this device and
+so CARRIERS=0 mode can be used,  which is sufficiently robust that the
+model can be solved with the gate bias at -3.0 V directly.  A structure file
+is saved at this point as an example of the device in accumulation. By
+specifying P.Quantum on the output statement the BQP is written to the 
+structure file. The gate bias is then ramped all the way up to 3.0V with
+QSCV specified on the solve statement in order to calculate and save the 
+quasistatic C-V curves. After the final voltage,  another structure file
+is output as an example of inversion.  The quantum effects are only apparent 
+near the Si/SiO2 interface.
+
+The second part does the semi-classical calculation over the same bias
+range.
+ 
+Remarks :  The BQP calculation is a self-consistent one and can take much
+longer to run than the equivalent semi-classical one.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} quantumex07.in : Comparison of transport models for a Double gate MOSFET including quantum effects.
+
+Requires: S-Pisces/Quantum
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates:
+
+{bullet} Use of the BQP model coupled with drift-diffusion and energy balance.
+{newline}
+{bullet} Effect of quantum confinement on carrier and current density.
+{newline}
+{bullet} Effect of carrier transport model on drain current of device.
+{newline}
+
+In this example the drain current of a double gate MOSFET is calculated 
+using the BQP to model quantum effects.  A drift-diffusion model featuring
+field dependent mobility is compared with an energy balance model with an
+energy dependent mobility.  For a device of such small dimensions as in 
+this MOSFET,  non-stationary effects will have a significant effect on the
+carrier transport.  The energy balance model can approximate these effects,
+and when coupled with the BQP model it includes quantum effects too.
+
+The first part of the deck does the calculation with energy balance
+(HCTE.EL on the MODELS statement) and Bohm Quantum Potential (BQP.N
+on the MODELS statement). FLDMOB with EVSATMOD=0 on the MODELS statement
+invoke an energy dependent mobility calibrated for Silicon.
+The NOCURRENT parameter is specified on the first SOLVE statement to
+directly get a solution with a gate voltage of -0.5 V. A small drain bias
+is applied and then the gate biases ramped to gradually turn the MOSFET on.
+
+The second part of the deck does the same calculation using a drift-diffusion
+model,  and with the CVT mobility model (which includes velocity saturation). 
+The quantum effects are included by using the BQP model.
+
+From the difference in the value of drain currents it is evident that 
+non-stationary effects are very important.  The energy balance model
+approximates these effects via its energy dependent mobility.
+By looking at the electron concentration or electron quantum potential one
+can see that confinement effects are similar in the two cases.
+
+
+Remarks: Explicitly setting the material parameters in the oxide as done
+here is not strictly necessary, although it can improve convergence in some
+cases.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} quantumex08.in : Silicon FINFET device in 3D with BQP
+
+Requires: DevEdit 3D/Device 3D/Quantum 3D
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates:
+
+{bullet} Application of the BQP model coupled with energy balance to
+a complex 3D device.
+{newline}
+{bullet} Application of BQP in case of 2D quantisation.
+{newline}
+{bullet} Effect of quantum confinement on carrier density in FINFET.
+{newline}
+
+The example illustrates the modelling of a FINFET device using BQP and Energy balance in 3D.
+The quantisation inside the channel is almost 2-dimensional and since we 
+do not have a principal direction of quantisation we cannot be sure that
+the model is calibrated until we do a calibration against a 2D 
+Schrodinger-Poisson model. This is not currently available in Atlas but
+a calibration performed for SILVACO by the authors of the BQP model suggests 
+using isotropic effective masses in Silicon of 0.7 m0 with BQP.NALPHA = 0.3
+and BQP.NGAMMA = 1.4.  
+
+The 3D device structure is created in DevEdit 3D and the required 
+models are set.  After the SOLVE.INIT statement, the solution for
+a gate voltage of 0.2 Volts is obtained using the NOCURRENT initial
+guess parameter.  A drain bias is applied and then the gate voltage is
+ramped to turn the device on. The drain current is plotted in TonyPlot
+and the device structure in TonyPlot3D. The cutplane facility of 
+TonyPlot3D can be used to look at the electron density and quantum 
+potential in the channel, which illustrate the reduced electron density
+at the Si/Oxide interface.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} quantumex09.in : AlGaAs/InGaAs/GaAs PHEMT - Approximate calibration
+
+Requires: Blaze/Quantum
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates:
+
+{bullet} Application of the BQP model to III-V materials.
+{newline}
+{bullet} Example of setting BQP parameters on a material by material basis.
+{newline}
+{bullet} Rough calibration of BQP by comparing with S-P charge density.
+{newline}
+
+
+In this deck, a pHEMT structure is solved at equilibrium for the Schrodinger
+-Poisson model and BQP model.  The BQP parameters are set on a material by
+ material basis, and the ones that are chosen represent a reasonable fit of the electron
+ density profile. The electron density profile in the channel is matched by
+varying the BQP parameters. By observing the change of the key features of 
+the profile as the BQP parameters are varied, one can arrive at values which
+give close agreement.  This is a time consuming activity.  
+ By comparing Q-V or C-V curves one can verify that the chosen parameters are
+good enough or refine the calibration further. In this case, fairly good 
+agreement was found with the C-V curves from a Schrodinger-Poisson model,
+and so these parameters are used in the next example.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} quantumex10.in : Quantum Tunnelling in a Silicon Diode
+
+Requires: S-Pisces
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This examples demonstrates:
+
+{bullet} Example of a QTREGION statement.
+{newline}
+{bullet} Example of BBT.NONLOCAL and BBT.NLDERIVS commands.
+{newline}
+
+In this example, the QTREGION statement is used to set up a mesh suitable
+for tunneling calculations. The device is a degenerately doped silicon p-n
+diode.  Non-local Band-To-Band tunneling is selected on the MODELS
+statement by using the BBT.NONLOCAL keyword. Because the solution will go
+to relatively high levels of tunneling current,  convergence may become 
+difficult.  The optional parameter BBT.NLDERIVS is used to improve this.
+The diode is biased into both forward and reverse biases.  In forward bias
+a tunneling current occurs up to about 0.3 V, and at higher bias the 
+usual forward bias diffusion current occurs as can be seen in the LOG file.
+The STRUCTURE files, with the BBT tunneling current displayed, show the
+actual tunneling current being injected into the device. Under reverse
+bias it acts like generation, under forward bias like
+recombination.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} quantumex11.in : Quantum Tunnelling in a Silicon Structure with a non-linear junction profile.
+
+Requires: S-Pisces
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates:
+
+{bullet} Example of a QTREGION statement applied to a non-linear junction profile.
+{newline}
+{bullet} Example of BBT.FORWARD and BBT.REVERSE parameters.
+{newline}
+
+In this example the QTREGION statement is used to set up a mesh suitable
+for tunneling calculations. The device has two junctions, one which is 
+a straight line and the other which is curved. Multiple QTREGION statements
+are used to create two QTREGIONs. The contour of the junction is approximately
+followed and the SNRM.BEG and SNRM.END parameters are used to match the
+QTREGION meshspacing with the device mesh spacing in the direction 
+perpendicular to the tunneling direction
+is approximately normal to the junction.  An example of F.RESOLUTION is given 
+in the QTREGION for the linear junction.  This takes the relative mesh
+spacing in the tunneling direction from a data file.
+
+The curved junction is forward biased,  the optional BBT.FORWARD parameter
+is used.  The linear junction is then reverse biased,  the BBT.FORWARD
+parameter is cleared and the optional BBT.REVERSE parameter is set.  These
+two parameters determine where the tunnel current is injected into the device.
+BBT.FORWARD injects at the edges of the QTREGIONS, and BBT.REVERSE averages 
+over the junction itself.   These schemes can be more stable than the default
+option,  which injects the current at the position it actually occurs in the 
+model.
+
+From the LOG files we see that there is a forward bias tunneling current,
+and from the Structure files we see exactly where the current is injected.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} quantumex12.in : Coupled Mode Space NEGF approach to Double Gate FET
+
+Requires: S-Pisces/Quantum
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates:
+
+{bullet} Use of NEGF_MS model
+{newline}
+{bullet} Quantum confinement, ballistic transport 
+{newline}
+
+This is an example of modeling the ballistic I-V characteristics of a nanoscale double 
+gate transistor using the Non Equilibrium Green's function approach.  
+Atlas solves a 1D Schrodinger equation in order to find
+eigenvalues and eigenfunctions at each slice of the device. 
+A quantum transport equation (NEGF) is then solved. 
+Due to a varying cross-section of the transistors, Atlas will automatically 
+account for coupling between subbands, which is called the coupled modespace approach.
+ 
+First, a rectangular mesh is created. A spacing in the transport direction 
+should be fine enough, so that a half-bandwidth of discretized 
+effective mass Hamiltonian is 
+larger than applied bias.  
+Here we consider a simple double gate transistor with flared up 
+source and drain extensions.
+Device length is 35 nm, channel thickness is 1 nm, and gate oxide is 1 nm
+gate length is 10nm. Source and drain extension thickness is 5nm.
+Only two carrier injecting contacts (source and drain) are supported in Atlas. 
+There can be any number of gates.  
+   
+Due to the ballistic nature of transport, there is no voltage 
+drop near the source and drain contacts. Moreover, the potential 
+in the source and drain has to be allowed to float because  the number 
+of electrons reflected backward and thus total carrier concentration in  contacts
+can change with bias.
+
+For these reasons we use REFLECT on the CONTACT statement to apply 
+von Neumann boundary conditions for potential. Note that Fermi levels 
+in contacts are fixed.
+
+SCHRODINGER and/or P.SCHRODINGER parameters on the MODELS statement
+will tell Atlas that this is a quantum solution. A Schrodinger 
+equation will be solved in each slice of the device for electrons and/or holes.  
+NEGF_MS parameter specifies that we want to compute transport
+using Non Equilibrium Green's Function (NEGF) approach in the mode (subband) space.
+If the cross-section is not constant, Atlas 
+will take into account coupling between subbands. 
+ 
+The coupling is especially strong near the wide-narrow region interface.
+A parameter NEGF_CMS instead of NEGF_MS will enforce the coupled mode space approach. 
+A parameter NEGF_UMS instead of NEGF_MS will enforce uncoupled mode space approach.  
+Parameter EIGEN can be omitted on the MODELS statement. Atlas will 
+automatically decide on the optimum number of subbands required. This 
+number may change with bias. Setting the EIGEN parameter will fix the number 
+of subbands, which may either cause a loss of precision (if it is too small),
+or increase the computation time (if it is too large).
+
+Note that the number of subbands taken into account  may vary along the device.
+Parameters OX.SCHRO and OX.MARGIN control wavefunction penetration into oxide.
+This ensures that electron density is smooth at the semiconductor-oxide interface.
+Here, a parameter NUM.DIRECT is set to 1, which means that only one 
+isotropic mass is taken into account.
+
+When all NUM.DIRECT=3, all three pairs of valleys (in the case of Si)
+are treated independently. Note that while primed subbands have the same eigen energy due
+to the same effective mass in the confinement direction, their transport 
+effective mass is different. Therefore, transmission and current due to primed subbands 
+are different.
+
+A predictor-corrector scheme for Poisson convergence  is used, where after 
+each quantum solution (corrector), a quasi Fermi level is extracted and several 
+iterations with classical electron density (predictor) are performed.  
+NPRED.NEGF=7 (default) sets the number of predictor iterations to 7
+QCRIT.NEGF=3e-3 (default) sets the potential convergence criterium in the NEGF case to 3 mV 
+ESIZE.NEGF=2001 (default) sets the number of energy grid points to 2001. 
+A nonuniform energy grid is constructed. A larger number may improve precision 
+in the electron density calculation  and improve convergence, but increase the computation time.
+Parameter CARRIERS on the METHOD statement is set to zero which means  
+that only a Poisson equation 
+is solved self-consistently with  NEGF equations. 
+
+In the structure file, quantities of interest are potential, carrier density, current density profiles,
+bound state energies and wavefunctions.
+A user can also probe various energy dependent quantities, which are specific to NEGF method,
+and store them in a file at each bias.
+
+Set NEGF.LOG parameter on SOLVE or SAVE statement to save the probes.
+ESIZEOUT.NEGF=500 (default) sets the number of energy grid points to 500 in the output
+.log file if the PROBE statements are present (see below). A uniform energy grid is used.
+The Parameter FILENAME can be specified only once. In this case a file TransvsE$.log 
+will be created at each bias point, where $ is the number of the bias point.
+Comment lines in the file give the values of terminal bias.
+All probes are plotted as functions of Energy. A uniform energy grid is used.
+
+The size of the grid is regulated in the OUTPUT statement (see above).
+TRANSMISSION is the number of modes that can pass through the device at a particular energy.
+One can also separate contributions due to each pair of valleys using the parameter BAND.
+DOSVSE is the local density of states. It can be characterized by the parameters 
+BAND, STATE and location X.
+DENSVSE is the local carrier density versus Energy, and integrating DENSVSE gives the 
+total carrier concentration at this location. CURDVSE is the local current density versus energy,
+and integrating CURDSVE gives the total current density at this location. In 
+the ballistic case, i.e. when no inelastic 
+phonons are present, this quantity should not change with location. 
+It can be characterized by the parameters  BAND, STATE and location X.
+If the parameters BAND or STATE are omitted, a summation is performed over the 
+band or state indices. 
+
+Warning: Poor convergence usually results when there is no injection barrier.
+  
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} quantumex13.in : Drift Diffusion mode space approach to cylindrical Surround Gate FET
+
+Requires: S-Pisces/Quantum
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates:
+
+{bullet} Use of DD_MS model
+{newline}
+{bullet} Quantum confinement  
+{newline}
+{bullet} Generation-recombination effects within DD_MS model 
+{newline}
+{bullet} Floating body effects 
+{newline}
+
+This example demonstrates the importance of quantum confinement and floating body effects 
+in nanoscale surround gate FETs and shows how to use the  Drift Diffusion mode space  (DD_MS) model.
+The first part computes Id-Vg characteristics of an 4 nm in diameter SurFET without generation-recombination
+mechanisms. The second part switches on Shockly-Read-Hall recombination, band-to-band tunneling and 
+impact ionization, and then compares the results.
+
+Usage of DD_MS model  is quite analogous 
+to that of Schrodinger or mode-space NEGF (NEGF_MS) models. 
+The DD_MS models is activated by an option DD_MS along with SCHRO (for electrons) 
+and/or P.SCHRO  (for holes) on the MODELS statement. The variable CARR on the METHOD 
+statement should be set to zero, since multidimensional drift-diffusion solvers are not used.  
+Due to a variation of electron density and potential in transverse direction, Dirichlet boundary 
+conditions in contacts are not the best option. Instead, a quasi Fermi level is fixed, while 
+electrostatic potential is subjected to von Neumann (zero electric field) boundary conditions, 
+which are set by specifying REFLECT on the CONTACT statement. 
+
+The Schrodinger equation is solved in each transverse slice to find electron and/or hole eigen energies 
+and wave functions.  The minimum required number of eigen states is determined automatically, but may 
+also be set by the parameter EIGEN on the MODELS statement. The DD_MS model is compatible with all Atlas 
+Schrodinger solvers: 1D and cylindrical in Atlas2D and 2D in Atlas3D. In this example, the 1D Schrodinger
+equation is solved in cylindrical coordinates  for all orbital quantum numbers 
+at each slice in X direction. The eigen energies are then sorted together with the 
+corresponding wave functions.
+
+Position dependent 
+eigen energies play a role of conduction (valence) band edge and are used to solve 1D drift-diffusion 
+transport equations in each subband. The equations are discretized using Scharfetter-Gummel scheme.   
+Atlas mobility models are fully integrated with the method and used in the discretization.  DDMS 
+always employs a rigorous mobility-diffusion relation, which is dimensionality dependent in case of 
+Fermi-Dirac statistics.  
+
+Generation-recombination (G-R) mechanisms such as Shockley-Read-Hall, Auger and optical recombination, 
+band-to-band tunneling, and impact ionization are available in the method. When generation-recombination 
+mechanisms are present, it is possible to iterate between carrier density and G-R rates before solving 
+the Poisson equation. The self-consistency between carrier density and G-R rates, achieved in this inner 
+iteration procedure, will result in a more stable Poisson convergence. The number of inner iterations is 
+controlled by the RGITER.DDMS=N and the RGCONV.DDMS=X parameters on the METHOD statement.  Here, N is 
+the maximum number of inner iterations (default is 0) and X is the minimum error between 0 and 1 (default is 1e-5). 
+It is recommended that you first run a simulation without G-R mechanisms to get a feel for device behavior,
+and then increase G-R parameters. 
+
+In addition to a regular structure file, a detailed information on each subband can be stored in an extra 
+log file by using option DDMS.LOG on SAVE or SOLVE statements. The file will contain subband-resolved 
+quantities, such as eigen energies, carrier densities, current densities, quasi Fermi levels and 
+generation-recombination rates.
+
+Unlike the mode-space NEGF_MS model, the DD_MS model can handle only devices with uniform cross-section, 
+because quantum mechanical coupling between electron subbands is neglected. 
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} quantumex14.in : Comparison of DD_MS and NEGF_MS models for nanoscale  SOI FET
+
+Requires: S-Pisces/Quantum
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates:
+
+{bullet} Comparison of quantum and classical transport models
+{newline}
+{bullet} Quantum confinement  
+{newline}
+
+This example compares classical drift-diffusion (DD_MS) and quantum 
+ (NEGF_MS) transport models in a 6nm thick Si SOI FET with 30 nm gate length. 
+ Both solutions employ uncoupled mode space approach, based on exactly the same 
+ Schrodinger and Poisson solvers and exactly the same material constants,
+ and thus allowing a one-to-one comparison.
+ 
+ While it is generally accepted that a quantum transport solution should
+ give slightly higher current due to source-to-drain tunneling (absent in DD_MS),
+ the detailed comparison shows that other factors are more important.  
+ A comparison of 
+ eigen energy (bound state energy) profiles shows that a potential drop in the 
+ source in DD_MS model gives rise to a lower source injection barrier and 
+ higher classical current. 
+ 
+ In addition, it is possible to look at the transmission function computed by 
+ NEGF and compare its steps with eigen energies at the source injection barrier. 
+ Once can see that transmission is non zero below the the maximum of eigen energy, 
+ which is due to source-to-drain tunneling. However, the magnitude of a single 
+ transmission step never reaches a value of one, which signals a strong 
+ reflection of electrons back into the source. 
+ 
+ Slightly higher energy barrier and strong reflection lead to decrease 
+ of quantum current as compared to classical solution. 
+ 
+ 
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} quantumex15.in : Fast  product-space 2D Schrodinger solver
+
+Requires: S-Pisces/Quantum
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates:
+
+{bullet} Using SP.FAST parameter to invoke a fast product-space 2D Schrodinger solver
+{newline}
+{bullet} Quantum confinement  
+{newline}
+{bullet} Electron density in a FinFET channel
+{newline}
+
+This example demonstrates a fast  product-space 2D Schrodinger solver. 
+The product-space solution is a linear combination of products of 1D solutions in X and Y directions. 
+This approach is excellent for rectangular geometries, but can also tolerate moderate deviations 
+from rectangle. In this example a 10 by 10 nm channel of a FinFET, n-type doped to the density of 
+1e20, is considered.   
+
+The solver is invoked by the
+SP.FAST parameter on the MODELS statement. Also, a user has to specify a geometry and dimensionality
+of Schrodinger solution by writing  SP.GEOM=2DXY. OX.SCHRO and OX.MARGIN parameters which control the 
+penetration of electrons into oxide. FIXED.FERMI parameter always sets Fermi level to zero. NUM.DIRECT=3
+specifies that all three pairs of conduction band valleys will be taken into account. In the structure file, 
+these values are denoted as "Longitudinal", "Transverse1", and "Transverse2", which corresponds to a 
+value of effective mass in Y direction equal to ml=0.98, mt1=0.19 or mt2=0.19 respectively.
+
+A comparison can be done to a full 2D solution by switching off 
+the SP.FAST parameter.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} quantumex16.in : 3D comparison of DD_MS and NEGF_MS models for nanoscale  FinFET
+
+Requires: Device 3D/Quantum 3D
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates:
+
+{bullet} Comparison of quantum and classical transport models in 3D
+{newline}
+{bullet} Schrodinger-Poisson mesh
+{newline}
+{bullet} Fast product-space 2D SChrodinger solver 
+{newline}
+{bullet} Quantum confinement in a FinFET channel 
+{newline}
+
+This example compares classical drift-diffusion (DD_MS) and quantum 
+ (NEGF_MS) transport models in a 6 by 7 nm thick Si FinFET with 30 nm gate length. 
+ Both solutions employ an uncoupled mode space approach, based on exactly the same 
+ Schrodinger and Poisson solvers and exactly the same material constants,
+ thus allowing a one-to-one comparison. 
+ 
+ A 2D Schrodinger solution in each slice of the device is obtained with 
+ a fast product-space 2D Schrodinger solver by specifying the SP.FAST parameter 
+ on the MODELS statement. Transport solution (drift diffusion or NEGF) is performed 
+ in all uncoupled subbands. 
+ 
+ In order to decrease computational cost, we use a rough mesh in transport (X) direction for
+ 3D Poisson equation. On top of this mesh, we specify a finer Schrodinger-Poisson mesh
+ to decrease a discretization error in mode space drift-diffusion equations, and to avoid 
+ insufficient bandwidth of discretized transport Hamiltonian in NEGF equations.
+ The S-P mesh is specified similar to the original Atlas mesh by statements SPX.MESH, 
+ SPY.MESH and SPZ.MESH. To lower interpolation error and interpolation time, it is
+ a good idea to have the S-P mesh  as similar as possible. Thus we keep 
+ SPY.MESH and SPZ.MESH the same as the original mesh and change only SPX.MESH.
+ Note that due to the prismatic nature of the Atlas mesh, the
+ SPZ.MESH statement is optional. If it is not specified, SPZ.MESH will 
+ be identical to the original mesh in the Z direction.
+ 
+ S-P mesh can be specified on top of the Atlas mesh to refine the quantum solution, 
+ but it becomes especially useful when an external non Atlas mesh is loaded and 
+ a rectangular mesh is required by the Schrodinger solver. 
+ A rectangular mesh is required by the 2D Schrodinger 
+ solver with the SP.FAST option and by 1D solvers in X and Y directions. A general 2D 
+ Schrodinger solver and 1D Schrodinger in Z direction 
+  can work on a triangular mesh in the X-Y plane.
+ 
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+{subsection} quantumex17.in : Band-to-band tunneling at low temperature
+
+Requires: Blaze
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This gives an example of using the 
+{bold} BBT.NONLOCAL
+model to study the forward tunneling current in a degenerately-doped
+ Germanium diode at 4.2K.
+
+The deck uses the 
+{bold} dbinternal
+interface to consider 6 values of doping and to obtain the results in a
+format suitable for use with TonyPlot.  The auxiliary file quantumex17_aux.in
+is run for the 6 values of doping specified in quantumex17.in.
+
+The auxiliary file sets up a simple p-n diode in Germanium, with a fine
+mesh being specified near the actual junction.  Both the donor and acceptor
+concentration are set to be the same value, as specified by the $doping
+parameter supplied by the main deck.  The actual tunneling junction is set
+up by the
+{bold} QTREGION 
+statement.  Its limits in the y-direction (-0.2 microns to 0.2 microns)
+are sufficient to ensure that the tunneling slices start and end outside
+the depletion region under the biasing conditions considered.
+
+There are 6 tunneling slices which are parallel and regularly spaced, 
+with 151 points each on which to do the tunnel current calculation. 
+
+The parameters on the MATERIAL statement
+
+{bold} me.tunnel and  mh.tunnel
+
+have the major influence on the tunneling current and can be used as 
+fitting parameters. ni.min is specified to avoid underflow at these
+low temperatures.
+
+The model 
+{bold} BBT.NONLOCAL 
+is specified on the MODELS statement, along with
+{bold} BBT.NLDERIVS
+which includes fully non-local coupling into the jacobian matrix.
+
+If you wish to save out a structure point at a given value of bias, you
+can see the internal quantum tunnel current as a generation rate. This
+is optional.
+
+The bias is ramped up to 0.15 V of forward bias and the I-V curves saved
+in logfiles.  The 
+{bold} extract
+statement is used to find the peak value of the current, and the value
+of bias at which it occurs.  The I-V curves are plotted.
+
+The other plots are of the logarithm of the peak current versus the reciprocal
+of the square root of the doping level.  This curve is approximately a 
+straight line as is observed experimentally.  Also shown is the bias at which
+the tunnel current is a maximum.  This increases with the doping level,
+reflecting the more favourable band lineup for tunneling under more
+degenerate doping.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} quantumex18.in : GaAs n-type Resonant Tunneling Diode
+
+Requires: Blaze/Quantum
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+
+This example considers n-type GaAs RTD with 2nm wide double barriers separated by a 2nm well.
+The sumulation is based of a self-consistent solution of Poisson and Non-Equilibrium Green's 
+function equations.
+To launch the model, use N.NEGF_PL1D and/or  P.NEGF_PL1D on the MODELS statement. 
+This will solve a 1D model in one slice and copy it to all other slices.
+If slices are not equivalent, use N.NEGF_PL and/or  P.NEGF_PL to solve a 1D model
+for each slice. Energy grid size in the NEGF solver is regulated 
+by ESIZE.NEGF on the MODELS statement (default is 2001). You may increase it up 
+to 10000   for better convergence. To set broadening in quazi-equilibrium regions, 
+use ETA.NEGF (default is 0.0066 eV). Increase it to 0.01 eV for better convergence.
+Physically, the broadening corresponds to inelastic electron-phonon scattering, and 
+is necessary  to fill emitter  quazi-bound states.
+
+In order to solve for eigen energies and wavefunctions, we use the NEGF.EIG paramater of the 
+SOLVE and SAVE statement.  NEGF.EIG can be switchedoff to save computation time, 
+if the information on eigen energies is not required.  Use EIG.YMIN and EIG.YMAX 
+parameters on the models statement to choose only states localized in this region.
+
+To gain insight into  transmission, DOS and current spectra, we use PROBE statements.
+Spectra files will have names quantumex18_TranvsE_1.log, 
+quantumex18_TranvsE_2.log etc. for each time you set NEGF.LOG on the SAVE statement.
+Setting X-location is not needed if you solve only one slice (N.NEGF_PL1D).
+
+Additionally, we probe total charge and resonant energies at each bias point 
+and store them in the IV log file.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} quantumex19.in : SiGe p-type Resonant Tunneling Diode
+
+Requires: S-Pisces/Quantum
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+
+This example considers a p-type SiGe RTD with 2nm wide double Si barriers separated by a 
+2nm SiGe well. A two-band model is used for hole bandstructure. 
+Band offsets and effective masses are set by DEV.HH, DEV.LH and MHH, MLH parametrs on 
+the MATERIAL statment. The convergence criterium  for the maximum change in potential is set 
+by the QCRIT.NEGF parameter on the MODELS statement to 0.1 meV.
+
+In order to solve for eigen energies and wavefunctions, we use NEGF.EIG paramater of the 
+SOLVE and SAVE statement.  NEGF.EIG can be switchedoff to save computation time 
+if the information on eigen energies is not required.  Use EIG.YMIN and EIG.YMAX 
+parametrs on the models statement to choose only states localized in this region.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+{subsection} quantumex20.in : Non-local inelastic trap assisted tunnelling in a MOS-C
+
+Requires: S-Pisces
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example shows how to model the tunneling current through an insulator defect level
+using the ITAT.SC.EL model.
+
+It demonstrates :
+
+{bullet} Setting up a Trap level for tunnelling using the DOPING statement
+{newline}
+{bullet} Setting up a self-consistent version of the ITAT model.
+{newline} 
+{bullet} Visualising the results of the ITAT model.
+
+A simple MOS-C is set up using Atlas mesh commands,  and the statement
+{newline}
+{bold} doping region=2 uniform tat.trap conc=1.0e19 acceptor sign=1.0e-13 sigp=1.0e-13  e.level=3.0
+{newline}
+sets up a spatially uniform trap concentration with the tat.trap parameter.  These
+traps are unlike conventional traps and their occupancy fractions are determined solely
+by the tunnel current passing through them.  This statement also sets the trap capture cross
+sections (1.0e-13 cm^2), type (acceptor) and energy level below the conduction band (3.0 eV).
+The ITAT.SC model for electrons is enabled on the models statement
+{newline}
+{bold} models itat.sc.el tat.slicepts=51 
+{newline}
+This causes a quantum tunnelling region to be automatically set up, with 51
+points along each tunnelling slice.  The self-consistency means that the
+tunnel current is injected into the current continuity equations in the semiconductor.
+
+The next part is a steady state voltage ramp of the gate.  This causes a tunnel
+current to flow through the traps in the oxide, and affects their occupation
+probabilities by charging them up.  After this the gate voltage is returned
+to zero on a transient ramp and the current obtained up to a simulation time
+of 0.01 s. After the initial transients,  the tunnelling current decays with 
+a power law dependence on time.  The change of charge in the device causes a 
+displacement current to be present too.  The trap occupancy is shown as a
+function of depth in the oxide for the equilibrium case, when the steady-state
+bias is 2.0V and after partially discharging.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+{subsection} quantumex21.in : Quantum Well Infrared Photodetector: Spectral and Angular Response
+
+Requires: S-Pisces/Quantum
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+
+In this example, we simulate intersubband GaAs/AlGaAs n-type multiple quantum
+well infrared photodetector (QWIP). We optimized the material and geometrical 
+aspects of the QWIP to tune the wavelength of its peak responsivity, and to 
+eliminate all but one bound state per well. 
+
+At a voltage bias commonly found in experimental conditions for these systems, 
+we calculate the optical gain, and estimate the radiative capture rate of the
+device. We confirm the radiative capture to be much slower than the known 
+phonon-driven capture for such detectors.
+
+Intersubband n-type QWIP detectors only operate at oblique incidence angles.
+We simulate the response of the detector for angles ranging from 0 to 80 degrees
+with respect to the normal, and close to the wavelength of peak response. 
+The results take into account the coherent multiple reflections of radiation 
+inside the active region thanks to the Transfer Matrix Method used.
+
+We simulate the spectral response of the detector, obtaining the absorption 
+and the generated photocurrent for a beam at 30 degrees with respect to the 
+normal. The physical structure and material properties of the device allow 
+only 1 bound state to exist. We set WELL.CNBS=2 in order to allow Atlas to 
+search for up to two states, and we confirm in the output that only 1 state 
+exists. This is why the bound-bound transition contribution to spontaneous 
+emission is zero. A non-zero contribution would indicate the existence of 
+multiple bound states, and therefore, degraded device performance.
+
+Detailed description of models and corresponding parameters used in this 
+simulation can be found directly in the input deck. 
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+{subsection} quantumex22.in : Laser Diode Simulation using Luttinger-Kohn k.p model
+
+Requires: S-Pisces/Quantum
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+The example demonstrates the use of Luttinger-Kohn k.p model to calculate the band 
+structure and optical response of the active layer of a simple quantum well laser 
+diode. The response is fully coupled to the drift diffusion equations during the  
+simulation, which biases the diode into a positive gain regime.
+
+The example illustrates the differences between the coupled k.p model with its
+corresponding effective mass approximation. The comparison is made between:
+band structure,
+density of states,
+optical gain,
+optical transition matrix elements,
+and band character 
+
+Detailed description of models and parameters used during the simulation can be found 
+in the input deck itself. 
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+{subsection} quantumex23.in : Simulation of a Band-to-Band Tunneling Diode
+
+Requires: Atlas
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates the capability of a TCAD simulation for non-local band-to-band tunneling (BTBT) at low to ultra-low voltages.
+
+This example is related to the IEEE T-ED publication: 
+T. A. Jokinen and S. McNamara, "Band-to-Band Tunneling Diode for Ultralow-Voltage Applications," IEEE Transactions on Electron Devices, vol. 64, no. 6, pp. 2702-2706, June 2017,
+and to the Silvaco Simulation Standard 2017 article "TCAD Simulations of TFET and Tunneling Diode".
+
+This gives an example of using the 
+{bold} BBT.NONLOCAL 
+and
+{bold} QTREGION
+model to study forward and reverse tunneling current in a degernerately-doped Silicon diode at room temperature (300K), and lowering the doping concentation so that the voltage hump (negative differential resistance) in forward bias is eliminated.
+
+The deck uses the 
+{bold} LOOP 
+statement to loop commands in 
+{bold} DeckBuild. 
+
+The 
+{bold} LOOP 
+is used to create three similar BTBT diodes with the only difference being the doping concentrations on each side of the junction. The BTBT diodes are designed with a fine mesh.  For tunneling to occur in the simulation, the junction is overlayed with a quantum region. This quantum region is defined by the statement:
+{bold} QTREGION
+. This creates quadrilateral that can be connected together to form a non-planar tunneling junction. 
+
+The model 
+{bold} BBT.NONLOCAL  
+is specified on the MODELS statement to use the non-local tunneling model. 
+
+The simulation should be done using 80-bit precision, using the option: 
+
+{bold}   simflags="-80"
+
+The structure file of each device in equilibrium is saved, and can be viewed in 
+{bold} Tonyplot
+. You can view the band diagrams and other information about the device. 
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+{subsection} quantumex24.in : Silicon NanoWire Gate-All-Around Tunneling Field-Effect Transistor (TFET)
+
+Requires: Atlas
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates the capability of a TCAD simulation for Silicon NanoWire (NW) Gate-All-Around (GAA) Tunneling Field-Effect Transistor (TFET) using the non-local band-to-band tunneling (BTBT) model.
+
+This example is related to the IEEE T-ED publication: 
+Z. Y. Chen et al., "Demonstration of Tunneling FETs Based on Highly Scalable Vertical Silicon Nanowires," in IEEE Electron Device Letters, vol. 30, no. 7, pp. 754-756, July 2009,
+and to the Silvaco Simulation Standard 2017 article "TCAD Simulations of TFET and Tunneling Diode".
+
+
+This gives an example of using the
+{bold} BBT.NONLOCAL 
+,
+{bold} QTX.MESH 
+, and
+{bold} QTY.MESH 
+models to study the Id-Vg characteristics of a Si NW-GAA-TFET at room temperature (300K) with two different drain voltages, 1.2 V and 0.05 V.
+
+The deck uses the
+{bold} LOOP 
+statement to loop commands in
+{bold} DeckBuild. 
+
+The 
+{bold} LOOP 
+is used to modify the drain voltage for two Id-Vg simulations.  The TFET has a fine mesh at the junctions, specifically at the tunneling junction between the p and i regions.  For tunneling to occur in the simulation, the p-i junction is overlayed with a quantum mesh. This quantum mesh is defined by the statement:
+{bold} QTX.MESH 
+and
+{bold} QTY.MESH
+. This creates simple mesh for planar tunneling junctions. 
+
+The model
+{bold} BBT.NONLOCAL 
+is specified on the MODELS statement to use the non-local tunneling model. The direction of tunneling is specified by the
+{bold} QTUNN.DIR 
+statement, with 0 being the y-direction and 1 being the x-direction.
+
+The structure file of each device in equilibrium is saved, and can be viewed in 
+{bold} Tonyplot
+. You can view the band diagrams and other information about the device. 
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+

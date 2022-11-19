@@ -1,0 +1,127 @@
+<html>
+  <head>
+    <title>Process and Device simulation</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Process and Device simulation</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Athena/Atlas/Luminous</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="imagesensorex04_plot0.png" width="640" alt="imagesensorex04_plot0" />
+      <p/>
+      <img src="imagesensorex04_plot1.png" width="640" alt="imagesensorex04_plot1" />
+      <p/>
+      <img src="imagesensorex04_plot2.png" width="640" alt="imagesensorex04_plot2" />
+      <p/>
+      <img src="imagesensorex04_plot3.png" width="640" alt="imagesensorex04_plot3" />
+      <p/>
+      <img src="imagesensorex04_plot4.png" width="640" alt="imagesensorex04_plot4" />
+      <p/>
+      <img src="imagesensorex04_plot5.png" width="640" alt="imagesensorex04_plot5" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates Process and Device simulation of a
+CMOS Image sensor (CIS). Front End as well as Back End Process
+simulation including lens are simulated using Athena. DC as well
+as Transient IV characteristics under illumination are simulated
+using Atlas.
+</p>
+<p>
+The CIS is a special transistor where the source region
+is the whole floating N- region underneath a heavy P+ doping
+pin layer. The drain side is a floating diffusion to which
+the electrons are transfered. The gate is used to transfer
+electrons from the source to the the drain.
+</p>
+<p>
+When designing CIS, the depletion region from the image sensor
+(source contact) should not connect to the depletion region
+from the drain contact. Therefore, you must isolate the drain
+contact from the source contact with boron implants.
+</p>
+<p>
+Also the buried N- region (which is the active sensor) was
+connected to the channel region under the gate to create a
+source with further additional implants.
+</p>
+<p>
+Only by doing this, do you get good connectivity of the image
+sensor to the drain when the transfer gate is activated.
+</p>
+<p>
+Vt was adjusted with the boron implant through the poly gate
+so that no leakage occurs when the light auto-biases the buried
+N- channel region.
+</p>
+<p>
+The complete structure was achieved by adding a Back End Process
+including a lens to focus light in the buried N- layer.
+</p>
+<p>
+Unsaturated and saturated D.C. IV Characteristics were simulated
+in order to verify low leakage current all the way up to Vg=1V.
+For that purpose, artificial source contact in buried N- layer
+is added to simulate FET IV characteristics.
+</p>
+<p>
+The Drain is then ramped up to 3.3V and is made floating by setting
+the current boundary condition.
+</p>
+<p>
+The light is shone on the structure during 50us.
+<b> Ray tracing </b> is used in this case but
+<b> FDTD </b> can also be used and the statements are available in the input deck.
+For a more detailed description of FDTD syntax please refer to image
+sensor examples 1 to 3.
+</p>
+<p>
+From the log file we can see that bias of the  buried N- region
+gradually decreases as the light generated carriers are
+integrated. At around 3us, the image sensor is saturated, and the
+voltage can increase no further no matter how much light you shine
+on it. Note that despite full light shining on the structure, the
+signal remains de-coupled from the drain (i.e the drain remains at
+3.3V before the gate is turned on). This is the result of the back
+end process shadowing the drain and of the low leakage of the design.
+</p>
+<p>
+From the structure file rays, photogeneration as well as electron
+concentration can be seen.
+</p>
+<p>
+At 50us the gate is ramped in transient to 3.3V to transfer the
+charge previously generated in the N- region to the floating drain.
+The potential in the N- region starts to increase in voltage as
+the electrons from the N- region are transfered to the floating
+drain region.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

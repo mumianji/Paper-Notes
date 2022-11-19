@@ -1,0 +1,54 @@
+; Define regions
+
+And 	CNPI	CTOX	NACTIVE
+And 	CPPI	CTOX	PACTIVE
+And 	NACTIVE	CPOL	NGATE
+And 	PACTIVE	CPOL	PGATE
+And 	NACTIVE	!CPOL	NSD1
+And 	PACTIVE	!CPOL	PSD1
+And 	NSD1	!CNWI	NSD
+And 	PSD1	CNWI	PSD
+
+Not	!CNWI 	NSD	NSUB
+Not 	CNWI 	PSD	PSUB
+Not	CCON	CPOL	SICONT
+
+; Define mask for trench isolation
+
+Or	NACTIVE	PACTIVE	AA
+
+; Export new masks
+
+Export	SICONT
+Export	NSD 
+Export	NSUB 
+Export	PSD 
+Export	PSUB 
+Export  NACTIVE
+Export  PACTIVE
+Export  NGATE
+Export  PGATE
+Export  NSD1
+Export  PSD1
+Export	AA
+
+; Define connectivity
+
+Connect CVIA 	CME2
+Connect CME1 	CVIA
+Connect CCON	CME1
+Connect	CPOL	CCON
+Connect NGATE	CPOL
+Connect NSD	CCON
+Connect PGATE	CPOL
+Connect PSD	CCON
+Connect NSUB	SICONT
+Connect PSUB	SICONT
+Connect CCON	SICONT
+
+Attach LABEL CME1
+
+; Define device name, gate, source/drain, substrate and connection
+
+ELEMENT MOS[myNMOS]  NGATE   NSD    NSUB   SICONT
+ELEMENT MOS[myPMOS]  PGATE   PSD    PSUB   SICONT

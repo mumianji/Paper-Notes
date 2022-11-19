@@ -1,0 +1,213 @@
+# (c) Silvaco Inc., 2018
+go devedit
+
+set pkfld = 1.0e17
+
+set pkchan = 5.0e16
+
+set width=1.0
+
+set len=0.5-($width/2)
+
+
+go devedit 
+#
+#  3D MOS transistor
+#  Steady-state simulation
+#
+
+DevEdit version="2.0" library="1.14"
+
+work.area left=$"len" top=-0.6 right=1 bottom=2.1
+
+# SILVACO Library V1.14
+
+region reg=1 mat=Silicon color=0xffc000 pattern=0x3 Z1=0 Z2=2.5 \
+	points="$"len",0 0.25,0 0.5,0 0.6,0.05 0.7,0.2 0.8,0.3 1,0.3 1,2 $"len",2 $"len",0"
+#
+impurity id=1 region.id=1 imp=Boron color=0x906000 \
+	x1=$"len" x2=0 y1=0 y2=0 \
+	peak.value=2e+16 ref.value=0 z1=0 z2=0 comb.func=Multiply \
+	rolloff.y=both conc.func.y=Constant \
+	rolloff.x=both conc.func.x=Constant \
+	rolloff.z=both conc.func.z=Constant
+#
+constr.mesh region=1 default
+
+region reg=2 mat="Silicon Oxide" color=0xff pattern=0x1 Z1=0 Z2=2.5 \
+	points="$"len",-0.02 0.25,-0.02 0.5,-0.02 0.6,-0.05 0.7,-0.2 0.8,-0.3 1,-0.3 1,0.3 0.8,0.3 0.7,0.2 0.6,0.05 0.5,0 0.25,0 $"len",0 $"len",-0.02"
+#
+constr.mesh region=2 default
+
+region reg=3 mat="Silicon Nitride" color=0xffff pattern=0x2 Z1=0.5 Z2=2 \
+	points="$"len",-0.3 0.5,-0.3 0.6,-0.35 0.7,-0.5 0.8,-0.6 1,-0.6 1,-0.5 1,-0.3 0.8,-0.3 0.7,-0.2 0.6,-0.05 0.5,-0.02 0.25,-0.02 $"len",-0.02 $"len",-0.2 $"len",-0.3"
+#
+constr.mesh region=3 default
+
+region reg=4 name=gate mat=PolySilicon elec.id=1 color=0xffff00 pattern=0x4 Z1=0.8 Z2=1.7 \
+	points="$"len",-0.2 0.25,-0.2 0.5,-0.2 0.6,-0.25 0.7,-0.4 0.8,-0.5 1,-0.5 1,-0.3 0.8,-0.3 0.7,-0.2 0.6,-0.05 0.5,-0.02 0.25,-0.02 $"len",-0.02 $"len",-0.2"
+#
+constr.mesh region=4 default
+
+region reg=5 name=source mat=Aluminum elec.id=2 color=0xffc8c8 pattern=0x6 Z1=0 Z2=0.5 \
+	points="$"len",-0.2 0.25,-0.2 0.25,-0.02 0.25,0 $"len",0 $"len",-0.02 $"len",-0.2"
+#
+constr.mesh region=5 default
+
+region reg=6 name=drain mat=Aluminum elec.id=3 color=0xffc0c0 pattern=0x6 Z1=2 Z2=2.5 \
+	points="$"len",-0.2 0.25,-0.2 0.25,-0.02 0.25,0 $"len",0 $"len",-0.02 $"len",-0.2"
+#
+constr.mesh region=6 default
+
+region reg=7 name=substrate mat=Aluminum elec.id=4 color=0xffc8c8 pattern=0x7 Z1=0 Z2=2.5 \
+	points="$"len",2 1,2 1,2.1 0,2.1 $"len",2"
+#
+constr.mesh region=7 default
+
+
+impurity id=1 imp=Phosphorus color=0x906000 \
+	x1=$"len" x2=0.3 y1=0 y2=0 \
+	peak.value=1e+20 ref.value=0 z1=0 z2=0.8 comb.func=Multiply \
+	rolloff.y=both conc.func.y=Gaussian conc.param.y=0.1 \
+	rolloff.x=both conc.func.x="Error Function" conc.param.x=0.05 \
+	rolloff.z=both conc.func.z="Error Function" conc.param.z=0.05
+impurity id=2 imp=Phosphorus color=0x906000 \
+	x1=$"len" x2=0.3 y1=0 y2=0 \
+	peak.value=1e+20 ref.value=0 z1=1.7 z2=2.5 comb.func=Multiply \
+	rolloff.y=both conc.func.y=Gaussian conc.param.y=0.1 \
+	rolloff.x=both conc.func.x="Error Function" conc.param.x=0.05 \
+	rolloff.z=both conc.func.z="Error Function" conc.param.z=0.05
+impurity id=3 imp=Boron color=0x906000 \
+	x1=$"len" x2=0.5 y1=0.05 y2=0.05 \
+	peak.value=$pkchan ref.value=0 z1=0 z2=2.5 comb.func=Multiply \
+	rolloff.y=both conc.func.y=Gaussian conc.param.y=0.05 \
+	rolloff.x=both conc.func.x=Gaussian conc.param.x=0.05 \
+	rolloff.z=both conc.func.z="Error Function" conc.param.z=0.05
+impurity id=4 imp=Boron color=0x906000 \
+	x1=0.5 x2=1 y1=0.3 y2=0.3 \
+	peak.value=$pkfld ref.value=0 z1=0 z2=2.5 comb.func=Multiply \
+	rolloff.y=both conc.func.y=Gaussian conc.param.y=0.25 \
+	rolloff.x=both conc.func.x=Gaussian conc.param.x=0.25 \
+	rolloff.z=both conc.func.z="Error Function" conc.param.z=0.05
+
+# Set Meshing Parameters
+#
+base.mesh height=0.2 width=0.1
+#
+bound.cond !apply max.slope=28 max.ratio=300 rnd.unit=0.001 line.straightening=1 align.points when=automatic
+#
+imp.refine imp="Phosphorus" sensitivity=1
+imp.refine min.spacing=0.03 z=0
+#
+constr.mesh max.angle=90 max.ratio=300 max.height=1 \
+	max.width=1 min.height=0.0001 min.width=0.0001
+#
+constr.mesh type=Semiconductor default
+#
+constr.mesh type=Insulator default
+#
+constr.mesh type=Metal default
+#
+constr.mesh type=Other default
+#
+constr.mesh region=1 default
+#
+constr.mesh region=2 default
+#
+constr.mesh region=3 default
+#
+constr.mesh region=4 default
+#
+constr.mesh region=5 default
+#
+constr.mesh region=6 default
+#
+constr.mesh region=7 default
+#
+# Perform mesh operations
+#
+Mesh Mode=MeshBuild
+Refine Mode=Y P1=$"len",-0.016114121268342 P2=0.492926716141002,0.185606236296171
+Refine Mode=Y P1=$"len",0.00988889357395856 P2=0.490628689492326,0.0705625948726598
+
+imp.refine imp="Phosphorus" sensitivity=1
+imp.refine min.spacing=0.03 z=0
+
+constr.mesh max.angle=90 max.ratio=300 max.height=1 \
+	max.width=1 min.height=0.0001 min.width=0.0001
+#
+constr.mesh type=Semiconductor default
+#
+constr.mesh type=Insulator default
+#
+constr.mesh type=Metal default
+#
+constr.mesh type=Other default
+
+z.plane z=0 spacing=0.25
+#
+z.plane z=0.5 spacing=0.1
+#
+z.plane z=0.8 spacing=0.1
+#
+z.plane z=1.7 spacing=0.08
+#
+z.plane z=2 spacing=0.1
+#
+z.plane z=2.5 spacing=0.25
+#
+z.plane max.spacing=1000000 max.ratio=1.5
+
+base.mesh height=0.2 width=0.1
+
+bound.cond !apply max.slope=28 max.ratio=300 rnd.unit=0.001 line.straightening=1 align.Points when=automatic
+
+structure outf=radex06_0.str
+
+go atlas
+#
+contact name=gate workfun=4.17
+contact name=drain resist=1.0e4 cap=1.0e-15
+#
+models srh auger cvt
+#
+# Single Event Upset
+# Specify the charge track: along drain-substrate long diagonal 
+
+single entry="0.0,-0.6,2.5" exit="1.0,2.0,0.0" radius=0.1 density=1.e18 \
+        t0=4.e-12 tc=2.e-12
+
+# Specify numerical method
+method newton carr=2
+
+solve vdrain=0.1
+solve vdrain=1.0 vstep=1.0 vfinal=5.0 name=drain
+save outf=radex06_1.str
+
+#for subsequent runs can save time by using LOAD
+#load inf=radex06_1.str master
+#solve prev
+
+#  Calculate transient response
+
+method newton dt.min=1.e-15
+
+log outf=radex06.log
+
+solve tfinal=4.e-12 tstep=1.e-13
+
+save outf=radex06_2.str
+
+solve tfinal=1.e-10  tstep=1.e-12 
+
+save outf=radex06_3.str
+
+solve tfinal=1.e-9  tstep=1.e-10 
+tonyplot radex06.log
+
+tonyplot3d radex06_0.str -set radex06_str_0.set
+tonyplot3d radex06_1.str -set radex06_str_1.set
+tonyplot3d radex06_2.str -set radex06_str_2.set
+tonyplot3d radex06_3.str -set radex06_str_3.set
+
+quit

@@ -1,0 +1,183 @@
+# (c) Silvaco Inc., 2018
+go atlas 
+#
+# This is the same as the ledex01.in example except we will apply
+# FDTD to the calculation of output coupling
+#
+#-------------------------------------------------------------------
+# MESH GENERATION
+#-------------------------------------------------------------------
+#
+#
+mesh 
+#periodic
+x.mesh loc=-15  spac=15
+x.mesh loc=15   spac=15
+#
+y.mesh loc=0.0   spac=0.1
+y.mesh loc=0.5   spac=0.001
+y.mesh loc=0.55  spac=0.005
+y.mesh loc=0.600 spac=0.0002
+y.mesh loc=0.603 spac=0.0002
+y.mesh loc=0.65  spac=0.005
+y.mesh loc=0.7   spac=0.005
+#
+#-------------------------------------------------------------
+# REGIONS AND ELECTRODES
+#-------------------------------------------------------------
+region num=1 material=GaN y.max=0.5 
+region num=2 material=AlGaN y.min=0.5 y.max=0.6 x.comp=0.2 
+region num=3 material=InGaN y.min=0.6 y.max=0.603 x.comp=0.20 name=well \
+       qwell led calc.strain polarization polar.scale=1.0 well.ny=50 
+region num=4 material=GaN y.min=0.603 substrate
+#
+electrode name=anode   top
+electrode name=cathode bottom
+#
+#-------------------------------------------------------------
+# DOPING PROFILES
+#-------------------------------------------------------------
+#
+doping region=1 uniform p.type conc=1e19
+doping region=2 uniform p.type conc=1e19
+doping region=4 uniform n.type conc=1e18
+#
+#---------------------------------------------------------------
+# MATERIAL MODELS
+#---------------------------------------------------------------
+#
+material material=GaN taun0=1e-9 taup0=1e-9 copt=1.1e-8 \
+         augn=1.0e-34 augp=1.0e-34
+material material=AlGaN taun0=1e-9 taup0=1e-9 copt=1.1e-8 \
+         augn=1.0e-34 augp=1.0e-34
+material material=InGaN taun0=1e-9 taup0=1e-9 copt=1.1e-8 \
+         augn=1.0e-34 augp=1.0e-34 
+#
+# Lorentz Broaden factor
+#
+material well.gamma0=30e-3
+#
+material edb=0.080 eab=0.101
+#
+models k.p fermi incomplete consrh auger optr print
+models region=3 k.p chuang spontaneous lorentz
+#
+mobility mun0=100 mup0=10 
+#
+#----------------------------------------------------------------
+# OUTPUT FLAGS and METHOD
+#----------------------------------------------------------------
+#
+output con.band val.band band.param charge polar.charge e.mobility \
+       h.mobility u.srh u.radiative u.auger permi
+#
+method climit=1e-4 maxtrap=10
+#
+#-----------------------------------------------------------------
+# SPECIFICATION of the OPTICAL PROBLEM
+#-----------------------------------------------------------------
+#
+# Here we describe the optical parameters for the FDTD solver
+# borrowing syntax from the Luminous BEAM.
+#
+# Line by line description:
+# 1) describes the origin and direction and wavelength (same as RT and TMM)
+# 2) specifies the descretization.  
+# 3) specifies that we want to save the last 5 FDTD log files
+# 4) specifies that we want to save the last 5 FDTD structure
+# files (including the lenslets)
+# PMLS and results for the electro-magnetic fields and photogeneration
+# rate.
+# 5) specifies that we want to extract near and far field patterns from
+# the face located at y=-1.
+# 6) specifies the output top surface is used for calculation of coupling.
+# you may specify more than one (e.g. OUT.BOTTOM)
+#
+beam  num=1 x.origin=0 y.origin=-1.1 z.origin=0 \
+      fdtd td.srate=5 prop.leng=30.0 big.index fd.auto td.err=0.01 dt=5e-18 \
+      td.log=ledex07  seq.log=5 \
+      td.file=ledex07 seq.str=5 \
+      facet="ledex07" y.facet=-0.05 seq.nfp=5 seq.ffp=5 \
+      out.top
+# pml.crop
+#
+# PMLS are important for three reasons:
+# 1) They make a perfectly black hole type sink.  There should be no 
+# reflection from PMLS.  This is the perfect approximation for the 
+# ideal test conditions.
+# 2) The absorption in PMLs is integrated to evaluate how much energy
+# leaves the device through that face.  This is compared with the
+# absorption integrated in the bulk to give output coupling.
+# 3) If your PMLs are not properly designed (i.e. index matched
+# at the boundaries). You will see ever increasing error.  This usually
+# means you are introducing more energy from the source than is allowed
+# to escape via the PMLs.
+#
+# The width of the PML should be set to a value on the order of the dimensions
+# of the device.  This should give equal numerical consideration to light
+# exiting the device as being absorbed in the device.
+#
+# Be sure to match the index to the adjacent material using either
+# the REAL.INDEX or the MATERIAL paramters of the PML statement.
+#
+# We comment out the bottom PML to make it act just like a perfect
+# mirror.
+#
+#pml beam=1 bottom degree=1 width=0.5 r90=0.001 material=GaN
+pml beam=1 top    degree=1 width=0.5 r90=0.001 real.index=1.0
+#
+# the end pls are critical to gather up axial light
+#
+pml beam=1 left degree=1 width=0.5 r90=0.001 material=GaN
+pml beam=1 right degree=1 width=0.5 r90=0.001 material=GaN
+#
+#
+#----------------------------------------------------------------
+# INITIAL SOLUTION
+#----------------------------------------------------------------
+#
+solve init
+solve prev
+#
+save outf=ledex07.str
+#
+#-----------------------------------------------------------------
+# BIAS RAMP and Save the SPECTRUM
+#-----------------------------------------------------------------
+#
+probe name=Recombination integrate recomb
+probe name=Radiative integrate radiative rname=well
+#
+log outf=ledex07.log
+solve vstep=0.05 vfinal=3.5 name=anode
+#
+# Here the parameter REF.BEAM specifies the reference beam which
+# we defined above so we can couple the LED analysis to FDTD.
+# This also acts as a trigger for LED analysis in FDTD in the
+# same way that assignment of the ANGPOWER parameter triggers
+# reverse ray trace.  Everything else is ordinary except the
+# SILENT flag which controls the amount of printout.  Turning
+# on SILENT prints FDTD details only once per wavelength and
+# changes to a nice summary for all other points being scanned.
+#
+save ref.beam=1 out.inspec=ledex07.spc out.spec=ledex07_out.spc lmin=0.40 lmax=0.46 nsamp=10 \
+	xmin=0 xmax=0.5 xnum=5 y=0.6015 te silent
+#
+# Plot the Ex fields from the last scan in x.
+#
+tonyplot ledex07_0.str ledex07_1.str ledex07_2.str ledex07_3.str ledex07_4.str -set ledex07_1.set
+#
+# Plot the convergence error for the last six scan positions 
+#
+tonyplot -overlay ledex07_0.log ledex07_1.log ledex07_2.log ledex07_3.log ledex07_4.log -set ledex07_2.set
+#
+# Plot the far field pattern for the last six scan positions 
+#
+tonyplot -overlay ledex07_0.ffp ledex07_1.ffp ledex07_2.ffp ledex07_3.ffp ledex07_4.ffp -set ledex07_3.set
+#
+# Plot the spectrum file
+#
+tonyplot ledex07_out.spc -set ledex07_4.set
+#
+quit
+

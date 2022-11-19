@@ -1,0 +1,105 @@
+#include <stdio.h>
+#include <math.h>
+#include <stdlib.h>
+#include "template.h"
+
+int mscextendedtransitionrates(int i,int j,double ec,double ev,double qfn,double qfp,double *etrap,double fn,double fp,double ttl,double ttn,double ttp,double species1,double fhmole,double fhion,double field,double sign,double sigp,double photon_energy,double photo_intensity,double *rate,int *usederivs,double *derivs)
+{
+/* use these constants as argument to derivs array if setting derivatives */
+const int QFN=0;const int QFP=1;const int ELEC=2;const int HOLE=3;
+const int TTL=4;const int TTN=5;const int TTP=6;const int SP1=7;
+const int SP2=8;const int SP3=9;const int FLD=10;
+const double BOLTS=1.38066244e-23/1.602189246e-19;
+double veln=2.19e7,velp=4.78e6;
+double capture_spec=2e-10,kb,ni,trap_level,k,kt;
+double emitspec=1.0e-6*0;
+/* Initialise derivative w.r.t. each input quantity to be zero */
+derivs[QFN] = 0;
+derivs[QFP] = 0;
+derivs[ELEC] = 0;
+derivs[HOLE] = 0;
+derivs[TTL] = 0;
+derivs[TTN] = 0;
+derivs[TTP] = 0;
+derivs[SP1] = 0;
+derivs[SP2] = 0;
+derivs[SP3] = 0;
+derivs[FLD]=0;
+*usederivs=1;
+
+*rate=0.0;
+
+kb = BOLTS*ttl;
+/* ni=3.0e-5; */
+k=1.38066e-23/1.602189e-19;
+kt=k*(370);
+ni=0.259;
+
+
+/* Eta=0.2 by heiman */
+trap_level=0.2; /* relative to Ei */
+
+
+switch (i)
+{
+    case 1:
+	if (j==2)
+	{
+	    *rate=sign*fn*veln + sigp*velp*ni*exp(-trap_level/kb);
+	/* printf("rate = %lf\n", *rate); */
+
+            derivs[ELEC] = sign*veln; 
+	}
+    else if (j==3)
+        {
+            *rate=capture_spec*species1;
+	/* printf(" passivation = %lf\n", *rate); */
+            derivs[SP1] = capture_spec; 
+        }
+	else
+	   puts("Error: index not handled");
+
+    break;
+
+    case 2:
+	if (j==1)
+	{	
+            /* Hole capture and electron emission  */
+	    *rate=sigp*fp*velp + sign*veln*ni*exp(+trap_level/kb);
+	        derivs[HOLE] = sigp*velp;
+	}      
+         else if (j==3)
+        {
+	    *rate=0.0;
+     	
+	}
+	else
+	   puts("Error: index not handled");
+
+    break;
+
+
+    case 3:
+	if (j==1)
+	{	
+         /* gentle depassivation rate */
+         *rate=emitspec;
+	}
+        else if (j==2)
+        {
+            *rate=0.0;
+        }
+	else
+	   puts("Error: index not handled");
+    break;
+	
+
+    default:
+	puts("Error: index not handled");
+    break;
+}
+/* if (i==1 && j==2)  printf("%d %d %e %e %e \n",i,j,*rate,etrap[1],etrap[2]);   */
+return(0);
+}
+             
+

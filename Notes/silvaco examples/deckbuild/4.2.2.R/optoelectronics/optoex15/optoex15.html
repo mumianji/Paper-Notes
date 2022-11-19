@@ -1,0 +1,69 @@
+<html>
+  <head>
+    <title>Defining a 3D Lenslet</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Defining a 3D Lenslet</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Device 3D/Luminous 3D</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="optoex15_plot0.png" width="640" alt="optoex15_plot0" />
+      <p/>
+      <img src="optoex15_plot1.png" width="640" alt="optoex15_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates:
+<br/>
+ </p>
+<ul>
+  <li>
+ How to define a 3D lenslet
+<br/>
+   </li>
+</ul>
+<p>
+One of the common applications of Luminous in 2D has been the simulation of a lens on top of a device.
+To facilitate a similiar function in 3D requires creating this 3D lens which can be difficult without using a 3D process simulator.
+To enable this, additional commands have been implemented into Luminous 3D.
+</p>
+<p>
+The lenslet is represented by a spherical section on top of the x-z plane. The BEAM statement parameters
+<b> lens.x </b> <b> lens.y </b> and
+<b> lens.z </b> are used to define the centre of a sphere. The radius of the sphere is specified with the parameter
+<b> lens.radius </b> and the location of the planar part surrounding the lenslet relative to the y=0 plane is specified by the
+<b> lens.plane </b> parameter. Finally the index of refraction of the volume between the lens plane and the device surface is specified with the
+<b> lens.index </b> parameter.
+</p>
+<p>
+The volume associated with the lenslet is neither meshed nor simulated and is only used in the ray tracing.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

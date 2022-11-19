@@ -1,0 +1,43 @@
+go athena
+
+#TITLE: Ion Milling of Aluminum
+#
+line x loc=0.0 spacing=0.1
+line x loc=3.0 spacing=0.1
+line y loc=0.0 spacing=0.1
+line y loc=1.0 spacing=0.2
+initial
+#
+deposit  aluminum thick=.75 div=10
+#
+deposit material=KTI820   thick=.5 div=8
+etch material=KTI820 start x=.95  y=-1.25
+etch  cont  x=1.00 y=-.75
+etch  cont  x=2.00 y=-.75
+etch  done  x=2.05 y=-1.25
+#
+structure outfile=anelex10_0.str
+#
+rate.etch machine=ionmill rie aluminum direct=2000 a.m
+rate.etch machine=ionmill rie material=KTI820  direct=500.0 a.m
+rate.etch machine=ionmill rie silicon  direct=1000.0 a.m
+#
+etch mach=ionmill time=1.00 minute
+structure outfile=anelex10_1.str
+#
+etch mach=ionmill time=1.00 minute
+structure outfile=anelex10_2.str
+#
+etch mach=ionmill time=1.00 minute
+structure outfile=anelex10_3.str
+#
+etch mach=ionmill time=1.00 minute
+structure outfile=anelex10_4.str
+#
+etch mach=ionmill time=1.00 minute
+structure outfile=anelex10_5.str
+#
+tonyplot anelex10_*.str           
+#
+quit
+

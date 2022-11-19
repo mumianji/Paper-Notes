@@ -1,0 +1,107 @@
+<html>
+  <head>
+    <title>Enhancement Mode IEMOSFET I-V and Breakdown Curves</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Enhancement Mode IEMOSFET I-V and Breakdown Curves</H1>
+    <table id="text">
+      <tr>
+        <td><b>Required:</b></td><td><i>Blaze TFT</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="sicex07_plot0.png" width="640" alt="sicex07_plot0" />
+      <p/>
+      <img src="sicex07_plot1.png" width="640" alt="sicex07_plot1" />
+      <p/>
+      <img src="sicex07_plot2.png" width="640" alt="sicex07_plot2" />
+      <p/>
+      <img src="sicex07_plot3.png" width="640" alt="sicex07_plot3" />
+      <p/>
+      <img src="sicex07_plot4.png" width="640" alt="sicex07_plot4" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example is based on the following paper submitted by
+<b> AIST </b> Japan:
+&quot;4.3 m-ohm.cm2, 1100 V 4H-SiC Implantation and Epitaxial MOSFET&quot;,
+Shinsuke Harada et. al., Material Science Forum Vols. 527-529 (2006)
+pp 1281-1284.
+</p>
+<p>
+The paper investigated the effect of a Nitrogen implant in the surface of the
+lightly doped drain region, that was the electrical N-type doping connection
+to the main vertical drift region to the back of the device where the drain
+contact resides.  In order to allow users to experiment with this n-type
+doping concentration, this concentraion was defined as a variable called
+<b> &quot;CN&quot; </b> near the begining of the input file.  In the example, this doping
+concentration was set to the near optimal value of
+<b> 1e17/cm3</b> .
+</p>
+<p>
+For large band-gap semiconductors, it is necessary to use extended precision
+when simulating the device in the &quot;off&quot; condition, such as when simulating
+breakdown.  In this example,
+<b> 160 bit precision </b> is used, which is defined in
+the &quot;go atlas&quot; statement at the begining of the input file.  For the
+simulation of the I-V curves, it is not strictly necessary however, but it is
+still used here for completeness.
+</p>
+<p>
+The &quot;
+<b>mesh</b> &quot; startement defines the width of the device.
+In order to convert the simulated currents into Amps/cm2 used in the paper,
+the 1.5um gate length device needs to be multiplied by 6.67e7 um.
+</p>
+<p>
+One of the features of SiC/oxide interface is the very high density of
+<b> interface states </b> under the gate, which dominate the determination of the
+threshold voltage.  Most publications place the typical interface state
+density as high as 1e14/cm2/eV at the band edges, dropping to a near constant
+value of 2e11/cm2/eV throughout the rest of the band gap that is more than
+0.5eV away from each of the band edges.  These interface states are modelled
+using the &quot;
+<b>intdefects</b> &quot; statement.
+</p>
+<p>
+The high density of interface states, effectively turn off the channel,
+naturally creating a normally off (enhancement mode) device with a high
+threshold voltage.  In order to reduce the threshold voltage to the more
+acceptable 3.4 volts required for this paper, an n-type channel implant is
+required, with a surface concentraion as high as 1.2e17/cm3 as specified in
+the paper.  Using this surface implant specified in the paper and the
+distribution of interfaces states found in the open literature, the correct
+threshold voltage of 3.4 volts was obtained.
+</p>
+<p>
+Finally, very tight tollerances are applied to the solution using the &quot;
+<b>method</b> &quot; statement, which force the simulator to resolve currents down to
+approximately 1e-30 amps, which is necessary to accurately account for
+leakage currents.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

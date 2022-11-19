@@ -1,0 +1,87 @@
+<html>
+  <head>
+    <title>3D MIM capacitance</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>3D MIM capacitance</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>QUEST</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>QUEST 2.0.2.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="questex12_plot0.png" width="640" alt="questex12_plot0" />
+      <p/>
+      <img src="questex12_plot1.png" width="640" alt="questex12_plot1" />
+      <p/>
+      <img src="questex12_plot2.png" width="640" alt="questex12_plot2" />
+      <p/>
+      <img src="questex12_plot3.png" width="640" alt="questex12_plot3" />
+      <p/>
+    </div>
+    <div id="text" >
+<p>
+This example demonstrates the use of QUEST for 3D MIM capacitance simulation.
+</p>
+<p>
+Introduction:
+</p>
+<p>
+The Metal-Insulator-Metal (MIM) capacitor is a key passive component in RF and
+analog integrated circuits. MIM capacitors have attracted great attention because
+of their high capacitance density that supplies a small area, increases circuit density
+and further reduces fabrication cost.
+</p>
+<p>
+Running the Example
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+<p>
+Results analysis
+</p>
+<p>
+The objective of the analysis is to extract the R,L and C parameter of the simple RLC
+MIM device equivalent model.
+</p>
+<p>
+For that purpose we use the B element of the ABCD matrix (questex12_abcd.dat). From the
+imaginary part of the B element we extract C and L according to the following
+equation B_I=Lw -1/CW using the build-in optimizer by the JavaScript capability. The real
+part of B gives directly the Resistance R.
+</p>
+<p>
+To run the script use the RUNJAVASCRIPT command or type the following command:
+</p>
+<p>
+quest -v -b javascript_name.js
+</p>
+<p>
+This example also shows the
+<b> DBinternal </b> capability to investigate the MIM Thickness effect on the capacitance value. Please
+refer to DeckBuild example DOE: Design of Experiment Examples for detailed explanation
+of the
+<b> DBinternal</b> syntax.
+</p>
+  </div></body>
+</html>

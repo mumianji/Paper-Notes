@@ -1,0 +1,59 @@
+<html>
+  <head>
+    <title>Metal Elbows with Manhattan Geometry</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Metal Elbows with Manhattan Geometry</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>CLEVER</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="clex01_0.str.png" width="640" alt="clex01_0.str" />
+      <p/>
+    </div>
+    <div id="text" >
+<p>
+CLEVER is used in this example to simulate an &quot;L&quot; shaped metal region, often found in custom cells, which is insulated from the silicon substrate by a
+0.5um oxide layer. The processing steps are very simple requiring only etching and deposition.
+</p>
+<p>
+As with any CLEVER simulation the process etching steps are driven from a layout file generated from MaskViews. This file will be included in the support files when this example is loaded.
+</p>
+<p>
+A basic etch and deposition model is used whereby a uniformly thick layer of metal is deposited and etched. This results in the classical &quot;manhattan&quot;
+geometry where the rectangular shaped structures have the appearance of a Manhattan skyline.
+</p>
+<p>
+Once the process simulation is complete the three-dimensional structure is saved with the
+<b> Save</b> statement and can be plotted using
+<b> TonyPlot3d.</b> </p>
+<p>
+Finally the interconnect parasitic extraction is carried out using the
+<b> Interconnect</b> statement. Firstly, however, the material parameters of silicon are defined using the
+<b> Material</b> statement so that in this case silicon &quot;inherits&quot; the same material properties as silicon. In this example only the parasitic capacitance values are calculated
+from the field solver. During this calculation automatic mesh adaption is performed with the
+<b> Adapt</b> parameter whereby the mesh is modified until the error in the capacitance extraction is reduced to the default maximum of 5% of the capacitance. The structure and the SPICE netlist are then saved.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

@@ -1,0 +1,46 @@
+go athena
+#
+#                   OPTOLITH input file: anopex04.in
+#                   -------------------------------
+#
+#              Imaging using annular illumination aperture
+#
+# ANNULAR APERTURE
+#
+#
+# Compensate for intensity difference with intensity=2
+#
+illumination intensity=2 duv.line
+#
+illum.filter clear.fil circle sigma=0.8
+illum.filter circle in.radius=0 out.radius=0.6 transmit=0
+#
+projection na=.42 
+#
+pupil.filter clear.fil circle
+#
+# define mask : three different cd's 0.8, 0.6, 0.4)
+#
+layout lay.clear x.low=-1.8 z.low=-0.4 x.high=-1. z.high=0.4
+layout x.low=1 z.low=-0.2 x.high=1.4 z.high=0.2
+layout x.low=-.3 z.low=-.3 x.high=.3 z.high=.3
+#
+image win.x.lo=-2 win.z.lo=-1 win.x.hi=2 win.z.hi=1 x.p=45 z.p=25 n.pup=10
+#
+structure outfile=anopex04_0.str intensity mask
+#
+# 
+# CIRCULAR APERTURE
+#
+#
+illumination intensity=1 duv.line
+#
+illum.filter clear.fil circle sigma=0.5
+#
+image win.x.lo=-2 win.z.lo=-1 win.x.hi=2 win.z.hi=1 x.p=45 z.p=25 n.pup=10
+#
+structure outfile=anopex04_1.str intensity mask
+#
+tonyplot anopex04_0.str anopex04_1.str -set anopex04.set
+#
+quit

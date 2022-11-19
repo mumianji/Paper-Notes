@@ -1,0 +1,109 @@
+# (c) Silvaco Inc., 2018
+#############################################################################
+##  Double gate Mosfet, comparison between Drift-Diffusion and Energy-Balance 
+##  models.  Calculation with Bohm Quantum potential and field dependent 
+##  mobilities. Energy Balance case first.
+#############################################################################
+go atlas
+mesh
+x.m l=0.0 s=0.001
+x.m l=0.03 s=0.001
+	
+y.m l=-0.0015  s=0.0001
+y.m l=0.0      s=0.00005
+y.m l=0.0015   s=0.0001
+y.m l=0.0030   s=0.00005
+y.m l=0.0045   s=0.0001
+
+region      num=1 y.min=0 y.max=0.0030 silicon
+region      num=2 y.max=0 sio2
+region      num=3 y.min=0.0030 sio2
+
+electrode   num=1 name=gate top x.min=0.01 x.max=0.02 
+electrode   num=2 name= drain x.max=0 y.min=0.0 y.max=0.003
+electrode   num=3 name=source x.min=0.03 y.min=0.0 y.max=0.003
+electrode   num=4 name=gate2 bottom x.min=0.01 x.max=0.02
+
+doping region=1 p.type uniform conc=1.0E18
+doping region=1 x.max=0.01 n.type uniform conc=1.0E20
+doping region=1 x.min=0.02 n.type uniform conc=1.0E20
+contact name=gate aluminum
+contact name=gate2 aluminum common=gate
+
+material region=2 eg300=8.05 affinity=1.0 nc300=2.8e19 nv300=1.04e19
+material region=3 eg300=8.05 affinity=1.0 nc300=2.8e19 nv300=1.04e19
+
+models bqp.n bqp.ngamma=1.2 bqp.nalpha=0.5 srh fermi ni.fermi fldmob hcte.el evsatmod=0
+
+method climit=1.0e-4  block clim.eb=1.0E7 meinr
+
+output band.par con.band val.band t.quantum
+
+solve init 
+
+solve vgate=-0.5 nocurrent
+
+solve name=drain vdrain=0 vstep=0.005 vfinal=0.05 
+
+log outf=quantumex07_eb.log
+solve name=gate vgate=-0.5 vstep=0.02 vfinal=0.5
+log off
+save outf=quantumex07_eb.str
+
+
+####################################
+### Drift Diffusion Calculation  ###
+####################################
+go atlas
+mesh
+x.m l=0.0 s=0.001
+x.m l=0.03 s=0.001
+	
+y.m l=-0.0015  s=0.0001
+y.m l=0.0      s=0.00005
+y.m l=0.0015   s=0.0001
+y.m l=0.0030   s=0.00005
+y.m l=0.0045   s=0.0001
+
+region      num=1 y.min=0 y.max=0.0030 silicon
+region      num=2 y.max=0 sio2
+region      num=3 y.min=0.0030 sio2
+
+electrode   num=1 name=gate top x.min=0.01 x.max=0.02 
+electrode   num=2 name= drain x.max=0 y.min=0.0 y.max=0.003
+electrode   num=3 name=source x.min=0.03 y.min=0.0 y.max=0.003
+electrode   num=4 name=gate2 bottom x.min=0.01 x.max=0.02
+
+doping region=1 p.type uniform conc=1.0E18
+doping region=1 x.max=0.01 n.type uniform conc=1.0E20
+doping region=1 x.min=0.02 n.type uniform conc=1.0E20
+contact name=gate aluminum
+contact name=gate2 aluminum common=gate
+
+material region=2 eg300=8.05 affinity=1.0 nc300=2.8e19 nv300=1.04e19
+material region=3 eg300=8.05 affinity=1.0 nc300=2.8e19 nv300=1.04e19
+
+models bqp.n bqp.ngamma=1.2 bqp.nalpha=0.5 cvt srh fermi ni.fermi
+
+method  block climit=1.0e-4 
+output band.par con.band val.band t.quantum
+
+solve init 
+
+solve vgate=-0.5 nocurrent
+
+solve name=drain vdrain=0 vstep=0.005 vfinal=0.05 
+
+log outf=quantumex07_dd.log
+solve name=gate vgate=-0.5 vstep=0.025 vfinal=0.5 
+log off
+
+save outf=quantumex07_dd.str
+
+tonyplot -overlay quantumex07_dd.log quantumex07_eb.log -set quantumex07.set
+tonyplot -overlay quantumex07_dd.str quantumex07_eb.str -set quantumex07a.set
+
+quit
+
+
+

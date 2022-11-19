@@ -1,0 +1,167 @@
+# (c) Silvaco Inc., 2018
+
+go victoryprocess 
+
+Init material=silicon c.boron=1e14 \
+     layout="powerex19.lay" depth=90 gasheight=5
+
+Option cartesian.spacing.ratio=1.35 
+
+Cartesian mask="GATE"    spacing=0.5   all.point 
+Cartesian mask="METAL"   spacing=0.75  all.point 
+
+Line x location=37   
+Line x location=38  
+
+Line x location=56.5  
+Line x location=57.5  
+Line x location=58.5 
+Line x location=59.5  
+Line x location=60.5 
+Line x location=61.5 
+Line x location=62.5
+Line x location=63.5  
+
+Line y location=0   
+Line y location=0.2  
+Line y location=0.45 
+Line y location=0.55 
+Line y location=1.45 
+Line y location=1.55
+Line y location=1.8  
+Line y location=2   
+
+Line z location=-5   
+Line z location=-1.5 
+Line z location=-1.1 
+Line z location=-0.5 
+Line z location=-0.1 
+Line z location=0    
+Line z location=0.025    
+Line z location=3    
+Line z location=3.5    
+Line z location=80 
+Line z location=90
+
+Deposit material=oxide MAX thickness=0.1
+
+Mask "N_WELL" reverse
+Implant phosphorus energy=2000 tilt=0 rotation=0 dose=8e11
+Strip material=resist
+
+Mask "P_WELL" reverse
+Implant boron energy=1500 tilt=0 rotation=0 dose=1e13
+Implant boron energy=500  tilt=0 rotation=0 dose=5e12
+Implant boron energy=100  tilt=0 rotation=0 dose=2e12
+Implant boron energy=40   tilt=0 rotation=0 dose=1e12
+Strip material=resist
+
+Mask "N_PLUS" reverse
+Implant phosphorus energy=150 tilt=0 rotation=0 dose=2e15
+Strip material=resist
+
+Mask "P_PLUS" reverse
+Implant boron energy=400 tilt=0 rotation=0 dose=5e15
+Implant boron energy=100 tilt=0 rotation=0 dose=2e15
+Implant boron energy=40  tilt=0 rotation=0 dose=1e15
+Strip material=resist
+
+Mask "N_FING" reverse
+Implant phosphorus energy=300 tilt=0 rotation=0 dose=1.5e12
+Strip material=resist
+
+Mask "P_FING" reverse
+Implant boron energy=120 tilt=0 rotation=0 dose=1.5e12
+Strip material=resist
+
+Diffuse time=1 temperature=1050
+
+Deposit material=nitride MAX thickness=0.4
+Etch material=nitride MAX mask="LOCOS"
+
+Deposit material=polysilicon CONFORMAL thickness=1
+Etch material=polysilicon MAX mask="GATE" 
+Electrodes "GATE" material=polysilicon
+
+Deposit material=bpsg MIN thickness=0.4
+Etch material=bpsg MAX mask="METAL" reverse
+Etch material=oxide MAX mask="METAL" reverse
+
+Deposit material=aluminum MIN thickness=0.5
+Electrodes "METAL" material=aluminum
+
+save name=powerex19_vp_0
+
+
+# Device meshing
+# ==============
+
+go victorymesh
+
+load in=powerex19_vp_0
+
+remesh regular
+
+save out=powerex19_0.str
+
+
+tonyplot3d powerex19_0.str -set powerex19_0.set
+
+
+# Device simulation 
+# =================
+
+go victorydevice
+
+mesh infile=powerex19_0.str verbose=2 
+
+contact name=gate n.poly
+models consrh cvt 
+impact selb 
+
+method climit=1e-4 pam.gmres ix.tol=1e-35 ir.tol=1e-35 norm.scaling.local
+
+solve init
+solve previous
+log outfile=powerex19_0.log
+solve vdrain=0.01 previous
+solve vdrain=0.05 vstep=0.05 vfinal=0.5 name=drain 
+solve vstep=0.5 vfinal=5 name=drain
+solve vstep=1 vfinal=10 name=drain
+solve vstep=5 vfinal=50 name=drain
+solve vstep=10 vfinal=100 name=drain
+solve vstep=20 vfinal=200 name=drain
+solve vstep=20 vfinal=500 name=drain
+solve vstep=10 vfinal=1000 name=drain cname=drain compliance=1e-8
+contact name=drain current
+solve previous
+solve istep=1.05 ifinal=1e-8 imult name=drain
+save outf=powerex19_1.str
+tonyplot powerex19_0.log -set powerex19_1.set
+
+
+go victorydevice
+
+mesh infile=powerex19_0.str verbose=2 
+
+contact name=gate n.poly
+models consrh cvt
+
+method pam.gmres norm.scaling.local
+
+solve init
+solve previous
+solve vdrain=0.001 previous
+solve vdrain=0.01 previous
+solve vdrain=0.1 previous
+
+log outfile=powerex19_1.log
+
+solve vgate=0.001 previous
+solve vgate=0.01 previous
+solve vgate=0.1 previous
+solve vgate=0.2 previous
+solve vstep=0.2 vfinal=5 name=gate
+tonyplot powerex19_1.log
+
+

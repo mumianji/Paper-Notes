@@ -1,0 +1,61 @@
+go athena 
+# 
+#      Mask layout: 0.3 um contact hole and 0.3 contact hole
+#      with sub-imageable (0.04 - 0.12 um) 180 degree Phase Shifters (outriggers).
+#
+# Define the structure
+# 
+line x loc=-0.6 spac=0.1 
+line x loc=-0.15 spac=0.01
+line x loc=0 spac=0.1 
+line x loc=0.15 spac=0.01
+line x loc=0.6 spac=0.1
+line y loc=1.1 spac=0.5 
+line y loc=1.6 spac=0.5 
+# 
+init silicon
+#
+	rate.develop name.resist= OiR32 i.line c.dill=0.026
+#
+deposit nitride thick=0.035 div=1
+# 
+deposit name.resist=OiR32 thick=.8 divisions=30
+# Aerial image calculation
+# 
+illumination i.line 
+#
+illum.filter clear.fil circle sigma=0.38
+#
+projection na=.54
+#
+pupil.filter clear.fil circle
+#
+set dist=0.55
+set width=0.15
+layout lay.clear x.lo=-0.15 z.lo=-0.15 x.hi=0.15 z.hi=0.15 phase=0. trans=1.
+layout x.lo=-$dist z.lo=$dist x.hi=$dist z.hi=($dist+$width) phase=180. trans=1.
+layout x.lo=-$dist z.lo=-($dist+$width) x.hi=$dist z.hi=-$dist phase=180. trans=1.
+layout x.lo=-($dist+$width) z.lo=-$dist x.hi=-$dist z.hi=$dist phase=180. trans=1.
+layout x.lo=$dist z.lo=-$dist x.hi=($dist+$width) z.hi=$dist phase=180. trans=1.
+#
+image win.x.lo=-0.75 win.x.hi=0.75 win.z.lo=0 win.z.hi=0 dx=0.01 
+#
+structure outfile=anopex03_int.str intensity
+#
+extract init inf="anopex03_int.str" 
+extract name="peak" 2d.max.conc impurity="Norm Intensity" material="All"
+#
+# Resist exposure
+#
+expose dose=230 num.refl=10
+#
+# Post exposure bake
+#
+bake time=45 seconds temp=115
+#
+# Resist Development
+#
+develop mack time=60 steps=4 substeps=30
+#
+structure outfile=anopex22_w$"width"_d$"dist".str
+quit

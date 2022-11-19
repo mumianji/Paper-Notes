@@ -1,0 +1,73 @@
+<html>
+  <head>
+    <title>Simulation of a simple square sided inductor</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Simulation of a simple square sided inductor</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>QUEST</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>QUEST 2.0.2.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="tutorial_plot0.png" width="640" alt="tutorial_plot0" />
+      <p/>
+      <img src="tutorial_plot1.png" width="640" alt="tutorial_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<p>
+This example is a square inductor. The input files for all examples
+are already in the software installation, and can be accessed using
+the DeckBuild GUI. Start
+<b> Deckbuild  </b> with the command deckbuild then from the
+<b> Main Control  </b> menu select
+<b> Examples. </b> Scroll down to the
+<b> QUEST </b> section, double-click to expand, then double-click
+on the required example. The description of the example is displayed.
+To load and run this example, select the
+<b> Load  </b> button in DeckBuild. This will copy the input file, GDS II file and
+results to your current working directory. Select the
+<b> Run  </b> button to execute the example.
+</p>
+<p>
+The GDSII file can be viewed in MaskViews, Expert or any other layout editing tool that
+can read GDSII format. The process is a generic process using six metal levels and
+standard values for the conductivity and permittivity.
+</p>
+<p>
+Since the inductor in this example has a diameter of approximately 400um, the depth
+of the substrate in the simulation was chosen to be 400um.
+</p>
+<p>
+A two port simulation is defined by using the reserved electrode name called
+&quot;subs_ground&quot;. This grounds out the reference electrode for both the &quot;IN&quot; port and
+the &quot;OUT&quot; port of the two port network.
+</p>
+<p>
+All the results will be placed in a directory structure under the name &quot;tutorial_db&quot;
+which was defined with SAVE command.
+</p>
+<p>
+Three dimensional structure files can be viewed with TonyPlot3d.  All other RLCG and
+Q versus frequency data can be viewed with TonyPlot.
+</p>
+  </div></body>
+</html>

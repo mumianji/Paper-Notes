@@ -1,0 +1,98 @@
+#
+# ganfetex01.in
+#
+# This example is the basis of the Simulation Standard article
+# "Simulating the Source of Polarization Charge in AlGaN/GaN HFETs"
+# Simulation Standard, V. 15, N. 8, Aug. 2006, Silvaco International.
+# 
+# That article is based on the work of:
+# J. P. Ibbetson, et. al., Appl. Phys. Lett. 77, 250 (2000).
+#
+
+go atlas
+
+# initial thickness
+set th=0.005
+set index=1
+
+# delta Ec is 75% of delta Eg
+set align1=0.75
+# location of surface donor trap level relative to valence band
+set Ed=2.6
+# density of surface donor traps
+set Dens=6e13
+# density of donors in GaN
+set d_gan=1e15
+# density of donors in AlGaN
+set d_algan=1e18
+# lifetime
+set tau=1e-10
+# polarization charges either set by model or fixed
+# in the example they are fixed in order to calibrate
+# to Ibbetson's paper
+#set po="polarization polar.scale=1 calc.strain"
+set po=" "
+set pz=1.608e13
+set pzAlGaN=-1*($pz + 2.122e13)
+# set up some thickness dependent mesh parameters
+set ymin=-1*$th
+set ymin2=$ymin/2
+set ydelta=$th + 0.0010
+
+#
+mesh auto width=1000
+
+x.m l=0.0 s=1
+x.m l=1.0 s=1
+#
+y.m l=$ymin  s=0.0001
+y.m l=$ymin2 s=0.001
+y.m l=0.0    s=0.0001
+y.m l=0.01   s=0.001
+y.m l=1.0    s=0.5
+y.m l=1.98   s=0.001
+y.m l=2.0    s=0.0001
+#
+region mat=AlGaN y.min=$ymin y.max=0 x.comp=0.34 $"po" donors=$d_algan 
+region mat=GaN   y.min=0 y.max=2.0 donors=$d_gan $"po" substrate
+#
+elec  name=sub bottom
+#
+material material=Oxide alattice=5.43
+material mat=AlGaN edb=0.042 eab=0.200 \
+	taun0=$tau taup0=$tau align=$align1
+material mat=GaN   edb=0.042 eab=0.200 \
+	taun0=$tau taup0=$tau mun=100 
+#
+material mater=AlGaN mun=5 vsatn=1.1e7
+material mater=GaN mun=100 vsatn=1.9e7
+# Caughy-Thomas parameters
+mobility mater=AlGaN mu1n.caug=5 mu2n.caug=135 ncritn.caug=1e17 vsatn=1.1e7
+mobility mater=GaN   mu1n.caug=100 mu2n.caug=2000 ncritn.caug=1e17 vsatn=1.9e7
+#
+models fldmob k.p print srh fermi incomplete 
+#
+interface charge=$pz s.s y.min=0.0 y.max=0.0 
+interface charge=$pzAlGaN s.x y.min=$ymin y.max=$ymin 
+interface charge=2.122e13 s.x y.min=2.0 y.max=2.0
+#
+inttrap donor density=$Dens degen=2 e.level=$Ed taun=1e-12 taup=1e-12 \
+	y.min=$ymin y.max=$ymin s.x
+inttrap acceptor density=9e14  degen=4 e.level=0.2 taun=1e-12 taup=1e-12 \
+	y.min=2.0 y.max=2.0 s.x
+#
+output con.band val.band band.param flowlines charge traps \
+	e.mob h.mob e.vel ex.vel ey.vel h.vel hx.vel hy.vel qss polar.charge
+#
+method  gumits=300 clim.dd=1e5 autonr
+#
+solve 
+save outf="ganfetex01_$'index'.str"
+#
+#
+extract init inf="ganfetex01_$'index'.str"
+extract name="2DEG" 1e-4 * area from curve(depth,impurity="Electron Conc" \
+        material="All" mat.occno=1 x.val=0.5) \
+	where x.min=0 and x.max=0.5 outfile="extract.dat"
+
+quit

@@ -1,0 +1,68 @@
+go mocasim
+
+####################################################################
+# (c) SILVACO International 2000-2009                              #
+# MOCASIM example 5: default GaN input deck                        #
+#                                                                  #
+# file: mocasim05.in                                               #
+####################################################################
+
+# Section 1
+# =========
+# Select the crystal type and the material.
+crystal wurtzite
+initialize material=GaN
+
+# Section 2
+# =========
+# Assign the intra valley scattering mechanisms.
+defpot_acoustic_phonon E1=6.0
+polar_optical_phonon energy=0.092895
+ionised_impurity
+
+# Assign the inter valley scattering mechanisms.
+intervalley_phonon val_a=1 energy=0.092895 defpot=1.0e9 numval_a=5
+intervalley_phonon val_a=0 val_b=1 energy=0.092895 defpot=1.0e9 numval_b=6
+intervalley_phonon val_a=0 val_b=2 energy=0.092895 defpot=1.0e9
+intervalley_phonon val_a=1 val_b=2 energy=0.092895 defpot=1.0e9 numval_a=6
+
+# Section 3
+# =========
+# Define the range over which to simulate the transport.
+temperature value=300
+doping value=1e14
+field value=0.1e5,0.2e5,0.3e5,0.4e5,0.5e5
+field value=0.6e5,0.7e5,0.8e5,0.9e5,1.0e5
+field value=1.1e5,1.2e5,1.3e5,1.4e5,1.5e5
+field value=1.6e5,1.7e5,1.8e5,1.9e5,2.0e5
+field value=2.2e5,2.4e5,2.6e5,2.8e5,3.0e5
+
+# Section 4
+# =========
+# Assign a backup file.
+log outfile=mocasim05_1.bak
+
+# Section 5
+# =========
+# Do the Monte Carlo simulation.
+print
+solve
+
+# Section 6
+# =========
+# Save the results.
+save outfile=mocasim05_2.dat
+
+# Section 7
+# =========
+# Fit a polynomial model (with terms up to E^9) to the
+# Monte Carlo data.
+fit poly numE=10 compare=mocasim05_3.dat
+
+# Tonyplot
+# ========
+# Plot the Monte Carlo data and the fitted model.
+tonyplot mocasim05_2.dat -set mocasim05_2.set
+tonyplot mocasim05_3.dat -add mocasim05_3.dat -set mocasim05_3.set
+
+quit

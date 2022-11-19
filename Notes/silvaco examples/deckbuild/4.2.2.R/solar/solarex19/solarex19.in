@@ -1,0 +1,207 @@
+# (c) Silvaco Inc., 2018
+#
+# the first part performs characterization on a small area of the
+# device surface to characterize the absorption versus depth
+#
+go atlas
+#
+# this is the characterization run where we use a small
+# geometry (40umx10umx40um) to obtain an optical characterization.
+#
+mesh three.d
+
+x.m l=0  s=1
+x.m l=40 s=1
+
+y.m l=0  s=4
+y.m l=10  s=4
+
+z.m l=0  s=1
+z.m l=40 s=1
+#
+# the electrical details are maybe not so important as the optical
+# characteristics 
+#
+region num=1 material=silicon
+elec   num=1 bottom
+doping uniform p.type conc=1e14
+#
+# we chose to use a small geometry due to the complexity of the surface
+# 
+# here we shine solar spectra normal to the device and trace 11x11
+# rays through the device.
+#
+beam  num=1 y.origin=-30 am1.5 wavel.start=0.3 wavel.end=1.2 wavel.num=10 \
+   front.refl ^back.refl reflects=4 x.mirror z.mirror ^periodic nx=11 nz=11 \
+   min.power=0.0001 outfile=solarex19_0.str subnx=100 subny=100 subnz=100 \
+   lens.loss polar=45 amb.mat=silicon 
+#
+# this is the pyramid texturing that makes full scale simulation of the 
+# surface features over large areas prohibitive
+#
+lens random giza  mean=6 sigma=3 plane=0 seed=-665  n.feat=200 material=silicon
+#
+solve
+#
+# the characterize statement enables an accounting resulting photogeneration
+# rate as a function of depth down to 400 microns depth.  Notice this is
+# well below the surface but well outside the initial simulation geometry.
+#
+charac beam=1 absorpt=solarex19.log dep1=-10 dep2=400 s.dep1=0.001 s.dep2=10 seq.abs=100
+#
+# the actual characterization takes place here
+#
+solve b1=1 
+
+#
+#
+tonyplot solarex19_000000.log -set solarex19_0.set
+tonyplot solarex19_000000.log -set solarex19_1.set
+tonyplot3d solarex19_0.str -set solarex19_2.set
+#
+
+#
+# in the second part of this demonstration we reload the characterized
+# absorption versus depth into a large area device in 2D to simulate the
+# effects of the surface texturing in a large scale experiment
+#
+go atlas
+#
+# this time we will simulatea large 2D domain (4mmx200um)
+#
+mesh
+
+x.m l=0    s=100
+x.m l=4000 s=100
+
+y.m l=0    s=0.1
+y.m l=100  s=10
+y.m l=200  s=0.1
+#
+# here we will even add some electronics just for illustration
+#
+region num=1 material=silicon
+elec num=1 top
+elec num=2 bottom
+doping uniform p.type conc=1e16
+doping gaus peak=0 char=0.1 conc=1e19 n.type
+#
+# dataset is  a new concept which allows you to map data in
+# arbitrary manner.  right now dataset is only used for characterized
+# data and anisotropic index of refraction data for FDTD.  we
+# expect this paradigm to expand in usage since it provices
+# a uniform way of treating imported data
+#
+# the data set obtains data from a file pointed to by the parameter
+# value of INFILE.  we name it "pass1" so we can reference the data
+# later.  we signify the file contains absorption data using the
+# ABS.CHAR parameter.  The parameter AXIS.YXZ indicates that the (one 
+# dimensional) data contained in the data set varries with Y direction.
+# fy1 and fy2 are the coordinate span we are copying "from".
+# the parameters ty1 and ty2 are the coordinate span we are copying "to".
+# so the first data set copys the first 200 microns of absorption into
+# the first 200 microns of the device in the y direction.
+#
+dataset infile=solarex19_000000.log name=pass1 abs.char axis.yxz fy1=0   fy2=200 ty1=0   ty2=200
+#
+# the second data set is a trick we use to simulate the effects of
+# a back side mirror.
+#
+dataset infile=solarex19_000000.log name=pass2 abs.char axis.yxz fy1=200 fy2=400 ty1=200 ty2=0
+#
+# here we interact with the dataset not the file
+#
+beam  num=1 charac=pass1
+beam  num=2 charac=pass2
+#
+solve
+#
+method carr=2
+#
+# here we can play around a little
+#
+solve b1=1 b2=0
+save outf=solarex19_1.str
+
+solve b1=0 b2=1
+save outf=solarex19_2.str
+
+solve b1=1 b2=1
+save outf=solarex19_3.str
+
+tonyplot  solarex19_1.str solarex19_2.str solarex19_3.str -set solarex19_3.set
+
+#
+# in the last part of this demonstration we reload the characterized
+# absorption versus depth into a large area 3D device to simulate the
+# effects of the surface texturing in a large scale experiment
+#
+go atlas
+#
+# this time we will simulate the entire domain (4mmx4mmx200um)
+#
+mesh three.d
+
+x.m l=0    s=100
+x.m l=4000 s=100
+
+y.m l=0    s=100
+y.m l=4000 s=100
+
+z.m l=0    s=1
+z.m l=200  s=10
+#
+# here we will even add some electronics just for illustration
+#
+region num=1 material=silicon
+elec num=1 top
+elec num=2 bottom
+doping uniform p.type conc=1e16
+doping gaus peak=0 char=0.1 conc=1e19 n.type
+#
+# dataset is  a new concept which allows you to map data in
+# arbitrary manner.  right now dataset is only used for characterized
+# data and anisotropic index of refraction data for FDTD.  we
+# expect this paradigm to expand in usage since it provices
+# a uniform way of treating imported data
+#
+# the data set obtains data from a file pointed to by the parameter
+# value of INFILE.  we name it "pass1" so we can reference the data
+# later.  we signify the file contains absorption data using the
+# ABS.CHAR parameter.  The parameter AXIS.ZYX indicates that the (one 
+# dimensional) data contained in the data set varries with Z direction.
+# fz1 and fz2 are the coordinate span we are copying "from".
+# the parameters tz1 and tz2 are the coordinate span we are copying "to".
+# so the first data set copys the first 200 microns of absorption into
+# the first 200 microns of the device in the z direction.
+#
+dataset infile=solarex19_000000.log name=pass1 abs.char axis.zxy fz1=0   fz2=200 tz1=0   tz2=200
+#
+# the second data set is a trick we use to simulate the effects of
+# a back side mirror.
+#
+dataset infile=solarex19_000000.log name=pass2 abs.char axis.zxy fz1=200 fz2=400 tz1=200 tz2=0
+#
+# here we interact with the dataset not the file
+#
+beam  num=1 charac=pass1
+beam  num=2 charac=pass2
+#
+solve
+#
+method carr=2
+#
+# here we can play around a little
+#
+solve b1=1 b2=0
+save outf=solarex19_4.str cutplane x.cutplane=2000
+
+solve b1=0 b2=1
+save outf=solarex19_5.str cutplane x.cutplane=2000
+
+solve b1=1 b2=1
+save outf=solarex19_6.str cutplane x.cutplane=2000
+
+tonyplot  solarex19_4.str solarex19_5.str solarex19_6.str -set solarex19_4.set
+
+quit

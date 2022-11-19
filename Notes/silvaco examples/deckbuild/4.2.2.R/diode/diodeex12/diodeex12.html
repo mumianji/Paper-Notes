@@ -1,0 +1,97 @@
+<html>
+  <head>
+    <title>Tunnelling Through a Polysilicon-Oxide-Silicon Diode</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Tunnelling Through a Polysilicon-Oxide-Silicon Diode</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>S-Pisces</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="diodeex12_plot0.png" width="640" alt="diodeex12_plot0" />
+      <p/>
+      <img src="diodeex12_plot1.png" width="640" alt="diodeex12_plot1" />
+      <p/>
+      <img src="diodeex12_plot2.png" width="640" alt="diodeex12_plot2" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example shows how to self-consistently include oxide barrier tunneling in the I-V
+characteristics of a MIS diode.  For forward bias there are three different components
+to the tunnel current, and in reverse bias the tunnel current is electronic in nature
+and limited by the thermal generation rate of carriers in the silicon.
+</p>
+<p>
+The example is split into several sections,  each starting with
+<br/>
+<b> go atlas </b> <br/>
+The first section sets up a structure with a polysilicon gate, a 2.5 nm thick oxide and
+a lightly p-doped Silicon substrate.  The substrate is contacted with an ohmic aluminum
+contact.
+</p>
+<p>
+The next section reads in the structure and sets material parameters for the oxide and silicon.
+The effective masses in the oxide strongly effect the value of the tunnel current.
+The contact workfunction is set to be that of n-type polysilicon, and the effective masses in the contacts
+are also set.  On the MODELS statement
+some mobility and recombination models are set for the silicon. The parameter
+<b> QTNLSC.EL </b> enables self-consistent electron tunneling, whereby electrons
+tunneling through the oxide are injected into the electron continuity equation in the
+silicon.  The parameter
+<b> QTNL.DERIVS </b> puts non-local derivatives into the system matrix to help achieve a converged solution,
+and is essential in this example.  The anode bias is then ramped to 2.4 V and the
+resulting currents saved in a logfile.  The current components are also saved using the
+j.elec, j.hole and j.tun parameters.
+</p>
+<p>
+The next section is essentially the same as the last except that hole tunnelling is
+included as well, by specifying
+<b> QTNLSC.HO</b> .  In the following section band-to-band tunneling is initially enabled
+by using the
+<b> QTNLSC.BBT </b> parameter.  This will be significant when the valence band in the polysilicon is at a
+greater electron energy than the silicon conduction band.  The forward biased I-V curves show that at
+low biases the electron injection dominates, then hole tunneling from the silicon valence
+band to the polysilicon valence band becomes dominant. At even higher biases the band-to-band
+tunneling switches on and dominates.
+</p>
+<p>
+The example continues with negative bias being applied to the anode.  This causes the electrons
+to be removed from the device by tunnelling to the gate, and because the electrons are minority carriers they are only
+supplied through SRH generation processes.  Even at large negative biases the current is relatively small
+because of the rate limiting effect of the SRH generation of minority carriers. To illustrate this the
+final section repeats the reverse bias simulation but with an SRH lifetime that is two orders of magnitude
+longer and the tunnel current is much smaller because of the lower thermal generation rate.
+The hole and band-to-band tunnel rates are negligible in this case.  The contact Fermi-level
+is near to the polysilicon conduction band and consequently hole injection is negligible.
+The I-V characteristics of the diode between Anode voltages of -2.4 V and 2.4 V are shown in the final plot.
+This example thus demonstates the rectifying properties of the tunneling diode, and the physical processes
+which lead to this behavior.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

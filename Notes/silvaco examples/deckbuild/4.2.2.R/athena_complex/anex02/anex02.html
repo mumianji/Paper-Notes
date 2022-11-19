@@ -1,0 +1,140 @@
+<html>
+  <head>
+    <title>Trench Isolation Example</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Trench Isolation Example</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>SSuprem 4, Elite</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="anex02_plot0.png" width="640" alt="anex02_plot0" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example shows the fabrication of a trench isolation
+structure using
+<b> Elite </b> and
+<b> SSuprem 4 </b> to model etching and oxidation processes.
+</p>
+<p>
+The example begins with grid definition. This is tailored to
+place fine grid in the area that will be exposed during the trench etch.
+The
+<b> INITIAL </b> statement does not specify a material type, so silicon is taken by default.
+A background doping of boron with concentration 1.0e15 is specified.
+The parameter
+<b> NO.IMP </b> specifies that the entire simulation should neglect all processing
+steps that introduce dopant into the structure.  This results
+in a much faster calculation for diffusion and oxidation calculations
+but will not produce a structure suitable for electrical analysis
+because dopant will be left out. This is intended to provide
+a fast mode of calculation that is useful for initial simulations.
+The parameter
+<b> SPACE.MULT </b> specifies that a coarser grid be used than that specified by the
+<b> SPACING </b> parameter on the
+<b> LINE </b> statements. This also is intended for fast initial runs of the simulator.
+To disable these features for a more complete calculation, simply
+delete the
+<b> NO.IMP </b> and
+<b> SPACE.MULT </b> parameters from the
+<b> INITIALIZE </b> statement.
+</p>
+<p>
+Following initialization, a nitride layer is deposited and patterned
+by the
+<b> DEPOSIT </b> and
+<b> ETCH </b> statements. The structure is then reflected to create a symmetric
+structure for trench etching.
+</p>
+<p>
+The trench is performed by defining an etch machine with the
+<b> RATE.ETCH </b> statement. For this etch, the etch rates for all materials except
+silicon are assumed to be zero, so only rates for silicon are defined.
+If other materials were to be etched, the rates for each material should be
+set with a
+<b> RATE.ETCH </b> statement.
+For this etch process, the rates are defined for the
+<b> RIE </b> model.  This simple model describes the etch process as a combination
+of
+<b> ISOTROPIC </b> and
+<b> DIRECTIONAL </b> components.  The parameter
+<b> U.M </b> specifies that the etch rates are given in units of microns per minute.
+</p>
+<p>
+The etch is then performed for a period of 10 minutes.
+</p>
+<p>
+Following the etch, the nitride masking layer is removed with the
+<b> ETCH NITRIDE ALL </b> statement.
+</p>
+<p>
+The trench is then filled with a sandwich of materials. First a layer
+of oxide is deposited with the simple conformal model. Then a layer of
+polysilicon is deposited with the
+<b> Elite </b> calculation. Finally, photoresist is deposited using
+<b> Elite </b> to model the resist flow.  This is included by adding the parameters
+<b> SMOOTH.WIN </b> and
+<b> SMOOTH.STEP </b> to the deposit machine definition.  These two parameters specify
+the width over which a simple averaging algorithm will be applied
+and the number of times it will be applied respectively.  This results in
+a smoothed profile that is a fast way of modeling the flowing resist
+during deposit.
+</p>
+<p>
+The structure coated with resist has a surface that is nearly
+planar.  By applying an etch process that erodes all materials at
+an equal rate, the planarization process can be modeled.  This is
+performed next by specifying the etch rates for an
+<b> Elite </b> type calculation using the
+<b> WET.ETCH </b> model.  Following the etch, the grid on the surface of the structure
+is relaxed to remove any excess grid that may have been introduced
+during the etch process.  The parameter
+<b> DX.SURF </b> on the
+<b> RELAX </b> statement specifies the minimum surface segment size in microns for the
+relax operation.
+</p>
+<p>
+Next, a nitride layer is deposited and patterned to control the area that
+will be oxidized.
+</p>
+<p>
+Some model parameters are set for the oxidation using the
+<b> METHOD </b> and
+<b> OXIDE </b> statements.  Then the diffusion is performed in two steps, first in
+dry oxygen specified using the
+<b> DRYO2 </b> parameter, and then in water, specified by the
+<b> WETO2 </b> parameter.
+</p>
+<p>
+Finally, the structure is plotted using
+<b> TonyPlot </b> and the structure saved to a file.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

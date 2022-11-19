@@ -1,0 +1,92 @@
+<html>
+  <head>
+    <title>3D NPN Transient Response</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>3D NPN Transient Response</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>DevEdit 3D/Device 3D</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="bjtex07_plot0.png" width="640" alt="bjtex07_plot0" />
+      <p/>
+      <img src="bjtex07_plot1.png" width="640" alt="bjtex07_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This examples demonstrates transient simulation of a BJT structure
+in three dimensions.
+</p>
+<p>
+In this example a bipolar transistor is constructed using DevEdit 3D. The
+structure is then passed to Atlas for electrical testing. The input file
+consists of the following 2 main portions:
+</p>
+<ul>
+  <li>
+ Construction of the device in DevEdit 3D
+<br/>
+  </li>
+  <li>
+  Simulation of the Gummel plot in Atlas
+  </li>
+</ul>
+<p>
+The first stage of the input constructs the BJT geometry, material regions,
+doping profiles, and electrodes in DevEdit 3D. The structure was created in
+DevEdit 3D by drawing the device regions in interactive mode and specifying 3D
+doping distribution. Finally the mesh was generated automatically by specifying
+basic mesh constraints and refining in the important areas of the device.
+</p>
+<p>
+The Atlas simulation begins by reading in the structure from DevEdit 3D.
+DeckBuild provides the autointerface between DevEdit 3D and Atlas so that the
+structure produced by DevEdit 3D is transferred to Atlas without having to
+indicate the mesh statement.
+</p>
+<p>
+The
+<b> models </b> statement is used to select a set of physical models for this simulation.  In
+this case, these models are SRH and AUGER recombination, the concentration
+and field dependent mobility model, and the two carriers model.
+</p>
+<p>
+The initial solution for zero biases is obtained using
+<b> solve init</b> . The steady-state solution for Veb=-0.4V and Vcb=1V is then obtained.
+</p>
+<p>
+Then the emitter voltage is ramped to -0.8V with a ramptime of 0.1ns,
+and transient simulation are performed. The Newton algorithm, which is
+the default method in Atlas is used for these calculations.
+</p>
+<p>
+The results of the simulation are then displayed using TonyPlot.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

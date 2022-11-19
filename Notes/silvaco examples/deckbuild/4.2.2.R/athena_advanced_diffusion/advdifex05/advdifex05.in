@@ -1,0 +1,25 @@
+go athena
+
+line  x loc=0     spacing=0.2
+line  x loc=0.4   spacing=0.2
+line  y loc=0.0   spacing=0.001
+line  y loc=0.2   spacing=0.005
+line  y loc=1.0   spacing=0.5
+
+init silicon c.boron=1.0e12 orientation=100
+
+method pls ic ddc
+
+moment silicon i.boron energy=2 dose=1e+14 range=0.00704931 std.dev=0.004 gamma=0.377732 kurtosis=2.80128 srange=0.0060031 sstd.dev=0.0137224 sgamma=-0.346361 skurtosis=3.49406 dratio=0.721264 lstd.dev=0.00519761 kurtt=3 lsstd.dev=0.00274448 skurtt=3
+
+implant boron dose=1.0e14 energy=2 crystal unit.dam dam.factor=1.0 PRINT.MOM
+
+struct outfile=advdifex05_ini.str
+
+diffuse time=10 sec temp=1000
+
+struct outfile=advdifex05_end.str
+
+tonyplot -overlay advdifex05_ini.str advdifex05_ini_exp.str advdifex05_end.str advdifex05_end_exp.str -set advdifex05.set
+
+quit

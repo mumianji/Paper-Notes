@@ -1,0 +1,77 @@
+# (c) Silvaco Inc., 2018
+go athena cutfile=latchex03.sec
+ 
+# grid and mask information provided by latchex03.sec, latchex03.lay
+
+init silicon c.boron=1.0e15 orientation=100 
+
+deposit oxide thickness=0.05 div=1
+mask name="PWE"
+implant amorphous boron dose=3e12 energy=100
+strip
+
+mask name="PWE" reverse
+implant amorphous phosphorus dose=4e12 energy=180 
+strip
+
+# relax grid
+relax y.min=1
+relax y.min=2 
+
+# well drive 
+diffus time=300 temp=1150 
+
+mask name="N+"
+implant amorphous arsenic dose=1e15 energy=100 
+
+strip
+
+mask name="P+"
+implant amorphous boron dose=1e15 energy=30
+strip
+
+# final activation
+diffuse time=30 temp=900
+
+etch oxide all
+deposit alum thickness=0.05 div=2
+mask name="MET"
+etch alum dry thickness=0.06
+strip
+
+autoelectrode
+structure outf=latchex03_0.str
+tonyplot  latchex03_0.str -set latchex03_0.set
+
+go atlas
+#  Electrodes #1 - pwell; #2 - vss;  #3 - vdd; #4 - nwell;
+# mesh     inf=latchex03_0.str
+material taup0=1e-6 taun0=1e-6
+models   bipolar print 
+impact   selb 
+output   flowlines 
+
+method   newton trap 
+
+solve  vnwell=0.25 vstep=0.25 vfinal=5 name=nwell
+solve  vvdd=0.25 vstep=0.25 vfinal=5 name=vdd 
+save outf=latchex03_1.str 
+ 
+# syntax for loading solutions. 
+# Can be used on subsequent runs to save time
+# load inf=latchex03_1.str master
+# solve prev
+
+log outf=latchex03.log
+
+curvetrace end.val=1.e-3 contr.name=vss curr.cont step.init=-0.1 mincur=1e-12 nextst=1.5
+solve curvetrace
+
+save outf=latchex03_2.str
+
+tonyplot latchex03.log -set latchex03_log.set
+tonyplot latchex03.log -set latchex03_log2.set
+tonyplot latchex03_2.str -set latchex03_1.set
+
+quit
+

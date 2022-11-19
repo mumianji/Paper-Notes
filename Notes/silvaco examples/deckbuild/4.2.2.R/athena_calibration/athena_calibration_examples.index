@@ -1,0 +1,435 @@
+{section} Athena_CALIBRATION : Process Simulator Calibration 
+
+
+{subsection} ancaex01.in : OED Tuning Using TWO.DIM for DRYO2 
+
+Requires: SSuprem 4
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This example compares the 
+{bold} two.dim 
+and 
+{bold} Fermi 
+methods for simulation of diffusion
+in an oxidizing ambient. The two.dim method shows the Oxidation Enhanced
+Diffusion (OED) effect. The next example 
+{bold} ancaex02.in 
+demonstrates how OED profiles could be calibrated.
+
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} ancaex02.in : OED Calibration Using THETA.0 
+
+
+Requires: SSuprem 4
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This example shows how to use the interstitial injection coefficient 
+{bold} theta.0 
+for calibration of Oxidation Enhanced Diffusion. Only prefactor theta.0
+is used in this example. If data on temperature dependence of OED was
+available,  
+{bold} theta.E 
+could be calibrated as well.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+{subsection} ancaex03.in : Calibration of Thin WetO2 Oxidation 
+
+Requires: SSuprem 4, OPTIMIZER 
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This example performs calibration of thin oxide model parameters using
+OPTIMIZER. These parameters are quite accurately characterized for dryo2
+ambient, but virtually no information exists for wetO2 ambient. Historically,
+wet oxidation has been predominantly used for thick oxide growth. However,
+low temperature, low pressure, short time wet oxidation is becoming more
+popular. Unfortunately, to the best of our knowledge extensive experimental 
+results do not exist for such oxidations. Therefore, calibration based just
+on few experimental points may need to be performed for wet thin oxidations.
+
+The default value for thin oxidation term for wetO2 is zero. This
+usually underestimates thin oxide thickness. The default values result
+in 71 A and 173 A oxide thicknesses for 30 and 90 minutes wetO2
+oxidation at 820 C and pressure of 0.2 atmospheres. Typical
+experimental values could be 100 A and 230 A.  These values
+are selected as targets for calibration procedure.  Only using
+OPTIMIZER could the parameters of thin oxidation models be found.
+
+To load and execute this example, select the
+{bold} Load example 
+button. Once loaded, select  
+{bold} Optimizer... 
+from the
+{bold} Main Control 
+menu. The
+{bold} Deckbuild: Optimizer 
+screen will appear. Select 
+{bold} Load File ... 
+from the 
+{bold} File 
+menu and then load the special optimizer file 
+{bold} ancaex03.opt 
+from the scrolling 
+{bold} Optimizer Load 
+menu.
+
+Preset parameters and targets are included in this file. When you
+select 
+{bold} Parameters 
+from the
+{bold} Mode 
+menu you will find that thinox.0 and thinox.l are chosen as parameters for optimization. The default values for dryo2 oxidation are selected as an initial 
+guess.
+
+Oxide thicknesses 
+{bold} tox1 
+and
+{bold} tox2 
+after 30 and 90 minutes of oxidation respectively are selected as a targets.
+
+
+You can modify any of these targets and/or parameters. Please refer to
+Chapter 
+{bold} Optimizer 
+in the VWF Interactive Tools Manual.
+
+If you want to run the preset optimization
+task, it is better to slightly improve the default stop criteria as follows:
+
+Select 
+{bold} Setup 
+from the
+{bold} Mode 
+menu. Then decrease the maximum error down to 2, and increase the number of Iterations to 10.
+
+After this just select the
+{bold} Optimize 
+button, on the OPTIMIZER menu.
+
+{subsection} ancaex04.in : Tuning LOCOS Shapes using the COMPRESS Model
+
+Requires: SSuprem 4
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This example shows a simple way of tuning the LOCOS bird's beak shape.
+It is known that the length and thickness of a bird's beak during LOCOS
+oxidation decreases with an increase of nitride thickness. This happens
+because thicker nitride produces higher stresses which decrease
+oxidation rates.  A viscous stress-dependent oxidation model should be
+used to accurately predict this effect. However this model is
+very time consuming therefore one can use the 
+{bold} compress 
+model with
+higher Young's modulus for nitride in order to decrease bird's beak
+length. This example calculates LOCOS for two values of nitride Young
+modulus coefficient 3.89e12 dynes/cm^2  (default) and 3.89e14 dynes/cm^2.
+The values of Young's modulus are reverse proportional to the elastic constant s11.elast. Poisson's ratio stays unchanged because it is equal to -(s12.elast/s11.elast).
+
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+{subsection} ancaex05.in : Tuning Threshold Voltage using Seg.0 and Theta.0
+
+Requires: SSuprem 4
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This example demonstrates how physical parameters related to silicon/oxide interface can be used for the tuning of
+threshold voltage of a MOS structure. A simplified 1D simulation of an
+NMOS channel formation is considered. Two parameters are used for the Vt calibration:  
+{bold} Seg.0 
+, which is the prefactor of boron segregation coefficient on the
+silicon /oxide interface, and 
+{bold} theta.0 
+which is the prefactor of interstitial injection coefficient. Using DBInternal capability 
+(see section DOE of the Deckbuild Examples), the simulation is repeated for 7 different values of Seg.0 and for 5 different theta.0. 
+For each case the threshold voltage is extracted using 
+{bold} QuickMOS 1dvt. 
+The results are stored in the
+{bold} ancaex05.dat 
+file for subsequent plotting of Vt vs theta.0 for different Seg.0 curves. Such curves could be used
+for selecting of appropriate segregation and interstitial injection coefficients.  
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} ancaex06.in : Tuning Directional and Isotropic Etch for Spacer Formation 
+
+Requires: ELITE
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This example demonstrates how to use etch rate parameters to tune
+a MOS spacer width and shape. In the first simulation the etch rate is completely
+directional. This corresponds to simple dry (anisotropic) etching of SSuprem 4.
+The dry etch model usually overestimates spacer width. In the second simulation,
+an isotropic component is included which results in a narrower spacer.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+{subsection} ancaex07.in :  Multiple Implant Profile Optimization 
+
+Requires: SSuprem 4, OPTIMIZER
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This example performs optimization of implant doses and energies as well as 
+diffusion temperature in order to obtain a specified boron doping profile as
+well as pn-junction depth. 
+The target boron profile is a constant doping with concentration of 2e16
+all the way from the silicon surface until x=1.0. The target for the pn-junction
+depth is 1.5 micron.  
+
+
+To load and execute this example, select the
+{bold} Load 
+button. 
+
+First, run the example without optimization. From, the 
+{bold} TonyPlot 
+profile you will see that boron concentration varies between 2e16 and 5e16
+and the pn-junction is around 1.3 microns.
+
+In order to find an optimized solution select
+{bold} Optimizer... 
+from the
+{bold} Main Control 
+menu. The
+{bold} Deckbuild: Optimizer 
+screen will appear in a moment. Select 
+{bold} Load File ... 
+from the 
+{bold} File 
+menu and then load the special optimizer file 
+{bold} ancaex07.in.opt 
+from the scrolling 
+{bold} Optimizer Load 
+menu.
+
+
+Preset parameters and targets are included in this file. When you
+select 
+{bold} Parameters 
+from the
+{bold} Mode 
+menu you will find that doses and energies for all 4 implants as well as diffusion
+temperature are chosen as parameters for optimization.
+
+
+Boron profile 
+{bold} bcurve 
+is chosen as an optimization target. Constant concentrations of 2e16 are set as target
+values for depths from 0.02 to 1 micron. Then a concentration of 1e16
+is set for 1.1 micron. Weights for all these points are set to 1.0. A junction depth of 1.5 microns is
+an additional point target with a weight of 6.0. 
+
+Now you can modify any of these targets and/or parameters. Please refer to
+Chapter 
+{bold} Optimizer 
+in the VWF Interactive Tools Manual.
+
+If you want to run the preset optimization
+task it is better to slightly relax the default stop criteria as follows:
+
+Select 
+{bold} Setup 
+from the
+{bold} Mode 
+menu and increase the maximum error to 20.
+
+After this just select the
+{bold} Optimize 
+button. 
+
+After optimization is completed you may execute the 
+{bold} TonyPlot 
+which will the plot final optimized profile.
+After optimization is completed you may copy optimized parameters back to the input deck
+by selecting 
+{bold} Copy to Deck 
+from the
+{bold} Edit 
+menu. After that you can run the optimized deck from the beginning and obtain a
+{bold} Tonyplot 
+of the optimized profile.
+
+
+{subsection} ancaex08.in : Extraction of Implant Moments from Measured Data
+
+Requires: SSuprem 4 and OPTIMIZER
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This example shows how the general purpose OPTIMIZER can be used for
+extraction of dual-Pearson implant parameters from an experimental
+profile. This technique could be useful when Athena's implant look-up
+tables do not include moments for a specific implant (e.g. 0 degrees angle,
+very high or low energy, "exotic" ion-material combination, etc.) or
+when it appears that a simulated profile does not match an experimental one.
+This example can also be used as a tutorial for setting up an optimization
+procedure with a so-called curved target.
+
+An experimental profile for 1e13 ion/cm**2, 15 keV, 0 degrees Boron implant
+into <100> crystalline silicon is used in this example. This SIMS profile 
+published by H. Kinoshita of the Microelectronic Research Center (Austin, TX).
+The profile is in a simple XY format which can be read into the OPTIMIZER
+{bold} ancaex08_4256.opt
+.
+
+To load and execute this example, display this text and select the
+{bold} Load example 
+button while this text is displayed. This will copy the input file and several support
+files including ancaex08_4256.dat and ancaex08_4256.opt will be copied
+to your current working directory at this time.
+
+Selection of initial values for optimization is usually very important
+in the setup of the optimization task. In thr case of implantation one can use
+parameters available for a similar implant. To demonstrate the flexibility
+of this approach, parameters corresponding to the same implant but at 
+7 degrees are used. It can be performed by using default a SVDP model and
+PRINT.MOM parameter in the IMPLANT statement.
+
+If you want to compare this initial approximation with the experimental one,
+just  select the
+{bold} run 
+button to execute the example. In the end the two profiles will be
+overlaid in TonyPlot, so one can see that the experimental profile
+has a much bigger and deeper channeling peak than the default 7 degrees
+profile.
+
+The Optmizer is used to find a better set of dual-Pearson parameters
+{bold} range, std.dev, gamma, 
+etc. that will result in a simulated profile which better match the experimental one. 
+In order to achieve this, select
+{bold} Optimizer... 
+from the
+{bold} Main Control 
+menu. The
+{bold} Deckbuild: Optimizer 
+screen will appear in a moment. Unlike the first example ancaex08.in, this example
+does not use a special optimizer file with preset parameters and targets,
+so you should repeat the following steps in order to set the optimization task.
+
+First, select
+{bold} Parameters 
+from the
+{bold} Mode 
+menu, this will display the Parameter worksheet. Select (highlight) the
+MOMENTS statement and choose
+{bold} Add 
+from the 
+{bold} Edit 
+pull-down menu. The
+{bold} Parameter define 
+pop-up will appear. Check all check-boxes excluding the first two which
+correspond to dose and energy, then press
+{bold} Apply
+. 
+Nine new rows will be inserted into the Parameter worksheet.  By
+default all min/max values for parameters are +-50%. This should be
+changed for some parameters. For example, we may expect a wider range
+for skewness (asymmetry) for Pearson distributions, therefore we set
+{bold} {newline}
+Minimum value 
+to -1.0
+and
+{bold} Maximum value 
+to +3.0 for  
+{bold} gamma 
+and
+{bold} sgamma 
+parameters.
+Also, the intervals for the fourth moment 
+{bold} kurtosis 
+of both first and second Pearson functions should be wider (2.7,10.0).
+{bold} dratio 
+should not be higher than 1.0 therefore its maximum value should be set
+to 1.0. To edit any of these numeric values position the pointer over
+the corresponding cell of the worksheet, click the left-hand mouse
+button, edit the value, and do not forget to push the return button
+after finishing the editing.
+
+The next step is setting the curved target. Select
+{bold} Targets 
+from the 
+{bold} Mode 
+menu. Highlight the 
+{bold} extract 
+line. This line extracts the Boron chemical concentration profile which
+corresponds to the SIMS measured profile. After that choose
+{bold} Add 
+from the
+{bold} Edit 
+pull-down menu. A new row will be inserted into the Target worksheet.
+The target name will correspond to the name in the extract statement.
+Now, to insert experimental profiles as a curved target select the only
+row in the worksheet by double-clicking the left-hand button while the
+pointer is positioned anywhere in the row, then choose
+{bold} Edit > X/Y Data > Insert > From File
+. The 
+{bold} Optimizer X/Y Target Data 
+pop-up will appear. Select
+{bold} ancaex08_4256.opt 
+file and then press 
+{bold} Load
+.
+
+The next step is to change the response type of the curved target from 
+{bold} log 
+to
+{bold} linear
+.
+Otherwise the estimated error would be very small because Optimizer
+would take the log of the result and target at each point before
+computing the error. Select the
+{bold} Edit > Select all
+. All the rows will appear raised. Then choose 
+{bold} Lin/Log
+from the same menu and all row's response type will be toggled.
+
+
+Now, once the parameters, targets, and setup information have been
+defined, the Optimization process can be started by pressing the
+{bold} Optimize 
+button. During the optimization run, the 
+{bold} Graphics 
+mode shows real-time updates of parameter, target, and error values.
+After optimization is completed you may execute  
+{bold} TonyPlot 
+which will plot the comparison between optimized and measured profiles. 

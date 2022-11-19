@@ -1,0 +1,107 @@
+<html>
+  <head>
+    <title>Infrared Heat Lamp Annealing in Vacuum with Radiative Cooling</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Infrared Heat Lamp Annealing in Vacuum with Radiative Cooling</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Thermal3D</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="thermalex08_plot0.png" width="640" alt="thermalex08_plot0" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+When a wafer is clamped only at it edges and is heated with an infra-red
+source in a vacuum, the majority of the heat loss occurs through
+<b> black body radiation.</b> The vacuum prevents thermal conduction mechanisms for the majority of the
+wafer area.  It is also important to realize that if both sides of the wafer
+are exposed to the vacuum without contact to a conductive heat sink, both the
+front and back sides of the wafer will radiate heat and so black body heat
+radiation must be simulated from both surfaces for accurate results.
+</p>
+<p>
+In Atlas, black body radiation is simulated with an additional logical
+parameter,
+<b> &quot;BLACKBODY&quot;</b> added to the
+<b> &quot;THERMCONTACT&quot;</b> statement.  This allows the user to set up multiple thermally radiative
+boundary conditions in their structure.
+</p>
+<p>
+The power per unit area lost to black body radiation for an ideal radiator,
+is known absolutely for any given temperature, K.  The power absorbed by
+that same body from it&apos;s surroundings, is also known absolutely from the
+temperature of those surroundings.  The nett power loss or gain, to or
+from, any body by infra-red radiation, is therefore simply the difference
+between the power lost to it&apos;s surrounds and the power absorbed from it&apos;s
+surroundings.
+</p>
+<p>
+The formula in Atlas is given by:
+</p>
+<b> { ALPHA (T - EXT.TEMP) }  +  { STEFAN ( T^4 - EXT.TEMP^4) }  W/cm^2</b> <p>
+Where:-
+</p>
+<b> &quot;ALPHA&quot;</b> <p>
+is the coefficient to take account of thermal conductivity to
+the wafer holder, and should be set to zero if all the heat loss is
+through radiative processes only,
+</p>
+<b> &quot;T&quot;</b> <p>
+is the temperature of the surface calculated by Atlas,
+</p>
+<b> &quot;EXT.TEMP&quot;</b> <p>
+is the external temperature of the surroundings,
+usually 300K if the equipment in normal laboratory conditions,
+</p>
+<b> &quot;STEFAN&quot;</b> <p>
+is the black body radiation constant.
+</p>
+<p>
+For reflective surfaces, the
+<b> surface emissivity</b> correction can be taken account of by reducing the value of the
+<b> &quot;STEFAN&quot; </b> parameter from the ideal black body radiation value of
+5.67051x10^-12 W/cm2/K^4, which is the default value.  The area of the
+thermal contact is also calculated by Atlas by integration of the area
+of all mesh points in contact with the user defined thermal contact.
+</p>
+<p>
+So in summary, for an ideal black body radiator, only the background
+temperature
+<b> &quot;EXT.TEMP&quot; </b> need be specified on the
+<b> &quot;THERMCONTACT&quot; </b> statement,the rest will be calculated by Atlas.  For reflective surfaces,
+with less than ideal radiation characteristics, the
+<b> effective emissivity coefficient </b> can be taken account of by using the appropriate value of the
+<b> &quot;STEFAN&quot;</b> parameter.  Simply multiply the default value of &quot;STEFAN&quot; by the
+emissivity coefficient.  For pure radiative cooling, also set the thermal
+conductivity coefficient,
+<b> &quot;ALPHA&quot; </b> to zero.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

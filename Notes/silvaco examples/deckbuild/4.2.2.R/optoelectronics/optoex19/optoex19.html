@@ -1,0 +1,80 @@
+<html>
+  <head>
+    <title>Cylindrical Avalanche Photodiode</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Cylindrical Avalanche Photodiode</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>S-Pisces/Luminous</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="optoex19_plot0.png" width="640" alt="optoex19_plot0" />
+      <p/>
+      <img src="optoex19_plot1.png" width="640" alt="optoex19_plot1" />
+      <p/>
+      <img src="optoex19_plot2.png" width="640" alt="optoex19_plot2" />
+      <p/>
+      <img src="optoex19_plot3.png" width="640" alt="optoex19_plot3" />
+      <p/>
+      <img src="optoex19_plot4.png" width="640" alt="optoex19_plot4" />
+      <p/>
+      <img src="optoex19_plot5.png" width="640" alt="optoex19_plot5" />
+      <p/>
+      <img src="optoex19_plot6.png" width="640" alt="optoex19_plot6" />
+      <p/>
+      <img src="optoex19_plot7.png" width="640" alt="optoex19_plot7" />
+      <p/>
+      <img src="optoex19_plot8.png" width="640" alt="optoex19_plot8" />
+      <p/>
+      <img src="optoex19_plot9.png" width="640" alt="optoex19_plot9" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates:
+<br/>
+ The Atlas Geiger mode capability for a 3D avalanche photodiode operated as a
+single photon counter at biases beyond breakdown - the Geiger counter mode.
+<br/>
+This 3D APD was made from silicon and  simulated in 2 cylindrical coordinates (r,y).
+The anode is a diffused p+ disc in 6 microns of epitaxial n- silicon on n+ silicon substrate.
+</p>
+<p>
+IV characteristics (dark as well under illumination) are simulated by ramping
+the cathode voltage up to around 36V where the diode starts to break down
+and then beyond to 45V where the Geiger mode comes into play.
+</p>
+<p>
+For the Geiger mode simulation, a probe statement was added so that the electron
+avalanche probabilities at the designated point versus bias could be seen on the log file.
+The cathode was ramped to 70V, a bias at which single electrons or holes at some points
+in the device have a 100% chance of initiating an avalanche.  The probabilities can be seen
+in the 2D plots at several biases as wellas in the log file at the probed coordinates.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

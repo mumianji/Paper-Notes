@@ -1,0 +1,99 @@
+# (c) Silvaco Inc., 2018
+go athena
+
+line x location=0
+line x location=7  spacing=0.05
+line x location=10
+
+line y location=40 spacing=0.1
+line y location=44 spacing=0.4
+line y location=47 spacing=0.4
+
+init silicon c.arsenic=1.0e19 orientation=100
+
+epitaxy time=8 temp=1000 thickness=8 divisions=15 dy=0.1 ydy=8 c.phosphor=1e15
+epitaxy time=8.4 temp=1000 thickness=8.4 divisions=20 dy=0.05 ydy=0.4 \
+        c.phosphor=1e15
+
+deposit barrier thickness=2 divisions=5 dy=0.01 ydy=2
+etch barrier right p1.x=7
+implant boron dose=3e12 energy=200 tilt=45 rotation=180 crystal
+etch barrier all
+
+epitaxy time=4 temp=1000 thickness=4 divisions=10 dy=0.05 ydy=0.4 \
+        c.phosphor=1e15
+epitaxy time=4 temp=1000 thickness=4 divisions=10 dy=0.05 ydy=0.4 \
+        c.phosphor=1e15
+
+deposit barrier thickness=2 divisions=5 dy=0.01 ydy=2
+etch barrier right p1.x=7
+implant boron dose=3e12 energy=200 tilt=45 rotation=180 crystal
+etch barrier all
+
+epitaxy time=4 temp=1000 thickness=4 divisions=10 dy=0.05 ydy=0.4 \
+        c.phosphor=1e15
+epitaxy time=4 temp=1000 thickness=4 divisions=10 dy=0.05 ydy=0.4 \
+        c.phosphor=1e15
+
+deposit barrier thickness=2 divisions=5 dy=0.01 ydy=2
+etch barrier right p1.x=7
+implant boron dose=3e12 energy=200 tilt=45 rotation=180 crystal
+etch barrier all
+
+epitaxy time=4 temp=1000 thickness=4 divisions=10 dy=0.05 ydy=0.4 \
+        c.phosphor=1e15
+epitaxy time=4 temp=1000 thickness=3.6 divisions=20 dy=0.0005 ydy=0 \
+        c.phosphor=1e15
+
+deposit oxide thick=0.01 divisions=5
+diffus time=3000 temp=1100 nitro
+
+deposit barrier thickness=0.5 divisions=5 dy=0.01 ydy=0.5
+etch barrier right p1.x=7
+implant boron dose=1e14 energy=200 tilt=7 rotation=27 crystal s.oxide=0.01
+etch barrier all
+diffus time=60 temp=1050 nitro
+etch oxide all
+deposit aluminum thickness=3 divisions=8 dy=0.001 ydy=3
+electrode name=anode x=5
+struct outfile=powerex13_0.str
+
+
+go atlas
+
+mesh infile=powerex13_0.str width=5e6
+
+electrode name=cathode y.min=44 y.max=47
+models consrh conmob bgn fermi ust
+impact selb
+contact name=anode workfunc=5.02 surf.rec
+
+method climit=1e-4 maxtraps=10
+output con.band val.band
+
+solve init
+solve previous
+save outfile=powerex13_1.str
+tonyplot powerex13_1.str -set powerex13_0.set
+
+log outfile=powerex13_0.log
+solve vcathode=0.01
+solve vcathode=0.1
+solve vcathode=1
+solve vcathode=10 vstep=10 vfinal=50 name=cathode
+save outfile=powerex13_2.str
+tonyplot powerex13_2.str -set powerex13_1.set
+solve vstep=10 vfinal=100 name=cathode
+# save outfile=100V.str
+solve vstep=10 vfinal=200 name=cathode
+# save outfile=200V.str
+solve vstep=10 vfinal=700 name=cathode compliance=2e-3 cname=cathode
+log off
+tonyplot powerex13_0.log -set powerex13_2.set
+
+solve init
+solve previous
+log outfile=powerex13_1.log
+solve vanode=0.01
+solve vanode=0.05 vstep=0.05 vfinal=1 name=anode
+tonyplot powerex13_1.log -set powerex13_3.set

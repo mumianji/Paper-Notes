@@ -1,0 +1,223 @@
+# (c) Silvaco Inc., 2018
+go atlas 
+
+#A/cm^2
+mesh width=1e8 
+ 
+x.m l=0 s=0.5
+x.m l=1 s=0.5
+
+
+y.m l=0 s=0.01
+y.m l=0.85 s=0.01
+
+region num=1 user.mat=MTDATA 
+ 
+elec num=1 name=anode   top
+elec num=2 name=cathode bottom
+
+
+contact name=anode   workf=5.0 
+contact name=cathode workf=4.4 
+
+material region=1 user.default=organic user.group=semiconductor \
+	 eg300=2.7 affinity=2.3 permi=3 nv300=1e21 nc300=1e21
+
+odefects region=1 hopping nia=0 nid=0 na=0 nd=4e15 \
+	sigmaia=0 sigmaid=0 sigmaa=0 sigmad=0.027 ea=0 ed=0.635 \
+	numa=48 numd=48 
+
+set CRT=3.35e-3
+set e0=1/($CRT*$CRT)
+set e0=$e0
+ 
+mobility region=1 mun0=4.79e-8 e0n.pfmob=$e0 mup0=4.79e-6 e0p.pfmob=$e0
+ 
+models pfmob langevin fermi 
+
+solve init
+solve prev
+output val.band con.band band.param e.field traps e.mobility h.mobility charge u.langevin
+
+method maxtrap=10 carrier=1 hole
+ 
+probe name="int_exciton" integr exciton
+probe name="Field" max field
+
+solve vanode=0.5
+ 
+log outf=organicex04_0.log
+solve vanode=0.2
+solve vanode=0.5
+solve vstep=0.5 vfinal=45 name=anode
+
+tonyplot -overlay organicex04_0.log organicex04.dat -set organicex04_0.set
+
+
+#####################################
+# 2 Layers 
+#####################################
+
+go atlas 
+
+mesh width=1e8
+
+x.m l=0 s=0.5
+x.m l=1 s=0.5
+
+y.m l=0 s=0.002
+y.m l=0.06 s=0.0001
+y.m l=0.1 s=0.001
+
+
+region num=1 user.mat=HIL  y.min=0 y.max=0.06
+region num=2 user.mat=ETL y.min=0.06 y.max=0.1
+
+elec num=1 name=anode top
+elec num=2 name=cathode bottom
+
+interface s.s thermionic tunnel y.min=0.059 y.max=0.061 \
+	dd.tunnel=0.01 dy.tunnel=0.001
+
+contact name=anode workf=5.01 surf.rec  
+contact name=cathode workf=3.08 surf.rec 
+
+ointdefect s.s cont y.min=0.058 y.max=0.062 numa=24 numd=24 ha=1.4e10 hd=1.4e10 tca=5500 \
+           tcd=5500 afile=organicex04_0_ointaccep.dat dfile=organicex04_0_ointdon.dat \
+           sigae=1e-16 sigah=1e-14 sigde=1e-14 sigdh=1e-16
+
+odefects region=1 cont ha=2e16 hd=2e16 tca=2700 tcd=2700 numa=30 numd=30
+odefects region=2 cont ha=2e16 hd=2e16 tca=2700 tcd=2700 numa=30 numd=30
+
+set LUMO1=2.31
+set HOMO1=5.31
+set eg300_1=$HOMO1-$LUMO1
+
+set LUMO3=2.98
+set HOMO3=5.68
+set eg300_3=$HOMO3-$LUMO3
+
+material region=1  user.default=organic user.group=semiconductor \
+eg300=$eg300_1 affinity=$LUMO1 permi=3.5 nv300=2e19 nc300=2e19 
+
+material region=2  user.default=organic user.group=semiconductor \
+eg300=$eg300_3 affinity=$LUMO3 permi=3.5 nv300=2e19 nc300=2e19 
+
+material region=1 rst.exciton=0.25 lds.exciton=0.01 taus.exciton=10e-9
+material region=2 rst.exciton=0.25 lds.exciton=0.01 taus.exciton=10e-9
+
+
+mobility region=1 mun0=1.1e-4*2 mup0=8.83e-5*2 e0n.pfmob=5e4 e0p.pfmob=5e4
+mobility region=2 mun0=5.52e-06*2 mup0=3.68e-7*2 e0n.pfmob=1.5e6 e0p.pfmob=1.5e6
+
+models pfmob langevin singlets 
+
+output u.langevin band.param con.band val.band \
+	charge e.field e.mobility h.mobility traps
+
+probe name="int_exciton" exciton integr
+
+solve init
+log outf=organicex04_1.log
+solve vanode=0.0 vstep=0.2 vfinal=7 name=anode l.wave=0.524
+save outf=organicex04_0.str
+
+
+#####################################
+# 3 Layers
+#####################################
+
+
+go atlas 
+
+mesh width=1e8
+
+x.m l=0 s=0.5
+x.m l=1 s=0.5
+
+y.m l=0 s=0.002
+y.m l=0.06 s=0.0001
+y.m l=0.07 s=0.0005
+y.m l=0.08 s=0.0001
+y.m l=0.10 s=0.001
+
+region num=1 user.mat=HIL y.max=0.06
+region num=2 user.mat=HTL y.min=0.06 y.max=0.08
+region num=3 user.mat=ETL y.min=0.08 y.max=0.10
+
+elec num=1 name=anode top
+elec num=2 name=cathode bottom
+
+interface s.s thermionic tunnel y.min=0.059 y.max=0.061 \
+	dd.tunnel=0.01 dy.tunnel=0.001
+
+interface s.s thermionic tunnel y.min=0.079 y.max=0.081 \
+	dd.tunnel=0.01 dy.tunnel=0.001
+
+
+contact name=anode workf=5.01  surf.rec barrier
+contact name=cathode workf=3.08 surf.rec barrier  
+
+ointdefect s.s cont y.min=0.058 y.max=0.062 numa=24 numd=24 ha=1.4e10 hd=1.4e10 tca=5500 \
+           tcd=5500 afile=organicex04_0_ointaccep.dat dfile=organicex04_0_ointdon.dat \
+           sigae=1e-16 sigah=1e-14 sigde=1e-14 sigdh=1e-16
+
+
+ointdefect s.s cont y.min=0.079 y.max=0.081 numa=24 numd=24 ha=2.2e8 hd=2.2e8 tca=3000 \
+	   tcd=3000 afile=organicex04_1_ointaccep.dat dfile=organicex04_1_ointdon.dat \
+           sigae=1e-16 sigah=1e-14 sigde=1e-14 sigdh=1e-16
+
+odefects region=1 cont ha=2e16 hd=2e16 tca=2700 tcd=2700 \
+                  afile=acep1.dat dfile=don1.dat numa=30 numd=30
+odefects region=2 cont ha=2e16 hd=2e16 tca=2700 tcd=2700 \
+                  afile=acep2.dat dfile=don2.dat numa=30 numd=30
+odefects region=3 cont ha=2e16 hd=2e16 tca=2700 tcd=2700 \
+                  afile=acep3.dat dfile=don3.dat numa=30 numd=30
+
+
+set LUMO1=2.31
+set HOMO1=5.31
+set eg300_1=$HOMO1-$LUMO1
+
+set LUMO2=2.48
+set HOMO2=5.44
+set eg300_2=$HOMO2-$LUMO2
+
+set LUMO3=2.98
+set HOMO3=5.68
+set eg300_3=$HOMO3-$LUMO3
+
+material region=1  user.default=organic user.group=semiconductor \
+	eg300=$eg300_1 affinity=$LUMO1 permi=3.5 nv300=2e19 nc300=2e19 
+
+material region=2  user.default=organic user.group=semiconductor \
+	eg300=$eg300_2 affinity=$LUMO2 permi=3.5 nv300=2e19 nc300=2e19 
+
+material region=3  user.default=organic user.group=semiconductor \
+	eg300=$eg300_3 affinity=$LUMO3 permi=3.5 nv300=2e19 nc300=2e19 
+
+
+material region=1 rst.exciton=0.25 lds.exciton=0.01 taus.exciton=10e-9
+material region=2 rst.exciton=0.25 lds.exciton=0.01 taus.exciton=10e-9
+material region=3 rst.exciton=0.25 lds.exciton=0.01 taus.exciton=10e-9
+
+mobility region=1 mun0=1.1e-4*2 mup0=8.83e-5*2 e0n.pfmob=5e4 e0p.pfmob=5e4
+mobility region=2 mun0=2.13e-05*2 mup0=5.15e-6*2 e0n.pfmob=2.5e5 e0p.pfmob=1.5e5
+mobility region=3 mun0=5.52e-06*2 mup0=3.68e-7*2 e0n.pfmob=1.5e6 e0p.pfmob=1.5e6
+	
+models pfmob langevin singlet print
+
+output u.langevin band.param con.band val.band \
+	charge e.field e.mobility h.mobility
+
+probe name="int_exciton" exciton integr
+
+solve init
+
+log outf=organicex04_2.log
+solve vanode=0 vstep=0.2 vfinal=7 name=anode l.wave=0.524
+save outf=organicex04_1.str
+
+tonyplot -overlay organicex04_1.log organicex04_2.log -set organicex04_1.set
+tonyplot -overlay organicex04_1.log organicex04_2.log -set organicex04_2.set
+tonyplot organicex04_0.str organicex04_1.str -set organicex04_3.set

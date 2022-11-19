@@ -1,0 +1,55 @@
+go athena 
+
+
+#  Part I - first implant arsenic, then boron
+
+line x loc = 0.0  spacing=0.005   
+line x loc = 0.5  spacing=0.005
+
+line y loc = 0     spacing = 0.005
+line y loc = 0.3   spacing = 0.005
+
+init silicon
+
+deposit barrier thick=0.001 div=2
+
+etch barrier start x=0.245 y=0.1
+etch cont x=0.255 y=0.1
+etch cont x=0.255 y=-0.1
+etch done x=0.245 y=-0.1
+
+implant sampling arsenic energy=10 dose=9.27e12 tilt=0 bca n.ion=10000 divergence=0.1 impact.point=0.5
+
+implant sampling boron energy=10 dose=9.27e12 tilt=0 bca n.ion=10000 divergence=0.1 impact.point=0.5
+
+structure outfile=aniiex11_1.str remove.gas
+
+
+
+
+#  Part II - first implant boron, then arsenic
+
+line x loc = 0.0  spacing=0.005   
+line x loc = 0.5  spacing=0.005
+
+line y loc = 0     spacing = 0.005
+line y loc = 0.3   spacing = 0.005
+
+init silicon
+
+deposit barrier thick=0.001 div=2
+
+etch barrier start x=0.245 y=0.1
+etch cont x=0.255 y=0.1
+etch cont x=0.255 y=-0.1
+etch done x=0.245 y=-0.1
+
+implant sampling boron energy=10 dose=9.27e12 tilt=0 bca n.ion=10000 divergence=0.1 impact.point=0.5
+
+implant sampling arsenic energy=10 dose=9.27e12 tilt=0 bca n.ion=10000 divergence=0.1 impact.point=0.5
+
+structure outfile=aniiex11_2.str remove.gas
+
+tonyplot aniiex11_1.str -add aniiex11_2.str -set aniiex11.set
+
+quit

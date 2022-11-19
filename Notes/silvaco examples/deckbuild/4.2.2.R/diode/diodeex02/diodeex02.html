@@ -1,0 +1,124 @@
+<html>
+  <head>
+    <title>Breakdown Simulation with EB and NEB Models</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Breakdown Simulation with EB and NEB Models</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>S-Pisces/Giga</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="diodeex02_plot0.png" width="640" alt="diodeex02_plot0" />
+      <p/>
+      <img src="diodeex02_plot1.png" width="640" alt="diodeex02_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates breakdown simulation of a 1D diode, including
+second breakdown,  with Energy Balance (EB) and Nonisothermal Energy
+Balance (NEB) Models.
+</p>
+<p>
+Breakdown simulation for submicron devices should be simulated using the
+Energy Balance Model due to  nonlocal impact ionization effects, which
+can substantially influence device characteristics. For high current
+levels the thermal self-heating effects can also play an important
+role by decreasing the mobility and impact ionization rate. This example
+demonstrates a comparison of breakdown calculations obtained with Energy
+Balance and Nonisothermal Energy Balance Models.
+</p>
+<p>
+The first Atlas run uses the Energy Balance Model: Poisson&apos;s equation,
+carrier continuity equations, and energy balance equation for electrons
+and holes are solved self-consistently.
+</p>
+<p>
+In the first part of the input file the device is described, including
+mesh, electrodes locations, and doping distribution.
+The
+<b> material </b> statement is then used to assign  energy relaxation times for electrons and holes.
+The
+<b> models </b> statement is used to select a set of physical models for this
+simulation.  In this case, these models are SRH and AUGER
+recombination, the concentration and field dependent mobility model,
+band gap narrowing, and energy balance
+equations for electrons and holes (hcte).
+The
+<b> impact </b> statement is used to assign the energy relaxation lengths for the Selberherr model.
+The
+<b> contact </b> statement is used to specify a large resistor at the emitter electrode, providing a smooth
+transition from voltage boundary conditions to current boundary conditions. It is not
+needed if the curve tracing algorithm is used (see the following example).
+</p>
+<p>
+The numerical methods used in EB simulation can strongly affect
+convergence and CPU time. Here
+<b> method block newton </b> is used. This decouples the carrier temperature calculation from the
+potential and continuity equations at lower biases. This allows for
+larger bias steps at low bias.
+</p>
+<p>
+The initial biasing is done by ramping the emitter contact towards 25V. A compliance limit is set on the emitter current as defined by:
+<b> cname=emitter compl=&lt;value&gt;</b> . Once this current is exceeded the voltage ramp stops and Atlas proceeds to the next simulation line. This is to specify
+<i> current forcing</i> on the emitter contact. The syntax
+<b> contact name=emitter current </b> does this.
+</p>
+<p>
+After setting the newton method the biasing proceeds by specifying
+<b> istep=&lt;value&gt; imult</b> . The parameter imult indicates that the istep is a
+<i> multiplier</i> to the current as opposed to an additive step. Therefore at each bias
+step the forced current is multiplied by istep.
+<b> ifinal </b> indicates the
+maximum current to be simulated.
+</p>
+<p>
+Note that due to the use of current forcing,
+<b> emitter int. bias </b> should be used as the x axis on the IV data plots.
+</p>
+<p>
+The second Atlas run uses the Nonisothermal Energy Balance Model: Poisson&apos;s equation,
+carrier continuity equations, energy balance equation for electrons and holes, and
+the lattice heat flow equation are solved self-consistently.
+</p>
+<p>
+The same set of models is used, except that the solution of the  lattice energy
+balance equation is activated using the
+<b> models  lat.temp </b> statement.
+</p>
+<p>
+In addition, the thermal boundary conditions should be defined in this case.
+Thermal boundary conditions are defined in the
+<b> thermcontact </b> statement. Values of the thermal conductances are specified at the thermal contact
+located along the emitter and base electrodes.
+</p>
+<p>
+The results of the two simulation runs are then overlaid using TonyPlot.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

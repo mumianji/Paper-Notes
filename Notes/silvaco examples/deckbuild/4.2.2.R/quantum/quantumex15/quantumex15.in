@@ -1,0 +1,48 @@
+# (c) Silvaco Inc., 2018
+go atlas
+mesh
+x.m  l= -0.008   s=0.001
+x.m  l=-0.007   s=0.0005
+x.m  l=-0.005   s=0.0002
+x.m  l= 0.0   s=0.0005
+x.m  l= 0.005   s=0.0002
+x.m  l= 0.007   s=0.0005
+x.m  l= 0.008   s=0.001
+
+y.m   l= -0.008   s=0.001
+y.m   l=-0.007   s=0.0005
+y.m   l=-0.005   s=0.0002
+y.m   l= 0.0     s=0.0005
+y.m   l= 0.005   s=0.0002
+y.m   l= 0.01   s=0.001
+
+
+region num=2 sio2
+region num=1 silicon x.min=-0.005 x.max=0.005 y.min=-0.005 y.max=0.005
+
+electrode num=1 name=gate x.max=-0.007 y.min=-0.008 y.max=0.005
+electrode num=1 name=gate x.min= 0.007 y.min=-0.008 y.max=0.005
+electrode num=1 name=gate y.max= -0.007 x.min=-0.008 x.max=0.008
+
+
+doping reg=1     uniform conc=1.0e20 n.type
+
+
+models schrodinger sp.geom=2dxy  sp.fast  Ox.Schro OX.margin=0.002 \
+          fixed.fermi   num.direct=3 
+      
+        
+method carr=0 
+output  con.band val.band eigens=15
+
+
+solve init
+save outfile = quantumex15_init.str
+tonyplot quantumex15_init.str -set quantumex15_dens.set
+
+solve v1=1.0
+save outfile = quantumex15_vg1.str
+tonyplot quantumex15_vg1.str -set quantumex15_dens.set
+
+quit
+

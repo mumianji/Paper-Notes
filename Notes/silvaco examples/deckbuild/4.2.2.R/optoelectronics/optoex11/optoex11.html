@@ -1,0 +1,81 @@
+<html>
+  <head>
+    <title>Defining a 3D Elliptical Source</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Defining a 3D Elliptical Source</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Device 3D/Luminous 3D</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="optoex11_plot0.png" width="640" alt="optoex11_plot0" />
+      <p/>
+      <img src="optoex11_plot1.png" width="640" alt="optoex11_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates:
+<br/>
+ </p>
+<ul>
+  <li>
+ How to define a 3D elliptical source
+  </li>
+</ul>
+<p>
+To define an optical source in Luminous 3D is a little more complex than one in Luminous2D. The following steps are needed to define an elliptical beam using the BEAM statement.
+</p>
+<p>
+The origin of the beam is defined as (X.ORIGIN, Y.ORIGIN, Z.ORIGIN), similiar to 2D, but an additional two parameters
+<b> angle </b> and
+<b> theta</b> are also needed to define the orientation of the beam. The angle parameter specifies the angle of the beam relative to the device X axis
+and the theta parameter specifies the rotated angle of propogation relative to the X-Z plane.
+</p>
+<p>
+The centre of the elliptical source can be offset from the centre of the beam coordinate centre using the parameters
+<b> xcenter  </b> and
+<b> zcenter</b> but in this example we have chosen the centre of the elliptical source to coincide with the origin of the beam system.
+</p>
+<p>
+After defining the beam coordinate system and the location of the elliptical beam, it is necessary to define the elliptical radii of the beam using the parameters
+<b> xradius</b> and
+<b> zradius.</b> </p>
+<p>
+The sampling frequency of the source beam must now be chosen. The samples are taken along each of the beam front principle axes, ie the x and z planes,
+in constant steps. The number of sampling points in each axis is defined by the parameters
+<b> nx</b> and
+<b> nz</b> .
+</p>
+<p>
+Finally the wavelength of the light is defined, the front side reflections are switched on with the parameter
+<b> metal.reflect </b> so that all metal regions act as perfect optical reflectors and the parameter
+<b> raytrace</b> identifies a file within which the traced rays are saved so they can be plotted with TonyPlot 3D.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

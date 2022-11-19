@@ -1,0 +1,62 @@
+
+go clever
+
+## Process Description ##
+
+Init Layout="clex09.lay" Depth=1 Map="clex09.lmp" 
+
+Save Spice="clex09.before.net" Layout="clex09_1.lay"
+
+
+go victoryprocess
+
+Init Layout="clex09_1.lay" Depth=1 material=silicon
+
+# Gate Stack
+Deposit material=Oxide Thickness=0.25 Max
+Deposit material=Polysilicon Thickness=0.3 Max
+etch material=polysilicon thick=0.36 angle=87 max mask=POLY
+Electrodes mask=POLY material=polysilicon
+Electrodes mask=*GATE material=polysilicon
+
+# Via 2
+Deposit material=Oxide Thickness=0.25 Max
+Etch material=Oxide Thickness=0.9 angle=87 mask=VIA2 reverse max
+Electrodes mask=*CONT material=Silicon
+
+# Metal 1
+Deposit material=Aluminum Thickness=0.25 Max
+Etch material=Aluminum Thickness=0.3 angle=87 max mask=MET1
+Electrodes mask=MET1 material=Aluminum
+
+# Via 3
+Deposit material=Oxide Thickness=0.25 Max
+Etch material=Oxide Thickness=0.3 angle=87 max mask=VIA3 reverse
+
+# Metal 2
+Deposit material=Aluminum Thickness=0.5 Max
+Etch material=Aluminum Thickness=0.6 angle=87 max mask=MET2
+Electrodes mask=MET2 material=Aluminum
+
+# Passivation
+Deposit material=Oxide Thickness=0.25 Max
+
+export clever(unstructured) Structure=clex09.str
+
+## After creating the 3D structure   ##
+## Perform the Interconnect Analysis ##
+
+
+go clever
+
+## Process Description ##
+
+Init structure="clex09.str" Layout="clex09.lay" Depth=1 Map="clex09.lmp"
+
+Save Spice="clex09.before.net" Layout="clex09_1.lay"
+
+Interconnect Adapt=(0.04,0.02)
+
+Save Spice="clex09.net"
+
+quit

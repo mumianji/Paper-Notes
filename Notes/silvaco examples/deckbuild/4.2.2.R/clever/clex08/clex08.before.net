@@ -1,0 +1,8 @@
+M1 gnd in out gnd N w=1u l=0.25u As=0.2p Ad=0.2p Ps=1.4u Pd=1.4u Nrs=0.135494 Nrd=0.139506 geo=3
+M2 out in gnd gnd N w=1u l=0.25u As=0.2p Ad=0.2p Ps=1.4u Pd=1.4u Nrs=0.135494 Nrd=0.139506 geo=3
+M3 gnd in out gnd N w=1u l=0.25u As=0.2p Ad=0.275p Ps=1.4u Pd=2.55u Nrs=0.135494 Nrd=0.139506 geo=2
+M4 gnd in out gnd N w=1u l=0.25u As=0.2p Ad=0.275p Ps=1.4u Pd=2.55u Nrs=0.139506 Nrd=0.135494 geo=2
+M5 out in vdd vdd P w=1u l=0.25u As=0.275p Ad=0.2p Ps=2.55u Pd=1.4u Nrs=0.139506 Nrd=0.135494 geo=1
+M6 vdd in out vdd P w=1u l=0.25u As=0.2p Ad=0.2p Ps=1.4u Pd=1.4u Nrs=0.139506 Nrd=0.135494 geo=3
+M7 out in vdd vdd P w=1u l=0.25u As=0.2p Ad=0.2p Ps=1.4u Pd=1.4u Nrs=0.139506 Nrd=0.135494 geo=3
+M8 vdd in out vdd P w=1u l=0.25u As=0.2p Ad=0.275p Ps=1.4u Pd=2.55u Nrs=0.139506 Nrd=0.135494 geo=2

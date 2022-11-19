@@ -1,0 +1,151 @@
+# (c) Silvaco Inc., 2018
+go atlas
+
+mesh
+
+x.mesh loc=0.0   spac=12.0
+x.mesh loc=100   spac=2.0
+x.mesh loc=125   spac=5.0
+x.mesh loc=150   spac=2.0
+x.mesh loc=280   spac=13.0
+
+y.mesh loc=0.0   spac=5.0
+y.mesh loc=13.0  spac=0.4
+y.mesh loc=17.0  spac=2.0
+y.mesh loc=70.0  spac=10.0
+y.mesh loc=200.0 spac=50.0
+y.mesh loc=410.0 spac=10.0
+
+region     num=1 silicon   x.min=0 x.max=100 y.min=0 y.max=13
+region     num=2 silicon   x.min=0 x.max=280 y.min=13 y.max=410
+region     num=3 insulator x.min=100 x.max=280 y.min=0 y.max=13
+
+# 1- Cathode; 2- Anode; 3-Gate
+elec       num=1 top left length=100 name=cathode
+elec       num=2 bottom name=anode
+elec       num=3 x.min=150 x.max=280 y.min=0. y.max=13. name=gate
+#
+#  Impurity profile
+#
+doping reg=2 uniform conc=1.e13    n.type  
+doping reg=2 gauss conc=1.e17 p.type junc=47
+doping reg=1 gauss conc=1.e19 n.type junc=16 x.l=0 x.r=100 rat=0.8
+doping reg=2 gauss conc=1.e20 p.type peak=410 junc=393 x.l=0 x.r=170 rat=0.1
+doping reg=2 gauss conc=1.e17 n.type peak=410 char=10 x.l=170 x.r=280
+
+save outf=powerex06.str
+tonyplot powerex06.str -set powerex06.set
+
+
+go atlas
+.begin
+#
+#    Turn-off of GTO with protection circuitry
+#
+#    Part 1: Steady state solution
+#    ISOTHERMAL CASE
+#
+i1 0 1  400.
+d1 1 2  dd
+v1 2 0  900 
+r1 1 3  1
+l1 1 4  4uH
+#
+d2 5 3  dd
+l2 4 5  4uH
+r2 4 6  22
+#
+d3 5 6  dd
+l3 5 7  0.2uH
+c1 6 0  0.22uF
+#
+agto 0=cathode 7=anode  8=gate width=3.035e6 infile=powerex06.str
+#
+d4 12 8  dd
+l4  8 9 0.5uH
+r4  9 11 1mg 
+#
+v2  12 0 -25
+v3  11 0 -12
+#
+r3  9 10 5.4
+#
+v4  10 0 12
+
+#
+.nodeset v(1)=0 v(2)=900 v(3)=0 v(4)=0 v(5)=0 v(6)=0 \
+         v(7)=0. v(8)=0 v(9)=0 v(10)=12 v(11)=-12 v(12)=-25
+#
+.numeric toldc=1.e-6 vchange=0.025 imaxdc=100
+.save outfile=gtosave 
+.model dd d is=1e-7
+.options m2ln relpot print debug
+.end
+#
+models device=agto reg=1 analytic fldmob srh auger bgn  
+models device=agto reg=2 analytic fldmob srh auger bgn  
+material device=agto reg=1 taun0=2.4e-6 taup0=0.6e-6
+material device=agto reg=2 taun0=2.4e-6 taup0=0.6e-6
+material device=agto reg=3 permitti=1
+impact device=agto selb reg=1
+impact device=agto selb reg=2
+
+
+go atlas
+.begin
+#
+#    Turn-off of GTO with protection circuitry (tr)
+#
+#    Part 2: Transient solution
+#    ISOTHERMAL CASE
+#
+i1 0 1  400.
+d1 1 2  dd
+v1 2 0  900 
+r1 1 3  1
+l1 1 4  4uH
+#
+d2 5 3  dd
+l2 4 5  4uH
+r2 4 6  22
+#
+d3 5 6  dd
+l3 5 7  0.2uH
+c1 6 0  0.22uF
+#
+agto 0=cathode 7=anode  8=gate width=3.035e6 infile=powerex06.str
+#
+d4 12 8  dd
+l4  8 9 0.5uH
+r4  9 11 1mg PULSE 1mg 1.e-6 0 100ns 100ns 10 1000
+#
+v2  12 0 -25
+v3  11 0 -12
+#
+r3  9 10 5.4
+#
+v4  10 0 12
+#
+.numeric lte=1 vchange=1000 dtmin=0.1ps
+#
+.tran 25ns 400us
+.load infile=gtosave
+.log outfile=powerex06
+.model dd d is=1e-7
+.options print
+.end
+#
+models device=agto reg=1 analytic fldmob srh auger bgn   
+models device=agto reg=2 analytic fldmob srh auger bgn  
+material device=agto reg=1 taun0=2.4e-6 taup0=0.6e-6
+material device=agto reg=2 taun0=2.4e-6 taup0=0.6e-6
+material device=agto reg=3 permitti=1
+impact device=agto selb reg=1
+impact device=agto selb reg=2
+method quasi
+
+go atlas
+
+tonyplot powerex06_tr.log -set powerex06_tr_log.set
+
+quit

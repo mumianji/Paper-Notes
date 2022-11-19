@@ -1,0 +1,70 @@
+# (c) Silvaco Inc., 2018
+go atlas 
+
+mesh cylindrical three.d
+
+r.mesh l=0 spacing=0.05
+r.mesh l=0.08 spacing=0.01
+r.mesh l=0.16 spacing=0.05
+r.mesh l=0.19 spacing=0.01
+
+# for angle and angle division
+a.m  l=0   spac=60
+a.m  l=360 spac=60
+
+# for z-direction
+z.mesh l=0 spacing=0.01
+z.mesh l=0.03 spacing=0.01
+z.mesh l=0.11 spacing=0.025
+z.mesh l=3.105 spacing=1
+z.mesh l=3.11 spacing=0.0015
+
+region num=1 material=Silicon a.min=0 a.max=360 z.min=0 z.max=0.03 r.min=0 r.max=0.19 
+region num=2 material=Silicon a.min=0 a.max=360 z.min=0.03 z.max=3.105 r.min=0.16 r.max=0.19 
+region num=3 material=Silicon a.min=0 a.max=360 z.min=0.03 z.max=0.11 r.min=0 r.max=0.16
+region num=4 material=Silicon a.min=0 a.max=360 z.min=0.11 z.max=3.105 r.min=0.08 r.max=0.16
+region num=5 material=Silicon a.min=0 a.max=360 z.min=0.11 z.max=3.11 r.min=0 r.max=0.08
+region num=6 material=air     a.min=0 a.max=360 z.min=3.105 z.max=3.11 r.min=0.08 r.max=0.29
+
+electrode name=cathode a.min=0 a.max=360 r.min=0 r.max=0.19 z.min=0 z.max=0
+electrode name=anode a.min=0 a.max=360 r.min=0 r.max=0.19 z.min=3.11 z.max=3.11
+
+doping region=1 uniform n.type conc=5e+17
+doping region=2 uniform n.type conc=5e+17
+doping region=3 uniform n.type conc=1e+14
+doping region=4 uniform n.type conc=1e+14
+doping region=5 uniform p.type conc=4e+16
+
+save outf=solarex14_0.str
+
+beam num=1 z.origin=-2.0 raytrace=solarex14_1.str \
+x.origin=0 y.origin=0 phi=0.0 theta=90 nx=10 nz=10  power.file=solarex14.spec
+
+models fermi ni.fermi cvt srh
+
+method BICGST 
+
+solve init
+log outf=solarex14_0.log
+solve previous
+solve vstep=0.02 vfinal=0.55 name=anode
+log off
+
+solve init
+solve b1=1
+log outf=solarex14_1.log
+solve previous
+solve vstep=0.02 vfinal=0.55 name=anode
+
+tonyplot -overlay solarex14_0.log solarex14_1.log -set solarex14_0.set
+tonyplot3d solarex14_1.str -set solarex14_1.set
+
+extract init inf="solarex14_1.log"
+extract name="Jsc" y.val from curve(v."anode", i."cathode") where x.val=0.0
+extract name="Voc" x.val from curve(v."anode", i."cathode") where y.val=0.0 
+extract name="Pm" max(curve(v."anode", (v."anode" * i."cathode"))) 
+extract name="Vm" x.val from curve(v."anode", (v."anode"*i."cathode") ) \
+	where y.val=$"Pm"
+extract name="Im" $"Pm"/$"Vm"
+extract name="FF" ($"Pm"/($"Jsc"*$"Voc"))
+extract name="Eff" ($"Pm"/(3.14157*(0.19)*(0.19)*1e-8*0.1))*100

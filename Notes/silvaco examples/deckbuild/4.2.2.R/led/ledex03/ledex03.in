@@ -1,0 +1,248 @@
+# (c) Silvaco Inc., 2018
+go devedit 
+work.area x1=0 y1=-0.1 x2=3.5 y2=10
+# devedit 2.8.5.R (Wed Mar  1 14:54:21 PST 2006)
+# libMeshBuild 1.24.3 (Wed Mar  1 14:53:36 PST 2006)
+# libSVC_Misc 1.28.0 (Tue Jan 31 20:56:53 PST 2006)
+# libsflm 7.2.13 (Wed Feb 22 00:28:57 PST 2006)
+# libSDB 1.8.3 (Tue Feb 21 23:41:46 PST 2006)
+# libSvcFile 1.12.0 (Tue Jan 17 01:48:56 PST 2006)
+# libDW_Version 3.2.0 (Mon Jan 16 23:45:02 PST 2006)
+region reg=1 mat=GaN color=0xcba2a2 pattern=0xd \
+	polygon="1.85,2 1.95,2 3.45,2 3.5,2 3.5,4 0,4 0,0.603 1.85,0.603"
+#
+impurity id=1 region.id=1 imp=Donors \
+	peak.value=1e+18 ref.value=1000000000000 comb.func=Multiply
+#
+constr.mesh region=1 default max.height=10
+
+region reg=2 mat=InGaN color=0xfe8282 pattern=0x3 \
+	polygon="1.85,0.603 0,0.603 0,0.6 1.85,0.6"
+#
+impurity id=1 region.id=2 imp="Composition Fraction X" \
+	peak.value=0.2 ref.value=1000000000000 comb.func=Multiply
+#
+constr.mesh region=2 default
+
+region reg=3 mat=AlGaN color=0xfe8282 pattern=0x4 \
+	polygon="1.85,0.6 0,0.6 0,0.5 1.85,0.5"
+#
+impurity id=1 region.id=3 imp=Acceptors \
+	peak.value=1e+19 ref.value=1000000000000 comb.func=Multiply
+#
+impurity id=2 region.id=3 imp="Composition Fraction X" \
+	peak.value=0.2 ref.value=1000000000000 comb.func=Multiply
+#
+constr.mesh region=3 default
+
+region reg=4 mat=GaN color=0xcba2a2 pattern=0xd \
+	polygon="1.85,0.5 0,0.5 0,0 0.15,0 1.75,0 1.85,0"
+#
+impurity id=1 region.id=4 imp=Acceptors \
+	peak.value=1e+19 ref.value=1000000000000 comb.func=Multiply
+#
+constr.mesh region=4 default max.height=0.2
+
+region reg=5 name=anode mat=Nickel elec.id=1 work.func=0 color=0xfefe95 pattern=0xe \
+	polygon="0.15,0 0.15,-0.1 1.75,-0.1 1.75,0"
+#
+constr.mesh region=5 default
+
+region reg=6 name=cathode mat=Tin elec.id=2 work.func=0 color=0xfefe95 pattern=0xd \
+	polygon="1.95,2 1.95,1.9 3.45,1.9 3.45,2"
+#
+constr.mesh region=6 default
+
+region reg=7 mat=Sapphire color=0xcb pattern=0xa \
+	polygon="0,4 3.5,4 3.5,10 0,10"
+#
+constr.mesh region=7 default max.height=10
+
+
+# Set Meshing Parameters
+#
+base.mesh height=2 width=0.05
+#
+bound.cond !apply max.slope=30 max.ratio=100 rnd.unit=0.001 line.straightening=1 align.points when=automatic
+#
+imp.refine min.spacing=0.02
+#
+constr.mesh max.angle=90 max.ratio=300 max.height=1000 \
+	max.width=1000 min.height=0.0001 min.width=0.0001
+#
+constr.mesh type=Semiconductor default
+#
+constr.mesh type=Insulator default
+#
+constr.mesh type=Metal default
+#
+constr.mesh type=Other default
+#
+constr.mesh region=1 default max.height=10
+#
+constr.mesh region=2 default
+#
+constr.mesh region=3 default
+#
+constr.mesh region=4 default max.height=0.2
+#
+constr.mesh region=5 default
+#
+constr.mesh region=6 default
+#
+constr.mesh region=7 default max.height=10
+constr.mesh id=1 x1=0 y1=0.499 x2=1.85 y2=0.501 default max.height=0.001
+constr.mesh id=2 x1=0 y1=0.599 x2=1.85 y2=0.604 default max.height=0.0005
+constr.mesh id=3 x1=0 y1=0.649 x2=1.85 y2=0.651 default max.height=0.01
+constr.mesh id=4 x1=1.7 y1=0 x2=2 y2=3 default max.width=0.02
+constr.mesh id=5 x1=1.8 y1=1.99 x2=3.5 y2=2.01 default max.height=0.01
+constr.mesh id=6 x1=0 y1=3.99 x2=4 y2=4.01 default max.height=0.1
+Mesh Mode=MeshBuild
+
+
+base.mesh height=2 width=0.05
+
+bound.cond !apply max.slope=30 max.ratio=100 rnd.unit=0.001 line.straightening=1 align.Points when=automatic
+
+structure outfile=ledex03.str
+
+go atlas
+#
+# 2 Dimensional Structure by DevEdit
+# Expand 10 times to x-direction
+mesh infile=ledex03.str scale.x=100
+#
+save outf=ledex03_0.str
+#
+go atlas 
+#
+# GaN LED Opto Device Simulation
+#
+# Making Structure Devedit X direction is 350um, y direction is ~5um, 
+# X direction so long, so the x directin was scale down 1/100 on device making
+# On ATLAS, SCALE.X on MESH mulipled by 100 to remake the Original structure
+
+# Blue single-quantum well LED
+
+# Band offset 
+# dEc:dEv(GaN:InGaN)=0.7:0.3
+# dEc:dEv(AlGaN:GaN)=0.7:0.3
+#
+# Parameter used for this blue SQW LED
+#############################################################################
+#  Epilayer #  Material  #  Type  # Thickness #  Doping    #    Mobility    #
+#           #            # p or n #     [nm]  #   [cm-3]   #    [cm2/V-s]   #
+#############################################################################
+# p-Contact #    GaN     #    p   #    500    #     1e19   #        10      #
+# p-Emitter #  Al0.2GaN  #    p   #    100    #     1e19   #        10      #
+#   Blue    #  In0.2GaN  #    -   #      3    #       -    #       100      #
+# n-Contact #    GaN     #    n   #   4000    #     1e18   #       100      #
+# n-Buffer  #    GaN     #    -   #     30    #       -    #       100      #
+# Substrate #  Sapphire  #    -   #      -    #       -    #         -      #
+#############################################################################
+
+#-------------------------------------------------------------------
+# SECTION 1 : MESH GENERATION
+#-------------------------------------------------------------------
+# Chip Size is 350 um * 350 um
+# Etching Width 185 um
+# Etching Depth 2.0 um
+
+mesh infile=ledex03_0.str width=477
+#
+#-------------------------------------------------------------
+# SECTION 2: REGIONS AND ELECTRODES
+#-------------------------------------------------------------
+region num=1 modify material=GaN substrate
+region num=2 modify material=InGaN qwell led well.ny=40
+#---------------------------------------------------------------
+# SECTION 4: MATERIAL MODELS
+#---------------------------------------------------------------
+#
+models polarization calc.strain polar.scale=0.5
+#
+material material=GaN taun0=1e-9 taup0=1e-9 copt=1.1e-8 \
+         augn=1.0e-34 augp=1.0e-34
+material material=AlGaN taun0=1e-9 taup0=1e-9 copt=1.1e-8 \
+         augn=1.0e-34 augp=1.0e-34
+material material=InGaN taun0=1e-9 taup0=1e-9 copt=1.1e-8 \
+         augn=1.0e-34 augp=1.0e-34 
+#
+# Lorentz Broaden factor
+material well.gamma0=30e-3
+#
+material edb=0.080 eab=0.101
+#
+material ndx.adachi
+material material=Nickel real.index=1.00 imag.index=0.0
+#
+models k.p fermi incomplete consrh auger optr print
+models region=2 k.p chuang spontaneous lorentz
+#
+mobility mup=10
+mobility fmct.n gansat.n
+#
+#----------------------------------------------------------------
+# SECTION 5: OUTPUT FLAGS and METHOD
+#----------------------------------------------------------------
+#
+output con.band val.band band.param charge polar.charge e.mobility \
+       h.mobility u.srh u.radiative u.auger permi flowlines
+#
+method climit=1e-4 maxtrap=10
+#
+#----------------------------------------------------------------
+# SECTION 6: INITIAL SOLUTION
+#----------------------------------------------------------------
+#
+solve init
+solve prev
+#
+save outf=ledex03_1.str
+#
+tonyplot ledex03_1.str
+#
+#-----------------------------------------------------------------
+# SECTION 7: BIAS RAMP and Save the SPECTRUM
+#-----------------------------------------------------------------
+#
+probe name="Radiative"     radiative     integrate x.min=0 x.max=350 y.min=0.6 y.max=0.603
+probe name="Recombination" recombination integrate x.min=0 x.max=350 y.min=0.0 y.max=5
+#
+log outf=ledex03.log
+solve vstep=0.05 vfinal=3.5 name=anode
+save outf=ledex03_3p5.str
+save spectrum=ledex03_3p5.spc lmin=0.40 lmax=0.50 nsamp=100
+
+solve vstep=0.05 vfinal=4.0 name=anode
+save outf=ledex03_4p0.str
+save spectrum=ledex03_4p0.spc lmin=0.40 lmax=0.50 nsamp=100
+
+solve vstep=0.05 vfinal=5.0 name=anode
+save outf=ledex03_5p0.str
+save spectrum=ledex03_5p0.spc lmin=0.40 lmax=0.50 nsamp=100
+#
+#------------------------------------------------------------------
+# SECTION 8: PLOTTING CURVES
+#------------------------------------------------------------------
+#
+# V-I Curve
+tonyplot ledex03.log     -set ledex03_0.set
+# I-L Curve
+tonyplot ledex03.log     -set ledex03_1.set
+# 
+# EL Intensity at 60mA(3.5V)
+tonyplot ledex03_3p5.spc -set ledex03_2.set
+#
+tonyplot ledex03_3p5.str ledex03_4p0.str ledex03_5p0.str -set ledex03_2-1.set
+#
+save angpower=ledex03_ang.log xmin=5 xmax=180 xnum=35 y=0.6015 side mir.bottom \
+     reflects=4 lmin=0.40 lmax=0.50 nsamp=5
+#
+# Plot the Angluar Power
+# Here the 90 degree is the direction of center to bottom
+# 270 degree is the direction of center to top
+# It should be flip angle 90 to be 270, then it is correct.
+tonyplot ledex03_ang.log -set ledex03_3.set
+#
+quit

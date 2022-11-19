@@ -1,0 +1,204 @@
+# (c) Silvaco Inc., 2018
+go victoryprocess 
+# Set geometrical parameters of the device
+# Substrate depth
+set SUBSTRATETHICK=2
+# Substrate doping
+set SUBSTRATEDOP=3e19
+# Half of the pitch
+set PITCH2=2.4
+#Thickness of Epi layer
+set EPITHICK=4
+# Phosphorus concentration in epi layer
+set EPIDOP=2e16
+# Trench slope angle
+set ANGLE=87
+# Half of trench width
+set TRENCHWIDTH2=0.5
+# Trench depth
+set TRENCHDEPTH=1.5
+# Radius at the bottom of the trench as portion of WIDTH2
+# This parameter should be 0  < RAD < 0.9
+set RAD=0.5
+# Radius at the bottom of the trench in microns
+set RADIUS=$RAD*$TRENCHWIDTH2
+# Thickness of nirtide mask used for geometrical etch of "slopped" and "rounded" trench
+set MASKTHICK=0.5
+set PI=3.141593
+# Base resolution for etch/depo and oxidation
+set RESOLUTION=0.04
+#
+Init meshdepth=2 orientation=100  from=0.0 to=$PITCH2 depth=$SUBSTRATETHICK gasheight=10 resolution=$RESOLUTION material=silicon dopants="phosphorus" dopingvalues=$SUBSTRATEDOP surface.z=$EPITHICK
+# Base volume grid
+Line x location=0.0 spacing=0.2
+Line x location=$PITCH2 spacing=0.2
+#
+Line z location=-2 spacing=0.5
+Line z location=0.5*$EPITHICK spacing=1
+Line z location=$EPITHICK spacing=0.2
+Line z location=$SUBSTRATETHICK+$EPITHICK spacing=1
+#
+
+Epitaxy time=15 temperature=1100 thickness=$EPITHICK  dopants="phosphorus" dopingvalues=$EPIDOP
+
+# Form a trench with rounded bottom by combitation of DRY and WET etch steps
+Deposit material=nitride thickness=$MASKTHICK conformal
+Etch  thick=$TRENCHDEPTH-$RADIUS+$MASKTHICK dry angle=$ANGLE left.to=$TRENCHWIDTH2-$RADIUS+$MASKTHICK/tan($PI*$ANGLE/180.0) ref.z=-$MASKTHICK 
+
+Etch wet thickness=$RADIUS left.to=$TRENCHWIDTH2
+Strip material=nitride 
+
+#Trench oxideation
+Diffuse time=30 temperature=1050 dryo2 press=1.00 hcl=3
+# Wet etch to adjust gate oxide thickness
+Etch material=oxide thickness=0.03 wet 
+#
+# Extract gate oxide thicknesses
+set MEASUREPOSY=0.5*$TRENCHDEPTH
+extract name="gateox_bottom" thickness oxide mat.occno=1 x.val=0.05
+extract name="gateox_side" thickness oxide mat.occno=1 y.val=$MEASUREPOSY
+#
+# Deposit and Etch-back Polysilicon gate
+set POLYDEPOTHICK=$TRENCHWIDTH2+0.3
+Deposit material=polysilicon thick=$POLYDEPOTHICK dopants="phosphorus" dopingvalues="1e20" conformal
+Etch thickness=$POLYDEPOTHICK+0.02 dry
+
+# Add grid lines along the channel 
+extract name="Xgate_position" max.bound oxide mat.occno=1 y.val=$MEASUREPOSY
+extract name="TrenchBottom" max.bound oxide mat.occno=1 x.val=0.01
+
+set XSP=0.02
+Line x loc=$Xgate_position-$RADIUS-$XSP spacing=$XSP
+Line x location=$Xgate_position+$XSP spacing=$XSP
+set ZSP=0.04
+line z location=0.4 spacing=$ZSP
+line z location=$TRENCHDEPTH+0.5*$RADIUS spacing=$ZSP
+
+#Vt adjust "vertical" doping 
+Implant boron energy=150 dose=5e12
+Implant boron energy=300 dose=7e12
+Implant boron energy=500 dose=9e12
+
+set BDIFFTIME=60
+Diffuse time=$BDIFFTIME temperature=1050
+
+# Add fine grid to capture N+ implant
+Line z location=0.02 spacing=0.01
+
+# N+ Implant and drive
+set NplusDOSE=2e15
+Implant arsenic dose=$NplusDOSE energy=30 tilt=0
+Diffuse time=30 temperature=950
+
+# Adjust vertical mesh after N+ diffusion
+Line z location=0.1 spacing=$ZSP
+Line remove z location=0.02 spacing=0.01
+
+# Isolation oxide and recessed etch for P= implant and source contact
+Deposit material=oxide thick=1 conformal
+Etch material=oxide right.to=$PITCH2-0.5 dry thickness=2
+Etch material=silicon thick=0.5 dry
+
+# P+ implant and drive
+set PplusDOSE=2e15
+Implant boron dose=$PplusDOSE energy=25  tilt=0
+Diffuse time=15 temperature=1000 
+#Surface concentration in the "middle" of the vertical gate
+extract name="SurfC" surf.conc impurity="Net Doping" material="Silicon" mat.occno=1 y.val=$MEASUREPOSY
+#
+extract name="J1" xj material="Silicon" mat.occno=1 x.val=$TRENCHWIDTH2+0.2 junc.occno=1
+extract name="J2" xj material="Silicon" mat.occno=1 x.val=$TRENCHWIDTH2+0.2 junc.occno=2
+extract name="GateLength" $J2-$J1
+if cond=($J2 > $TrenchBottom)
+	extract name="Jlat" xj material="Silicon" mat.occno=1 y.val=$TrenchBottom junc.occno=1 
+if.end
+# Contact metal deposition
+Deposit material=aluminum thick=0.3 conformal
+
+# Assign electrods
+Electrode name=gate x=0.05 z=0.5*$TRENCHDEPTH
+Electrode name=source x=0.05 
+Electrode name=drain substrate
+
+save name=powerex22
+
+# Use VictoryMesh to prepare the structure for VictoryDevice simulation
+
+go victorymesh 
+load in="powerex22"
+# Mirror the structure
+mirror axes="-x"
+set MaxSIZE=0.5
+set MaxMOSSIZE=0.001
+set MaxJuncSIZE=0.03
+set MaxIntSIZE=0.01
+remesh delaunay 
+refine max.size=$MaxSIZE regions="*"
+refine max.size=0.4*$MaxSIZE regions="material:aluminum"
+refine max.size=0.2*$MaxSIZE regions="material:polysilicon"
+
+refine max.interface.size=$MaxMOSSIZE grading="quadratic" 
+refine max.junction.size=$MaxJuncSIZE grading="quadratic"
+refine regions="material:sio2" max.interface.size=$MaxIntSIZE grading="quadratic" \
+interface.regions="material:sio2" other.interface.regions="material:polysilicon,silicon"
+
+save out=powerex22.str
+tonyplot powerex22.str -set powerex22.set
+
+############# Vt Test : Returns Threshold Volatage ################
+go victorydevice 
+
+mesh infile="powerex22.str" width=10
+
+# set material models
+models cvt srh print 
+
+contact name=gate n.poly
+interface qf=3e10
+
+method newton
+solve init
+
+# Bias the drain 
+solve vdrain=0.1 
+
+# Ramp the gate
+log outf=powerex22_vt.log master
+
+solve vgate=0 vstep=0.2 vfinal=5.0 name=gate
+
+# extract Vt parameters
+extract name="Vth" (xintercept(maxslope(curve(abs(v."gate"),abs(i."drain")))) \
+	- abs(ave(v."drain"))/2.0)
+
+extract name="MaxId" y.val from curve (abs(v."gate"),abs(i."drain")) where x.val = 5
+tonyplot powerex22_vt.log -set powerex22_vt.set
+
+############# BV Test : Returns Breakdaown volatage  ################
+
+go victorydevice simflags="-80"
+
+mesh infile="powerex22.str" width=10
+
+models cvt srh print 
+impact selb
+
+contact name=gate n.poly
+
+solve init
+method newton climit=1e-4 
+
+solve init
+#
+log outf=powerex22_BV.log
+solve vdrain=0.03
+solve vdrain=0.1
+solve vdrain=0.25 vstep=0.25 vfinal=2 name=drain 
+solve  vstep=1 vfinal=10 name=drain  
+solve  vstep=2 vfinal=70 name=drain cname=drain compliance=1e-10
+
+extract name="BV" max(v."drain")
+tonyplot powerex22_BV.log -set powerex22_BV.set
+quit
+
+

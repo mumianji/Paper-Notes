@@ -1,0 +1,130 @@
+# TPCS version: 8
+# various properties
+log label 1
+key opaque 0
+mark frequency 0
+mark overlay 0
+graph width 0 2
+graph width 1 1
+graph width 2 1
+graph width 3 1
+graph width 4 3
+graph width 5 1
+sequence size 1
+sequence width 0
+log zero -20
+sequence mark 0 0
+sequence mark 1 1
+sequence mark 2 2
+sequence mark 3 3
+sequence mark 4 4
+sequence mark 5 5
+# Functions
+function 1 "" ""
+function 2 "" ""
+function 3 "" ""
+function 4 "" ""
+select 1
+# plot flags, special
+show mesh on
+show edges on
+show materials on
+show contours on
+show light off
+show vectors off
+show junctions on
+show electrodes on
+show threed off
+draw 1
+# contour set 1
+contours 1 impurity "Net Doping" "log"
+contours 1 materials 1
+contours 1 materials "Silicon" 1
+contours 1 min auto
+contours 1 max auto
+contours 1 nsteps 33
+contours 1 type fill
+contours 1 outline off
+contours 1 color 0
+contours 1 apply
+# contour set 2
+contours 2 impurity "(unknown impurity)" "linear"
+contours 2 materials all
+contours 2 min auto
+contours 2 max auto
+contours 2 nsteps 33
+contours 2 type fill
+contours 2 outline off
+contours 2 color 0
+contours 2 apply
+# contour set 3
+contours 3 impurity "(unknown impurity)" "linear"
+contours 3 materials all
+contours 3 min auto
+contours 3 max auto
+contours 3 nsteps 33
+contours 3 type fill
+contours 3 outline off
+contours 3 color 0
+contours 3 apply
+# junctions/depletion set
+junctions show none
+junctions show junctions
+junctions contours 0.5
+junctions apply
+region param -101
+# key positions
+key contours 1 at 3
+key contours 2 at 1
+key contours 3 at 6
+key electrical at 3
+key vectors at 6
+key overlay at 2
+key regions at 4
+key apply 
+# annotation, titles
+title main auto
+title sub auto
+# annotation, footers
+footer right none
+footer left none
+# annotation, show
+show xaxis on
+show yaxis on
+show grid off
+show label xaxis on
+show label yaxis on
+# annotation, axes
+range xaxis auto
+range yaxis auto
+label xaxis "Microns"
+label yaxis "Microns"
+# zoom
+zoom from 0.00182482, 0.00413223 scale 1.00735, 2.83041
+# user labels
+label "Ec = 100 kV/cm" from 1.72099, -0.0460209 color 0 scale 0
+label 0 at 5 5
+label "Na = 3e16 /cc" from 2.89846, 0.0389826 color 0 scale 0
+label 1 at 5 5
+label "Pr = 0.4e-6 C/sqcm" from 1.92931, -0.0631933 color 0 scale 0
+label 2 at 5 5
+label "Ps = 0.5e-6 C/sqcm" from 1.95648, -0.0777899 color 0 scale 0
+label 3 at 5 5
+label "SiO2" from 2.23727, -0.123297 color 0 scale 0
+label 4 at 5 5
+label "SiO2" from 3.79515, -0.0649105 color 0 scale 0 to 3.03433, -0.00223124
+label 5 at 0 0
+label "d = 10 A" from 4.18463, -0.0606174 color 0 scale 0
+label 6 at 5 5
+label "drain" from 4.5107, -0.155924 color 0 scale 0 to 4.85488, -0.132742
+label 7 at 5 5
+label "epsf = 10" from 1.38586, -0.0288485 color 0 scale 0
+label 8 at 5 5
+label "ferroelectric" from 1.5489, -0.0898105 color 0 scale 0
+label 9 at 0 0
+label "gate" from 1.78439, -0.149055 color 0 scale 0 to 1.5489, -0.132742
+label 10 at 7 7
+label "source" from 0.498228, -0.154207 color 0 scale 0 to 0.126871, -0.131883
+label 11 at 7 7
+# overlay level names
+label overlay 0 "ferroex02.str"

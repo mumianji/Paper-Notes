@@ -1,0 +1,79 @@
+<html>
+  <head>
+    <title>Retention example</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Retention example</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>S-Pisces</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="sonosex04_plot0.png" width="640" alt="sonosex04_plot0" />
+      <p/>
+      <img src="sonosex04_plot1.png" width="640" alt="sonosex04_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+The example shows:
+</p>
+<ul>
+  <li>
+ How to create a SONOS device structure
+<br/>
+  </li>
+  <li>
+ How use the PF.NITRIDE model
+<br/>
+  </li>
+  <li>
+ How to study the long term retention properties of the device
+<br/>
+  </li>
+</ul>
+<p>
+The device is set up using Atlas mesh commands to make a dielectric stack of
+4 nm of Silicon oxide, 5 nm of Silicon Nitride and 10 nm of Sapphire (Al2O3).
+</p>
+<p>
+The device is charged for 1 millisecond with a Gate Bias of 18 V, before the
+<b> SOLVE INIT SONOS </b> statement resets all electrode biases to zero,  while preserving the fixed
+charge density in the Silicon Nitride and protecting the free charge
+densities in the insulator stack from numerical problems.
+</p>
+<p>
+The device is simulated for up to 10 years,  with progressively increasing
+step sizes.  It saves out the structure files at preset time points, so that
+you can look at the change in charge profile and the (negative) Sonos
+electron charging rate as time progresses. To do this, use the TonyPlot
+cutline tool to create sections through the gate stack.  The overall
+stored charge is shown in the logfile, and can be seen to be much
+diminished after 3 x 10^8 seconds
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

@@ -1,0 +1,870 @@
+{section} Athena_1D : 1D Process Simulation
+
+{subsection} an1dex01.in : Comparison of Gaussian, Pearson and SVDP methods 
+
+Requires: Athena 1D
+Minimum Versions: Athena1D 5.21.2.R
+
+
+This example compares implant analytical models: Gaussian (symmetrical)
+profile, single Pearson (amorphous implant), and SIMS Verified Dual
+Pearson (
+{bold} SVDP
+) method. 
+The parameter 
+{bold} PRINT.MOM 
+specifies that moments used in each simulation should be printed out.
+The
+{bold} MOMENTS 
+statement is used to select the tables.
+
+To load and run this example, select the 
+{bold} Load example 
+button. This action will copy all associated files to your
+current working directory. Select the 
+{bold} DeckBuild run 
+button to execute the example.
+
+
+{subsection} an1dex02.in : Experimental Verification of Channeling Profiles  
+
+Requires: Athena 1D
+Minimum Versions: Athena1D 5.21.2.R
+
+This example compares zero-tilt boron implant profiles obtained using
+the SIMS Verified Dual Pearson (
+{bold} SVDP
+) method with experimental results (R.J. Shreutelkamp, et.al.,
+Nucl.Instr. & Meth., B55, p.615, 1991) saved in *.exp files.
+
+To load and run this example, select the 
+{bold} Load example 
+button. This action will copy all associated files to your
+current working directory. Select the 
+{bold} DeckBuild run 
+button to execute the example.
+
+{subsection} an1dex03.in : Dose Dependent Channeling of Phosphorus 
+
+Requires: Athena 1D
+Minimum Versions: Athena1D 5.21.2.R
+
+This example shows the dose dependence of zero-tilt P implant profiles obtained using the 
+SIMS Verified Dual Pearson (
+{bold} SVDP
+) method and compares them with experimental results (R.J. Shreutelkamp, et.al., 
+Nucl.Instr. & Meth., B55, p.615, 1991) saved in *.exp files. As the implant dose
+increases, more damage is caused resulting in additional dechanneling of 
+phosphorus ions. Therefore, the profile tail shortens with increasing dose.
+
+To load and run this example, select the 
+{bold} Load example 
+button. This action will copy all associated files to your
+current working directory. Select the 
+{bold} DeckBuild run 
+button to execute the example.
+
+{subsection} an1dex04.in : Retrograde Well Formation Using High Energy Implants
+
+Requires: Athena 1D
+Minimum Versions: Athena1D 5.21.2.R
+
+This example shows high energy implant capability. The look-up tables
+for main implants are extended up to 8 MeV which allows simulation
+of modern technologies involving MEV implants. In this example,
+the three microns deep retrograde well is formed using two P implants
+(2 MeV and 0.75 MeV) with subsequent 1 hour, 1100 C anneal. 
+
+To load and run this example, select the 
+{bold} Load example 
+button. This action will copy all associated files to your
+current working directory. Select the 
+{bold} DeckBuild run 
+button to execute the example.
+
+{subsection} an1dex05.in : User-Defined MOMENTs with Parameters from MC Simulation
+
+Requires: Athena 1D
+Minimum Versions: Athena1D 5.21.2.R
+
+This example can be used as a template which allows us to estimate implant moments
+from Monte Carlo simulation and then use these moments in subsequent 
+analytical implants. This approach is useful for those ion/material/energy combinations
+which are not included in look-up tables. 
+
+In the first part of the example, the Monte Carlo method is used to calculate 
+moments for 70 keV boron in titanium silicide. Parameter
+{bold} PRINT.MOM 
+specified in the 
+{bold} IMPLANT 
+statement allows Athena to save the calculated moments in the standard structure
+file 
+{bold} an1dex05_01.str
+. 
+
+In the second part of the example, first the moments parameters 
+for single Pearson distribution are extracted from the file. Then, the 
+parameter substitution capability of 
+{bold} DeckBuild 
+is used to path these parameters to the 
+{bold} MOMENTS 
+statement. After that, the moments set in the
+{bold} MOMENTS 
+statement are used in the analytical implant. Parameter
+{bold} ANY.PEARSON 
+is set to FALSE. This ensures that Pearson type-IV distribution will be used.
+Profiles obtained in Monte Carlo and analytical simulations
+are compared in TonyPlot.
+
+
+To load and run this example, select the 
+{bold} Load example 
+button. This action will copy all associated files to your
+current working directory. Select the 
+{bold} DeckBuild run 
+button to execute the example.
+
+
+{subsection} an1dex06.in : Comparison of Analytical and MC Implant Models
+
+Requires: Athena 1D
+Minimum Versions: Athena1D 5.21.2.R
+
+This example shows that the channeling effect of ion implantation
+can be simulated using the Monte Carlo crystal model.
+It compares boron implants at 7 degrees obtained by amorphous and crystalline 
+Monte Carlo models with amorphous and SVDP analytical models. The analytical approach is preffered within the range of the SVDP model validity. However, outside this range the crystalline MC implant can be used for more accurate profiles.
+
+To load and run this example, select the 
+{bold} Load example 
+button. This action will copy all associated files to your
+current working directory. Select the 
+{bold} DeckBuild run 
+button to execute the example.
+
+
+{subsection} an1dex07.in : BCA Models for Well Channeled Boron Implant.
+
+Requires: Athena 1D
+Minimum Versions: Athena1D 5.21.2.R
+
+This example demonstrates that 0-tilt implantation can be simulated using
+Binary Collision Approximation (BCA) Model. In the BCA model the deflection 
+of the moving particles is calculated in a strict binary way - between the 
+moving ion and the closest atom in the lattice. The difference between 
+the BCA model and earlier implemented Monte Carlo crystalline model is  
+much more accurate determination of the closest atom and more accurate 
+calculation of impact dependent inelastic energy losses. Therefore, 
+BCA is capable to much more accurately predicting trajectories of 
+well-channeled particles and therefore usually gives much better 
+agreement with experiments in those cases where the channeling process 
+is dominant, e.g. for 0 degree implants. 
+
+The simulated profile is compared with the experiment (R.J. Shreutelkamp, et.al., 
+Nucl.Instr. & Meth., B55, p.615, 1991) and SVDP simulation which is 
+also based on SIMS experiments. It should be stressed that 
+experimental results for well channeled implants are quite sensitive 
+to many factors including surface conditions (thickness and uniformity 
+of oxide surface layer) and precision of the ion beam orientation 
+and beamwidth. Even a 0.5 degree deviation in these parameters could 
+result in considerable changes of measured implanted profiles. 
+Therefore, agreement between these simulations and experiment should 
+be considered reasonable.
+
+To load and run this example, select the 
+{bold} Load example 
+button. This action will copy all associated files to your
+current working directory. Select the 
+{bold} DeckBuild run 
+button to execute the example.
+
+{subsection} an1dex08.in : Preamorphization Effect on Shallow Junction Profile.
+
+Requires: Athena 1D
+Minimum Versions: Athena1D 5.21.2.R
+
+This example demonstrates that the BCA implant model can predict
+reduction of the channeling tail by using the preamorphization
+technique. Preamorphization of surface layers using Silicon ion
+bombardment is often used to avoid deep channeling tails when shallow
+symmetric doping profiles are  required.
+
+BCA simulations of three separate 70 keV, 1e13 ion/cm^2, 0-tilt Arsenic 
+implants are performed:
+
+{bullet} without preamorphization
+{newline}
+{bullet} with partial preamorphization (1e14 Si ions/cm^2) 
+{newline}
+{bullet} with full preamorphization (1e15 Si ions/cm^2) . 
+{newline}
+
+The profile comparison shows that even partial preamorphization
+significantly reduces the channeling tail, while "full"
+preamorphization completely eliminates the tail.
+
+
+To load and run this example, select the 
+{bold} Load example 
+button. This action will copy all associated files to your
+current working directory. Select the 
+{bold} DeckBuild run 
+button to execute the example.
+
+
+{subsection} an1dex09.in : Al Implant in 4H-SiC in [0001] Crystallographic Direction.
+
+Requires: Athena 1D
+Minimum Versions: Athena1D 5.21.2.R
+
+This example shows very pronounced channeling effects for on-axis implantation in 4H-SiC. The Al implant energy is 60 keV and implant direction condition corresponds to on-axis implantation in [0001] crystallographic direction. The experimental profiles are taken from Wong-Leung et al. J. Appl. Phys. vol.93, pp 8914-8916, 2003.
+
+To load and run this example, select the 
+{bold} Load example 
+button. This action will copy all associated files to your
+current working directory. Select the 
+{bold} DeckBuild run 
+button to execute the example.
+
+{subsection} an1dex10.in : Al Implant in 4H-SiC in [11-23] Crystallographic Direction.
+
+Requires: Athena 1D
+Minimum Versions: Athena1D 5.21.2.R
+
+This example shows very pronounced channeling effects 
+for on-axis implantation in 4H-SiC. The Al implant energy is 60 keV, and the
+implant direction condition corresponds to on-axis implantation in [11-23]
+crystallographic direction. Comparison with results of an1dex09.in shows that 
+crystallographic orientation significantly affects the length of channeling tails. 
+Crystallographic analysis shows that channels in [11-23] direction are 
+"wider" than in [0001] direction which results in almost two times longer channeling 
+tails when implanting in [11-23] direction. The experimental profiles are taken from 
+Wong-Leung et al. J. Appl. Phys. vol.93, pp 8914-8916, 2003.
+
+To load and run this example, select the 
+{bold} Load example 
+button. This action will copy all associated files to your
+current working directory. Select the 
+{bold} DeckBuild run 
+button to execute the example.
+
+
+{subsection} an1dex11.in : Boron Implant and Anneal 
+
+Requires: Athena 1D
+Minimum Versions: Athena1D 5.21.2.R
+
+This example gives a simple demonstration of implantation and
+annealing. Boron is implanted and the profile
+is diffused.  
+
+For this annealing of a medium dose implant in an inert ambient, the default
+{bold} fermi 
+diffusion model is used. 
+
+
+After completing the diffusion calculation, 
+{bold} TonyPlot 
+is used to plot final profile.
+
+To load and run this example, select the 
+{bold} Load example 
+button. This action will copy all associated files to your
+current working directory. Select the 
+{bold} DeckBuild run 
+button to execute the example.
+
+{subsection} an1dex12.in : Oxidation Enhanced Diffusion of Boron 
+
+Requires: Athena 1D
+Minimum Versions: Athena1D 5.21.2.R
+
+This example demonstrates the diffusion models for Oxidation
+Enhanced Diffusion (OED). 
+When diffusion is performed in an
+oxidizing ambient, point defects are injected into the silicon with a
+rate that is a function of the rate at which the silicon is oxidizing.
+This point defect injection gives rise to an increased diffusion that
+is commonly referred to as OED.
+
+To model OED, the 
+{bold} TWO.DIM 
+diffusion model must specified
+on the 
+{bold} METHOD 
+statement.  When this model is specified, the
+interstitial and vacancy concentration will be calculated along with
+the impurities.  This model loosely couples the point defects,
+generated by the oxidizing Si-SiO2 interface, with the diffusing
+boron.
+
+When modeling point defects, it is necessary to extend the substrate of
+the simulation space to provide an adequate sink for the point defects.
+Simulations show that a depth of 20 to 50 microns is required in most
+cases.
+
+This example re-runs the simulation using the 
+{bold} fermi 
+model to compare results. The overlay plot at the end of the simulation
+demonstrates the extra oxidation enhancement to the diffusion depth.
+
+To load and run this example, select the 
+{bold} Load example 
+button. This action will copy all associated files to your
+current working directory. Select the 
+{bold} DeckBuild run 
+button to execute the example.
+
+
+{subsection} an1dex13.in : Damage Enhanced Diffusion of Arsenic
+
+Requires: Athena 1D
+Minimum Versions: Athena1D 5.21.2.R
+
+This example demonstrates the damage enhanced diffusion effect in a
+heavy arsenic implant which is typical of MOS source/drain or bipolar emitter
+processing. 
+
+Diffusion enhancement due to defects being introduced during heavy implants
+are responsible for the
+{bold} Transient Enhanced Diffusion (TED) 
+or
+{bold} Rapid Thermal Annealing (RTA) 
+effect. 
+
+One of the key parameters in TED modeling using the full.cpl model is
+the amount of implant damage generated by the implant. This is
+controlled using the
+{bold} UNIT.DAMAGE 
+model. The parameter
+{bold} DAM.FACT 
+scales the interstitial concentration relative to the doping profile. 
+
+A 15 second heat cycle at 1000 Celcius is performed and the resulting
+dopant profile saved.
+
+
+When modeling point defects, it is necessary to extend the substrate of
+the simulation space to provide an adequate sink for the point defects.
+Simulations show that a depth of 20 to 50 microns is required in most
+cases.
+
+This example re-runs the simulation using the 
+{bold} fermi 
+model to compare results. The overlay plot at the end of the simulation
+demonstrates the extra implant damage enhancement to the diffusion depth.
+
+
+To load and run this example, select the 
+{bold} Load example 
+button. This action will copy all associated files to your
+current working directory. Select the 
+{bold} DeckBuild run 
+button to execute the example.
+
+
+
+{subsection} an1dex14.in : Transient Enhanced Diffusion using <311> Clusters
+
+Requires: Athena 1D
+Minimum Versions: Athena1D 5.21.2.R
+
+This example demonstrates the damage enhanced diffusion effect in a
+phosphorus implant typical of MOS LDD
+processing. 
+
+Diffusion enhancement due to defects being introduced during heavy implants
+are responsible for the
+{bold} Transient Enhanced Diffusion (TED) 
+or
+{bold} Rapid Thermal Annealing (RTA) 
+effect. 
+
+This example shows the Stanford 311 cluster diffusion model. To enable this model, the syntax used is
+{bold} method full.cpl cluster.dam i.loop.sink high.conc. 
+This model is an extension to the fully coupled model that describes
+the dissolution of 311 interstitial clusters.
+
+
+The implant damage is defined in the <311> model by using the
+{bold} cluster 
+statement. The parameters
+{bold} min.cluster  
+and
+{bold} max.cluster 
+describe the doping levels at which clusters form.
+
+
+Tuning of the TED effect is performed using the release
+time of the clusters speicified as follows:
+
+{bold} cluster tau.311.0= <val> tau.311.E= <val> 
+
+When modeling point defects, it is necessary to extend the substrate of
+the simulation space to provide an adequate sink for the point defects.
+Simulations show that a depth of 20 to 50 microns is required in most
+cases.
+
+The plot shows the evolution of the transient enhanced diffusion. At
+800 C the transient effect lasts for about 5 minutes. The overlay
+plot shows how the diffusion in the first 5 minutes is greater than in the subsequent 55 minutes.
+
+
+A second plot shows the location and concentration of the interstitial
+clusters and the free interstitials. As the clusters decay they release
+free interstitials that provide the diffusion mechanism for the
+phosphorus.
+
+
+To load and run this example, select the 
+{bold} Load example  
+button. This action will copy all associated files to your
+current working directory. Select the 
+{bold} DeckBuild run 
+button to execute the example.
+
+
+
+{subsection} an1dex15.in : Phosphorus Pile-up During Oxidation
+
+Requires: Athena 1D
+Minimum Versions: Athena1D 5.21.2.R
+
+This example demonstrates the effect of Phosphorus pile-up during oxidation.
+To clearly demonstrate the pile-up effect, the example starts with constant P concentration of 1e18 /cm^3. The effect is most pronounced when oxidation is more intensive than diffusion, so phosphorus piling-up due to moving oxidation front does not have time to diffuse inside the bulk. High pressure is used to increase oxidation rate.
+If the standard 
+{bold} Fermi 
+model for diffusion is used, the pile-up effect is 
+exaggerated because oxidation enhanced diffusion is not taken into account. 
+More realistic profiles can be obtained using the
+{bold} Two.dim 
+model. In this case phosphorus diffuses faster inside the bulk which prevents the formation of a very high pile-up.
+
+To load and run this example, select the 
+{bold} Load example 
+button. This action will copy all associated files to your
+current working directory. Select the 
+{bold} DeckBuild run 
+button to execute the example.
+
+
+
+{subsection} an1dex16.in : Phosphorus Predeposition using POCl 
+
+Requires: Athena 1D
+Minimum Versions: Athena1D 5.21.2.R
+
+This example demonstrates simultaneous phosphorus predeposition and oxide 
+growth. The oxygen content of the gas is specified by the parameters
+{bold} dryo2 press=0.8. 
+The phosphorus concentration is controlled by the 
+{bold} c.phos 
+parameter.
+
+To load and run this example, select the 
+{bold} Load example 
+button. This action will copy all associated files to your
+current working directory. Select the 
+{bold} DeckBuild run 
+button to execute the example.
+
+
+{subsection} an1dex17.in : Indium Implant and Anneal
+
+Requires: Athena 1D
+Minimum Versions: Athena1D 5.21.2.R
+
+This example demonstrates the implantation and diffusion of Indium in
+Silicon. It uses the 
+{bold} fermi 
+model to anneal a medium dose implant at high temperature in an inert
+ambient.
+
+For implantation, the 
+{bold} monte 
+parameter is used to activate the Monte Carlo implantation model. Monte
+Carlo implants will generally be more accurate than the analytical
+tables for non-standard species. Analytical tables for Indium are also available.
+
+To load and run this example, select the 
+{bold} Load example 
+button. This action will copy all associated files to your
+current working directory. Select the 
+{bold} DeckBuild run 
+button to execute the example.
+
+
+{subsection} an1dex18.in : GaAs MESFET Gate Simulation in 1D
+
+Requires: Athena 1D
+Minimum Versions: Athena1D 5.21.2.R
+
+This example simulates a simple 1D GaAs MESFET structure underneath the gate. 
+Carbon is used as a background dopant in the 
+{bold} init 
+statement. Beryllium and silicon are implanted into GaAs using an analytical implant model. Next, the anneal step is performed using the default Fermi method. 
+
+The hump in the beryllium profile where it intersects with silicon profile is due to the electric field effect. 
+
+To load and run this example, select the 
+{bold} Load example 
+button. This action will copy all associated files to your
+current working directory. Select the 
+{bold} DeckBuild run 
+button to execute the example.
+
+
+
+{subsection} an1dex19.in : Zinc Diffusion in N-type Indium Phosphide
+
+Requires: Athena 1D
+Minimum Versions: Athena1D 5.21.2.R
+
+This example demonstrates the effect of n-type doping on Zinc diffusion in InP. 
+
+It has been found that the main diffusion mechanism for Zn in A3B5 compounds 
+is via doubly charged interstitial pairs. This means that Zn diffusivity is 
+proportional to the second power of hole concentrations. Therefore, high  
+background n-type doping concentration results in strong retardation of zinc
+diffusion. Also, the Zn diffusion profile drops abruptly when n- and p-type
+concentrations are close to each other near the pn-junction. The diffusivity
+coefficients DIPP.0 and DIPP.E are selected to approximately match experimental
+data from G.J. van Gurp et.al. J. Appl. Phys., v.61(5), p.1846 (1987). 
+
+The simulation results for high n-type levels are in reasonable agreement 
+with the experiments from this paper as well. Other effects may influence 
+these simulations. For example, the activation mechanism in this case can 
+be much more complicated than that based on the simple solid solubility 
+level set to 1e19 for all impurities. There is evidences that the solid
+solubility of Zn may depend on the n-type doping level as well. In any case this
+example is a good starting point for the calibration of impurity diffusion effects
+in A3B5 compounds.
+
+To load and run this example, select the 
+{bold} Load example 
+button. This action will copy all associated files to your
+current working directory. Select the 
+{bold} DeckBuild run 
+button to execute the example.
+
+
+
+{subsection} an1dex20.in : OED Calibration Using THETA.0 
+
+Requires: Athena 1D
+Minimum Versions: Athena1D 5.21.2.R
+
+This example shows how to use the interstitial injection coefficient 
+{bold} theta.0 
+for calibration of Oxidation Enhanced Diffusion. Only prefactor theta.0
+is used in this example. If data on temperature dependence of OED was
+available,  
+{bold} theta.E 
+could be calibrated as well.
+
+To load and run this example, select the 
+{bold} Load example 
+button. This action will copy all associated files to your
+current working directory. Select the 
+{bold} DeckBuild run 
+button to execute the example.
+ 
+
+
+{subsection} an1dex21.in :  Multiple Implant Profile Optimization 
+
+Requires: Athena 1D, OPTIMIZER
+Minimum Versions: Athena1D 5.21.2.R
+
+This example performs optimization of implant doses, energies, and 
+diffusion temperature in order to obtain a specified boron doping profile as
+well as pn-junction depth. 
+The target boron profile is a constant doping with a concentration of 2e16
+all the way from the silicon surface until x=1.0. The target for the pn-junction
+depth is 1.5 microns.  
+
+
+To load and execute this example, display this text and select the
+{bold} Load example 
+button.
+
+First, run the example without optimization. From the
+{bold} TonyPlot 
+profile you will see that boron concetration varies between 2e16 and 5e16
+and the pn-junction is around 1.3 microns.
+In order to find an optimized solution select  
+{bold} Optimizer... 
+from the
+{bold} Main Control 
+menu. The
+{bold} Deckbuild: Optimizer 
+screen will appear. Select 
+{bold} Load File ... 
+from the 
+{bold} File 
+menu and then load the special optimizer file 
+{bold} an1dex21.in.opt 
+from the 
+{bold} Optimizer Load 
+menu.
+
+
+Preset parameters and targets are included in this file. When you
+select 
+{bold} Parameters 
+from the
+{bold} Mode 
+menu you will find that doses and energies for all 4 implants as well as diffusion
+temperature are chosen as parameters for optimization.
+
+
+The boron profile 
+{bold} bcurve 
+is chosen as an optimization target. Constant concentrations of 2e16 are set as target
+values for depths from 0.02 to 1 microns. A concentration of 1e16
+is set for 1.1 micron. Weights for all these points are set to 1.0. A junction depth of 1.5 microns is
+an additional point target with a weight of 6.0. 
+
+You can now modify any of these targets and/or parameters. Please refer to
+the Chapter 
+{bold} Optimizer 
+in the VWF Interactive Tools Manual.
+
+If you want to run the preset optimization
+task it is better to slightly relax the default stop criteria as follows:
+
+ 
+{bullet}Select 
+{bold} Setup 
+from the
+{bold} Mode 
+menu and increase the maximum error to 20.
+
+{bullet}Select the 
+{bold} Optimize 
+button. 
+
+After optimization is completed you may copy optimized parameters back to the input deck
+by selecting 
+{bold} Copy to Deck 
+from the
+{bold} Edit 
+menu. After that, you can run the optimized deck from the beginning and obtain a
+{bold} TonyPlot 
+plot of the optimized profile.
+
+{subsection} an1dex22.in : Implant Dose Effect at Different Energies using DBInternal
+
+Requires: Athena 1D
+Minimum Versions: Athena1D 5.21.2.R
+
+This example shows how to use the 
+{bold} DBInternal 
+capability of DeckBuild to investigate dose
+effect on As implant profiles at different energies. A simple template
+Athena1D input deck "an1dex22_tmpl.in" is created. It includes one BCA
+implant statement with dose and energy specified using set capability
+of DeckBuild. The content of "an1dex22_tmpl.in can be seen inside the Experiment
+input deck file an1dex22.in. 
+
+The Experiment file starts with
+{bold} go internal 
+command which transfers control from the current simulator to
+DBInternal. The Experiment file consist of two main parts. The    
+{bold} load 
+command specifies which template file should be used for multiple runs. The
+{bold} sweep 
+command specifies how the variables set in the template file should be changed.
+Both parameters specified by the 
+{bold} set 
+command in the template file are set to be changed.
+The 
+{bold} range 
+specifies the initial value of the parameter, final value value of the parameter, and number of points. The dose varies in a log scale, so its values will be 1e13, 1e14, and 1e15. 
+The energy is changed linearly, so its values will be 5keV, 10keV, and 15keV. The total number of simulations will be 3 X 3 = 9.
+
+After all simulations are complete, the resulting profiles are shown in
+{bold} TonyPlot
+.
+
+To load and run this example, select the 
+{bold} Load example 
+button. This action will copy all associated files to your
+current working directory. Select the 
+{bold} DeckBuild run 
+button to execute the example.
+
+{subsection} an1dex23.in : Predeposition Simulation Using PLS Model
+
+Requires: Athena 1D
+Minimum Versions: Athena1D 5.21.2.R
+
+This example shows the ability of the 
+{bold} advanced diffusion model 
+to handle the complex couplings between boron and the free point defects.
+
+Although not corresponding to the modern deep sub-micron technologies, this simulation is representative of the high 
+dopant concentration features which reveal the complex couplings between
+{bold} dopant 
+and 
+{bold} point defects
+. Therefore, it is considered as a meaningful basic test for any advanced diffusion model.
+
+Even if this model has been developed for state of the art technologies, it still can be used as the 
+standard diffusion  model for any diffusion step. For example, in the case of buried layer formation, 
+the TED phenomena become irrelevant. So only the 
+{bold} Classical Dopant Diffusion (CDD) 
+part of the advanced diffusion model can be used while 
+{bold} Interstitial Clusters (IC) 
+and 
+{bold} Defect-Dopant Clusters (DDC) 
+models can be ignored.
+
+To activate the new advanced diffusion model, specify 
+{bold} PLS 
+in the 
+{bold} METHOD 
+statement before the diffusion step. Then, only the SDD part is activated.
+
+To load and run this example, select 
+{bold} Load example 
+button. This action will copy all associated files to your current working directory. Select the DeckBuild 
+{bold} run 
+button to execute the example.
+
+
+{subsection} an1dex24.in : Cowern's Experiment Simulation Using PLS Model
+
+Requires: Athena 1D
+Minimum Versions: Athena1D 5.21.2.R
+
+This example shows the ability of the advanced diffusion model to handle 
+{bold} Interstitial Clusters (IC) 
+kinetics.
+
+In order to validate the IC model, we simulate the experimental data obtained by 
+{bold} Cowern et al
+. This experiment consists of observing the diffusivity of two boron marker layers after a silicon implantation at 40 keV to a dose of
+2E13 atoms/cm^2. From these observations, Cowern has estimated the diffusion enhancement 
+and the evolution of Interstitial supersaturation with time. 
+From the experimental  point of view, this quantity can be related to the 
+{bold} boron diffusion enhancement 
+with respect to its thermal equilibrium diffusion.
+
+The surpersaturation evolution curve exhibits three parts:
+
+{bold} 1. 
+The first step characterized by a high supersaturation value (first run of the simulation) corresponds 
+to a large acceleration of the dopant diffusion and can be explained by the presence of 
+{bold} small clusters
+.
+
+{bold} 2. 
+The second step exhibits a plateau slightly decreasing with time. It is explained by the competitive growth between {311} 
+defects, known as the 
+{bold} Ostwald ripening 
+phenomena. Diffusion acceleration then remains constant during this plateau.
+
+{bold} 3. 
+The third step characterized by the supersaturation collapse is explained by the 
+{bold} entire dissolution 
+of the Interstitial Cluster population, due to the recombination at the surface.
+
+In order to represent two boron markers obtained by epitaxy in Cowern's experiment, two implants with calibrated moments are used in the example. The initial interstitial profile generated 
+by the silicon implant in the experiment is implemented into simulation by the PROFILE statement with an1dex24.dat file.
+
+To activate the new advanced diffusion model, specify 
+{bold} PLS IC 
+in the 
+{bold} METHOD 
+statement before the diffusion step, to take into account both Classical Dopant Diffusion (CDD) and IC models.
+
+To load and run this example, select 
+{bold} Load example 
+button. This action will copy all associated files to your current working directory. Select the Deckbuild 
+{bold} run 
+button to execute the example.
+
+
+{subsection} an1dex25.in : Pelaz Experiment Simulation Using PLS Model
+
+Requires: Athena 1D
+Minimum Versions: Athena1D 5.21.2.R
+
+In this experiment, a boron marker is deposited at a depth of 0.15 microns. In order to observe the boron diffusion, 
+{bold} Pelaz 
+has performed a silicon implant in order to generate a 
+{bold} high 
+interstitial concentration 
+at the surface. Unlike the Cowern experiment, the boron concentration is high enough to allow the formation of 
+{bold} Boron-Interstitial Clusters (BIC)
+. Thus, this experiment exhibits a particular effect of in the boron diffusion: an 
+{bold} immobilization and  de-activation 
+of the dopant at high concentrations even under the solid solubility limit.
+
+The boron peak has been modelled using modified implants (through moments tuning), to mimic the epitaxied marker 
+shape. The initial interstitial profile, 
+generated by the silicon implant, is imported using the an1dex25.dat file.
+
+To activate the new advanced diffusion model, specify 
+{bold} PLS IC DDC 
+in the 
+{bold} METHOD 
+statement before the diffusion step to take into account CNET, IC and BIC models.
+
+To load and run this example, select 
+{bold} Load example button
+. This action will copy all associated files to your current working directory. Select the Deckbuild 
+{bold} run 
+button to execute the example.
+
+{subsection} an1dex26.in : 20 keV Implant/Diffusion Simulation Using PLS Model
+
+Requires: Athena 1D
+Minimum Versions: Athena1D 5.21.2.R
+
+Once the validity of an entire 
+{bold} PLS 
+diffusion model has been proved using specific experiments, simulations of relevant modern integrated 
+circuits 
+technologies are addressed.
+
+Boron implantation at 
+{bold} 20 keV 
+is widely used  in silicon technologies. Since the experiment setup involves low temperature such as 800C, 
+the effects of boron immobilization and desactivation at high concentration take place. Thus, the three 
+parts of the PLS model have to be used.
+
+Comparison between 
+{bold} chemical 
+and 
+{bold} electrically active 
+boron concentration shows that
+even below the solid solubility, most of the dopant stay inactive due to the formation of mixed 
+dopant-defect clusters 
+{bold} (BIC) 
+at high concentrations. By comparing results obtained with only CDD or IC model with the full PLS (IC + DDC), it can 
+be concluded that this type of 
+clusters also consume free interstitials which leads to 
+{bold} reduction 
+of the boron  diffusion.
+
+This proves one more time that all three parts of the model: classical, interstitial clusters and mixed dopant-defect 
+clusters  are needed to accurately simulate the 
+post-implant diffusion.
+
+The initial 
+{bold} interstitial 
+profile generated by the boron implant is modeled though a "+1" model.
+
+To activate the new advanced diffusion model, specify 
+{bold} PLS IC DDC 
+in the 
+{bold} METHOD 
+statement before the diffusion step to take into account CDD, IC and BIC models.
+
+To load and run this example, select 
+{bold} Load example button
+. This action will copy all associated files to your current working directory. Select the Deckbuild 
+{bold} run 
+button to execute the example.

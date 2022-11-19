@@ -1,0 +1,74 @@
+<html>
+  <head>
+    <title>SRAM Analysis for Back Annotation into SPICE model</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>SRAM Analysis for Back Annotation into SPICE model</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>CLEVER</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="clex16.str.png" width="640" alt="clex16.str" />
+      <p/>
+    </div>
+    <div id="text" >
+<p>
+This example is a six-transistor, three metal, single poly SRAM cell.
+The cell consists of four NMOS and two PMOS transistors.
+</p>
+<p>
+The layout file defines various layers up to metal 3.  The rule file
+exports six new masks, plus CLEVER defines another two masks -
+<b> *GATE </b> and
+<b> *CONT.  </b> These masks are gates and contacts, which are the NGATE and PGATE
+regions, plus the two exported contacts.  The modified layout
+and a SPICE netlist of the devices are saved after the
+original layout file is initialized in the command file
+and the rule file executed in the command file.
+</p>
+<p>
+The gate oxide is defined as a separate material, called
+<b> Gateox,</b> distinct from silicon oxide.
+<b> Gateox </b> is given a very low (but non-zero) permittivity.  As a result,
+the area calculation of
+capacitance (i.e. determined by the transistor gate area over the
+gate oxide and silicon) is very low.  This area capacitance of the
+gate over silicon is accurately calculated in
+the SPICE model (since only the area and gate oxide thickness are
+necessary).  Since CLEVER calculates the total field solution, it does
+not distinguish the contribution of the capacitance due to the poly gate
+over the silicon from either the fringe effects or capacitance with
+other conducting lines.  This methodology of artificially lowering the
+area capacitance in CLEVER avoids calculating this value twice,
+once in CLEVER, and once again in the SPICE model.
+</p>
+<p>
+The geometry of the structure is the idealized Manhattan cross-sections.
+No advanced lithographic or etch models are used.
+</p>
+<p>
+This example is also discussed in the CLEVER tutorial in the manual.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

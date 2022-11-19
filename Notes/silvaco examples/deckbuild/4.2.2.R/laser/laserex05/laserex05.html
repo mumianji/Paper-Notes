@@ -1,0 +1,132 @@
+<html>
+  <head>
+    <title>Simulating a Multi-Quantum Well AlGaInP Laser Diode</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Simulating a Multi-Quantum Well AlGaInP Laser Diode</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Blaze/Laser/Quantum</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="laserex05_plot0.png" width="640" alt="laserex05_plot0" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates the application of Laser to simulate a multi-quantum well laser diode. The key points of this simulation are :
+</p>
+<ul>
+  <li>
+ One mesh for both electrical and laser simulations
+<br/>
+  </li>
+  <li>
+ Laser structure definition using new Atlas region syntax
+<br/>
+  </li>
+  <li>
+ Optical and electrical material parameters specification for the chosen materials
+<br/>
+  </li>
+  <li>
+ Application of the QWELL parameter for active layer creation and quantum well simulation
+<br/>
+  </li>
+  <li>
+ Use of LASER statement to define laser attributes
+<br/>
+  </li>
+  <li>
+ The same BLAZE mesh used for both electrical and laser simulations
+  </li>
+</ul>
+<p>
+This example is derived from published work [IEEE Journal of Quantum Electronics,
+VOL. 34, NO. 9, September 1998] and is reproduced as closely as possible in this simulation.
+</p>
+<b> Mesh Creation </b> <p>
+The standard Atlas mesh
+is used in both the electrical and laser parts of this simulation. If no specific laser mesh is created then Laser defaults to the standard Atlas mesh.
+</p>
+<b> Region Creation </b> <p>
+The REGION statements are used to define many region quantities. The material type is defined with the
+<b> material </b> parameter and the composition fractions within this material are set using the
+<b> X.COMP </b> and
+<b> Y.COMP </b> parameters appropriately.
+</p>
+<p>
+The doping type and concentration are also defined on the region statement where the parameters
+<b> acceptor </b> and
+<b> donor </b> are used to define a uniform concentration in each region. If a non-uniform concentration is required then the DOPING statement would need to be used instead.
+</p>
+<b> Material Parameters </b> <p>
+The
+<b> material </b> statement is used to set various physical quantities for each material region in the device.
+The band gap, conduction and valence band density of states and band alignment are declared with the parameters
+<b> eg300, NC300, NV300 </b> and
+<b> align. </b> The material permittivity for the solution of Poisson&apos;s equation and the high frequency bulk dielectric constant are both explicity set with the parameters
+<b> permittivity </b> and
+<b> epsinf. </b> Finally, the material lifetimes
+<b> taun0 </b> and
+<b> taup0 </b> and the constant of radiative recombination
+<b> COPT </b> are defined.
+</p>
+<b> Quantum Wells (QWELL) </b> <p>
+The
+<b> qwell </b> parameter of the
+<b> models </b> statement firstly creates new material region(s) that will contain the
+quantum wells. Both the individual barrier width
+<b> wb </b> and the quantum well width
+<b> ww </b> need to be defined. Then a solution is found for bound state energies
+in the quantum well by a solution to a coupled set of Poisson /
+Schrodinger equations.
+The solution to this equation is then used in the
+<b> yan </b> model to calculate the optical gain of the quantum well.
+</p>
+<b> Laser and Physical Models </b> <p>
+The physical models may be chosen from the manual as normal and in this
+simulation there are 3 key models. The
+<b> fermi </b> model is chosen to correctly simulate population inversion statistics
+within the active region. The  laser gain model chosen for the active
+regions is the multiple quantum well model chosen with the
+<b> gainmod=4 </b> parameter. Finally the spontaneous recombination model
+<b> optr </b> has been chosen to calculate the spontaneous recombination in the
+device. The spontaneous recombination is used in the photon
+rate equations to calculate the photon density.
+</p>
+<p>
+The solution to the Helmholtz equation is controlled by parameters on the
+<b> laser </b> statement. On this line the rear and front reflectivities can be
+defined with the
+<b> rf </b> and
+<b> rr </b> parameters. The length of the laser cavity must be defined, so that the
+longitudinal modes can be calculated correctly, using the
+<b> cavity.length </b> parameter.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

@@ -1,0 +1,52 @@
+
+{subsection} radex09.in : Single Event Burnout (SEB) in a High Voltage PiN Diode
+
+Requires: VictoryDevice/SEE
+{newline}
+Minimum Versions: VictoryDevice 1.10.2.R
+
+This examples demonstrates Single Event Burnout (SEB) in a High Voltage PiN Diode
+
+The structure of the 3D PiN diode is simple enough to be emulated directly in 
+the device simulator without the need to resort to a full process simulator.
+Further simplification is afforded by the 
+{bold} circular symmetry 
+of the diode allowing the diode to be simulated in two dimensions with 
+cylindrical corrections to correctly predict 3D device characteristics.  For 
+the simulation of single events, only a central and vertical strike is a valid
+candidate for correctly simulating 3D effects using this 2 dimensional circular
+symetry method.  This method is invoked using the
+{bold} cylindrical
+parameter, on the mesh statement
+
+There are two important requirements for simulating Single Event Burnout (SEB).
+Firstly, the device IV characteristics must display a 
+{bold} "snapback"
+characteristic, where, for at least a range of voltages, there exists two 
+possible corresponding stable current conditions, one a low current "off" state
+and a second high current "on" state.  At high voltages, the "on" state 
+dissipates sufficient power to over heat the device.
+ 
+Secondly, self heating plays a leading role in greatly reducing the current 
+density in a PiN diode at which the snapback IV characteristic occurs, allowing
+a significantly lower 
+{bold} Linear Energy Transfer (LET)
+strike to transfer the diode from an "off" state, to a stable "on" state, where
+continuous heating eventually burns the device to destruction, hence the name
+of the phenomenon, "Single Event Burnout". 
+
+This example, first biases the PiN diode close to it's breakdown voltage of 
+{bold} 3,500 volts.
+Then a
+{bold} LOOP, L.END
+statement is used to start the simulation with a strike of 4 MeV-cm2/mg LET.
+The LOOP then doubles the LET strike value until the current pulse from the 
+strike is sufficient to transfer the IV characteristics to a stable "on" state,
+whereupon the device burns out in short order afterwards.
+
+To load and run this example, select the
+{bold} Load example 
+button in DeckBuild. This will copy the input file and any support
+files to your current working directory. Select the
+{bold} run 
+button to execute the example.

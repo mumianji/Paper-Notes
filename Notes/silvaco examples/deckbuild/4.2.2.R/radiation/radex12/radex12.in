@@ -1,0 +1,139 @@
+# (c) Silvaco Inc., 2018
+
+# Construct the Imager Structure
+
+go victoryprocess
+
+init silicon layout="radex12.lay" gasheight=1 depth=3 
+
+# option doping.off
+
+cartesian mask="PWELL" spac=0.1 all.point 
+
+line x location=0     spacing=0.25
+line x location=0.5   spacing=0.125
+line x location=0.75  spacing=0.125
+line x location=1     spacing=0.125
+line x location=1.25  spacing=0.175
+line x location=1.5   spacing=0.125
+line x location=2     spacing=0.125
+line x location=2.5   spacing=0.25
+line x location=4.25  spacing=0.875
+line x location=6     spacing=0.25
+line x location=6.5   spacing=0.25
+
+line y location=0     spacing=0.15
+line y location=0.25  spacing=0.125
+line y location=0.5   spacing=0.15
+line y location=1     spacing=0.25
+line y location=2     spacing=0.25
+line y location=2.5   spacing=0.25
+line y location=3     spacing=0.125
+line y location=3.5   spacing=0.175
+line y location=4     spacing=0.125
+line y location=4.5   spacing=0.175
+line y location=5     spacing=0.125
+line y location=5.5   spacing=0.175
+line y location=6     spacing=0.15
+line y location=6.25  spacing=0.125
+line y location=6.5   spacing=0.15
+
+line z location=0 spac=0.002
+line z location=0.9 spac=0.3
+line z location=1.8 spac=0.1
+line z location=3 spac=0.5
+
+etch silicon thick=2 max
+doping silicon boron=1e19 
+deposit silicon thick=2 phosphorus=1.5e15 max
+
+mask "PWELL" reverse
+
+Profile infile="radex12_0.dat" boron lstddev=0.01
+Profile infile="radex12_1.dat" boron lstddev=0.01
+Profile infile="radex12_2.dat" boron lstddev=0.01
+
+strip resist
+
+deposit oxide thick=0.006 max
+deposit polysilicon thick=0.2 max
+
+etch polysilicon thick=0.2 max mask="POLY"
+doping phosphorus=1e20 polysilicon 
+electrodes "POLY" polysilicon
+
+deposit oxide thick=0.01 conformal
+
+mask "NPLUS" reverse
+implant phosphor energy=20 dose=2.5e14 tilt=7 rotation=27
+implant phosphor energy=20 dose=2.5e14 tilt=7 rotation=117 
+implant phosphor energy=20 dose=2.5e14 tilt=7 rotation=207 
+implant phosphor energy=20 dose=2.5e14 tilt=7 rotation=297 
+strip resist
+
+mask "BF2" reverse
+implant bf2 energy=30 dose=5e13 tilt=7 rotation=27 
+implant bf2 energy=30 dose=5e13 tilt=7 rotation=117
+implant bf2 energy=30 dose=5e13 tilt=7 rotation=207
+implant bf2 energy=30 dose=5e13 tilt=7 rotation=297
+strip resist
+
+diffus time=2 temperature=1050 
+
+etch oxide thick=0.02 max mask="CONT" reverse
+
+mask "CONT" reverse
+deposit aluminum thick=0.206 min
+strip resist
+electrodes "CONT" aluminum
+
+save name=radex12_vp_0
+
+
+go victorymesh
+
+load in=radex12_vp_0
+
+remesh conformal
+
+save out=radex12_0.str
+
+
+tonyplot3d radex12_0.str -set radex12_0.set
+
+
+go victorydevice
+
+mesh infile=radex12_0.str 
+
+models consrh cvt fermi
+
+output band.param con.band val.band
+
+probe n.conc    x=4.25 y=3.25 z=1     name=cis_conc
+probe potential x=1    y=4.5  z=0.002 name=fd_potential
+probe potential x=4.25 y=3.25 z=1     name=cis_potential
+
+method pam.gmres norm.scaling.local
+
+solve init
+solve previous
+
+# Deplete the Image Sensor of Electrons
+log outfile=radex12_0.log
+solve Vcgate=3.3 ramptime=1e-6 dt=1e-8 tstop=1e-6
+solve tstop=2e-6 dt=1e-8
+
+# Dark Recovery Time
+solve tstop=0.1 dt=1e-7
+method constant.timestep
+solve tstop=1 dt=0.05e-1
+
+
+go internal
+
+load infile=radex12_1.in
+
+sweep parameter=FLUENCE type=list data="1e10, 1e11, 1e12"
+
+tonyplot -overlay radex12_*.log -set radex12_1.set

@@ -1,0 +1,76 @@
+<html>
+  <head>
+    <title>7nm pFinFET With SiGe Source-Drain Stressors</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>7nm pFinFET With SiGe Source-Drain Stressors</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Victory Process 3D Structure Editor, 3D Diffusion and Implantation</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Victory Process 7.22.3.R, Victory Mesh 1.2.4.R, Victory Device 1.12.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="mos2ex26_plot0.png" width="640" alt="mos2ex26_plot0" />
+      <p/>
+      <img src="mos2ex26_plot1.png" width="640" alt="mos2ex26_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<p>
+Victory Device 3D
+<br/>
+</p>
+<p>
+For devices with a gate length of 28nm and below, it is possible to obtain
+significant mobile carrier mobility enhancement for most of the channel length,
+using remotely located epitaxial stressor material in the source drain regions.
+Using mobility enhancement techniques like this for p-channel devices can
+reduce the need for wider gate widths to match complimentary n-channel current
+drives, allowing the possibility of truely symmetrical layouts for
+complimentary MOS designs.
+</p>
+<p>
+In this example, we show the effects of mobility enhancement using epitaxially
+grown SiGe source-drain regions in a 7nm p-channel FinFET.  The stress
+calculation is invoked during the process simulation with the
+<b> Stress exposed</b> statement line.  This calculates the stress induced by the SiGe epitaxial
+source-drain regions.  At the end of the process simulation, any additional
+stress induced by subsequent processing steps is adjusted for by the
+<b> Stress exposed rebalance</b> line.  The stress calculations are saved into the final structure file, which
+is then exported to Victory Device.  The strain induced mobility enhancement is
+calculated in the
+<b> mobility material=silicon model.iso=1 nhance phance</b> line.  These enhanced mobility values are then included into any subsequent
+mobility model.
+</p>
+<p>
+The first device simulation calculates the un-saturate IdVg curve without
+invoking the strain enhancement calculations, whilst the second device
+simulation takes strain into account.  The difference due to the strain
+enhanced mpobility is shown in the final plot.
+</p>
+<br/>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support
+files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

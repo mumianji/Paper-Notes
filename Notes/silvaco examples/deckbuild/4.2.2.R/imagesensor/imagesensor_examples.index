@@ -1,0 +1,578 @@
+{section} IMAGESENSOR : Image Sensor Application Examples
+{newline}
+{subsection} imagesensorex01.in :  Image Sensor :Image Sensor Lenslet Analysis 
+{newline}
+Requires: S-Pisces/Luminous
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example shows how finite difference time domain (FDTD) analysis can
+be applied to optimization of lenslet design for an microlens image
+sensor.
+
+In this example we will use the built-in analytic lens specification
+defined on the 
+{bold} LENS 
+statement.  This allows us to define lenslets
+considered during FDTD analysis but does not impact the drift diffusion
+analysis.  The advantage of lenslets is that extra
+mesh points are not added into the device analysis part of the simulation.
+
+There are several different lens forms supported by FDTD in Luminous2D
+and Luminous3D.  These include spherical, elliptical, pyramidal, 
+composite and aspheric types.  The composite lenslet is formed by a
+planar face with cylindrical and spherical roll off at the edges.  The
+aspheric lenslet is defined by a 10th order polynomial fitted to 
+measured h-sag data using a Levenberg-Marquardt non-linear least 
+squares algorithm.
+
+The device in this example is defined simply by a buried N well 
+under the lens and light blocking structures.  In this case we 
+are less concerned with the electrical operation of the device 
+than the light collection capability.
+
+In this example we compare six lens designs in six simulations.
+In all six cases the geometry is the same with the exception
+of the lens height.  The lenslet width is fixed at 8 microns
+and the height is varried from 0.5 to 3.5 microns in half micron
+steps.  Simple geometrical calculations give six lens radii
+and associated lens centers for the cases.
+
+We will characterize the lenslet light gathering capability based on
+the integrated photogeneration rate in the N well region.  This 
+is done using the 
+{bold} PROBE
+ statement.
+
+Each of the six simulations begins with a description of the device
+structure and mesh using the 
+{bold} MESH
+, 
+{bold} X.M
+, 
+{bold} Y.M
+, 
+{bold} REGION
+,
+{bold} ELEC
+, and 
+{bold} DOPING 
+statements.
+
+Next, we specify some material models and parameter defaults.  Of 
+significance is the specification of the complex index of refraction
+of aluminum using the 
+{bold} REAL.INDEX
+ and 
+{bold} IMAG.INDEX
+ parameters
+of the 
+{bold} MATERIAL
+ statement.  In this case we set the imaginary
+index to a very high value.  This makes the aluminum blocking
+regions highly reflective/absorptive to light.
+
+Next we specify the optical source on the 
+{bold} BEAM
+ statement.  We
+specify the light with normal incidence from above with a wavelength
+of 0.415 microns.  This is only a nominal wavelength and is never used
+since we will define the analysis wavelengths explicitly on the subsequent
+{bold} SOLVE
+ statments.  We also define the sampling in the FDTD mesh.
+This sampling should typically be a small fraction of the incident 
+wavelength.  The 
+{bold} TD.WAVES
+ parameter specifies how many source
+wavelengths are propogated in this simulation.  Finally, we specify
+a file for capture of the structure as represented in the final
+FDTD mesh solution.  This is useful to examine the interference
+and diffraction patterns that might not be otherwise discernable in
+the standard finite-difference structure file.
+
+Next, we specify the lenslet.  The six cases will be differentiated
+by the location of the center along the y axis, 
+{bold} Y.LOC
+ and the
+radius, 
+{bold} RADIUS
+.
+
+We add perfectly matched layers (PMLs) at the top and bottom of the FDTD domain
+to absorb reflected and transmitted light.  This is specified on the
+{bold} PML
+ statements.
+
+After obtaining the initial solution, we define a probe using the 
+{bold} PROBE
+statement to allow us to measure the integrated photogeneration rate as
+a function of wavelength for each lens design.  It is important to notice
+that we specified the 
+{bold} FDTD
+ parameter on the 
+{bold} PROBE
+ statement.
+This indicates that the integration of the generation rate will take place
+in the FDTD analysis domain.  The FDTD domain presents a more accurate
+estimate since some loss is expected during interpolation to the 
+finite-difference domain.
+
+Finally, we capture the solutions for various wavelengths over the visible
+spectrum.
+
+At the end of the simulations we will have two data sets to consider.  First,
+we will produce optical intensity plots of the six lenslet designs under
+green illumination.  In comparing these plots we can see that focusing is
+better under the taller lenslets.
+
+Second, we can overlay the integrated generation rate curves versus
+optical wavelength.  This verifies that the 3.5 micron lens height 
+produces the best light collection.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+{subsection} imagesensorex02.in :  Image Sensor : Charge Integration Analysis
+
+Requires: S-Pisces/Luminous
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+In this example we examine the time integration of charge in the N well
+of the imaging device and look at crosstalk caused by charge blooming
+into an adjacent cell.  In this case we simulate two half cells representing
+adjacent red and green pixels.  This implies that we will implement color
+separation filtering and perform integration of charge during a time domain
+simulation.
+
+The simulation begins with a description of the device
+structure and mesh using the 
+{bold} MESH
+, 
+{bold} X.M
+, 
+{bold} Y.M
+, 
+{bold} REGION
+,
+{bold} ELEC
+, and 
+{bold} DOPING 
+statements.
+
+In this example we add a couple of extra oxide regions to represent the
+color filters for the adjacent pixels.  The optical characteristics of
+these regions will be modified to pass or not pass the source
+light.
+
+Next, we specify some material models and parameter defaults.  Of 
+significance is the specification of the complex index of refraction
+of aluminum using the 
+{bold} REAL.INDEX
+ and 
+{bold} IMAG.INDEX
+ parameters
+of the 
+{bold} MATERIAL
+ statement.  In this case we set the imaginary
+index to a very high value.  This makes the aluminum blocking
+regions highly reflective/absorptive to light.
+
+Here we also specify the imaginary index of the red filter.  In this case
+the thickness of the filter was used to calculate an index that will absorb
+99% of the incident light.  We do not need to specify the index of the
+green filter since it is assumed to pass all of the incident light.
+
+Next we specify the optical source on the 
+{bold} BEAM
+ statement.  We
+specify the light with normal incidence from above with a wavelength
+of 0.5325 microns. This wavelength corresponds to the band pass of
+the green filter.  We also define the sampling in the FDTD mesh.
+This sampling should typically be a small fraction of the incident 
+wavelength.  The 
+{bold} TD.WAVES
+ parameter specifies how many source
+wavelengths are propogated in this simulation.  Finally, we specify
+a file for capture of the structure as represented in the final
+FDTD mesh solution.  This is useful to examine the interference
+and diffraction patterns that might not be otherwise discernable in
+the standard finite-difference structure file.
+
+Next, we specify the lenslets above the two pixels.
+
+We add perfectly matched layers (PMLs) at the top and bottom of the FDTD domain
+to absorb reflected and transmitted light.  This is specified on the
+{bold} PML
+ statements.
+
+After obtaining the initial solution, we define probes using the 
+{bold} PROBE
+statement to allow us to measure the integrated electron concentration as
+a function of time for green and red pixel wells.
+
+Next we empty the well for the initial conditions.  To empty the well, we
+perform a zero carrier solution with the electron quasi-Fermi level set
+to a very high potential.  This insures that the electron concentration
+is negligible.
+
+Finally, we quickly ramp the beam up to an 'on' state and continue to
+integrate the charge over 1 micro-second.
+
+At the end of the simulation we can plot the integrated charge in the
+two wells to see at what time a) the green well charge saturates and
+b) when the red well charge begins to increase due to charge blooming
+out of the green well.
+
+We then plot the electron concentration in the final structure.  This shows
+how the electrons have diffused out over the barrier between the two 
+collection wells.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} imagesensorex03.in :  Image Sensor : Crosstalk at Angular Incidence
+
+Requires: Blaze/Luminous
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+In this example we attempt to look at the crosstalk between adjacent
+colors due to angularly incident light.  In this case we simulate two
+adjacent pixels; one red and one green.  We then obtain solutions
+as a function of angle of incidence and collect the integrated 
+photogeneration rate as a measure of the relative charge collected
+in each of the adjacent pixels.  This measure can be used to quantify
+crosstalk as a function of angle of incidence.
+
+The simulations begins with a description of the device
+structure and mesh using the 
+{bold} MESH
+, 
+{bold} X.M
+, 
+{bold} Y.M
+, 
+{bold} REGION
+,
+{bold} ELEC
+, and 
+{bold} DOPING 
+statements.
+
+In this example we add a couple of extra oxide regions to represent the
+color filters for the adjacent pixels.  The optical characteristics of
+these regions will be modified to pass or not pass the source
+light.
+
+Next, we specify some material models and parameter defaults.  Of 
+significance is the specification of the complex index of refraction
+of aluminum using the 
+{bold} REAL.INDEX
+ and 
+{bold} IMAG.INDEX
+ parameters
+of the 
+{bold} MATERIAL
+ statement.  In this case we set the imaginary
+index to a very high value.  This makes the aluminum blocking
+regions highly reflective/absorptive to light.
+
+Here we also specify the imaginary index of the red filter.  In this case
+the thickness of the filter was used to calculate an index that will absorb
+99% of the incident light.  We do not need to specify the index of the
+green filter since it is assumed to pass all of the incident light.
+
+Next we specify the optical source on the 
+{bold} BEAM
+ statement.  We
+specify the light with normal incidence from above with a wavelength
+of 0.5325 microns.  This wavelength corresponds to the band pass of
+the green filter.  We also define the sampling in the FDTD mesh.
+This sampling should typically be a small fraction of the incident 
+wavelength.  The 
+{bold} TD.WAVES
+ parameter specifies how many source
+wavelengths are propogated in this simulation.  Finally, we specify
+a file for capture of the structure as represented in the final
+FDTD mesh solution.  This is useful to examine the interference
+and diffraction patterns that might not be otherwise discernable in
+the standard finite-difference structure file.
+
+Next, we specify the lenslets above the two pixels.
+
+We add perfectly matched layers (PMLs) at the top and bottom of the FDTD domain
+to absorb reflected and transmitted light.  This is specified on the
+{bold} PML
+ statements.
+
+After obtaining the initial solution, we define probes using the 
+{bold} PROBE
+statement to allow us to measure the integrated photogeneration rate as
+a function of wavelength in both of the green and red sensor wells.  
+It is important to notice
+that we specified the 
+{bold} FDTD
+ parameter on the 
+{bold} PROBE
+ statement.
+This indicates that the integration of the generation rate will take place
+in the FDTD analysis domain.  The FDTD domain presents a more accurate
+estimate since some loss is expected during interpolation to the 
+finite-difference domain.
+
+Finally, we capture the solutions for various angles as specified by the
+{bold} ANGLE
+parameter of the 
+{bold} SOLVE
+statement.  These angles were selected to provide integer numbers of
+wavelengths in phase shift at the edges of the source.
+
+When the simulation is complete we can look at the integrated photogeneration
+rates in the adjacent wells as a function of angle of incidence.  Here we
+can see that after about 20 degrees, the collected green rate decreases and
+the collected red rate begins to increase.  This information is very useful
+in designing the collection system of the camera.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} imagesensorex04.in :  Image Sensor : Process and Device simulation
+
+Requires: Athena/Atlas/Luminous
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates Process and Device simulation of a
+CMOS Image sensor (CIS). Front End as well as Back End Process 
+simulation including lens are simulated using Athena. DC as well 
+as Transient IV characteristics under illumination are simulated
+using Atlas. 
+
+
+The CIS is a special transistor where the source region
+is the whole floating N- region underneath a heavy P+ doping
+pin layer. The drain side is a floating diffusion to which
+the electrons are transfered. The gate is used to transfer
+electrons from the source to the the drain.
+
+When designing CIS, the depletion region from the image sensor 
+(source contact) should not connect to the depletion region
+from the drain contact. Therefore, you must isolate the drain 
+contact from the source contact with boron implants.
+
+Also the buried N- region (which is the active sensor) was
+connected to the channel region under the gate to create a 
+source with further additional implants.
+
+Only by doing this, do you get good connectivity of the image 
+sensor to the drain when the transfer gate is activated.
+
+Vt was adjusted with the boron implant through the poly gate
+so that no leakage occurs when the light auto-biases the buried 
+N- channel region.
+
+The complete structure was achieved by adding a Back End Process
+including a lens to focus light in the buried N- layer.
+
+Unsaturated and saturated D.C. IV Characteristics were simulated
+in order to verify low leakage current all the way up to Vg=1V. 
+For that purpose, artificial source contact in buried N- layer 
+is added to simulate FET IV characteristics. 
+
+The Drain is then ramped up to 3.3V and is made floating by setting
+the current boundary condition.
+
+The light is shone on the structure during 50us. 
+{bold} Ray tracing 
+is used in this case but
+{bold} FDTD 
+can also be used and the statements are available in the input deck.
+For a more detailed description of FDTD syntax please refer to image
+sensor examples 1 to 3. 
+
+From the log file we can see that bias of the  buried N- region 
+gradually decreases as the light generated carriers are 
+integrated. At around 3us, the image sensor is saturated, and the 
+voltage can increase no further no matter how much light you shine 
+on it. Note that despite full light shining on the structure, the 
+signal remains de-coupled from the drain (i.e the drain remains at 
+3.3V before the gate is turned on). This is the result of the back 
+end process shadowing the drain and of the low leakage of the design.
+
+From the structure file rays, photogeneration as well as electron 
+concentration can be seen.
+
+At 50us the gate is ramped in transient to 3.3V to transfer the
+charge previously generated in the N- region to the floating drain.
+The potential in the N- region starts to increase in voltage as 
+the electrons from the N- region are transfered to the floating
+drain region. 
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+{subsection} imagesensorex05.in : CIS Output Signal Characterization
+
+Required Athena/Monte Carlo Implant/Luminous/Deckbuild
+{newline}
+Minimum Version Athena 5.22.3.R, Atlas 5.26.1.R
+
+
+This examples shows the creation and calibration of a 3.3 Volt CMOS Image 
+Sensor (CIS), using a standard 10 ohm-cm epitaxy process.  The 
+Image Sensor is created using Athena process simulation and monte-carlo 
+implantation.  
+
+The pass transistors have a high threshold voltage of approximately 2.5 volts
+to minimize leakage currents in their off state.  Since the signal output 
+contact of the image sensor is floating, the threshold voltage of the two 
+pass transistors is determined by using the 
+{bold} probe
+statement, whereby the electron concentration under their gates, tg_conc and
+rst_conc, are used to determine the relative conductivity of the channel,
+rather than the usual drain current plot.
+
+The first transient simulates what happens when the image sensor is depleted
+of electrons, and is simply left to integrate thermally generated charge 
+(leakage current) in the dark for a period of 10 seconds.  The 
+transient_dark.log plot shows that the concentration of electrons in the 
+depleted image sensor well, starts to rise after approximately 0.1 seconds,
+so this effectively sets a maximum integration time limit on the image sensor
+to obtain a normal contrast image.
+
+The second set of transients, numbering 10 in all, calibrate the image sensor
+output for a typical light intensity range that would be expected in a normal
+out door setting.  The simulated intensity range was one order of magnitude,
+between 0.02 and 0.2 times the intensity of a standard solar AM-1.5 spectrum.
+It was found that the optimum integration time for such a photograph with
+this intensity range, was approximately 7.5e-04 seconds for this particular
+image sensor.  This integration time indicates the image sensor can be used
+in a range from bright sunshine images down to an average intensity of
+approximately four orders of magnitude less than this.
+
+The 10 simulations for the different intensities for written using the loop
+capability in deckbuild.  The loops are bounded by the deckbuild syntax
+{bold} loop steps=16 
+and 
+{bold} l.end 
+The values of intensity are increased inside each loop for each simulation 
+using deckbuild's
+{bold} set 
+statements, which assign a value to the light intensity variable defined in 
+the set statement.
+
+The output signal voltage of the image sensor is taken from the common 
+source / drain contact of the two series pass transistors.  In order to save
+the complication of creating a separate contact at this location, and then
+defining this contact as a high resistance voltage sense contact, the probe 
+statement was used once again, to probe the potential at this location.
+
+The figure of image sensor output voltage (fd_potential) versus light 
+integration time up to the chosen integration time of 7.5e-5 seconds, shows 
+the effect of light intensity variation on the output voltage.  The output
+voltage at the final time of 7.5e-5 seconds is the final outptut signal of the 
+image sensor and is captured by an 
+{bold} extract 
+statement.  The values of the extract statement were then collated in the 
+final plot and show the output signal characteristics of the image sensor
+versus light intensity reflected from an image.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+{subsection} imagesensorex06.in : Image Sensor Cell including 2 Pass Transistors
+
+Requires: Victory Process, Victory Mesh, Victory Device
+{newline}
+Minimum Versions: Victory Process 7.22.3.R, Victory Mesh 1.2.4.R, Victory Device 1.12.1.R
+
+
+By default Victory Process and Device run on just one processor.
+To ensure better perfomance on your computer the following simulation condition
+{bold} simflags="-P all" 
+could be specidied in the 
+{bold} go 
+line starting Victory Process or Device. This means that all processors available will be used.
+If you want to use a smaller number of processors you can substitute "all" with a desired number, e.g.
+{bold} simflags="-P 4".
+
+This examples demonstrates solutions to some of the particular 3D process 
+and device issues when simulating a 3D image sensor cell.  The first issue
+with a number of designs is the 
+{bold} very high implantation energies 
+required to isolate the active region of the image sensor.  
+
+If 3D Monte-Carlo Implantation is used to simulate these high energy implants,
+the simulation times can be excessive.  The solution is to simulate these 
+implants as a single spot in Athena and then to extract the depth and lateral
+spreading of the implants using 
+{bold} deckbuild's extract statements. 
+This creates an accurate data file of the implant, which can then be imported
+into Victory cell using the 
+{bold} profile statement 
+and incorporated into the 3D structure when required using the implant 
+statement. 
+
+The device simulation is in three parts.  Firstly the threshold voltage
+of the two pass transistors is simulated.  Then a dark transient is simulated
+to find the dark current recovery time, which sets the low light sensitivity 
+limit of the image sensor, ie the maximum useable light integration time.  
+Finally a simulastion is done illuminating the device with a typical average
+light intensity of 0.01 Watts/cm2 with a standard solar AM 1.5 spectrum, 
+which for this sesnor, would require an integration time of approximately 
+0.0008 for a 50% exposure level.  The illumination intensity and exposure 
+integration time can both be adjusted by changing these two variable 
+quantities at the 
+{bold} set statement 
+lines, near the top of the inpu file for the final device simulation.
+
+The threshold voltage of the pass transistors is 
+deliberately high to ensure that charge leakage in their off state is 
+minimized.  Since the pass transisotrs have a common floating electrode
+without an ohmic contact, the threshold voltage is plotted using the
+electron concentration under the gates.  The electron concentrations are
+measwured using
+{bold} probe 
+statemnts, which probe the silicon surface under the gates. In this example, 
+the probe quantities have been called 
+{bold} "cg_conc" 
+and 
+{bold} "ng_conc"
+. 
+
+For the transient simulations, the output voltage of the cell can be monitored
+in tonyplot by plotting the probe quantity called 
+{bold} fd_potential
+. Another interesting quantity also extracted using the
+probe statement is the electron concentration in the active image sensor
+region.  This image sensor electron concentration is called 
+{bold}"cis_conc" 
+in this example.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.

@@ -1,0 +1,128 @@
+<html>
+  <head>
+    <title>Reaction-Diffusion degradation modelling of a Silicon pMOSFET</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Reaction-Diffusion degradation modelling of a Silicon pMOSFET</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>S-Pisces</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="mos2ex20_plot0.png" width="640" alt="mos2ex20_plot0" />
+      <p/>
+      <img src="mos2ex20_plot1.png" width="640" alt="mos2ex20_plot1" />
+      <p/>
+      <img src="mos2ex20_plot2.png" width="640" alt="mos2ex20_plot2" />
+      <p/>
+      <img src="mos2ex20_plot3.png" width="640" alt="mos2ex20_plot3" />
+      <p/>
+      <img src="mos2ex20_plot4.png" width="640" alt="mos2ex20_plot4" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example is similar to mosex18 but uses a different degradation model.
+It demonstrates :
+</p>
+<ul>
+  <li>
+ Using Athena to set up a pMOSFET.
+<br/>
+  </li>
+  <li>
+ Setting up a deck with with the Reaction-Diffusion degradation model enabled.
+<br/>
+  </li>
+  <li>
+ Doing stressing and relaxation biasing transient simulations.
+<br/>
+  </li>
+  <li>
+ Using PROBE statement to get hydrogen densities.
+<br/>
+  </li>
+  <li>
+ Obtaining Id-Vg curves for degraded device structures.
+  </li>
+</ul>
+<p>
+The first section beginning
+<br/>
+<b> go athena</b> <br/>
+is much the same as mos2ex18.  The next section starting
+<br/>
+<b> go atlas</b> <br/>
+enables the reaction-diffusion model using the DEVDEG.RD parameter
+<br/>
+<b> model temp=300 mos hhi devdeg.rd devdeg.h</b> <br/>
+and the parameter DEVDEG.H specifies that the traps created will become positively charged.
+The hot hole model is also enabled.  Accompanying the models statement is
+<br/>
+<b> degradation rd.sihtot=1.0e12 rd.h.hccoef=1.0e8 rd.kf0=2.0e-4 rd.aevar=0.05 rd.kr0=1.0e-13 rd.invhcoef=0.01 rd.coupled</b> <br/>
+which sets the density of passivated bonds on the interface using the RD.SIHTOT parameter.  The contribution of hot holes
+to the degradation is included by assigning a value to the RD.H.HCCOEF parameter.  The depassivation rate constant RD.KF0
+is set to 2.0e-4 /s and the repassivation rate constant to 1e-13 cc /s.  The default activation energy of 1.5 eV is
+used with a variance of 0.05 eV as specified by the RD.AEVAR parameter.  The RD.INVHCOEF parameter enables the inversion
+hole contribution to depassivation rate, and the RD.COUPLED flag enables fully self-consistent coupling between the
+hydrogen generation rates and the other equations.
+</p>
+<p>
+The PROBE statements probe the atomic hydrogen and molecular hydrogen compositions at various points near to the
+Si/SiO2 interface.
+</p>
+<p>
+The device is stressed to -2.0 V on the gate and 0.1 V on the drain and the simulation run
+for 100 s.  The DEVDEG parameter on the LOG statement means that the total interface charge due to
+degradation is stored in the log file.  The depassivation process creates atomic hydrogen which
+then diffuses and dimerises to molecular hydrogen.  The default values for diffusion and dimerisation
+have been used,  details are given in the manual.
+</p>
+<p>
+In the next section, starting
+<br/>
+<b> go atlas</b> <br/>
+the same models are set and the device structure degraded to 100 s is read in using the LOAD statement.
+The gate and drain biases are zeroed on a short ramp and the device is relaxed to 1000 s. The presence
+of atomic hydrogen which has not diffused away from the interface means that the repassivation rate is
+greater than the depassivation rate, most notably in the channel under the gate. This is seen in the
+integrated degradation charge which is captured in the log file and is plotted at the end of the relaxation
+simulation.
+</p>
+<p>
+The structure files from this and the previous section are all saved with the DEVDEG parameter on the OUTPUT
+statement causing the degradation trap density to be output.  This is then used in the final section, starting
+<br/>
+<b> go atlas</b> <br/>
+where each of the saved structure files is read in turn during the loop statement, and the Id-Vg curves
+obtained. These are then plotted and you can see that the relaxed structure has retained a small shift in
+threshold voltage.  This is disproportionate to the overall reduction in interface charge density, and is
+due to the large repassivation occuring at the interface under the gate,  where the device is most sensitive
+to interface charge.  Over longer time periods the free hydrogen will diffuse away and repassivation will cease.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

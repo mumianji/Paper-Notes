@@ -1,0 +1,569 @@
+# (c) Silvaco Inc., 2018
+##########
+#--No Stress
+##########
+go victoryprocess  
+
+set nidep=0.05
+
+init material=silicon orientation=111  \
+     from=0 to=10 depth=3 gasheight=5 \
+     resolution="0.01,0.01" meshdepth=3
+
+line x location=0 spacing=1 
+line x location=1 spacing=0.02 
+line x location=1.75 spacing=1
+line x location=2.5-$nidep spacing=0.015
+line x location=2.5 spacing=0.015
+line x location=2.75 spacing=0.25  
+line x location=3 spacing=0.015
+line x location=3+$nidep spacing=0.015 
+line x location=6 spacing=1
+line x location=9 spacing=0.02
+line x location=10 spacing=1
+
+line z location=-1.225-$nidep spacing=0.015
+line z location=-1.225 spacing=0.015
+line z location=-1.125 spacing=0.008
+line z location=-1.1 spacing=0.005
+line z location=-0.1 spacing=0.1
+line z location=0 spacing=0.025
+line z location=3 spacing=1
+
+
+deposit material=AlN thickness=0.10 conformal
+
+deposit material=GaN thickness=1 conformal
+
+deposit material=AlGaN thickness=0.025 x.comp=0.30 conformal
+
+deposit aluminum between.x="2.5,3" thickness=0.1 conformal
+
+deposit nitride thickness=$nidep conformal
+
+etch outside.x="1,9" thickness=$nidep+0.025 dry
+
+deposit aluminum thickness=$nidep+0.025 min
+
+electrodes name=gate x=2.7 z=-1.15
+electrodes name=source x=0.5 z=-1.15
+electrodes name=drain x=9.5 z=-1.15
+electrodes substrate
+
+save name=ganfetex19_0
+
+go victorymesh 
+
+load in=ganfetex19_0
+
+remesh conformal
+refine max.obtuseness=1
+
+save out=ganfetex19_0.str
+
+
+go victorydevice simflags="-80"
+
+mesh inf=ganfetex19_0.str width=100
+
+region modify material=GaN num=6 substrate
+
+trap acceptor e.level=1.5 density=1e16 material=GaN degen.fac=1 sign=1e-13 sigp=1e-13
+
+contact name=gate work=5
+contact name=source work=2.5
+contact name=drain work=2.5
+
+models srh print
+mobility material=GaN albrct.n gansat.n
+models polarization calc.strain tensor.scale=0 psp.scale=0.8 piezo.scale=0.8 print
+
+output con.band val.band charge polar.charge band.par qss
+
+method newton trap maxtrap=10 
+
+solve init
+solve prev
+
+solve vdrain=0.01
+solve vdrain=0.1
+solve vdrain=0.5
+solve name=gate vfinal=-6 vstep=-0.5 prev
+log outf=ganfetex19_0.log
+solve prev
+solve name=gate vfinal=1.0 vstep=0.2 prev
+log off
+
+
+##########
+#--Compressive Stress
+##########
+go victoryprocess  
+
+set nidep=0.05 
+set nstress=-8e10
+
+init material=silicon orientation=111  \
+     from=0 to=10 depth=3 gasheight=5 \
+     resolution="0.01,0.01" meshdepth=3
+
+line x location=0 spacing=1 
+line x location=1 spacing=0.02
+line x location=1.75 spacing=1
+line x location=2.5-$nidep spacing=0.015
+line x location=2.5 spacing=0.015
+line x location=2.75 spacing=0.25  
+line x location=3 spacing=0.015
+line x location=3+$nidep  spacing=0.015 
+line x location=6 spacing=1
+line x location=9 spacing=0.02
+line x location=10 spacing=1
+
+line z location=-1.225-$nidep spacing=0.015
+line z location=-1.225 spacing=0.015
+line z location=-1.125  spacing=0.008
+line z location=-1.1 spacing=0.005
+line z location=-0.1 spacing=0.1
+line z location=0 spacing=0.025
+line z location=3 spacing=1
+
+method stress.hist=on stress.latticemismatch=off
+
+deposit material=AlN thickness=0.10 conformal
+
+deposit material=GaN thickness=1 conformal
+
+deposit material=AlGaN thickness=0.025 x.comp=0.30 conformal
+
+deposit aluminum between.x="2.5,3" thickness=0.1 conformal
+
+deposit nitride thickness=$nidep stressxx=$nstress stresszz=$nstress conformal
+
+etch outside.x="1,9" thickness=$nidep+0.025 dry
+
+deposit aluminum thickness=$nidep+0.025 min
+
+electrodes name=gate x=2.7 z=-1.15
+electrodes name=source x=0.5 z=-1.15
+electrodes name=drain x=9.5 z=-1.15
+electrodes substrate
+
+
+save name=ganfetex19_1
+
+go victorymesh 
+
+load in=ganfetex19_1
+
+remesh conformal
+refine max.obtuseness=1
+
+save out=ganfetex19_1.str
+
+go victorydevice simflags="-80"
+
+mesh inf=ganfetex19_1.str width=100
+
+region modify material=GaN num=6 substrate
+
+trap acceptor e.level=1.5 density=1e16 material=GaN degen.fac=1 sign=1e-13 sigp=1e-13
+
+contact name=gate work=5
+contact name=source work=2.5
+contact name=drain work=2.5
+
+models srh print
+mobility material=GaN albrct.n gansat.n
+models polarization calc.strain tensor.scale=1 psp.scale=0.8 piezo.scale=0.8 print
+
+output con.band val.band charge polar.charge band.par qss
+
+method newton trap maxtrap=10 
+
+solve init
+solve prev
+
+solve vdrain=0.01
+solve vdrain=0.1
+solve vdrain=0.5
+solve name=gate vfinal=-6 vstep=-0.5 prev
+
+log outf=ganfetex19_1_1.log
+solve prev
+solve name=gate vfinal=1.0 vstep=0.2 prev
+log off
+
+
+go victorydevice simflags="-80"
+
+mesh inf=ganfetex19_1.str width=100
+
+region modify material=GaN num=6 substrate
+
+trap acceptor e.level=1.5 density=1e16 material=GaN degen.fac=1 sign=1e-13 sigp=1e-13
+
+contact name=gate work=5
+contact name=source work=2.5
+contact name=drain work=2.5
+
+models srh print
+mobility material=GaN albrct.n gansat.n
+models polarization calc.strain tensor.scale=2 psp.scale=0.8 piezo.scale=0.8 print
+
+output con.band val.band charge polar.charge band.par qss
+
+method newton trap maxtrap=10 
+
+solve init
+solve prev
+
+solve vdrain=0.01
+solve vdrain=0.1
+solve vdrain=0.5
+solve name=gate vfinal=-6 vstep=-0.5 prev
+
+log outf=ganfetex19_1_2.log
+solve prev
+solve name=gate vfinal=1.0 vstep=0.2 prev
+log off
+
+
+##########
+#--Tensile Stress
+##########
+go victoryprocess  
+
+set nidep=0.05 
+set nstress=1e11
+
+init material=silicon orientation=111  \
+     from=0 to=10 depth=3 gasheight=5 \
+     resolution="0.01,0.01" meshdepth=3
+
+line x location=0 spacing=1 
+line x location=1 spacing=0.02
+line x location=1.75 spacing=1
+line x location=2.5-$nidep spacing=0.015
+line x location=2.5 spacing=0.015
+line x location=2.75 spacing=0.25  
+line x location=3 spacing=0.015
+line x location=3+$nidep spacing=0.015 
+line x location=6 spacing=1
+line x location=9 spacing=0.02
+line x location=10 spacing=1
+
+line z location=-1.225-$nidep spacing=0.015
+line z location=-1.225 spacing=0.015
+line z location=-1.125 spacing=0.008
+line z location=-1.1 spacing=0.005
+line z location=-0.1 spacing=0.1
+line z location=0 spacing=0.025
+line z location=3 spacing=1
+
+method stress.hist=on stress.latticemismatch=off
+
+deposit material=AlN thickness=0.10 conformal
+
+deposit material=GaN thickness=1 conformal
+
+deposit material=AlGaN thickness=0.025 x.comp=0.30 conformal
+
+deposit aluminum between.x="2.5,3" thickness=0.1 conformal
+
+deposit nitride thickness=$nidep stressxx=$nstress stresszz=$nstress conformal
+
+etch outside.x="1,9" thickness=$nidep+0.025 dry
+
+deposit aluminum thickness=$nidep+0.025 min
+
+electrodes name=gate x=2.7 z=-1.15
+electrodes name=source x=0.5 z=-1.15
+electrodes name=drain x=9.5 z=-1.15
+electrodes substrate
+
+save name=ganfetex19_2
+
+
+go victorymesh 
+
+load in=ganfetex19_2
+
+remesh conformal
+refine max.obtuseness=1
+
+save out=ganfetex19_2.str
+
+go victorydevice simflags="-80"
+
+mesh inf=ganfetex19_2.str width=100
+
+region modify material=GaN num=6 substrate
+
+trap acceptor e.level=1.5 density=1e16 material=GaN degen.fac=1 sign=1e-13 sigp=1e-13
+
+contact name=gate work=5
+contact name=source work=2.5
+contact name=drain work=2.5
+
+models srh print
+mobility material=GaN albrct.n gansat.n
+models polarization calc.strain tensor.scale=1 psp.scale=0.8 piezo.scale=0.8 print
+
+output con.band val.band charge polar.charge band.par qss
+
+method newton trap maxtrap=10 
+
+solve init
+solve prev
+
+solve vdrain=0.01
+solve vdrain=0.1
+solve vdrain=0.5
+solve name=gate vfinal=-6 vstep=-0.5 prev
+
+log outf=ganfetex19_2_1.log
+solve prev
+solve name=gate vfinal=1.0 vstep=0.2 prev
+log off
+
+
+go victorydevice simflags="-80"
+
+mesh inf=ganfetex19_2.str width=100
+
+region modify material=GaN num=6 substrate
+
+trap acceptor e.level=1.5 density=1e16 material=GaN degen.fac=1 sign=1e-13 sigp=1e-13
+
+contact name=gate work=5
+contact name=source work=2.5
+contact name=drain work=2.5
+
+models srh print
+mobility material=GaN albrct.n gansat.n
+models polarization calc.strain tensor.scale=4 psp.scale=0.8 piezo.scale=0.8 print
+
+output con.band val.band charge polar.charge band.par qss
+
+method newton trap maxtrap=10 
+
+solve init
+solve prev
+
+solve vdrain=0.01
+solve vdrain=0.1
+solve vdrain=0.5
+solve name=gate vfinal=-6 vstep=-0.5 prev
+
+log outf=ganfetex19_2_2.log
+solve prev
+solve name=gate vfinal=1.0 vstep=0.2 prev
+log off
+
+
+##########
+#-- Compressive Stress; nitride thickness reduction of 20%
+##########
+go victoryprocess  
+
+set a=0.8
+set nidep=0.05*$a 
+set nstress=-8e10
+
+init material=silicon orientation=111  \
+     from=0 to=10 depth=3 gasheight=5 \
+     resolution="0.01,0.01" meshdepth=3
+
+line x location=0 spacing=1 
+line x location=1 spacing=0.02
+line x location=1.75 spacing=1
+line x location=2.5-$nidep spacing=0.015
+line x location=2.5 spacing=0.015
+line x location=2.75 spacing=0.25  
+line x location=3 spacing=0.015
+line x location=3+$nidep spacing=0.015 
+line x location=6 spacing=1
+line x location=9 spacing=0.02
+line x location=10 spacing=1
+
+line z location=-1.225-$nidep spacing=0.015
+line z location=-1.225 spacing=0.015
+line z location=-1.125 spacing=0.008
+line z location=-1.1 spacing=0.005
+line z location=-0.1 spacing=0.1
+line z location=0 spacing=0.025
+line z location=3 spacing=1
+
+method stress.hist=on stress.latticemismatch=off
+
+deposit material=AlN thickness=0.10 conformal
+
+deposit material=GaN thickness=1 conformal 
+
+deposit material=AlGaN thickness=0.025 x.comp=0.30 conformal
+
+deposit aluminum between.x="2.5,3" thickness=0.1 conformal
+
+deposit nitride thickness=$nidep stressxx=$nstress stresszz=$nstress conformal
+
+etch outside.x="1,9" thickness=$nidep+0.025 dry
+
+deposit aluminum thickness=$nidep+0.025 min
+
+electrodes name=gate x=2.7 z=-1.15
+electrodes name=source x=0.5 z=-1.15
+electrodes name=drain x=9.5 z=-1.15
+electrodes substrate
+
+save name=ganfetex19_3
+
+go victorymesh 
+
+load in=ganfetex19_3
+
+remesh conformal
+refine max.obtuseness=1
+
+save out=ganfetex19_3.str
+
+
+go victorydevice simflags="-80"
+
+mesh inf=ganfetex19_3.str width=100
+
+region modify material=GaN num=6 substrate
+
+trap acceptor e.level=1.5 density=1e16 material=GaN degen.fac=1 sign=1e-13 sigp=1e-13
+
+contact name=gate work=5
+contact name=source work=2.5
+contact name=drain work=2.5
+
+models srh print
+mobility material=GaN albrct.n gansat.n
+models polarization calc.strain tensor.scale=1 psp.scale=0.8 piezo.scale=0.8 print
+
+output con.band val.band charge polar.charge band.par qss
+
+method newton trap maxtrap=10 
+
+solve init
+solve prev
+
+solve vdrain=0.01
+solve vdrain=0.1
+solve vdrain=0.5
+solve name=gate vfinal=-6 vstep=-0.5 prev
+
+log outf=ganfetex19_3.log
+solve prev
+solve name=gate vfinal=1.0 vstep=0.2 prev
+log off
+
+
+##########
+#-- Compressive Stress; nitride thickness reduction of 50%
+##########
+go victoryprocess  
+
+set a=0.5
+set nidep=0.05*$a 
+set nstress=-8e10
+
+init material=silicon orientation=111  \
+     from=0 to=10 depth=3 gasheight=5 \
+     resolution="0.01,0.01" meshdepth=3
+
+line x location=0 spacing=1 
+line x location=1 spacing=0.02 
+line x location=1.75 spacing=1
+line x location=2.5-$nidep spacing=0.015
+line x location=2.5 spacing=0.015
+line x location=2.75 spacing=0.25  
+line x location=3 spacing=0.015
+line x location=3+$nidep spacing=0.015 
+line x location=6 spacing=1
+line x location=9 spacing=0.02
+line x location=10 spacing=1
+
+line z location=-1.225-$nidep spacing=0.015
+line z location=-1.225 spacing=0.015
+line z location=-1.125 spacing=0.008
+line z location=-1.1 spacing=0.005
+line z location=-0.1 spacing=0.1
+line z location=0 spacing=0.025
+line z location=3 spacing=1
+
+method stress.hist=on stress.latticemismatch=off
+
+deposit material=AlN thickness=0.10 conformal
+
+deposit material=GaN thickness=1 conformal
+
+deposit material=AlGaN thickness=0.025 x.comp=0.30 conformal
+
+deposit aluminum between.x="2.5,3" thickness=0.1 conformal
+
+deposit nitride thickness=$nidep stressxx=$nstress stresszz=$nstress conformal
+
+etch outside.x="1,9" thickness=$nidep+0.025 dry
+
+deposit aluminum thickness=$nidep+0.025 min
+
+electrodes name=gate x=2.7 z=-1.15
+electrodes name=source x=0.5 z=-1.15
+electrodes name=drain x=9.5 z=-1.15
+electrodes substrate
+
+
+save name=ganfetex19_4
+
+go victorymesh 
+
+load in=ganfetex19_4
+
+remesh conformal
+refine max.obtuseness=1
+
+save out=ganfetex19_4.str
+
+
+go victorydevice simflags="-80"
+
+mesh inf=ganfetex19_4.str width=100
+
+region modify material=GaN num=6 substrate
+
+trap acceptor e.level=1.5 density=1e16 material=GaN degen.fac=1 sign=1e-13 sigp=1e-13
+
+contact name=gate work=5
+contact name=source work=2.5
+contact name=drain work=2.5
+
+models srh print
+mobility material=GaN albrct.n gansat.n
+models polarization calc.strain tensor.scale=1 psp.scale=0.8 piezo.scale=0.8 print
+
+output con.band val.band charge polar.charge band.par qss
+
+method newton trap maxtrap=10 
+
+solve init
+solve prev
+
+solve vdrain=0.01
+solve vdrain=0.1
+solve vdrain=0.5
+solve name=gate vfinal=-6 vstep=-0.5 prev
+
+log outf=ganfetex19_4.log
+solve prev
+solve name=gate vfinal=1.0 vstep=0.2 prev
+log off
+
+
+tonyplot -overlay ganfetex19_0.log ganfetex19_1_1.log ganfetex19_1_2.log ganfetex19_2_1.log ganfetex19_2_2.log ganfetex19_3.log ganfetex19_4.log -set ganfetex19_0.set
+tonyplot ganfetex19_1.str ganfetex19_2.str -set ganfetex19_1.set
+tonyplot ganfetex19_3.str ganfetex19_4.str -set ganfetex19_2.set
+
+quit

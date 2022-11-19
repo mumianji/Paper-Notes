@@ -1,0 +1,112 @@
+# (c) Silvaco Inc., 2018
+go atlas
+TITLE   a-si TFT simulation
+
+mesh	three.d
+#
+x.m		l=0	spac=0.5
+x.m		l=2	spac=0.5
+x.m		l=3.5	spac=1.0
+x.m		l=5	spac=0.25
+x.m		l=10	spac=1.5
+x.m		l=15.	spac=0.25
+x.m		l=16.5	spac=1.0
+x.m		l=18	spac=0.5
+x.m		l=20	spac=0.5
+#
+#
+y.m		l=-0.1	spac=0.05
+y.m		l=0	spac=0.0075
+y.m		l=0.05	spac=0.01
+y.m		l=0.1	spac=0.0075
+y.m		l=0.5	spac=0.25
+y.m		l=10.	spac=5
+#
+#
+z.m		l=0	spac=5
+z.m		l=15	spac=5
+#
+#
+#  **************** regions ****************
+#             1=oxide  2=silicon 3-oxide
+#
+region       num=1  y.max=0.    oxide
+region       num=2  y.min=0.    y.max=0.1   silicon
+region       num=3  y.min=0.1   oxide
+#
+#  **************** electrodes ****************
+#    1=gate  2=substrate  3=source  4=drain
+#
+elec  num=1  x.min=5    x.max=15  y.min=-0.1 y.max=-0.1 name=gate
+elec  num=2  x.min=0.   x.max=2.    y.min=0.   y.max=0.   name=source
+elec  num=3  x.min=18.0 x.max=20.0  y.min=0.   y.max=0.   name=drain
+elec  num=4  substrate              name=substrate
+#
+#  **************** doping profiles  ****************
+#
+doping     reg=2  uniform conc=7.e14 n.type
+doping     reg=2  gauss conc=3.e18 n.type x.right=5 char=0.3
+doping     reg=2  gauss conc=3.e18 n.type x.left=15 char=0.3
+#
+#   Set parameters for amorphus silicon
+#
+material region=2 mun=20 mup=1.5 nc300=2.5e20 \
+ nv300=2.5e20 eg300=1.9
+#
+defects nta=1.e21 ntd=1.e21 wta=0.033 wtd=0.049 \
+  nga=1.5e15 ngd=1.5e15 ega=0.62 egd=0.78 wga=0.15 wgd=0.15 \
+  sigtae=1.e-17 sigtah=1.e-15 sigtde=1.e-15 sigtdh=1.e-17  \ 
+  siggae=2.e-16 siggah=2.e-15 siggde=2.e-15 siggdh=2.e-16  
+#
+contact	num=1 alum
+models srh bgn conmob fldmob temp=300  
+#
+impact selb
+#
+method itlimit=30
+solve init
+#
+save outf=tftex06_0.str
+#
+# Id-Vg calculations
+#
+#ramp the drain to 0.1V
+#
+method  bicgst  maxtrap=6  trap
+solve vdrain=0.025
+solve vdrain=0.05
+solve vdrain=0.1
+#
+#ramp the gate and store the results
+#
+log outf=tftex06_1.log
+#
+solve vstep=0.25 vfinal=1.5 name=gate
+#
+save outf=tftex06_1.str
+#
+solve vgate=2.0 vstep=0.5 vfinal=20 name=gate
+#
+# Id-Vd calculations 
+#
+#ramp the gate to 1.5V
+#
+log off
+#
+method  bicgst carr=2  maxtrap=6  trap
+#
+#ramp the drain and store the results
+#
+load infile=tftex06_1.str master
+#
+log outf=tftex06_2.log master
+solve prev
+solve vdrain=0.1 vstep=0.1 vfinal=1 name=drain
+solve vdrain=1.25 vstep=0.25 vfinal=3 name=drain
+solve vdrain=3.25 vstep=0.25 name=drain vfinal=4
+#
+tonyplot3d tftex06_0.str -set tftex06_0.set
+tonyplot tftex06_1.log -set tftex06_1.set
+tonyplot tftex06_2.log -set tftex06_2.set
+tonyplot3d tftex06_1.str -set tftex06_3.set
+quit

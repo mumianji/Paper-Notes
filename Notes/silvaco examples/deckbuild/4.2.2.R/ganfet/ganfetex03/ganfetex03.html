@@ -1,0 +1,90 @@
+<html>
+  <head>
+    <title>AlGaN/GaN HEMT Id-Vgs and Id-Vds Characterization</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>AlGaN/GaN HEMT Id-Vgs and Id-Vds Characterization</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Blaze</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="ganfetex03_plot0.png" width="640" alt="ganfetex03_plot0" />
+      <p/>
+      <img src="ganfetex03_plot1.png" width="640" alt="ganfetex03_plot1" />
+      <p/>
+      <img src="ganfetex03_plot2.png" width="640" alt="ganfetex03_plot2" />
+      <p/>
+      <img src="ganfetex03_plot3.png" width="640" alt="ganfetex03_plot3" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates Id-Vds and Id-Vgs calculations in an
+AlGaN/GaN HEMT.
+</p>
+<p>
+This example demonstrates:
+</p>
+<ul>
+  <li>
+ Construction of the heterojunction structure using Atlas syntax
+<br/>
+  </li>
+  <li>
+ Material and models parameter specification 
+<br/>
+  </li>
+  <li>
+ Simulation of Id/Vds and Id/Vgs characteristics 
+<br/>
+  </li>
+  <li>
+ Display of the results in TonyPlot
+  </li>
+</ul>
+<p>
+The device under consideration is a simple AlGaN/GaN HEMT. The main
+concept here is that the polarization charge is calculated using the
+built-in models as specified by the
+<b> polarization </b> parameter on the
+<b> model </b> statement.
+</p>
+<p>
+After the initial solution is obtained the gate voltage is ramped to -10 V,
+then the IdVg characteristic is extracted from Vg=-10 to Vg=1.0 V.
+</p>
+<p>
+A family of drain current characteristics are then simulated with
+and without lattice heating taken into account by ramping the drain
+from 0 to 15 V at various gate voltages.
+</p>
+<p>
+Finally, the family of curves is plotted using the TonyPlot tool.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

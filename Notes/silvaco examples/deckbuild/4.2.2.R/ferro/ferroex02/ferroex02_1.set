@@ -1,0 +1,85 @@
+# TPCS version: 8
+# various properties
+log label 0
+key opaque 0
+mark frequency 0
+mark overlay 0
+graph width 0 2
+graph width 1 4
+graph width 2 4
+graph width 3 4
+graph width 4 4
+graph width 5 4
+sequence size 2
+sequence width 1
+log zero 0
+sequence mark 0 0
+sequence mark 1 1
+sequence mark 2 2
+sequence mark 3 3
+sequence mark 4 4
+sequence mark 5 5
+# Functions
+function 1 "" ""
+function 2 "" ""
+function 3 "" ""
+function 4 "" ""
+select 1
+# xygraph flags
+show points on
+show lines on
+# xygraph types
+xygraph type 0 convert 0
+xygraph yaxis scale log
+# xygraph x-axis
+xygraph xaxis "Gate Voltage" linear
+# xygraph y-axes
+xygraph yaxis none
+xygraph yaxis "Drain Current" log
+# xygraph group
+xygraph group "(unknown electricals)"
+# key positions
+key contours 1 at 0
+key contours 2 at 0
+key contours 3 at 0
+key electrical at 6
+key vectors at 0
+key overlay at 6
+key regions at 4
+key apply 
+# annotation, titles
+title main auto
+title sub auto
+# annotation, footers
+footer right none
+footer left none
+# annotation, show
+show xaxis on
+show yaxis on
+show grid off
+show label xaxis on
+show label yaxis on
+# annotation, axes
+range xaxis auto
+range yaxis auto
+label xaxis "gate bias (V)"
+label yaxis "Drain Current (A)"
+# zoom
+zoom from 0, 0 scale 1, 1
+# user labels
+label "Ec = 100 kV/cm" from 5.61753, -11.8732 color 0 scale 1
+label 0 at 7 7
+label "Pr = 0.4e-6 C/sqcm" from 5.52355, -12.6948 color 0 scale 1
+label 1 at 7 7
+label "Ps = 0.5e-6 C/sqcm" from 5.52355, -13.5493 color 0 scale 1
+label 2 at 7 7
+label "Vt shift due to polarisation of ferroelectric" from 3.30566, -8.82393 color 0 scale 1 to 1.47299, -6.5553
+label 3 at 2 2
+label "decreasing Vg" from 0.811096, -5.13615 color 0 scale 1 to 1.09304, -6.4507
+label 4 at 3 3
+label "eps = 10" from 5.53698, -14.4366 color 0 scale 1
+label 5 at 7 7
+label "increasing Vg" from 2.67728, -10.9531 color 0 scale 1 to 1.13331, -7.66667
+label 6 at 2 2
+# overlay level names
+label overlay 0 "ferroex02.log"

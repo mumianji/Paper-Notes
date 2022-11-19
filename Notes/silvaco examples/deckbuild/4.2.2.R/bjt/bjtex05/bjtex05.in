@@ -1,0 +1,68 @@
+# (c) Silvaco Inc., 2018
+go atlas
+TITLE Bipolar BVCEO simulation
+
+mesh
+x.m l=0 spac=0.1
+x.m l=2 spac=0.1
+
+y.m l=0 spac=0.002
+y.m l=1 spac=0.10
+
+region num=1 silicon
+
+electrode num=1 name=emitter left length=0.8
+electrode num=2 name=base    right length=0.5 y.max=0
+electrode num=3 name=collector bottom
+
+doping reg=1 uniform n.type conc=5e15 
+doping reg=1 gauss   n.type conc=1e18 peak=1.0 char=0.2
+doping reg=1 gauss   p.type conc=1e18 peak=0.05 junct=0.15 
+doping reg=1 gauss   n.type conc=5e19 peak=0.0  junct=0.05 x.right=0.8
+doping reg=1 gauss   p.type conc=5e19 peak=0.0  char=0.08 x.left=1.5
+
+save outf=bjtex05_0.str
+tonyplot  bjtex05_0.str -set bjtex05_0.set
+
+# set poly emitter
+contact name=emitter n.poly surf.rec
+
+material taun0=5e-6 taup0=5e-6
+
+# set models 
+models bipolar print   
+impact selb
+
+solve init
+
+method  newton trap    
+
+
+solve prev
+solve vbase=0.025
+solve vbase=0.05
+solve vbase=0.2
+
+contact name=base current
+
+
+method  newton trap ir.tol=1.e-20 ix.tol=1.e-20
+
+solve ibase=3.e-15
+
+log outf=bjtex05.log master
+
+# ramp collector voltage
+solve vcollector=0.25
+solve vcollector=0.5
+solve vcollector=1
+solve vcollector=3
+solve vcollector=5
+
+solve vstep=0.5 vfinal=10  name=collector compl=5.e-11 e.comp=3
+
+
+# plot results
+tonyplot  bjtex05.log -set bjtex05_log.set
+
+quit

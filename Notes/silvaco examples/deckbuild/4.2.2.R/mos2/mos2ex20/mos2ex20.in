@@ -1,0 +1,244 @@
+# (c) Silvaco Inc., 2018
+go athena
+# Reaction-Diffusion model pMOS degradation simulation
+
+# Establish initial grid and substrate material
+line x  location=0.0   spacing=0.075
+line x  location=0.5   spacing=0.05
+line x  location=0.75  spacing=0.075
+line x  location=1.7   spacing=0.05
+line x  location=2.2   spacing=0.05
+
+line y  location=0.0   spacing=0.5
+line y  location=1.0   spacing=0.5
+
+init silicon c.phos=1e18 
+
+epitaxy thick=2.5 divis=6 c.phos=4e16 time=25 temp=800
+epitaxy thick=0.5 divis=12 c.phos=4e16 time=5  temp=800 dy=0.005 ydy=0
+
+diff time=20 temp=900 dryo2
+
+deposit nitride thick=.35 div=1
+
+etch nitride left  p1.x=0.5
+
+relax y.min=-2.5 dir.y=f 
+relax y.min=-2.5 dir.y=f 
+
+
+method grid.ox=0.05
+diffuse time=60 temp=1000 weto2
+
+strip nitride
+etch oxide thick=0.05
+
+
+# create the effect of selective epitaxy by 
+# depositing and then removing from atop oxide  
+
+# Deposit Silicon layers
+
+deposit silicon  thick=0.025 divis=10 c.boron=1e17
+
+
+deposit photo thick=.4 divis=5
+etch photo left x=0.8
+# define the etch rates
+rate.etch machine=test rie  n.m silicon isotropic=0.0 directional=20.0
+rate.etch machine=test rie  n.m oxide   isotropic=0.0  directional=3.0
+
+# perform the etch 
+etch mach=test time=6. minutes dx.mult=0.25
+
+
+strip
+
+
+# deposit gate oxide to get exact thickness
+deposit oxide    thick=0.016 div=1
+
+
+# Deposit poly for the gate
+
+deposit poly thick=0.2  divis=8 c.boron=1.e17
+
+# Pattern the gate
+etch poly       left  p1.x=1.7
+etch oxide      thick=0.02
+
+# implant source drain
+implant boron dose=1e15 energy=20
+
+
+rate.depo machine=BPSG nitride u.m  sigma.dep=0.20 smooth.win=0.5 \
+        smooth.step=1 unidirec dep.rate=1.0 angle1=0.00
+
+deposit machine=BPSG time=0.7 minute divis=8
+
+deposit photo thick=.75 divis=7
+
+etch photo    start x=0.9 y=10.
+etch          cont  x=0.9 y=-10.
+etch          cont  x=1.5 y=-10.
+etch          done  x=1.5 y=10.
+
+rate.etch machine=test1 nitride u.m  wet.etch isotropic=0.3
+etch machine=test1 time=1. minutes dx.mult=0.2
+
+rate.etch machine=test2 nitride u.m  rie      direct=0.3
+etch machine=test2 time=1.5 minutes
+
+strip
+
+# Deposit and pattern the contact metal
+# 
+rate.depo machine=alum_depo alumin u.m  cvd dep.rate=1.0 step.cov=0.80
+deposit machine=alum_depo time=.25 minute divis=5
+
+etch aluminum right p1.x=1.9
+
+# reflect the structure
+structure right mirror
+
+
+# Define the electrodes
+electrode    name=source  left
+electrode    name=drain   right
+electrode    name=gate    x=2.5 y=-3.1
+electrode    name=substrate backside
+
+# Define impurity as acceptor or donor in SiGe material
+
+structure outfile=mos2ex20_0.str
+
+go atlas
+ 
+contact name=gate p.polysilicon
+
+material material=Si    taun0=1e-7  taup0=1e-7
+
+#do elevated temperature simulation
+
+model temp=300 mos hhi devdeg.rd devdeg.h
+degradation rd.sihtot=1.0e12 rd.h.hccoef=1.0e8 rd.kf0=2.0e-4 rd.aevar=0.05 rd.kr0=1.0e-13 rd.invhcoef=0.01 rd.coupled
+
+probe name="hatom_channel" h.atom x=2.2 y=-3.02
+probe name="hmole_channel" h.mole x=2.2 y=-3.02
+probe name="hatom_oxide" h.atom x=2.2 y=-3.03
+probe name="hmole_oxide" h.mole x=2.2 y=-3.03
+probe name="hatom_poly" h.atom x=2.2 y=-3.04
+probe name="hmole_poly" h.mole x=2.2 y=-3.04
+probe p.conc x=2.2 y=-3.02
+probe n.conc x=2.2 y=-3.02
+
+# Perform zero bias solution
+solve init 
+solve prev
+
+output devdeg con.band val.band
+
+save outf=mos2ex20_1.str
+
+method dt.max=1.0 tol.time=1.0e-3 quasi
+
+# Apply a stress Voltage of -2.0 Volts on the Gate for 100 seconds
+log outf=mos2ex20_0.log devdeg
+solve vgate=-2.0 vdrain=0.1 ramptime=1.0e-6 tstep=1.0e-8 tfinal=1.0e-3
+save outf=mos2ex20_2.str
+
+solve tfinal=1.0e-2
+save outf=mos2ex20_3.str
+
+solve tfinal=1.0e-1
+save outf=mos2ex20_4.str
+
+solve tfinal=100.0
+save outf=mos2ex20_5.str
+ 
+log off
+
+go atlas
+
+mesh infile=mos2ex20_0.str width=1.0
+
+material material=silicon taun0=1e-7 taup0=1e-7
+
+model temp=300 mos hhi devdeg.rd devdeg.h
+degradation rd.sihtot=1.0e12 rd.h.hccoef=1.0e8 rd.e.hccoef=0.0 rd.e.offset=0.0 rd.h.offset=0.0 rd.kf0=2.0e-4 rd.aevar=0.05 rd.kr0=1.0e-13 rd.invhcoef=0.01 rd.coupled
+
+probe name="hatom_channel" h.atom x=2.2 y=-3.02
+probe name="hmole_channel" h.mole x=2.2 y=-3.02
+probe name="hatom_oxide" h.atom x=2.2 y=-3.03
+probe name="hmole_oxide" h.mole x=2.2 y=-3.03
+probe name="hatom_poly" h.atom x=2.2 y=-3.04
+probe name="hmole_poly" h.mole x=2.2 y=-3.04
+probe p.conc x=2.2 y=-3.02
+probe n.conc x=2.2 y=-3.02
+
+solve init
+
+load infile=mos2ex20_5.str master
+
+contact name=gate p.polysilicon
+
+solve prev
+
+method dt.max=10.0 tol.time=1.0e-3  quasi
+# Now relax the device for 1000 s
+
+log outf=mos2ex20_1.log devdeg
+solve vgate=0.0 vdrain=0.0 ramptime=1.0e-3 tstep=1.0e-8 tfinal=1000.0 
+log off
+
+output con.band val.band devdeg
+
+save outf=mos2ex20_6.str
+
+tonyplot -overlay mos2ex20_0.log mos2ex20_1.log -set mos2ex20_0.set
+tonyplot -overlay mos2ex20_0.log mos2ex20_1.log -set mos2ex20_1.set
+tonyplot -overlay mos2ex20_0.log mos2ex20_1.log -set mos2ex20_2.set
+
+go atlas
+
+mesh infile=mos2ex20_0.str width=1.0
+
+material material=silicon taun0=1e-7 taup0=1e-7
+
+model temp=300 mos hhi devdeg.rd devdeg.h
+degradation rd.sihtot=1.0e12 rd.h.hccoef=1.0e8 rd.e.hccoef=0.0 rd.e.offset=0.0 rd.h.offset=0.0 rd.kf0=2.0e-4 rd.aevar=0.05 rd.kr0=1.0e-13 rd.invhcoef=0.01 rd.coupled
+
+#do elevated temperature simulation
+
+loop steps=6
+
+assign name=counter print n.value=1 delta=1
+assign name=counterp1 print n.value=2 delta=1
+
+solve init
+
+load infile=mos2ex20_${counter}.str master
+
+contact name=gate p.polysilicon
+
+solve name=drain vstep=-0.1 vfinal=-0.5
+
+solve vgate=0.1
+solve vgate=0.5
+
+log outf=mos2ex20_${counterp1}.log
+
+solve name=gate vstep=-0.025 vfinal=-1.8 compl=1.0e-6 cname=source
+
+extract name="vt${counter}" -(xintercept(maxslope(curve(abs(v."gate"),abs(i."drain")))) \
+        - abs(ave(v."drain"))/2.0)
+
+log off
+
+l.end
+
+
+tonyplot -overlay mos2ex20_2.log mos2ex20_3.log mos2ex20_4.log mos2ex20_5.log mos2ex20_6.log mos2ex20_7.log -set mos2ex20_3.set
+
+tonyplot mos2ex20_5.str -set mos2ex20_4.set
+

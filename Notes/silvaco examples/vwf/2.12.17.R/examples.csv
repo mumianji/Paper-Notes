@@ -1,0 +1,41 @@
+#Stress in MOSFET with embedded SiGe layer
+vwfex01.tgz, vwfex01
+
+#VT optimization using a Doe approach
+vwfex02.tgz, vwfex02
+
+#VT optimization using an Optimization approach
+vwfex03.tgz, vwfex03
+
+#Back End Capacitance optimization
+vwfex04.tgz, vwfex04
+
+#Inductance Response Surface Model (RSM)
+vwfex05.tgz, vwfex05
+
+#User defined Inductor spice model parameters extraction
+vwfex06.tgz, vwfex06
+
+#Spice corner analysis
+vwfex07.tgz, vwfex07
+
+#TFT spice model parameter extraction
+vwfex08.tgz, vwfex08
+
+#Organic Solar cell optimization
+vwfex09.tgz, vwfex09
+
+#Inductance Q factor optimization
+vwfex10.tgz, vwfex10
+
+#Inductance Q factor optimization using LM algorithm
+vwfex11.tgz, vwfex11
+
+#Defining ATLAS split in VWF
+vwfex12.tgz, vwfex12
+
+#Defining DEVEDIT split in VWF
+vwfex13.tgz, vwfex13
+
+#Calibration of IECE model in Victory Process
+vwfex14.tgz, vwfex14

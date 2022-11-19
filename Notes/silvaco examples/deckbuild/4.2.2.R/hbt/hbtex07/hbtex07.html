@@ -1,0 +1,60 @@
+<html>
+  <head>
+    <title>3D SiGe HBT Example</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>3D SiGe HBT Example</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Device 3D</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="hbtex07_plot0.png" width="640" alt="hbtex07_plot0" />
+      <p/>
+      <img src="hbtex07_plot1.png" width="640" alt="hbtex07_plot1" />
+      <p/>
+      <img src="hbtex07_plot2.png" width="640" alt="hbtex07_plot2" />
+      <p/>
+      <img src="hbtex07_plot3.png" width="640" alt="hbtex07_plot3" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates the use of Atlas 3D to create a hetero-junction
+bipolar transistor.  The structure can be plotted using
+<b> TonyPlot3D.</b> The combination of a hetero-junction device with a 3D structure requires the
+use of
+<b> Blaze 3D.</b> The band alignment is arranged such that all the SiGe band edge discontinuity
+occurs at the valance band edge.  To correctly model abrupt band edge
+discontinuities, a 10 Angstrom grid spacing is recommended at these junctions.
+A careful study of the grid in
+<b> TonyPlot3D</b> and in the input file will show how this stringent requirement can be met
+without increasing the total number of grid points to an unacceptable level
+in a 3D device.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

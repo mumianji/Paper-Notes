@@ -1,0 +1,76 @@
+# (c) Silvaco Inc., 2018
+go atlas
+TITLE : IGBT steady state output characteristics
+
+mesh
+
+x.mesh loc=0.0   spac=1.25
+x.mesh loc=13.0  spac=0.8
+x.mesh loc=25.0  spac=1.4
+
+y.mesh loc=-0.08 spac=0.04
+y.mesh loc=0.0   spac=0.01
+y.mesh loc=0.6   spac=0.2
+y.mesh loc=8.0   spac=1.0
+y.mesh loc=70.0  spac=20.0
+y.mesh loc=100.0 spac=10.0
+
+region     num=1 y.max=0.0   oxide
+region     num=2 y.min=0.0  silicon
+
+#   electrodes #1 - gate; #2 - emitter #3 - collector
+
+elec       num=1 left  y.min=-0.08  length=13.0 name=gate
+elec       num=2 right y.min=0.0  y.max=0.0 length=6.8  name=emitter
+elec       num=3 bottom  name=collector
+
+#   impurity profile
+
+doping     uniform conc=1.5e14 n.type    
+doping     uniform conc=1.0e19 p.type    y.t=81.4 y.b=100
+doping     uniform conc=1.0e17 n.type    y.t=65.0 y.b=81.4
+doping     gauss conc=2.7e17 p.type junc=5.8 x.l=13   ratio=0.8
+doping     gauss conc=9.3e19 n.type junc=0.4 x.l=13 x.r=20 ratio=0.8
+
+save outf=powerex04_0.str
+
+tonyplot  powerex04_0.str -set powerex04_0.set
+
+mater    region=2 taup0=1e-6 taun0=1e-6
+contact  num=1 n.poly
+
+models   analytic srh auger fldmob surfmob  
+impact   selb
+   
+solve    init                
+
+method  newton trap 
+
+# Vge increased from 0 up to Vge=10.0 V
+solve    vgate=0.1  vstep=0.1   nstep=9    name=gate 
+solve    vgate=1.2  vstep=0.2   nstep=18   name=gate
+solve    vgate=5.0  outf=VG5.str master
+solve    vgate=5.2  vstep=0.2   nstep=23   name=gate
+solve    vgate=10.0 outf=VG10.str master
+
+# Vge=5.0 V
+# Vce increased from 0. up to Vce=20. V
+log      outf=powerex04_1.log master
+
+load     inf=VG5.str master
+solve    vcollector=0.1 vstep=0.1  vfinal=0.9  name=collector
+solve    vcollector=1.0 vstep=1.0  vfinal=20.0 name=collector
+
+# Vge=10.0 V
+# Vce increased from 0.1 up to Vce=20. V
+log      outf=powerex04_2.log master
+load     inf=VG10.str master
+solve    vcollector=0.1 vstep=0.1  vfinal=1.5  name=collector
+solve    vcollector=2.0 vstep=1.0  vfinal=20.0 name=collector
+save     outf=powerex04_1.str master
+
+tonyplot -overlay powerex04_1.log powerex04_2.log -set powerex04_log.set
+quit
+
+
+

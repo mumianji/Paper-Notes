@@ -1,0 +1,79 @@
+## layout
+name "CMOS Inverter"
+start 2.300000 10.900000
+stop 5.000000 10.900000
+## end
+## information
+## end
+## grid
+linex 0.000000 0.100000
+linex 0.300000 0.100000
+linex 0.500000
+linex 0.600000 0.100000
+linex 0.800000 0.050000
+linex 1.100000 0.150000
+linex 1.500000 0.150000
+linex 1.800000 0.050000
+linex 2.000000 0.100000
+linex 2.100000
+linex 2.300000 0.100000
+linex 2.700000 0.100000
+liney 0.000000 0.010000
+liney 0.100000 0.050000
+liney 0.500000 0.080000
+liney 1.000000 0.100000
+liney 5.000000 1.000000
+## end
+## electrodes
+"gate" "POLY" 0.800000 1.800000
+"source" "MET1" -0.100000 0.500000
+"drain" "MET1" 2.100000 2.800000
+## end
+## mask "WELL"
+barrier 0.100000 1 min.space=0.005 min.dist=0.000
+etchall
+## end
+## mask "AAD"
+barrier 0.100000 1 min.space=0.005000 min.dist=0.000000
+etchnone
+## end
+## mask "VIA1"
+barrier 0.100000 1 min.space=0.005000 min.dist=0.000000
+etchnone
+## end
+## mask "POLY"
+barrier 0.100000 1 min.space=0.005000 min.dist=0.000000
+etchstart -0.100000
+etchdone  0.800000
+etchstart 1.800000
+etchdone  2.800000
+## end
+## mask "RES"
+barrier 0.100000 1 min.space=0.005000 min.dist=0.000000
+etchnone
+## end
+## mask "VIA2"
+barrier 0.100000 1 min.space=0.005000 min.dist=0.000000
+etchstart -0.100000
+etchdone  0.300000
+etchstart 2.300000
+etchdone  2.800000
+## end
+## mask "MET1"
+barrier 0.100000 1 min.space=0.005000 min.dist=0.000000
+etchstart 0.500000
+etchdone  2.100000
+## end
+## mask "VIA3"
+barrier 0.100000 1 min.space=0.005000 min.dist=0.000000
+etchnone
+## end
+## mask "MET2"
+barrier 0.100000 1 min.space=0.005 min.dist=0.000
+etchall
+## end
+## regions
+"ngate" 1.300 1 0.800 1.800
+"nmcc" 2.550 2 2.300 2.800 -0.100 0.300
+"pwell" 1.350 1 -0.100 2.800
+## end

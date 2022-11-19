@@ -1,0 +1,899 @@
+{section} DIODE : Diode Application Examples 
+
+
+
+
+{subsection} diodeex01.in : Schottky Diode Forward Characteristic
+
+Requires: S-Pisces
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates simulation of a Schottky Diode Forward Characteristic. 
+It shows:
+
+{bullet} Formation of a diode structure using Atlas syntax
+{newline}
+{bullet} Setting of Schottky barrier height for the anode
+{newline} 
+{bullet} Forward biasing the anode
+
+In the first part of the input file the device is described, including
+mesh, electrodes locations, and doping distribution. This is a 2D
+n-type device with heavily doped floating p-type guard ring regions,
+located at the left and right sides of the structure. The Schottky
+anode is located at the top of the device, and a heavily doped cathode is located at
+the bottom of the device.
+
+After the device description, the
+{bold} model 
+statement is used to specify the following set of models :
+carrier concentration dependent mobility
+{bold} (ccsmob)
+, field dependent mobility, band-gap narrowing,
+SRH and Auger recombination. The two carrier model is specified here as well (carriers=2). 
+
+
+The key statement for setting a Schottky contact is
+{bold} contact name=<char> work=<val>
+. It is used to specify the workfunction of the Schottky electrode. In this
+example, since the substrate is n-type silicon with an affinity of 4.17,
+the specified workfunction of 4.97 provides
+a Schottky-barrier height of 0.8V. The default barrier height is zero
+(a perfect ohmic contact). This condition is assumed for the cathode.
+
+
+The electrical simulation simply ramps the anode voltage to 1.0V in
+0.05V steps using the
+{bold} solve 
+statement. The results of the simulation are then displayed using TonyPlot.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+{subsection} diodeex02.in : Breakdown Simulation with EB and NEB Models
+
+Requires: S-Pisces/Giga
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates breakdown simulation of a 1D diode, including
+second breakdown,  with Energy Balance (EB) and Nonisothermal Energy
+Balance (NEB) Models.
+
+Breakdown simulation for submicron devices should be simulated using the 
+Energy Balance Model due to  nonlocal impact ionization effects, which
+can substantially influence device characteristics. For high current
+levels the thermal self-heating effects can also play an important
+role by decreasing the mobility and impact ionization rate. This example
+demonstrates a comparison of breakdown calculations obtained with Energy
+Balance and Nonisothermal Energy Balance Models.
+
+The first Atlas run uses the Energy Balance Model: Poisson's equation,
+carrier continuity equations, and energy balance equation for electrons
+and holes are solved self-consistently.
+
+In the first part of the input file the device is described, including
+mesh, electrodes locations, and doping distribution.
+The
+{bold} material 
+statement is then used to assign  energy relaxation times for electrons and holes.
+The
+{bold} models 
+statement is used to select a set of physical models for this
+simulation.  In this case, these models are SRH and AUGER
+recombination, the concentration and field dependent mobility model,
+band gap narrowing, and energy balance
+equations for electrons and holes (hcte).
+The 
+{bold} impact 
+statement is used to assign the energy relaxation lengths for the Selberherr model.
+The 
+{bold} contact 
+statement is used to specify a large resistor at the emitter electrode, providing a smooth
+transition from voltage boundary conditions to current boundary conditions. It is not
+needed if the curve tracing algorithm is used (see the following example).
+
+The numerical methods used in EB simulation can strongly affect
+convergence and CPU time. Here
+{bold} method block newton 
+is used. This decouples the carrier temperature calculation from the
+potential and continuity equations at lower biases. This allows for
+larger bias steps at low bias.
+
+The initial biasing is done by ramping the emitter contact towards 25V. A compliance limit is set on the emitter current as defined by:
+{bold} cname=emitter compl=<value>
+. Once this current is exceeded the voltage ramp stops and Atlas proceeds to the next simulation line. This is to specify 
+{italic} current forcing
+on the emitter contact. The syntax
+{bold} contact name=emitter current 
+does this.
+
+After setting the newton method the biasing proceeds by specifying
+{bold} istep=<value> imult
+. The parameter imult indicates that the istep is a 
+{italic} multiplier
+to the current as opposed to an additive step. Therefore at each bias
+step the forced current is multiplied by istep. 
+{bold} ifinal 
+indicates the
+maximum current to be simulated.
+
+Note that due to the use of current forcing,  
+{bold} emitter int. bias 
+should be used as the x axis on the IV data plots.
+
+The second Atlas run uses the Nonisothermal Energy Balance Model: Poisson's equation, 
+carrier continuity equations, energy balance equation for electrons and holes, and 
+the lattice heat flow equation are solved self-consistently.
+
+The same set of models is used, except that the solution of the  lattice energy
+balance equation is activated using the
+{bold} models  lat.temp 
+statement.
+
+In addition, the thermal boundary conditions should be defined in this case.
+Thermal boundary conditions are defined in the 
+{bold} thermcontact 
+statement. Values of the thermal conductances are specified at the thermal contact 
+located along the emitter and base electrodes.
+
+The results of the two simulation runs are then overlaid using TonyPlot.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+{subsection} diodeex03.in : Breakdown Simulation with the Curve Tracer
+
+Requires: S-Pisces
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates breakdown simulation for a 1D diode using the
+automatic curve tracing algorithm. It shows:
+
+{bullet} 1D diode structure formation using Atlas syntax
+{newline}
+{bullet} Setting of models for breakdown simulation
+{newline}
+{bullet} Setting of curve tracing parameters
+{newline}
+{bullet} Automatic reverse bias curve trace simulation.
+
+In the first part of the input file, the device structure is specified including
+mesh, electrodes locations, and doping distribution.
+
+The
+{bold} models 
+statement is then used to select a set of physical models for this simulation.  In this case,
+these models are SRH and AUGER recombination, the concentration and field dependent 
+mobility model, band gap narrowing and two carriers solution.
+The 
+{bold} impact 
+statement is used to activate the Crowell-Sze impact ionization model.
+The 
+{bold} method 
+statement is used to activate the coupled Newton algorithm.
+
+The 
+{bold} curvetrace 
+statement is used to initialize parameters for the curve tracing algorithm. The
+{bold} contr.name 
+parameter specifies the name of electrode for which the load line
+technique will be applied. In this example it is the emitter. The 
+{bold} curr.cont 
+parameter means
+that value of current will be monitored, and simulation will be stopped when
+the current exceeds the value specified by the
+{bold} end.val 
+parameter (1.e-3 A/micron in this case).
+The 
+{bold} mincur 
+parameter defines the minimum current value after which the load
+line technique will actually be applied. Before that point, standard voltage boundary
+conditions are used. The
+{bold} nextst.ratio 
+parameter defines the maximum factor to use in increasing the voltage step on
+flat parts of the IV curve away from the turning points.
+
+The statement
+{bold} solve curvetrace 
+is used to activate the curve tracing algorithm.
+
+The results of the simulation are then displayed using TonyPlot. The drain voltage should be plotted as
+{bold} drain int.bias 
+from the TonyPlot menu, since the drain bias value includes the effect
+of the varying load used in the curve tracing algorithm.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} diodeex04.in : Silicon Carbide Diode Characteristics 
+
+Requires: Blaze
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+In this example, a SiC diode is simulated to demonstrate the Atlas 
+capabilities to handle wide band gap semiconductor devices under room and
+elevated temperature conditions. The interest toward SiC technologies
+is growing due to the thermal and electronic properties of the material
+potentially leading to very high figures of merit for high-power,
+high-speed, high-temperature, and radiation hard applications. 
+
+The p+/n/n+ diode structure considered is a device based on one of the SiC
+polytypes called alpha-SiC (or 6H-SiC), and is constructed using Atlas syntax.
+The input file consists of the following main parts:
+
+{bullet} Mesh, regions, electrodes and doping specification using Atlas syntax
+{newline}
+{bullet} Material and models definition for SiC
+{newline}
+{bullet} Calculation of forward I-V characteristic under the room temperature conditions
+{newline}
+{bullet} Calculation of forward I-V characteristics under elevated temperature 623K
+{newline}
+{bullet} Calculation of reverse and breakdown characteristics at 623K
+
+The simulations at elevated temperatures are performed in  a separate Atlas run within the same input file with the respective resetting/changing of the material and models
+definition.
+
+The input file starts by defining the mesh. The location and grid spacing
+along x and y directions are specified in the 
+{bold} x.m 
+and 
+{bold} y.m 
+statements. This 
+simulation employs cylindrical symmetry and is therefore quasi-3-dimensional. 
+To activate this feature, the parameter 
+{bold} cylindrical 
+is included in the 
+{bold} mesh
+statement.
+
+The structure consists of 3 regions: p+ emitter, n base, and n+ emitter
+regions, each uniformly doped. The dimensions of the regions and their
+doping are defined in the 
+{bold} region 
+and 
+{bold} doping 
+statements respectively.
+The anode and cathode contacts are specified in the 
+{bold} electrode 
+statements.
+
+Basic material parameters of alpha-SiC are defined in the 
+{bold} material 
+statements.
+These include dielectric permittivity, energy band gap, parameters related to
+the band gap narrowing, auger recombination coefficients, saturation velocity,
+and parameters describing mobility and lifetime temperature dependencies. The
+low field mobilities and lifetimes are specified on a region-by-region basis
+taking into consideration the level of doping in the respective regions.
+
+The set of physical models in the 
+{bold} model 
+statement includes electric field
+mobility dependence, Shockley-Read-Hall and Auger recombination, and band gap 
+narrowing. The temperature is also specified in the model statement.
+
+The first run is completed by the 
+{bold} solve 
+statement in which the anode bias is
+stepped from 0.1 up to 4 V to calculate the diode forward characteristic
+under room temperature conditions. The I-V data is saved in the log file.
+
+The second Atlas run simulates the forward, reverse, and breakdown
+characteristics under elevated temperature conditions. It starts by
+reading in the mesh and structure data from the file produced by the first run.
+In order to use the same cylindrical symmetry as the first run the
+{bold} cylindrical 
+parameter must be specified whilst loading the mesh.  The
+same material and model statements are used in this input file with the
+temperature set at 623K. Then the solving procedure is repeated to
+obtain the forward I-V characteristic which is saved in the log file.
+
+
+The set of physical models needs to be extended for simulating reverse
+and breakdown characteristics to include the impact
+ionization-generation model.  This is done in the following part of the
+input file, in the 
+{bold} impact 
+statement.  The Selberherr impact
+ionization model is used with the parameters changed to reflect the
+properties of alpha-SiC. The other material and model statements are
+repeated here to ensure proper reinitialization of the material and
+models parameters. Since the breakdown in diode structures is typically
+very sharp  the 
+{bold} curvetrace 
+feature of Atlas is used to bias the curve. Note that the parameter
+{bold} step.init 
+is negative. This is sufficient to force a negative voltage sweep on
+the anode.  The reverse/breakdown characteristic is saved in the log
+file. To plot the breakdown the
+{bold} anode int.bias 
+should be used as the x-axis.
+
+The graphs with the forward I-V characteristics at the room and elevated 
+temperatures, and the reverse and breakdown characteristic at 623K are
+displayed using TonyPlot.
+
+Since cylindrical coordinates were used, Note that in all I-V plots the
+units of current is Amps and not Amps/micron.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} diodeex05.in : Zener Diode Breakdown 
+
+
+Requires: SSuprem 4/S-Pisces
+{newline}
+Minimum Versions: Athena 5.22.3.R, Atlas 5.26.1.R
+
+This example demonstrates  electrical
+simulation of a Zener diode breakdown. It shows:
+
+{bullet} The formation of a 2D Zener diode structure in Athena
+{newline}
+{bullet} The transfer of the structure to Atlas
+{newline}
+{bullet} Specification of models for Zener breakdown simulation
+{newline}
+{bullet} Reverse bias simulation to the breakdown voltage
+
+The structure formation is performed by implanting a heavy boron dose into a
+heavily doped n-type substrate. The 2D extent of the p+ region is controlled
+by the etch coordinate of an oxide mask. A short diffusion is performed
+in Athena to drive in the p+ dopant.
+
+After the diffusion, 
+{bold} extract 
+statements are used to measure the
+junction depth and sheet resistance of the p+ region. After this, metal
+is added and patterned. The electrode positions are then defined using
+the 
+{bold} electrode 
+statements in Athena.
+
+The statement 
+{bold} go atlas 
+enables the automatic interface from Athena to Atlas.
+DeckBuild will switch simulators to Atlas and load in the final Athena structure 
+as the initial Atlas mesh. 
+
+In Atlas, the first lines of syntax define the models to be used in the
+simulation. The statement 
+{bold} models bip 
+defines the standard bipolar model set
+that is also recommended for diode simulation. This consists of
+concentration, temperature and electric field dependent mobilities,
+concentration dependent SRH and Auger recombination, and band gap
+narrowing. The parameter 
+{bold} bbt.std 
+enables the Lombardi band-to-band
+tunneling model. In heavily doped diodes this mechanism is the
+principal leakage current mechanism at voltages less than the avalanche
+breakdown.  The 
+{bold} impact 
+statement enables the impact ionization model of
+Selberherr.
+
+Newton's method is chosen on the method statement. The parameter
+{bold} climit=1e-4 
+is highly recommended for all reverse bias simulations
+in Atlas. It enables higher accuracy in the calculation of carrier
+concentration in the depletion regions.
+
+The anode voltage is then ramped up to -10V in 0.25V steps. The
+breakdown voltage of this device is around -5.5V. Atlas will converge
+up to this voltage and then stop as no solutions beyond this voltage
+are possible. By plotting the output log file in TonyPlot, the breakdown
+can clearly be seen. The pre-breakdown current is dominated by
+band-to-band tunneling. An equivalent simulation excluding the 'bbt.std'
+parameter might be run to demonstrate this.
+
+The final statements use the 
+{bold} extract 
+feature of DeckBuild to measure
+the maximum anode voltage at which convergence was obtained and the
+anode voltage for a particular value of anode current.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+{subsection} diodeex06.in : 3D Diode Characteristic 
+
+
+Requires: Device 3D
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates  electrical
+simulation of a diode. It shows:
+
+{bullet} The formation of a 3D diode structure in Atlas
+{newline}
+{bullet} Forward bias simulation 
+
+The
+{bold} z.mesh 
+statement is used in a similar manner to x.mesh and y.mesh to create a
+3D structure using the Atlas syntax. Following this the REGION,
+ELECTRODE and DOPING statement each have Z related parameters that
+correspond with the X and Y parameters familiar from 2D simulation.
+
+The syntax for setting material and model parameters and for biasing
+the device and saving results is identical to the previous 2D examples.
+Note that
+{italic} TonyPlot3d
+is required to plot the 3D mesh and solution files. TonyPlot is used
+for plotting the log files.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} diodeex07.in : Gunn Diode 
+
+Requires: DevEdit/Blaze
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example shows the transient oscillatory behavior of a 
+{bold} Gunn 
+device due to 
+the negative differential resistance of behavior exhibited by GaAs 
+(as a result of electron intervalley transfer). 
+
+In the first part of the input file the structure is defined within DevEdit.
+The device is a sandwich structure made up of 2 gold electrode layers on the 
+top and bottom, one low doped transit layer in the middle and 2 high doped
+layers acting as low resistivity contact regions and carrier injectors.
+
+The thickness of the transit layer together with the applied electric field
+is one of the key design features determining the frequency of the oscillations.
+
+In the second part of the file, after the 'go atlas' statement, transient device 
+simulations are performed for different biases.
+
+After loading the structure from DevEdit, a load resistor is attached at
+the anode side with the
+{bold} contact 
+statement. In order to model the negative differential velocity saturation
+behavior for electrons,  
+{bold} fldmob 
+in the model statement is
+specified together with the
+{bold} evsatmod=1 
+parameter.  This switches on the negative differential mobility model
+for GaAs like materials. As the function of holes is negligable, the
+solution of the hole continuity equation can be disabled by specifying 
+{bold} carriers=1.
+
+By ramping up the bias of the anode to 2 V one can clearly see the effect of 
+the negative resistance
+{bold} extract 
+is used to calculate the critical electric field from the log-file. With the 
+following stationary simulation it can be shown that the bias is not sufficient 
+to feed an oscillation with the given load, the oscillation is damped. The 
+frequency is calculated by extracting the time required of 4 full periods.
+
+In contrast, the device is able to operate at 4V bias. To monitor the movement
+of the domains, select several of the different electron distributions 
+from different points in time (as 2d contours or the corresponding cutlines) 
+displayed with TonyPlot at the end of the simulation, and make a movie using
+the
+{bold} Tools: Movie 
+menu.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+{subsection} diodeex08.in : 3D Diode using lifetime killing 
+
+
+Requires: DevEdit 3D/Device 3D/Giga 3D
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+A common practice in high power electronics is to vary carrier lifetime across a device by bombarding the region of silicon  with particles or introducing gold impurities. 
+This example demonstrates how such an analysis may be performed using device simulation. This example shows:
+
+{bullet} The formation of a 3D diode structure in DEVEDIT3D
+{newline}
+{bullet} Device simulation driving the diode into forward bias 
+{newline}
+{bullet} How to create a 3D plot showing the current crowding effect
+
+The structure is first created by running DEVEDIT3D in batch mode using the command 
+{bold} go devedit.
+DEVEDIT3D performs three functions: creation of the diode topology with the
+{bold} region 
+statement, addition of impurities with the 
+{bold} impurity 
+statement and finally creates the mesh for the device simulation by setting various 
+{bold} Meshing Parameters 
+options. Further information on these statements may be found in the 
+{bold} VWF Interactive Tools User's Manual: Volume 1
+.
+
+Only the top left quarter of the complete cell will be simulated as the three quarters are identical. 
+The structure created by DEVEDIT3D contains two different silicon regions which will exhibit different carrier lifetimes during the device simulation.
+
+The completed structure is then piped into the device simulator which is started with the 
+{bold} go atlas 
+command. The Atlas syntax is then used to modify the material parameters in the different regions. The 
+{bold} material 
+statement is used to specify the electron and hole lifetime in each silicon region. In this example we have made the carrier lifetime 20 times smaller in
+ the region which has undergone a lifetime killing process- region number 1. It is also highly important that the necessary physical models are switched on if the simulation is to be accurate. The 
+{bold} model 
+ statement is used to switch on the appropriate models for the simulation. In this case the example uses analytic and conmob: the doping and temperature 
+dependent low field mobility model, fldmob: the lateral electric field-dependent mobility model, srh: Shockley-Read-Hall recombination, auger: recombination 
+accounting for high level injection effects, and bgn: band gap narrowing.
+
+In addition, if thermal self heating effects are required in the simulation, an additional parameter
+{bold} lat.temp 
+ will be required to cause the simulator to solve the lattice heat flow equation. If this is the case a thermal boundary condition must also be specified using the 
+{bold} thermcontact 
+ statement. This example uses the cathode electrode, number 2, as the thermal boundary condition and specifies a fixed temperature there of 300 K.
+
+As the solution proceeds all terminal characteristics are saved into a file, with the command
+{bold} log outf=<filename>
+, which can then be plotted at the end of the simulation. Two simulations are 
+performed in this example, with and without the lattice heating model switched on, both driving the diode into forward bias. TonyPlot is then used to display
+ both of the I-V results on the same plot as well as the change in lattice temperature. When the lattice heating model is turned on the increase in lattice
+ temperature causes a decrease in carrier mobility and thereby a roll-off in current under forward bias.
+
+Note that the user can use 
+{italic} TonyPlot3d 
+to plot the 3D mesh and solution files. By displaying the total current density in an isosurface contour plot, the current crowding effect can be seen.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+{subsection} diodeex09.in : Temperature Ramping - Effect on Leakage
+
+
+Requires: S-Pisces
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates the correct method for global temperature ramping in 
+{bold} Atlas 
+for any device.  A diode structure was chosen here for simplicity.
+In Atlas the 
+{bold} global temperature 
+of the device is set using the
+{bold} models 
+statement.  However, the global temperature can only be set ONCE in the input
+deck if ALL the temperature dependent parameters are to be set.  If the 
+temperature is reset during a single input deck with a second "models
+statement" an incorrect result is obtained, since not all of the temperature
+dependent parameters are set in subsequent models statements.
+
+The solution is to use the combination of a "go atlas" statement, together with
+a "mesh infile=" statement.  After the mesh statement, reset the global
+temperature with a new "models" statement.
+
+The device bias conditions can then either be ramped up from zero, as in this
+example, or loaded in from the previous solution with a
+{bold} "load infile=" 
+statement.  In order to end up with one continuous 
+{bold} log outfile 
+the keyword
+{bold} append 
+must be added to the log outfile name after the second and subsequent "log
+outfile=" statements in order to prevent the original log file from being 
+overwritten.
+
+This example also plots the electron and hole
+{bold} mobility versus temperature
+. Substituting different mobility models allows the temperature effects of each
+to be compared.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+{subsection} diodeex10.in : GaN diode, Reverse-bias leakage current vs temperature
+
+
+Requires: Blaze
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example demonstrates modeling of temperature dependence of reverse-bias leakage current
+in GaN Schottky diode as a consequence of phonon-assisted tunneling based on the reference below:
+
+Pipinys P., and V. Lapeika, "Temperature dependence of reverse-bias leakage current in GaN Schottky
+diodes as a consequence of phonon-assisted tunneling" J.Appl. Phys. 99 (2006): 093709.
+
+It shows:
+
+{bullet} Structure definition using Atlas 
+{newline}
+{bullet} Temperature Tependence Reverse Voltage Characteristics using Atlas
+{newline} 
+
+It has been found that the reverse I-V characteristics of some Gallium Nitride (GaN) diodes can best be 
+explained by using a phonon-assisted electron tunneling model. The electrons are assumed to be emitted from 
+local levels in the metal-semiconductor interface.
+
+To enable the model, use the keyword
+{bold} PIPINYS 
+on the 
+{bold} CONTACT 
+statement. The default value of
+{bold} PIP.NT 
+is 
+{bold} 0 
+and so you must set a finite value for this quantity in order for the model to have any effect. The other 
+parameters may be specified on the MATERIAL statement. Although the model was developed specifically for 
+reverse bias current in GaN, Atlas does not restrict use of the model to that material. 
+{bold} PIP.OMEGA 
+is the phonon energy,
+{bold} PIP.ACC 
+is the electron-phonon interaction constant, and 
+{bold} PIP.ET 
+is the trap depth.
+
+Once constructed, the device reverse characteristics are then simulated in Atlas (SPISCES), using as
+well the 
+{bold} "Universal Schottky Tunneling" model (UST)  
+
+The Experiment file starts with
+{bold} go internal 
+command which transfers control from the current simulator (i.e. Atlas) to
+DBInternal. The    
+{bold} load 
+command specifies which template file should be used for multiple runs. The
+{bold} sweep 
+command specifies how the variables set in the template file should be changed.
+The parameter specified by the 
+{bold} set 
+command in the template file is set to be changed; in this case the temperature.
+The 
+{bold} data 
+specifies values of the temperature. 
+
+The final results are plotted using the same X and Y axes as in the paper for a direct comparison 
+with measured results. 
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+{subsection} diodeex11.in : Effect of ionic species on small signal capacitance of MOS-C
+
+
+Requires: S-Pisces
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example shows how to include ionic species in the insulator of a MOS-C capacitor.
+The mobile species affect the small signal conductance and capacitance of the device
+as a function of bias and frequency.  The deck builds a basic MOS-C structure using 
+Atlas commands.  Then an ionic species is added using the DOPING statement.
+{newline}
+{bold} doping region=1 species1 gaussian conc=1e16 char=0.06 lat.char=0.15  peak=0.125
+{newline}
+with the SPECIES1 parameter.  Another species is initialised using the same syntax, and
+both species have an initial gaussian distribution.  The PROBE statement is used to
+set up an integration of the species over the device. The generic ion transport model is 
+selected on the MODELS statement
+{newline}
+{bold} models srh nspecies=2 species1.z=2 species2.z=-1
+{newline}
+where NSPECIES=2 indicates there are two species, and SPECIES1.Z=2 indicates that the first
+has a double positive charge and SPECIES2.Z=-1 indicates that the second has a single negative
+charge. The METHOD statement
+{newline}
+{bold} method species.maxx=1.0e6 species.ins
+{newline} 
+restricts the species to the insulator and sets the maximum permissible update vector to be
+a ratio of 1.0e6.
+
+The anode is biased to 1.0 V and the anode voltage is ramped to -2.0 V with the small signal
+parameters calculated at 100 Hz. This is then repeated with the small signal frequency being 
+1 GHz. These curves are compared to the MOS-C without ions in the insulator.  In the latter 
+case the Capacitance varies only slightly with the channel charge.  With ionic species present,
+and at 100 Hz, the movement of ionic charge by the test signal gives a large capacitance. At
+an anode voltage of 1 V the negative ions are near the anode and the positive ions are near 
+the semiconductor/insulator interface.  As the anode bias changes to -2 V,  this situation
+reverses and when the centre of charge is near the centre of the insulator the small signal
+capacitance is a maximum.  With a test signal of 1 GHz the ionic species are not sufficently
+mobile to react and so the small signal capacitance is much reduced.  The species density
+profiles are shown in the cutline of the plot of the structure file at 1.o and -2.0 V anode bias.
+  The PROBE statements can optionally  be selected in the first plot and show that the integrated density of each species is
+constant (because there are no reactions and the species are confined to the insulator).
+They also show the species concentration at the center of the insulating layer as a function of bias.
+
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+{subsection} diodeex12.in : Tunnelling Through a Polysilicon-Oxide-Silicon Diode
+
+Requires: S-Pisces
+{newline}
+Minimum Versions: Atlas 5.26.1.R
+
+This example shows how to self-consistently include oxide barrier tunneling in the I-V
+characteristics of a MIS diode.  For forward bias there are three different components
+to the tunnel current, and in reverse bias the tunnel current is electronic in nature 
+and limited by the thermal generation rate of carriers in the silicon.
+
+The example is split into several sections,  each starting with
+{newline}
+{bold} go atlas 
+{newline}
+The first section sets up a structure with a polysilicon gate, a 2.5 nm thick oxide and
+a lightly p-doped Silicon substrate.  The substrate is contacted with an ohmic aluminum
+contact.  
+
+The next section reads in the structure and sets material parameters for the oxide and silicon.
+The effective masses in the oxide strongly effect the value of the tunnel current.
+The contact workfunction is set to be that of n-type polysilicon, and the effective masses in the contacts
+are also set.  On the MODELS statement 
+some mobility and recombination models are set for the silicon. The parameter
+{bold} QTNLSC.EL 
+enables self-consistent electron tunneling, whereby electrons 
+tunneling through the oxide are injected into the electron continuity equation in the 
+silicon.  The parameter
+{bold} QTNL.DERIVS 
+puts non-local derivatives into the system matrix to help achieve a converged solution, 
+and is essential in this example.  The anode bias is then ramped to 2.4 V and the 
+resulting currents saved in a logfile.  The current components are also saved using the
+j.elec, j.hole and j.tun parameters.  
+
+The next section is essentially the same as the last except that hole tunnelling is 
+included as well, by specifying 
+{bold} QTNLSC.HO
+.  In the following section band-to-band tunneling is initially enabled 
+by using the 
+{bold} QTNLSC.BBT 
+parameter.  This will be significant when the valence band in the polysilicon is at a
+greater electron energy than the silicon conduction band.  The forward biased I-V curves show that at
+low biases the electron injection dominates, then hole tunneling from the silicon valence
+band to the polysilicon valence band becomes dominant. At even higher biases the band-to-band 
+tunneling switches on and dominates.
+
+The example continues with negative bias being applied to the anode.  This causes the electrons 
+to be removed from the device by tunnelling to the gate, and because the electrons are minority carriers they are only
+supplied through SRH generation processes.  Even at large negative biases the current is relatively small
+because of the rate limiting effect of the SRH generation of minority carriers. To illustrate this the
+final section repeats the reverse bias simulation but with an SRH lifetime that is two orders of magnitude
+longer and the tunnel current is much smaller because of the lower thermal generation rate. 
+ The hole and band-to-band tunnel rates are negligible in this case.  The contact Fermi-level
+is near to the polysilicon conduction band and consequently hole injection is negligible.
+  The I-V characteristics of the diode between Anode voltages of -2.4 V and 2.4 V are shown in the final plot.
+This example thus demonstates the rectifying properties of the tunneling diode, and the physical processes
+which lead to this behavior.
+
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+{subsection} diodeex13.in : Avalanche breakdown in Si diode at low/cryogenic temperatures down to 3 K 
+
+Requires: Victory Device  or  Atlas
+{newline}
+Minimum Versions: Victory Device 1.12.1.R  or  Atlas 5.26.1.R
+
+This example demonstrates the capability of a TCAD simulation of impact ionization in silicon devices at very low or cryogenic temperatures, down to 3 K (liquid helium temperature).
+
+This example is related to the Simulation Standard article: 
+"TCAD Simulation of Impact Ionization at Cryogenic Temperatures, down to 3 K", The Simulation Standard, Silvaco, Oct-Dec 2016.
+
+The input deck provided with this example can be run by either Victory Device or Atlas simulator, just by changing the solver name in the command  
+{bold} go victorydevice 
+into
+{bold} go atlas
+. It shows that both the Silvaco's major device simulators can be fully compatible in terms of input commands, producing same results, and allowing easy transition between Atlas and Victory Device.
+
+TCAD simulations of devices operating at very low temperatures, especially below 50 K, have always posed a challenge. Below 50 K, carrier and ionization statistics develop sharp transitions which cause slower convergence.  As the temperature (T) decreases, the intrinsic carrier concentration also decreases, and the computed carrier concentration can easily underflow.
+
+An additional challenge is modeling of impact ionization at very low or cryogenic temperatures. The general impact ionization generation process (described in the User's Manual) requires enough of free carriers (i.e. current density) to initiate the avalanche process. At very low temperatures, especially in the reverse-biased devices, the drift-diffusion current becomes so small that the simulated impact ionization generation rates remain so low that breakdown does not occur at the expected bias state. 
+
+In reality, impact ionization is a non-local process and is caused by hot carriers in the non-Maxwellian tail of the energy distribution function. The standard drift-diffusion model fails to correctly model these effects, although you can simulate the impact ionization breakdown. This is done by putting a
+{bold} minimum value on the current densities 
+used in the equation that calculates the impact generation rate (see User's Manual). You set a minimum current density by specifying the values of its directional components with the 
+{bold} JNX.MIN, JNY.MIN, JNZ.MIN, JPX.MIN, JPY.MIN, JPZ.MIN 
+parameters on the
+{bold} IMPACT 
+statement.  This model is currently only available with the
+{bold} E.SIDE 
+option activated on the
+{bold} IMPACT 
+statement (see  "Impact Ionization Models" section in the device simulator User's Manual).
+
+In order to correctly simulate the impact ionization in silicon (Si) at cryogenic temperatures, a modified set of parameters for the Selberherr's Impact Ionization Model is needed. The low-temperature parameters, better suited for T < 273 K , are activated by using the 
+{bold} SELB.SET2 
+option on the 
+{bold} IMPACT 
+statement.
+
+The simulation capabilities and model accuracy have been enhanced specifically to address cryogenic devices down to liquid helium temperatures (4K ... 3K). For cryogenic simulations, 160-bit extended precision has been found to offer the best combination of accuracy and speed.  Very low temperature (T < 50K) simulations should be done using 160-bit precision, using the option: 
+
+{bold}   simflags="-160"
+
+Additionally, to enable the robust numerical treatment for very low (cryogenic) temperature simulations, you should set MIN.TEMP to 2 K and MAX.TEMP to 1000 K on the METHOD statement, as in this example:
+
+ method  MIN.TEMP=2 MAX.TEMP=1000 DVMAX=0.1  RHSNORM 
+         climit=1e-4  ir.tol=1e-40 ix.tol=1e-40 cr.tol=1e-20 
+
+With such settings, breakdown IV curves of a reverse-biased silicon p-n diode have been successfully computed, by both Victory Device and Atlas, down to extremely low temperature of 3 K. Example results are shown in the enclosed plots. 
+
+You can plot similar overlaid plots yourself if you use 
+{bold} Overlay 
+feature in
+{bold} TonyPlot
+. 
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+

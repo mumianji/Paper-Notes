@@ -1,0 +1,56 @@
+go athena
+
+#TITLE: Stress Dependent Oxidation Example
+
+#  LOCOS cross section with stress effects
+
+# Define a very simple mesh in the substrate
+line x loc=-1 spac=0.2
+line x loc=0 spac=0.05
+line x loc=1 spac=0.2
+line y loc=0 
+line y loc=1
+init orient=100
+#
+# Pad oxide and nitride mask
+deposit oxide thick=0.02  div=1
+deposit nitride thick=0.15 div=1
+etch nitride left p1.x=0
+#
+#set some material parameters and models for the oxidation
+oxide stress.dep=f  
+material nitride visc.0=1.8e15
+#
+# Perform field oxidation
+method   viscous
+diffuse tim=90 tem=1000 wet 
+#
+structure outfile=anoxex06_1.str
+#
+# Now perform the same calculation with stress dependence
+line x loc=-1 spac=0.2
+line x loc=0 spac=0.05
+line x loc=1 spac=0.2
+line y loc=0 
+line y loc=1
+init orient=100
+#
+# Pad oxide and nitride mask
+deposit oxide thick=0.02  div=1
+deposit nitride thick=0.15 div=1
+etch nitride left p1.x=0
+#
+#set some models and material parameters and models for the oxidation
+oxide stress.dep=t
+material nitride visc.0=1.8e15
+method   viscous
+#
+# Perform field oxidation
+diffuse tim=90 tem=1000 wet
+ 
+structure outfile=anoxex06_2.str
+
+#
+tonyplot anoxex06_*.str -set anoxex06.set 
+#
+quit

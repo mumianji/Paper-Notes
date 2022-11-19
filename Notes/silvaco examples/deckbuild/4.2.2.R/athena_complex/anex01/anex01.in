@@ -1,0 +1,151 @@
+go athena
+
+# Establish the grid locations and densities 
+line x loc=-12.0   spacing=0.3
+line x loc=-5.0    spacing=0.1
+line x loc=-2.5    spacing=0.07
+line x loc=-1.50    spacing=0.05
+line x loc=1.50    spacing=0.05
+line x loc=2.5    spacing=0.07
+line x loc=5.0     spacing=0.1
+line x loc=7.0     spacing=0.1
+line x loc=9.0     spacing=0.1
+line x loc=12.0    spacing=0.3
+
+line y loc=0.0     spacing=0.01
+line y loc=1.0     spacing=0.3
+
+# Initialize the silicon wafer, include boron background doping
+init c.boron=1.0e16 space.m=3 
+
+#deposit the gate oxide
+deposit oxide thick=0.025 div=1
+deposit nitride th=.25 div=1
+etch nitride left  p1.x=-5.0
+etch nitride right p1.x=5.0
+# 
+method grid.ox=0.2
+diff time=160 temp=965 wet
+
+etch nitride all
+
+#deposit the gate poly
+deposit poly thick=0.500 div=10
+
+etch poly left p1.x=-.5
+etch poly right p1.x=9
+etch poly start x=.5 y=10
+etch      cont  x=.5 y=-10
+etch      cont  x=7 y=-10
+etch      done  x=7 y=10
+
+structure outfile=anex01_0.str
+
+# implant ldd phosphorus
+implant phos dose=3e13 energy=35
+
+#deposit the oxide spacer
+deposit oxide thick=0.4 div=8
+
+#etch the spacer back
+etch oxide thick=.45
+
+# implant source drain arsenic
+implant arsenic dose=1e15 energy=50
+
+# anneal
+diff time=30 temp=920
+
+#SOG processing
+rate.depo machine=SOG material=BPSG u.m hemisphe \
+          sigma.dep=2.50 dep.rate=1.0 angle1=90 angle2=-90 \
+          smooth.win=5 smooth.step=3
+deposit machine=SOG time=1 minutes div=6
+
+structure outfile=anex01_1.str
+
+deposit photoresist thick=.6 div=6
+#struct outf=photo1.str
+etch photoresist start x=-2.5 y=1000
+etch              cont x=-2.5 y=-1000
+etch              cont x=-1.5 y=-1000
+etch              done x=-1.5 y=1000
+
+etch photoresist start x=2.5 y=1000
+etch              cont x=2.5 y=-1000
+etch              cont x=1.5 y=-1000
+etch              done x=1.5 y=1000
+
+rate.etch machine=wet material=BPSG u.m  wet.etch isotropic=1 
+
+etch machine=wet time=.75 minutes dx.mult=.5
+
+rate.etch machine=m1 rie material=BPSG isotropic=0.0  directional=1.0 u.m
+
+etch machine=m1 time=1.6 minute dt.max=0.01
+
+structure outfile=anex01_2.str
+
+strip
+
+rate.etch machine=wet2 material=BPSG u.m  wet.etch isotropic=1 
+etch machine=wet2 time=.05 minute
+
+rate.depo machine=ALmetal aluminum u.m  sigma.dep=0.35 hemisphe \
+dep.rate=1.0 angle1=70 angle2=-70
+
+deposit machine=ALmetal time=1 minute div=6
+
+rate.depo machine=resistspin photoresist name.res=OiR32 u.m cvd \
+          dep.rate=1.0 step.cov=2.5
+
+deposit machine=resistspin time=.4 minute divis=16
+
+rate.depo machine=resistspin photoresist name.res=OiR32 u.m cvd \
+          dep.rate=1.0 step.cov=1.0 smooth.win=1 smooth.step=1
+
+deposit machine=resistspin time=.2 minute divis=8
+
+structure outfile=anex01_3.str
+
+# OPTOLITH Module
+
+illumination i.line 
+
+illum.filter clear.fil circle sigma=0.3
+
+projection na=.3 flare=2
+
+pupil.filter circle
+
+layout x.low=-2.5 z.low=-7.5 x.high=-1.5 z.high=7.5 lay.clear
+layout x.low=1.5  z.low=-7.5 x.high=2.5  z.high=7.5 
+
+image win.x.lo=-12.0 win.z.lo=-1.0 win.x.hi=12.0 win.z.hi=1.0 dx=0.25 one.d clear
+
+structure outfile=anex01_4.str intensity mask
+
+#Input optical parameters for user materials
+
+optical material=BPSG wavelength=0.365 refrac.real=1.78 refrac.imag=0.0
+
+# Resist exposure
+
+expose dose=220
+
+structure outfile=anex01_5.str
+
+# Post exposure bake
+bake diff.length=.08
+
+structure outfile=anex01_6.str
+
+# Resist Development
+
+develop mack time=60 steps=5 substeps=24
+
+structure outfile=anex01_7.str
+
+tonyplot anex01_7.str -ttitle anex01.in:Final -set anex01.set
+
+quit

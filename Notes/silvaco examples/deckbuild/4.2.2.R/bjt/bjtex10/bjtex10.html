@@ -1,0 +1,90 @@
+<html>
+  <head>
+    <title>Athena/Atlas Simulation of an NPN BJT</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Athena/Atlas Simulation of an NPN BJT</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Athena/S-Pisces</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R, Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="bjtex10_plot0.png" width="640" alt="bjtex10_plot0" />
+      <p/>
+      <img src="bjtex10_plot1.png" width="640" alt="bjtex10_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates how to use combination of several Athena
+runs in 1D mode and Atlas to simulate the electrical characteristics of a
+vertical NPN bipolar transistor. This example shows:
+</p>
+<ul>
+  <li>
+ Four Athena simulations in 1D mode of various doping distributions in a
+1D NPN bipolar structure
+<br/>
+  </li>
+  <li>
+ Athena-Atlas interface for 1D doping profiles
+<br/>
+  </li>
+  <li>
+ Ic and Ib extraction versus Vbe (Gummel Plot)
+  </li>
+</ul>
+<p>
+Athena process simulation in 1D mode is taken as
+the starting point for this simulation. P+ and n+ contact implants and
+final anneal are added at the very end.
+</p>
+<p>
+The input file is run four times with different steps commented out.
+As a result, four doping profiles in different vertical sections  of
+the NPN device are obtained. The structure file names correspond to
+areas where the vertical sections are taken.
+</p>
+<p>
+When all four Athena simulations are completed DeckBuild switches simulation
+to Atlas where mesh and electrodes are set. After that, doping profiles
+from all four 1D structures are used to build 2-D doping in Atlas.
+Uniform antimony (buried layer) and arsenic (epi layer) profiles are
+imported from
+<b> bjtex10_1.str</b> . Afterwards emitter doping is specified in the area between x=0 and x=1 using
+phosphorus component of the bjtex10_1.str profile. The parameter
+<b> ratio.lat </b> represent lateral diffusion during emitter formation.
+Base boron doping is specified in the area between x=0 and x=5 from
+<b> bjtex10_2.str</b> . P+ contact boron doping and N+ phosphorus doping under collector contact
+are imported from corresponding Athena structure files.
+</p>
+<p>
+Then a standard Gummel plot simulation with Atlas is then performed.
+This is described in detail in the first example in this section.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

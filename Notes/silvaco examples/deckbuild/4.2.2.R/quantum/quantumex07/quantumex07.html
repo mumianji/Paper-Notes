@@ -1,0 +1,95 @@
+<html>
+  <head>
+    <title>Comparison of transport models for a Double gate MOSFET including quantum effects.</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Comparison of transport models for a Double gate MOSFET including quantum effects.</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>S-Pisces/Quantum</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="quantumex07_plot0.png" width="640" alt="quantumex07_plot0" />
+      <p/>
+      <img src="quantumex07_plot1.png" width="640" alt="quantumex07_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates:
+</p>
+<ul>
+  <li>
+ Use of the BQP model coupled with drift-diffusion and energy balance.
+<br/>
+  </li>
+  <li>
+ Effect of quantum confinement on carrier and current density.
+<br/>
+  </li>
+  <li>
+ Effect of carrier transport model on drain current of device.
+<br/>
+  </li>
+</ul>
+<p>
+In this example the drain current of a double gate MOSFET is calculated
+using the BQP to model quantum effects.  A drift-diffusion model featuring
+field dependent mobility is compared with an energy balance model with an
+energy dependent mobility.  For a device of such small dimensions as in
+this MOSFET,  non-stationary effects will have a significant effect on the
+carrier transport.  The energy balance model can approximate these effects,
+and when coupled with the BQP model it includes quantum effects too.
+</p>
+<p>
+The first part of the deck does the calculation with energy balance
+(HCTE.EL on the MODELS statement) and Bohm Quantum Potential (BQP.N
+on the MODELS statement). FLDMOB with EVSATMOD=0 on the MODELS statement
+invoke an energy dependent mobility calibrated for Silicon.
+The NOCURRENT parameter is specified on the first SOLVE statement to
+directly get a solution with a gate voltage of -0.5 V. A small drain bias
+is applied and then the gate biases ramped to gradually turn the MOSFET on.
+</p>
+<p>
+The second part of the deck does the same calculation using a drift-diffusion
+model,  and with the CVT mobility model (which includes velocity saturation).
+The quantum effects are included by using the BQP model.
+</p>
+<p>
+From the difference in the value of drain currents it is evident that
+non-stationary effects are very important.  The energy balance model
+approximates these effects via its energy dependent mobility.
+By looking at the electron concentration or electron quantum potential one
+can see that confinement effects are similar in the two cases.
+</p>
+<p>
+Remarks: Explicitly setting the material parameters in the oxide as done
+here is not strictly necessary, although it can improve convergence in some
+cases.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

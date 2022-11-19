@@ -1,0 +1,151 @@
+# Properties file overrides the default database
+Version 9
+default_mask_mode
+0
+9
+VPMDiffusionGeneralParameters
+2004
+264
+VPMDiffusionGeneralParameters
+-1 
+0 8.327e+22
+1 
+Cr
+22 10 1
+0
+0
+0
+0
+0
+0
+OxidationParameters
+2000
+3
+OxidationParameters_dry
+dry
+0
+0
+0
+0
+1
+0
+1.9
+2.2
+2.2e+22
+9
+1 103800 2
+12
+1 0.596 0
+1 0.833 0
+1 1 0
+-1 
+1 12.8667 1.23
+12
+1 6.57e+06 2.37
+1 53700 1.8
+1 5.87e+06 2.32
+12
+0 0.0069
+0 0.006
+0 0.0078
+5e+16
+0
+0.75
+1
+6
+0 1 3 5 7 10 
+3
+900 1000 1100 
+18
+1 1 1 1.75 1.25 1.621 1.75 1.486 2.207 1.75 1.486 2.207 1.75 1.486 2.207 1.75 1.486 2.207 
+18
+1 1 1 1.083 1.658 1.355 1.25 1.84 1.49 1.444 2.075 1.641 1.639 2.332 1.816 2.028 2.759 2.102 
+2 0 1
+-2 1 241.6 0.62
+-1 1 15.5435 0.145
+0 0 1
+1 1 15.5435 0.46
+2 1 241.6 1
+-50
+1 2600 1.1
+0
+0
+1
+0
+0
+OxidationParameters
+2000
+1
+OxidationParameters_dry
+dry
+1
+0
+3.1e-13
+-7.405
+0
+0
+0
+0
+0
+-1
+-1
+-1
+-1
+0
+0
+1
+1
+0
+0
+0
+0
+-1
+-1
+1
+0
+1
+9.7
+0
+VPMDiffusionGeneralParameters
+2004
+100
+VPMDiffusionGeneralParameters
+-1 
+-1 
+1 
+C
+39 10 1
+0
+0
+0
+0
+0
+0
+VPMFlowParameters
+2301
+VPMFlowParameters
+0  1  1  0  0  1
+IonMillingMaterialParameter
+3002
+59
+IonMillingMaterialParameter::chemicalFormula
+chemicalFormula
+13 Cr
+IonMillingMaterialParameter
+3002
+59
+IonMillingMaterialParameter::massDensity
+massDensity
+0 7.19
+IonMillingMaterialParameter
+3002
+59
+IonMillingMaterialParameter::surfaceBindingEnergy
+surfaceBindingEnergy
+0 4.1
+IonMillingMaterialParameter
+3002
+59
+IonMillingMaterialParameter::latticeCoefficient
+latticeCoefficient
+0 0.48

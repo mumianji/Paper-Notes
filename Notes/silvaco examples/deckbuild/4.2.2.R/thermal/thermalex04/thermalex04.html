@@ -1,0 +1,65 @@
+<html>
+  <head>
+    <title>GaAs IC Structure</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>GaAs IC Structure</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>DevEdit 3D/Thermal 3D</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="thermalex04_plot0.png" width="640" alt="thermalex04_plot0" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example runs thermal simulation of a  GaAs IC structure with three
+heat producing devices.
+</p>
+<p>
+The device consists of three GaAs regions defined as heat sources in a
+GaAs substrate. A single thermal contact is applied to the bottom of
+the substrate region. The structure is prepared using DevEdit 3D in a
+similar manner to the previous examples in this section.
+</p>
+<p>
+In Atlas, the
+<b> material </b> statement is used to define the power output of two of the three GaAs
+regions. The substrate is defined as having a temperature dependent
+thermal conductivity according to the
+<b> tcon.power </b> parameter.
+</p>
+<p>
+This example is designed to show the effect of the heating produced by
+neighboring devices on a non-heat producing transistor. The third GaAs
+region (defined as region #4) has no heat power output. However the
+solution file will show that the device is heated by conduction from
+the neighboring devices.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

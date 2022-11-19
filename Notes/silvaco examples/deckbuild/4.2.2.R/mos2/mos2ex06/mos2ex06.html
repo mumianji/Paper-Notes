@@ -1,0 +1,122 @@
+<html>
+  <head>
+    <title>BSIM3 SPICE Model Extraction (Salicide process)</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>BSIM3 SPICE Model Extraction (Salicide process)</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>SSuprem 4/S-Pisces/Utmost</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R, Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="mos2ex06_plot0.png" width="640" alt="mos2ex06_plot0" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates the extraction of a BSIM3 SPICE model from Atlas
+simulation data of an NMOS transistor. The example:
+</p>
+<ul>
+  <li>
+ Forms a MOS device in Athena using a salicide process 
+<br/>
+  </li>
+  <li>
+ Uses assigned variables to parameterize the structure
+<br/>
+  </li>
+  <li>
+ Simulates Id/Vgs-Vbs curves in Atlas
+<br/>
+  </li>
+  <li>
+ Simulates Id/Vds-Vgs curves in Atlas
+<br/>
+  </li>
+  <li>
+ Interfaces to UTMOST for extraction of a BSIM3 parameter set.
+  </li>
+</ul>
+<p>
+The process simulation used for this example is an NMOS process flow.
+Further description of MOS process simulation can be found in the MOS
+examples description.  As a more advanced technique, this flow has been
+parameterized in places using the
+<b> set </b> statements. These are used to assign variables such as spacer width
+which are then used later in several locations in the input file.
+<b> extract </b> statements are used throughout the process simulation to measure
+important process parameters. In terms of the SPICE model extraction, it
+is vital to extract the gate oxide thickness in metres for use in
+UTMOST.
+</p>
+<p>
+The salicide process to create self-aligned silicides on the source,
+drain and gate requires the use of the Athena/SILICIDES module. Users
+who do not have this option could replace the silicidation steps with
+metal deposition and patterning as used in the previous MOS examples.
+In this transistor, titanium silicide is used. A titanium layer is
+deposited and a short heat cycle applied. No special method parameters
+are needed to enable creation of the silicide layer during this
+diffusion. The remaining titanium is then stripped. These silicide
+regions are indicated in the
+<b> electrode </b> definition in Athena.
+</p>
+<p>
+The two Atlas runs in this example are also parameterized using the
+<b> set </b> statement. This enables easy conversion of the whole Id/Vgs and Id/Vds
+tests from, say, NMOS to PMOS or 5.0V supply to 3.3V.
+</p>
+<p>
+The first Atlas run simulates Id/Vgs curves at three substrate biases. The sequence of
+<b> solve </b> statements is to first save three solutions at each back bias with Vds=0.1V and Vgs=0.0V.
+Each of these three files is then loaded in turn using
+<b> load </b> and the gate voltage ramped up to the supply voltage defined as &apos;vdsmax&apos;.
+In this example all three curves are saved to a single log file.
+However it is more traditional to save the three curves in separate
+files. Either approach is possible.
+</p>
+<p>
+The second Atlas run simulates Id/Vds curves at three different gate
+voltages. A similar technique to the first run is used. Three solution
+files are saved at each gate bias with Vds=0.0V. These are then loaded
+in turn and the drain voltage ramped to &apos;vdsmax&apos;. All the curves are
+saved to a single log file although separate ones could be used for
+each curve.
+</p>
+<p>
+The final stage of the example is to run UTMOST to extract the SPICE
+model. Important information about the structure such as gate oxide
+thickness and gate length is transferred to UTMOST using the results of
+<b> extract </b> statements in the Athena simulation. The log files from Atlas are
+loaded and appended together. UTMOST then fits the SPICE model to the
+complete Id/Vgs-Vbs and Id/Vds-Vgs data sets. All the UTMOST parameters
+are stored to a file and then extract is used to print out the
+parameters of interest.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

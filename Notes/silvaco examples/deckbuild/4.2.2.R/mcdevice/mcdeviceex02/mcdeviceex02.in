@@ -1,0 +1,102 @@
+# (c) Silvaco Inc., 2018
+go atlas
+mcdevice
+# 25-nm MOSFET definition
+# see http://www-mtl.mit.edu/researchgroups/Well/
+# MIT's "well-tempered" MOSFET
+# Reduce from iter=200000 to iter=2500 to make a short test.
+# Note that this test will not have fully reached staty-state at iter=2500.
+algo mode=2 carrier=e iter=2500 dt=0.1e-15
+poisson tstep=5
+#Turn off enhancement for now!
+#enhan mode=2 tstep=20 estep=300 xstep=(1,1,0) hithre=10.0 nfrac=0.8
+# save output at regular intervals
+# (-1 will default to a reasonable value)
+output tstep=500 init=1 \
+  currentlogfile    ="mcdeviceex02_current.log" \
+  currentramplogfile="mcdeviceex02_current_ramp.log" \
+  solstrfile        ="mcdeviceex02_sol.str" \
+  summaryoutfile    ="mcdeviceex02_summary.out"
+# Set the maximum number of particles (i.e. electrons).
+particle n=40000
+# X Mesh Lines
+xmesh node=1   loc=0.0000
+xmesh node=45  loc=0.0225 ratio=1.00
+xmesh node=145 loc=0.0725 ratio=1.00
+xmesh node=189 loc=0.0950 ratio=1.00
+# Y Mesh Lines
+ymesh node=1  loc=-0.0615
+ymesh node=6  loc=-0.0015 ratio=0.400
+ymesh node=11 loc= 0.0000 ratio=0.800
+ymesh node=90 loc= 0.0800 ratio=1.035
+# Simulation Box
+region n=1 mat=SiO2 type=out     boundp=(0.0,0.095,-0.0615,0.08)
+# Substrate
+region n=2 mat=Si   type=mc      boundp=(0.0,0.095,0.0,0.08)
+# Gate oxide
+region n=3 mat=SiO2 type=block   boundp=(0.0,0.095,-0.0015,0.0)
+# Source contact
+region n=4 mat=Si   type=contact boundp=(0.0,0.0026,0.0026,0.0073) \
+       name="source"
+# Drain contact
+region n=5 mat=Si   type=contact boundp=(0.0924,0.095,0.0026,0.0073) \
+       name="drain" usefermi=1
+# Poly gate
+region n=6 mat=Poly type=contact boundp=(0.0225,0.0725,-0.0615,-0.0015) \
+       name="gate"
+# Substrate contact
+region n=7 mat=Si   type=contact boundp=(0.0,0.095,0.0771,0.08) \
+       name="substrate"
+# calculate current in cregions
+cregion boundp=(0.0275,0.0675,0.0,0.08)
+cregion boundp=(0.0325,0.0475,0.0,0.080)
+cregion boundp=(0.0475,0.0625,0.0,0.08)
+## background
+doping dopant=B conc=1e15 boundp=(0.0000,0.0950,0.0,0.0800)
+## source 
+doping dopant=As conc=2e20 \
+  boundp=(0.0000,0.0293,0.0,      0.0001) \
+  char =(0.0040,0.0040,0.0001,0.0170)
+## source halo
+doping dopant=B conc=1e19 \
+  boundp=(0.0000,0.0293,0.0179,0.0181) \
+  char =(0.0182,0.0182,0.0160,0.0160)
+## drain 
+doping dopant=As conc=2e20 \
+  boundp=(0.0657,0.0950,0.0,      0.0001) \
+  char =(0.0040,0.0040,0.0001,0.0170)
+## drain halo
+doping dopant=B conc=1e19 \
+  boundp=(0.0657,0.0950,0.0179,0.0181) \
+  char =(0.0182,0.0182,0.0160,0.0160)
+## gate
+doping dopant=As conc=5e20 \
+  boundp=(0.0225,0.0725,-0.0615,-0.0015)
+#Uncomment to use surface scattering in this region
+#ssregion boundp=(0.0153,0.0355,0.0,0.0006)
+#Make rough=0.0 for the Si-SiO2 interface when using ssREGION
+#matdef n=4 name="SiO2" eps=3.9 barrier=3.15 rough=0.0
+
+# Do a single solve at vgate=vdrain=1.0 V.
+solve vgate=1.0 vdrain=1.0
+tonyplot mcdeviceex02_current.log -set mcdeviceex02_current_log.set
+tonyplot mcdeviceex02_sol.str -set mcdeviceex02_sol_str.set
+
+# Do a 3-step voltage ramp from vdrain=3.0 V to vdrain=0.0 V.
+#solve vgate=1.0 vdrain=3.0 name="drain" vfinal=0.0 vstep=-1
+
+# Do a 3-step voltage ramp from vdrain=0 V to vdrain=3 V.
+#solve vgate=1.0 vdrain=0.0 name="drain" vfinal=3.0 vstep=1.0
+
+# Do a longer 5-step voltage ramp from vdrain=5.0 V to vdrain=0.0 V.
+#algo iter=7500
+#solve vgate=1.0 vdrain=5.0 name="drain" vfinal=0.0 vstep=-1
+
+# Do a second solve at Vgate=vdrain=2.0 V.
+#output currentlogfile="mcdeviceex02_current2.log" \
+#       solstrfile    ="mcdeviceex02_sol2.str"
+#solve vgate=2.0 vdrain=2.0
+#tonyplot mcdeviceex02_current2.log -set mcdeviceex02_current_log.set
+#tonyplot mcdeviceex02_sol2.str -set mcdeviceex02_sol_str.set
+
+quit

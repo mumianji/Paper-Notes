@@ -1,0 +1,137 @@
+#silvaco.file ASCII version=1.14.9 format=1
+""
+
+#non-visible objects 
+number-of-non-visible-objects 0
+
+#non-enable-contour objects 
+number-of-non-enable-contour-objects 0
+
+#Cut Plane Settings   
+point_1 0 0 0
+point_2 1 0 0
+point_3 0 0 1
+three_points 0
+PAN 0
+PITCH 90
+ELEV 1
+#Cut Plane Axes Settings   
+X_REVERSE 0
+Y_REVERSE 0
+XY_SWAP 0
+
+#Define Iso Surfaces
+iso_surf "e- Current Density" 239480.75534110589
+
+#Define the scene matrix
+sm_00 0.91308610477293173
+sm_01 -0.36431780536580566
+sm_02 -0.18315649582811974
+sm_03 -2.994595340019035
+
+sm_10 -0.16306951854199436
+sm_11 -0.73793171015437287
+sm_12 0.65487794532349763
+sm_13 1.060093033658301
+
+sm_20 -0.37374068201504879
+sm_21 -0.56809271060460353
+sm_22 -0.73320431993056334
+sm_23 14.024108413515638
+
+sm_30 0
+sm_31 0
+sm_32 0
+sm_33 1
+
+#Define the camera matrix
+cm_00 1
+cm_01 0
+cm_02 0
+cm_03 0
+
+cm_10 0
+cm_11 1
+cm_12 0
+cm_13 0
+
+cm_20 0
+cm_21 0
+cm_22 1
+cm_23 -34.085418146367765
+
+cm_30 0
+cm_31 0
+cm_32 0
+cm_33 1
+
+#Define the scene scaling factors
+ss_xyz 1 1 1
+
+#Define 3D projection 
+proj_3d_aspect 1.1004901960784315
+proj_3d_z_near 18.868421744701852
+proj_3d_z_far 33.944854543865887
+proj_3d_height 12.600828875947409
+proj_3d_fovy 25
+proj_3d_type 0
+proj_3d_depth_cue 2
+coord_selection 0
+coord_type 0
+modelview_x_scale 1
+modelview_y_scale 1
+modelview_z_scale 1
+
+#Global BBox Settings   
+global_bbox_min 0.50775615798671481 -0.59224384201328517 -0.49224384201328519
+global_bbox_max 9.7383657630199281 6.8383657630199259 7.7383657630199272
+#Define x-y-z Axis Visibility
+x_axis_visibility 1
+y_axis_visibility 1
+z_axis_visibility 1
+#Define Legend Visibility
+contour_legend 1
+region_legend 1
+#Define the DisplayMode
+display_mode_id 11
+#Define Show Cut Plane
+show_cut_plane 0
+#Define Show Cut Plane X Y Axes
+show_cut_plane_x_axis 1
+show_cut_plane_y_axis 1
+#Define the DrawMode
+draw_mode_id 0
+#Define the Region_Color_Type
+region_color_type 0
+
+#Define Title and Sub_Title
+title ATLAS
+sub_title "Data from latchex04_1.str"
+#Define light0 and light1 information
+light0_enabled 1
+light0_color 255 255 255
+light0_intensity 0.53
+light0_latitude 30
+light0_longitude 0
+
+light1_enabled 1
+light1_color 255 255 255
+light1_intensity 0.53
+light1_latitude 0
+light1_longitude 270
+#Define contours information
+imp_menu_index 29
+name-of-doping "e- Current Density"
+limit_select_type 0
+auto_max_limit 1
+auto_min_limit 1
+contour_max_imp_value 8477618.0099999998
+contour_min_imp_value 0
+legend_type 0
+legend_auto_mapping 1
+legend_mapping 0
+legend_palette 0
+legend_nbr_of_colors 5
+
+
+EOF 1712591209

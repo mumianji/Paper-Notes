@@ -1,0 +1,173 @@
+# (c) Silvaco Inc., 2018
+go devedit
+
+#
+# ATLAS 3D Thermal simulation
+# 2 layer structure with 8 elements dissipating energy
+#
+
+DevEdit version="2.0" library="1.14"
+
+work.area left=0 top=0 right=1000 bottom=1000
+
+# SILVACO Library V1.14
+
+region reg=1 mat=Silicon color=0xffc000 pattern=0x4 Z1=0 Z2=10 \
+	points="0,0 1000,0 1000,1000 0,1000 0,0"
+#
+constr.mesh region=1 default
+
+region reg=2 mat=Silicon color=0xffc000 pattern=0x4 Z1=0 Z2=2 \
+	points="500,500 600,500 600,600 500,600 500,500"
+#
+constr.mesh region=2 default
+
+region reg=3 mat=Silicon color=0xffc000 pattern=0x4 Z1=0 Z2=2 \
+	points="700,280 870,280 870,400 700,400 700,370 830,370 830,310 700,310 700,280"
+#
+constr.mesh region=3 default
+
+region reg=4 mat=Silicon color=0xffc000 pattern=0x4 Z1=0 Z2=2 \
+	points="100,90 260,90 260,160 100,160 100,90"
+#
+constr.mesh region=4 default
+
+region reg=5 mat=Silicon color=0xffc000 pattern=0x4 Z1=0 Z2=2 \
+	points="60,790 350,790 350,850 170,850 170,930 60,930 60,790"
+#
+constr.mesh region=5 default
+
+region reg=6 mat=Silicon color=0xffc000 pattern=0x4 Z1=0 Z2=2 \
+	points="800,50 860,50 860,90 800,90 800,50"
+#
+constr.mesh region=6 default
+
+region reg=7 mat=Silicon color=0xffc000 pattern=0x4 Z1=0 Z2=2 \
+	points="800,850 920,850 920,870 800,870 800,850"
+#
+constr.mesh region=7 default
+
+region reg=8 mat=Silicon color=0xffc000 pattern=0x4 Z1=0 Z2=2 \
+	points="800,800 920,800 920,820 800,820 800,800"
+#
+constr.mesh region=8 default
+
+region reg=9 mat=Silicon color=0xffc000 pattern=0x4 Z1=0 Z2=2 \
+	points="800,900 920,900 920,920 800,920 800,900"
+#
+constr.mesh region=9 default
+
+region reg=10 mat="Silicon Oxide" color=0xff pattern=0x2 Z1=10 Z2=200 \
+	points="0,0 1000,0 1000,1000 0,1000 0,0"
+#
+constr.mesh region=10 default
+
+region reg=11 name=substrate mat=Aluminum elec.id=1 work.func=0 color=0xffc8c8 pattern=0x7 Z1=200 Z2=201 \
+	points="0,0 1000,0 1000,1000 0,1000 0,0"
+#
+constr.mesh region=11 default
+
+# Set Meshing Parameters
+#
+base.mesh height=1000000 width=1000000
+#
+bound.cond !apply max.slope=28 max.ratio=300 rnd.unit=0.001 line.straightening=1 align.points when=automatic
+#
+imp.refine min.spacing=0.02 z=0
+#
+constr.mesh max.angle=90 max.ratio=300 max.height=100 \
+	max.width=100 min.height=0.0001 min.width=0.0001
+#
+constr.mesh type=Semiconductor default
+#
+constr.mesh type=Insulator default
+#
+constr.mesh type=Metal default
+#
+constr.mesh type=Other default
+#
+constr.mesh region=1 default
+#
+constr.mesh region=2 default
+#
+constr.mesh region=3 default
+#
+constr.mesh region=4 default
+#
+constr.mesh region=5 default
+#
+constr.mesh region=6 default
+#
+constr.mesh region=7 default
+#
+constr.mesh region=8 default
+#
+constr.mesh region=9 default
+#
+constr.mesh region=10 default
+#
+constr.mesh region=11 default
+#
+# Perform mesh operations
+#
+
+refine mode=both x1=26.3157894736842 y1=29.4117647058824 x2=315.789473684211 y2=246.130030959752
+refine mode=both x1=755.417956656347 y1=9.28792569659443 x2=896.284829721362 y2=171.826625386997
+refine mode=both x1=668.730650154799 y1=210.526315789474 x2=891.640866873065 y2=473.684210526316
+refine mode=both x1=450.46439628483 y1=430.340557275542 x2=679.566563467492 y2=613.003095975232
+refine mode=both x1=766.25386996904 y1=721.362229102167 x2=961.300309597523 y2=975.232198142415
+refine mode=both x1=29.4117647058824 y1=726.006191950464 x2=388.544891640867 y2=973.684210526316
+
+imp.refine min.spacing=0.02 z=0
+
+constr.mesh max.angle=90 max.ratio=300 max.height=100 \
+	max.width=100 min.height=0.0001 min.width=0.0001
+#
+constr.mesh type=Semiconductor default
+#
+constr.mesh type=Insulator default
+#
+constr.mesh type=Metal default
+#
+constr.mesh type=Other default
+
+z.plane z=2 spacing=1
+#
+z.plane z=10 spacing=2.5
+#
+z.plane z=200 spacing=40
+#
+z.plane max.spacing=1000000 max.ratio=100
+
+base.mesh height=1000000 width=1000000
+
+bound.cond !apply max.slope=28 max.ratio=300 rnd.unit=0.001 line.straightening=1 align.Points when=automatic
+
+Mesh Mode=MeshBuild
+
+struct outfile=thermalex02.str
+
+go atlas
+
+mesh infile=thermalex02.str
+
+models thermal
+method
+
+material region=1 
+material region=2 power=1.3
+material region=3 power=2.0
+material region=4 power=1.5
+material region=5 power=1.8
+material region=6 power=0.2
+material region=7 power=0.3 
+material region=8 power=0.4 
+material region=9 power=0.3 
+material region=10 tc.const=1
+
+solve t1=300 outf=thermalex02_0.str
+tonyplot3d thermalex02_0.str -set thermalex02_0.set
+tonyplot3d thermalex02_0.str -set thermalex02_1.set
+
+quit
+

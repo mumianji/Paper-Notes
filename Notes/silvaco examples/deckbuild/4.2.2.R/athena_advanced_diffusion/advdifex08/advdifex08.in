@@ -1,0 +1,35 @@
+#=========================================
+#     2D boron predeposition
+#=========================================
+
+go athena
+
+#the x dimension definition
+line x loc = 0.0  spacing=0.05
+line x loc = 0.6  spacing=0.01
+line x loc = 1.0  spacing=0.05
+
+#the vertical definition
+line y loc = 0     spacing = 0.01 
+line y loc = 1.5   spacing = 0.2
+
+#initialize the mesh
+init silicon c.boron=1.0e10 two.d
+
+#deposition
+deposit nitride thick=0.2 dy=0.02 ydy=0.1 divis=10
+
+#etch
+etch nitride left p1.x=0.5
+
+method pls
+
+#perform diffusion
+diffuse time=1 hour temperature=950 c.boron=1e20 
+
+structure outfile=advdifex08_end.str
+
+tonyplot advdifex08_end.str -set advdifex08.set
+
+quit
+

@@ -1,0 +1,72 @@
+<html>
+  <head>
+    <title>6T SRAM SEU Simulation using SPICE only</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>6T SRAM SEU Simulation using SPICE only</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>SmartSpice</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>SmartSpice 4.19.27.C</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="radex16_plot0.png" width="640" alt="radex16_plot0" />
+      <p/>
+      <img src="radex16_plot1.png" width="640" alt="radex16_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example is a variant of radex14, where instead simulating the drain
+current response from an SEU strike using TCAD, and then importing this SEU data
+into a SmartSpice simulation, here we use an internal SmartSpice algorithm to
+calculate the total track charge created by the strike which is then converted
+into current time pairs internally at a specified device node and time.
+</p>
+<p>
+The obvious advantage of using Spice to calculate the SEU track charge versus
+time, instead of using TCAD, is simulation speed.  The downside is that the
+calculation is a worst case calculation, since it is assumed that all of the
+generated charge is actually collected by the device node, which is not usually
+the case.  In reality, the actual fraction of charge collected depends on
+strike angle and strike location and whether any carrier multiplication occurs
+from high electric fields and internal gain etc.
+</p>
+<p>
+The SEU event is struck at the same nMOS drain node, in the same SRAM circuit
+as in radex14 example, and with the same Linear Energy Transfer value of unity,
+which is now set in the
+<b> .PARAM DLET=1</b> statement.  The total charge in the charge track is calculated by integrating
+over the SEU track length, which is set by the
+<b> .PARAM F_LENGTH=0.5u</b> statement.  Other timing parameters are also set on .PARAM statement lines.
+</p>
+<p>
+For simulation method comparisons, the SRAM operation point is set to it&apos;s low
+power configuration with an applied supply voltage of 0.85 volts, which
+represents the state of highest sensitivity to being upset by a single event.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

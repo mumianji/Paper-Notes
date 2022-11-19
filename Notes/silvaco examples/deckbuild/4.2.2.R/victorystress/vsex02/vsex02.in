@@ -1,0 +1,219 @@
+# (c) Silvaco Inc., 2018
+
+############################
+### Create the structure ###
+############################
+
+go victoryprocess 
+
+Init material=oxide layout="vsex02_0.lay" depth=0.4 gasheight=2.6 padding=0
+
+# define the x grid (x axis is parallel to the fin)
+Line x loc=0     spac=0.15
+Line x loc=0.475 spac=0.005
+Line x loc=0.5 spac=0.0075
+Line x loc=0.525 spac=0.005
+Line x loc=1     spac=0.15
+
+# define the y grid (y axis is parallel to the gate)
+Line y loc=0     spac=0.2
+Line y loc=0.221 spac=0.1
+Line y loc=0.321 spac=0.1
+Line y loc=0.471 spac=0.005
+Line y loc=0.475 spac=0.005
+Line x loc=0.5 spac=0.0075
+Line y loc=0.525 spac=0.005
+Line y loc=0.529 spac=0.005
+Line y loc=0.679 spac=0.1
+Line y loc=0.779 spac=0.1
+Line y loc=1     spac=0.2
+
+# define the z grid (z axis is into the substrate)
+Line z loc=-2.60
+Line z loc=-0.30
+Line z loc=-0.20 
+Line z loc=-0.150  
+Line z loc=-0.052 
+Line z loc=-0.050 spac=0.005
+Line z loc=0      spac=0.0075
+Line z loc=0.4
+
+# create the silicon fin
+Deposit material=silicon MAX thickness=0.05 dopant=boron dopingvalue=2e19
+Mask material=barrier mask="GATE"
+Doping material=silicon phosphorus=1e20 min=0 max=0.1
+Strip material=barrier
+Mask material=barrier mask="FIN"
+Etch material=silicon MAX
+Strip material=barrier
+
+# create the gate isolation layer
+Deposit material=nitride CONFORMAL thickness=0.002 stepcoverage=2
+
+# create the gate
+Deposit material=poly CONFORMAL thickness=0.15 dopant=arsenic dopingvalue=1e20
+Mask material=barrier mask="GATE"
+Etch material=poly MAX
+Etch material=nitride MAX
+Strip material=barrier
+
+# add the capping layer 
+Deposit material=nitride CONFORMAL thickness=0.1
+Mask material=barrier mask="GPF" deltaCD=0.1
+Etch material=nitride MAX 
+Strip material=barrier
+
+save name=vsex02_vp_0
+
+go victorymesh
+
+load in=vsex02_vp_0
+
+remesh regular
+
+save out=vsex02_regular.str
+
+tonyplot3d vsex02_regular.str -set vsex02.set
+
+
+############################################################
+### Import the structure into VictoryStress, perform     ###
+### a stress/strain analysis, and calculate the mobility ###
+### enhancement.                                         ###
+############################################################
+
+go victorystress
+
+init structure="vsex02_regular.str"
+
+material nitride intrin.sig=1e10
+
+material silicon model.iso=1
+
+
+# perform the stress analysis saving strain for subsequent n and p
+# mobility enhancements calculation
+
+stress exposed strain rebalance
+
+save structure="vsex02_stress.str"
+
+reset
+
+init structure="vsex02_stress.str"
+material silicon model.iso=1
+mobility nhance phance
+
+save structure="vsex02_mobility.str"
+
+# tonyplot3d is used to create a cutplane according to the set file
+tonyplot3d vsex02_mobility.str -set vsex02_1.set -cut vsex02_mobility_2d.str
+# plot of the cutplane
+tonyplot vsex02_mobility_2d.str -set vsex02_2.set
+
+
+#######################################################
+### Load the file into VictoryDevice to perform the ###
+### electrical analysis.                            ###
+#######################################################
+
+go victorydevice
+
+# load the structure file
+mesh inf=vsex02_mobility.str 
+
+# First define the necessary electrodes. Placing a
+# contact on the bottom of the Insulating substrate
+# enhances the stability of the simulation.
+
+electrode name=gate region=2
+electrode name=source x.max=0 y.min=.475 y.max=.525 z.min=-.05 z.max=0
+electrode name=drain  x.min=1 y.min=.475 y.max=.525 z.min=-.05 z.max=0
+electrode name=substrate z.min=0.4
+
+contact name=gate n.poly
+
+# first run the simulation without stress effects
+
+# activate the usual silicon models
+models cvt consrh auger bgn
+
+#calculate the idvg curve
+solve init
+solve 
+solve vdrain=0.001
+solve vdrain=0.01 
+solve vdrain=0.1 
+
+log outf=vsex02_0.log
+solve vgate=0.0 vstep=0.1 vfinal=3 name=gate 
+log off
+
+#calculate the idvd curve at vg=1
+solve init
+solve vgate=0 vstep=0.1 vfinal=1 name=gate
+
+log outf=vsex02_1.log
+solve vdrain=0.0  vstep=0.01 vfinal=0.1 name=drain
+solve vdrain=0.15 vstep=0.05 vfinal=0.5 name=drain
+solve vdrain=0.6  vstep=0.2  vfinal=3.0 name=drain
+log off
+
+#calculate the idvd curve at vg=2.0
+solve init
+solve vgate=0 vstep=0.1 vfinal=2.0 name=gate
+
+log outf=vsex02_2.log
+solve vdrain=0.0  vstep=0.01 vfinal=0.1 name=drain
+solve vdrain=0.15 vstep=0.05 vfinal=0.5 name=drain
+solve vdrain=0.6  vstep=0.2  vfinal=3.0 name=drain
+log off
+
+# now run the simulation with stress effects
+
+# activate the usual silicon models
+models cvt consrh auger bgn
+
+# include stress bandgap effects
+models stress
+
+# include stress mobility enhancement
+mobility nhance phance
+
+#calculate the idvg curve
+solve init
+solve 
+solve vdrain=0.01
+solve vdrain=0.1 
+
+log outf=vsex02_0_stress.log
+solve vgate=0.0 vstep=0.1 vfinal=3 name=gate 
+ 
+log off
+
+#calculate the idvd curve at vg=1
+solve init
+solve vgate=0 vstep=0.1 vfinal=1 name=gate
+
+log outf=vsex02_1_stress.log
+solve vdrain=0.0  vstep=0.01 vfinal=0.1 name=drain
+solve vdrain=0.15 vstep=0.05 vfinal=0.5 name=drain
+solve vdrain=0.6  vstep=0.2  vfinal=3.0 name=drain
+log off
+
+#calculate the idvd curve at vg=2.0
+solve init
+solve vgate=0 vstep=0.1 vfinal=2.0 name=gate
+
+log outf=vsex02_2_stress.log
+solve vdrain=0.0  vstep=0.01 vfinal=0.1 name=drain
+solve vdrain=0.15 vstep=0.05 vfinal=0.5 name=drain
+solve vdrain=0.6  vstep=0.2  vfinal=3.0 name=drain
+log off
+
+
+tonyplot -overlay vsex02_0.log vsex02_0_stress.log -set vsex02_3.set
+
+tonyplot -overlay vsex02_1.log vsex02_2.log vsex02_1_stress.log vsex02_2_stress.log -set vsex02_4.set
+
+quit

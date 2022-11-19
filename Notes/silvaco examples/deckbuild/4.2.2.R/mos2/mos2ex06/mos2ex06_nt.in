@@ -1,0 +1,266 @@
+go athena 
+
+#	Salicided N-MOSFET Full IV Curve Application
+#	============================================
+
+# Define a global grid density multiplier....make this value 
+# bigger to speed up the simulation for demos etc....
+
+set grid_density=1
+
+#
+line x loc=0     spac=0.1
+line x loc=0.2   spac=0.05
+line x loc=0.32  spac=0.05
+line x loc=0.4   spac=0.05
+line x loc=0.5   spac=0.05
+line x loc=0.6   spac=0.05
+line x loc=0.8   spac=0.1
+line x loc=1     spac=0.15
+#
+line y loc=0.00  spac=0.01 
+line y loc=0.15  spac=0.005
+line y loc=0.17  spac=0.005
+line y loc=0.25  spac=0.05
+line y loc=2.5   spac=0.15
+line y loc=5.0   spac=0.5
+#
+init c.phos=1.0e14 space.mult=$grid_density
+#
+#pwell formation including masking off of the nwell
+diffus time=30 temp=900 dryo2 press=1.00 hcl=3
+#
+etch oxide thick=0.025
+#
+#P-well Implant
+# 
+implant boron dose=1.5e13 energy=100 pears
+#
+diffus temp=925 time=100 weto2 hcl=3
+#
+#N-well implant not shown -
+#
+# welldrive starts here
+set welldrive_temp=1200
+diffus time=50 temp=1000 t.rate=4.000 dryo2 press=0.10 hcl=3
+diffus time=120 temp=$welldrive_temp nitro
+diffus time=90 temp=$welldrive_temp t.rate=-4.444 nitro
+#
+# Experimentally: Dip off the oxide and measure the peak conc.....
+extract name="peak conc" max.conc boron silicon mat.occno=1
+etch oxide all
+#
+#sacrificial "cleaning" oxide
+diffus time=20 temp=900 dryo2 press=1 hcl=3
+extract thickness oxide mat.occno=1 name="sacox"
+#
+etch oxide all
+#
+# gate oxide grown here:-
+# make sure it has a couple of grid points....
+# Set a partial pressure variable for use as a calibration parameter....
+# note, the grid density has been adjusted during growth to improve accuracy...
+set ppress=1
+set gate_temp=875
+method grid.ox=0.005
+diffus time=10 temp=800 t.final=$gate_temp nit press=$ppress
+diffus time=5 temp=$gate_temp nitrogen press=$ppress hcl=3
+diffus time=28 temp=$gate_temp dryo2 press=$ppress hcl=3
+diffus time=25 temp=$gate_temp nitrogen press=$ppress hcl=3
+diffus time=20 temp=$gate_temp t.final=800 dryo2 press=$ppress hcl=3
+# Extract the gateoxide for use later in the Spice Model extraction...
+extract thickness oxide mat.occno=1 name="tox"
+# Reset the grid during oxide growth, back to default...
+method grid.ox=0.1
+#
+#convert tox to metres for utmost
+extract name="utmost_tox" ($tox * 1.0e-10)
+#
+#vt adjust implant 
+implant boron dose=1.4e12 energy=20 pearson
+#
+depo poly thick=0.3 spaces=8
+#example converts to 2D following this step
+etch poly left p1.x=0.5
+
+# Relax the mesh below the active device area
+relax y.min=0.3
+relax y.min=0.4
+relax y.min=0.5
+
+#
+method full.cpl compress 
+diffuse time=10 temp=875 dry press=1.0
+# 
+implant phosphor dose=1.0e13 energy=35 pear
+#
+#Spacer Formation - setup a variable as a spacer thickness....
+set spacer_width=0.175
+depo oxide thick=$spacer_width divisions=8
+etch oxide dry thick=$"spacer_width"+0.025
+#
+# SD Implant
+implant arsenic dose=5.0e15 energy=45 pear
+#
+# RTA dopant activation
+diffuse temp=1000 time=0.1667 nitrogen 
+structure outf=activate.str
+#
+
+# Create the salicide areas
+deposit titan thick=0.1 divi=3
+diffuse temp=800 time=0.5 nitrogen
+etch titanium all
+
+
+
+#
+#############################################################################
+################### Extract Design parameters ###############################
+#############################################################################
+
+# Extract some design parameters for use with Utmost model extraction later....
+
+# Extract a first order approximation for NSUB as the average of the
+# surface and peak channel conc values......
+#
+extract name="chan_peak_conc" max.conc impurity="Net Doping" material="Silicon" mat.occno=1 x.val=0.5
+#
+extract name="chan_surf_conc" surf.conc impurity="Net Doping" material="Silicon" mat.occno=1 x.val=0.5
+extract name="nsub" ($"chan_peak_conc"+$"chan_surf_conc")/2
+
+
+# Reflect the structure....
+structure mirror right
+
+# Extract the poly Ld at this point.....
+extract name="ld" thick poly y.val=0
+extract name="utmost_ld" ($ld * 1.0e-4)
+
+
+
+#########################################################################
+############### SET UP ELECTRODE NAMES ##################################
+#########################################################################
+
+
+# Name the eletrodes for Atlas....in the correct order of use.....
+# Note the gate has been named before, as we do not want a voltage
+# drop running down through the poly from the overlying TiSix....
+electrode name=substrate backside
+electrode name=source x=0.1
+electrode name=drain x=1.9
+electrode name=gate x=0.55
+
+
+structure outfile=mos2ex06.str
+tonyplot  mos2ex06.str -set mos2ex06_0.set
+
+##########################################################################
+############# SET UP ATLAS TEST VARIABLES ###############################
+##########################################################################
+
+#  These variables are set to enable simple modification of the 
+#  MOS level 3 test.
+# 
+# setup ATLAS runs
+# general
+set polarity=1
+set vdd=$polarity*5.0
+
+#idvg
+set vdslin=$polarity*0.1
+set vdslinhalf=$polarity*0.05
+set vgstep=$polarity*0.2
+set vbsmax=-1*$vdd
+set vbshalf=$vbsmax/2
+
+#idvd
+#      can't change vgcurves w/o syntax change later
+set vdstep=$polarity*0.2
+set vgmin=$polarity*2.0
+set vgcurves=3
+set vghalf=($vdd+$vgmin)/($vgcurves-1)
+set vbs=0.0
+
+##################### START ATLAS SIMULATION #######################
+
+
+go atlas
+
+
+models cvt srh print   
+
+contact name=gate n.poly
+interface qf=3e10
+
+
+solve init
+
+save outf=init.str master
+
+
+method  newton autonr trap
+solve prev
+solve vdrain=$vdslinhalf
+solve vdrain=$vdslin 
+solve vsubstrate=0 outf=solve_tmp0 
+solve vsubstrate=$vbshalf outf=solve_tmp1 
+solve vsubstrate=$vbsmax outf=solve_tmp2
+ 
+#################  Create the IdVg-Vb IV matrix ######################
+load infile=solve_tmp0
+log outf=mos2ex06_IdVg-Vb.log
+solve name=gate vgate=0 vfinal=$vdd vstep=$vgstep 
+ 
+load infile=solve_tmp1
+
+solve name=gate vgate=0 vfinal=$vdd vstep=$vgstep 
+ 
+load infile=solve_tmp2
+
+solve name=gate vgate=0 vfinal=$vdd vstep=$vgstep  
+
+#########################################################################
+go atlas
+
+models cvt srh print  
+
+contact name=gate n.poly
+interface qf=3e10
+
+
+solve init
+
+
+
+method newton autonr trap
+solve prev
+solve vsubstrate=$vbs
+#solve vgate=$vgmin outf=solve_tmp0 
+#solve vgate=$vghalf outf=solve_tmp1 
+#solve vgate=$vdd outf=solve_tmp2 
+
+solve vgate=1 vstep=0.25 vfinal=1.5 name=gate outf=solve_tmp0 onefile
+ 
+solve vgate=1.75 vstep=0.25 vfinal=3 name=gate outf=solve_tmp1 onefile
+ 
+solve vgate=3.25 vstep=0.25 vfinal=4.5 name=gate outf=solve_tmp2 onefile
+
+#####################  Create the IdVd-Vg IV matrix #######################
+load infile=solve_tmp0
+log outf=mos2ex06_IdVd-Vg.log
+solve name=drain vdrain=0 vfinal=$vdd vstep=$vdstep
+  
+load infile=solve_tmp1
+
+solve name=drain vdrain=0 vfinal=$vdd vstep=$vdstep
+  
+load infile=solve_tmp2
+
+solve name=drain vdrain=0 vfinal=$vdd vstep=$vdstep 
+ 
+
+quit
+
+

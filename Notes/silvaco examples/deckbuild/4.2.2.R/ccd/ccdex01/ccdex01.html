@@ -1,0 +1,168 @@
+<html>
+  <head>
+    <title>Illumination and Charge Transfer</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Illumination and Charge Transfer</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>SSuprem 4/S-Pisces/Luminous</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R, Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="ccdex01_plot0.png" width="640" alt="ccdex01_plot0" />
+      <p/>
+      <img src="ccdex01_plot1.png" width="640" alt="ccdex01_plot1" />
+      <p/>
+      <img src="ccdex01_plot2.png" width="640" alt="ccdex01_plot2" />
+      <p/>
+      <img src="ccdex01_plot3.png" width="640" alt="ccdex01_plot3" />
+      <p/>
+    </div>
+    <div id="text" >
+</p>
+<br/>
+<p>
+In this example a CCD structure is constructed using the Athena process
+simulator. This structure is passed to Atlas for electrical testing.
+The input file tests consist of four portions:
+<br/>
+</p>
+<ul>
+  <li>
+ Construction of a CCD device
+<br/>
+  </li>
+  <li>
+ Emptying the storage well of carriers
+<br/>
+  </li>
+  <li>
+ Illuminating the CCD with a light source and measuring the generated carriers
+<br/>
+  </li>
+  <li>
+ Transfer of the carriers to the drain
+  </li>
+</ul>
+<p>
+The first stage of the input constructs the CCD geometry and doping
+profiles in Athena. The CCD device consists of a storage node on the
+left of the structure controlled by a polysilicon gate. A transfer node
+to the right of this is also controlled by both a polysilicon gate and a drain
+region of heavy n+ doping with a metal contact.
+</p>
+<p>
+The CCD structure has an n- active region at the surface above a p-type
+substrate. Under the transfer node an extra p-type implant is given.
+This implant is of sufficient magnitude to create a potential
+difference between the storage and transfer nodes, but is not so large
+as to cause a junction.
+</p>
+<p>
+The process simulation is designed to run extremely quickly so there is
+a minimum of diffusion steps included. The final stages of the Athena
+input performs the electrode definition needed by Atlas.  Also some
+EXTRACT statements are used to measure the junction depth of the active
+region under the storage and transfer nodes.
+</p>
+<p>
+The Atlas simulation begins with definition of the models and material
+parameters of the device.  The
+<b> contact </b> statement is used to define the
+workfunction of the two polysilicon electrodes.  The
+<b> material </b> statement
+is used to define minority carrier lifetimes in the semiconductor.  The
+interface charge between the gate oxide and the semiconductor is set by
+the &apos;qf&apos; parameter of the
+<b> interface </b> statement.
+</p>
+<p>
+The physical models used in this simulation reflect different
+physical effects that are important in CCD devices. The mobility model CVT
+includes a surface mobility degradation  which is important in the
+transfer phase of the simulation as the charge moves from the storage
+node to the drain. The recombination models consrh and auger are needed
+as the recombination of the carriers is important in determining the
+capacity and charge transfer characteristics. Band gap narrowing is
+also needed to model the properties of areas with high carrier concentration.
+</p>
+<p>
+The initial part of the Atlas input file biases the drain to +20V,
+whilst the two gates are held at -6V. This is done to deplete the electrons
+from the n- active layer. The final structure with the active layer
+empty of carriers is saved. At this point
+<b> extract </b> statements are used
+to extract the integrated electron concentration in the storage well.
+This will be a small number.
+</p>
+<p>
+Next, Luminous is used to illuminate the storage node. The light beam is
+defined near the start of the input file using the
+<b> beam </b> statement. This
+beam is defined with a 500nm wavelength, an origin at (0,-1) and width of
+2um. The angle of 90 degrees specifies normal incidence onto the top of
+the CCD. Luminous calculates all internal reflections and absorption by
+the layers within the simulation structure.
+</p>
+<p>
+To illuminate the structure, a transient simulation is used. The power of the
+light beam is controlled by the parameter B1 on the SOLVE statement.
+This is defined to rise from zero to 1 W/cm^2 in 5ns, to remain at this
+power for a further 15ns, and then to fall to zero in another 5ns.  The
+<b> tstep </b> parameter is used to define the initial timestep of the
+simulation. All other timesteps are automatically calculated by Atlas
+based on the local truncation error. The
+<b> tstop </b> parameter defines the
+end of the simulation time. The illumination part is set to last 50ns.
+</p>
+<p>
+At the end of the illumination section a structure is stored. This
+structure can be plotted to see the charge collected under the storage
+node. The potential difference between the storage and transfer nodes
+created by the extra boron implant stops charge from leaking away to
+the large positive potential on the drain.
+<b> extract </b> statements are used
+once again to measure the integrated electron concentration. The value
+obtained is subtracted from the value obtained from the empty well.
+</p>
+<p>
+The final stage of the Atlas simulation is the charge transfer. This is
+also performed as a transient simulation. It is very important to note
+that during a single Atlas run the time is
+<i> not</i> reset to zero. Since the
+illumination section was 50ns, that is the starting time for this
+section. In this section the transfer gate is ramped from -6V to +2V.
+This causes the potential barrier between the storage node and the
+drain to be removed, Charge can now flow form the storage node, under the
+transfer gate and into the drain.
+</p>
+<p>
+At each timestep in the transfer simulation a structure is saved.
+By loading several of these structure files into TonyPlot it is possible
+to observe the movement of charge across the device.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

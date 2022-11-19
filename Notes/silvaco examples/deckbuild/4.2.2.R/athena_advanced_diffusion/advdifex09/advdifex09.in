@@ -1,0 +1,42 @@
+
+#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+#XXX       BORON implant at 2keV           XXXXXX
+#XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+go athena
+
+#the x dimension deinition
+line x loc = 0.0 spacing=0.008
+line x loc = 0.05 spacing=0.006
+line x loc = 0.1 spacing=0.008
+
+#the vertical definition
+line y loc = 0 spacing = 0.002
+line y loc = 0.05 spacing = 0.01
+line y loc = 0.1 spacing = 0.02
+
+#initialize the mesh
+init silicon c.arsenic=1.0e17 c.boron=1e12 two.d
+
+#deposition
+deposit nitride thick=0.05 dy=0.01 ydy=0.02 divis=10
+
+#etch
+etch nitride left p1.x=0.05
+
+method pls
+
+#perform implantation
+
+implant boron dose=1.0e14 energy=2 tilt=7 rotation=30 crystal unit.damage dam.factor=1.0
+structure outfile=advdifex09_ini.str
+
+#perform diffusion
+
+diffuse time=10 sec temperature=1000
+
+structure outfile=advdifex09_end.str
+
+tonyplot advdifex09_end.str -set advdifex09.set
+
+quit

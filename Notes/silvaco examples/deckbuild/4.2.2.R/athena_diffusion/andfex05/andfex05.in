@@ -1,0 +1,37 @@
+go athena 
+
+#TITLE: Phosphorus Pile-up During Oxidation
+
+#the x dimension definition
+line x loc = 0.0  spacing=0.1
+line x loc = 0.1  spacing=0.1
+
+#the vertical definition
+line y loc = 0     spacing = 0.01 
+line y loc = 1  spacing = 0.02 
+
+#initialize the mesh
+init silicon c.phos=1.0e18
+
+#perform intensive oxidation
+# Use Fermi Model
+method fermi grid.ox=0.02
+diffuse time=10 temperature=900 wet press=10
+struct outf=andfex05_1.str
+
+# Repeat with TWO.DIM Model to simulate Oxidation Enhanced Diffusion
+#the x dimension definition
+line x loc = 0.0  spacing=0.1
+line x loc = 0.1  spacing=0.1
+
+#the vertical definition
+line y loc = 0     spacing = 0.01 
+line y loc = 1  spacing = 0.02 
+
+#initialize the mesh
+init silicon c.phos=1.0e18
+
+method two.dim grid.ox=0.02
+diffuse time=10 temperature=900 wet press=10
+struct outf=andfex05_2.str
+tonyplot -overlay andfex05_1.str andfex05_2.str -set andfex05.set 

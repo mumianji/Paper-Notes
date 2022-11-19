@@ -1,0 +1,85 @@
+<html>
+  <head>
+    <title>2D BCA coincident boron arsenic point implants</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>2D BCA coincident boron arsenic point implants</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>SSuprem 4, MC IMPLANT</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="aniiex11_plot0.png" width="640" alt="aniiex11_plot0" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example shows the difference between two implants as
+a result of the order in which they are done.  The implant
+damage from the first implant affects the second implant.
+</p>
+<p>
+An impenetrable
+<b> barrier </b> layer is deposited upon silicon in this example,
+which is then etched to create a 10 nm wide window.  This structure
+forms the starting point for two separate cases.
+</p>
+<p>
+In the first case, a 10 keV arsenic implant is performed, followed by
+a 10 keV boron implant.  Arsenic, a heavier ion than boron, creates
+significant damage in the silicon.  As a result, the crystal
+integrity of silicon is reduced, which in turn reduces the boron
+channeling.
+</p>
+<p>
+The second case reverses the order of the implants (but maintains
+the same energy and dose).  Boron is
+first implanted, and the normal
+<b> [100] </b> channel profile of boron as determined by BCA is formed.  The arsenic
+implant follows. Since boron is much lighter than arsenic, there is
+less damage created by the boron implant (which can also be viewed in the
+<b> .history.str </b> files), and arsenic forms nearly the same distribution
+as in the first case.  Quantitatively, the peak concentration
+(the projected range) of boron is noticeably deeper in the
+second case.
+</p>
+<p>
+The current example simulates 10,000 ions incident upon the
+structure for each implant.  Increased accuracy, at the
+cost of increased simulation time, can be obtained by increasing the
+<b> n.ion </b> parameter of the
+<b> IMPLANT </b> statement to 100,000.
+</p>
+<p>
+The
+<b> impct.point </b> parameter specifies a precise impact location
+for the ions.  This parameter makes the barrier layer redundant,
+and is available only for Monte Carlo ion implant simulations.
+See the Athena User&apos;s manual for a complete description
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

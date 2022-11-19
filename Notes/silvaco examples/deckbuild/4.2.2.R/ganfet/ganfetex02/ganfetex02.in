@@ -1,0 +1,172 @@
+# (c) Silvaco Inc., 2018
+#
+# ganfetex02.in
+#
+# In this deck the goal is to examine the breakdown voltage as a function
+# of field plate geometry.
+#
+# This deck is based on Karmalkar and Mishra, ED 48, pp 1515-1521, 
+# August 2001
+#
+
+go internal
+
+# initial field plate length
+set l= 1.0
+set index=0
+
+#loop on 6 field plate lengths
+loop steps=6
+
+set index=$index+1
+
+# drain-gate distance
+set Ldg=5.1
+# field plate thickness
+set t=1.77355
+# AlGaN composition fraction
+set xc=0.295
+#set eps0=8.9 - 0.4*$xc
+# set trap lifetime
+set lt=1e-7
+# an optical source helps stability of breakdown
+# by supplying carrier pairs to initiate breakdown
+set light=1e-5
+# polarization charge density if set manually
+#set ch1=1e13
+
+# mesh locations based on field plate geometry
+set xl=0.9 + $l
+set xd=0.9 + $Ldg
+set y1= 0.3 + $t
+set y2= $y1 + 0.02
+set y3= $y2 + 0.04
+set y4= $y2 + 0.18
+
+go atlas 
+
+mesh width=1000	
+# mesh geometry
+x.m l=0.0  s=0.1
+x.m l=0.05 s=0.05
+x.m l=0.5  s=0.05
+x.m l=0.9  s=0.025
+x.m l=(0.9+$xl)/2  s=0.05
+
+x.m l=$xl  s=0.025
+x.m l=($xl+$xd)/2  s=0.25
+x.m l=$xd-0.05  s=0.05
+x.m l=$xd  s=0.05
+#
+y.m l=0.0  s=0.1000
+y.m l=0.3  s=0.1000
+y.m l=$y1  s=0.0020
+y.m l=$y2  s=0.0020
+y.m l=$y3  s=0.0100
+y.m l=$y4  s=0.0500
+# device structure
+# POLAR.SCALE is chosen to match calibrated values
+# of 2DEG charge concentration
+region num=1 mat=SiN y.min=0 y.max=$y1
+region num=2 mat=AlGaN y.min=$y1 y.max=$y2  donors=1e16 x.comp=$xc polarization calc.strain polar.scale=0.65
+region num=3 mat=GaN y.min=$y2 y.max=$y4 donors=1e15 polarization calc.strain polar.scale=0.65 substrate
+#
+elect name=source x.max=0 y.min=$y1 y.max=$y3
+elect name=drain x.min=6.0 y.min=$y1 y.max=$y3
+elect name=gate x.min=0.5 x.max=0.9 y.min=0.3 y.max=$y1
+elect name=gate x.min=0.5 x.max=$xl y.min=0.3 y.max=0.3
+#
+doping    gaussian characteristic=0.01 conc=1e18  n.type x.left=0.0 \
+        x.right=0.05 y.top=$y1 y.bottom=$y3 ratio.lateral=0.01 direction=y
+doping    gaussian characteristic=0.01 conc=1e18  n.type x.left=$xd-0.05 \
+        x.right=$xd y.top=$y1 y.bottom=$y3 ratio.lateral=0.01 direction=y
+
+###################################################################
+# KM parameter set
+###################################################################
+material material=GaN eg300=3.4 align=0.8 permitt=9.5 \
+	mun=900 mup=10 vsatn=2e7 nc300=1.07e18 nv300=1.16e19 \
+	real.index=2.67 imag.index=0.001 \
+	taun0=$lt taup0=$lt
+material material=AlGaN affinity=3.82 eg300=3.96 align=0.8 permitt=9.5 \
+	mun=600 mup=10 nc300=2.07e18 nv300=1.16e19 \
+	real.index=2.5 imag.index=0.001 \
+	taun0=$lt taup0=$lt
+###################################################################
+model print fermi fldmob srh pch.elec
+impact material=GaN selb an1=2.9e8 an2=2.9e8 bn1=3.4e7 bn2=3.4e7 \
+	    ap1=2.9e8 ap2=2.9e8 bp1=3.4e7 bp2=3.4e7
+#impact selb e.dir ^e.side directed angle=0
+#
+contact name=gate work=5.23
+#
+#interface charge=$ch1 s.s ^s.i y.min=$y1 y.max=$y3
+#
+beam number=1 x.o=0 y.o=$y4+0.1 angle=270 wavelength=0.3
+#
+output con.band val.band band.param charge e.mob h.mob flowlines qss
+############################################################################## 
+# idvg curve
+##############################################################################
+solve
+
+log outf=ganfetex02_0.log
+solve vdrain=0.05
+solve vstep=-0.2 vfinal=-2 name=gate 
+solve vstep=-0.1 vfinal=-4 name=gate
+log off
+
+save outfile=ganfetex02_0.str
+
+extract init infile="ganfetex02_0.log"
+extract name="Vpinchoff" xintercept(maxslope(curve(v."gate",i."drain")))
+
+############################################################################## 
+# idvd breakdown curves
+##############################################################################
+method autonr gcarr.itlimit=10 clim.dd=1e3 clim.eb=1e3 nblockit=25
+solve init 
+# turn on optical source to help initiate breakdown
+solve b1=$light index.check
+#
+solve nsteps=10 vfinal=$Vpinchoff name=gate b1=$light
+
+log outf=ganfetex02_$'index'.log
+
+solve  vstep=0.1 vfinal=1  name=drain b1=$light
+solve  vstep=1   vfinal=10 name=drain b1=$light
+solve  vstep=2   vfinal=20 name=drain b1=$light
+solve  vstep=5 vfinal=1200 name=drain  b1=$light cname=drain compl=0.5
+
+# change to current contact to resolve breakdown
+contact name=drain current
+solve 
+solve imult istep=1.1 ifinal=1 name=drain
+#
+save outfile=ganfetex02_$'index'.str 
+#
+
+extract init infile="ganfetex02_$'index'.log"
+extract name="a" slope(maxslope(curve(i."drain",v."drain")))
+extract name="b" xintercept(maxslope(curve(i."drain",v."drain")))
+extract name="Vdmax" max(curve(i."drain",v."drain"))
+extract name="Idmax" x.val from curve(i."drain",v."drain") where y.val=$Vdmax
+extract name="Vd1" $Vdmax - 20
+extract name="Id1" y.val from curve(v."drain",i."drain") where x.val=$Vd1
+extract name="c" grad from curve(v."drain",i."drain") where x.val=$Vdmax
+extract name="d" $Idmax - $c*$Vdmax
+extract name="Vbr" ($b - $d)/($c - (1/$a))
+extract name="Is" $b + $Vbr/$a
+
+go internal
+
+set l=$l+0.25
+
+l.end
+
+tonyplot ganfetex02_1.str ganfetex02_2.str ganfetex02_3.str ganfetex02_4.str ganfetex02_5.str ganfetex02_6.str -set ganfetex02_1.set
+tonyplot -overlay ganfetex02_1.log ganfetex02_2.log ganfetex02_3.log ganfetex02_4.log ganfetex02_5.log ganfetex02_6.log -set ganfetex02_0.set
+
+quit
+
+

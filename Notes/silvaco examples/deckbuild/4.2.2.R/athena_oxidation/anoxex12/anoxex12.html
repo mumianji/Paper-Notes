@@ -1,0 +1,53 @@
+<html>
+  <head>
+    <title>Controlling Encroachment using Oxidation Threshold</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Controlling Encroachment using Oxidation Threshold</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>SSuprem 4</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="anoxex12_plot0.png" width="640" alt="anoxex12_plot0" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example specifies that oxidation only occurs when oxidant concentration
+is above a certain value.
+</p>
+<p>
+Two oxidation threshold values are used in this example along with a
+run using the default model. The threshold model is enabled by:
+<b> method ox.thresh</b> </p>
+<p>
+Parameters for the model are set by material and separately for wet and
+dry oxidations using the statement
+<b> oxide  min.oxidant=&lt;value&gt; </b> </p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

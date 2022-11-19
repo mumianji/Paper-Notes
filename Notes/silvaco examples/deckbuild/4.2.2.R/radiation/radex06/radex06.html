@@ -1,0 +1,86 @@
+<html>
+  <head>
+    <title>SEU in Memory Cell Transistor</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>SEU in Memory Cell Transistor</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>DevEdit 3D/Device 3D</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="radex06_plot0.png" width="640" alt="radex06_plot0" />
+      <p/>
+      <img src="radex06_plot1.png" width="640" alt="radex06_plot1" />
+      <p/>
+      <img src="radex06_plot2.png" width="640" alt="radex06_plot2" />
+      <p/>
+      <img src="radex06_plot3.png" width="640" alt="radex06_plot3" />
+      <p/>
+      <img src="radex06_plot4.png" width="640" alt="radex06_plot4" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates SEU in a MOSFET with an external resistor and capacitor emulating a RAM cell.  The example shows:
+</p>
+<ul>
+  <li>
+ Formation of structure in DevEdit 3D
+<br/>
+  </li>
+  <li>
+ Parameterized structural and doping parameters 
+<br/>
+  </li>
+  <li>
+ Automatic interface from DevEdit 3D to Device 3D
+<br/>
+  </li>
+  <li>
+ Setting of external resistor and capacitor on the 
+<b> drain</b> contact
+<br/>
+  </li>
+  <li>
+ Definition of the SEU pulse
+<br/>
+  </li>
+  <li>
+ DC simulation to bias MOSFET in initial cell condition
+<br/>
+  </li>
+  <li>
+ Transient simulation of SEU strike
+<br/>
+  </li>
+  <li>
+ Analysis of voltage drop at the drain contact
+  </li>
+</ul>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

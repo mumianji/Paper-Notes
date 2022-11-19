@@ -1,0 +1,52 @@
+go athena
+
+# Aluminum implant into 6H-SiC at different energies
+
+line x loc=-1 spac=1
+line x loc=1 spac=1
+
+line y loc=0.00 spac=0.0125
+line y loc=2.50 spac=0.0125
+
+init sic_6h one.d rot.sub=0
+structure outfile=sicex04_init.str
+
+init infile=sicex04_init.str rot.sub=0
+implant aluminum n.ion=10000 dose=3.0e13 tilt=9 rot=45 energy=30 bca sampling
+structure outfile=sicex04_0.str remove.gas
+#
+extract name="al30" curve(depth,impurity="Aluminum" material="All" x.val=0.0) \
+        outfile="sicex04_0.dat"
+
+
+init infile=sicex04_init.str rot.sub=0
+implant aluminum n.ion=10000 dose=7.9e13 tilt=9 rot=45 energy=90 bca sampling
+structure outfile=sicex04_1.str remove.gas
+#
+extract name="al90" curve(depth,impurity="Aluminum" material="All" x.val=0.0) \
+        outfile="sicex04_1.dat"
+
+init infile=sicex04_init.str rot.sub=0
+implant aluminum n.ion=10000 dose=3.8e14 tilt=9 rot=45 energy=195 bca sampling
+structure outfile=sicex04_2.str remove.gas
+#
+extract name="al195" curve(depth,impurity="Aluminum" material="All" x.val=0.0) \
+        outfile="sicex04_2.dat"
+
+init infile=sicex04_init.str
+implant aluminum n.ion=10000 dose=3.0e13 tilt=9 rot=-15 energy=500 bca sampling
+structure outfile=sicex04_3.str remove.gas
+#
+extract name="al500" curve(depth,impurity="Aluminum" material="All" x.val=0.0) \
+        outfile="sicex04_3.dat"
+
+init infile=sicex04_init.str rot.sub=0
+implant aluminum n.ion=10000 dose=3.0e13 tilt=9 rot=45 energy=1000 bca sampling
+structure outfile=sicex04_4.str remove.gas
+#
+extract name="al1000" curve(depth,impurity="Aluminum" material="All" x.val=0.0) \
+        outfile="sicex04_4.dat"
+tonyplot -overlay sicex04_0.dat sicex04_0.exp sicex04_1.dat sicex04_1.exp sicex04_2.dat sicex04_2.exp sicex04_3.dat sicex04_3.exp sicex04_4.dat sicex04_4.exp -set sicex04.set
+
+
+quit

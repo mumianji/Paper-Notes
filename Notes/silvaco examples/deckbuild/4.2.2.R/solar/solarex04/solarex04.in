@@ -1,0 +1,88 @@
+# (c) Silvaco Inc., 2018
+go atlas 
+#
+# Solar cell example number 4.
+# This example is for a simple Ge 
+#
+# GaInP optical data and layer structure courtesy of IES-UPM, Madrid"
+#
+# Here we specify a mesh of one square meter ( 100um x 1e10 um).
+# Since the structure is essentially one dimensional we ignore
+# variations if x and z.  The AUTO keyword indicates that the
+# we will not specify mesh lines in the y direction that they
+# will be inferred from the REGION statements.
+#
+mesh auto width=1e10
+#
+x.mesh loc=0   spac=10
+x.mesh loc=100 spac=10
+#
+# Here we place a InGaP window layer on top of a Ge p-n photodetector.
+# By proper choice of the thickness of the InGaP layer we
+# can optimize the efficiency of the detector.
+#
+regio num=1 bottom thickness=1   material=ingap     ny=10 donor=8e17 x.comp=0.5
+regio num=2 bottom thickness=0.2 material=germanium ny=25 donor=6e18
+regio num=3 bottom thickness=50  material=germanium ny=50 acceptor=8.5e17  
+#
+# Electrodes on top and bottom
+#
+electrode name=cathode num=1 top x.max=20
+electrode name=anode   num=2 bottom
+#
+# We specify the complex index of refraction from a table
+# and get the index of germanium from the Sopra database.
+#
+material material=ingap     index.file=solarex04.nk
+material material=germanium sopra=Ge.nk
+#
+# Specify reasonable surface recombination velocities.
+#
+interface s.s y.min=0.9 y.max=1.1 s.n=1e6  s.p=1e6
+#
+# Enable all of the recombination models and Fermi
+# statistics.
+#
+models srh conmob fermi ni.fermi bgn optr auger print
+#
+# The beam is placed above the device and transfer matrix
+# method is enabled.  Here you can add the optional parameter
+# SUBST that will make it seem as though the last germanium
+# region is infinite for the transfer matrix method.
+#
+beam num=1 phi=90 y.origin=-5 tr.matrix
+# subst
+#
+# Initial solution
+#
+solve
+#
+# Capture the terminal currents to a file.
+# 
+log outf=solarex04.log
+#
+# Using the Deckbuild loop syntax we loop over wavelengths from
+# 0.6 microns to 1.6 microns and extract spectral response
+#
+loop steps=100
+stmt wave=0.6:0.01
+solve b1=1e-02 lambda=$wave
+l.end
+#
+# Save off the final result including optical intensity
+#
+output opt.intens
+save outf=solarex04.str
+# 
+# Using EXTRACT statements extract quantum efficiency
+#
+extract init infile="solarex04.log"
+extract name="EQE" curve(elect."optical wavelength", abs(i."anode")/elect."source photo current") outfile="solarex04.dat"
+extract name="EQE_ge" max(abs(i."cathode")/elect."source photo current")
+#
+# Plot the results
+#
+tonyplot solarex04.dat -set solarex04_0.set
+tonyplot solarex04.str -set solarex04_1.set
+
+quit

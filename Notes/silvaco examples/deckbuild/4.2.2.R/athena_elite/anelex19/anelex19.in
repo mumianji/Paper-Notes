@@ -1,0 +1,48 @@
+go athena
+
+#TITLE: Trench etch, reflow, and metal deposit
+# 
+line x loc=0.00 spac=0.1 
+line x loc=1 spac=0.05
+line x loc=2 spac=0.05
+line x loc=3.0 spac=0.1 
+#
+line y loc=0.00 spac=0.5
+line y loc=0.5 spac=0.5 
+initialize 
+#
+deposit oxide      thick=1.5 div=10
+deposit nitride      thick=.3 div=1
+#
+etch    nitride      start x=1.0 y=-10
+etch                 cont  x=1.0 y=10
+etch                 cont  x=2.0 y=10
+etch                 done  x=2.0 y=-10
+
+rate.etch machine=m1 rie oxide iso=1.0 dir=0.0 u.m
+#
+etch machine=m1 time=40.0 second dx.mult=0.25
+
+rate.etch machine=m2 rie oxide iso=0.0 dir=1.0 u.m
+#
+etch machine=m2 time=60.0 second dx.mult=0.5
+
+strip nitride
+
+structure outfile=anelex19_0.str
+
+#perform reflow here!
+material oxide visc.0=1.862e-20 gamma.reflo=1e3 reflow 
+diff time=10 temp=950 reflow
+
+structure outfile=anelex19_1.str
+
+rate.depo machine=PE4450 aluminum u.m  sigma.dep=0.65 hemisphe \
+          dep.rate=0.5 angle1=70.0 angle2=-70.0
+deposit machine=PE4450 time=45 second divis=8
+
+structure outfile=anelex19_2.str
+tonyplot anelex19_*.str
+
+quit
+

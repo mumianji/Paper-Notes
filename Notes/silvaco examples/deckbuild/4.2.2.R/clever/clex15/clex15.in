@@ -1,0 +1,44 @@
+go clever
+
+
+#####   FIRST DO A 3D SIMULATION   #####
+
+Init  Layout="clex15.lay" Depth=1.0 box=(0,0 10,10)
+
+## Pad oxide ##
+
+Deposit Oxide Thickness=0.01 Max
+
+## LOCOS ##
+
+Deposit  Nitride Thickness=0.1 Max
+
+Deposit  Resist Thickness=0.1 Max
+
+Mask "LOCOS"
+
+Etch Nitride
+
+Strip Resist
+
+Oxidize Temperature=950 Time=150 WetO2 Hcl=3 Pressure=1 <100> resolution=high
+
+## The oxidation "resolution" parameter can be set to "normal", ##
+## "medium" or "high" and can be used in either 3D or 2D mode.  ##
+
+Save  Structure="clex15_3D.str"
+
+
+#####   NOW DO A 2D CUTLINE AND PLOT   #####
+
+Cut line=(0, 5, 10, 5)
+# (X1, Y1, X2, Y2)
+
+Save  Structure="clex15_2D.str"
+
+tonyplot clex15_2D.str -set clex15.set
+
+quit
+
+
+

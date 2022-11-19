@@ -1,0 +1,49 @@
+# (c) Silvaco Inc., 2018
+go atlas
+Title 2D Gaussian Source
+#
+# SECTION 1: Mesh Specification
+#
+mesh
+#
+x.m l=0    s=0.2
+x.m l=5    s=0.2
+y.m l=0.0  s=0.05
+y.m l=5.0  s=0.5
+y.m l=25.0 s=0.1
+#
+# SECTION 2: Structure Specification
+#
+regi num=1 silicon
+#
+elec num=1 y.max=0.0 x.max=0.2
+elec num=2 y.max=0.0 x.min=4.8
+elec num=3 bottom
+#
+doping unif n.type conc=2e16
+doping gaus peak=0.0  char=0.1 conc=1e18 p.type dir=y
+doping gaus peak=10.0 char=0.1 conc=1e18 n.type dir=y
+#
+# SECTION 3: Gaussian Source Specification
+# Note:  For Gaussian sources you want to specify lots of rays with the
+# RAY parameter to resolve the intensity distribution in the source.  Also
+# an odd number of rays is good to insure a central ray.
+#
+beam num=1 x.origin=2.5 y.origin=-5.0 angle=90 wavelength=0.623 rays=101 bpm gaussian mean=0 xsigma=0.25
+#
+# SECTION 4: Solution Procedure
+#
+method newton carr=2
+output opt.intens
+#
+solve 
+solve v3=0.5
+solve v3=1.0
+#
+solve b1=1
+#
+save outf=optoex16.str
+#
+tonyplot optoex16.str -set optoex16.set
+#
+quit

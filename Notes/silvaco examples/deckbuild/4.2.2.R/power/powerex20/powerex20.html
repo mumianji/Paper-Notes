@@ -1,0 +1,91 @@
+<html>
+  <head>
+    <title>3D Vertical LOCOS power MOSFET</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>3D Vertical LOCOS power MOSFET</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Victory Process - Victory Device</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Victory Process 7.22.3.R, Victory Mesh 1.2.4.R, Victory Device 1.12.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="powerex20_plot0.png" width="640" alt="powerex20_plot0" />
+      <p/>
+      <img src="powerex20_plot1.png" width="640" alt="powerex20_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example is taken from the Silvaco Simulation Standard Article:
+&quot;Vertical LOCOS Power Devices in Victory Process: From 3D Process and
+Electrical Optimisation to High Speed, Full Chip Process Emulation, Volume
+25, Number 2, April - May - June 2015&quot;
+</p>
+<p>
+The example creates a simplified process flow in Victory Process for a
+curved corner vertical LOCOS MOS power device, the structure is then
+exported and passed into Victory Device for electrical simulation.
+</p>
+<p>
+The simulation is initialised with a heavily doped N+ layer, this forms the
+N+ Drain. Once the volume mesh is defined, a thick N-type layer is deposited
+with a doping of 8E15cm3 followed by a P-type layer of 1E17cm3 which form
+the N-drift and P-base (source) respectively.
+</p>
+<p>
+SPECIFYMASKPOLY is then used to define the masks for etching the trench. Two
+masks are defined to create the trench outline, they are then merged using a
+Boolean OR operation on them.
+</p>
+<p>
+Thin oxide and nitride layers are then deposited, the former for the thin
+gate oxide, the latter to stop oxide growth in subsequent thermal steps.
+</p>
+<p>
+As a short cut, the single mask set defined previously is used to etch away
+unnecessary parts of these layers and form the deep trench. The DELTACD
+parameter is used to shift the dimensions of the mask layer.
+</p>
+<p>
+Once the thick oxide is grown, polysilicon is used to fill the trench and
+defined as an electrode.
+</p>
+<p>
+Finally the device is exported using an unstructured delaunay mesh. The base
+mesh size is set at 0.2um. mesh refinement is then undertaken on distance to
+interface with polysilicon to provide drift region refinement along the edge
+of the thick oxide. Refinement is also undertaken on the P/N junction.
+Finally a refinement box is defined over the N-Drift/N+ Drain transition.
+</p>
+<p>
+The exported structure is then passed to Victory Device, a bias is applied
+to the device and ramped up. Complience is set such that the simulation
+stops when breakdown is achieved. The EXTRACT statement is used to print out
+the value of breakdown voltage.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

@@ -1,0 +1,146 @@
+# (c) Silvaco Inc., 2018
+go atlas 
+#
+# GaN LED Device Simulation
+#
+# Blue single-quantum well LED
+#
+# Parameter used for this blue SQW LED
+#############################################################################
+#  Epilayer #  Material  #  Type  # Thickness #  Doping    #    Mobility    #
+#           #            # p or n #     [nm]  #   [cm-3]   #    [cm2/V-s]   #
+#############################################################################
+# n-Buffer  #    GaN     #    -   #     30    #       -    #       100      #
+# n-Contact #    GaN     #    n   #   4000    #     1e18   #       100      #
+# n-Contact #  In0.2GaN  #    -   #      3    #       -    #       100      #
+# p-Emitter #  Al0.2GaN  #    p   #    100    #     1e19   #        10      #
+# p-Contact #    GaN     #    p   #    500    #     1e19   #        10      #
+#############################################################################
+#-------------------------------------------------------------------
+# SECTION 1 : MESH GENERATION
+#-------------------------------------------------------------------
+#
+# width for 1 Dimensional Structure conversion to  A/cm^2
+mesh width=1e8
+#
+x.mesh loc=0.0    spac=0.5
+x.mesh loc=1.0    spac=0.5
+#
+y.mesh loc=-5.00  spac=1.0
+y.mesh loc=-0.65  spac=0.005
+y.mesh loc=-0.603 spac=0.0002
+y.mesh loc=-0.600 spac=0.0002
+y.mesh loc=-0.55  spac=0.005
+y.mesh loc=-0.5   spac=0.001
+y.mesh loc=-0.0   spac=0.1
+#-------------------------------------------------------------
+# SECTION 2: REGIONS AND ELECTRODES
+#-------------------------------------------------------------
+region num=1 material=GaN y.max=-0.603 substrate
+region num=2 material=InGaN y.max=-0.6 y.min=-0.603 x.comp=0.20 \
+       name=well qwell led well.ny=50
+region num=3 material=AlGaN y.max=-0.5 y.min=-0.6 x.comp=0.2 
+region num=4 material=GaN y.min=-0.5 
+#
+electrode name=anode   bottom
+electrode name=cathode top
+#-------------------------------------------------------------
+# SECTION 3: DOPING PROFILES
+#-------------------------------------------------------------
+# p type is Mg
+# n type is Si
+doping region=4 uniform p.type conc=1e19
+doping region=3 uniform p.type conc=1e19
+doping region=1 uniform n.type conc=1e18
+#---------------------------------------------------------------
+# SECTION 4: MATERIAL MODELS
+#---------------------------------------------------------------
+models calc.strain polarization polar.scale=1.0
+
+models  fermi ^incomplete consrh auger optr print k.p
+models region=2 k.p chuang spontaneous lorentz
+#
+material material=GaN taun0=1e-9 taup0=1e-9 copt=1.1e-8 \
+         augn=1.0e-34 augp=1.0e-34
+material material=AlGaN taun0=1e-9 taup0=1e-9 copt=1.1e-8 \
+         augn=1.0e-34 augp=1.0e-34
+material material=InGaN taun0=1e-9 taup0=1e-9 copt=1.1e-8 \
+         augn=1.0e-34 augp=1.0e-34
+#
+# Lorentz Broaden factor
+material well.gamma0=30e-3
+#
+material edb=0.080 eab=0.101
+#
+mobility mun0=100 mup0=10 
+#
+#----------------------------------------------------------------
+# SECTION 5: OUTPUT FLAGS and METHOD
+#----------------------------------------------------------------
+#
+output con.band val.band band.param charge polar.charge e.mobility \
+       h.mobility u.srh u.radiative u.auger permi
+#
+method climit=1e-4 maxtrap=10
+#
+#----------------------------------------------------------------
+# SECTION 6: INITIAL SOLUTION
+#----------------------------------------------------------------
+#
+solve init
+solve prev
+#
+save outf=ledex01_1.str
+#
+#-----------------------------------------------------------------
+# SECTION 7: BIAS RAMP and Save the SPECTRUM
+#-----------------------------------------------------------------
+#
+probe name=Recombination integrate recomb
+probe name=Radiative integrate radiative rname=well
+#
+log outf=ledex01.log
+solve vstep=0.05 vfinal=3.5 name=anode
+save outf=ledex01_3p5.str
+save spectrum=ledex01_3p5.spc lmin=0.40 lmax=0.50 nsamp=100
+
+solve vstep=0.05 vfinal=4.0 name=anode
+save outf=ledex01_4p0.str
+save spectrum=ledex01_4p0.spc lmin=0.40 lmax=0.50 nsamp=100
+
+solve vstep=0.05 vfinal=5.0 name=anode
+save outf=ledex01_5p0.str
+save spectrum=ledex01_5p0.spc lmin=0.40 lmax=0.50 nsamp=100
+#
+#------------------------------------------------------------------
+# SECTION 8: PLOTTING CURVES
+#------------------------------------------------------------------
+#
+# V-I Curve
+tonyplot ledex01.log     -set ledex01_0.set
+# I-L Curve
+tonyplot ledex01.log     -set ledex01_1.set
+# EL Intensity at 3.5V, 4.0V and 5.0V
+tonyplot -overlay ledex01_3p5.spc ledex01_4p0.spc ledex01_5p0.spc -set ledex01_2.set
+
+extract init infile="ledex01_3p5.str"
+extract name="Electron" curve(depth,impurity="Electron Conc" material="All" \
+        x.val=0.5) outfile="ledex01_3p5_Electron.dat"
+extract name="Electron" curve(depth,impurity="Hole Conc" material="All" \
+        x.val=0.5) outfile="ledex01_3p5_Hole.dat"
+
+extract init infile="ledex01_4p0.str"
+extract name="Electron" curve(depth,impurity="Electron Conc" material="All" \
+        x.val=0.5) outfile="ledex01_4p0_Electron.dat"
+extract name="Electron" curve(depth,impurity="Hole Conc" material="All" \
+        x.val=0.5) outfile="ledex01_4p0_Hole.dat"
+
+extract init infile="ledex01_5p0.str"
+extract name="Electron" curve(depth,impurity="Electron Conc" material="All" \
+        x.val=0.5) outfile="ledex01_5p0_Electron.dat"
+extract name="Electron" curve(depth,impurity="Hole Conc" material="All" \
+        x.val=0.5) outfile="ledex01_5p0_Hole.dat"
+
+tonyplot -overlay ledex01_3p5_Electron.dat ledex01_3p5_Hole.dat ledex01_4p0_Electron.dat ledex01_4p0_Hole.dat ledex01_5p0_Electron.dat ledex01_5p0_Hole.dat -set ledex01_3.set
+
+quit

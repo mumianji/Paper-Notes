@@ -1,0 +1,76 @@
+<html>
+  <head>
+    <title>Liquid Crystal (LCD) Field Dependent Capacitance</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Liquid Crystal (LCD) Field Dependent Capacitance</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>CLEVER, VICTORYPROCESS</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="clex22_plot0.png" width="640" alt="clex22_plot0" />
+      <p/>
+      <img src="clex22_plot1.png" width="640" alt="clex22_plot1" />
+      <p/>
+      <img src="clex22_plot2.png" width="640" alt="clex22_plot2" />
+      <p/>
+    </div>
+    <div id="text" >
+<p>
+This example illustrates using Clever to simulate the physics in Liquid Crystal
+films.  Liquid crystal films consist of long molecules, called
+<b> directors </b> which rotate in response to applied electric fields, that effectively supplies
+a rotational torque.  The permittivity and hence the capacitance of these LCD
+films, is highly directional and dependent on the the orientation of the long
+molecules (directors). When an electric field is applied which rotates these
+molecules, the capacitance in the direction across the film, can change
+dramatically.  Clever simulates this physics, in order to calculate the voltage
+(field) dependent capacitance of LCD layers.
+</p>
+<p>
+The directional permittivities of the LCD versus director angle are defined in
+the
+<b> setLC </b> statement.
+</p>
+<p>
+The layers which interface the LCD film can anchor the LCD molecules in a fixed
+direction, regardless of applied field.  This creates an increasing angular
+rotation of the LCD molecules with applied field, the further they are away
+from these anchored interface regions.  These physical effects are also
+included in the simulations.  Specifying these fixed interface angles for top
+and bottom interfaces is executed by the statements
+<b> LCbndaryT </b> and
+<b> LCbndaryB </b> </p>
+<p>
+Clearly, if an applied voltage changes the permittivity of a film, the stored
+charge and capacitance is also voltage dependent. Since Q=CxV, where Q is
+stored charge, C is layer capacitance in a particular direction and V is
+applied voltage, mathematical instability can result at certain applied
+voltages due to the inter-dependence of all three parameters.  The purpose of
+the
+<b> cPenalty</b> parameter, is to introduce a modicum of numerical damping, to calm these
+numerical instabilities.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

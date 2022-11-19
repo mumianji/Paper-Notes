@@ -1,0 +1,169 @@
+silvaco.file ASCII version=1.14.16 format=1
+""
+#non-visible objects
+number-of-non-visible-objects 0
+
+#non-enable-contour objects
+number-of-non-enable-contour-objects 3
+non-enable-contour-object SiO2
+non-enable-contour-object Polysilicon
+non-enable-contour-object Si3N4
+
+#Cut Plane Settings
+point_1 0 0 0
+point_2 1 0 0
+point_3 0 0 1
+three_points 0
+PAN 0
+PITCH 90
+ELEV 1
+
+#Cut Plane Axes Settings
+X_REVERSE 0
+Y_REVERSE 0
+XY_SWAP 0
+
+#Region Properties
+region "Region #1" 0 0 4
+region "Region #2" 0 0 4
+region "Region #7" 0 0 4
+region "Region #3" 0 0 4
+region "Region #5" 0 0 4
+region "Region #6" 0 0 4
+region "Region #8" 0 0 4
+region "Region #4" 0 0 4
+
+#Region Labels
+region_label "Region #1" "Region #1" 1 0 0 0
+region_label "Region #2" "Region #2" 1 0 0 0
+region_label "Region #7" "Region #7" 1 0 0 0
+region_label "Region #3" "Region #3" 1 0 0 0
+region_label "Region #5" "Region #5" 1 0 0 0
+region_label "Region #6" "Region #6" 1 0 0 0
+region_label "Region #8" "Region #8" 1 0 0 0
+region_label "Region #4" "Region #4" 1 0 0 0
+
+#Overlay Properties
+overlay_mode_active 0
+
+#Define the scene matrix
+sm_00 -0.84239460604100391
+sm_01 0.52912689126501977
+sm_02 -0.10196107420599304
+sm_03 0.042517757525804695
+
+sm_10 -0.31212302208034792
+sm_11 -0.32488114646515698
+sm_12 0.89276618426042398
+sm_13 0.19666378738358917
+
+sm_20 0.43926136502138946
+sm_21 0.78388581669252289
+sm_22 0.43883080975228217
+sm_23 -0.20782008080159745
+
+sm_30 0
+sm_31 0
+sm_32 0
+sm_33 1
+
+#Define the camera matrix
+cm_00 1
+cm_01 0
+cm_02 0
+cm_03 0
+
+cm_10 0
+cm_11 1
+cm_12 0
+cm_13 0
+
+cm_20 0
+cm_21 0
+cm_22 1
+cm_23 -1.7745468252340779
+
+cm_30 0
+cm_31 0
+cm_32 0
+cm_33 1
+
+#Define the scene scaling factors
+ss_xyz 1.0521448482007163 1.0521448482007163 1.0521448482007163
+
+#Define 3D projection
+proj_3d_aspect 1.097799511002445
+proj_3d_z_near 1.3574302220955736
+proj_3d_z_far 2.158804283815825
+proj_3d_height 0.63937187556954922
+proj_3d_fovy 25
+proj_3d_type 0
+proj_3d_depth_cue 2
+
+coord_selection 0
+coord_type 0
+
+modelview_x_scale 1
+modelview_y_scale 1
+modelview_z_scale 1
+
+#Global BBox Settings
+global_bbox_min 0.072890315497208841 0.072890315497208841 -0.234324120390598
+global_bbox_max 0.3656645267541867 0.34066452675418679 0.44066452675418666
+
+#Define x-y-z Axis Visibility
+x_axis_visibility 0
+y_axis_visibility 0
+z_axis_visibility 0
+
+#Define Legend Visibility
+contour_legend 1
+region_legend 1
+
+#Define the DisplayMode
+display_mode_id 3
+
+#Define Show Cut Plane
+show_cut_plane 0
+
+#Define Show Cut Plane X Y Axes
+show_cut_plane_x_axis 1
+show_cut_plane_y_axis 1
+
+#Define the DrawMode
+draw_mode_id 0
+
+#Define the Region_Color_Type
+region_color_type 0
+
+mat_info "Electrodes 0 1"
+mat_info "Tungsten 55 1"
+
+#Define light0 and light1 information
+light0_enabled 1
+light0_color 255 255 255
+light0_intensity 0.53
+light0_latitude 30
+light0_longitude 0
+
+light1_enabled 1
+light1_color 255 255 255
+light1_intensity 0.53
+light1_latitude 0
+light1_longitude 270
+
+#Define contours information
+imp_menu_index 3
+name-of-doping Arsenic
+limit_select_type 0
+auto_max_limit 1
+auto_min_limit 1
+contour_max_imp_value 6.12264e+20
+contour_min_imp_value 1e+12
+legend_type 1
+legend_auto_mapping 1
+legend_mapping 0
+legend_palette 0
+legend_nbr_of_colors 10
+
+EOF 628690053

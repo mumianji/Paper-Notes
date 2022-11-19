@@ -1,0 +1,67 @@
+<html>
+  <head>
+    <title>A true curved spiral inductor design including ground shield pattern</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>A true curved spiral inductor design including ground shield pattern</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>QUEST</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>QUEST 2.0.2.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="questex09_plot0.png" width="640" alt="questex09_plot0" />
+      <p/>
+      <img src="questex09_plot1.png" width="640" alt="questex09_plot1" />
+      <p/>
+      <img src="questex09_plot2.png" width="640" alt="questex09_plot2" />
+      <p/>
+    </div>
+    <div id="text" >
+<p>
+This example is a true curved spiral inductor. To load and run this example, select the
+<b> Load </b> button in DeckBuild. This will copy the input file, GDSII file and results to your current working directory. Select the
+<b> Run </b> button to execute the example.
+</p>
+<p>
+The GDSII file can be viewed in MaskViews, Expert or any other layout editing tool that
+can read GDSII format. The process is a generic process using six metal levels and
+standard values for the conductivity and permittivity.
+</p>
+<p>
+Since the inductor in this example has a diameter of approximately 300um, the depth
+of the substrate in the simulation was chosen to be 400um. A grid is above the
+inductor.
+</p>
+<p>
+A two port simulation is defined. The first port is between the electrodes &quot;in&quot; and
+&quot;gnd&quot;. The second port is between the electrodes &quot;out&quot; and &quot;gnd&quot;. The reference
+electrode &quot;gnd&quot; is on the grid above the inductor.
+</p>
+<p>
+All the results will be placed in a directory structure under the name &quot;questex09_db&quot;
+which was defined with the SAVE command.
+</p>
+<p>
+Three dimensional structure files can be viewed with TonyPlot3d. All other RLCG and Q
+versus frequency data can be viewed with TonyPlot.
+</p>
+  </div></body>
+</html>

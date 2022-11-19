@@ -1,0 +1,117 @@
+# TPCS version: 7
+# various properties
+log label 0
+key opaque 0
+mark frequency 0
+mark overlay 0
+graph width 0 1
+graph width 1 1
+graph width 2 1
+graph width 3 1
+graph width 4 3
+graph width 5 1
+sequence size 3
+sequence width 1
+log zero 0
+sequence mark 0 0
+sequence mark 1 1
+sequence mark 2 2
+sequence mark 3 3
+sequence mark 4 4
+sequence mark 5 5
+# Functions
+function 1 "" ""
+function 2 "" ""
+function 3 "Po[1] - Pi[1]" ""
+function 4 "" ""
+select 1
+# xygraph flags
+show points on
+show lines on
+# xygraph types
+xygraph type 0 convert 0
+xygraph yaxis scale linear
+# xygraph x-axis
+xygraph xaxis "Pi[1]" linear
+# xygraph y-axes
+xygraph yaxis none
+xygraph yaxis "Po[1]" linear
+# xygraph group
+xygraph group "(unknown electricals)"
+# key positions
+key contours 1 at 3
+key contours 2 at 1
+key contours 3 at 6
+key electrical at 1
+key vectors at 6
+key overlay at 4
+key regions at 0
+key apply 
+# annotation, titles
+title main "Output power"
+title sub "at different frequencies"
+# annotation, footers
+footer right none
+footer left none
+# annotation, show
+show xaxis on
+show yaxis on
+show grid off
+show label xaxis on
+show label yaxis on
+# annotation, axes
+range xaxis -95, 5 increment 20,5
+range yaxis -60, 0 increment 10,5
+label xaxis "Input power [dBm]"
+label yaxis "Output power [dBm]"
+# zoom
+zoom from 0, 0 scale 1, 1
+# user labels
+# overlay level names
+label overlay 0 "1 GHz"
+label overlay 1 "100 MHz"
+select 2
+# xygraph flags
+show points on
+show lines on
+# xygraph types
+xygraph type 0 convert 0
+xygraph yaxis scale linear
+# xygraph x-axis
+xygraph xaxis "Pi[1]" linear
+# xygraph y-axes
+xygraph yaxis none
+xygraph yaxis "Function 1" linear
+# xygraph group
+xygraph group "(unknown electricals)"
+# key positions
+key contours 1 at 3
+key contours 2 at 1
+key contours 3 at 6
+key electrical at 1
+key vectors at 6
+key overlay at 4
+key regions at 0
+key apply 
+# annotation, titles
+title main "Gain compression"
+title sub "at 1 GHz"
+# annotation, footers
+footer right none
+footer left none
+# annotation, show
+show xaxis on
+show yaxis on
+show grid off
+show label xaxis on
+show label yaxis on
+# annotation, axes
+range xaxis -40, -15 increment 5,5
+range yaxis 10, 16 increment 1,5
+label xaxis "Input power [dBm]"
+label yaxis "Gain [dB]"
+# zoom
+zoom from 0, 0 scale 1, 1
+# user labels
+# overlay level names
+label overlay 0 "mercury07_2.log"

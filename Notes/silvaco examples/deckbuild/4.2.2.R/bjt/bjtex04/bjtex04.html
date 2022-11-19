@@ -1,0 +1,90 @@
+<html>
+  <head>
+    <title>NPN - Gummel Plot and Ic/Vce Characterization</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>NPN - Gummel Plot and Ic/Vce Characterization</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>S-Pisces</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="bjtex04_plot0.png" width="640" alt="bjtex04_plot0" />
+      <p/>
+      <img src="bjtex04_plot1.png" width="640" alt="bjtex04_plot1" />
+      <p/>
+      <img src="bjtex04_plot2.png" width="640" alt="bjtex04_plot2" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example simulates a Gummel plot and the Ic vs. Vce characteristics
+for different values of base current of a silicon BJT. It shows:
+</p>
+<ul>
+  <li>
+ Formation of an NPN BJT using Atlas syntax
+<br/>
+  </li>
+  <li>
+ Ic and Ib extraction versus Vbe (Gummel plot)
+<br/>
+  </li>
+  <li>
+ Ic extraction versus Vce for various Ib 
+  </li>
+</ul>
+<p>
+The initial stage of the example uses the
+<b> mesh, region, </b> and
+<b> electrode </b> statements in Atlas to construct the NPN structure.  Analytical doping profiles are added in the
+<b> doping </b> statement. The structure has a heavy n+ emitter, 1.0e18 peak base
+concentration, a buried collector layer and heavy p+ extrinsic base
+contact.
+</p>
+<p>
+The
+<b> contact </b> statement is used to define the emitter contact as a N-type polysilicon
+emitter.  Surface recombination is also specified at the polysilicon/
+silicon interface.  Next, the
+<b> material </b> statement is used to specify the electron and hole SRH lifetimes.  The
+<b> models bipolar </b> statement is set to specify that the default set of bipolar models is
+to be used.  The default set of bipolar models includes: concentration
+dependent mobility, field dependent mobility, band-gap narrowing,
+concentration dependent lifetimes and Auger recombination.
+</p>
+<p>
+The gummel plot syntax is similar to that described in the first
+example of this section. The syntax for the Ic/Vce simulation is
+described under the PNP example in this section. The key point is the
+use of current boundary conditions on the base contact as defined by
+<b> contact name=base current</b> . This allows a constant base current to be forced while Vce is ramped.
+The family of Ic/Vce curves can be overlaid in TonyPlot or exported to
+UTMOST for SPICE model extraction.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

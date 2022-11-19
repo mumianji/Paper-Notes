@@ -1,0 +1,109 @@
+<html>
+  <head>
+    <title>General Current Collapse and Recovery Phenomenon</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>General Current Collapse and Recovery Phenomenon</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Blaze</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="ganfetex09_plot0.png" width="640" alt="ganfetex09_plot0" />
+      <p/>
+      <img src="ganfetex09_plot1.png" width="640" alt="ganfetex09_plot1" />
+      <p/>
+      <img src="ganfetex09_plot2.png" width="640" alt="ganfetex09_plot2" />
+      <p/>
+      <img src="ganfetex09_plot3.png" width="640" alt="ganfetex09_plot3" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates simulation of the &quot;Current Collapse&quot; and &quot;Current
+Recovery&quot; phenomenon resulting from population and de-population of
+both un-intentional insulator interface traps and intentional iron (Fe)
+traps near and under the gate of the GaN FET as a result of Gate to Drain
+Electric Fields.
+</p>
+<p>
+The device structure in this example is based on work by Daniel Balaz from
+his PhD Thesis from University of Glasgow in 2011 entitled &quot;Current collapse
+and device degradation in AlGaN/GaN heterostructure field effect transistors&quot;
+</p>
+<p>
+The structure is created using Atlas syntax and the spontaneous and piezo-
+electric charge concentrations are automatically calculated using the
+&quot;substrate, polarization and calc.strain&quot; parameters in the region statements.
+</p>
+<p>
+Substrate leakage current is controlled by a graduated concentration of
+deep level iron (Fe) acceptor traps located 1eV below the conduction band
+edge using the doping statement and the key parameter &quot;trap&quot;.
+</p>
+<p>
+The insulator interface traps are created using the &quot;inttrap&quot; statement.
+For analytical simplicity, only a single level interface acceptor trap,
+located 0.8eV below the conduction band edge was used.
+The areal density of the interface traps used in this example, was 2e12/cm2.
+Using a different energy location in the bandgap for the intentional Fe
+doping and the un-intentional insulator interface traps, allowed the
+contribution from both types of trap to be distinguished on the resulting
+transient I-V curves.
+</p>
+<p>
+The device is first biased with zero volts on the gate and 5 volts
+on the drain. After 1 mili-second at this bias, the device is field stressed
+for only one further milli-second at 25 volts on the drain
+and -4 volts on the gate. After this short bias stress,
+the device was returned to it&apos;s original bias of
+zero volts on the gate and 5 volts on the drain.
+</p>
+<p>
+After only one milli-second of bias stress, the drain current is
+significantly reduced demonstrating the currnet collapse phenomenon.
+For completeness, the unstressed bias remained on the device until the traps
+became de-populated with electrons and the drain current returned to it&apos;s
+original value.  Interestingly, it takes over one week for the device to
+recover !  (6e5 seconds).  This very long recovery time may be incorrectly
+interpreted as device degredation from field induced traps which is an
+irreversible effect resulting from electric field induced
+reverse piezo-electric stress.
+</p>
+<p>
+It will be seen from the transient recovery curve that there are two recovery
+&apos;bumps&quot;.  The first current recovery &quot;bump&quot; at a time of around 30 seconds,
+is from the re-population of the interface traps and the main recovery at
+approximately 1e5 seconds, is from the intentionally doped bulk iron (Fe)
+traps.  Obviously a wide distribution of insulastor interface trap energies
+will &quot;smear out&quot; this initial recovery bump making it difficult to
+distinguish this individual contribution from the bulk iron traps.  That is
+why a single interface trap energy was selected for this example to clarify
+the effect on the current recovery curve.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

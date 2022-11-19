@@ -1,0 +1,131 @@
+# (c) Silvaco Inc., 2018
+
+go atlas
+mesh diag.flip
+
+
+x.m l=0.00       s=0.0002
+x.m l=0.05        s=0.0002
+
+
+y.m l= -0.001   s=0.0002
+y.m l=  0.0     s=0.0002
+y.m l=  0.006    s=0.0002
+y.m l=  0.01    s=0.002
+
+
+
+region      num=1  sio2
+region      num=2  y.min= 0.00  y.max=0.006  silicon
+
+
+
+electrode   num=1 name= source x.max=0.0   y.min=0.0 y.max=0.006
+electrode   num=2 name= drain  x.min=0.05  y.min=0.0 y.max=0.006
+electrode   num=3 name=gate    x.min=0.01 x.max=0.04 y.min=-0.001 y.max=-0.001 
+
+
+contact name=source  reflect
+contact name=drain   reflect 
+contact name=gate    workfun=4.7 
+
+
+doping region=2  n.type uniform conc=1.0E20 x.max=0.01
+doping region=2  n.type uniform conc=1.0E20 x.min=0.04
+doping region=2  p.type uniform conc=1.0E18 x.min=0.01 x.max=0.04
+
+output  con.band val.band eigens=10 
+
+models  schro p.schrodinger dd_ms   npred.negf=10 \
+        Ox.Schro Ox.Margin=0.002  num.direct=1 num.band=1 
+        
+
+mobility betan=2 vsatn=1.1e7       
+ 
+method carriers=0  
+
+
+
+# A zero bias quantum solution is obtained first.
+
+solve init
+
+solve v2=1.0
+save outf=quantumex14_ddms_vd10.str ddms.log
+
+log outf=quantumex14_ddms_IdVg_vd10.log
+solve v3=0.0 vstep =0.1 vfinal=1.5 name = gate
+save outf=quantumex14_ddms_vd10_vg15.str ddms.log
+log off
+
+
+####################################
+#
+#  NEGF
+#
+#####################################
+
+
+go atlas
+mesh diag.flip
+
+
+x.m l=0.00       s=0.0002
+x.m l=0.05        s=0.0002
+
+
+y.m l= -0.001   s=0.0002
+y.m l=  0.0     s=0.0002
+y.m l=  0.006    s=0.0002
+y.m l=  0.01    s=0.002
+
+
+
+region      num=1  sio2
+region      num=2  y.min= 0.00  y.max=0.006  silicon
+
+
+
+electrode   num=1 name= source x.max=0.0   y.min=0.0 y.max=0.006
+electrode   num=2 name= drain  x.min=0.05  y.min=0.0 y.max=0.006
+electrode   num=3 name=gate    x.min=0.01 x.max=0.04 y.min=-0.001 y.max=-0.001 
+
+
+contact name=source  reflect
+contact name=drain   reflect 
+contact name=gate    workfun=4.7 
+
+
+doping region=2  n.type uniform conc=1.0E20 x.max=0.01
+doping region=2  n.type uniform conc=1.0E20 x.min=0.04
+doping region=2  p.type uniform conc=1.0E18 x.min=0.01 x.max=0.04
+
+output  con.band val.band eigens=10 
+probe Transmission filename="quantumex14_TranvsE"
+
+models  schro p.schrodinger negf_ms   npred.negf=10 \
+        Ox.Schro Ox.Margin=0.002  num.direct=1 num.band=1 
+
+method carriers=0  
+
+
+
+solve init
+
+solve v2=1.0 
+save outf=quantumex14_negf_vd10.str negf.log
+
+log outf=quantumex14_negf_IdVg_vd10.log
+solve v3=0.0 vstep =0.1 vfinal=1.5 name = gate
+save outf=quantumex14_negf_vd10_vg15.str  negf.log
+log off
+
+
+tonyplot -overlay  quantumex14_ddms_IdVg_vd10.log  quantumex14_negf_IdVg_vd10.log -set  quantumex14_IVg.set
+
+tonyplot quantumex14_ddms_vd10_vg15.str quantumex14_negf_vd10_vg15.str -set  quantumex14_data.set
+
+
+exit
+
+

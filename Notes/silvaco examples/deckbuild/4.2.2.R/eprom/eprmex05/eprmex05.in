@@ -1,0 +1,148 @@
+# (c) Silvaco Inc., 2018
+go atlas
+mesh width=1.0
+
+x.m loc=0.0 spac=0.05
+x.m loc=1.0 spac=0.05
+
+y.m loc=-0.1 spac=0.005
+y.m loc=-0.08 spac=0.0005
+y.m loc=-0.05 spac=0.005
+y.m loc=-0.02 spac=0.0005
+y.m loc=0.0  spac=0.005
+y.m loc=0.1  spac=0.01
+y.m loc=1.0  spac=0.1
+
+region num=1 material=oxide y.max=0.0
+region num=2 material=silicon y.min=0.0
+
+electrode name=cgate top
+electrode name=substrate bottom
+electrode name=fgate x.min=0.25 x.max=0.75 y.min=-0.08  y.max=-0.02  material=polysilicon
+electrode name=source y.min=0.0 y.max=0.0 x.max=0.1
+electrode name=drain y.min=0.0 y.max=0.0 x.min=0.9 x.max=1.0
+
+doping region=2 uniform p.type conc=1.0e16
+
+doping x.min=0.2 x.max=0.8 y.min=-0.08  y.max=-0.02 uniform n.type conc=1.0e18
+
+doping region=2 gaussian x.max=0.2 n.type conc=1e20 peak=0.0 junction=0.15 ratio.lat=1.0
+
+doping region=2 gaussian x.min=0.8 n.type conc=1e20 peak=0.0 junction=0.15 ratio.lat=1.0
+
+regrid log doping ratio=6 max.level=2
+
+save outf=eprmex05_0.str
+
+go atlas
+
+mesh infile=eprmex05_0.str width=1.0
+
+contact name=cgate aluminum
+
+contact name=fgate floating n.poly
+
+models srh mos
+
+probe integrate x.min=0.25 x.max=0.75 y.min=-0.08 y.max=-0.02 charge name=tcharge
+
+solve init
+
+solve prev
+
+solve vdrain=0.1
+
+solve vdrain=0.5
+
+log outf=eprmex05_0.log
+
+solve name=cgate vstep=0.1 vfinal=10.0 cname=drain compl=1.0e-4
+
+extract name="initial vt" ((xintercept(maxslope(curve(v."cgate",i."drain"))))-abs(ave(v."drain"))/2.0)
+
+log off
+
+go atlas
+
+mesh infile=eprmex05_0.str width=1.0
+
+contact name=cgate aluminum
+
+contact name=fgate floating n.poly
+
+models srh mos
+
+probe integrate x.min=0.25 x.max=0.75 y.min=-0.08 y.max=-0.02 charge name=tcharge
+
+solve init
+
+solve prev
+
+solve qfgate=-1.0e-16
+solve qfgate=-5.0e-16
+solve qfgate=-1.0e-15
+
+output con.band val.band
+
+solve vdrain=0.1
+
+solve vdrain=0.5
+
+log outf=eprmex05_1.log
+
+solve name=cgate vstep=0.1 vfinal=10.0 cname=drain compl=1.0e-4
+
+extract name="floating contact vt" ((xintercept(maxslope(curve(v."cgate",i."drain"))))-abs(ave(v."drain"))/2.0)
+
+log off
+
+solve vcgate=3.0
+
+save outf=eprmex05_1.str
+
+go atlas
+
+mesh infile=eprmex05_0.str width=1.0
+# Modify the electrode with the floating parameter
+electrode name=fgate modify floating
+
+contact name=cgate aluminum
+
+contact name=fgate n.poly
+
+models srh mos
+
+probe integrate x.min=0.25 x.max=0.75 y.min=-0.08 y.max=-0.02 charge name=tcharge
+
+solve init
+
+solve prev
+
+solve qfgate=-1.0e-16
+solve qfgate=-5.0e-16
+solve qfgate=-1.0e-15
+
+output con.band val.band
+
+solve vdrain=0.1
+
+solve vdrain=0.5
+
+log outf=eprmex05_2.log
+
+solve name=cgate vstep=0.1 vfinal=10.0 cname=drain compl=1.0e-4
+
+extract name="floating electrode vt" ((xintercept(maxslope(curve(v."cgate",i."drain"))))-abs(ave(v."drain"))/2.0)
+
+log off
+
+tonyplot -overlay eprmex05_0.log eprmex05_1.log eprmex05_2.log -set eprmex05_2.set
+
+solve vcgate=3.0 
+
+save outf=eprmex05_2.str
+
+tonyplot -overlay eprmex05_1.str eprmex05_2.str -set eprmex05_1.set
+
+
+

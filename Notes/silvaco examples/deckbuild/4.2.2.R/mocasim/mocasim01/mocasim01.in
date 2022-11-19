@@ -1,0 +1,67 @@
+go mocasim
+
+####################################################################
+# (c) SILVACO International 2000-2009                              #
+# MOCASIM example 1: default GaAs input deck                       #
+#                                                                  #
+# file: mocasim01.in                                               #
+####################################################################
+
+# Section 1
+# =========
+# Select the material.
+initialize material=GaAs
+
+# Section 2
+# =========
+# Assign the intra valley scattering mechanisms.
+deformation_potential_acoustic_phonon E1=7.0
+polar_optical_phonon energy=0.0353355
+ionised_impurity
+
+# Assign the inter valley scattering mechanisms.
+intervalley_phonon LL energy=0.02900 defpot=1.0e9 num_L_valleys=3
+intervalley_phonon XX energy=0.02995 defpot=7.0e8 num_X_valleys=2
+intervalley_phonon GL energy=0.02788 defpot=1.0e9 num_L_valleys=4
+intervalley_phonon GX energy=0.02995 defpot=1.0e9 num_X_valleys=3
+intervalley_phonon LX energy=0.02934 defpot=5.0e8 num_L_valleys=4 num_X_valleys=3
+
+# Section 3
+# =========
+# Define the range over which to simulate the transport.
+field value=500,1000,1500,2000,2500,3000
+field value=3250,3500,3750,4000,4250,4500
+field value=4750,5000,5500,6000,6500,7000
+field value=7500,8000,8500,9000,9500,10000
+temperature value=300
+doping value=1.0e14
+
+# Section 4
+# =========
+# Assign a backup file.
+log outfile=mocasim01_1.bak
+
+# Section 5
+# =========
+# Do the Monte Carlo simulation.
+solve
+
+# Section 6
+# =========
+# Save the results.
+save outfile=mocasim01_2.dat
+
+# Section 7
+# =========
+# Fit the negative-differential mobility model to the Monte
+# Carlo data, and output the Monte Carlo data and the
+# fitted data to the file mocasim01_3.dat
+fit negative compare=mocasim01_3.dat
+
+# Tonyplot
+# ========
+# Plot the Monte Carlo data and the fitted model.
+tonyplot mocasim01_2.dat -set mocasim01_2.set
+tonyplot mocasim01_3.dat -set mocasim01_3.set
+ 
+quit

@@ -1,0 +1,100 @@
+<html>
+  <head>
+    <title>Thin film tandem solar cell</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Thin film tandem solar cell</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>SSuprem 4/BLAZE/TFT/Luminous</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="solarex12_plot0.png" width="640" alt="solarex12_plot0" />
+      <p/>
+      <img src="solarex12_plot1.png" width="640" alt="solarex12_plot1" />
+      <p/>
+      <img src="solarex12_plot2.png" width="640" alt="solarex12_plot2" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates both IV and EQE simulations of a tandem
+a-Si:H/uc-Si:H solar cell based on the following reference:
+</p>
+<p>
+M.Zeman and J.Krc, &quot;Optical and electrical modeling of thin-film
+silicon solar cells&quot; J. mater. res., Vol 23, No. 4, April 2008
+</p>
+<p>
+A microphah solar cell with the following structure was used in the
+simulation: ZnO:Al(500nm)/p-a-Si:H(10nm)/i-a-Si:H(200nm)/n-a-Si:H
+(15nm)/p-uc-Si:H(10nm)/i-uc-Si:H(2.2um)/p-uc-Si:H(15nm)/ZnO(100nm)/Ag.
+</p>
+<p>
+The Tauc-Lorentz dielectric function with Urbach Tail model for complex
+index of refraction was used for a-Si:H material. The model parameters
+were calibrated to fit the EQE of the top cell. For the bottom cell
+silicon index of refraction was used except that the imaginary part
+of the index of refraction was shifted in energy to take into account
+the band gap difference between silicon and uc-Si:H material. No specific
+calibration was performed here.
+</p>
+<p>
+In order to model the interlayer between the two solar cells an
+original and simple method was used. Note that a more physical
+approach can be used as well using the NLBBT model as illustrated
+in solarex03.in. The method used here consists of adding an
+electrode which exactly overlay the interlayer and attaching a
+lumped resistance to it using the
+<b> contact name=com resist=1e16 </b> statement. In doing this, we force the current to flow from Anode
+to Cathode and prevent any current to flow in the added electrode.
+Physically it can be justified by the fact the interlayer is acting
+like a resistor letting current flows without significant limitation.
+The value of the resistance can be used to adjust the amount of
+current allowing to flow through the added electrode thus controling
+the interlayer resistance.
+</p>
+<p>
+In hydrogenated amorphous silicon (a-Si:H), the effect of dangling-bond
+states on recombination can be significant. The dangling-bond states are
+amphoteric and located around the middle of the bandgap. In this example
+the
+<b> amphoteric</b> parameter on the
+<b> defect</b> statement was used to specify amphoteric defects.
+</p>
+<p>
+While in mechanically stacked Multi Junction cells, the subcells usually
+have separate contacts, monolithic Multi Junction cells are epitaxilly
+grown on one substrate, and the subcells are interconnected in series by
+tunnel diodes, leading to a standard two terminal contact. Thus the subcells
+are not accessible separately and the spectral response of a certain
+subcell has to be measured by using the effect of current limitation.
+In this example we shown how to accurately extract the spectral response
+in order to compare simulation and measurement in a reliable way.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

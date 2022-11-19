@@ -1,0 +1,227 @@
+# (c) Silvaco Inc., 2018
+
+go athena 
+
+line x location=-8  spacing=0.5
+line x location=-7  spacing=0.1
+line x location=-4  spacing=2
+line x location=-1  spacing=0.1
+line x location=0   spacing=0.1
+line x location=0.7 spacing=0.1
+line x location=1.5 spacing=0.05
+line x location=2   spacing=0.1
+line x location=2.5 spacing=0.05
+line x location=3   spacing=0.1
+line x location=3.5 spacing=0.05
+line x location=4.5 spacing=0.2
+line x location=5.5 spacing=0.5
+
+line y location=2 spacing=0.1
+line y location=3 spacing=0.5
+
+init silicon c.boron=1.0e19 orientation=100
+
+method full.cpl
+
+epitaxy time=1 temp=1050 thickness=1 divisions=8 dy=0.1 ydy=1 \
+        c.phosphor=1e15
+epitaxy time=1 temp=1050 thickness=1 divisions=16 dy=0.002 ydy=0 \
+        c.phosphor=1e15
+
+deposit barrier thick=0.03 divisions=3
+etch barrier left p1.x=-7
+etch barrier right p1.x=0.7
+implant boron energy=500 dose=3.1e14 tilt=0 rotation=0 bca n.ion=200000 
+implant boron energy=145 dose=2.4e14 tilt=0 rotation=0 bca n.ion=200000
+implant boron energy=15  dose=1.4e14 tilt=0 rotation=0 bca n.ion=200000 
+etch barrier all
+
+method full.cpl grid.ox=0.003
+
+deposit oxide thick=0.006 divisions=3
+diffus time=1 temperature=1050 nitro
+deposit polysilicon thickness=0.1 divisions=10 dy=0.005 ydy=0.1
+deposit polysilicon thickness=0.1 divisions=10 dy=0.005 ydy=0   
+diffus time=0.2 temperature=1050 nitro
+etch polysilicon left p1.x=0
+etch polysilicon start x=1.5 y=-1
+etch cont x=2.5 y=-1
+etch cont x=2.5 y=0
+etch done x=1.5 y=0
+etch polysilicon right p1.x=3.5
+structure outfile=temp.str
+diffus time=7 temperature=1050 dryo2
+diffuse time=3 temperature=1050
+deposit barrier thick=0.03 divisions=3
+etch barrier right p1.x=0
+implant phosphor energy=20 dose=2e15 tilt=7 rotation=27 bca n.ion=200000 
+etch barrier all
+
+deposit barrier thick=0.03 divisions=3
+etch barrier left p1.x=-1
+implant bf2 energy=15 dose=1e14 tilt=7 rotation=27 bca  n.ion=200000
+etch barrier all
+diffus time=0.5 temperature=1050 nitro
+
+etch oxide dry thick=0.05
+ 
+etch oxide start x=-7 y=-1
+etch cont x=0 y=-1
+etch cont x=0 y=1
+etch done x=-7 y=1
+etch oxide start x=1.5 y=-1
+etch cont x=2.5 y=-1
+etch cont x=2.5 y=1
+etch done x=1.5 y=1
+etch oxide start x=3.5 y=-1
+etch cont x=4.5 y=-1
+etch cont x=4.5 y=1
+etch done x=3.5 y=1
+
+deposit aluminum thick=0.03 divisions=3
+etch aluminum start x=-7 y=-1
+etch cont x=0 y=-1
+etch cont x=0 y=1
+etch done x=-7 y=1
+etch aluminum start x=1.5 y=-1
+etch cont x=2.5 y=-1
+etch cont x=2.5 y=1
+etch done x=1.5 y=1
+etch aluminum start x=3.5 y=-1
+etch cont x=4.5 y=-1
+etch cont x=4.5 y=1
+etch done x=3.5 y=1
+
+
+electrode name=substrate x=-7.5
+electrode name=cgate x=0.6
+electrode name=ngate x=3
+electrode name=drain x=5
+
+deposit oxide thick=0.03 divisions=3
+
+struct outfile=imagesensorex05_0.str
+tonyplot imagesensorex05_0.str -set imagesensorex05_0.set
+
+go atlas 
+
+mesh infile=imagesensorex05_0.str
+
+models consrh cvt
+contact name=ngate common=cgate
+method climit=1e-4 itlimit=30 maxtraps=30
+
+probe n.conc x=1 y=0.002 name=tg_conc
+probe n.conc x=3 y=0.002 name=rst_conc
+
+solve init
+solve previous
+save outfile=0V.str
+solve vdrain=0.1
+log outfile=imagesensorex05_0.log
+solve vcgate=0.05 vstep=0.05 vfinal=3.3 name=cgate
+save outfile=Vg3p3.str
+log off
+tonyplot imagesensorex05_0.log -set imagesensorex05_1.set
+
+
+go atlas 
+
+mesh infile=imagesensorex05_0.str
+
+models consrh cvt
+method climit=1e-4 itlimit=30 maxtraps=30
+
+probe n.conc    x=-3  y=0.85  name=cis_conc
+probe potential x=2   y=0.002 name=fd_potential
+probe potential x=-3  y=0.85  name=cis_potential
+
+solve init
+solve previous
+solve vdrain=0.1
+solve vdrain=1
+solve vdrain=3.3
+
+# Deplete the Image Sensor of Electrons
+log outfile=imagesensorex05_1.log
+solve Vcgate=3.3 ramptime=1e-9 dt=1e-11 tstop=1e-9
+solve Vngate=3.3 ramptime=1e-9 dt=1e-11 tstop=1e-8
+save outfile=depleted_dark.str
+
+# Isolate the Image Sensor
+solve Vngate=0 ramptime=1e-9 dt=1e-11 tstop=1.1e-8
+save outfile=pre_expose_dark.str
+
+# Dark Recovery Time
+solve tstop=10
+tonyplot imagesensorex05_1.log -set imagesensorex05_2.set
+save outfile=filled_dark.str
+log off
+
+
+# SAME SIMULATION BUT AT SOLAR AM-1.5 ILLUMINATION WITH DIFFERENT INTENSITIES
+
+go atlas 
+
+system rm imagesensorex05.dat
+system echo "Voltage vs Optical Intensity" >> imagesensorex05.dat
+system echo "16 2 2" >> imagesensorex05.dat
+system echo "Optical Intensity" >> imagesensorex05.dat
+system echo "CIS Output Voltage">> imagesensorex05.dat
+
+mesh infile=imagesensorex05_0.str
+
+# Maximum Expose Time is 0.1 Seconds
+# Minimum Expose Time is 1e-7 Seconds
+set expose_time=7.5e-5
+set intensity=200*$expose_time
+
+models consrh cvt
+method climit=1e-4 itlimit=30 maxtraps=30
+beam am1.5 angle=90 min.window=-7.9 max.window=5.4 x.origin=0 y.origin=-1 \
+     metal.reflect wavel.num=100 wavel.start=0.281 wavel.end=1.281
+
+probe n.conc    x=-3  y=0.85  name=cis_conc
+probe potential x=2   y=0.002 name=fd_potential
+probe potential x=-3  y=0.85  name=cis_potential
+
+loop steps=16
+
+solve init
+solve previous   b1=1e-4*$intensity
+solve previous   b1=0.01*$intensity
+solve previous   b1=$intensity
+solve vdrain=0.1 b1=$intensity
+solve vdrain=1   b1=$intensity
+solve vdrain=3.3 b1=$intensity
+
+# Deplete the Image Sensor of Electrons
+log outfile=imagesensorex05_$'intensity'.log
+solve Vcgate=3.3 ramptime=1e-9 dt=1e-11 tstop=1e-9 b1=$intensity
+solve Vngate=3.3 ramptime=1e-9 dt=1e-11 tstop=1e-8 b1=$intensity
+save outfile=depleted_light.str
+
+# Isolate the Image Sensor
+solve Vngate=0 ramptime=1e-9 dt=1e-11 tstop=1.1e-8 b1=$intensity
+save outfile=pre_expose_light.str
+
+# Light Integration Time
+solve tstop=$expose_time b1=$intensity
+save outfile=read.str
+
+extract name="CIS Output Voltage" y.val from \
+        curve(time, probe."fd_potential") where x.val=$expose_time
+
+system echo "$"intensity"  $"CIS Output Voltage"" >> imagesensorex05.dat
+
+
+solve tstop=10 b1=$intensity
+log off
+set intensity=$intensity+(200*$expose_time)
+
+l.end
+
+tonyplot imagesensorex05_0.03.log -overlay imagesensorex05_0.06.log imagesensorex05_0.09.log imagesensorex05_0.12.log imagesensorex05_0.15.log imagesensorex05_0.18.log imagesensorex05_0.24.log  -set imagesensorex05_3.set
+
+tonyplot imagesensorex05.dat -set imagesensorex05_4.set
+quit

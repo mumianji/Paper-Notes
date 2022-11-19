@@ -1,0 +1,76 @@
+# TPCS version: 7
+# various properties
+log label 0
+key opaque 0
+mark frequency 0
+mark overlay 0
+graph width 0 2
+graph width 1 1
+graph width 2 1
+graph width 3 0
+graph width 4 1
+graph width 5 0
+sequence size 1
+sequence width 0
+log zero 0
+sequence mark 0 0
+sequence mark 1 1
+sequence mark 2 2
+sequence mark 3 3
+sequence mark 4 4
+sequence mark 5 5
+# Functions
+function 1 "" ""
+function 2 "" ""
+function 3 "" ""
+function 4 "" ""
+select 1
+# xygraph flags
+show points on
+show lines on
+# xygraph types
+xygraph type 0 convert 0
+xygraph yaxis scale linear
+# xygraph x-axis
+xygraph xaxis "Photon Energy" linear
+# xygraph y-axes
+xygraph yaxis none
+xygraph yaxis "Gain mode 1" linear
+# xygraph group
+xygraph group "(unknown electricals)"
+# key positions
+key contours 1 at 3
+key contours 2 at 1
+key contours 3 at 6
+key electrical at 6
+key vectors at 6
+key overlay at 2
+key regions at 4
+key apply 
+# annotation, titles
+title main auto
+title sub auto
+# annotation, footers
+footer right none
+footer left none
+# annotation, show
+show xaxis on
+show yaxis on
+show grid off
+show label xaxis on
+show label yaxis on
+# annotation, axes
+range xaxis auto
+range yaxis auto
+label xaxis "Photon Energy (eV)"
+# zoom
+zoom from 0, 0 scale 1, 1
+# user labels
+label "Before lasing threshold (V=0.8 V)" from 1.03741, -435.684 color 0 scale 2 to 1.03331, -521.694
+label 0 at 0 0
+label "V=1.5 and V=1.7 V" from 1.09054, 16.1591 color 0 scale 2
+label 1 at 5 5
+# overlay level names
+label overlay 0 "laserex02_dc0.log"
+label overlay 1 "laserex02_dc14.log"
+label overlay 2 "laserex02_dc18.log"

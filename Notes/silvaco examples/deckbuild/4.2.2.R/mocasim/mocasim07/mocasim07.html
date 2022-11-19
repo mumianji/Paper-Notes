@@ -1,0 +1,67 @@
+<html>
+  <head>
+    <title>Temperature dependent Si simulation</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Temperature dependent Si simulation</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Mocasim, TonyPlot</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Mocasim 5.16.0.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="mocasim07_plot0.png" width="640" alt="mocasim07_plot0" />
+      <p/>
+      <img src="mocasim07_plot1.png" width="640" alt="mocasim07_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<p>
+This example is very similar to example 2.  However in example 2
+we did a simulation over a range of electric fields (at a fixed
+temperature and doping), in this example we do a simulation over
+a range of temperatures (at a fixed electric field and doping).
+</p>
+<p>
+Instead of fitting the Caughey-Thomas mobility model we fit the
+basic ATLAS low-field temperature dependent mobility model.
+</p>
+<p>
+As well as fitting the model to the Monte Carlo data we generate
+a c-interpreter function that will calculate the model.  The
+parameter
+<b> tofimun</b> tells Mocasim to generate a file with the template of the ATLAS
+&quot;int tofimun(...)&quot; function.  The parameter
+<b> ci_file</b> tells Mocasim where to save the c-interpreter function to.
+</p>
+<p>
+This c-interpreter function could be read into ATLAS with
+the command
+</p>
+<p>
+mobility material=silicon f.tofimun=mocasim07_4.lib
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

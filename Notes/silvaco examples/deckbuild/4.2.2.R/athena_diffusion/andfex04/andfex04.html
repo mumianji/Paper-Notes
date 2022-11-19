@@ -1,0 +1,87 @@
+<html>
+  <head>
+    <title>Transient Enhanced Diffusion using <311> Clusters</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Transient Enhanced Diffusion using <311> Clusters</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>SSuprem 4</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="andfex04_plot0.png" width="640" alt="andfex04_plot0" />
+      <p/>
+      <img src="andfex04_plot1.png" width="640" alt="andfex04_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates the damage enhanced diffusion effect in a
+phosphorus implant typical of MOS LDD
+processing.
+</p>
+<p>
+Diffusion enhancement due to defects introduced during heavy implants
+are responsible for the
+<b> Transient Enhanced Diffusion (TED) </b> or
+<b> Rapid Thermal Annealing (RTA) </b> effect.
+</p>
+<p>
+This example shows the Stanford 311 cluster diffusion model. To enable this model the syntax used is
+<b> method full.cpl cluster.dam i.loop.sink high.conc </b> This model is an extension to the fully coupled model that describes
+the dissolution of 311 interstitial clusters.
+</p>
+<p>
+The implant damage is defined in the &lt;311&gt; model using the
+<b> cluster </b> statement. The parameters
+<b> min.cluster  </b> and
+<b> max.cluster </b> describe the doping levels at which clusters form.
+</p>
+<p>
+Tuning of the TED effect is performed using the release
+time of the clusters speicified as follows:
+</p>
+<b> cluster tau.311.0= &lt;val&gt; tau.311.E= &lt;val&gt; </b> <p>
+When modeling point defects, it is necessary to extend the substrate of
+the simulation space to provide an adequate sink for the point defects.
+Simulations show that a depth of 20 to 50 microns is required in most
+cases.
+</p>
+<p>
+The plot shows the evolution of the transient enhanced diffusion. At
+800 degrees the transient effect lasts for about 5 minutes. The overlay
+plot shows how the diffusion in the first 5 minutes is greater the subsequent
+55 minutes.
+</p>
+<p>
+A second plot shows the location and concentration of the interstitial
+clusters and the free interstitials. As the clusters decay they release
+free interstitials that provide the diffusion mechanism for the
+phosphorus.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

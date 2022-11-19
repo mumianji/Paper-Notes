@@ -1,0 +1,103 @@
+<html>
+  <head>
+    <title>25-nm n-MOSFFET with quantum correction</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>25-nm n-MOSFFET with quantum correction</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>MC Device</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="mcdeviceex03_plot0.png" width="640" alt="mcdeviceex03_plot0" />
+      <p/>
+      <img src="mcdeviceex03_plot1.png" width="640" alt="mcdeviceex03_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates 2D Monte Carlo device modeling of a silicon
+n-MOSFET with quantum correction.
+</p>
+<p>
+For all aspects of this example apart from the quantum correction,
+please see the previous example, mcdeviceex02.
+</p>
+<p>
+The aspects of this example related to the quantum correction are
+specified with three different statements.
+</p>
+<p>
+On the
+<b> QREGION </b> statement,
+the
+<b> BOUNDP </b> parameter specifies a rectangular domain where
+the quantum correction is included.
+In this case, the quantum correction is included just under the gate.
+<b> DIR</b> = Y
+on the
+<b> QREGION </b> statement specifies the
+direction of quantization.
+</p>
+<p>
+The
+<b> SCHRMESH </b> statement specifies the number and location of nodes used for the
+Schroedinger mesh.  The Schroedinger equation is solved
+on the 1D mesh specified here at every
+<b> XSTEP</b> = 1
+mesh lines along X
+and at every
+<b> TSTEP</b> = 4000
+iterations.  Undersampling the quantum solution either
+spatially or temporally may reduce the accuracy of the solution.
+This choice
+was found to be adequate for this device
+and is a reasonable starting point for modeling other devices.
+</p>
+<p>
+The
+<b> SCHRREGION </b> statement specifies the material regions
+used for the quantum correction.
+You must specify these material definitions using
+<b> SCHRREGION </b> statements consistently with the material definitions
+you specified on the 2D Poisson mesh using
+<b> REGION </b> statements.
+In this example, although MCDEVICE obtains non-zero values of the
+electrons&apos; wave functions in the SiO2 region,
+MCDEVICE confines the MC electrons to the silicon substrate.
+As a result,
+the &quot;Electron Conc&quot; and &quot;Average Electron Conc&quot; fields in the
+mcdeviceex03_sol.str file
+do not show electrons in the SiO2 even though electron penetration of
+oxide barrier is considered as part of the model.
+This choice is conventional.
+The model does a good job of predicting
+the impact of quantum size effects on the electron concentration
+and the terminal currents.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

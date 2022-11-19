@@ -1,0 +1,637 @@
+{section} Athena_COMPLEX : Complex Process Examples
+
+{subsection} anex01.in : Non-planar Optical Lithography 
+
+Requires: SSuprem 4, Elite, and Optolith
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This example uses
+{bold} Optolith  
+to show non-planar lithography over a complex topography created using 
+{bold} SSuprem 4  
+and
+{bold} Elite
+.
+
+The example begins with a silicon substrate that is 24 microns wide
+and 1 micron deep.  Two parameters on the 
+{bold} INITIALIZE  
+statement specify that the no impurity (geometric) mode and 
+the coarse grid mode be employed.  The parameter
+{bold} NO.IMP  
+specifies that the introduction of impurities
+will be bypassed. This results in a much faster calculation for 
+many steps and still produces similar topographies to the calculation
+including impurities.  For simulations that are concerned
+primarily with topography, the no impurity mode can typically 
+be applied without loss of significant information.
+
+The parameter
+{bold} SPACE.MULT  
+specifies that all grid spacings specified by the parameter
+{bold} SPACING  
+on the 
+{bold} LINE 
+statement should be multiplied by the specified value.  This results
+in a global grid coarsening by the specified factor.  This speeds the 
+simulation by reducing the discretization.
+
+The process sequence begins with deposition of a thin oxide 
+to model the effect of gate oxidation. Next, nitride is deposited and 
+patterned simply by specifying the positions of a vertical 
+plane that defines the boundary of the etch region.
+Following the nitride patterning, field oxidation is performed
+and the nitride mask is stripped.
+
+Next, gate polysilicon is deposited and patterned using the geometric 
+etch capability and a structure file is saved.
+
+Following the structure file save, the structure is implanted.  
+Since the no impurity mode is being used, the implant step will be 
+ignored.  Next, the sidewall spacers are formed by depositing 
+oxide and etching it using the vertical etch model.  The source/drain
+implant is performed next, but due to the use of the no impurity
+mode, it is bypassed. The next step is the source/drain implant anneal.
+This step runs much more quickly in no impurity mode.  This is
+because impurity diffusion, which typically limits the time step size
+during diffusion and causes more equations to be solved, does not
+need to be calculated.  
+
+The next step is to deposit spin-on-glass. The glass deposition and 
+reflow process are approximated here by performing a deposit that includes
+a geometric smoothing performed during the deposit. This is accomplished
+by defining an 
+{bold} Elite  
+machine using the 
+{bold} RATE.DEPO  
+statement and including the parameters
+{bold} SMOOTH.WIN  
+and
+{bold} SMOOTH.STEP  
+as part of the statement. The 
+{bold} Elite
+machine is invoked by specifying the 
+{bold} DEPOSIT  
+statement with the 
+{bold} MACHINE  
+parameter used to specify the previously defined machine.
+
+The next sequence of process steps deposits photoresist, patterns the resist 
+with the geometric etch capability, defines a wet etch machine and 
+employs that machine on the structure, defines a directional 
+etch machine and employs that machine on the structure, saves
+the structure, and strips the photoresist.
+
+Following this, a short wet etch is performed to remove fillets from the 
+structure, and aluminum is deposited using the 
+{bold} Elite
+hemispherical model.
+
+Next, photoresist is deposited using the same geometric smoothing approach that is applied to model spin-on-glass reflow. This results in a nearly planar top surface following the resist deposit.
+The parameter
+{bold} NAME.RESIST  
+specifies the type of resist that will be used from the library of
+resists included in the models file. In this case, the photoresist
+named OiR32 is applied.
+
+After the resist is deposited, the simulation begins the 
+{bold} Optolith   
+portion of the process. This performs a detailed analysis of the 
+photolithographic process of this final structure.  
+{bold} Optolith  
+simulation begins by performing imaging.  The 
+{bold} ILLUMINATION
+, 
+{bold} ILLUM.FILTER
+, 
+{bold} PROJECTION
+,  and 
+{bold} PUPIL.FILTER  
+statements describe the illumination system.  The 
+{bold} LAYOUT  
+statements define two mask features. The parameter
+{bold} LAY.CLEAR  
+removes any previously defined layout information so that a new layout can be
+initialized.  Once the illumination system and the layout have been 
+defined, the imaging module is invoked. The 
+{bold} IMAGE  
+statement invokes the imaging module and specifies the 
+window in which imaging will be performed.  The parameter 
+{bold} DX  
+specifies the discretization along the x-dimension and the parameter
+{bold} ONE.D  
+specifies that the imaging should consider only one dimension. The 
+parameter
+{bold} CLEAR  
+specifies that the mask should be considered as a clear field
+with dark features defined by the 
+{bold} LAYOUT  
+statements.  
+
+The 
+{bold} OPTICAL  
+statement defines the index of refraction for BPSG material at
+a wavelength of 0.365 microns.  The 
+{bold} EXPOSE   
+statement performs the resist exposure from the results of the 
+imaging module.  
+
+Following exposure, the 
+{bold} BAKE  
+statement performs post-exposure bake and calculates the diffusion
+of the photoactive component.  Finally, resist development
+is performed using the 
+{bold} DEVELOP  
+statement. The 
+{bold} MACK 
+model is specified along with the development
+{bold} TIME  
+, number of 
+{bold} STEPS 
+at which regridding will be performed, and
+the number of non-regridded 
+{bold} SUBSTEPS  
+that will be taken per step.
+
+Finally the results of the simulation are plotted using 
+{bold} TonyPlot  
+.  The non-ideal features in the photoresist due to reflections from the 
+underlying topography can be seen in the lines of resist that remain.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} anex02.in : Trench Isolation Example 
+
+Requires: SSuprem 4, Elite
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This example shows the fabrication of a trench isolation 
+structure using
+{bold} Elite 
+and 
+{bold} SSuprem 4 
+to model etching and oxidation processes.  
+
+The example begins with grid definition. This is tailored to 
+place fine grid in the area that will be exposed during the trench etch.
+The 
+{bold} INITIAL 
+statement does not specify a material type, so silicon is taken by default.
+A background doping of boron with concentration 1.0e15 is specified.
+The parameter
+{bold} NO.IMP 
+specifies that the entire simulation should neglect all processing
+steps that introduce dopant into the structure.  This results 
+in a much faster calculation for diffusion and oxidation calculations
+but will not produce a structure suitable for electrical analysis
+because dopant will be left out. This is intended to provide 
+a fast mode of calculation that is useful for initial simulations.
+The parameter
+{bold} SPACE.MULT 
+specifies that a coarser grid be used than that specified by the 
+{bold} SPACING 
+parameter on the 
+{bold} LINE 
+statements. This also is intended for fast initial runs of the simulator.
+To disable these features for a more complete calculation, simply
+delete the 
+{bold} NO.IMP 
+and 
+{bold} SPACE.MULT 
+parameters from the 
+{bold} INITIALIZE 
+statement.
+
+Following initialization, a nitride layer is deposited and patterned 
+by the 
+{bold} DEPOSIT 
+and 
+{bold} ETCH 
+statements. The structure is then reflected to create a symmetric
+structure for trench etching.
+
+The trench is performed by defining an etch machine with the
+{bold} RATE.ETCH 
+statement. For this etch, the etch rates for all materials except 
+silicon are assumed to be zero, so only rates for silicon are defined.
+If other materials were to be etched, the rates for each material should be 
+set with a
+{bold} RATE.ETCH 
+statement.
+For this etch process, the rates are defined for the
+{bold} RIE 
+model.  This simple model describes the etch process as a combination 
+of 
+{bold} ISOTROPIC 
+and 
+{bold} DIRECTIONAL 
+components.  The parameter
+{bold} U.M 
+specifies that the etch rates are given in units of microns per minute.
+
+The etch is then performed for a period of 10 minutes.
+
+Following the etch, the nitride masking layer is removed with the
+{bold} ETCH NITRIDE ALL 
+statement.
+
+The trench is then filled with a sandwich of materials. First a layer 
+of oxide is deposited with the simple conformal model. Then a layer of 
+polysilicon is deposited with the 
+{bold} Elite 
+calculation. Finally, photoresist is deposited using
+{bold} Elite 
+to model the resist flow.  This is included by adding the parameters
+{bold} SMOOTH.WIN 
+and 
+{bold} SMOOTH.STEP 
+to the deposit machine definition.  These two parameters specify
+the width over which a simple averaging algorithm will be applied
+and the number of times it will be applied respectively.  This results in 
+a smoothed profile that is a fast way of modeling the flowing resist
+during deposit.
+
+The structure coated with resist has a surface that is nearly
+planar.  By applying an etch process that erodes all materials at 
+an equal rate, the planarization process can be modeled.  This is 
+performed next by specifying the etch rates for an
+{bold} Elite 
+type calculation using the 
+{bold} WET.ETCH 
+model.  Following the etch, the grid on the surface of the structure
+is relaxed to remove any excess grid that may have been introduced
+during the etch process.  The parameter
+{bold} DX.SURF 
+on the 
+{bold} RELAX 
+statement specifies the minimum surface segment size in microns for the 
+relax operation.
+
+Next, a nitride layer is deposited and patterned to control the area that 
+will be oxidized.
+
+Some model parameters are set for the oxidation using the 
+{bold} METHOD 
+and 
+{bold} OXIDE 
+statements.  Then the diffusion is performed in two steps, first in 
+dry oxygen specified using the 
+{bold} DRYO2 
+parameter, and then in water, specified by the 
+{bold} WETO2 
+parameter.
+
+Finally, the structure is plotted using 
+{bold} TonyPlot 
+and the structure saved to a file.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} anex03.in : Comparison of Simple and Realistic Resist Surfaces 
+
+Requires: Optolith
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This example demonstrates optical lithography over non-planar topography.  
+{bold} Optolith 
+is invoked to expose and develop the photoresist.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} anex04.in : Metal Patterning Over Non-planar Topography 
+
+Requires: SSuprem 4, Elite, and Optolith
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This example demonstrates optical lithography over non-planar topography.  
+{bold} Optolith 
+is invoked to expose and develop the photoresist.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} anex05.in : Multi-level Interconnect Formation 
+
+Requires: SSuprem 4, Elite
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This example shows the use of 
+{bold} Elite 
+to model a complete interconnect 
+system over isolation oxide grown using 
+{bold} SSuprem 4
+.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} anex06.in : Trench Formation and Planarization 
+
+Requires: SSuprem 4, Elite
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This example shows the use of 
+{bold} Elite
+to model a trench process
+using a unique self-aligned process.  The process begins with spacer formation 
+over a patterned sandwich of oxide and nitride layers. Next, oxidation 
+is performed using the spacer as a mask.  This creates a bird's
+beak that extends under the spacer.  After etching the nitride, 
+an opening is created by etching enough oxide to remove the 
+bird's beak. This opening is used to pattern a trench etch.
+The resulting trench is oddly shaped because of the simultaneous
+erosion of the silicon and the lateral erosion of the masking 
+oxide.
+
+Following the trench formation, an oxide layer is grown.  The structure is 
+then filled with oxide.  Planarizing photoresist is deposited next.
+
+Finally, the structure is planarized by eroding all materials with a similar 
+etch rate. The sequence of structures is then plotted using 
+{bold} TonyPlot
+.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+{subsection} anex07.in : Trench Oxidation  
+
+Requires: SSuprem 4, Elite
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This example shows the use of
+{bold} Elite 
+to model a trench process
+using two different etch conditions.
+Following the trench formation, an oxide layer is grown.  
+Note that "uneven" surfaces resulted from 
+{bold} Elite 
+etch don't prevent to simulate the oxidation process.
+
+The final structures are then plotted using 
+{bold} TonyPlot
+.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} anex08.in : DevEdit Mesh Adaptation with Elite and SSuprem 4 
+
+Requires: SSuprem 4, Elite, and DEVEDIT
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This example shows the use of 
+{bold} DevEdit 
+in a mesh adaptation application. A trench is etched with an 
+{bold} Elite 
+etch machine. A highly doped oxide is
+then deposited inside the trench for sidewall doping.  Boron segregation
+and transport coefficients are defined. (These parameters may be used
+to calibrate the amount of out diffusion of boron.)
+
+A short heat cycle segregates out some of the boron from the oxide
+into the silicon trench sidewall.
+
+{bold} DevEdit 
+is then invoked to regrid the structure based upon the
+concentration gradient of the boron and phosphorous. The weight for
+each impurity will determine the distance from the diffusion front that
+the grid is refined. These parameters should be used in relation to the
+estimated subsequent diffusion profile.
+
+{bold} DevEdit 
+is invoked at a point where minimal material boundary points exist to minimize
+the mesh density. This is a preferred although not essential method of use.
+
+Next,
+{bold} Athena 
+is re-invoked and again the segregation and transport
+coefficients are defined in the new 
+{bold} Athena 
+session.
+
+A second diffusion is started, and the boron diffusion front now moves
+within the refined mesh region.
+
+{bold} DevEdit 
+may be used in this manner to refine at any stage during a process
+flow. 
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} anex09.in : GaAs on Silicon Process 
+
+Requires: SSuprem 4
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This example shows the use of 
+{bold} Athena 
+in a GaAs on Silicon example.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} anex10.in : Trench Etching and Lithography 
+
+Requires: SSuprem 4, Elite, and Optolith
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This example shows the use of 
+{bold} Athena 
+in a trench etching example. 
+{bold} Optolith 
+is used for patterning and 
+{bold} Elite 
+is used for etching.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+{subsection} anex11.in : CMOS Example Using MaskViews
+
+Requires: SSuprem 4, MaskViews
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+{bold} NOTE: 
+This example works only on UNIX/LINUX computers. 
+
+{bold} MaskViews  
+is a product enabling the design of more than one device side by side.
+For example, if an NMOS and a PMOS pair need to be considered side by
+side, then
+{bold} MaskViews  
+is used in conjunction with a single generic input file. 
+{bold} MaskViews  
+sends to the process simulator the mask, grid, boolean region and
+electrode name information. 
+
+This example uses an IC Layout cross section along with a 
+generic process flow to realize a specific device.
+To run this example, first invoke 
+{bold} MaskViews  
+from the 
+{bold} Tools - MaskViews - Start MaskViews  
+menu options. An IC Layout editor will appear. Create a cutline object by selecting the 
+{bold} Write file  
+button. Then select the beginning and end of the required cross section
+on the layout itself. This action will generate a 'cutline object' as a
+file. (If used under the 
+{bold} VWF  
+the cutline object will be loaded into the 
+database). The cutline object contains 4 pieces of information:
+
+{bullet} masking information - where to place the photoresist or barrier
+{bullet} grid information - automatically generated from a set of rules
+{bullet} boolean regions information - defining regions of interest
+{bullet} electrode names - for use in a later device test
+
+Load the cutline object into 
+{bold} DeckBuild 
+by using the 
+{bold} Tools - MaskViews - Cutlines  
+menu option. Once loaded into 
+{bold} DeckBuild
+, press
+{bold} run
+.
+
+The completed run will relate directly to your IC layout cutline selection.
+
+Note the use of the 
+{bold} AUTOELECTRODE  
+statement, used to refer any available electrode names at a particular
+point in the process flow to a specific material region.
+Electrode names may be associated with poly, metal or silicide regions.
+The 
+{bold} AUTOELECTRODE 
+statement will search from the top of the
+structure until it finds an appropriate electrode material.
+
+The lateral position of the electrode is determined from the
+IC layout electrode mask position. Electrodes are named automatically,
+half-way from the point where the cutline intercepts the
+layout electrode polygon to the point where the cutline leaves the 
+electrode polygon.
+
+The grid is derived from a set of rules relating to the edge
+of each mask layer. These rules are defined under the :
+{bold} define - grid - x  
+pop-up window within 
+{bold} MaskViews
+.
+
+This example also demonstrates the use of 
+{bold} MaskViews
+, with a view to usage
+under the Virtual Wafer Fab. When used under the 
+{bold} VWF
+, split lots may
+include many devices, e.g. a P-channel and an N-channel MOS device.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} anex12.in : Bipolar Example Using MaskViews 
+
+Requires: SSuprem 4, MaskViews
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+{bold} NOTE: 
+This example works only on UNIX/LINUX computers. 
+
+This example uses an IC Layout cross section together with a generic 
+process flow to realize a specific device.
+
+To run this example, first invoke 
+{bold} MaskViews  
+from the 
+{bold} Tools - MaskViews - Start MaskViews  
+options. Create a cutline object by selecting the 
+{bold} Write file  
+button, and then selecting the beginning and end of the required cross section.
+Load the cutline object into 
+{bold} DeckBuild  
+by using the 
+{bold} Tools - MaskViews - Cutlines  
+menu option. Once loaded into 
+{bold} DeckBuild
+, press
+{bold} run
+.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.

@@ -1,0 +1,177 @@
+# (c) Silvaco Inc., 2018
+go atlas 
+#
+# Size of the detector
+set L=40
+# Pitch between detector
+set d=20
+# InSb buffer layer thickness
+set hl=10
+# InSb epilayer thickness
+set hh=5
+# Electrode Thickness
+set et=2   
+ 
+mesh  three.d space.mult=1 outfile=optoex17_0.str 
+#
+x.mesh loc=0		spac=$d/5
+x.mesh loc=$d 		spac=$d/5
+x.mesh loc=$L+$d 	spac=$d/5
+x.mesh loc=$L+2*$d 	spac=$d/5
+x.mesh loc=2*$L+2*$d  	spac=$d/5
+x.mesh loc=2*$L+3*$d  	spac=$d/5
+x.mesh loc=3*$L+3*$d  	spac=$d/5
+x.mesh loc=3*$L+4*$d  	spac=$d/5
+x.mesh loc=4*$L+4*$d  	spac=$d/5
+x.mesh loc=4*$L+5*$d  	spac=$d/5
+x.mesh loc=5*$L+5*$d  	spac=$d/5
+x.mesh loc=5*$L+6*$d  	spac=$d/5
+# 
+y.mesh loc=-2		spac=2
+y.mesh loc=0	    	spac=$hl/4
+y.mesh loc=$hl     	spac=$hl/4
+y.mesh loc=$hl+$hh/2 	spac=$hh/8
+y.mesh loc=$hl+$hh 	spac=$hh/8
+y.mesh loc=$hl+$hh+$et 	spac=$et/2
+#
+z.mesh loc=0	 	spac=$d/5
+z.mesh loc=$d 		spac=$d/5
+z.mesh loc=$L+$d 	spac=$d/5
+z.mesh loc=$L+2*$d	spac=$d/5
+z.mesh loc=2*$L+2*$d  	spac=$d/5
+z.mesh loc=2*$L+3*$d  	spac=$d/5
+z.mesh loc=3*$L+3*$d  	spac=$d/5
+z.mesh loc=3*$L+4*$d  	spac=$d/5
+z.mesh loc=4*$L+4*$d  	spac=$d/5
+z.mesh loc=4*$L+5*$d  	spac=$d/5
+z.mesh loc=5*$L+5*$d  	spac=$d/5
+z.mesh loc=5*$L+6*$d  	spac=$d/5
+
+#
+region number=1  x.min=0         x.max=5*$L+6*$d y.min=0       y.max=$hl     	 z.min=0  	 z.max=6*$d+5*$L material=InSb donor=1e15
+
+region number=2  x.min=$d        x.max=$d+$L     y.min=$hl     y.max=$hl+$hh 	 z.min=$d  	 z.max=$d+$L 	 material=InSb donor=1e15 
+region number=3  x.min=2*$d+$L   x.max=2*$d+2*$L y.min=$hl     y.max=$hl+$hh  	 z.min=$d 	 z.max=$d+$L 	 material=InSb donor=1e15 
+region number=4  x.min=3*$d+2*$L x.max=3*$d+3*$L y.min=$hl     y.max=$hl+$hh 	 z.min=$d 	 z.max=$d+$L 	 material=InSb donor=1e15 
+region number=5  x.min=4*$d+3*$L x.max=4*$d+4*$L y.min=$hl     y.max=$hl+$hh 	 z.min=$d 	 z.max=$d+$L 	 material=InSb donor=1e15
+region number=6  x.min=5*$d+4*$L x.max=5*$d+5*$L y.min=$hl     y.max=$hl+$hh 	 z.min=$d 	 z.max=$d+$L 	 material=InSb donor=1e15 
+
+region number=7  x.min=$d        x.max=$d+$L     y.min=$hl     y.max=$hl+$hh  	 z.min=2*$d+$L   z.max=2*$d+2*$L material=InSb donor=1e15 
+region number=8  x.min=2*$d+$L   x.max=2*$d+2*$L y.min=$hl     y.max=$hl+$hh 	 z.min=2*$d+$L   z.max=2*$d+2*$L material=InSb donor=1e15 
+region number=9  x.min=3*$d+2*$L x.max=3*$d+3*$L y.min=$hl     y.max=$hl+$hh 	 z.min=2*$d+$L   z.max=2*$d+2*$L material=InSb donor=1e15 
+region number=10  x.min=4*$d+3*$L x.max=4*$d+4*$L y.min=$hl     y.max=$hl+$hh 	 z.min=2*$d+$L   z.max=2*$d+2*$L material=InSb donor=1e15 
+region number=11  x.min=5*$d+4*$L x.max=5*$d+5*$L y.min=$hl     y.max=$hl+$hh 	 z.min=2*$d+$L   z.max=2*$d+2*$L material=InSb donor=1e15 
+
+region number=12  x.min=$d        x.max=$d+$L     y.min=$hl     y.max=$hl+$hh  	 z.min=3*$d+2*$L z.max=3*$d+3*$L material=InSb donor=1e15 
+region number=13  x.min=2*$d+$L   x.max=2*$d+2*$L y.min=$hl     y.max=$hl+$hh 	 z.min=3*$d+2*$L z.max=3*$d+3*$L material=InSb donor=1e15 
+region number=14  x.min=3*$d+2*$L x.max=3*$d+3*$L y.min=$hl     y.max=$hl+$hh 	 z.min=3*$d+2*$L z.max=3*$d+3*$L material=InSb donor=1e15 
+region number=15  x.min=4*$d+3*$L x.max=4*$d+4*$L y.min=$hl     y.max=$hl+$hh 	 z.min=3*$d+2*$L z.max=3*$d+3*$L material=InSb donor=1e15 
+region number=16  x.min=5*$d+4*$L x.max=5*$d+5*$L y.min=$hl     y.max=$hl+$hh 	 z.min=3*$d+2*$L z.max=3*$d+3*$L material=InSb donor=1e15 
+
+region number=17  x.min=$d        x.max=$d+$L     y.min=$hl     y.max=$hl+$hh  	 z.min=4*$d+3*$L z.max=4*$d+4*$L material=InSb donor=1e15 
+region number=18  x.min=2*$d+$L   x.max=2*$d+2*$L y.min=$hl     y.max=$hl+$hh 	 z.min=4*$d+3*$L z.max=4*$d+4*$L material=InSb donor=1e15 
+region number=19  x.min=3*$d+2*$L x.max=3*$d+3*$L y.min=$hl     y.max=$hl+$hh 	 z.min=4*$d+3*$L z.max=4*$d+4*$L material=InSb donor=1e15 
+region number=20  x.min=4*$d+3*$L x.max=4*$d+4*$L y.min=$hl     y.max=$hl+$hh 	 z.min=4*$d+3*$L z.max=4*$d+4*$L material=InSb donor=1e15 
+region number=21  x.min=5*$d+4*$L x.max=5*$d+5*$L y.min=$hl     y.max=$hl+$hh 	 z.min=4*$d+3*$L z.max=4*$d+4*$L material=InSb donor=1e15 
+
+region number=22  x.min=$d        x.max=$d+$L     y.min=$hl     y.max=$hl+$hh  	 z.min=5*$d+4*$L z.max=5*$d+5*$L material=InSb donor=1e15 
+region number=23  x.min=2*$d+$L   x.max=2*$d+2*$L y.min=$hl     y.max=$hl+$hh 	 z.min=5*$d+4*$L z.max=5*$d+5*$L material=InSb donor=1e15 
+region number=24  x.min=3*$d+2*$L x.max=3*$d+3*$L y.min=$hl     y.max=$hl+$hh 	 z.min=5*$d+4*$L z.max=5*$d+5*$L material=InSb donor=1e15 
+region number=25  x.min=4*$d+3*$L x.max=4*$d+4*$L y.min=$hl     y.max=$hl+$hh 	 z.min=5*$d+4*$L z.max=5*$d+5*$L material=InSb donor=1e15 
+region number=26  x.min=5*$d+4*$L x.max=5*$d+5*$L y.min=$hl     y.max=$hl+$hh 	 z.min=5*$d+4*$L z.max=5*$d+5*$L material=InSb donor=1e15 
+
+#
+elec   number=1  x.min=$d        x.max=$d+$L     y.min=$hl+$hh y.max=$hl+$hh+$et z.min=$d  	 z.max=$d+$L     material=alum name=anode1
+elec   number=2  x.min=2*$d+$L   x.max=2*$d+2*$L y.min=$hl+$hh y.max=$hl+$hh+$et z.min=$d 	 z.max=$d+$L 	 material=alum name=anode2
+elec   number=3  x.min=3*$d+2*$L x.max=3*$d+3*$L y.min=$hl+$hh y.max=$hl+$hh+$et z.min=$d 	 z.max=$d+$L   	 material=alum name=anode3
+elec   number=4  x.min=4*$d+3*$L x.max=4*$d+4*$L y.min=$hl+$hh y.max=$hl+$hh+$et z.min=$d 	 z.max=$d+$L   	 material=alum name=anode4
+elec   number=5  x.min=5*$d+4*$L x.max=5*$d+5*$L y.min=$hl+$hh y.max=$hl+$hh+$et z.min=$d 	 z.max=$d+$L   	 material=alum name=anode5
+
+elec   number=6  x.min=$d        x.max=$d+$L     y.min=$hl+$hh y.max=$hl+$hh+$et z.min=2*$d+$L   z.max=2*$d+2*$L material=alum name=anode6
+elec   number=7  x.min=2*$d+$L   x.max=2*$d+2*$L y.min=$hl+$hh y.max=$hl+$hh+$et z.min=2*$d+$L   z.max=2*$d+2*$L material=alum name=anode7
+elec   number=8  x.min=3*$d+2*$L x.max=3*$d+3*$L y.min=$hl+$hh y.max=$hl+$hh+$et z.min=2*$d+$L   z.max=2*$d+2*$L material=alum name=anode8
+elec   number=9  x.min=4*$d+3*$L x.max=4*$d+4*$L y.min=$hl+$hh y.max=$hl+$hh+$et z.min=2*$d+$L   z.max=2*$d+2*$L material=alum name=anode9
+elec   number=10 x.min=5*$d+4*$L x.max=5*$d+5*$L y.min=$hl+$hh y.max=$hl+$hh+$et z.min=2*$d+$L   z.max=2*$d+2*$L material=alum name=anode10
+
+elec   number=11 x.min=$d        x.max=$d+$L     y.min=$hl+$hh y.max=$hl+$hh+$et z.min=3*$d+2*$L z.max=3*$d+3*$L material=alum name=anode11
+elec   number=12 x.min=2*$d+$L   x.max=2*$d+2*$L y.min=$hl+$hh y.max=$hl+$hh+$et z.min=3*$d+2*$L z.max=3*$d+3*$L material=alum name=anode12
+elec   number=13 x.min=3*$d+2*$L x.max=3*$d+3*$L y.min=$hl+$hh y.max=$hl+$hh+$et z.min=3*$d+2*$L z.max=3*$d+3*$L material=alum name=anode13
+elec   number=14 x.min=4*$d+3*$L x.max=4*$d+4*$L y.min=$hl+$hh y.max=$hl+$hh+$et z.min=3*$d+2*$L z.max=3*$d+3*$L material=alum name=anode14
+elec   number=15 x.min=5*$d+4*$L x.max=5*$d+5*$L y.min=$hl+$hh y.max=$hl+$hh+$et z.min=3*$d+2*$L z.max=3*$d+3*$L material=alum name=anode15
+
+elec   number=16 x.min=$d        x.max=$d+$L     y.min=$hl+$hh y.max=$hl+$hh+$et z.min=4*$d+3*$L z.max=4*$d+4*$L material=alum name=anode16
+elec   number=17 x.min=2*$d+$L   x.max=2*$d+2*$L y.min=$hl+$hh y.max=$hl+$hh+$et z.min=4*$d+3*$L z.max=4*$d+4*$L material=alum name=anode17
+elec   number=18 x.min=3*$d+2*$L x.max=3*$d+3*$L y.min=$hl+$hh y.max=$hl+$hh+$et z.min=4*$d+3*$L z.max=4*$d+4*$L material=alum name=anode18
+elec   number=19 x.min=4*$d+3*$L x.max=4*$d+4*$L y.min=$hl+$hh y.max=$hl+$hh+$et z.min=4*$d+3*$L z.max=4*$d+4*$L material=alum name=anode19
+elec   number=20 x.min=5*$d+4*$L x.max=5*$d+5*$L y.min=$hl+$hh y.max=$hl+$hh+$et z.min=4*$d+3*$L z.max=4*$d+4*$L material=alum name=anode20
+
+elec   number=21 x.min=$d        x.max=$d+$L     y.min=$hl+$hh y.max=$hl+$hh+$et z.min=5*$d+4*$L z.max=5*$d+5*$L material=alum name=anode21
+elec   number=22 x.min=2*$d+$L   x.max=2*$d+2*$L y.min=$hl+$hh y.max=$hl+$hh+$et z.min=5*$d+4*$L z.max=5*$d+5*$L material=alum name=anode22
+elec   number=23 x.min=3*$d+2*$L x.max=3*$d+3*$L y.min=$hl+$hh y.max=$hl+$hh+$et z.min=5*$d+4*$L z.max=5*$d+5*$L material=alum name=anode23
+elec   number=24 x.min=4*$d+3*$L x.max=4*$d+4*$L y.min=$hl+$hh y.max=$hl+$hh+$et z.min=5*$d+4*$L z.max=5*$d+5*$L material=alum name=anode24
+elec   number=25 x.min=5*$d+4*$L x.max=5*$d+5*$L y.min=$hl+$hh y.max=$hl+$hh+$et z.min=5*$d+4*$L z.max=5*$d+5*$L material=alum name=anode25
+
+elec   number=26 x.min=0           x.max=5*$L+6*$d y.min=$hl  y.max=$hl+$et   z.min=0           z.max=$d/2       material=alum  name=cathode
+elec   number=27 x.min=0           x.max=$d/2      y.min=$hl  y.max=$hl+$et   z.min=0           z.max=5*$L+6*$d  material=alum  name=cathode
+elec   number=28 x.min=5*$L+5.5*$d x.max=5*$L+6*$d y.min=$hl  y.max=$hl+$et   z.min=0           z.max=5*$L+6*$d  material=alum  name=cathode
+elec   number=29 x.min=0           x.max=5*$L+6*$d y.min=$hl  y.max=$hl+$et   z.min=5*$L+5.5*$d z.max=5*$L+6*$d  material=alum  name=cathode
+
+#
+doping gaussian peak=$hl+$hh conc=1e19 p.type char=0.5 x.left=0 x.right=5*$L+6*$d z.left=0 z.right=5*$L+6*$d
+
+# 
+material material=InSb mun=47.7e4 mup=850 taun0=5e-8 taup0=5e-8 permittivity=16.8 tc.const=0.18 \
+copt=5e-11 me.tunnel=0.014 mh.tunnel=0.43
+
+# set contact material to be opaque
+material material=Aluminum imag.index=1000 real.index=3.16228
+ 
+#define physical models  
+models srh fermi conmob auger optr temperature=77 cubic35 print
+
+# set light in the middle of thr detector with beam size L x L
+# Blackbody radiation source at 2000kelvin
+beam     num=1 x.origin=0.0 y.origin=-50 z.origin=0 angle=90.0 \
+xmin=3*$d+2*$L xmax=3*$d+3*$L zmin=3*$d+2*$L zmax=3*$d+3*$L \
+raytrace=optoex17_ray.str wavelength=5.5 power.file=optoex17.spec
+
+
+solve init
+solve b1=0.1
+solve b1=0.5
+solve b1=1
+
+log outf=optoex17_0.log
+solve prev
+
+extract init inf="optoex17_0.log"
+extract name="crosstalk_1" max(i."anode1"/i."anode13")
+extract name="crosstalk_2" max(i."anode2"/i."anode13")
+extract name="crosstalk_3" max(i."anode3"/i."anode13")
+extract name="crosstalk_4" max(i."anode4"/i."anode13")
+extract name="crosstalk_5" max(i."anode5"/i."anode13")
+extract name="crosstalk_6" max(i."anode6"/i."anode13")
+extract name="crosstalk_7" max(i."anode7"/i."anode13")
+extract name="crosstalk_8" max(i."anode8"/i."anode13")
+extract name="crosstalk_9" max(i."anode9"/i."anode13")
+extract name="crosstalk_10" max(i."anode10"/i."anode13")
+extract name="crosstalk_11" max(i."anode11"/i."anode13")
+extract name="crosstalk_12" max(i."anode12"/i."anode13")
+extract name="crosstalk_14" max(i."anode14"/i."anode13")
+extract name="crosstalk_15" max(i."anode15"/i."anode13")
+extract name="crosstalk_16" max(i."anode16"/i."anode13")
+extract name="crosstalk_17" max(i."anode17"/i."anode13")
+extract name="crosstalk_18" max(i."anode18"/i."anode13")
+extract name="crosstalk_19" max(i."anode19"/i."anode13")
+extract name="crosstalk_20" max(i."anode20"/i."anode13")
+extract name="crosstalk_21" max(i."anode21"/i."anode13")
+extract name="crosstalk_22" max(i."anode22"/i."anode13")
+extract name="crosstalk_23" max(i."anode23"/i."anode13")
+extract name="crosstalk_24" max(i."anode24"/i."anode13")
+extract name="crosstalk_25" max(i."anode25"/i."anode13")
+extract name="Total_crosstalk" max((i."anode1"+i."anode2"+i."anode3"+i."anode4"+i."anode5"+i."anode6"+i."anode7"+i."anode8"+i."anode9"+i."anode10"+i."anode11"+i."anode12"+i."anode14"+i."anode15"+i."anode16"+i."anode17"+i."anode18"+i."anode19"+i."anode20"+i."anode21"+i."anode22"+i."anode23"+i."anode24"+i."anode25")/i."anode13")
+
+extract name="QE" max(i."cathode"/elect."Available Photo current")
+
+struct outf=optoex17_1.str
+

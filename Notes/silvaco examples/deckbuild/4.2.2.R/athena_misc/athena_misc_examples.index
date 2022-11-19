@@ -1,0 +1,203 @@
+{section} Athena_MISC : Miscellaneous Process Simulation Examples
+
+
+{subsection} anmiex01.in : Multiple Impurities in a Material (BPSG) 
+
+Requires: SSuprem 4
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This example demonstrates the deposition of material such as BPSG
+that contains multiple impurities in 
+{bold} Athena
+.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} anmiex02.in : Epitaxial Growth
+
+Requires: SSuprem 4 
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This example makes use of the 
+{bold} EPITAXY 
+statement to create an
+epitaxial layer with a specific mesh density and boron concentration.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+
+{subsection} anmiex03.in : Phosphorus Segregation Modeling 
+
+Requires: SSuprem 4
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This example shows the use of improved discretization to
+improve spurious phosphorus segregation through gate oxides.  
+
+The problem is clearly seen in the left plot. The original gridding has
+no mesh points wholly within the oxide layer. It results in too much
+diffusion through the oxide. The only way to decrease the transport is
+to increase the number of grid points in the thin oxide. 
+
+
+To increase mesh in thermally grown oxides the parameter 
+{bold} method grid.ox 
+is used. The default
+Lowther discretization method means the diffusion into silicon is
+almost completely eliminated (right plot).
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+{subsection} anmiex04.in : Substrate Shear Stress 
+
+Requires: SSuprem 4
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This example demonstrates  the
+capability to calculate shear
+stress as a result of an overlying nitride layer.  The results of the
+calculation are plotted using 
+{bold} TonyPlot 
+to display contours of each of
+the three components of stress produced by the calculation.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+{subsection} anmiex05.in : MOSFET Scaling with the STRETCH command 
+
+Requires: Athena
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+The command 
+
+{bold} stretch poly length=<val> 
+
+will stretch the defined material to the indicated final length. 
+
+This can be used in short channel effect scaling experiments using VWF.
+
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+
+{subsection} anmiex06.in : Salicide Example Using Titanium Silicide 
+
+Requires: SSuprem 4
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This example models a self aligned silicide (salicide) process.
+
+No special commands are required to enable silicidation. Any interface
+between a refractory metal and silicon or polysilicon will cause growth
+of a silicide material.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+{subsection} anmiex07.in : Selective and Non-selective Si Deposition 
+
+Requires: SSuprem 4
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+It is known that crystalline Si cannot be grown on non-crystalline
+(Poly-Si or other material) surfaces. Therefore, in those cases when
+the epitaxial or other type of silicon growth takes place in the
+structure with different surface material types, the crystalline Si grows only
+on Si while Poly-Si grows elsewhere.  To facilitate simulation of such 
+structures the capability to selectively transform Si into Poly during 
+deposition or epitaxy has been implemented. The capability is invoked
+by the parameter SI_TO_POLY in the corresponding DEPOSIT or EPITAXY
+statement. This example demonstrates this capability for Si deposition
+on the structure consisting of 2 LOCOS isolation areas and an active Si area.
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+{subsection} anmiex08.in : Analytical Etch of a Trench with Angled Sidewalls and Undercuts
+
+Requires: SSuprem 4
+{newline}
+Minimum Versions: Athena 5.22.3.R
+
+This example demonstrates use of ANGLE and UNDERCUT parameters with default 
+(DRY) analytical etch. ANGLE specifies the angle (in degrees) of resulting
+sidewalls. The ANGLE is measured from horizontal. ANGLE=90 (default)  corresponds to  vertical sidewalls, ANGLE < 90 results in trenches 
+narrowing to the bottom, while ANGLE > 90 produces a retrograde sidewalls.
+UNDERCUT specifies the penetration (in microns) of the etch under the
+mask edges. The UNDERCUT length is measured along the boundary line between
+etched material and masking layer. 
+
+To load and run this example, select the
+{bold} Load
+button in DeckBuild > Examples. This will copy the input file and any support files to your current working directory. Select the
+{bold} Run
+button in DeckBuild to execute the example.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

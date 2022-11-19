@@ -1,0 +1,107 @@
+<html>
+  <head>
+    <title>Erase example</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Erase example</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>S-Pisces</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="sonosex03_plot0.png" width="640" alt="sonosex03_plot0" />
+      <p/>
+      <img src="sonosex03_plot1.png" width="640" alt="sonosex03_plot1" />
+      <p/>
+      <img src="sonosex03_plot2.png" width="640" alt="sonosex03_plot2" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+The example shows:
+</p>
+<ul>
+  <li>
+ How to create a SONOS device structure
+<br/>
+  </li>
+  <li>
+ How to charge and then erase the device 
+<br/>
+  </li>
+  <li>
+ Use of PROBE statement to obtain stored charge density
+  </li>
+</ul>
+<p>
+This example illustrates how the position of the trapped charges in
+the Silicon Nitride vary with time as the device is charged up and then
+erased by changing the Gate Bias.  This example has a 2 nm thick
+tunnelling layer, a 5 nm Nitride layer and a 5 nm blocking oxide layer.
+</p>
+<p>
+The NITRIDECHARGING statement sets up a density of 10^20 /cm^3 of electron
+traps, having a relatively high capture cross-section of 10^-10 cm^2.
+A bias of 18 V is applied to the gate and the device is charged up.  The
+state of the structure is saved out to a structure file at certain
+values of charge time. It is charged for 1.0 seconds, after which SOLVE
+INIT is called, with the SONOS parameter specified.
+</p>
+<p>
+SOLVE INIT preserves the stored charge density,  but on its own tries
+to put in the steady state equibrium solution.  The combination of a
+large fixed charge, and weak coupling of the drift-diffusion equations
+through the wide band-gap semiconductors,  can result in erroneous
+free carrier screening of the fixed charge.  The SONOS parameter used with
+SOLVE INIT avoids this.
+</p>
+<p>
+After this, negative bias is applied to the gate, ramping for 1 nanosecond
+and then the device is erased for 1.0 seconds.  The structure file is
+output at preset intervals in order to allow the user to inspect the
+progress of the erasing.
+</p>
+<p>
+The integrated nett stored charge in C/um is obtained using the PROBE statement
+</p>
+<b> PROBE NAME=nettcharge SONOS.CHARGE INTEGRATE  Y.MIN=-0.0075 Y.MAX=-0.0015 X.MIN=0.1 X.MAX=0.2 </b> <p>
+and this quantity can be plotted as a function of time.  When the device is
+charged, the largest contribution is from the tunnel current into the
+Nitride conduction band.  For erase, it is the tunnelling direct from the traps
+to the channel. This is illustrated by doing a second erase,  with the only
+change being the parameter ELEC.DEPTH in the NITRIDECHARGING statement.
+This is increased from 1.5 eV to 2.0 eV, in order to reduce the direct
+trap-to-channel tunnel current.  It can be seen from the log file that
+the erase takes longer with deeper traps.
+</p>
+<p>
+The user can employ the TonyPlot cutline tool to see the vertical profile
+of the Trapped Nitride Charge through the gate stack at various time points
+of the charging/erasing.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

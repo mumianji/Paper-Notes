@@ -1,0 +1,41 @@
+go athena
+
+#TITLE: Trench etching using RIE model
+# 
+line x loc=0.00 spac=0.20 
+line x loc=0.5 spac=0.05
+line x loc=1 spac=0.05
+line x loc=1.5 spac=0.05
+line x loc=2 spac=0.05
+line x loc=2.5 spac=0.05
+line x loc=3.0 spac=0.20 
+#
+line y loc=0.00 spac=0.02
+line y loc=2.5 spac=0.1 
+initialize
+#
+deposit material=SPR500      thick=1. div=5
+#
+etch material=SPR500 start x=1.1 y=-10
+etch                 cont  x=1.1 y=10
+etch                 cont  x=1.9 y=10
+etch                 done  x=1.9 y=-10
+#
+structure outfile=anelex04_0.str
+
+rate.etch machine=m1 rie silicon iso=1.0 dir=0.0 u.m
+#
+etch machine=m1 time=40.0 second dx.mult=0.5
+
+structure outfile=anelex04_1.str
+
+rate.etch machine=m2 rie silicon iso=0.0 dir=1.0 u.m
+#
+etch machine=m2 time=50.0 second dx.mult=0.5
+#
+structure outfile=anelex04_2.str
+tonyplot anelex04_*.str -ttitle anelex04.in
+#
+
+quit
+

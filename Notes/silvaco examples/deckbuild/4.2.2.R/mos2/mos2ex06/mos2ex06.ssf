@@ -1,0 +1,21 @@
+v UTMOST 
+# This file was created by UTMOST version 30.3.0.R 
+#SSF 2.0 generic
+##############################################################################
+#                    Copyright Silvaco International (c)                     #
+#                               1992-1997                                    #
+#                                                                            #
+# This file format and the following Key are copyright Silvaco International.#
+# You may not use, this format or key without reproducing this message in    #
+# full and obtaining express written permission from Silvaco International.  #
+#                                                                            #
+# To obtain such permission please contact: Silvaco International            #
+#                                           support@silvaco.com              #
+#                                                                            #
+# KEY=SVC86hn7562asdx                       PROD=345                         #
+##############################################################################
+j 1 2 
+k 4 
+H 82 "LEVEL" "TNOM" "TOX" "XJ" "NCH" "NSUB" "VTH0" "K1" "K2" "K3" "K3B" "W0" "NLX" "DVT0W" "DVT1W" "DVT2W" "DVT0" "DVT1" "DVT2" "VBM" "U0" "UA" "UB" "UC" "VSAT" "A0" "AGS" "B0" "B1" "KETA" "A1" "A2" "RDSW" "PRWG" "PRWB" "WR" "WINT" "LINT" "DWG" "DWB" "VOFF" "NFACTOR" "CIT" "CDSC" "CDSCD" "CDSCB" "ETA0" "ETAB" "DSUB" "PCLM" "PDIBLC1" "PDIBLC2" "PDIBLCB" "DROUT" "PSCBE1" "PSCBE2" "PVAG" "DELTA" "MOBMOD" "PRT" "UTE" "KT1" "KT1L" "KT2" "UA1" "UB1" "UC1" "AT" "NQSMOD" "WL" "WLN" "WW" "WWN" "WWL" "LL" "LLN" "LW" "LWN" "LWL" "CAPMOD" "CJpar" "CJSWpar"  
+I  8 27 1E-8 1.5E-7 1.7E17 6E16 0.4128907 0.7748354 -4.202714E-4 80 0 2.5E-6 1.74E-7 0 0 -0.032 2.2 0.53 -0.032 -5 501.3030965 1.953721E-9 1.335252E-19 4.255474E-11 1E5 0.6663497 0 0 0 -0.047 0 1 0 0 0 1 0 0 0 0 -0.149156 1.4290083 0 2.4E-4 0 0 0.08 -0.07 0.56 1.93173 0.39 8.6E-3 0 1 4.24E8 5E-5 0 0.01 1 0 -1.5 0 0 0 4.31E-9 -7.61E-18 -5.6E-11 3.3E4 0 0 1 0 1 0 0 1 0 1 0 1 0 0  
+J  "." "degrees C" "m" "m" "cm^-3" "cm^-3" "V" "V^0.5" "-" "-" "V^-1.0" "m" "m" "m^-1.0" "m^-1.0" "V^-1.0" "-" "-" "V^-1.0" "V" "cm^2.0/Vs" "m/V" "(m/V)^2" "V^-1.0" "m/sec" "-" "V^-1.0" "m" "m" "V^-1.0" "V^-1.0" "-" "ohm*um^WR" "V^-1.0" "V^-.5" "-" "m" "m" "m/V" "m/V^0.5" "V" "-" "F/m^2" "F/m^2" "F/Vm^2" "F/Vm^2" "-" "V^-1.0" "-" "-" "-" "-" "V^-1.0" "-" "V/m" "V/m" "-" "V" "-" "ohm*um/C" "-" "V" "V*m" "-" "m/V" "(m/V)^2" "V^-1.0" "m/sec" "-" "m^WLN" "-" "m^WWN" "-" "m^WWN+WLN" "m^LLN" "-" "m^LWN" "-" "m^LWN+LLN" "-" "F" "F"  

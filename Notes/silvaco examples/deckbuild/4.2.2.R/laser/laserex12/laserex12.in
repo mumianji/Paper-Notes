@@ -1,0 +1,154 @@
+# (c) Silvaco Inc., 2018
+#
+#   Silicon p-n junction waveguide modulator.
+#
+#   In this example we  model how effective refractive index 
+#   for each transverse mode changes with bias using DC and time-dependent simulation.  
+#
+#   Quantities of interest are a spatial profile of material refractive index and
+#   log of effective refractive index with bias for each mode.
+#
+#
+#
+#
+#
+go atlas
+
+mesh width=1000
+
+x.mesh location=-2 spacing=0.2
+x.mesh location=-1.6 spacing=0.2
+x.mesh location=-1  spacing=0.2
+x.mesh location=-0.5  spacing=0.05
+
+x.mesh location=-0.1 spacing=0.01
+x.mesh location=0.0    spacing=0.02
+x.mesh location=0.1 spacing=0.01
+
+x.mesh location=0.5  spacing=0.05
+x.mesh location=1  spacing=0.2
+x.mesh location=1.6  spacing=0.2
+x.mesh location=2  spacing=0.2
+
+y.mesh location=-0.5 spacing=0.01
+y.mesh location=-0.45 spacing=0.01
+y.mesh location=-0.3 spacing=0.01
+y.mesh location=-0.2 spacing=0.01
+y.mesh location=-0.15 spacing=0.01
+y.mesh location=-0.05 spacing=0.01
+y.mesh location=0     spacing=0.01
+y.mesh location=0.5     spacing=0.01
+y.mesh location=1     spacing=0.2
+y.mesh location=1.5   spacing=0.2
+
+
+region number=1 material=silicon y.min=1
+region number=2 material=oxide   y.min=0 y.max=1
+region number=3 material=silicon y.min=-0.5 y.max=0
+region number=4 material=oxide   x.min=-1.6 x.max=-0.1 y.min=-0.5 y.max=-0.05
+region number=4 material=oxide   x.min=0.1 x.max=1.6 y.min=-0.5 y.max=-0.05
+region number=4 material=oxide   x.min=-0.1 x.max=0.1 y.min=-0.5 y.max=-0.2
+
+
+electrode name=anode x.min=-2 x.max=-1.6 y.min=-0.5 y.max=-0.05 ^helm
+electrode name=cathode x.min=1.6 x.max=2. y.min=-0.5 y.max=-0.05 ^helm
+
+
+# parametrs for free-carrier absorption model ABS.FCARRIER, 
+# given by: 
+# R.Soren, B. Benett, IEEE J of QE, v 23, n. 1 , 1987, pp. 123-129
+# R.Soren, B. Benett, IEEE J of QE, v 23, n. 12 , 1987, pp. 2159-2166
+#
+# delta_refraction= -(FC.RN*n^FC.EXPRN+FC.RP*p^FC.EXPRP)
+# delta_absorption=  (FC.AN*n^FC.EXPAN+FC.AP*p^FC.EXPAP)
+#
+# These parameters are default for Si, Ge, Polysilicon
+#
+material material=silicon  fc.an=6.0e-18 fc.ap=4.0e-18 fc.expan=1 fc.expap=1
+material material=silicon  fc.rn=6.2e-22 fc.rp=6.0e-18 fc.exprn=1 fc.exprp=0.8
+
+
+
+doping p.type conc=1e16 uniform  material=silicon
+doping p.type conc=1e20 uniform x.min=-2 x.max=-0.3 y.max=0  material=silicon
+doping n.type conc=1e20 uniform x.min=0.3 x.max=2   y.max=0  material=silicon
+
+
+models consrh conmob bgn fermi  abs.fcarrier 
+
+#
+# REFR.INDEX will store material index into the structure file
+# WCGD.REFR  will store effective refractive index into the IV log file
+
+output refr.index wvgd.refr flowlines con.band val.band 
+
+# Optionally, optical field profiles can be stored
+# output ex.opt ey.opt hx.opt hy.opt ez.opt hz.opt 
+
+method climit=1e-4
+
+
+#
+#  You can probe material index at a location and store it into IV log file
+#
+
+probe refr.real x=0.0 y=-0.1     name=Refr_i
+probe refr.real x=-0.1 y=-0.03   name=Refr_p
+probe refr.real x= 0.1 y=-0.03   name=Refr_n
+
+solve init
+
+#
+#  TRACE parameter on the WAVEGUIDE statement means that Helmholtz eq-n
+#  will be solved for each bias
+#
+
+waveguide  trace v.helm  wavelength=1.31   nmode=10  ly.max=0.8 index.model=1
+
+
+solve prev
+
+#
+# Save spatial profiles
+save outfile=laserex12_v0.str 
+tonyplot laserex12_v0.str -set laserex12_v0.set
+
+# Save  spectrum of material refractive index
+save refr.spec=laserex12_refrspec_v0.log   emin=0.1 emax=10 nsamp=500 x=0.0 y=-0.1
+tonyplot laserex12_refrspec_v0.log -set laserex12_refrspec_v0.set
+
+
+#
+#  DC simulation
+#
+
+
+log outfile=laserex12_IV.log
+solve vgate=0.0  vstep=0.2  vfinal=2 name=anode
+save outfile=laserex12_v2.str 
+log off
+tonyplot laserex12_IV.log -set laserex12_IV.set
+
+#
+# Time dependent simulation
+#
+
+method  dt.max=1e-10 
+
+solve init
+solve prev
+
+log outfile=laserex12_train.log
+solve vanode=2   dt=1e-12  ramptime=1e-10 tstop=1e-9 
+solve vanode=0   dt=1e-12  ramptime=1e-10 tstop=2e-9
+solve vanode=2   dt=1e-12  ramptime=1e-10 tstop=3e-9 
+solve vanode=0   dt=1e-12  ramptime=1e-10 tstop=4e-9 
+solve vanode=2   dt=1e-12  ramptime=1e-10 tstop=5e-9 
+solve vanode=0   dt=1e-12  ramptime=1e-10 tstop=6e-9
+log off
+eye.diagram inf=laserex12_train.log outf=laserex12_eye.log period=1e-9 t.start=0
+
+
+tonyplot laserex12_train.log -set laserex12_train.set
+tonyplot laserex12_eye.log -set laserex12_eye.set
+

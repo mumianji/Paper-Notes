@@ -1,0 +1,171 @@
+# (c) Silvaco Inc., 2018
+# An example of a double hetrostructure bipolar transitor.
+# The device is built using Atlas and incorporates doping
+# profiles sepecified by external ASCII files.
+
+go atlas 
+
+mesh
+
+x.mesh loc=0.0 spac=0.05
+x.mesh loc=0.3 spac=0.05
+x.mesh loc=0.6 spac=0.05
+x.mesh loc=1.0 spac=0.05
+
+y.mesh loc=0.0 spac=0.02
+y.mesh loc=0.048 spac=0.01
+y.mesh loc=0.05 spac=0.01
+y.mesh loc=0.052 spac=0.01
+y.mesh loc=0.06 spac=0.01
+y.mesh loc=0.145 spac=0.01
+y.mesh loc=0.15 spac=0.01
+y.mesh loc=0.151 spac=0.005
+y.mesh loc=0.18 spac=0.01
+y.mesh loc=0.19 spac=0.01
+y.mesh loc=0.2 spac=0.01
+y.mesh loc=0.21 spac=0.002
+y.mesh loc=0.2199 spac=0.0001
+y.mesh loc=0.22 spac=0.005
+y.mesh loc=0.2201 spac=0.0001
+y.mesh loc=0.23 spac=0.005
+y.mesh loc=0.26 spac=0.01
+y.mesh loc=0.29 spac=0.005
+y.mesh loc=0.2999 spac=0.0001
+y.mesh loc=0.3 spac=0.05
+y.mesh loc=0.301 spac=0.001
+y.mesh loc=0.31 spac=0.005
+y.mesh loc=0.32 spac=0.005
+y.mesh loc=0.34 spac=0.05
+y.mesh loc=0.7 spac=0.03
+y.mesh loc=0.72 spac=0.005
+y.mesh loc=0.721 spac=0.005
+y.mesh loc=0.725 spac=0.01
+y.mesh loc=1.0 spac=0.07
+
+
+region num=1  material=oxide 
+region num=2  material=InGaAs x.min=0.0 x.max=0.3 y.min=0.0 y.max=0.15 x.comp=0.47   
+region num=3  material=InP x.min=0.0 x.max=0.3 y.min=0.15 y.max=0.22  
+region num=4  material=InGaAs x.min=0.0 x.max=0.6 y.min=0.22 y.max=0.3 x.comp=0.47   
+region num=5  material=InP x.min=0.0 x.max=1.0 y.min=0.3 y.max=1.0
+
+
+electrode num=1 name=emitter x.min=0.0 x.max=0.3 y.min=0.0 y.max=0.0
+electrode num=2 name=base x.min=0.45 x.max=0.6 y.min=0.22 y.max=0.22
+electrode num=3 name=collector bottom
+
+# ########################
+
+# Here two ASCII files are called to specify the doping properties.
+# hbtex08_n will provide n type doping and hbtex08_p will provide
+# p type doping. Each file can be viewed by selecting the file
+# name i.e. hbtex08_p and then pulling down the tool menu in tonyplot
+# and selecting TextEditor whilst the file name is still highlighted.
+# By performing a vertical cutline through the structure i.e hbtex08.str
+# the doping profiles can be easily viewed.
+
+doping x.min=0.0 x.max=1.0 y.min=0.0 y.max=1.0 n.type ascii infile=hbtex08_n.dat
+doping x.min=0.0 x.max=1.0 y.min=0.0 y.max=1.0 p.type ascii infile=hbtex08_p.dat
+
+mobility material=InP f.conmun=hbtex08_InP_skr.lib f.conmup=hbtex08_InP_skr.lib
+mobility material=InGaAs f.conmun=hbtex08_InGaAs_skr.lib f.conmup=hbtex08_InGaAs_skr.lib
+
+model fermi print cubic35
+
+method climit=1e-4
+output band.param con.band val.band e.mob h.mob flowlines u.srh u.auger
+
+solve init
+solve previous
+save outf=hbtex08.str
+
+tonyplot hbtex08.str -set hbtex08_doping.set
+
+#quit
+
+# NB. 
+# v3 means a voltage on electrode 3 which is the collector.
+# v2 means a voltage on electrode 2 which is the base.
+
+solve v3=0.0001 
+solve v3=0.001 
+solve v3=0.01 
+solve v3=0.1 
+solve v3=2
+
+solve v2=0.0001 
+solve v2=0.001 
+solve v2=0.01 
+solve v2=0.1 
+solve vstep=0.05 vfinal=0.4 electrode=2
+
+log outf=hbtex08_IV.log
+
+solve
+solve vstep=0.05 vfinal=1.5 electrode=2
+
+save outfile=hbtex08_IV.str
+tonyplot hbtex08_IV.str
+tonyplot hbtex08_IV.log -set hbtex08_gummel.set
+tonyplot hbtex08_IV.log -set hbtex08_IV_dccurrentgain.set
+
+extract init infile="hbtex08_IV.log"
+extract name="Ic" y.val from curve(v."base",i."collector") where x.val=1.5
+extract name="Ib" y.val from curve(v."base",i."base") where x.val=1.5
+extract name="betamax" $Ic/$Ib
+
+#quit
+
+# Frequency analysis
+
+go atlas
+
+mesh infile=hbtex08.str
+
+mobility material=InP f.conmun=hbtex08_InP_skr.lib f.conmup=hbtex08_InP_skr.lib
+mobility material=InGaAs f.conmun=hbtex08_InGaAs_skr.lib f.conmup=hbtex08_InGaAs_skr.lib
+
+model fermi print cubic35
+
+method climit=1e-4
+output band.param con.band val.band
+
+load infile=hbtex08.str master
+solve previous
+
+solve v3=0.0001   ac freq=1e6
+solve v3=0.001    ac freq=1e6
+solve v3=0.01     ac freq=1e6
+solve v3=0.1      ac freq=1e6
+solve v3=0.5      ac freq=1e6
+solve v3=0.75     ac freq=1e6
+solve v3=1.0      ac freq=1e6
+
+solve v2=0.0001   ac freq=1e6
+solve v2=0.001    ac freq=1e6
+solve v2=0.01     ac freq=1e6
+solve v2=0.1      ac freq=1e6
+solve v2=0.5      ac freq=1e6
+solve v2=0.75     ac freq=1e6
+solve v2=1.0      ac freq=1e6
+
+log outf=hbtex08_freq.log gains inport=base outport=collector width=50
+
+solve  v2=1.0 v3=1.0 vstep=0.025 electrode=23 ac \
+	freq=1 fstep=10 nfstep=7 mult.freq   
+solve  v2=1.0 v3=1.0 vstep=0.025 electrode=23 ac freq=2e7    
+solve  v2=1.0 v3=1.0 vstep=0.025 electrode=23 ac freq=4e7    
+solve  v2=1.0 v3=1.0 vstep=0.025 electrode=23 ac freq=6e7    
+solve  v2=1.0 v3=1.0 vstep=0.025 electrode=23 ac freq=1e8    
+solve  v2=1.0 v3=1.0 vstep=0.025 electrode=23 ac freq=2e8    
+solve  v2=1.0 v3=1.0 vstep=0.025 electrode=23 ac freq=4e8    
+solve  v2=1.0 v3=1.0 vstep=0.025 electrode=23 ac freq=1e9    
+solve  v2=1.0 v3=1.0 vstep=0.025 electrode=23 ac freq=2.5e9    
+solve  v2=1.0 v3=1.0 vstep=0.025 electrode=23 ac freq=3.5e9    
+solve  v2=1.0 v3=1.0 vstep=0.025 electrode=23 ac freq=2.2e10 
+
+tonyplot hbtex08_freq.log -set hbtex08_freq_accurrentgain.set 
+tonyplot hbtex08_freq.log -set hbtex08_freq_unilateralpowergain.set
+
+
+quit

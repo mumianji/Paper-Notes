@@ -1,0 +1,103 @@
+<html>
+  <head>
+    <title>NMOS Second Breakdown Simulation</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>NMOS Second Breakdown Simulation</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>SSuprem 4/DevEdit/S-Pisces/Giga</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R, Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="mos2ex08_plot0.png" width="640" alt="mos2ex08_plot0" />
+      <p/>
+      <img src="mos2ex08_plot1.png" width="640" alt="mos2ex08_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates fabrication and second breakdown analysis of
+a short channel structure with non-isothermal energy balance models.
+</p>
+<ul>
+  <li>
+ A short channel MOSFET is created in Athena,
+<br/>
+  </li>
+  <li>
+ Regridding in DEVEDIT 
+<br/>
+  </li>
+  <li>
+  Selection of the coupled solution of energy balance and lattice heating equations
+<br/>
+  </li>
+  <li>
+  Electrical analysis using the curve tracer algorithm to trace the IV curve
+  </li>
+</ul>
+<p>
+Deep submicron devices should be simulated using the Energy Balance Model
+due to velocity overshoot, and nonlocal impact ionization effects,
+which could substantially influence device characteristics.  For high
+current levels, the thermal self-heating effects can also play an
+important role by decreasing mobility and impact ionization rate. This
+example demonstrates second breakdown simulation with the non-isothermal
+energy balance model using curve tracing algorithm.
+</p>
+<p>
+A fully coupled approach is used to solve five equations in this
+device. This provides much improved convergence over decoupled
+techniques used in older Atlas versions.
+</p>
+<p>
+The workfunction, interface charge and MOS models are set using the syntax as described in earlier examples. The
+energy balance equation for electrons and lattice energy balance
+equation  are set by
+<b> models hcte.el lat.temp</b> . The
+<b> impact </b> statement is used to assign the energy relaxation length for Selberherr
+model.  Thermal boundary conditions are required with any
+non-isothermal simulation. These are defined in the
+<b> thermcontact </b> statement.  A value of the thermal conductance is specified at the
+thermal contact located along the substrate. Thermal isolation
+conditions are assumed on the all other surfaces.
+</p>
+<p>
+The
+<b> curvetrace </b> statement is used to initialize parameters for curve tracing algorithm. A full description of the curve tracing syntax is included with the MOS snapback example.
+The gate voltage is ramped to 1V, and then the
+<b> solve curvetrace </b> statement is used to activate the curve tracing algorithm.
+</p>
+<p>
+Plotting the internal drain bias versus drain current in TonyPlot will
+display the second breakdown curve.  The resulting curve from Atlas
+shows several turning points. The second breakdown occurs at the final
+stage where the voltage drops sharply. At this point both the lattice
+and carrier temperatures are high.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

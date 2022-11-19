@@ -1,0 +1,82 @@
+go victoryprocess 
+
+# resolution
+set x=0.002
+set y=0.002
+set z=0.002
+
+set bminX=-0.015
+set bmaxX=0.015
+set bminY=-0.002
+set bmaxY=0.002
+
+set subs_thick=0.02
+set mask_thick=0.02
+set tot_thick=$subs_thick + $mask_thick + 0.005
+
+set CD=10
+
+
+Init material=chromium depth=$subs_thick  gasHeight=$tot_thick \
+ from="$bminX, $bminY" to="$bmaxX, $bmaxY" \
+     resolution="$x, $y, $z" flow.dim=3d
+
+set xh=0.0005*$CD
+Specifymaskpoly maskname=HARD P1="-0.05, -0.1" P2="-0.05, 0.1" P3="-$xh, 0.1" P4="-$xh, -0.1"
+Specifymaskpoly maskname=HARD add P1="0.05, -0.1" P2="0.05, 0.1" P3="$xh, 0.1" P4="$xh, -0.1"
+Depo conformal thickness=$mask_thick material=diamond
+
+
+Etch DRY thickness=$mask_thick+0.0005 material=diamond mask="HARD" 
+Save name=vpex05_0
+Export structure=vpex05_0.str 
+
+set seceff=0.8
+set alloy_density_coeff=0.8
+set alloy_density=7.19*$alloy_density_coeff
+
+Material material="alloy" ionmill.useparametersfrom="chromium" \
+         ionmill.parameter="massDensity"   ionmill.parameterValue="$alloy_density"
+
+IonMill beamAngle=5.0 beamdivergence=5 rotation=on time=5 min \
+        ion=Ar energy=250 currentdensity=1.5 redepmaterial=alloy \
+        secefficiency=$seceff secLimit=0.15 reflectX=0 reflectY=2 \
+        solver="LAX_FRIEDRICH" autoRef  maxCFL=0.25
+
+
+Save name=vpex05_1
+Export structure=vpex05_1.str 
+
+
+# Visualization and extraction
+
+tonyplot3d vpex05_1.str -set vpex05_0.set
+
+# Generate 2D structure for etch depth and sidewall slope
+
+Export 2D structure=vpex05_2.str YCENTER
+tonyplot vpex05_2.str
+
+# Analyse the 2D cut
+
+# Extract trench depth and slope 
+extract init infile="vpex05_2.str"
+extract name="b" thickness material="chromium" mat.occno=1 x.val=0
+extract name="thick" thickness material="chromium" mat.occno=1 x.val=-0.0148
+
+# Etch depth in microns
+extract name="d" ($"thick" - $"b")/10000.0
+
+
+extract name="x09" thickness material="chromium" mat.occno=1 y.val=0.9*$d
+extract name="x01" thickness material="chromium" mat.occno=1 y.val=0.1*$d
+extract name="slope" 0.8*$"d"/($"x09" - $"x01")*10000.0
+extract name="angle" atan($"slope")*180.0/3.1415926
+
+# Comparison of Ion Milling rates for materials in the structure 
+system cp ratetable_Cr_ID264.str vpex05_Cr.str
+system cp ratetable_C_ID100.str vpex05_Diam.str
+system cp ratetable_Cr_ID59.str vpex05_alloy.str
+tonyplot -overlay vpex05_Diam.str vpex05_Cr.str vpex05_alloy.str 
+
+quit

@@ -1,0 +1,268 @@
+# (c) Silvaco Inc., 2018
+go devedit
+#
+# First we create  a randomly textured device using Devedit
+#
+region reg=1 mat=Silicon color=0xffcc00 pattern=0x4 \
+	polygon="2,-0.3 3.5,1 4.5,-0.1 5,1.1 6.5,-0.3 7.5,0.8 8,-0.2 9,1 \
+	9,10.0 0.0,10.0 0.0,1"
+#
+impurity id=1 region.id=1 imp=Boron \
+        peak.value=1e+15 ref.value=1000000000000 comb.func=Multiply
+#
+constr.mesh region=1 default
+#
+# Set Meshing Parameters
+#
+base.mesh height=0.5 width=0.5
+#
+bound.cond !apply max.slope=30 max.ratio=100 rnd.unit=0.001 line.straightening=1 align.points when=automatic
+#
+constr.mesh max.angle=90 max.ratio=300 max.height=1000 \
+	max.width=1000 min.height=0.0001 min.width=0.0001
+#
+constr.mesh type=Semiconductor default
+constr.mesh type=Insulator default
+constr.mesh type=Metal default
+constr.mesh type=Other default
+constr.mesh region=1 default
+#
+constr.mesh id=1 x1=0 y1=-0.5 x2=100000 y2=1.2 default max.height=0.1 max.width=0.2
+Mesh Mode=MeshBuild
+#
+# Save the initial structure
+#
+struct outf=solarex06_0.str
+#
+#############################
+#
+go athena
+#
+# We perform some diffusion in ATHENA
+#
+method full.cpl 
+diffuse time=10 min temp=900 c.phosphor=2e20
+#
+# Save the new structure
+#
+struct outf=solarex06_1.str
+#
+#############################
+#
+go devedit
+#
+# Add Air and cathode electrode and remesh
+#
+deposit reg.id=2 mat=Air thickness=3.0
+#
+region reg=3 name=cathode mat=Aluminum elec.id=1 work.func=0 color=0xffc8c8 pattern=0x7 \
+	polygon="0,-0.5 2,-0.5 2,-0.3 0,1"
+#
+# Set Meshing Parameters
+#
+base.mesh height=0.5 width=0.5
+#
+bound.cond !apply max.slope=28 max.ratio=300 rnd.unit=0.001 line.straightening=1 align.points when=automatic
+#
+imp.refine imp="Net Doping" scale=log
+imp.refine min.spacing=0.04
+#
+constr.mesh max.angle=90 max.ratio=300 max.height=10000 \
+	max.width=10000 min.height=0.0001 min.width=0.0001
+#
+constr.mesh type=Semiconductor default
+constr.mesh type=Insulator default
+constr.mesh type=Metal default
+constr.mesh type=Other default
+constr.mesh region=1 default
+constr.mesh region=2 default
+constr.mesh region=3 default
+Mesh Mode=MeshBuild
+#
+# Save final structure
+#
+struct outf=solarex06_2.str
+#
+#############################
+#
+# RAY TRACING SIMULATION
+#
+#############################
+#
+go atlas
+#
+# Read in the previously defined structure
+#
+mesh inf=solarex06_2.str
+#
+# Name the bottom electrode anode.
+#
+elec name=anode bottom
+#
+# This is to pick up the default complex index of refraction data
+# for aluminum from the Sopra data base.
+#
+material mat=aluminum sopra=Al.nk
+#
+# We enable Shockley-Read-Hall recombination.  In
+# most cases of photodetection it is important to
+# model recombination as a competing process that
+# has direct effects on terminal quantum efficiency.
+#
+models srh
+#
+# Here we specify that the cathode region does not
+# reflect light.  This enables better comparison
+# with FDTD.  In FDTD metal reflection is modeled
+# by the electric and magnetic conductivity.  Such
+# considerations are outside the scope of this
+# example.
+#
+contact name=cathode reflect=0
+#
+# Enable output of optical intensity to the structure
+# file.
+output opt.intens
+#
+# Here we define the optical source.  In this case the source is
+# directly above the device propagating directly down on the
+# device.  We ignore back side reflections and limit the maximum
+# number of reflections traced to 2.  Lastly, we specify
+# a monochromatic source at a wavelength of 0.5 microns.  In
+# this example we choose a monochromatic source to expedite the
+# example.  The multispectral solar example is completely analogous
+# to this but the simulation time goes up linearly with the number
+# of spectral samples.
+#
+beam x.o=5.0 y.o=-4.0 angle=90 front.refl ^back.refl reflects=2 wavelength=0.623
+#
+# Include this parameter assignment for multi-spactral AM1.5 solar spectrum.
+#
+# power.file=solarex06_15.spec
+#
+# Here we extract the dark characteristics
+#
+solve init
+log outf=solarex06_0.log
+solve vanode=0 name=anode vstep=0.025 vfinal=0.5
+log off
+#
+# Next we extract the lighted characteristics for ray trace.
+#
+solve init
+solve b1=1.0
+log outf=solarex06_1.log
+solve vanode=0 name=anode vstep=0.025 vfinal=0.55
+#
+# Last we use the EXTRACT capability to measure various
+# meaningful parameters
+# 
+extract init infile="solarex06_1.log"
+extract name="Jsc" y.val from curve(v."anode", i."anode") where x.val=0.0
+extract name="Voc" x.val from curve(v."anode", i."anode") where y.val=0.0
+extract name="Pm" min(curve(v."anode", (v."anode" * i."anode")))
+extract name="Vm" x.val from curve(v."anode", (v."anode"*i."anode") ) \
+        where y.val=$"Pm"
+extract name="Im" $"Pm"/$"Vm"
+extract name="FF" $"Pm"/($"Jsc"*$"Voc")
+extract name="Opt_int" max(beam."1")
+extract name="Power_Eff" (abs($"Pm")/($Opt_int*9*1e-4*1e-4))*100
+##########################################
+#
+# FINITE DIFFERENCE TIME DOMAIN SIMULATION
+#
+##########################################
+#
+go atlas
+#
+# Read in the previously defined structure
+#
+mesh infile=solarex06_2.str
+#
+# Name the bottom electrode anode.
+#
+elec name=anode bottom
+#
+# This is to pick up the default complex index of refraction data
+# for aluminum from the Sopra data base.
+#
+material mat=aluminum sopra=Al.nk
+#
+# We enable Shockley-Read-Hall recombination.  In
+# most cases of photodetection it is important to
+# model recombination as a competing process that
+# has direct effects on terminal quantum efficiency.
+#
+models srh
+#
+#
+# Enable output of optical intensity to the structure
+# file.
+output opt.intens
+#
+# Here we define the optical source.  In this case the source is
+# directly above the device propagating directly down on the
+# device.  We ignore back side reflections and limit the maximum
+# number of reflections traced to 2.  Lastly, we specify
+# a monochromatic source at a wavelength of 0.5 microns.  In
+# this example we choose a monochromatic source to expedite the
+# example.  The multispectral solar example is completely analogous
+# to this but the simulation time goes up linearly with the number
+# of spectral samples.
+#
+# The FDTD parameter enables finite difference time domain simulation.
+# set TD.SRATE=20 which define the spacial sampling. Set PROP.LENG to 
+# the longest side of the device plus the width of the PMLs and multiply 
+# by 1.5 or 2. Set TD.ERR to 0.01 Use this number to control the 
+# accuracy/time trade off. TD.FILE specifies a file to output the FDTD 
+# grid solution.  TD.LOG specifies a file to output the FDTD time domain 
+# iteration data. SUBNX and SUBNY specify  subsampling numbers for 
+# outputting the FDTD mesh. 
+
+beam num=1 x.origin=0.0 y.origin=-4 angle=90.0  wavelength=0.623 \
+	fdtd td.srate=20 prop.leng=30 big.index td.err=0.01 \
+        td.file="solarex06_3" td.log="solarex06_2.log" subnx=200 subny=200 
+
+# The following two statements place perfectly matching layers at top and bottom 
+# of the device to prevent spurious reflections at the boundaries of the simulation 
+# domain. Set the width of the PMLs to a number on the order of the device dimension 
+# (say 1/2 dimension)
+
+pml top     degree=1 width=5 r90=0.0001
+pml bottom  degree=1 width=5 r90=0.0001 material=silicon
+#
+# Here we extract the lighed characteristics for FDTD.
+#
+solve init
+solve b1=1.0
+save outf=solarex06_4.str
+log outf=solarex06_3.log
+solve vanode=0 name=anode vstep=0.1 vfinal=0.3
+solve vstep=0.01 name=anode vfinal=0.55
+#
+$ Use the EXTRACT capability to measure various
+# meaningful parameters.
+# 
+extract init infile="solarex06_3.log"
+extract name="Jsc" y.val from curve(v."anode", i."cathode") where x.val=0.0
+extract name="Voc" x.val from curve(v."anode", i."cathode") where y.val=0.0
+extract name="Pm" max(curve(v."anode", (v."anode" * i."cathode")))
+extract name="Vm" x.val from curve(v."anode", (v."anode"*i."cathode") ) \
+        where y.val=$"Pm"
+extract name="Im" $"Pm"/$"Vm"
+extract name="FF" $"Pm"/($"Jsc"*$"Voc")
+extract name="Opt_int" max(beam."1")
+extract name="Power_Eff" (abs($"Pm")/($Opt_int*9*1e-4*1e-4))*100
+# 
+# Plot a comparison of the illuminated characteristics.
+#
+tonyplot -overlay solarex06_1.log solarex06_3.log -set solarex06_0.set
+#
+# Plot the FDTD log file error residual
+#
+tonyplot solarex06_2.log -set solarex06_1.set
+#
+# Plot intensity on the FDTD mesh
+#
+tonyplot solarex06_3.str -set solarex06_2.set
+quit

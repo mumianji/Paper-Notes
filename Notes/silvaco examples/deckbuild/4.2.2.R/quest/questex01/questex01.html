@@ -1,0 +1,49 @@
+<html>
+  <head>
+    <title>Create Electrodes</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Create Electrodes</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>QUEST</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>QUEST 2.0.2.R</i></td>
+      </tr>
+    </table>
+    <div id="text" >
+<p>
+This example demonstrate how to created electrodes in QUEST. An electrode is the
+association of a label and a pad. To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+<p>
+The GDSII file can be viewed in MaskViews, Expert or any other layout editing tool that can read GDSII format.
+</p>
+<p>
+The GDS file is an octogonal inductor where only the &quot;IN&quot; label is present.  The objective
+is to create the &quot;OUT&quot; label and pads for both &quot;IN&quot; and &quot;OUT&quot;.
+To create labels the
+<i> addlabel </i> command is used. Label name and coordinates are specified.
+To create pads addpad command is used. This command used the existing labels in the
+GDS and automatically create corresponding pads with the size and datatype provided
+by the user.
+</p>
+  </div></body>
+</html>

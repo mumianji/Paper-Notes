@@ -1,0 +1,95 @@
+<html>
+  <head>
+    <title>SEU Induced Gate Rupture (SEGR) in a Power MOSFET</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>SEU Induced Gate Rupture (SEGR) in a Power MOSFET</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>SSuprem 4/S-Pisces</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R, Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="powerex15_plot0.png" width="640" alt="powerex15_plot0" />
+      <p/>
+      <img src="powerex15_plot1.png" width="640" alt="powerex15_plot1" />
+      <p/>
+      <img src="powerex15_plot2.png" width="640" alt="powerex15_plot2" />
+      <p/>
+      <img src="powerex15_plot3.png" width="640" alt="powerex15_plot3" />
+      <p/>
+      <img src="powerex15_plot4.png" width="640" alt="powerex15_plot4" />
+      <p/>
+      <img src="powerex15_plot5.png" width="640" alt="powerex15_plot5" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This examples demonstrates how an SEU strike in a power MOSFET can create a
+high transitory gate field sufficient to rupture the gate oxide.  Experimnets
+have shown that a transitory breakdown field across the gate oxide that only
+lasts for pico-second time scales, is sufficient to rupture the gate causing
+permanant damage to the device.
+</p>
+<p>
+A gate rupture event is dependent on both the device bias and the LET of the
+SEU strike.  The bias that creates the most sensitive conditions for a gate
+rupture event occurs when the field across the gate oxide from the gate bias
+is in the same direction as the additional field from the induced charges from
+the SEU event.  When this condition occurs, the existing field across the
+device from the gate bias is re-enforced by the additional field created by
+the SEU induced charge track, thus minimizing the LET required from the SEU
+strike to cause a gate rupture event.
+</p>
+<p>
+The example creates a power MOSFET structure using the Athena process
+simulator.  Circular symmetry is then used for the device simulations, where
+the center of the cylindrical device is at X=0 (the left hand side of the
+structure).
+</p>
+<p>
+An SEU strike with an LET of 37.2 (corresponding to a Bromine Ion), is
+simulated, with the strike occuring at the center of the device (X=0).  At the
+time of the SEU strike, a bias of -13.9 volts is applied to the gate and
+30 volts on the drain.  This bias condition creates a near critical condition
+close to that required for a gate rupture event to occur.
+</p>
+<p>
+The gate oxide field was probed near the strike, such that gate oxide field
+versus time could be plotted before, during and after the SEU strike.  After
+the SEU strike occurs, this critical reversed bias condition results in a
+peak gate oxide field that increases by over 3 times the field from just
+the DC bias condition alone.
+</p>
+<p>
+The evolution of the hole concentration distribution was also monitored
+at 5, 50 and 150 pico seconds after the strike. The drain current was
+simulated over a longer time span.  Just for completeness sake the breakdown
+voltage and unsaturated threshold voltage (for Vd=0.1 volts) were also
+simulated.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

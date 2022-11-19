@@ -1,0 +1,57 @@
+<html>
+  <head>
+    <title>Oxidation Induced Stress Enhanced Etch Rate</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Oxidation Induced Stress Enhanced Etch Rate</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>SSUPREM4, Elite, MC DEPOSIT/ETCH</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="anelex31_plot0.png" width="640" alt="anelex31_plot0" />
+      <p/>
+      <img src="anelex31_plot1.png" width="640" alt="anelex31_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example demonstrates the stress enhanced etching using
+the Elite module of Athena.  A simple trench is etched into the silicon
+substrate through a region near a bird&apos;s beak.  This region
+contains two high Sxy stress areas developed after oxidation.
+Oxidation is simulated using a stress-dependent viscous model.
+</p>
+<p>
+A standard
+<b> RIE </b> etching machine is defined using the
+<b> RATE.ETCH </b> statement.
+Stress enhancement of the etch rate is specified in the
+<b> RATE.DOPE </b> statement.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

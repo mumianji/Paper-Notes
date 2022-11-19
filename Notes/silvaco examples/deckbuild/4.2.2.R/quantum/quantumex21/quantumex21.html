@@ -1,0 +1,84 @@
+<html>
+  <head>
+    <title>Spectral and Angular Response</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Spectral and Angular Response</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>S-Pisces/Quantum</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="quantumex21_plot0.png" width="640" alt="quantumex21_plot0" />
+      <p/>
+      <img src="quantumex21_plot1.png" width="640" alt="quantumex21_plot1" />
+      <p/>
+      <img src="quantumex21_plot2.png" width="640" alt="quantumex21_plot2" />
+      <p/>
+      <img src="quantumex21_plot3.png" width="640" alt="quantumex21_plot3" />
+      <p/>
+      <img src="quantumex21_plot4.png" width="640" alt="quantumex21_plot4" />
+      <p/>
+      <img src="quantumex21_plot5.png" width="640" alt="quantumex21_plot5" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+In this example, we simulate intersubband GaAs/AlGaAs n-type multiple quantum
+well infrared photodetector (QWIP). We optimized the material and geometrical
+aspects of the QWIP to tune the wavelength of its peak responsivity, and to
+eliminate all but one bound state per well.
+</p>
+<p>
+At a voltage bias commonly found in experimental conditions for these systems,
+we calculate the optical gain, and estimate the radiative capture rate of the
+device. We confirm the radiative capture to be much slower than the known
+phonon-driven capture for such detectors.
+</p>
+<p>
+Intersubband n-type QWIP detectors only operate at oblique incidence angles.
+We simulate the response of the detector for angles ranging from 0 to 80 degrees
+with respect to the normal, and close to the wavelength of peak response.
+The results take into account the coherent multiple reflections of radiation
+inside the active region thanks to the Transfer Matrix Method used.
+</p>
+<p>
+We simulate the spectral response of the detector, obtaining the absorption
+and the generated photocurrent for a beam at 30 degrees with respect to the
+normal. The physical structure and material properties of the device allow
+only 1 bound state to exist. We set WELL.CNBS=2 in order to allow Atlas to
+search for up to two states, and we confirm in the output that only 1 state
+exists. This is why the bound-bound transition contribution to spontaneous
+emission is zero. A non-zero contribution would indicate the existence of
+multiple bound states, and therefore, degraded device performance.
+</p>
+<p>
+Detailed description of models and corresponding parameters used in this
+simulation can be found directly in the input deck.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

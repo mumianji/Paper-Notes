@@ -1,0 +1,66 @@
+<html>
+  <head>
+    <title>3D Coaxial Solar cell</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>3D Coaxial Solar cell</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Device 3D/Luminous</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="solarex14_plot0.png" width="640" alt="solarex14_plot0" />
+      <p/>
+      <img src="solarex14_plot1.png" width="640" alt="solarex14_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+The solar cell is a coaxial silicon nanowire, approximately 380 nanometers
+thick. The nanowire consists of three layers of silicon: a positively
+charged core; a thin intrinsic, or neutrally charged, inner shell; and
+a negatively charged outer shell. When a photon hits the nanowire, it
+generates a pair of charges: an electron and a hole. The charges then
+radially move electrons outward from the center to a contact in the shell,
+holes move inward to a contact in the core. The advantage of the circular
+cross section is that the electrons and holes must move across a much
+shorter distance than they would in a flat cell to reach the contacts
+that collect them and send electricity flowing out of the device.
+</p>
+<p>
+In Atlas3D, the
+<b> CYLINDRICAL</b> parameter enables you to create a general cylindrical structure. The MESH
+statement must appear as:
+<b> MESH THREE.D CYLINDRICAL</b> where the
+<b> THREE.D</b> parameter informs the simulator to create a fully 3D mesh.
+When specifying
+the
+<b> CYLINDRICAL</b> parameter, you must now specify the structure in terms of radius, angle,
+and cartesian Z coordinates.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

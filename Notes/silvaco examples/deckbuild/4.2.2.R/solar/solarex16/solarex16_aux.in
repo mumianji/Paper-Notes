@@ -1,0 +1,160 @@
+go athena
+
+set Height_pyr=5
+set Length_half_pyr=5
+set Si_thick=50
+set pyramid=1
+
+line x loc=0.00 spac=$Length_half_pyr/5 
+line x loc=$Length_half_pyr spac=$Length_half_pyr/5
+
+line y loc=0.00 	spac=$Si_thick/10 
+line y loc=$Si_thick   	spac=$Si_thick/10
+
+initialize silicon two.d c.boron=7e16
+
+Deposit silicon thickness=$Height_pyr div=10 c.boron=7e16
+
+# If pyramid=0 ==> flat surface. Allow to compare results with pyramid=1
+IF cond=($pyramid=1)
+
+etch material=silicon 	start x=$Length_half_pyr y=-$Height_pyr
+etch 			cont  x=0 y=0
+etch 			done  x=0 y=-$Height_pyr
+
+IF.END
+
+structure mirror right
+
+go devedit
+
+base.mesh height=2 width=0.5
+
+bound.cond !apply max.slope=30 max.ratio=100 rnd.unit=0.001 line.straightening=1 align.points when=automatic
+
+constr.mesh max.angle=90 max.ratio=300 max.height=1000 \
+	max.width=1000 min.height=0.0001 min.width=0.0001
+constr.mesh id=1 x1=0 y1=1 x2=$Length_half_pyr*2 y2=-5 default max.height=0.2 max.width=0.2
+
+Mesh Mode=MeshBuild
+
+go athena
+
+method full.cpl high.conc
+
+implant phosph dose=5e15 energy=10
+diffus time=30 temp=1000
+
+deposit material=oxide thickness=0.025 div=5
+
+# to define the number of pyramid. Number=2 corresponds to 2^2=4 pyramids
+set number=2
+set i=-1
+loop steps=$number
+  set i = $i + 1
+  structure mirror right
+l.end
+
+etch material=oxide 	start x=$Length_half_pyr-0.25 y=0
+etch 			cont  x=$Length_half_pyr-0.25 y=-$Height_pyr-1
+etch 			cont  x=$Length_half_pyr+0.25 y=-$Height_pyr-1
+etch 			done  x=$Length_half_pyr+0.25 y=0
+ 
+deposit material=Aluminum thickness=1 
+
+etch aluminum right p1.x=$Length_half_pyr+0.5
+etch aluminum left p1.x=$Length_half_pyr-0.5
+
+structure flip.y
+
+deposit material=oxide thickness=0.5
+
+etch material=oxide 	start x=0 y=-$Si_thick
+etch 			cont  x=0 y=-$Si_thick-10
+etch 			cont  x=4 y=-$Si_thick-10
+etch 			done  x=4 y=-$Si_thick
+
+deposit material=Aluminum thickness=0.5
+
+etch above aluminum p1.y=-$Si_thick-0.5
+
+structure flip.y
+
+electrode name=anode x=1 y=$Si_thick+0.25
+electrode name=cathode x=$Length_half_pyr y=-$Height_pyr-0.5
+
+structure outfile=solarex16_0_$"Length_half_pyr".str
+
+set Length=$Length_half_pyr*2*(2*$number)
+
+go devedit
+
+init inf=solarex16_0_$"Length_half_pyr".str
+
+base.mesh height=2 width=0.5
+
+bound.cond !apply max.slope=30 max.ratio=100 rnd.unit=0.001 line.straightening=1 align.points when=automatic
+
+constr.mesh max.angle=90 max.ratio=300 max.height=1000 \
+	max.width=1000 min.height=0.0001 min.width=0.0001
+constr.mesh id=1 x1=0 y1=1 x2=$Length y2=-$Height_pyr default max.height=0.2 max.width=0.2
+constr.mesh id=2 x1=0 y1=49.5 x2=4 y2=50 default max.height=0.05 max.width=0.5
+
+Mesh Mode=MeshBuild
+
+structure outf=solarex16_1_$"Length_half_pyr".str
+
+go atlas 
+
+mesh inf=solarex16_1_$"Length_half_pyr".str 
+
+doping uniform p.type conc=1e20 y.min=$Si_thick-0.5 y.max=$Si_thick x.min=0 x.max=4
+
+material material=Aluminum sopra=Al.nk
+
+material taun0=1000e-6 taup0=1000e-6 
+
+# Back dielectric Surface Recombination 
+interface p1.x=4 p2.x=$Length p1.y=50 p2.y=50 s.n=100 s.p=15 s.i
+
+models consrh conmob analytic temp=300 print
+
+output band.param con.band val.band flowlines
+
+solve init
+
+method newton autonr maxtrap=10 itlimit=50
+
+log outfile=solarex16_0_$"Length_half_pyr".log 
+solve vanode=0 vstep=0.02 vfinal=0.75 name=anode 
+log off
+
+beam num=1 x.orig=15 y.orig=-7 angle=90 power.file=solarex16.spec \
+           wavel.start=0.3 wavel.end=1.2 reflect=2 back.reflect
+
+probe name=inten beam=1 intensity
+
+solve b1=1e-05
+solve b1=1e-04
+solve b1=1e-03
+solve b1=1e-02
+solve b1=0.1
+solve b1=1
+solve b1=1.2
+
+log outfile=solarex16_1_$"Length_half_pyr".log 
+solve vanode=0 vstep=0.02 vfinal=0.76 name=anode  
+ 
+extract init inf="solarex16_1_$'Length_half_pyr'.log"
+extract name="Jsc" y.val from curve(v."anode", i."anode") where x.val=0.0
+extract name="JscmAcm2" $Jsc*1e08*1e03/$Length
+extract name="Voc" x.val from curve(v."anode", i."anode") where y.val=0.0 
+extract name="Pm" min(curve(v."anode", (v."anode" * i."anode"))) 
+extract name="Vm" x.val from curve(v."anode", (v."anode"*i."anode") ) \
+	where y.val=$"Pm"
+extract name="Im" $"Pm"/$"Vm"
+extract name="FF" ($"Pm"/($"Jsc"*$"Voc"))*100
+extract name="intens" max(probe."inten")
+extract name="Eff" (-1e8*$Pm/($"intens"*$Length))*100
+
+quit

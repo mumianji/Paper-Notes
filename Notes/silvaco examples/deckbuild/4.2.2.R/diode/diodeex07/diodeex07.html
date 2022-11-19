@@ -1,0 +1,94 @@
+<html>
+  <head>
+    <title>Gunn Diode</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Gunn Diode</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>DevEdit/Blaze</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="diodeex07_plot0.png" width="640" alt="diodeex07_plot0" />
+      <p/>
+      <img src="diodeex07_plot1.png" width="640" alt="diodeex07_plot1" />
+      <p/>
+      <img src="diodeex07_plot2.png" width="640" alt="diodeex07_plot2" />
+      <p/>
+      <img src="diodeex07_plot3.png" width="640" alt="diodeex07_plot3" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This example shows the transient oscillatory behavior of a
+<b> Gunn </b> device due to
+the negative differential resistance of behavior exhibited by GaAs
+(as a result of electron intervalley transfer).
+</p>
+<p>
+In the first part of the input file the structure is defined within DevEdit.
+The device is a sandwich structure made up of 2 gold electrode layers on the
+top and bottom, one low doped transit layer in the middle and 2 high doped
+layers acting as low resistivity contact regions and carrier injectors.
+</p>
+<p>
+The thickness of the transit layer together with the applied electric field
+is one of the key design features determining the frequency of the oscillations.
+</p>
+<p>
+In the second part of the file, after the &apos;go atlas&apos; statement, transient device
+simulations are performed for different biases.
+</p>
+<p>
+After loading the structure from DevEdit, a load resistor is attached at
+the anode side with the
+<b> contact </b> statement. In order to model the negative differential velocity saturation
+behavior for electrons,
+<b> fldmob </b> in the model statement is
+specified together with the
+<b> evsatmod=1 </b> parameter.  This switches on the negative differential mobility model
+for GaAs like materials. As the function of holes is negligable, the
+solution of the hole continuity equation can be disabled by specifying
+<b> carriers=1.</b> </p>
+<p>
+By ramping up the bias of the anode to 2 V one can clearly see the effect of
+the negative resistance
+<b> extract </b> is used to calculate the critical electric field from the log-file. With the
+following stationary simulation it can be shown that the bias is not sufficient
+to feed an oscillation with the given load, the oscillation is damped. The
+frequency is calculated by extracting the time required of 4 full periods.
+</p>
+<p>
+In contrast, the device is able to operate at 4V bias. To monitor the movement
+of the domains, select several of the different electron distributions
+from different points in time (as 2d contours or the corresponding cutlines)
+displayed with TonyPlot at the end of the simulation, and make a movie using
+the
+<b> Tools: Movie </b> menu.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

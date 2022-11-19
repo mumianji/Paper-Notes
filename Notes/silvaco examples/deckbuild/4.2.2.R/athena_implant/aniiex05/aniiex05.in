@@ -1,0 +1,62 @@
+go athena
+# Dose Dependence of P Implants
+line x loc = 0.0  spac=0.1
+line x loc = 1.0  spac=0.1
+line y loc = 0    spac=0.01
+line y loc = 1.2  spac=0.01
+init 
+implant phos energy=100 dose=1.e13 tilt=0 rotation=0
+
+#
+extract name="p1" curve(depth,impurity="Phosphorus" material="Silicon" \
+        mat.occno=1 x.val=-10) outfile="aniiex05_01.dat"
+
+line x loc = 0.0  spac=0.1
+line x loc = 1.0  spac=0.1
+line y loc = 0    spac=0.01
+line y loc = 1.2  spac=0.01
+init 
+implant phos energy=100 dose=5.e13 tilt=0 rotation=0 
+
+#
+extract name="p1" curve(depth,impurity="Phosphorus" material="Silicon" \
+        mat.occno=1 x.val=-10) outfile="aniiex05_02.dat"
+
+
+line x loc = 0.0  spac=0.1
+line x loc = 1.0  spac=0.1
+line y loc = 0    spac=0.01
+line y loc = 1.2  spac=0.01
+init 
+implant phos energy=100 dose=2.e14 tilt=0 rotation=0 
+
+#
+extract name="p1" curve(depth,impurity="Phosphorus" material="Silicon" \
+        mat.occno=1 x.val=-10) outfile="aniiex05_03.dat"
+
+
+line x loc = 0.0  spac=0.1
+line x loc = 1.0  spac=0.1
+line y loc = 0    spac=0.01
+line y loc = 1.2  spac=0.01
+init 
+implant phos energy=100 dose=5.e14 tilt=0 rotation=0 
+
+#
+extract name="p1" curve(depth,impurity="Phosphorus" material="Silicon" \
+        mat.occno=1 x.val=-10) outfile="aniiex05_04.dat"
+
+
+line x loc = 0.0  spac=0.1
+line x loc = 1.0  spac=0.1
+line y loc = 0    spac=0.01
+line y loc = 1.2  spac=0.01
+init 
+implant phos energy=100 dose=1.e15 tilt=0 rotation=0 
+
+#
+extract name="p1" curve(depth,impurity="Phosphorus" material="Silicon" \
+        mat.occno=1 x.val=-10) outfile="aniiex05_05.dat"
+tonyplot -overlay aniiex05_*.dat aniiex05_*.exp -set aniiex05.set
+quit
+

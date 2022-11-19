@@ -1,0 +1,21 @@
+go athena
+
+#TITLE: POCl example
+
+line x loc=-1.00 spac=2.00 
+line x loc=1.00 spac=2.00 
+#
+line y loc=0.00 spac=.01 
+line y loc=0.05 spac=.02
+#
+init orientation=100 
+#
+deposit oxide thickness=0.02 div=3
+deposit poly  thickness=0.2 div=20
+
+method fermi compress grid.ox=.01
+diff time=40 temp=950 dryo2 press=0.8 c.phos=1e23
+
+structure outfile=andfex11.str
+tonyplot andfex11.str
+

@@ -1,0 +1,20 @@
+# (c) Silvaco Inc., 2018
+go internal 
+
+load infile=solarex13_aux.in 
+
+sweep parameter=nbcells type=list range="2, 3, 4, 5, 6, 9, 10"
+      
+save sdb outfile=solarex13.dat
+
+tonyplot -overlay solarex13_2cells.dat solarex13_3cells.dat solarex13_4cells.dat solarex13_5cells.dat solarex13_6cells.dat solarex13_9cells.dat solarex13_10cells.dat 
+# Efficiency
+tonyplot solarex13.dat -set solarex13_2.set
+# Jsc
+tonyplot solarex13.dat -set solarex13_3.set
+# dead/active area
+tonyplot solarex13.dat -set solarex13_4.set
+# Voc
+tonyplot solarex13.dat -set solarex13_5.set
+# FF
+tonyplot solarex13.dat -set solarex13_6.set

@@ -1,0 +1,83 @@
+<html>
+  <head>
+    <title>Proton Irradiation Damage in a 2N2222 Bipolar Transistor</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Proton Irradiation Damage in a 2N2222 Bipolar Transistor</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Athena Atlas</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Athena 5.22.3.R  Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="radex18_plot0.png" width="640" alt="radex18_plot0" />
+      <p/>
+      <img src="radex18_plot1.png" width="640" alt="radex18_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This examples demonstrates the simulation of proton irradiation damage in a
+2N2222 bipolar transistor.
+</p>
+<p>
+The 2N2222 bipolar transistor is one of the most common devices found in
+satellites, and is a standard benchmark for devices to be tested against.
+There are numerous manufacturers of this part number.  In this example,
+specifications were taken from an example made by ON Semiconductor.  The ON
+semiconductor device exhibits a base/emitter breakdown voltage of 6 Volts and a
+collector/base breakdown voltage of 70 Volts.  The floating base
+collector/emitter breakdown voltage is 40 Volts.  The minimum gain was
+specified at 100 when Vce=10 Volts.
+</p>
+<p>
+Not shown in this example, the base doing was simulated such that Veb=6 Volts
+with solid solubility doping in the emitter.  Once this base doping was known,
+the colletor doping was set such that Vcb&gt;70 Volts with the previously
+extracted base doping.  The base width was set such that the current gain was
+greater than 100 consistent with a floating base Vce&gt;40 Volts.
+</p>
+<p>
+Once the DC characteristics were satisfactory, proton irradiation was simulated
+with a proton fluence of 1e11, 1e12 and 1e13/cm2, as set in the
+<b> radiation</b> statement using the
+<b> flence</b> parameter.  The physical damage created by the proton irradiation is caused by
+the
+<b> Non Ionising Energy Loss (neil)</b> parameter, since it is presumed that the ionising part of the energy loss
+mechanism occurs by elastic scattering, and therefore creates no damage.
+Also set is the scaling factor parameter
+<b> dam.proton</b> and the energy of the in-coming protons.
+</p>
+<p>
+For each fluence simulation, the simulator creates bulk defects in proportion
+to the specified fluence, whose capture cross sections are specified in the
+<b> defects</b> statement, together with the
+<b> fluence.model</b> switch parameter.  The other defects statement in the input file is there
+because in this example, we are using a polysilicon emitter doping source, so a
+further defect statement is required to specify the defects in the polysilicon
+which obviously existed prior to irradiation.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+  </div></body>
+</html>

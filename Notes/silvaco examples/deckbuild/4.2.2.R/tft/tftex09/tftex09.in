@@ -1,0 +1,131 @@
+# (c) Silvaco Inc., 2018
+go internal
+
+#     Rules for Position of Grain Boundary 
+#     nlength < GrainStart+GrainLength < nlength+Lg
+#
+
+#
+# Set up 7 Device Specifications
+#
+set nlength=5
+set GateLength=6
+set GrainLength=0.1
+set GrainDeltaX=0.25
+set SiliconThickness=0.05
+set GateOxideThickness=0.15
+set BuriedOxideThickness=0.5
+
+# The following variables are used to automatically
+# create the mesh, regions, electrodes and  doping.
+#
+set HalfGateOxideThickness=$"GateOxideThickness"/2
+set HalfGateLength=$"GateLength"/2
+
+set GateStart=$"nlength"
+set GateEnd=$"GateStart" + $"GateLength"
+set GateSpace=$"GateLength" / 12
+set DrainGateSpace=$"GateSpace" / 2
+
+set GrainStart=$"GateStart"+$"GrainDeltaX"
+set GrainEnd=$"GrainStart"+$"GrainLength"
+set GrainSpace=$"GrainLength"/5
+
+set HalfSiliconThickness=$"SiliconThickness"/2
+set SiliconThicknessSpace=$"SiliconThickness"/100
+set HalfSiliconThicknessSpace=$"SiliconThickness"/10
+
+set DeviceStart=0
+set DeviceStartSpace=$"nlength"/10
+set DeviceEnd=$"DeviceStart" + $"GateEnd" +$"nlength"
+set DeviceBottom=$"SiliconThickness"+$"BuriedOxideThickness"
+set DeviceBottomSpace=$"BuriedOxideThickness"/2
+
+set SourceEnd=$"nlength"/2
+set DrainStart=$"DeviceEnd"-$"nlength"/2
+
+go atlas
+
+mesh width=100
+
+x.m l=0 s=$"DeviceStartSpace"
+x.m l=$"SourceEnd" s=$"DeviceStartSpace"
+x.m l=$"GateStart" s=$"GateSpace"
+x.m l=$"GrainStart" spac=$"GrainSpace"
+x.m l=$"GrainEnd" s=$"GrainSpace"
+x.m l=$"GateEnd" s=$"GateSpace"
+x.m l=$"DrainStart" s=$"DeviceStartSpace"
+x.m l=$"DeviceEnd" s=$"DeviceStartSpace"
+#
+y.m l=-$"GateOxideThickness" s=$"HalfGateOxideThickness"
+y.m l=0 s=$"SiliconThicknessSpace"
+y.m l=$"HalfSiliconThickness" s=$"HalfSiliconThicknessSpace"
+y.m l=$"SiliconThickness" s=$"HalfSiliconThicknessSpace"
+y.m l=$"DeviceBottom" s=$"DeviceBottomSpace"
+#
+region num=1 oxide name=box
+region num=2 silicon y.min=0 y.max=$"SiliconThickness"
+region num=3 silicon x.min=$"GrainStart" x.max=$"GrainEnd" y.min=0 y.max=$"SiliconThickness"
+#
+electrodes num=1 name=source x.max=$"SourceEnd" y.min=0 y.max=0
+electrodes num=2 name=gate x.min=$"GateStart" x.max=$"GateEnd" y.max=-$"GateOxideThickness"
+electrodes num=3 name=drain x.min=$"DrainStart" y.min=0 y.max=0
+electrodes num=4 name=substrate bottom
+#
+doping  uniform conc=1.e15 n.type
+doping  gauss conc=3.e18 n.type x.right=$"GateStart" char=0.3
+doping  gauss conc=3.e18 n.type x.left=$"GateEnd" char=0.3
+#
+#   Set parameters for polysilicon
+#
+material region=2 mun=300 mup=30 taun0=1e-8 taup0=1e-8
+material region=3 mun=30 mup=3 taun0=1e-10 taup0=1e-10
+#
+defects region=2 continuous afile=tftex09_acc1.dat dfile=tftex09_don1.dat \
+  nga=6e18 ngd=6e20  ega=0 egd=0.0 wga=0.075 wgd=0.075 \
+  nta=5e17 ntd=2.5e19 wta=0.23 wtd=0.23 \
+  sigtae=1.e-16 sigtah=1.e-14 sigtde=1.e-14 sigtdh=1.e-16  \ 
+  siggae=1.e-16 siggah=1.e-14 siggde=1.e-14 siggdh=1.e-16 
+#
+defects region=3 continuous afile=tftex09_acc2.dat dfile=tftex09_don2.dat \
+  nga=1.2e14 ngd=1.2e14  ega=0 egd=0.0 wga=0.075 wgd=0.075 \
+  nta=7.5e11 ntd=7.5e11 wta=0.23 wtd=0.23 \
+  sigtae=1.e-16 sigtah=1.e-14 sigtde=1.e-14 sigtdh=1.e-16  \ 
+  siggae=1.e-16 siggah=1.e-14 siggde=1.e-14 siggdh=1.e-16 
+#
+contact	num=2 alum
+models srh temp=300 print 
+#
+method itlimit=30
+
+tonyplot tftex09_acc1.dat tftex09_don1.dat -set tftex09_0.set
+tonyplot tftex09_acc2.dat tftex09_don2.dat -set tftex09_1.set
+
+tonyplot tftex09_acc1.dat tftex09_don1.dat
+
+
+solve init
+save outf=tftex09_0.str
+tonyplot tftex09_0.str -set tftex09_2.set
+#
+solve prev 
+#
+# Electrode #1 - Source, #2 - Gate, #3 - Drain, #4 - Substrate
+#
+method  gummel newton gum.init=6
+solve  vgate=-5.0
+
+method  newton 
+solve  vdrain=0.1
+solve  vdrain=0.2
+solve  vdrain=0.5
+#
+# Solve id versus vg curve
+#
+log outf=tftex09_1.log 
+solve prev
+solve prev vstep=0.5 vfinal=10. name=gate 
+#
+tonyplot tftex09_1.log -set tftex09_3.set
+tonyplot tftex09_1.log -set tftex09_4.set
+quit

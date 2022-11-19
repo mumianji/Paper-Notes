@@ -1,0 +1,185 @@
+# (c) Silvaco Inc., 2018
+
+go atlas simflags="-160"
+
+mesh width=6.67e7
+
+set CN=1e17
+
+x.mesh location=0   spacing=0.2
+x.mesh location=1   spacing=0.2
+x.mesh location=2.5 spacing=0.2
+x.mesh location=3.5 spacing=0.2
+x.mesh location=4.5 spacing=0.2
+x.mesh location=6.5 spacing=0.2
+x.mesh location=7.0 spacing=0.2
+x.mesh location=8.0 spacing=0.2
+x.mesh location=8.5 spacing=0.2
+x.mesh location=9.5 spacing=0.2
+
+y.mesh location=-0.033  spacing=0.001
+y.mesh location=-0.0165 spacing=0.01
+y.mesh locatio=0        spacing=0.001
+y.mesh location=0.2     spacing=0.02
+y.mesh location=0.5     spacing=0.05
+y.mesh location=1       spacing=0.05
+y.mesh location=8.5     spacing=0.5
+y.mesh location=11      spacing=0.5
+
+region number=1 material=4H-SiC y.min=0
+region number=2 material=oxide  y.max=0
+
+electrode name=drain  bottom
+electrode name=gate   top x.max=3.51
+electrode name=source x.min=4.49 x.max=6.51 y.min=-0.034 y.max=0.0005
+electrode name=pwell  x.min=8.49 x.max=9.51 y.min=-0.034 y.max=0.0005
+
+doping n.type uniform  concentration=1e19    y.min=8.49
+doping n.type uniform  concentration=1e16    y.min=0.49  y.max=8.49
+doping p.type gaussian concentration=3e18    junction=1  peak=0.75 x.min=0.99
+doping p.type uniform  concentration=5e15    y.max=0.49
+doping n.type gaussian concentration=2.5e16  charac=0.2  peak=0.25 x.max=1.01
+doping n.type gaussian concentration=$CN+5e15 charac=0.08 peak=0.1  x.max=1.01
+doping n.type gaussian concentration=1.0e19  charac=0.08 peak=0.1 \
+       x.min=2.49 x.max=7.01
+doping p.type gaussian concentration=3.0e19  charac=0.2  peak=0.25 \
+       x.min=7.99 x.max=9.51
+
+# Specified N+ Buried Channel Immplant
+doping n.type gaussian concentration=1.2e17 charac=0.055 peak=0.0 \
+       x.min=1.01 x.max=2.49
+
+intdefects tfile=sicex07.dat numa=24 numd=24 continuous \
+           ega=0.805 egd=0.805 nga=2e11 ngd=2e11 wga=1 wgd=1 \
+           nta=1e14 ntd=1e14 wta=0.1 wtd=0.1
+
+# Anisotropic Mobility Model 
+# Low X Direction Mobility accounts for Surface Scattering of Channel
+mobility material=4H-SiC mun0=55 vsatn=1.5e6 vsatp=1.5e6
+mobility material=4H-SiC mun0=80 vsatn=2.0e7 vsatp=2.0e7 n.angle=90 p.angle=90
+
+models srh fldmob temperature=350 print
+contact name=gate workfunc=5.25
+
+method climit=1e-20 itlimit=50 \
+       ir.tol=1e-35 ix.tol=1e-35 \
+       pr.tol=1e-43 px.tol=1e-22 \
+       cr.tol=1e-35 cx.tol=1e-22
+
+# Threshold Voltage and Eox Extraction at Vg=12 Volts
+solve init
+solve previous
+save outfile=sicex07_0.str
+tonyplot sicex07.dat -set sicex07_0.set
+tonyplot sicex07_0.str -set sicex07_1.set
+solve vdrain=0.1
+solve vdrain=1
+log outfile=sicex07_0.log
+solve vgate=0.1
+solve vgate=0.5 vstep=0.5 vfinal=6 name=gate
+
+extract name="Vt" (xintercept(maxslope(curve(abs(v."gate"),abs(i."drain")))))
+
+solve vstep=0.5 vfinal=12 name=gate
+log off
+save outfile=Eox_Vg_12V.str
+tonyplot sicex07_0.log
+
+extract init infile="Eox_Vg_12V.str"
+extract name="Emax_Vg_12V"  \
+        max(impurity="e field" y.val=-0.0165 material="oxide")
+
+# IdVd Curves and Ion Extraction
+solve init
+solve previous
+log outfile=sicex07_1.log
+solve vdrain=0.1
+solve vdrain=0.5 vstep=0.5 vfinal=15 name=drain
+log off
+
+solve init
+solve previous
+solve vgate=0.1
+solve vgate=0.5 vstep=0.5 vfinal=1.5 name=gate
+solve vgate=2 vstep=1 vfinal=5 name=gate
+log outfile=sicex07_2.log
+solve vdrain=0.1
+solve vdrain=0.5 vstep=0.5 vfinal=15 name=drain
+log off
+
+solve init
+solve previous
+solve vgate=0.1
+solve vgate=0.5 vstep=0.5 vfinal=1.5 name=gate
+solve vgate=2 vstep=1 vfinal=10 name=gate
+log outfile=sicex07_3.log
+solve vdrain=0.1
+solve vdrain=0.5 vstep=0.5 vfinal=15 name=drain
+log off
+
+solve init
+solve previous
+solve vgate=0.1
+solve vgate=0.5 vstep=0.5 vfinal=1.5 name=gate
+solve vgate=2 vstep=1 vfinal=15 name=gate
+log outfile=sicex07_4.log
+solve vdrain=0.1
+solve vdrain=0.5 vstep=0.5 vfinal=15 name=drain
+extract init infile="sicex07_4.log"
+extract name="Ron" min(v."drain"/i."drain")
+log off
+
+tonyplot sicex07_1.log -overlay sicex07_2.log sicex07_3.log sicex07_4.log -set sicex07_2.set
+
+
+go atlas simflags="-160"
+
+mesh infile=sicex07_0.str width=6.67e7
+
+intdefects tfile=defects.dat numa=24 numd=24 continuous \
+           ega=0.805 egd=0.805 nga=2e11 ngd=2e11 wga=1 wgd=1 \
+           nta=1e14 ntd=1e14 wta=0.1 wtd=0.1
+
+# Anisotropic Mobility Model 
+# Low X Direction Mobility accounts for Surface Scattering of Channel
+mobility material=4H-SiC mun0=55 vsatn=1.5e6 vsatp=1.5e6
+mobility material=4H-SiC mun0=80 vsatn=2.0e7 vsatp=2.0e7 n.angle=90 p.angle=90
+
+models srh fldmob temperature=350 print
+impact aniso sic4h0001 e.side \
+       be0001=2.838e7 bh0001=2.15e7 be1120=1.462e7 bh1120=1.376e7
+contact name=gate workfunc=5.25
+
+method climit=1e-20 itlimit=50 \
+       ir.tol=1e-35 ix.tol=1e-35 \
+       pr.tol=1e-43 px.tol=1e-22 \
+       cr.tol=1e-35 cx.tol=1e-22
+
+solve init
+solve previous
+log outfile=sicex07_5.log
+solve vdrain=0.1
+solve vdrain=0.5
+solve vdrain=1 vstep=1 vfinal=10 name=drain
+solve vstep=5 vfinal=50 name=drain
+solve vstep=10 vfinal=100 name=drain
+solve vstep=20 vfinal=600 name=drain
+save outfile=Eox_Vd_600V.str
+
+extract init infile="Eox_Vd_600V.str"
+extract name="Emax_600V"  \
+        max(impurity="e field" y.val=-0.0165 material="oxide")
+
+solve vstep=20 vfinal=1100 name=drain compliance=0.1 cname=drain
+save outfile=Vd_1100V.str
+solve vstep=10 vfinal=2000 name=drain compliance=0.1 cname=drain
+
+contact name=drain current
+solve istep=1.2 imult ifinal=0.1 name=drain
+save outfile=bd.str
+
+extract name="Breakdown Voltage" max(v."drain")
+
+solve istep=1.2 imult ifinal=1000 name=drain
+tonyplot sicex07_5.log -set sicex07_3.set
+

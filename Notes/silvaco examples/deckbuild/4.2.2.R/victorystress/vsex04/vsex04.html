@@ -1,0 +1,119 @@
+<html>
+  <head>
+    <title>Stress simulation for a extremely thin SOI (ETSOI) CMOS</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Stress simulation for a extremely thin SOI (ETSOI) CMOS</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>Victory Process and Victory Stress</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Victory Process 7.22.0.R, Victory Stress 2.14.0.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="vsex04_plot0.png" width="640" alt="vsex04_plot0" />
+      <p/>
+      <img src="vsex04_plot1.png" width="640" alt="vsex04_plot1" />
+      <p/>
+      <img src="vsex04_plot2.png" width="640" alt="vsex04_plot2" />
+      <p/>
+      <img src="vsex04_plot3.png" width="640" alt="vsex04_plot3" />
+      <p/>
+      <img src="vsex04_plot4.png" width="640" alt="vsex04_plot4" />
+      <p/>
+      <img src="vsex04_plot5.png" width="640" alt="vsex04_plot5" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+Extremely thin SOI (ETSOI) devices are attractive for low power applications. The integration scheme
+of the ETSOI technology allows formation of  raised source/drain (RSD) extensions
+for both NFET and PFET by using a single mask. Another feature of ETSOI CMOS is the combination of
+two strain enhancement techniques, (1) Si:C RSD for NFET and SiGe RSD for PFET,
+and (2) stress liner effect coupled with faceted RSD.
+</p>
+<p>
+Details and features of the ETSOI CMOS can be found in [1], [2]. This example demonstrates stress
+simulation for ETSOI CMOS. Geometry parameters are taken from Figs.3 and 4, of Ref. [2].
+The nominal gate length for this simulation is 26nm. The stress simulation has been performed for a
+half of the device due to its symmetry.
+The following geometry parameters can be changed in this simulation in order to investigate
+the influence of the device geometry on stress distribution, and, therefore, on device performance:
+1) - the gate length; 2) - the gate height; 3) - the RSD height; 4) - the thickness of stress liner;
+5) -  the gate oxide thickness; 6) - the thickness of silicon on insulator (SOI);
+7) - the thickness of bottom oxide; 8) - proximity of the bottom of RSD to the gate;
+9) - proximity of the top of RSD to the gate (in case of faceted RSD);
+10) - the width of simulation domain.
+Also, the following 5 logical parameters can be used to vary simulation conditions:
+</p>
+<b> flag_faceted_RSD </b> <p>
+specifies that RSD has a slopped edge;
+</p>
+<b> flag_RSD </b> <p>
+specifies that RSD serves as a stressor;
+</p>
+<b> flag_liner </b> <p>
+specifies nitride stressor;
+</p>
+<b> flag_poly </b> <p>
+specifies that poly serves as a stressor;
+</p>
+<b> mat_RSD </b> <p>
+specifies that materials for RSD, mat_RSD=-1 corresponds to SiGe and mat_RSD=1 corresponds to Si:C.
+</p>
+<p>
+All above parameters can be varied  or used in design of experiments. The nominal values of
+parameters are set to correspond to conditions presented in Figs. 3 and 4 of [2].
+</p>
+<p>
+The 2D structure is obtain by Victory Process running in 2D mode and is subsequently used in Victory
+Stress. The isotropic model for stress simulations is used in this simulation since
+the structure is 2D. Thereofre, the elastic properties of Si, SiGe, and  Si:C
+are considered to be the same as for polysilicon. All parameters mentioned
+above could be changed. Each run of this example produces stress distributions
+for three types of stressors: first is for RSD regions either of SiGe with
+negative intrinsic stress or of Si:C with positive intrinsic stress; the
+second is the stress-liner made of nitride; the third one is the stress
+memorized in the gate. As a result of the simulations the four files will be
+saved for two geometries of RSD (vertical and faceted) and for all three
+stressor types.
+</p>
+<p>
+In case of vertical RSD these four files are: vsex04_0.str
+(initial structure), vsex04_2.str (RSD-stressor), vsex04_4.str
+(stress-liner), and vsex04_6.str (poly gate stressor).
+</p>
+<p>
+In case of faceted RSD these four files are: vsex04_1.str
+(initial structure), vsex04_3.str (RSD-stressor), vsex04_5.str
+(stress-liner), and vsex04_7.str (poly gate stressor).
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+<p>
+[1] K. Cheng, et al, Symp. VLSI Tech, 2009, p.212
+</p>
+<p>
+[2] K. Cheng, et al, IEDM 2009, p. 49
+  </div></body>
+</html>

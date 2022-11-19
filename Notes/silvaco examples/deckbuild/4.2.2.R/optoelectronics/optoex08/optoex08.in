@@ -1,0 +1,47 @@
+# (c) Silvaco Inc., 2018
+go atlas
+Title Interference
+#
+# SECTION 1: Mesh Specification
+#
+mesh
+#
+x.m l=0    s=0.2
+x.m l=5    s=0.2
+y.m l=0.0  s=0.02
+y.m l=1.0  s=0.02
+y.m l=2.0 s=0.02
+#
+# SECTION 2: Structure Specification
+#
+region num=1 silicon y.min=1 y.max=2
+region num=2 oxide y.min=0 y.max=1
+#
+elec num=1 y.min=1.0 y.max=1.0 x.max=0.2
+elec num=2 y.min=1.0 y.max=1.0 x.min=4.8
+elec num=3 bottom
+#
+doping unif n.type conc=2e16
+doping gaus peak=1.0  char=0.1 conc=1e18 p.type dir=y
+doping gaus peak=2.0 char=0.1 conc=1e18 n.type dir=y
+#
+# SECTION 3: Gaussian Source Specification
+#
+beam num=1 x.origin=2.5 y.origin=-5.0 angle=90 wavelength=0.623 bpm gaussian mean=0 xsigma=0.25 back.refl
+#
+# SECTION 4: Solution Procedure
+#
+method newton carr=2
+output opt.intens
+#
+solve 
+solve v3=0.5
+solve v3=1.0
+#
+solve b1=1
+#
+save outf=optoex08.str
+#
+tonyplot optoex08.str -set optoex08.set
+#
+quit

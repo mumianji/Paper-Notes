@@ -1,0 +1,57 @@
+<html>
+  <head>
+    <title>Mesh Refinement</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Mesh Refinement</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>CLEVER</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="clex19.CAP.0.str.png" width="640" alt="clex19.CAP.0.str" />
+      <p/>
+      <img src="clex19.CAP.1.str.png" width="640" alt="clex19.CAP.1.str" />
+      <p/>
+      <img src="clex19.CAP.2.str.png" width="640" alt="clex19.CAP.2.str" />
+      <p/>
+      <img src="clex19.CAP.3.str.png" width="640" alt="clex19.CAP.3.str" />
+      <p/>
+      <img src="clex19.CAP.4.str.png" width="640" alt="clex19.CAP.4.str" />
+      <p/>
+      <img src="clex19.str.png" width="640" alt="clex19.str" />
+      <p/>
+    </div>
+    <div id="text" >
+<p>
+This example illustrates the adaptative meshing capability of CLEVER.
+You can see the evolution of the mesh refinement using the
+command:
+<b> interconnect capacitance AdaptC=0.04  structure=&quot;clex19&quot;.   </b> As a result you get the following output: clex19.CAP.0.str, clex19.CAP.1.str,
+clex19.CAP.2.str, ...... The numbers mean that if we specify 1 volt on conductor
+i and 0 volt on other conductors, the capacitance values are calculated between
+conductor i and other conductors. The file clex19.CAP.i.str is the final grid
+structure after this simulation step.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

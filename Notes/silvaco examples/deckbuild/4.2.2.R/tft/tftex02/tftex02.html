@@ -1,0 +1,75 @@
+<html>
+  <head>
+    <title>Un-Passivated Device</title>
+    <style type="text/css">
+      body {background-color: #FFFFFF;}
+      div.picture
+      {
+        float:right;
+        width:700px;
+        margin:0px -50px 0px 30px;
+      }
+      #text
+      {
+         text-align: justify;
+         margin:10px 10px 10px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <H1>Un-Passivated Device</H1>
+    <table id="text">
+      <tr>
+        <td><b>Requires:</b></td><td><i>S-Pisces/TFT</i></td>
+      </tr>
+      <tr>
+        <td><b>Minimum Versions:</b></td><td><i>Atlas 5.26.1.R</i></td>
+      </tr>
+    </table>
+    <div class="picture" >
+      <img src="tftex02_plot0.png" width="640" alt="tftex02_plot0" />
+      <p/>
+      <img src="tftex02_plot1.png" width="640" alt="tftex02_plot1" />
+      <p/>
+    </div>
+    <div id="text" >
+<br/>
+<p>
+This file performs Id/Vgs simulation of a TFT device with material
+properties corresponding to un-passivated alpha-Si:H material. The example
+shows:
+</p>
+<ul>
+  <li>
+ Structure formation using Atlas syntax
+<br/>
+  </li>
+  <li>
+ Material and model settings for un-passivated a-Si
+<br/>
+  </li>
+  <li>
+ Forward Id/Vgs characteristics
+  </li>
+</ul>
+<p>
+The key command in TFT simulation is the
+<b> defect </b> statement. It is used to define a continuous density of trap states in
+the silicon and the relevant trapping cross-sections.
+</p>
+<p>
+The Id/Vgs ramping is performed in a similar manner to the threshold voltage
+tests for MOS devices described in the MOS example. Results from this
+example can be compared with the passivated a-Si device.
+</p>
+<p>
+A more detailed description of TFT material settings is given in the
+<i> Forward/Reverse Gate Voltage Characteristic </i> example.
+</p>
+<p>
+To load and run this example, select the
+<b> Load</b> button in DeckBuild &gt; Examples. This will copy the input file and any support files to your current working directory. Select the
+<b> Run</b> button in DeckBuild to execute the example.
+</p>
+  </div></body>
+</html>

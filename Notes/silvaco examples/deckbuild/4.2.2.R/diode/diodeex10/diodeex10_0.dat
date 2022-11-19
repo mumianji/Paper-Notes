@@ -1,0 +1,36 @@
+v DBInternal
+# silvaco.file ASCII version=1.14.23 format=1 contents=SDB,Tables=1
+
+Copyright "###################################################################"
+Copyright "#                    Copyright Silvaco Inc. (c)                   #"
+Copyright "#                            1992-2014                            #"
+Copyright "#                                                                 #"
+Copyright "# This file format and the following Key are copyright Silvaco    #"
+Copyright "# International. You may not use, this format or key without      #"
+Copyright "# reproducing this message in full and obtaining                  #"
+Copyright "# express written permission from Silvaco Inc.                    #"
+Copyright "#                                                                 #"
+Copyright "# To obtain such permission please contact: Silvaco Inc.          #"
+Copyright "#                                           support@silvaco.com   #"
+Copyright "#                                                                 #"
+Copyright "# KEY=SVC86hn7562asdx                       PROD=345              #"
+Copyright "###################################################################"
+#dbinternal 2.11.7.R (Thu Feb  8 16:02:37 GMT 2018)
+#libSDB 1.12.42 (Thu Oct 26 19:20:24 PDT 2017)
+p 8 10000 10001 10002 10003 10004 10005 10006 10007
+d 1 125 31232900 1.6847900000000001e-07 46839700 8.52877e-06 64985100 0.000374169
+d 2 150 31199100 1.8521400000000001e-07 46817100 9.12115e-06 64970500 0.000392047
+d 3 200 31124600 2.8846500000000001e-07 46765700 1.25368e-05 64938800 0.00049005
+d 4 250 31042900 6.1514900000000002e-07 46709000 2.1883999999999999e-05 64903700 0.000726592
+d 5 300 30955900 1.62765e-06 46648900 4.55458e-05 64865100 0.0012245
+d 6 350 30864900 4.8666500000000002e-06 46586500 0.000105144 64823200 0.00223396
+d 7 400 30770600 1.61933e-05 46522300 0.000256383 64778700 0.00425044
+Q 10000 1 ex_id
+Q 10001 1 tempera
+Q 10002 1 maxEx_VR04
+Q 10003 1 I_VR04
+Q 10004 1 maxEx_VR10
+Q 10005 1 I_VR10
+Q 10006 1 maxEx_VR20
+Q 10007 1 I_VR20
+EOF 628001611

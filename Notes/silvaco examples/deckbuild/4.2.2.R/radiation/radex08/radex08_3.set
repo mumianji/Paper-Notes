@@ -1,0 +1,205 @@
+silvaco.file ASCII version=1.14.19 format=1
+""
+#non-visible objects
+number-of-non-visible-objects 3
+non-visible-object "Region #1"
+non-visible-object "Region #8"
+non-visible-object "Material SiO2"
+
+#non-enable-contour objects
+number-of-non-enable-contour-objects 4
+non-enable-contour-object BPSG
+non-enable-contour-object Polysilicon
+non-enable-contour-object Si3N4
+non-enable-contour-object SiO2
+
+#Cut Plane Settings
+point_1 0 0 0
+point_2 1 0 0
+point_3 0 0 1
+three_points 0
+PAN 0
+PITCH 90
+ELEV 1
+
+#Cut Plane Axes Settings
+X_REVERSE 0
+Y_REVERSE 0
+XY_SWAP 0
+
+#Electrode Properties
+electrode word1 0 0 3
+electrode Q3 0 0 3
+electrode Q2 0 0 3
+electrode Q2_Bar 0 0 3
+electrode Q3_Bar 0 0 3
+electrode word2 0 0 3
+electrode Q1 0 0 3
+electrode Q1_Bar 0 0 3
+electrode ground2 0 0 3
+electrode Vdd2 0 0 3
+electrode Bit 0 0 3
+electrode ground1 0 0 3
+electrode Vdd 0 0 3
+electrode Bit_Bar 0 0 3
+
+#Electrode Labels
+electrode_label word1 word1 0 255 170 0
+electrode_label Q3 Q3 0 255 170 0
+electrode_label Q2 Q2 0 255 170 0
+electrode_label Q2_Bar Q2_Bar 0 255 170 0
+electrode_label Q3_Bar Q3_Bar 0 255 170 0
+electrode_label word2 word2 0 255 170 0
+electrode_label Q1 Q1 0 255 170 0
+electrode_label Q1_Bar Q1_Bar 0 255 170 0
+electrode_label ground2 ground2 0 255 170 0
+electrode_label Vdd2 Vdd2 0 255 170 0
+electrode_label Bit Bit 0 255 170 0
+electrode_label ground1 ground1 0 255 170 0
+electrode_label Vdd Vdd 0 255 170 0
+electrode_label Bit_Bar Bit_Bar 0 255 170 0
+
+#Region Properties
+region "Region #1" 1 0 4
+region "Region #8" 1 0 4
+region "Region #9" 0 0 4
+region "Region #10" 1 0 4
+
+#Region Labels
+region_label "Region #1" "Region #1" 1 0 0 0
+region_label "Region #8" "Region #8" 1 0 0 0
+region_label "Region #9" "Region #9" 1 0 0 0
+region_label "Region #10" "Region #10" 1 0 0 0
+
+#Overlay Properties
+overlay_mode_active 0
+
+#Define the scene matrix
+sm_00 0.70496116282435217
+sm_01 -0.70920927659103128
+sm_02 0.0072083913992053812
+sm_03 -0.091959599176581808
+
+sm_10 0.4030063444204729
+sm_11 0.40891427172780304
+sm_12 0.8187643157430361
+sm_13 -0.049225842407348681
+
+sm_20 -0.58362286218600601
+sm_21 -0.57429201663835205
+sm_22 0.57408451848074926
+sm_23 0.48104693700271106
+
+sm_30 0
+sm_31 0
+sm_32 0
+sm_33 1
+
+#Define the camera matrix
+cm_00 1
+cm_01 0
+cm_02 0
+cm_03 0
+
+cm_10 0
+cm_11 1
+cm_12 0
+cm_13 0
+
+cm_20 0
+cm_21 0
+cm_22 1
+cm_23 -1.5139743463341673
+
+cm_30 0
+cm_31 0
+cm_32 0
+cm_33 1
+
+#Define the scene scaling factors
+ss_xyz 1 1 1
+
+#Define 3D projection
+proj_3d_aspect 1.097799511002445
+proj_3d_z_near 0.91004587713382645
+proj_3d_z_far 1.5853331038718039
+proj_3d_height 0.57731709488722571
+proj_3d_fovy 25
+proj_3d_type 0
+proj_3d_depth_cue 2
+
+coord_selection 0
+coord_type 0
+
+modelview_x_scale 1
+modelview_y_scale 1
+modelview_z_scale 1
+
+#Global BBox Settings
+global_bbox_min -0.019149644905323965 -0.019149644905323965 -0.077399644905323986
+global_bbox_max 0.3859055841974825 0.23590558419748239 0.23590558419748242
+
+#Define x-y-z Axis Visibility
+x_axis_visibility 0
+y_axis_visibility 0
+z_axis_visibility 0
+
+#Define Legend Visibility
+contour_legend 1
+region_legend 1
+
+#Define the DisplayMode
+display_mode_id 3
+
+#Define Show Cut Plane
+show_cut_plane 0
+
+#Define Show Cut Plane X Y Axes
+show_cut_plane_x_axis 1
+show_cut_plane_y_axis 1
+
+#Define the DrawMode
+draw_mode_id 3
+
+#Define the Region_Color_Type
+region_color_type 0
+
+mat_info "Air 1 0"
+mat_info "Aluminum 70 1"
+mat_info "Conductor 66 1"
+mat_info "Electrodes 2 1"
+mat_info "GaN 77 1"
+mat_info "Polysilicon 40 1"
+mat_info "Sapphire 57 1"
+mat_info "Si3N4 28 1"
+mat_info "SiO2 23 1"
+mat_info "Silicon 8 1"
+
+#Define light0 and light1 information
+light0_enabled 1
+light0_color 255 255 255
+light0_intensity 0.52999997138977051
+light0_latitude 30
+light0_longitude 0
+
+light1_enabled 1
+light1_color 255 255 255
+light1_intensity 0.52999997138977051
+light1_latitude 0
+light1_longitude 270
+
+#Define contours information
+imp_menu_index 12
+name-of-doping "Net Doping"
+limit_select_type 0
+auto_max_limit 1
+auto_min_limit 1
+contour_max_imp_value 1.74602e+20
+contour_min_imp_value -1.16643e+20
+legend_type 0
+legend_auto_mapping 1
+legend_mapping 0
+legend_palette 0
+legend_nbr_of_colors 5
+
+EOF 1267080611

@@ -1,0 +1,120 @@
+# (c) Silvaco Inc., 2018
+# Enhancement-Mode N -Polar GaN MISFETs With Self_Aligned Source/Drain Regrowth
+# Singisetti, et al., of UCSB. EDL,32. p137, 2011
+
+go atlas simflags="-160"
+
+mesh width=1000 space.mult=1
+
+x.m l=4.45	s=0.25
+x.m l=4.95	s=0.02
+x.m l=5.00	s=0.005
+x.m l=5.31	s=0.1
+x.m l=5.62	s=0.005
+x.m l=5.67	s=0.02
+x.m l=6.17	s=0.25
+
+y.m l=-0.02 	s=0.001
+y.m l=0 	s=0.001
+y.m l=0.005 	s=0.0001
+y.m l=0.006 	s=0.00025
+y.m l=0.007 	s=0.0001
+y.m l=0.017 	s=0.002
+y.m l=0.027 	s=0.0001
+y.m l=0.028 	s=0.00025
+y.m l=0.029	s=0.0001
+y.m l=0.229 	s=0.05
+
+region num=1 material=nitride  x.min=4.45 x.max=6.17 y.min=-0.02 y.max=0.007
+region num=2 material=AlN x.min=5 x.max=5.62 y.min=0.005 y.max=0.007 
+region num=3 material=GaN  x.min=4.45 x.max=6.17 y.min=0.007 y.max=0.027
+region num=4 material=AlN x.min=4.45 x.max=6.17 y.min=0.027 y.max=0.029 
+region num=5 material=GaN  x.min=4.45 x.max=6.17 y.min=0.029 y.max=0.229 substrate
+region num=6 material=nitride  x.min=5 x.max=5.62 y.min=0 y.max=0.005
+region num=7 material=InGaN graded compx.bottom=0 compx.top=1  x.min=4.45 x.max=4.95 y.min=0 y.max=0.007
+region num=8 material=InGaN graded compx.bottom=0 compx.top=1  x.min=5.67 x.max=6.17 y.min=0 y.max=0.007
+
+electrode name=gate  x.min=5 x.max=5.62 y.min=-0.007 y.max=0
+electrode name=source  x.min=4.45 x.max=4.95 y.min=-0.002 y.max=0
+electrode name=drain  x.min=5.67 x.max=6.17 y.min=-0.002 y.max=0
+electrode substrate
+
+doping x.min=4.45 x.max=6.17 y.min=0.029 y.max=0.229 donor conc=1.5e18 uniform
+doping x.min=4.45 x.max=4.95 y.min=0 y.max=0.007 donor conc=2e19 uniform
+doping x.min=5.67 x.max=6.17 y.min=0 y.max=0.007 donor conc=2e19 uniform
+
+mobility albrct.n gansat.n bn.albrct=1e-3
+models k.p print srh fermi 
+models POLARIZATION calc.strain polar.scale=-0.8
+
+contact name=gate work=5.3
+
+interface y.min=0.004 y.max=0.006 x.min=5 x.max=5.62 s.i charge=5.25e13
+
+material material=InGaN align=0.6
+
+output con.band val.band  flowlines charge polar.charge band.par qss e.mob ex.vel opt.intens
+
+method climit=1e-4 gumits=300 maxtrap=10 ix.tol=1e-40 ir.tol=1e-40 
+
+solve init
+save outf=ganfetex08_0.str
+solve previous
+
+solve vstep=0.1 vfinal=4 name=drain
+
+log outf=ganfetex08_0.log
+solve vgate=0.01
+solve vgate=0.1 previous
+solve vstep=0.1 vfinal=5 name=gate previous
+log off
+
+extract init inf="ganfetex08_0.log"
+extract name="IdVg5V" y.val from curve(abs(v."gate"),abs(i."drain")) where x.val=5
+
+solve init
+solve previous
+solve vgate=0 outf=ganfetex08_vg0v previous
+solve vgate=1 outf=ganfetex08_vg1v previous
+solve vgate=2 outf=ganfetex08_vg2v previous
+solve vgate=3 outf=ganfetex08_vg3v previous
+solve vgate=4 outf=ganfetex08_vg4v previous
+solve vgate=5 outf=ganfetex08_vg5v previous
+
+solve init
+load inf=ganfetex08_vg0v
+log outf=ganfetex08_1.log
+solve vdrain=0 vstep=0.1 vfinal=4 name=drain previous
+
+solve init
+load inf=ganfetex08_vg1v
+log outf=ganfetex08_2.log
+solve vdrain=0 vstep=0.1 vfinal=4 name=drain previous
+
+solve init
+load inf=ganfetex08_vg2v
+log outf=ganfetex08_3.log
+solve vdrain=0 vstep=0.1 vfinal=4 name=drain previous
+
+solve init
+load inf=ganfetex08_vg3v
+log outf=ganfetex08_4.log
+solve vdrain=0
+solve vdrain=0 vstep=0.1 vfinal=4 name=drain previous
+
+solve init
+load inf=ganfetex08_vg4v
+log outf=ganfetex08_5.log
+solve vdrain=0 vstep=0.1 vfinal=4 name=drain previous
+
+solve init
+load inf=ganfetex08_vg5v
+log outf=ganfetex08_6.log
+solve vdrain=0 vstep=0.1 vfinal=4 name=drain previous
+
+tonyplot -overlay ganfetex08_0.log -set ganfetex08_0.set
+tonyplot -overlay ganfetex08_1.log ganfetex08_2.log ganfetex08_3.log ganfetex08_4.log ganfetex08_5.log ganfetex08_6.log -set ganfetex08_1.set
+tonyplot ganfetex08_0.str -set ganfetex08_2.set
+tonyplot ganfetex08_0.str -set ganfetex08_3.set
+
+quit

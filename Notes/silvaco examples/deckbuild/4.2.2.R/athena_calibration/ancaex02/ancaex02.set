@@ -1,0 +1,70 @@
+# TPCS version: 7
+# various properties
+log label 0
+key opaque 0
+mark frequency 0
+mark overlay 0
+graph width 0 2
+graph width 1 1
+graph width 2 1
+graph width 3 1
+graph width 4 2
+graph width 5 1
+sequence size 1
+sequence width 0
+log zero 0
+sequence mark 0 0
+sequence mark 1 1
+sequence mark 2 2
+sequence mark 3 3
+sequence mark 4 4
+sequence mark 5 5
+# Functions
+function 1 "" ""
+function 2 "" ""
+function 3 "" ""
+function 4 "" ""
+select 1
+# xsection flags
+show mesh off
+show edges on
+show materials off
+show points on
+show lines on
+# xsection impurities
+xsection impurity none
+xsection impurity "Boron"
+# key positions
+key contours 1 at 3
+key contours 2 at 1
+key contours 3 at 6
+key electrical at 0
+key vectors at 6
+key overlay at 6
+key regions at 4
+key apply 
+# annotation, titles
+title main auto
+title sub auto
+# annotation, footers
+footer right none
+footer left none
+# annotation, show
+show xaxis on
+show yaxis on
+show grid on
+show label xaxis on
+show label yaxis on
+# annotation, axes
+range xaxis -0.0190719, 1.5 increment 0.25,5
+range yaxis 13, 19 increment 1,9
+label xaxis "Depth (microns)"
+label yaxis "Boron (cm^-3)"
+# zoom
+zoom from 0, 0 scale 1, 1
+# user labels
+# overlay level names
+label overlay 0 "ancaex02_1e+08.str"
+label overlay 1 "ancaex02_3e+08.str"
+label overlay 2 "ancaex02_4.58e+08.str"
+label overlay 3 "ancaex02_6e+08.str"

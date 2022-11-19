@@ -1,0 +1,35 @@
+v ATLAS
+# This file was created by ATLAS version 5.26.1.R on Thu Apr 19 08:51:14 2018.
+#SSF 2.0 generic
+##############################################################################
+#                    Copyright (c) 1984 - 2018                               #
+#                    Silvaco Inc. All rights reserved                        #
+#                                                                            #
+# This file format and the following Key are copyright Silvaco Inc.          #
+# You may not use, this format or key without reproducing this message in    #
+# full and obtaining express written permission from Silvaco Inc.            #
+#                                                                            #
+# To obtain such permission please contact: Silvaco Inc.                     #
+#                                           support@silvaco.com              #
+#                                                                            #
+# KEY=SVC86hn7562asdx                       PROD=345                         #
+##############################################################################
+p 2 309 310
+d 0.3504 2.246
+d 0.3914 2.248
+d 0.4441 2.263
+d 0.4909 2.302
+d 0.544 2.193
+d 0.591 2.133
+d 0.6439 2.073
+d 0.6938 2.063
+d 0.7436 2.053
+d 0.7934 2.055
+d 0.8404 2.032
+d 0.8932 2.01
+d 0.943 2.012
+d 0.9958 2.002
+d 1.043 2.016
+d 1.092 2.018
+d 1.139 2.008
+d 1.192 2.01
